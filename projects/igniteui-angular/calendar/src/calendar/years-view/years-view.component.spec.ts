@@ -4,6 +4,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxYearsViewComponent } from './years-view.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const VIEW_ITEM_CSSCLASS = '.igx-calendar-view-item';
 const SELECTED_ITEM_CSSCLASS = 'igx-calendar-view-item--selected';
@@ -44,7 +45,7 @@ describe('IgxYearsView', () => {
     });
 
     it('should focus the view and update the model when a year is clicked', () => {
-        spyOn(yearsView.selected, 'emit');
+        vi.spyOn(yearsView.selected, 'emit');
         const years = items();
         const target = years.findIndex(year => year.textContent.trim() === '2022');
 

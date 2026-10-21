@@ -25,11 +25,12 @@ import {
     IgcGridToolbarHidingComponent,
 } from './components';
 import { defineComponents } from '../utils/register';
+import { describe, beforeAll, beforeEach, afterEach, it, expect } from 'vitest';
 
 describe('Elements: ', () => {
     let testContainer: HTMLDivElement;
 
-    beforeAll(async () =>{
+    beforeAll(async () => {
         defineComponents(
             IgcGridComponent,
             IgcHierarchicalGridComponent,
@@ -88,10 +89,10 @@ describe('Elements: ', () => {
             gridEl.primaryKey = 'id';
             gridEl.data = [{ id: '1' }];
             (gridEl as any).detailTemplate = (ctx) => {
-                return html`<div>
+                return html `<div>
                     <igc-grid id="child${ctx.implicit.id}"></igc-grid>
                 </div>`;
-            }
+            };
 
             // TODO: Better way to wait - potentially expose the queue or observable for update on the strategy
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 2));
@@ -114,7 +115,7 @@ describe('Elements: ', () => {
             detailGrid = document.querySelector<IgcNgElement>('#child1');
             expect(detailGrid).toBeDefined();
             detailGridComponent = (await detailGrid?.ngElementStrategy[ComponentRefKey])?.instance as IgxGridComponent;
-            expect(detailGridComponent).toBeDefined("Detail child grid was destroyed on re-expand");
+            expect(detailGridComponent, "Detail child grid was destroyed on re-expand").toBeDefined();
         });
     });
 
@@ -223,7 +224,7 @@ describe('Elements: ', () => {
 
             gridEl.data = SampleTestData.foodProductData();
             gridEl.addEventListener("columnInit", (args: CustomEvent<any>) => {
-                args.detail.headerTemplate = (ctx) => html`<span>Templated ${args.detail.field}</span>`;
+                args.detail.headerTemplate = (ctx) => html `<span>Templated ${args.detail.field}</span>`;
             });
             testContainer.appendChild(gridEl);
 
@@ -366,7 +367,7 @@ describe('Elements: ', () => {
             expect(actionStripComponent.actionButtons.toArray().length).toBeGreaterThan(0);
         });
 
-        it('should not destroy action strip when row it is shown in is destroyed or cached.', async() => {
+        it('should not destroy action strip when row it is shown in is destroyed or cached.', async () => {
             const innerHtml = `
             <igc-grid id="testGrid" auto-generate>
             <igc-action-strip id="testStrip">
@@ -389,16 +390,16 @@ describe('Elements: ', () => {
             actionStrip.show(row);
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
 
             grid.data = [];
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
-           // row destroyed
-            expect((row.cdr as any).destroyed).toBeTrue();
+            // row destroyed
+            expect((row.cdr as any).destroyed).toBe(true);
             // action strip still in DOM, only hidden.
-            expect(actionStrip.hidden).toBeTrue();
-            expect(actionStrip.isConnected).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
+            expect(actionStrip.isConnected).toBe(true);
 
             grid.data = SampleTestData.foodProductData();
             grid.groupBy({ fieldName: 'InStock', dir: 1, ignoreCase: false });
@@ -410,7 +411,7 @@ describe('Elements: ', () => {
             actionStrip.show(row);
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
 
             // collapse all data rows, leave only groups
             grid.toggleAllGroupRows();
@@ -419,12 +420,12 @@ describe('Elements: ', () => {
             await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 3));
 
             // row not destroyed, but also not in dom anymore
-            expect((row.cdr as any).destroyed).toBeFalse();
+            expect((row.cdr as any).destroyed).toBe(false);
             expect(row.element.nativeElement.isConnected).toBe(false);
 
-             // action strip still in DOM, only hidden.
-            expect(actionStrip.hidden).toBeTrue();
-            expect(actionStrip.isConnected).toBeTrue();
+            // action strip still in DOM, only hidden.
+            expect(actionStrip.hidden).toBe(true);
+            expect(actionStrip.isConnected).toBe(true);
         });
 
         it('should attach nested elements into the parent view instead of as separate application roots', async () => {
@@ -457,7 +458,7 @@ describe('Elements: ', () => {
             const rootViews = (injector.get(ApplicationRef) as any)._views as unknown[];
 
             // no element parent to attach to, so the grid stays a root
-            expect(rootViews.includes(await hostViewOf('igc-grid'))).toBeTrue();
+            expect(rootViews.includes(await hostViewOf('igc-grid'))).toBe(true);
 
             // each nested element's view lives in its parent element's container, not in the app's roots
             const expectedParents = {
@@ -472,10 +473,10 @@ describe('Elements: ', () => {
 
             for (const [selector, parentSelector] of Object.entries(expectedParents)) {
                 const hostView = await hostViewOf(selector);
-                expect(rootViews.includes(hostView))
-                    .withContext(`${selector} should not be attached as a separate root view`).toBeFalse();
-                expect((await anchorOf(parentSelector))?.indexOf(hostView!))
-                    .withContext(`${selector} should be attached in the view of ${parentSelector}`)
+                expect(rootViews.includes(hostView), `${selector} should not be attached as a separate root view`)
+                    .toBe(false);
+                expect((await anchorOf(parentSelector))?.indexOf(hostView!),
+                    `${selector} should be attached in the view of ${parentSelector}`)
                     .toBeGreaterThan(-1);
             }
         });
@@ -510,14 +511,14 @@ describe('Elements: ', () => {
             expect(toolbarEl?.parentElement).toBe(gridEl);
             expect(toolbarEl?.querySelector<HTMLElement>('igc-grid-toolbar-title')?.parentElement).toBe(toolbarEl);
             expect(actionsEl?.parentElement).toBe(toolbarEl);
-            expect(Array.from(gridEl?.querySelectorAll('igc-column') || []).every(x => x.parentElement === gridEl)).toBeTrue();
+            expect(Array.from(gridEl?.querySelectorAll('igc-column') || []).every(x => x.parentElement === gridEl)).toBe(true);
 
             // sibling order kept as authored
             expect(Array.from(actionsEl?.children || []).map(x => x.tagName))
                 .toEqual(['IGC-GRID-TOOLBAR-HIDING', 'IGC-GRID-TOOLBAR-PINNING']);
 
             // the paginator is projected deeper (into the footer) - that spot survives the attach too
-            expect(gridEl?.contains(paginatorEl)).toBeTrue();
+            expect(gridEl?.contains(paginatorEl)).toBe(true);
             expect(paginatorEl?.parentElement).not.toBe(gridEl);
         });
 

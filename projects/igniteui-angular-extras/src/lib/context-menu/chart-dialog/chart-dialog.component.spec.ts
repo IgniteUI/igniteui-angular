@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { IgxChartMenuComponent } from './chart-dialog.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxChartMenuComponent', () => {
     let component: IgxChartMenuComponent;
@@ -30,8 +31,8 @@ describe('IgxChartMenuComponent', () => {
         });
 
         it('should clear previous chart and create new one via chartFactory', () => {
-            const clearSpy = jasmine.createSpy('clear');
-            const factorySpy = jasmine.createSpy('chartFactory');
+            const clearSpy = vi.fn();
+            const factorySpy = vi.fn();
             component.chartArea = { clear: clearSpy } as any;
             component.chartDirective = { chartFactory: factorySpy };
 
@@ -78,19 +79,19 @@ describe('IgxChartMenuComponent', () => {
         it('should toggle fullScreen from false to true', () => {
             component.fullScreen = false;
             component.toggleFullScreen();
-            expect(component.fullScreen).toBeTrue();
+            expect(component.fullScreen).toBe(true);
         });
 
         it('should toggle fullScreen from true to false', () => {
             component.fullScreen = true;
             component.toggleFullScreen();
-            expect(component.fullScreen).toBeFalse();
+            expect(component.fullScreen).toBe(false);
         });
     });
 
     describe('createChart guards', () => {
         it('should return early when chartType is falsy', () => {
-            const factorySpy = jasmine.createSpy('chartFactory');
+            const factorySpy = vi.fn();
             component.chartDirective = { chartFactory: factorySpy };
             component.chartArea = { clear: () => {} } as any;
 
@@ -102,7 +103,7 @@ describe('IgxChartMenuComponent', () => {
 
         it('should return early when chartDirective is not set', () => {
             component.chartDirective = undefined;
-            component.chartArea = { clear: jasmine.createSpy('clear') } as any;
+            component.chartArea = { clear: vi.fn() } as any;
 
             component.createChart('Pie');
 
@@ -110,7 +111,7 @@ describe('IgxChartMenuComponent', () => {
         });
 
         it('should return early when chartArea is not set', () => {
-            const factorySpy = jasmine.createSpy('chartFactory');
+            const factorySpy = vi.fn();
             component.chartDirective = { chartFactory: factorySpy };
             component.chartArea = undefined;
 
@@ -137,13 +138,13 @@ describe('IgxChartMenuComponent', () => {
 
     describe('isConfigAreaExpanded', () => {
         it('should default to false', () => {
-            expect(component.isConfigAreaExpanded).toBeFalse();
+            expect(component.isConfigAreaExpanded).toBe(false);
         });
     });
 
     describe('ngAfterViewInit', () => {
         it('should create a ResizeObserver and call createChart when currentChartType and chartDirective are set', () => {
-            const factorySpy = jasmine.createSpy('chartFactory');
+            const factorySpy = vi.fn();
             component.chartDirective = { chartFactory: factorySpy };
             component.chartArea = { clear: () => {} } as any;
             component.currentChartType = 'Pie';
@@ -154,7 +155,7 @@ describe('IgxChartMenuComponent', () => {
         });
 
         it('should not call createChart when currentChartType is not set', () => {
-            const factorySpy = jasmine.createSpy('chartFactory');
+            const factorySpy = vi.fn();
             component.chartDirective = { chartFactory: factorySpy };
             component.chartArea = { clear: () => {} } as any;
             component.currentChartType = undefined;
@@ -176,7 +177,7 @@ describe('IgxChartMenuComponent', () => {
         it('should disconnect the contentObserver if it exists', () => {
             component.ngAfterViewInit();
             const observer = (component as any).contentObserver;
-            const disconnectSpy = spyOn(observer, 'disconnect');
+            const disconnectSpy = vi.spyOn(observer, 'disconnect');
 
             component.ngOnDestroy();
 
@@ -184,7 +185,7 @@ describe('IgxChartMenuComponent', () => {
         });
 
         it('should complete the chartDialogResizeNotify subject', () => {
-            const completeSpy = spyOn(component.chartDialogResizeNotify, 'complete');
+            const completeSpy = vi.spyOn(component.chartDialogResizeNotify, 'complete');
 
             component.ngOnDestroy();
 
