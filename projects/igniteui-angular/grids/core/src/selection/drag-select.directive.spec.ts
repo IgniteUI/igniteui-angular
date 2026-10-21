@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 
@@ -11,15 +12,21 @@ describe('IgxGridDragSelectDirective #grid', () => {
     let deltas: { left: number; top: number }[];
     let stops: boolean[];
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [DragSelectTestComponent]
         }).compileComponents();
-    }));
+    });
 
     /**
-     * The fixture is created inside the test itself so that the change detection triggered by
-     * `detectChanges` runs in the same fake async zone as the assertions that follow it.
+     * The directive scrolls on an `animationFrameScheduler` interval. Waiting for the next
+     * animation frame lets any interval frame that was already requested run before it resolves.
+     */
+    const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+    /**
+     * The fixture is created inside the test itself so that every test starts from a fresh
+     * directive with its own emission records.
      */
     const setup = () => {
         fix = TestBed.createComponent(DragSelectTestComponent);
@@ -40,146 +47,142 @@ describe('IgxGridDragSelectDirective #grid', () => {
      * coordinates below are also the offsets inside it. The directive treats the outer 15% of
      * each side as a scroll zone - x <= 30 / x >= 170 and y <= 15 / y >= 85.
      */
-    const pointerOver = (x: number, y: number) => {
+    const pointerOver = async (x: number, y: number) => {
         element.dispatchEvent(new PointerEvent('pointerover', { clientX: x, clientY: y }));
-        tick(16);
+        await nextFrame();
     };
 
     const lastDelta = () => deltas[deltas.length - 1];
 
-    it('should emit the matching scroll delta for every edge and corner', fakeAsync(() => {
+    it('should emit the matching scroll delta for every edge and corner', async () => {
         setup();
 
-        pointerOver(10, 5);
-        expect(lastDelta()).toEqual({ left: -1, top: -1 }, 'top left');
+        await pointerOver(10, 5);
+        expect(lastDelta(), 'top left').toEqual({ left: -1, top: -1 });
 
-        pointerOver(190, 5);
-        expect(lastDelta()).toEqual({ left: 1, top: -1 }, 'top right');
+        await pointerOver(190, 5);
+        expect(lastDelta(), 'top right').toEqual({ left: 1, top: -1 });
 
-        pointerOver(10, 95);
-        expect(lastDelta()).toEqual({ left: -1, top: 1 }, 'bottom left');
+        await pointerOver(10, 95);
+        expect(lastDelta(), 'bottom left').toEqual({ left: -1, top: 1 });
 
-        pointerOver(190, 95);
-        expect(lastDelta()).toEqual({ left: 1, top: 1 }, 'bottom right');
+        await pointerOver(190, 95);
+        expect(lastDelta(), 'bottom right').toEqual({ left: 1, top: 1 });
 
-        pointerOver(100, 5);
-        expect(lastDelta()).toEqual({ left: 0, top: -1 }, 'top');
+        await pointerOver(100, 5);
+        expect(lastDelta(), 'top').toEqual({ left: 0, top: -1 });
 
-        pointerOver(100, 95);
-        expect(lastDelta()).toEqual({ left: 0, top: 1 }, 'bottom');
+        await pointerOver(100, 95);
+        expect(lastDelta(), 'bottom').toEqual({ left: 0, top: 1 });
 
-        pointerOver(10, 50);
-        expect(lastDelta()).toEqual({ left: -1, top: 0 }, 'left');
+        await pointerOver(10, 50);
+        expect(lastDelta(), 'left').toEqual({ left: -1, top: 0 });
 
-        pointerOver(190, 50);
-        expect(lastDelta()).toEqual({ left: 1, top: 0 }, 'right');
+        await pointerOver(190, 50);
+        expect(lastDelta(), 'right').toEqual({ left: 1, top: 0 });
 
         fix.destroy();
-        discardPeriodicTasks();
-    }));
+    });
 
-    it('should keep emitting the same delta while the pointer stays in the same zone', fakeAsync(() => {
+    it('should keep emitting the same delta while the pointer stays in the same zone', async () => {
         setup();
 
-        pointerOver(10, 50);
+        await pointerOver(10, 50);
         const afterFirstFrame = deltas.length;
-        expect(afterFirstFrame).toBeGreaterThan(0, 'the subscription starts emitting');
+        expect(afterFirstFrame, 'the subscription starts emitting').toBeGreaterThan(0);
 
         // Moving inside the same zone must not resubscribe, but the interval keeps running.
-        pointerOver(20, 60);
-        expect(deltas.length).toBeGreaterThan(afterFirstFrame, 'the interval is still emitting');
-        expect(deltas.every(delta => delta.left === -1 && delta.top === 0)).toBeTruthy('same delta throughout');
+        await pointerOver(20, 60);
+        expect(deltas.length, 'the interval is still emitting').toBeGreaterThan(afterFirstFrame);
+        expect(deltas.every(delta => delta.left === -1 && delta.top === 0), 'same delta throughout').toBeTruthy();
 
         fix.destroy();
-        discardPeriodicTasks();
-    }));
+    });
 
-    it('should stop scrolling when the pointer moves from an edge to the middle of the element', fakeAsync(() => {
+    it('should stop scrolling when the pointer moves from an edge to the middle of the element', async () => {
         setup();
 
-        pointerOver(10, 50);
+        await pointerOver(10, 50);
         const beforeMiddle = deltas.length;
-        expect(beforeMiddle).toBeGreaterThan(0, 'scrolling starts at the edge');
+        expect(beforeMiddle, 'scrolling starts at the edge').toBeGreaterThan(0);
 
-        pointerOver(100, 50);
+        await pointerOver(100, 50);
 
-        expect(deltas.length).toBe(beforeMiddle, 'no scrolling in the neutral zone');
+        expect(deltas.length, 'no scrolling in the neutral zone').toBe(beforeMiddle);
         fix.destroy();
-        discardPeriodicTasks();
-    }));
+    });
 
-    it('should stop scrolling when the pointer leaves the element', fakeAsync(() => {
+    it('should stop scrolling when the pointer leaves the element', async () => {
         setup();
 
-        pointerOver(10, 5);
+        await pointerOver(10, 5);
         const beforeLeave = deltas.length;
         expect(beforeLeave).toBeGreaterThan(0);
 
         element.dispatchEvent(new PointerEvent('pointerleave'));
-        tick(16);
+        await nextFrame();
 
-        expect(stops).toEqual([false], 'dragStop reports the drag as over');
-        expect(deltas.length).toBe(beforeLeave, 'no further emissions after leaving');
+        expect(stops, 'dragStop reports the drag as over').toEqual([false]);
+        expect(deltas.length, 'no further emissions after leaving').toBe(beforeLeave);
 
         // The direction is reset, so re-entering the very same zone starts scrolling again.
-        pointerOver(10, 5);
-        expect(deltas.length).toBeGreaterThan(beforeLeave, 'the same zone is picked up again');
+        await pointerOver(10, 5);
+        expect(deltas.length, 'the same zone is picked up again').toBeGreaterThan(beforeLeave);
 
         fix.destroy();
-        discardPeriodicTasks();
-    }));
+    });
 
-    it('should ignore pointer events while the drag is not active', fakeAsync(() => {
+    it('should ignore pointer events while the drag is not active', async () => {
         setup();
 
         // The directive is set directly rather than through the host binding - it is the very
         // same setter the `igxGridDragSelect` input writes to.
         directive.activeDrag = false;
 
-        pointerOver(10, 5);
+        await pointerOver(10, 5);
         element.dispatchEvent(new PointerEvent('pointerleave'));
-        tick(16);
+        await nextFrame();
 
-        expect(deltas.length).toBe(0, 'no scrolling');
-        expect(stops.length).toBe(0, 'no dragStop');
+        expect(deltas.length, 'no scrolling').toBe(0);
+        expect(stops.length, 'no dragStop').toBe(0);
 
         fix.destroy();
-        discardPeriodicTasks();
-    }));
+    });
 
-    it('should stop scrolling when the drag is deactivated or the directive is destroyed', fakeAsync(() => {
+    it('should stop scrolling when the drag is deactivated or the directive is destroyed', async () => {
         setup();
 
-        pointerOver(10, 5);
+        await pointerOver(10, 5);
         const whileActive = deltas.length;
         expect(whileActive).toBeGreaterThan(0);
 
         // The directive is set directly rather than through the host binding - it is the very
         // same setter the `igxGridDragSelect` input writes to.
         directive.activeDrag = false;
-        tick(16);
-        expect(deltas.length).toBe(whileActive, 'deactivating the drag unsubscribes');
+        await nextFrame();
+        expect(deltas.length, 'deactivating the drag unsubscribes').toBe(whileActive);
 
         directive.activeDrag = true;
-        pointerOver(190, 50);
+        await pointerOver(190, 50);
         const whileActiveAgain = deltas.length;
-        expect(whileActiveAgain).toBeGreaterThan(whileActive, 'reactivating it resumes');
+        expect(whileActiveAgain, 'reactivating it resumes').toBeGreaterThan(whileActive);
 
         fix.destroy();
-        tick(16);
-        expect(deltas.length).toBe(whileActiveAgain, 'destroying the directive unsubscribes');
+        await nextFrame();
+        expect(deltas.length, 'destroying the directive unsubscribes').toBe(whileActiveAgain);
 
         // The listeners are detached on destroy, so the element no longer reacts at all.
         element.dispatchEvent(new PointerEvent('pointerover', { clientX: 10, clientY: 5 }));
-        tick(16);
-        expect(deltas.length).toBe(whileActiveAgain, 'no listeners left on the element');
-        discardPeriodicTasks();
-    }));
+        await nextFrame();
+        expect(deltas.length, 'no listeners left on the element').toBe(whileActiveAgain);
+    });
 });
 
+// `pointer-events: none` keeps the browser's own pointer out: its cursor rests at (0, 0), over this element,
+// and the real hover event switches the scroll zone under the test. Dispatched events are not hit-tested.
 @Component({
     template: `<div [igxGridDragSelect]="activeDrag"
-        style="position: fixed; top: 0; left: 0; width: 200px; height: 100px;"></div>`,
+        style="position: fixed; top: 0; left: 0; width: 200px; height: 100px; pointer-events: none;"></div>`,
     imports: [IgxGridDragSelectDirective]
 })
 class DragSelectTestComponent {
