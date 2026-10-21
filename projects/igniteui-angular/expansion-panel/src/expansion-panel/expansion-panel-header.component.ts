@@ -2,6 +2,7 @@ import { Component, ChangeDetectorRef, ElementRef, HostBinding, Input, EventEmit
 import { IgxExpansionPanelIconDirective } from './expansion-panel.directives';
 import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxKeyBindingsService, altKey, arrowDown, arrowUp } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -19,19 +20,16 @@ export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconP
     templateUrl: 'expansion-panel-header.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     host: {
-        '(keydown.Enter)': 'onAction($any($event))',
-        '(keydown.Space)': 'onAction($any($event))',
-        '(keydown.Spacebar)': 'onAction($any($event))',
-        '(click)': 'onAction($event)',
-        '(keydown.alt.arrowdown)': 'openPanel($event)',
-        '(keydown.alt.arrowup)': 'closePanel($event)'
+        '(click)': 'onAction($event)'
     },
+    providers: [IgxKeyBindingsService],
     imports: [IgxIconComponent]
 })
 export class IgxExpansionPanelHeaderComponent {
     public panel = inject<IgxExpansionPanelBase>(IGX_EXPANSION_PANEL_COMPONENT, { host: true });
     public cdr = inject(ChangeDetectorRef);
     public elementRef = inject(ElementRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * Returns a reference to the `igx-expansion-panel-icon` element;
@@ -156,7 +154,7 @@ export class IgxExpansionPanelHeaderComponent {
 
     /**
      * Gets/sets the whether the header is disabled
-     * When disabled, the header will not handle user events and will stop their propagation
+     * When disabled, the header ignores clicks and key presses, and stops the propagation of clicks
      *
      * ```typescript
      *  const isDisabled = this.panel.header.disabled;
@@ -214,6 +212,12 @@ export class IgxExpansionPanelHeaderComponent {
 
     constructor() {
         this.id = `${this.panel.id}-header`;
+
+        this._keyBindings
+            .configure({ skip: () => this.disabled })
+            .setActivateHandler((event) => this.onAction(event))
+            .set([altKey, arrowDown], (event) => this.openPanel(event))
+            .set([altKey, arrowUp], (event) => this.closePanel(event));
     }
 
     /**
@@ -235,26 +239,22 @@ export class IgxExpansionPanelHeaderComponent {
 
     /** @hidden @internal */
     public openPanel(event: KeyboardEvent) {
-        if (event.altKey) {
-            const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };
-            this.interaction.emit(eventArgs);
-            if (eventArgs.cancel === true) {
-                return;
-            }
-            this.panel.expand(event);
+        const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };
+        this.interaction.emit(eventArgs);
+        if (eventArgs.cancel === true) {
+            return;
         }
+        this.panel.expand(event);
     }
 
     /** @hidden @internal */
     public closePanel(event: KeyboardEvent) {
-        if (event.altKey) {
-            const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };
-            this.interaction.emit(eventArgs);
-            if (eventArgs.cancel === true) {
-                return;
-            }
-            this.panel.collapse(event);
+        const eventArgs: IExpansionPanelCancelableEventArgs = { event, owner: this.panel, cancel: false };
+        this.interaction.emit(eventArgs);
+        if (eventArgs.cancel === true) {
+            return;
         }
+        this.panel.collapse(event);
     }
 
     /**
