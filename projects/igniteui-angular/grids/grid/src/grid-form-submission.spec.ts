@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -8,6 +8,7 @@ import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const UNTYPED_BUTTONS = 'button:not([type]), button[type=submit]';
@@ -24,12 +25,12 @@ const pressEnter = (target: Element): KeyboardEvent => {
     return event;
 };
 
-const addAdvancedFilteringCondition = (fixture: ComponentFixture<any>): HTMLInputElement => {
+const addAdvancedFilteringCondition = async (fixture: ComponentFixture<any>): Promise<HTMLInputElement> => {
     QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
-    tick(100);
+    await fixture.whenStable();
     fixture.detectChanges();
-    QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1); // 'ProductName'
-    QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 2); // 'Starts With'
+    await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 1); // 'ProductName'
+    await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 2); // 'Starts With'
     return QueryBuilderFunctions.getQueryBuilderValueInput(fixture)!.querySelector('input')!;
 };
 
@@ -38,20 +39,20 @@ describe('IgxGrid - implicit form submission #grid', () => {
     let grid: IgxGridComponent;
     let form: HTMLFormElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, GridInFormComponent]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(GridInFormComponent);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         grid = fixture.componentInstance.grid;
         form = fixture.nativeElement.querySelector('form');
-    }));
+    });
 
     it('should not render buttons which can become the default button of the form', () => {
         expect(grid.nativeElement.querySelectorAll(UNTYPED_BUTTONS).length).toBe(0);
@@ -59,15 +60,15 @@ describe('IgxGrid - implicit form submission #grid', () => {
         expect(defaultButton!.id).toBe('submit');
     });
 
-    it('should prevent implicit submission on Enter in the filtering row input', fakeAsync(() => {
+    it('should prevent implicit submission on Enter in the filtering row input', async () => {
         GridFunctions.clickFilterCellChipUI(fixture, 'ProductName');
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const input = fixture.debugElement.query(By.css(FILTER_UI_ROW)).query(By.directive(IgxInputDirective));
         expect(input.nativeElement.form).toBe(form);
-        expect(pressEnter(input.nativeElement).defaultPrevented).toBeTrue();
-    }));
+        expect(pressEnter(input.nativeElement).defaultPrevented).toBe(true);
+    });
 
     it('should prevent implicit submission on Enter in a cell editor', () => {
         const cell = grid.getCellByColumn(0, 'ProductName');
@@ -76,76 +77,76 @@ describe('IgxGrid - implicit form submission #grid', () => {
 
         const input: HTMLInputElement = grid.nativeElement.querySelector('.igx-grid__td--editing input')!;
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
+        expect(pressEnter(input).defaultPrevented).toBe(true);
     });
 
-    it('should prevent implicit submission on Enter in the toolbar column hiding search input', fakeAsync(() => {
+    it('should prevent implicit submission on Enter in the toolbar column hiding search input', async () => {
         const hidingButton: HTMLButtonElement = fixture.nativeElement.querySelector('igx-grid-toolbar-hiding button');
         hidingButton.click();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const input: HTMLInputElement = grid.nativeElement.querySelector('igx-column-actions input')!;
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
-    }));
+        expect(pressEnter(input).defaultPrevented).toBe(true);
+    });
 
-    it('should prevent implicit submission on Enter in the excel style filtering custom dialog input', fakeAsync(() => {
+    it('should prevent implicit submission on Enter in the excel style filtering custom dialog input', async () => {
         grid.filterMode = FilterMode.excelStyleFilter;
         fixture.detectChanges();
 
-        GridFunctions.clickExcelFilterIconFromCode(fixture, grid, 'ProductName');
+        await GridFunctions.clickExcelFilterIconFromCode(fixture, grid, 'ProductName');
         GridFunctions.clickExcelFilterCascadeButton(fixture);
-        tick(100);
+        await fixture.whenStable();
         fixture.detectChanges();
         GridFunctions.clickOperatorFromCascadeMenu(fixture, 0);
-        tick(100);
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const input = GridFunctions.getExcelFilteringInput(fixture, 0);
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
-    }));
+        expect(pressEnter(input).defaultPrevented).toBe(true);
+    });
 
-    it('should prevent implicit submission on Enter in the advanced filtering dialog input', fakeAsync(() => {
+    it('should prevent implicit submission on Enter in the advanced filtering dialog input', async () => {
         grid.openAdvancedFilteringDialog();
         fixture.detectChanges();
 
-        const input = addAdvancedFilteringCondition(fixture);
+        const input = await addAdvancedFilteringCondition(fixture);
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
+        expect(pressEnter(input).defaultPrevented).toBe(true);
 
         grid.closeAdvancedFilteringDialog(false);
-        tick(100);
-    }));
+        await fixture.whenStable();
+    });
 
-    it('should prevent implicit submission on Enter in the advanced filtering dialog opened with custom overlay settings', fakeAsync(() => {
+    it('should prevent implicit submission on Enter in the advanced filtering dialog opened with custom overlay settings', async () => {
         grid.openAdvancedFilteringDialog({
             closeOnOutsideClick: false,
             modal: false,
             positionStrategy: new GlobalPositionStrategy(),
             scrollStrategy: new AbsoluteScrollStrategy()
         });
-        tick(100);
+        await fixture.whenStable();
         fixture.detectChanges();
 
-        const input = addAdvancedFilteringCondition(fixture);
-        expect(grid.nativeElement.contains(input)).toBeFalse();
+        const input = await addAdvancedFilteringCondition(fixture);
+        expect(grid.nativeElement.contains(input)).toBe(false);
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
+        expect(pressEnter(input).defaultPrevented).toBe(true);
 
         grid.closeAdvancedFilteringDialog(false);
-        tick(100);
-    }));
+        await fixture.whenStable();
+    });
 
     it('should not prevent the native Enter activation of buttons inside the grid', () => {
         const hidingButton: HTMLButtonElement = fixture.nativeElement.querySelector('igx-grid-toolbar-hiding button');
-        expect(pressEnter(hidingButton).defaultPrevented).toBeFalse();
+        expect(pressEnter(hidingButton).defaultPrevented).toBe(false);
     });
 
     it('should not affect implicit submission from inputs outside the grid', () => {
         const outerInput: HTMLInputElement = fixture.nativeElement.querySelector('#outerInput');
-        expect(pressEnter(outerInput).defaultPrevented).toBeFalse();
+        expect(pressEnter(outerInput).defaultPrevented).toBe(false);
     });
 });
 
@@ -153,33 +154,33 @@ describe('IgxGrid - implicit form submission from grid components outside of the
     let fixture: ComponentFixture<GridComponentsInFormComponent>;
     let form: HTMLFormElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, GridComponentsInFormComponent]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(GridComponentsInFormComponent);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         form = fixture.nativeElement.querySelector('form');
-    }));
+    });
 
     it('should prevent implicit submission on Enter in the standalone column actions filter input', () => {
         const input: HTMLInputElement = fixture.nativeElement.querySelector('#standaloneActions input');
-        expect(fixture.componentInstance.grid.nativeElement.contains(input)).toBeFalse();
+        expect(fixture.componentInstance.grid.nativeElement.contains(input)).toBe(false);
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
+        expect(pressEnter(input).defaultPrevented).toBe(true);
     });
 
-    it('should prevent implicit submission on Enter in the standalone advanced filtering dialog input', fakeAsync(() => {
-        const input = addAdvancedFilteringCondition(fixture);
-        expect(fixture.componentInstance.grid.nativeElement.contains(input)).toBeFalse();
+    it('should prevent implicit submission on Enter in the standalone advanced filtering dialog input', async () => {
+        const input = await addAdvancedFilteringCondition(fixture);
+        expect(fixture.componentInstance.grid.nativeElement.contains(input)).toBe(false);
         expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBeTrue();
-    }));
+        expect(pressEnter(input).defaultPrevented).toBe(true);
+    });
 });
 
 @Component({

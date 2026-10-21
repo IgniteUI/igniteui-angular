@@ -1,12 +1,12 @@
 # CI-parity Docker test runner
 
-Runs the Ignite UI for Angular test suite inside a container that matches GitHub Actions as closely as possible (`ubuntu:24.04` + Node 24 + Google Chrome), regardless of host OS. Driven by the root [`justfile`](../../justfile); see that file for the recipe list (`just test`, `just run`, `just build`, `just shell`, `just clean`).
+Runs the Ignite UI for Angular test suite inside a container that matches GitHub Actions as closely as possible (`ubuntu:24.04` + Node 24 + Playwright Chromium), regardless of host OS. Driven by the root [`justfile`](../../justfile); see that file for the recipe list (`just test`, `just run`, `just build`, `just shell`, `just clean`).
 
 ## Keeping parity with CI
 
 `Dockerfile.test`'s `FROM ubuntu:24.04` must match `runs-on` in [`.github/workflows/nodejs.yml`](../../.github/workflows/nodejs.yml). GitHub redefines what `ubuntu-latest` points to over time (it silently moved 22.04 → 24.04 in January 2025) — nothing enforces that this Dockerfile follows along, so re-check both files whenever GitHub announces another `ubuntu-latest` migration, or consider pinning the workflow to an explicit `ubuntu-24.04` runner instead of the floating `ubuntu-latest` label. Node major version (24) is declared independently in both files today (`actions/setup-node` in the workflow vs. NodeSource's `setup_24.x` script here) — bump both together.
 
-Chrome cannot be pinned to an exact match: CI's runner image ships a periodically-frozen Chrome snapshot, while this Dockerfile always installs whatever apt's `stable` channel currently resolves to at build time. Treat Chrome-version parity as best-effort, not exact.
+Tests run on Vitest browser mode with Playwright's Chromium, exactly as in CI (`npx playwright install`), so the browser version comes from the Playwright version in `package-lock.json` rather than from the OS. `Dockerfile.test` bakes in only Chromium's OS libraries (`npx playwright install-deps chromium`, resolved against the latest Playwright release when the image is built); the browser itself is downloaded inside the container by `npx playwright install chromium` on every run (a no-op once present) and kept in the `node_modules` volume via `PLAYWRIGHT_BROWSERS_PATH`. `just test <component>` runs `ng test igniteui-angular --no-watch --include '**/<component>/**/*.spec.ts'` (after `build:styles:components`, in headless Chromium); pass an explicit glob instead of a component name to target anything else.
 
 ## Why Node instead of bash
 
@@ -29,7 +29,7 @@ Rebuilding the image on every invocation is wasteful; never rebuilding risks sil
 - **Missing image or hash mismatch** → rebuild automatically (no flag to remember), then reset the `node_modules` cache volume (a Node/OS bump can invalidate native bindings) and proceed.
 - **Hash matches** → skip straight to `docker run`; no rebuild cost on the common path.
 
-`just build` forces a rebuild regardless of the hash (e.g. to pull a new Chrome release baked into the same Dockerfile).
+`just build` forces a rebuild regardless of the hash (e.g. to refresh the Playwright OS dependencies baked into the same Dockerfile).
 
 ## Installing `just`
 

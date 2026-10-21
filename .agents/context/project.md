@@ -9,7 +9,7 @@ Read both before making changes; if they disagree with this file, they win.
 
 - Language: TypeScript
 - Framework: Angular 22+
-- Tests: Karma + Jasmine (targeted `karma*.conf.js` configs per suite)
+- Tests: Vitest — browser mode (Playwright Chromium) via the `@angular/build:unit-test` builder for component tests; Node for schematics, migrations, and Sass style tests. Run a subset with `ng test igniteui-angular --no-watch --include '<glob>'`
 - Packaging: ng-packagr, Angular Package Format with multiple entry points
 - Styles: Sass themes built on `igniteui-theming`
 
