@@ -7,7 +7,6 @@ import {
     ContentChildren,
     EventEmitter,
     HostBinding,
-    HostListener,
     Injector,
     Input,
     OnChanges,
@@ -65,7 +64,11 @@ import {
     NgControlAdapter,
     PickerCalendarOrientation,
     THEME_TOKEN,
-    ThemeToken
+    ThemeToken,
+    IgxKeyBindingsService,
+    altKey,
+    arrowDown,
+    arrowUp
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
@@ -122,7 +125,8 @@ const SingleInputDatesConcatenationString = ' - ';
     encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
-        { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
+        { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true },
+        IgxKeyBindingsService
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
@@ -143,6 +147,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * The number of displayed month views.
@@ -671,24 +676,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     constructor() {
         super();
         this.initLocale();
-    }
 
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    /** @hidden @internal */
-    public onKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey) {
-                    this.open();
-                }
-                break;
-        }
+        // The keys come from the inner inputs, so none are skipped. `open` checks disabled and readOnly.
+        this._keyBindings
+            .configure({ skip: [] })
+            .set([altKey, arrowDown], () => this.open())
+            .set([altKey, arrowUp], () => this.close());
     }
 
     /**
