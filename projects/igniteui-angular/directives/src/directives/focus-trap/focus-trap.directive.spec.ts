@@ -1,15 +1,16 @@
 import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusTrapDirective } from './focus-trap.directive';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('igxFocusTrap', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 TrapFocusTestComponent,
@@ -18,7 +19,7 @@ describe('igxFocusTrap', () => {
                 TrapFocusShadowDomTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -97,7 +98,7 @@ describe('igxFocusTrap', () => {
         expect(document.activeElement).toEqual(button.nativeElement);
     });
 
-    it('should trap focus on element with non-focusable elements', fakeAsync(() => {
+    it('should trap focus on element with non-focusable elements', async () => {
         const fix = TestBed.createComponent(TrapFocusTestComponent);
         fix.detectChanges();
 
@@ -108,22 +109,22 @@ describe('igxFocusTrap', () => {
         const focusTrap = fix.debugElement.query(By.directive(IgxFocusTrapDirective));
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
 
         UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
-    }));
+    });
 
-    it('should be able to set focusTrap dynamically', fakeAsync(() => {
+    it('should be able to set focusTrap dynamically', async () => {
         const fix = TestBed.createComponent(TrapFocusTestComponent);
         fix.detectChanges();
 
@@ -167,7 +168,7 @@ describe('igxFocusTrap', () => {
         UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
-    }));
+    });
 
     it('should focus only visible focusable elements on Tab key pressed', () => {
         const fix = TestBed.createComponent(TrapFocusTestComponent);
@@ -207,12 +208,12 @@ describe('igxFocusTrap', () => {
         fix.detectChanges();
 
         const directive = fix.debugElement.query(By.directive(IgxFocusTrapDirective)).injector.get(IgxFocusTrapDirective);
-        expect(directive.focusTrap).toBeTrue();
+        expect(directive.focusTrap).toBe(true);
         expect(directive.element).toBe(fix.debugElement.query(By.css('div')).nativeElement);
 
         fix.componentInstance.focusTrap = false;
         fix.detectChanges();
-        expect(directive.focusTrap).toBeFalse();
+        expect(directive.focusTrap).toBe(false);
     });
 
     it('should coerce the igxFocusTrap attribute value to boolean', () => {
@@ -221,8 +222,8 @@ describe('igxFocusTrap', () => {
 
         const [enabled, disabled] = fix.debugElement.queryAll(By.directive(IgxFocusTrapDirective))
             .map(el => el.injector.get(IgxFocusTrapDirective));
-        expect(enabled.focusTrap).toBeTrue();
-        expect(disabled.focusTrap).toBeFalse();
+        expect(enabled.focusTrap).toBe(true);
+        expect(disabled.focusTrap).toBe(false);
     });
 
     it('should prevent the default Tab behavior only while focus is trapped', () => {
@@ -232,16 +233,16 @@ describe('igxFocusTrap', () => {
         const inputs = fix.debugElement.queryAll(By.css('input'));
         inputs[0].nativeElement.focus();
 
-        expect(pressKey(inputs[0].nativeElement, 'Tab').defaultPrevented).toBeTrue();
+        expect(pressKey(inputs[0].nativeElement, 'Tab').defaultPrevented).toBe(true);
         expect(document.activeElement).toBe(inputs[1].nativeElement);
 
-        expect(pressKey(inputs[1].nativeElement, 'ArrowDown').defaultPrevented).toBeFalse();
+        expect(pressKey(inputs[1].nativeElement, 'ArrowDown').defaultPrevented).toBe(false);
         expect(document.activeElement).toBe(inputs[1].nativeElement);
 
         fix.componentInstance.focusTrap = false;
         fix.detectChanges();
 
-        expect(pressKey(inputs[1].nativeElement, 'Tab').defaultPrevented).toBeFalse();
+        expect(pressKey(inputs[1].nativeElement, 'Tab').defaultPrevented).toBe(false);
         expect(document.activeElement).toBe(inputs[1].nativeElement);
     });
 
@@ -457,7 +458,7 @@ describe('igxFocusTrap', () => {
         const input = fix.debugElement.query(By.css('input')).nativeElement;
         fix.destroy();
 
-        expect(pressKey(input, 'Tab').defaultPrevented).toBeFalse();
+        expect(pressKey(input, 'Tab').defaultPrevented).toBe(false);
     });
 });
 

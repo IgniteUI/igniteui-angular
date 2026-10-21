@@ -10,7 +10,6 @@ let NEXT_ID = 0;
 
 // TODO: Write migration from IgxDividerDirective to IgxDividerComponent
 @Component({
-    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-divider',
     template: '',
     styleUrl: 'divider.component.css',

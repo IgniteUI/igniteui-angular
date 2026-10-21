@@ -1,4 +1,5 @@
 import { IgxTouchManager } from './touch';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxTouchManager', () => {
     let manager: IgxTouchManager;
@@ -15,8 +16,8 @@ describe('IgxTouchManager', () => {
     });
 
     it('should stop tracking when pointerDown vetoes the gesture', () => {
-        const panStart = jasmine.createSpy('panStart');
-        const panMove = jasmine.createSpy('panMove');
+        const panStart = vi.fn();
+        const panMove = vi.fn();
         manager = new IgxTouchManager(target, {
             pointerDown: () => false,
             panStart,
@@ -27,14 +28,14 @@ describe('IgxTouchManager', () => {
         const touchMove = dispatchTouchMove(target);
         dispatchPointerEvent(target, 'pointermove', 30, 10);
 
-        expect(touchMove.defaultPrevented).toBeFalse();
+        expect(touchMove.defaultPrevented).toBe(false);
         expect(panStart).not.toHaveBeenCalled();
         expect(panMove).not.toHaveBeenCalled();
     });
 
     it('should preserve native touch behavior until the pan threshold is exceeded', () => {
-        const panStart = jasmine.createSpy('panStart');
-        const panMove = jasmine.createSpy('panMove');
+        const panStart = vi.fn();
+        const panMove = vi.fn();
         manager = new IgxTouchManager(target, {
             panStart,
             panMove
@@ -45,15 +46,15 @@ describe('IgxTouchManager', () => {
         dispatchPointerEvent(target, 'pointermove', 13, 10);
         const candidateTouchMove = dispatchTouchMove(target);
 
-        expect(initialTouchMove.defaultPrevented).toBeFalse();
-        expect(candidateTouchMove.defaultPrevented).toBeFalse();
+        expect(initialTouchMove.defaultPrevented).toBe(false);
+        expect(candidateTouchMove.defaultPrevented).toBe(false);
         expect(panStart).not.toHaveBeenCalled();
         expect(panMove).not.toHaveBeenCalled();
 
         dispatchPointerEvent(target, 'pointermove', 11, 20);
         const verticalTouchMove = dispatchTouchMove(target);
 
-        expect(verticalTouchMove.defaultPrevented).toBeFalse();
+        expect(verticalTouchMove.defaultPrevented).toBe(false);
         expect(panStart).not.toHaveBeenCalled();
         expect(panMove).not.toHaveBeenCalled();
 
@@ -62,14 +63,14 @@ describe('IgxTouchManager', () => {
 
         expect(panStart).toHaveBeenCalledTimes(1);
         expect(panMove).toHaveBeenCalledTimes(1);
-        expect(activePanTouchMove.defaultPrevented).toBeTrue();
+        expect(activePanTouchMove.defaultPrevented).toBe(true);
     });
 
     it('should not emit swipe when movement stays below the pan threshold', () => {
-        const panStart = jasmine.createSpy('panStart');
-        const panMove = jasmine.createSpy('panMove');
-        const swipe = jasmine.createSpy('swipe');
-        spyOn(Date, 'now').and.returnValues(0, 1, 1);
+        const panStart = vi.fn();
+        const panMove = vi.fn();
+        const swipe = vi.fn();
+        vi.spyOn(Date, 'now').mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValueOnce(1);
         manager = new IgxTouchManager(target, { panStart, panMove, swipe }, { panThreshold: 5 });
 
         dispatchPointerEvent(target, 'pointerdown', 10, 10);
@@ -83,9 +84,9 @@ describe('IgxTouchManager', () => {
 
     for (const endX of [13, 16]) {
         it(`should emit swipe before panEnd after a recognized pan ending at x=${endX}`, () => {
-            const swipe = jasmine.createSpy('swipe');
-            const panEnd = jasmine.createSpy('panEnd');
-            spyOn(Date, 'now').and.returnValues(0, 1, 2);
+            const swipe = vi.fn();
+            const panEnd = vi.fn();
+            vi.spyOn(Date, 'now').mockReturnValueOnce(0).mockReturnValueOnce(1).mockReturnValueOnce(2);
             manager = new IgxTouchManager(target, { swipe, panEnd }, { panThreshold: 5 });
 
             dispatchPointerEvent(target, 'pointerdown', 10, 10);
@@ -123,8 +124,8 @@ describe('IgxTouchManager', () => {
 });
 
 function expectTrackingStateToBeReset(manager: IgxTouchManager): void {
-    expect((manager as any)._tracking).toBeFalse();
-    expect((manager as any)._panStarted).toBeFalse();
+    expect((manager as any)._tracking).toBe(false);
+    expect((manager as any)._panStarted).toBe(false);
     expect((manager as any)._pointerId).toBeNull();
     expect((manager as any)._startTarget).toBeNull();
 }

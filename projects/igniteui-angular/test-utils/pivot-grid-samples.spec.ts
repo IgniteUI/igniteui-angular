@@ -25,10 +25,14 @@ import { IGX_PIVOT_GRID_DIRECTIVES, IgxPivotDataSelectorComponent, IgxPivotGridC
 })
 export class IgxPivotGridTestBaseComponent {
     public defaultExpand = true;
-    @ViewChild('emptyTemplate', { read: TemplateRef, static: true }) public emptyTemplate: TemplateRef<any>;
-    @ViewChild('chipValue', { read: TemplateRef, static: true }) public chipValueTemplate: TemplateRef<any>;
-    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
-    @ViewChild('selector', { read: IgxPivotDataSelectorComponent, static: true }) public dataSelector: IgxPivotDataSelectorComponent;
+    @ViewChild('emptyTemplate', { read: TemplateRef, static: true })
+    public emptyTemplate: TemplateRef<any>;
+    @ViewChild('chipValue', { read: TemplateRef, static: true })
+    public chipValueTemplate: TemplateRef<any>;
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true })
+    public pivotGrid: IgxPivotGridComponent;
+    @ViewChild('selector', { read: IgxPivotDataSelectorComponent, static: true })
+    public dataSelector: IgxPivotDataSelectorComponent;
     public data;
 
     public cellClasses;
@@ -68,7 +72,8 @@ export class IgxPivotGridTestBaseComponent {
             {
                 ProductCategory: 'Clothing', UnitPrice: 16.05, SellerName: 'Walter',
                 Country: 'Bulgaria', Date: '02/19/2020', UnitsSold: 492
-            }];
+            }
+        ];
 
         this.cellClasses = {
             test: this.callback,
@@ -77,20 +82,20 @@ export class IgxPivotGridTestBaseComponent {
 
         this.pivotConfigHierarchy = {
             columns: [{
-                memberName: 'Country',
-                enabled: true
-            },
+                    memberName: 'Country',
+                    enabled: true
+                },
             ],
             rows: [{
-                memberName: 'All',
-                memberFunction: () => 'All',
-                enabled: true,
-                childLevel: {
-                    memberName: 'ProductCategory',
-                    memberFunction: (data) => data.ProductCategory,
-                    enabled: true
-                }
-            }],
+                    memberName: 'All',
+                    memberFunction: () => 'All',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'ProductCategory',
+                        memberFunction: (data) => data.ProductCategory,
+                        enabled: true
+                    }
+                }],
             values: [
                 {
                     member: 'UnitsSold',
@@ -132,7 +137,8 @@ export class IgxPivotGridTestBaseComponent {
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestBaseComponent {
-    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true })
+    public override pivotGrid: IgxPivotGridComponent;
 
     public override defaultExpand = true;
     constructor() {
@@ -165,7 +171,8 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
             {
                 ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
                 Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492
-            }];
+            }
+        ];
         this.pivotConfigHierarchy = {
             columns: [
 
@@ -173,27 +180,25 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
                     memberName: 'Country',
                     enabled: true
                 }
-            ]
-            ,
+            ],
             rows: [{
-                memberName: 'All cities',
-                memberFunction: () => 'All Cities',
-                enabled: true,
-                childLevel: {
-                    memberName: 'City',
-                    enabled: true
-                }
-            }, {
-                memberFunction: () => 'AllProducts',
-                memberName: 'AllProducts',
-                enabled: true,
-                childLevel:
-                {
-                    memberFunction: (data) => data.ProductCategory,
-                    memberName: 'ProductCategory',
-                    enabled: true
-                }
-            }],
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }, {
+                    memberFunction: () => 'AllProducts',
+                    memberName: 'AllProducts',
+                    enabled: true,
+                    childLevel: {
+                        memberFunction: (data) => data.ProductCategory,
+                        memberName: 'ProductCategory',
+                        enabled: true
+                    }
+                }],
             values: [
                 {
                     member: 'UnitsSold',
@@ -228,8 +233,10 @@ export class IgxPivotGridTestComplexHierarchyComponent extends IgxPivotGridTestB
     imports: [IgxPivotGridComponent, IgxGridStateDirective]
 })
 export class IgxPivotGridPersistanceComponent {
-    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
-    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public pivotGrid: IgxPivotGridComponent;
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true })
+    public pivotGrid: IgxPivotGridComponent;
     public data = [
         {
             ProductCategory: 'Clothing', UnitPrice: 12.81, SellerName: 'Stanley Brooker',
@@ -258,15 +265,15 @@ export class IgxPivotGridPersistanceComponent {
         {
             ProductCategory: 'Components', UnitPrice: 16.05, SellerName: 'Walter Pang',
             Country: 'Bulgaria', City: 'Sofia', Date: '02/19/2013', UnitsSold: 492
-        }];
+        }
+    ];
     public pivotConfigHierarchy = {
         columns: [
             {
                 memberName: 'Country',
                 enabled: true
             }
-        ]
-        ,
+        ],
         rows: [
             {
                 memberName: 'City',
@@ -275,7 +282,8 @@ export class IgxPivotGridPersistanceComponent {
             {
                 memberName: 'ProductCategory',
                 enabled: true
-            }],
+            }
+        ],
         values: [
             {
                 member: 'UnitsSold',
@@ -298,27 +306,28 @@ export class IgxPivotGridPersistanceComponent {
     imports: [IgxPivotGridComponent]
 })
 export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseComponent {
-    @ViewChild('grid', { read: IgxPivotGridComponent, static: true }) public override pivotGrid: IgxPivotGridComponent;
+    @ViewChild('grid', { read: IgxPivotGridComponent, static: true })
+    public override pivotGrid: IgxPivotGridComponent;
 
     constructor() {
         super();
         this.pivotConfigHierarchy = {
             columns: [{
-                memberName: 'SellerName',
-                enabled: true
-            },
+                    memberName: 'SellerName',
+                    enabled: true
+                },
             ],
             rows: [{
-                memberName: 'ProductCategory',
-                memberFunction: (data) => data.ProductCategory,
-                enabled: true
-            }, {
-                memberName: 'Country',
-                enabled: true
-            }, {
-                memberName: 'Date',
-                enabled: true
-            }],
+                    memberName: 'ProductCategory',
+                    memberFunction: (data) => data.ProductCategory,
+                    enabled: true
+                }, {
+                    memberName: 'Country',
+                    enabled: true
+                }, {
+                    memberName: 'Date',
+                    enabled: true
+                }],
             values: [
                 {
                     member: 'UnitsSold',
@@ -371,7 +380,7 @@ export class IgxPivotGridMultipleRowComponent extends IgxPivotGridTestBaseCompon
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxPivotGridComponent]
 })
-export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComponent{
+export class IgxPivotGridFlexContainerComponent extends IgxPivotGridTestBaseComponent {
 }
 
 export class IgxTotalSaleAggregate {
@@ -399,7 +408,7 @@ export class IgxTotalSaleAggregate {
     };
 }
 
-export const SALES_DATA =[
+export const SALES_DATA = [
     {
         "JOBS": 35,
         "INV_SALES": 2497.11,

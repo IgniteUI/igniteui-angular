@@ -7510,6 +7510,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         let colResized = false;
         const unpinnedInView = this.headerContainer.igxGridForOf!.slice(vState.startIndex, vState.startIndex! + vState.chunkSize!).flatMap(x => x.columnGroup ? x.allChildren : x);
         const columnsInView = this.pinnedColumns.concat(unpinnedInView as IgxColumnComponent[]);
+        if (columnsInView.some(col => !col.autoSize && col.headerCell)) {
+            // Columns pending measurement render as `fit-content` only once the grid view is refreshed.
+            // A measurement may be triggered before that (e.g. by a pending throttled autosize request
+            // after `recalculateAutoSizes()`), so refresh first to avoid measuring stale cell widths.
+            this.cdr.detectChanges();
+        }
         for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths: number[] = [];
@@ -7609,21 +7615,22 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.page = page;
             }
         }
-        let targetRowIndex = (typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
-        const virtRec = this.verticalScrollContainer.igxForOf![targetRowIndex];
-        const col = typeof (column) === 'number' ? this.visibleColumns[column] : column;
-        const rowSpan = this.isRecordMerged(virtRec) ? virtRec?.cellMergeMeta.get(col)?.rowSpan : 1;
-        if (rowSpan > 1) {
-            targetRowIndex += Math.floor(rowSpan / 2);
-        }
+        // The target index must be resolved against the data view of the page the row is on,
+        // so when the page changes it is computed only after the new page data is rendered.
+        const scrollToRow = () => {
+            let targetRowIndex = (typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
+            const virtRec = this.verticalScrollContainer.igxForOf![targetRowIndex];
+            const col = typeof (column) === 'number' ? this.visibleColumns[column] : column;
+            const rowSpan = this.isRecordMerged(virtRec) ? virtRec?.cellMergeMeta.get(col)?.rowSpan : 1;
+            if (rowSpan > 1) {
+                targetRowIndex += Math.floor(rowSpan / 2);
+            }
+            this.scrollDirective(this.verticalScrollContainer, targetRowIndex);
+        };
         if (delayScrolling) {
-            this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(() => {
-                this.scrollDirective(this.verticalScrollContainer,
-                    targetRowIndex);
-            });
+            this.verticalScrollContainer.dataChanged.pipe(first(), takeUntil(this.destroy$)).subscribe(scrollToRow);
         } else {
-            this.scrollDirective(this.verticalScrollContainer,
-                targetRowIndex);
+            scrollToRow();
         }
 
         this.scrollToHorizontally(column);
