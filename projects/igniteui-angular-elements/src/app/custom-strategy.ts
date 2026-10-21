@@ -39,6 +39,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      */
     private pendingContentValues = new Map<string, any>();
     /** Whether the initial content queries of the component have resolved */
+    private queriesResolved = false;
+    /** Whether the initial content queries of the component and of all its query children have resolved */
     private contentResolved = false;
 
     /**
@@ -93,6 +95,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return;
         }
         this.element = element as IgcNgElement;
+        this.queriesResolved = false;
         this.contentResolved = false;
         this.pendingContentValues.clear();
 
@@ -191,7 +194,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const contentQueryChildrenCollection = componentConfig!.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
         if (contentQueryChildrenCollection.length === 0) {
             // no content children, emit event immediately, since there's nothing to be attached.
-            this.contentResolved = true;
+            this.queriesResolved = true;
+            this.resolveContent();
             (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
 
@@ -340,6 +344,27 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
     }
 
+    /**
+     * Mark content as resolved once the component's own queries and those of all its query children have resolved,
+     * retry pending values that depend on them and notify the parent, which may be waiting on this component.
+     */
+    private resolveContent(): void {
+        if (this.contentResolved || !this.queriesResolved || this.hasUnresolvedQueryChildren()) {
+            return;
+        }
+        this.contentResolved = true;
+        this.applyPendingContentValues();
+        this.parentElement?.deref()?.ngElementStrategy?.resolveContent();
+    }
+
+    /** Whether any of the component's content query children (e.g. a nested column group) haven't resolved their own content yet */
+    private hasUnresolvedQueryChildren(): boolean {
+        const componentConfig = this.config?.find(x => x.component === this._component);
+        return !!componentConfig?.contentQueries.some(query =>
+            this.runQueryInDOM(this.element, query).some(child => child.ngElementStrategy?.contentResolved === false)
+        );
+    }
+
     /** Retry pending additional property values once content queries have resolved */
     private applyPendingContentValues(): void {
         if (!this.pendingContentValues.size || !(this as any).componentRef?.instance) {
@@ -408,8 +433,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
         if (this.schedule.size === 0) {
             // children are attached and collections are updated, retry values that depend on them and emit event.
-            this.contentResolved = true;
-            this.applyPendingContentValues();
+            this.queriesResolved = true;
+            this.resolveContent();
             (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
     }

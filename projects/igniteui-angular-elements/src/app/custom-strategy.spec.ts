@@ -229,7 +229,7 @@ describe('Elements: ', () => {
 
             gridEl.data = SampleTestData.foodProductData();
             gridEl.addEventListener("columnInit", (args: CustomEvent<any>) => {
-                args.detail.headerTemplate = (ctx) => html `<span>Templated ${args.detail.field}</span>`;
+                args.detail.headerTemplate = (_ctx) => html `<span>Templated ${args.detail.field}</span>`;
             });
             testContainer.appendChild(gridEl);
 
@@ -789,6 +789,27 @@ describe('Elements: ', () => {
             expect(group.children.toArray()).toEqual([column]);
             expect(column.selected).toBe(false);
             expect(group.selected).toBe(false);
+        });
+
+        it('should apply a pre-connect selection of a group containing another group once all descendants resolve', async () => {
+            const outerGroupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            outerGroupEl.selected = true;
+            const innerGroupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            innerGroupEl.appendChild(columnEl);
+            outerGroupEl.appendChild(innerGroupEl);
+            gridEl.appendChild(outerGroupEl);
+
+            const outerGroup = (await outerGroupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const innerGroup = (await innerGroupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(outerGroup.children.toArray()).toEqual([innerGroup]);
+            expect(innerGroup.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(outerGroup.selected).toBe(true);
         });
 
         it('should hide opened toggle components in the grid on grid scroll', () => {
