@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IgxVsRecycleDirective } from './virtual-scroll-recycle.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 @Component({
     selector: 'test-recycle-host',
@@ -225,11 +226,11 @@ describe('IgxVsRecycleDirective', () => {
         const last = elementByKey().get(9)!;
 
         renderKeys(range(0, 9));
-        expect(last.isConnected).toBeFalse();
+        expect(last.isConnected).toBe(false);
 
         // Not kept for reuse: a content query would still report its components.
         renderKeys(range(0, 10));
-        expect(elements().includes(last)).toBeFalse();
+        expect(elements().includes(last)).toBe(false);
     });
 
     it('should move unbound DOM state with a recycled element to the key that enters', () => {
@@ -237,6 +238,6 @@ describe('IgxVsRecycleDirective', () => {
         elementByKey().get(0)!.querySelector('input')!.checked = true;
 
         renderKeys(range(1, 4));
-        expect(elementByKey().get(3)!.querySelector('input')!.checked).toBeTrue();
+        expect(elementByKey().get(3)!.querySelector('input')!.checked).toBe(true);
     });
 });

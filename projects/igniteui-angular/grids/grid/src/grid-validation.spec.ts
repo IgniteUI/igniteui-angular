@@ -1,23 +1,19 @@
-import { fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators'
+import { takeUntil } from 'rxjs/operators';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { IgxTooltipTargetDirective } from 'igniteui-angular/directives';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
-import {
-    IgxGridCustomEditorsComponent,
-    IgxGridValidationTestBaseComponent,
-    IgxGridValidationTestCustomErrorComponent,
-    IgxTreeGridValidationTestComponent
-} from '../../../test-utils/grid-validation-samples.spec';
+import { IgxGridCustomEditorsComponent, IgxGridValidationTestBaseComponent, IgxGridValidationTestCustomErrorComponent, IgxTreeGridValidationTestComponent } from '../../../test-utils/grid-validation-samples.spec';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { GridType, IGridFormGroupCreatedEventArgs, IgxGridCellComponent } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
 import { AutoPositionStrategy, HorizontalAlignment, IgxOverlayService, VerticalAlignment } from 'igniteui-angular/core';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 /**
  * These specs assert on cell component internals (`element`, `formControl`, `errorTooltip`)
@@ -28,8 +24,8 @@ const getCell = (grid: GridType, rowIndex: number, columnIndex: number) =>
 
 describe('IgxGrid - Validation #grid', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxGridValidationTestBaseComponent,
@@ -38,7 +34,7 @@ describe('IgxGrid - Validation #grid', () => {
                 IgxTreeGridValidationTestComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic Validation - ', () => {
         let fixture;
@@ -125,7 +121,7 @@ describe('IgxGrid - Validation #grid', () => {
             cell = getCell(grid, 1, 1);
             //the name should be correct email
             GridFunctions.verifyCellValid(cell, false);
-            expect(cell['formControl'].errors.email).toBeTrue();
+            expect(cell['formControl'].errors.email).toBe(true);
 
             cell.editMode = true;
             cell.update('m@in.com');
@@ -197,7 +193,7 @@ describe('IgxGrid - Validation #grid', () => {
             expect(errorMessage).toEqual(' Entry should be at least 4 character(s) long ');
         });
 
-        it('should show the error message on error icon hover and when the invalid cell becomes active.', fakeAsync(() => {
+        it('should show the error message on error icon hover and when the invalid cell becomes active.', async () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
 
             let cell = getCell(grid, 1, 1);
@@ -227,17 +223,17 @@ describe('IgxGrid - Validation #grid', () => {
             expect(positionSettings.closeAnimation.options.params).toEqual({ duration: '75ms' });
 
             cell.errorTooltip.first.close();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-            expect(cell.errorTooltip.first.collapsed).toBeTrue();
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
 
             const element = fixture.debugElement.query(By.directive(IgxTooltipTargetDirective)).nativeElement;
-            spyOn(element, 'matches').and.returnValue(true);
+            vi.spyOn(element, 'matches').mockReturnValue(true);
             element.dispatchEvent(new MouseEvent('pointerenter'));
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
-            expect(cell.errorTooltip.first.collapsed).toBeFalse();
-        }));
+            expect(cell.errorTooltip.first.collapsed).toBe(false);
+        });
 
         it('should allow preventing edit mode for cell/row to end by canceling the related event if isValid event argument is false', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
@@ -272,7 +268,7 @@ describe('IgxGrid - Validation #grid', () => {
 
         it('should trigger the validationStatusChange event on grid when validation status changes', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
-            spyOn(grid.validationStatusChange, "emit").and.callThrough();
+            vi.spyOn(grid.validationStatusChange, "emit");
 
             let cell = getCell(grid, 1, 1);
             UIInteractions.simulateDoubleClickAndSelectEvent(cell['element']);
@@ -382,10 +378,10 @@ describe('IgxGrid - Validation #grid', () => {
     describe('Custom Validation - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxGridValidationTestCustomErrorComponent);
             fixture.detectChanges();
-        }));
+        });
 
         it('should allow setting custom validators via template-driven configuration on the column', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
@@ -412,11 +408,11 @@ describe('IgxGrid - Validation #grid', () => {
     describe('Custom Editor Templates - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxGridCustomEditorsComponent);
             fixture.componentInstance.grid.batchEditing = true;
             fixture.detectChanges();
-        }));
+        });
 
         it('should trigger validation on change when using custom editor bound via formControl.', () => {
             // template bound via formControl
@@ -488,11 +484,11 @@ describe('IgxGrid - Validation #grid', () => {
     describe('Transactions integration - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxGridValidationTestBaseComponent);
             fixture.componentInstance.batchEditing = true;
             fixture.detectChanges();
-        }));
+        });
 
         it('should update validity when setting new value through grid API', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
@@ -654,11 +650,11 @@ describe('IgxGrid - Validation #grid', () => {
     describe('TreeGrid integration - ', () => {
         let fixture;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxTreeGridValidationTestComponent);
             fixture.componentInstance.batchEditing = true;
             fixture.detectChanges();
-        }));
+        });
 
         it('should allow setting built-in validators via template-driven and mark cell invalid', () => {
             const treeGrid = fixture.componentInstance.treeGrid as IgxTreeGridComponent;

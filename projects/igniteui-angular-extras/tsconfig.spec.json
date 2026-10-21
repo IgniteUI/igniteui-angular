@@ -5,8 +5,9 @@
     "strict": false,
     "noImplicitOverride": true,
     "outDir": "../../out-tsc/spec",
-    "types": ["jasmine", "node"]
+    "types": ["node"]
   },
+  "files": ["../igniteui-angular/test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
