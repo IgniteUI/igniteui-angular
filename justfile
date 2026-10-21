@@ -1,17 +1,17 @@
 # justfile — CI-parity test runner
 #
 # Runs the Ignite UI for Angular test suite inside a Docker container that
-# matches CI exactly (ubuntu:24.04 + Node 24 + Google Chrome), regardless of
+# matches CI exactly (ubuntu:24.04 + Node 24 + Playwright Chromium), regardless of
 # host OS. All orchestration lives in scripts/docker-test/*.mjs (Node, not
 # shell) so these recipes work unchanged on Windows, macOS, and Linux.
 #
 # Requires: docker, node. Install `just`: https://github.com/casey/just#installation
 #
 # Examples:
-#   just test avatar              # spec suite for one component
+#   just test avatar              # spec suite for one component (ng test --include)
 #   just test '**/slider/**/*.spec.ts'
 #   just test                     # CI default: test:lib + test:styles
-#   just run test:lib:others      # any npm script, run inside the container
+#   just run test:extras          # any npm script, run inside the container
 #   just build                    # force-rebuild the Docker image
 #   just shell                    # interactive shell in the container
 #   just clean                    # remove the image + node_modules volume
@@ -26,7 +26,7 @@ default:
 test COMPONENT="":
     {{ cli }} test "{{ COMPONENT }}"
 
-# Run any npm script (e.g. test:lib, test:lib:others, test:lib:grid) in the container
+# Run any npm script (e.g. test:lib, test:extras, test:elements) in the container
 run SCRIPT *ARGS:
     {{ cli }} run "{{ SCRIPT }}" {{ ARGS }}
 

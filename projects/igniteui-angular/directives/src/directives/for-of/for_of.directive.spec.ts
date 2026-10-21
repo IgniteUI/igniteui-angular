@@ -1,12 +1,29 @@
-﻿import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOfContext } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Directive, Injectable, IterableDiffers, NgZone, OnInit, QueryList, TemplateRef, ViewChild, ViewChildren, ViewContainerRef, DebugElement, Pipe, PipeTransform, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective } from './for_of.directive';
-import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait } from '../../../../test-utils/ui-interactions.spec';
+import { advance, useFakeClock } from '../../../../test-utils/helper-utils.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
+
+/** Content resize throttle of igxFor (`throttleTime(40)` in for_of.directive.ts). */
+const CONTENT_RESIZE_THROTTLE = 40;
+
+/** Device pixel ratio no real zoom level produces, so no probe result is cached for it. */
+const UNPROBED_DPR = 1.2345;
+
+/**
+ * Waits for igxFor to remeasure its items after a content resize: two frames let the ResizeObserver
+ * report (it runs after layout), then the fake clock passes the resize throttle.
+ */
+const remeasure = async (fix: ComponentFixture<unknown>) => {
+    await frames(2);
+    await advance(fix, CONTENT_RESIZE_THROTTLE);
+};
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -23,11 +40,11 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('empty virtual component', () => {
-        beforeEach(waitForAsync(() => {
-            return TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [EmptyVirtualComponent]
             }).compileComponents();
-        }));
+        });
 
         it('should initialize empty directive', () => {
             const fix = TestBed.createComponent(EmptyVirtualComponent);
@@ -40,11 +57,11 @@ describe('IgxForOf directive -', () => {
     describe('horizontal virtual component', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
-        beforeEach(waitForAsync(() => {
-            return TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [HorizontalVirtualComponent]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(HorizontalVirtualComponent);
@@ -191,7 +208,7 @@ describe('IgxForOf directive -', () => {
             // the container's width is assigned as wide as to display all cols
             fix.componentInstance.width = '600px';
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             const secondRecChildren = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER)[1].children;
             for (let i = 0; i < secondRecChildren.length; i++) {
@@ -203,13 +220,13 @@ describe('IgxForOf directive -', () => {
 
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualNoDataComponent, VerticalVirtualComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualComponent);
@@ -253,7 +270,7 @@ describe('IgxForOf directive -', () => {
 
             expect(parseInt(transform.slice(transform.indexOf('(') + 1, transform.indexOf(')')), 10)).toEqual(-5);
 
-            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
+            vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
@@ -292,6 +309,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
+            useFakeClock();
             fix.componentInstance.height = '1900px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
@@ -308,7 +326,7 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait(50);
+            await remeasure(fix);
             let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(9);
 
@@ -326,12 +344,13 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '150px' }
             ];
             fix.detectChanges();
-            await wait();
+            await advance(fix, 0);
             chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(10);
         });
 
         it('should take item margins into account when calculating the size cache', async () => {
+            useFakeClock();
             fix.componentInstance.height = '600px';
             fix.componentInstance.itemSize = '100px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
@@ -349,12 +368,12 @@ describe('IgxForOf directive -', () => {
                 { 1: '10', height: '100px', margin: '30px' }
             ];
             fix.detectChanges();
-            await wait(200);
+            await remeasure(fix);
             const cache = (fix.componentInstance.parentVirtDir as any).individualSizeCache;
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 100, 100, 100]);
             fix.componentInstance.scrollTop(400);
             fix.detectChanges();
-            await wait(200);
+            await remeasure(fix);
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
 
@@ -410,11 +429,11 @@ describe('IgxForOf directive -', () => {
 
         it('should not unobserve a view that resolves to no element', () => {
             const virtualContainer = fix.componentInstance.parentVirtDir;
-            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
-                'observe',
-                'unobserve',
-                'disconnect'
-            ]);
+            const observer = {
+                observe: vi.fn(),
+                unobserve: vi.fn(),
+                disconnect: vi.fn()
+            } as unknown as ResizeObserver;
             virtualContainer.testSetViewObserver(observer);
 
             // A comment anchor with no element after it - ResizeObserver.unobserve()
@@ -428,11 +447,11 @@ describe('IgxForOf directive -', () => {
 
         it('should unobserve the element that follows a comment-rooted view', () => {
             const virtualContainer = fix.componentInstance.parentVirtDir;
-            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
-                'observe',
-                'unobserve',
-                'disconnect'
-            ]);
+            const observer = {
+                observe: vi.fn(),
+                unobserve: vi.fn(),
+                disconnect: vi.fn()
+            } as unknown as ResizeObserver;
             virtualContainer.testSetViewObserver(observer);
 
             const anchor = document.createComment('container');
@@ -451,7 +470,7 @@ describe('IgxForOf directive -', () => {
         it('should preserve valid border sizes when another side cannot be parsed', () => {
             const virtualContainer = fix.componentInstance.parentVirtDir;
             const node = document.createElement('div');
-            spyOn(window, 'getComputedStyle').and.returnValue({
+            vi.spyOn(window, 'getComputedStyle').mockReturnValue({
                 borderTopWidth: '',
                 borderBottomWidth: '2px'
             } as CSSStyleDeclaration);
@@ -472,13 +491,13 @@ describe('IgxForOf directive -', () => {
 
     describe('vertical virtual component no data', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualNoDataComponent, VerticalVirtualComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
@@ -510,13 +529,13 @@ describe('IgxForOf directive -', () => {
     describe('vertical and horizontal virtual component', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualComponent);
@@ -534,6 +553,28 @@ describe('IgxForOf directive -', () => {
             displayContainer = null;
             verticalScroller = null;
             horizontalScroller = null;
+        });
+
+        it('should probe the max browser size once per document', () => {
+            // Every row has its own igxFor; only the first may force a layout to probe.
+            const [first, second] = fix.componentInstance.childVirtDirs.toArray();
+            const size = first['_calcMaxBrowserSize']();
+            const append = vi.spyOn(document.body, 'appendChild');
+
+            expect(second['_calcMaxBrowserSize']()).toBe(size);
+            expect(append).not.toHaveBeenCalled();
+        });
+
+        it('should probe the max browser size again when the zoom changes', () => {
+            // Zoom changes the max size in CSS px; a DPR no other test uses forces a fresh probe.
+            const dir = fix.componentInstance.parentVirtDir;
+            vi.spyOn(window, 'devicePixelRatio', 'get').mockReturnValue(UNPROBED_DPR);
+            const append = vi.spyOn(document.body, 'appendChild');
+
+            dir['_calcMaxBrowserSize']();
+            dir['_calcMaxBrowserSize']();
+
+            expect(append).toHaveBeenCalledTimes(1);
         });
 
         it('should initialize directive with vertical and horizontal virtualization', () => {
@@ -622,7 +663,7 @@ describe('IgxForOf directive -', () => {
         it('should scroll to wheel event correctly', async () => {
             fix.componentInstance.parentVirtDir.dc.instance._scrollInertia.smoothingDuration = 0;
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
-            await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, -1 * 2 * 120);
             fix.detectChanges();
             await wait();
 
@@ -909,32 +950,74 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        xit('should apply inertia when swiping via touch interaction.', async () => {
+        it('should apply inertia when swiping via touch interaction.', async () => {
             const dcElem = fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
-            // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
-            await UIInteractions.simulateTouchStartEvent(
-                dcElem,
-                0,
-                -150
-            );
-            await wait(1);
-            await UIInteractions.simulateTouchMoveEvent(dcElem, 0, -180);
-            await UIInteractions.simulateTouchEndEvent(dcElem, 0, -200);
-            fix.detectChanges();
+            expect(verticalScroller.scrollTop).toBe(0);
 
-            // wait for inertia to complete
-            await wait(1500);
-            fix.detectChanges();
-            const scrStepArray = fix.componentInstance.parentVirtDir.scrStepArray;
-            expect(scrStepArray.length).toBeGreaterThan(55);
+            // The touch speed is computed from Date.now() and the inertia is driven by requestAnimationFrame,
+            // so both are faked to make the swipe and the inertia frames deterministic.
+            vi.useFakeTimers({ toFake: ['Date', 'requestAnimationFrame', 'cancelAnimationFrame'] });
+            const steps: number[] = [];
+            try {
+                // swipe up 50px in 20ms - 2.5px/ms average speed
+                UIInteractions.simulateTouchStartEvent(dcElem, 0, 400);
+                vi.setSystemTime(Date.now() + 10);
+                UIInteractions.simulateTouchMoveEvent(dcElem, 0, 380);
+                vi.setSystemTime(Date.now() + 10);
+                UIInteractions.simulateTouchMoveEvent(dcElem, 0, 350);
+                UIInteractions.simulateTouchEndEvent(dcElem, 0, 350);
 
-            // check if inertia first accelerates then decelerate
-            const first = scrStepArray[0];
-            const mid = scrStepArray[10];
-            const end = scrStepArray[60];
+                // the touch move itself scrolls the content without any inertia
+                expect(verticalScroller.scrollTop).toBe(50);
 
-            expect(first).toBeLessThan(mid);
-            expect(end).toBeLessThan(mid);
+                // run the inertia frames until the scroll position settles
+                let prev = verticalScroller.scrollTop;
+                let idleFrames = 0;
+                for (let i = 0; i < 200 && idleFrames < 5; i++) {
+                    vi.advanceTimersToNextFrame();
+                    const current = verticalScroller.scrollTop;
+                    const step = current - prev;
+                    prev = current;
+                    if (step === 0) {
+                        idleFrames++;
+                    } else {
+                        idleFrames = 0;
+                        steps.push(step);
+                    }
+                }
+            } finally {
+                vi.useRealTimers();
+            }
+
+            // inertiaDuration 0.5 => ~60 inertia frames
+            expect(steps.length).toBeGreaterThan(55);
+            steps.forEach(step => expect(step).toBeGreaterThan(0));
+
+            // speed (2.5) * INERTIA_MULTIPLIER (15) * inertiaStep (1.5) per frame before the inertia breakpoint,
+            // then an ease-out deceleration until the inertia stops
+            const first = steps[0];
+            const mid = steps[9];
+            const end = steps[steps.length - 1];
+            expect(Math.abs(first - 56.25)).toBeLessThanOrEqual(1);
+            expect(Math.abs(mid - 56.25)).toBeLessThanOrEqual(1);
+            expect(end).toBeLessThan(mid / 10);
+            for (let i = 11; i < steps.length; i++) {
+                expect(steps[i]).toBeLessThanOrEqual(steps[i - 1] + 1);
+            }
+
+            const finalScrollTop = verticalScroller.scrollTop;
+            // the inertia scrolled the content much further than the swipe itself
+            expect(finalScrollTop).toBeGreaterThan(50 + 10 * 56);
+
+            // the real scroll event updates the rendered rows for the new scroll position
+            const expectedStartIndex = Math.floor(finalScrollTop / 50);
+            await vi.waitFor(() => {
+                fix.detectChanges();
+                const rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
+                expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(expectedStartIndex);
+                expect(rowsRendered[0].children[1].textContent)
+                    .toBe(fix.componentInstance.data[expectedStartIndex][1].toString());
+            });
         });
 
         it('should scroll left when using touch events', () => {
@@ -1011,19 +1094,19 @@ describe('IgxForOf directive -', () => {
 
             forOf.scrollPrev();
             fix.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(forOf.state.startIndex).toEqual(0);
 
             forOf.scrollTo(forOf.igxForOf.length - 1);
             fix.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
 
             forOf.scrollNext();
             fix.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(forOf.state.startIndex).toEqual(forOf.igxForOf.length - forOf.state.chunkSize);
         });
@@ -1059,7 +1142,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should correctly scroll to the last element when using the scrollTo method', () => {
-            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
+            vi.spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             /**  Scroll to the last 49999 row. */
             fix.componentInstance.parentVirtDir.scrollTo(49999);
@@ -1090,20 +1173,26 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
+            // The native scroll event and the ResizeObserver callbacks are delivered in the next rendering frames,
+            // so wait for them rather than a macrotask, which may run before they arrive.
+            const waitForFrames = async () => {
+                await new Promise(r => requestAnimationFrame(r));
+                await new Promise(r => requestAnimationFrame(r));
+            };
             const verticalDir = fix.componentInstance.parentVirtDir;
-            const chunkLoadSpy = spyOn<any>(verticalDir.chunkLoad, 'emit').and.callThrough();
-            const chunkPreLoadSpy = spyOn<any>(verticalDir.chunkPreload, 'emit').and.callThrough();
+            const chunkLoadSpy = vi.spyOn(verticalDir.chunkLoad, 'emit');
+            const chunkPreLoadSpy = vi.spyOn(verticalDir.chunkPreload, 'emit');
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
             expect(chunkLoadSpy).toHaveBeenCalledTimes(0);
             expect(chunkPreLoadSpy).toHaveBeenCalledTimes(0);
 
             // scroll so that start index changes.
             fix.componentInstance.scrollTop(100);
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(1);
             expect(chunkPreLoadSpy).toHaveBeenCalledTimes(1);
@@ -1111,27 +1200,27 @@ describe('IgxForOf directive -', () => {
             // change size so that chunk size does not change
             fix.componentInstance.height = '399px';
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(1);
 
             // change size so that chunk size changes
             fix.componentInstance.height = '1500px';
             fix.detectChanges();
-            await wait();
+            await waitForFrames();
 
             expect(chunkLoadSpy).toHaveBeenCalledTimes(2);
         });
     });
 
     describe('variable size component', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualVariableSizeComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should update display container classes when content state changes from virtualized to non-virtualized.', () => {
             const fix = TestBed.createComponent(VirtualVariableSizeComponent);
@@ -1168,13 +1257,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     RemoteVirtualizationComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should allow remote virtualization', async () => {
             const fix = TestBed.createComponent(RemoteVirtualizationComponent);
@@ -1207,13 +1296,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component with specified igxForTotalItemCount', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     RemoteVirtCountComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should apply remote virtualization correctly', async () => {
             const fix = TestBed.createComponent(RemoteVirtCountComponent);
@@ -1246,13 +1335,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('no width and height component', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoWidthAndHeightComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should use itemSize when no width or height are provided', () => {
             const fix = TestBed.createComponent(NoWidthAndHeightComponent);
@@ -1267,13 +1356,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('even odd first last functions', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     LocalVariablesComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should differentiate even odd items', () => {
             const fix = TestBed.createComponent(LocalVariablesComponent);
@@ -1297,13 +1386,13 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('`as` syntax', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     LocalVariablesAsComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         it('should get correct data using `as` syntax', () => {
             const fix = TestBed.createComponent(LocalVariablesAsComponent);
@@ -1320,13 +1409,13 @@ describe('IgxForOf directive -', () => {
     describe('on destroy', () => {
         let fix: ComponentFixture<VerticalVirtualDestroyComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualDestroyComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualDestroyComponent);
@@ -1367,13 +1456,13 @@ describe('IgxForOf directive -', () => {
     describe('on create new instance', () => {
         let fix: ComponentFixture<VerticalVirtualCreateComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VerticalVirtualCreateComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualCreateComponent);
@@ -1389,7 +1478,7 @@ describe('IgxForOf directive -', () => {
 
             scrollComponent.nativeElement.scrollTop = 500;
             fix.detectChanges();
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
             expect(scrollComponent.scrollAmount).toBe(500);
 
@@ -1558,7 +1647,8 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 })
 export class EmptyVirtualComponent {
 
-    @ViewChild('container', { static: true }) public container;
+    @ViewChild('container', { static: true })
+    public container;
     public data = [];
 }
 
@@ -1628,10 +1718,10 @@ export class VirtualComponent {
     public isHorizontalScrollbarVisible() {
         const horizontalScrollbar = this.container.element.nativeElement.querySelector('igx-horizontal-virtual-helper');
         /**
-         * Due to current implementation the height is automatically calculated.
-         *  That's why when it's less than 16 there is no scrollbar
+         * The helper's height is automatically calculated from the native scrollbar size, which is 0 when the
+         * browser hides scrollbars (e.g. headless Playwright). Check if the content is wider than the helper instead.
          */
-        return horizontalScrollbar.offsetHeight >= 16;
+        return horizontalScrollbar.clientWidth < horizontalScrollbar.children[0].offsetWidth;
     }
 }
 

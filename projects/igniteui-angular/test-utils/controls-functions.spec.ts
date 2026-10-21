@@ -3,6 +3,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { UIInteractions } from './ui-interactions.spec';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { expect } from 'vitest';
 
 const CHIP_REMOVE_BUTTON = '.igx-chip__remove';
 const DROP_DOWN_SELECTED_ITEM_CLASS = '.igx-drop-down__item--selected';
@@ -51,8 +52,7 @@ export class ControlsFunction {
 
     public static getCheckboxElement(name: string, element: DebugElement) {
         const checkboxElements = element.queryAll(By.css('igx-checkbox'));
-        const chkElement = checkboxElements.find((el) =>
-            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
+        const chkElement = checkboxElements.find((el) => (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
 
         return chkElement;
     }
