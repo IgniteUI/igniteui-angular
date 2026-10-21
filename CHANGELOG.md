@@ -12,6 +12,8 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
     - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+- `IgxSplitterComponent`
+    - Arrow keys combined with `Shift`, `Alt` or `Meta`, and `Ctrl` + arrow keys combined with another modifier, no longer resize or collapse the panes. The splitter bar ignores them, and the browser default runs. Previously the splitter bar ignored the extra modifiers and handled these keys as the plain arrow keys or `Ctrl` + arrow keys.
 - `IgxStepperComponent`
     - In linear mode, the steps after the first invalid step that is not `optional` or `disabled` are disabled, wherever the active step is, as in the Ignite UI for Web Components stepper. Previously only the active step and the steps after it were checked, so an invalid `optional` active step disabled the steps after it, and an invalid step before the active one did not. The disabled steps are also recalculated when the `optional` state of a step changes, and the step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
@@ -27,6 +29,18 @@ All notable changes for each version of this project will be documented in this 
     - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
     - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxDatePickerComponent`
+    - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, is now prevented.
+- `IgxDateRangePickerComponent`
+    - `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, no longer scroll the page. Previously their default browser action was not prevented.
+- `IgxExpansionPanelComponent`
+    - `Alt + Arrow Down` and `Alt + Arrow Up` no longer expand or collapse the panel when its header is disabled.
+- `IgxSplitterComponent`
+    - Keys other than the arrow keys, pressed on a splitter bar, now propagate, so for example `Escape` closes a dialog that contains the splitter. Previously the splitter bar stopped the propagation of every key.
+    - Holding `Ctrl` and an arrow key on a splitter bar now collapses or expands a pane once, instead of toggling it on every repeated key press.
+    - A splitter bar no longer loses the focus when one of its panes is collapsed, so the pane can be expanded again with `Ctrl` and an arrow key.
+    - A splitter bar next to a pane that is not `resizable` is now in the tab order, so the pane can be collapsed and expanded with `Ctrl` and an arrow key. The bar is removed from the tab order only when it can neither resize nor collapse its panes, that is when `nonCollapsible` is set and a pane is collapsed or not `resizable`.
+    - `Ctrl` and an arrow key no longer collapse or expand a pane when `nonCollapsible` is set.
 - `IgxStepperComponent`
     - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
     - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
@@ -34,6 +48,8 @@ All notable changes for each version of this project will be documented in this 
     - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
     - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
     - Setting `animationDuration` from code now applies it to the vertical animations as well.
+- `IgxTimePickerComponent`
+    - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the drop-down, is now prevented.
 
 ## 22.2.3
 

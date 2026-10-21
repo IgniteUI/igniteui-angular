@@ -4,9 +4,9 @@ import {
     ViewChild,
     Output,
     EventEmitter,
-    HostListener,
     HostBinding,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    inject
 } from '@angular/core';
 import { IgxButtonDirective, IgxButtonType, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
@@ -17,7 +17,10 @@ import {
     CustomDateRange,
     PickerInteractionMode,
     IDateRangePickerResourceStrings,
-    IgxPickerActionsDirective
+    IgxPickerActionsDirective,
+    IgxKeyBindingsService,
+    altKey,
+    arrowUp
 } from 'igniteui-angular/core';
 import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predefined-ranges/predefined-ranges-area.component';
 
@@ -28,6 +31,7 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
     styles: [':host {display: block;}'],
     templateUrl: 'calendar-container.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
+    providers: [IgxKeyBindingsService],
     imports: [
         IgxButtonDirective,
         IgxRippleDirective,
@@ -38,6 +42,8 @@ import { IgxPredefinedRangesAreaComponent } from '../../date-range-picker/predef
     ]
 })
 export class IgxCalendarContainerComponent {
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+
     @ViewChild(IgxCalendarComponent, { static: true })
     public calendar!: IgxCalendarComponent;
 
@@ -79,14 +85,12 @@ export class IgxCalendarContainerComponent {
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions!: IgxPickerActionsDirective;
 
-    @HostListener('keydown.alt.arrowup', ['$event'])
-    public onEscape(event: KeyboardEvent) {
-        event.preventDefault();
-
-        // Prevent the event from reaching IgxDatePickerComponent/IgxDateRangePickerComponent,
+    constructor() {
+        // Stop the event before it reaches IgxDatePickerComponent/IgxDateRangePickerComponent,
         // which also handle Alt+ArrowUp and would call close() a second time.
-        event.stopPropagation();
-        this.calendarClose.emit();
+        this._keyBindings
+            .configure({ skip: [] })
+            .set([altKey, arrowUp], () => this.calendarClose.emit(), { stopPropagation: true });
     }
 
     public get isReadonly() {
