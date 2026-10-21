@@ -114,15 +114,15 @@ describe('Sass changes', () => {
         };
 
         it('should hide a statement from Sass in every inert context', () => {
-            expect(compiles(undefinedMixin)).toBeFalse();
+            expect(compiles(undefinedMixin)).toBe(false);
             for (const { name, wrap } of inert) {
-                expect(compiles(wrap(undefinedMixin))).withContext(name).toBeTrue();
+                expect(compiles(wrap(undefinedMixin)), name).toBe(true);
             }
         });
 
         it('should be valid Sass in every preceding context', () => {
             for (const { name, code } of preceding) {
-                expect(compiles(code)).withContext(name).toBeTrue();
+                expect(compiles(code), name).toBe(true);
             }
         });
     });
@@ -153,7 +153,7 @@ describe('Sass changes', () => {
 
             it('should not touch code after an unbalanced bracket', () => {
                 const content = `${statement}\n$broken: fn(1, 2;\n${statement}`;
-                expect(apply(operation, content).startsWith(changed)).toBeTrue();
+                expect(apply(operation, content).startsWith(changed)).toBe(true);
             });
         });
     }

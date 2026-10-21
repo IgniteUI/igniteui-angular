@@ -12,24 +12,16 @@ describe('Update 7.3.4', () => {
     });
 
     it('should update time picker events', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<igx-time-picker (onOpen)="handler" (onClose)="handler"></igx-time-picker>`
-        );
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `<igx-time-picker (onOpen)="handler" (onClose)="handler"></igx-time-picker>`);
         const tree = await schematicRunner.runSchematic('migration-09', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(
-                `<igx-time-picker (onOpened)="handler" (onClosed)="handler"></igx-time-picker>`);
+            .toEqual(`<igx-time-picker (onOpened)="handler" (onClosed)="handler"></igx-time-picker>`);
     });
 
     it('should update date picker events', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<igx-date-picker (onOpen)="handler" (onClose)="handler"></igx-date-picker>`
-        );
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `<igx-date-picker (onOpen)="handler" (onClose)="handler"></igx-date-picker>`);
         const tree = await schematicRunner.runSchematic('migration-09', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(
-                `<igx-date-picker (onOpened)="handler" (onClosed)="handler"></igx-date-picker>`);
+            .toEqual(`<igx-date-picker (onOpened)="handler" (onClosed)="handler"></igx-date-picker>`);
     });
 });

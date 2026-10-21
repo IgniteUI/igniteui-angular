@@ -1,6 +1,8 @@
 import {
     booleanAttribute,
+    ComponentRef,
     createComponent,
+    DestroyRef,
     Directive,
     EventEmitter,
     Input,
@@ -130,11 +132,24 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /* blazorSuppress */
     public abstract expandChildren: boolean;
 
+    private readonly destroyRef = inject(DestroyRef);
+    // Columns created by createColumnsList. Standalone refs: Angular never destroys them on its own.
+    private columnRefs: ComponentRef<IgxColumnComponent>[] = [];
+
+    constructor() {
+        super();
+        // Release the created columns with the grid.
+        this.destroyRef.onDestroy(() => this.columnRefs.forEach(ref => ref.destroy()));
+    }
+
     /**
      * @hidden
      */
     public createColumnsList(cols: ColumnType[]): void {
         const columns: IgxColumnComponent[] = [];
+        // The new columns replace the previous ones; destroy those once the grid drops them.
+        const replacedRefs = this.columnRefs;
+        this.columnRefs = [];
         const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
             col.grid = this;
@@ -144,6 +159,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         });
         const result = flatten(columns);
         this.updateColumns(result);
+        replacedRefs.forEach(ref => ref.destroy());
         this.initPinning();
 
         result.forEach(col => {
@@ -173,6 +189,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         } else {
             ref = this._createColComponent(col);
         }
+        this.columnRefs.push(ref);
         return ref;
     }
 

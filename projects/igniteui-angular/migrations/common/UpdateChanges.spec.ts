@@ -51,7 +51,7 @@ describe('UpdateChanges', () => {
         });
     });
 
-    it('should replace/remove components', done => {
+    it('should replace/remove components', async () => {
         const selectorsJson: SelectorChanges = {
             changes: [
                 { type: 'component' as any, selector: 'igx-component', replaceWith: 'igx-replaced' },
@@ -59,42 +59,31 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'selectors.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(selectorsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(selectorsJson));
 
-        appTree.create(
-            'test.component.html',
-            '<igx-component> <content> <igx-remove></igx-remove> </igx-component> <igx-remove> <content> </igx-remove>'
-        );
-        appTree.create(
-            'test2.component.html',
-            '<igx-remove attr></igx-remove><igx-component>'
-        );
-        appTree.create(
-            'test3.component.html',
-            '<igx-remove-me-not attr></igx-remove-me-not> <igx-component> <igx-component-child></igx-component-child> </igx-component>'
-        );
+        appTree.create('test.component.html', '<igx-component> <content> <igx-remove></igx-remove> </igx-component> <igx-remove> <content> </igx-remove>');
+        appTree.create('test2.component.html', '<igx-remove attr></igx-remove><igx-component>');
+        appTree.create('test3.component.html', '<igx-remove-me-not attr></igx-remove-me-not> <igx-component> <igx-component-child></igx-component-child> </igx-component>');
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getSelectorChanges()).toEqual(selectorsJson);
 
         update.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual('<igx-replaced> <content>  </igx-replaced> ');
         expect(appTree.readContent('test2.component.html')).toEqual('<igx-replaced>');
-        expect(appTree.readContent('test3.component.html')).toEqual(
-            '<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>'
-        );
-        done();
+        expect(appTree.readContent('test3.component.html')).toEqual('<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>');
+        ;
     });
 
-    it('should replace/remove directives', done => {
+    it('should replace/remove directives', async () => {
         const selectorsJson: SelectorChanges = {
             changes: [
                 { type: 'directive' as any, selector: 'igxDirective', replaceWith: 'igxReplaced' },
@@ -102,31 +91,27 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'selectors.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(selectorsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(selectorsJson));
 
-        appTree.create(
-            'test.component.html',
-            `<igx-component [igxDirective]="val" igxRemove> <content igxDirective [igxRemove]="val"> </igx-component>` +
-            `<igx-component2 [igxRemove]='val'> <content> </igx-component2>`
-        );
+        appTree.create('test.component.html', `<igx-component [igxDirective]="val" igxRemove> <content igxDirective [igxRemove]="val"> </igx-component>` +
+            `<igx-component2 [igxRemove]='val'> <content> </igx-component2>`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(update.getSelectorChanges()).toEqual(selectorsJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<igx-component [igxReplaced]="val"> <content igxReplaced> </igx-component>` +
+        expect(appTree.readContent('test.component.html')).toEqual(`<igx-component [igxReplaced]="val"> <content igxReplaced> </igx-component>` +
             `<igx-component2> <content> </igx-component2>`);
-        done();
+        ;
     });
 
-    it('should replace/remove outputs', done => {
+    it('should replace/remove outputs', async () => {
         const outputJson: BindingChanges = {
             changes: [
                 {
@@ -140,45 +125,41 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'outputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(outputJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(outputJson));
 
         const fileContent = `<one (onReplaceMe)="a"> <comp\r\ntag (onReplaceMe)="dwdw" (onOld)=""> </other> <another (onOld)="b" />`;
         appTree.create('test.component.html', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getOutputChanges()).toEqual(outputJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw" (onOld)=""> </other> <another />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw" (onOld)=""> </other> <another />`);
 
         // should only match the defined selector #11666
         const fileContent2 = `<comp (onReplaceMe)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another (onOld)="b" /> <another-diff (onOld)="toKeep" />`;
         appTree.overwrite('test.component.html', fileContent2);
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp (replaced)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another /> <another-diff (onOld)="toKeep" />`
-        );
+        expect(appTree.readContent('test.component.html')).toEqual(`<comp (replaced)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another /> <another-diff (onOld)="toKeep" />`);
 
         outputJson.changes[0].owner = { type: 'directive' as any, selector: 'tag' };
         outputJson.changes[1].owner = { type: 'directive' as any, selector: 'tag' };
         appTree.overwrite('test.component.html', fileContent);
         const update2 = new UnitUpdateChanges(__dirname, appTree);
         update2.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw"> </other> <another (onOld)="b" />`);
-        done();
+        expect(appTree.readContent('test.component.html')).toEqual(`<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw"> </other> <another (onOld)="b" />`);
+        ;
     });
 
-    it('should replace/remove inputs', done => {
+    it('should replace/remove inputs', async () => {
         const inputJson: BindingChanges = {
             changes: [
                 {
@@ -192,33 +173,31 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
 
         let fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
         appTree.create('test.component.html', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another />`);
 
         inputJson.changes[1].remove = false;
         inputJson.changes[1].replaceWith = 'oldReplaced';
         appTree.overwrite('test.component.html', fileContent);
         const update2 = new UnitUpdateChanges(__dirname, appTree);
         update2.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another oldReplaced="b" />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another oldReplaced="b" />`);
         inputJson.changes[1].remove = true;
 
         inputJson.changes[0].owner = { type: 'directive' as any, selector: 'tag' };
@@ -226,39 +205,32 @@ describe('UpdateChanges', () => {
         appTree.overwrite('test.component.html', fileContent);
         const update3 = new UnitUpdateChanges(__dirname, appTree);
         update3.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw"> </other> <another oldProp="b" />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw"> </other> <another oldProp="b" />`);
 
         inputJson.changes[1].owner = { type: 'component' as any, selector: 'another' };
         inputJson.changes[0].owner = { type: 'component' as any, selector: 'comp' };
-        const fileContent2 =
-        `<comp\r\ntag [oldProp]="g" [replaceMe]="NOT.replaceMe" ><another oldProp="g" [otherProp]="oldProp" /></comp>`;
+        const fileContent2 = `<comp\r\ntag [oldProp]="g" [replaceMe]="NOT.replaceMe" ><another oldProp="g" [otherProp]="oldProp" /></comp>`;
         appTree.overwrite('test.component.html', fileContent2);
         const update4 = new UnitUpdateChanges(__dirname, appTree);
         update4.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
 
 
         fileContent = `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`;
         appTree.overwrite('test.component.html', fileContent);
         update4.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`
-        );
+        expect(appTree.readContent('test.component.html')).toEqual(`<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`);
 
         // should only match the defined selector #11666
         fileContent = `<comp [replaceMe]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another oldProp="b" /> <another-diff oldProp="toKeep" />`;
         appTree.overwrite('test.component.html', fileContent);
         update4.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp [replaced]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another /> <another-diff oldProp="toKeep" />`
-        );
+        expect(appTree.readContent('test.component.html')).toEqual(`<comp [replaced]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another /> <another-diff oldProp="toKeep" />`);
 
-        done();
+        ;
     });
 
-    it('should replace class identifiers', done => {
+    it('should replace class identifiers', async () => {
         const classJson: ClassChanges = {
             changes: [
                 {
@@ -270,31 +242,29 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
+        const fileContent = `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
+        expect(appTree.readContent('test.component.ts')).toEqual(`import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
 
-        done();
+        ;
     });
 
-    it('should replace multiple class identifier with the same value', done => {
+    it('should replace multiple class identifier with the same value', async () => {
         const classJson: ClassChanges = {
             changes: [
                 {
@@ -306,31 +276,29 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
+        const fileContent = `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
+        expect(appTree.readContent('test.component.ts')).toEqual(`import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
 
-        done();
+        ;
     });
 
-    it('should replace class identifiers (complex file)', done => {
+    it('should replace class identifiers (complex file)', async () => {
         const classJson: ClassChanges = {
             changes: [
                 { name: 'IgxGridComponent', replaceWith: 'IgxGridReplace' },
@@ -347,16 +315,15 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+        const fileContent = `import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridComponent } from "igniteui-angular";` +
             `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "igniteui-angular";\r\n` +
             `import {` +
@@ -383,18 +350,16 @@ describe('UpdateChanges', () => {
             `    private getOptions(fileName: string): IgxExporterOptionsBase {` +
             `        return new IgxExcelExporterOptions(fileName);` +
             `    }` +
-            `}`
-            ;
+            `}`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+        expect(appTree.readContent('test.component.ts')).toEqual(`import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridReplace } from "igniteui-angular";` +
             `import { IgxColumnReplace, IgxProvidedReplace, REPLACED_CONST} from "igniteui-angular";\r\n` +
             `import {` +
@@ -421,10 +386,9 @@ describe('UpdateChanges', () => {
             `    private getOptions(fileName: string): ReturnType {` +
             `        return new IgxNewable(fileName);` +
             `    }` +
-            `}`
-        );
+            `}`);
 
-        done();
+        ;
     });
 
     it('should correctly ignore types not from igniteui-angular', () => {
@@ -435,26 +399,25 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { Name } from ""; import { Another } from "@space/package"; export class Test { prop: Name; prop2: Another; }`;
+        const fileContent = `import { Name } from ""; import { Another } from "@space/package"; export class Test { prop: Name; prop2: Another; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(update.getClassChanges()).toEqual(classJson);
 
-        spyOn(tsUtils, 'getRenamePositions').and.callThrough();
+        vi.spyOn(tsUtils, 'getRenamePositions');
 
         update.applyChanges();
-        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Name', jasmine.anything());
-        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Another', jasmine.anything());
+        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Name', expect.anything());
+        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Another', expect.anything());
         expect(appTree.readContent('test.component.ts')).toEqual(fileContent);
     });
 
@@ -469,16 +432,15 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        let fileContent =
-`import { Size, Type as someThg } from "igniteui-angular";
+        let fileContent = `import { Size, Type as someThg } from "igniteui-angular";
 import { IgxService, IgxDiffService as eDiffService, Calendar as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
 export class Test {
@@ -494,12 +456,11 @@ export class Test {
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        let expectedFileContent =
-`import { IgxSize, IgxType as someThg } from "igniteui-angular";
+        let expectedFileContent = `import { IgxSize, IgxType as someThg } from "igniteui-angular";
 import { IgxService1, IgxNewDiffService as eDiffService, CalendarActual as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
 export class Test {
@@ -521,7 +482,7 @@ export class Test {
         expect(appTree.readContent('test.component.ts')).toEqual(expectedFileContent);
     });
 
-    it('should move property value between element tags', done => {
+    it('should move property value between element tags', async () => {
         const inputJson: BindingChanges = {
             changes: [
                 {
@@ -533,13 +494,13 @@ export class Test {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
 
         const fileContent = `<igx-icon fontSet='material' name='phone'></igx-icon>
 <igx-icon fontSet="material-icons" name="build"></igx-icon>
@@ -554,23 +515,21 @@ export class Test {
         update.addCondition('igxIcon_is_material_name', () => true);
 
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-`<igx-icon fontSet='material'>phone</igx-icon>
+        expect(appTree.readContent('test.component.html')).toEqual(`<igx-icon fontSet='material'>phone</igx-icon>
 <igx-icon fontSet="material-icons">build</igx-icon>
 <igx-icon>accessory</igx-icon>`);
 
-        expect(appTree.readContent('test1.component.html')).toEqual(
-`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
+        expect(appTree.readContent('test1.component.html')).toEqual(`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
 <igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
 
-        done();
+        ;
     });
 
-    it('should replace/remove properties', done => {
+    it('should replace/remove properties', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -591,16 +550,15 @@ export class Test {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`$var: igx-theme-func(
+        const fileContent = `$var: igx-theme-func(
     $prop1: red,
     $replace-me: 3,
     $remove-me: 0px,
@@ -622,12 +580,11 @@ $var3: igx-comp-theme(
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getThemeChanges()).toEqual(themeChangesJson);
 
         update.applyChanges();
-        expect(appTree.readContent('styles.scss')).toEqual(
-`$var: igx-theme-func(
+        expect(appTree.readContent('styles.scss')).toEqual(`$var: igx-theme-func(
     $prop1: red,
     $replaced: 3,
     $prop2: 2
@@ -642,10 +599,10 @@ $var3: igx-comp-theme(
 );`);
         expect(appTree.readContent('src/app/app.component.scss')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
         expect(appTree.readContent('test.component.scss')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
-        done();
+        ;
     });
 
-    it('should keep the brackets balanced for nested theme functions', done => {
+    it('should keep the brackets balanced for nested theme functions', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -661,8 +618,8 @@ $var3: igx-comp-theme(
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `@include igx-mixin(igx-theme-func($remove-me: 6px));
@@ -689,10 +646,9 @@ $var2: igx-theme-func($image: url(https://example.com/a.png));
 $var3: igx-theme-func( // not a ) bracket
     $prop1: red
 );`);
-        done();
     });
 
-    it('should not treat a theme function mentioned in a comment or a string as a call', done => {
+    it('should not treat a theme function mentioned in a comment or a string as a call', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -703,8 +659,8 @@ $var3: igx-theme-func( // not a ) bracket
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
@@ -720,10 +676,9 @@ $var: igx-theme-func($remove-me: 4px, $prop1: red);`);
 /* igx-theme-func($remove-me: 2px */
 $doc: "igx-theme-func($remove-me: 3px";
 $var: igx-theme-func( $prop1: red);`);
-        done();
     });
 
-    it('should remove a theme property that has a comment in front of it and keep the comment', done => {
+    it('should remove a theme property that has a comment in front of it and keep the comment', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -734,8 +689,8 @@ $var: igx-theme-func( $prop1: red);`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$var1: igx-theme-func(
@@ -769,10 +724,9 @@ $var4: igx-theme-func($prop1: red, // legacy
  $prop2: blue);
 $var5: igx-theme-func($prop1: red // legacy
 );`);
-        done();
     });
 
-    it('should update a theme property that has whitespace before its colon', done => {
+    it('should update a theme property that has whitespace before its colon', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -788,8 +742,8 @@ $var5: igx-theme-func($prop1: red // legacy
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$var1: igx-theme-func($prop1 : red, $remove-me : 6px);
@@ -808,10 +762,9 @@ $var2: igx-theme-func(
     $prop1     : red
 );
 $var3: igx-theme-func($replaced  :  6px);`);
-        done();
     });
 
-    it('should not update a function or mixin the stylesheet declares itself', done => {
+    it('should not update a function or mixin the stylesheet declares itself', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -822,8 +775,8 @@ $var3: igx-theme-func($replaced  :  6px);`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const userCode =
 `@use "igniteui-angular/theming" as igx;
@@ -843,10 +796,9 @@ $var1: my_igx-theme-func($remove-me: 2px);
 
         // a namespaced call to the library function is still migrated
         expect(appTree.readContent('styles.scss')).toEqual(userCode + `$var2: igx.igx-theme-func( $prop1: red);`);
-        done();
     });
 
-    it('should not take a declaration in a comment or a string for one the stylesheet makes', done => {
+    it('should not take a declaration in a comment or a string for one the stylesheet makes', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -857,8 +809,8 @@ $var1: my_igx-theme-func($remove-me: 2px);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `// @function igx-theme-func($remove-me: 1px) {}
@@ -874,10 +826,9 @@ $var2: igx-theme-func($remove-me: 6px);`);
 $var1: igx-theme-func($prop1: red);
 $doc: "@mixin igx-theme-func($remove-me: 1px)";
 $var2: igx-theme-func();`);
-        done();
     });
 
-    it('should update a namespaced Ignite UI call although the stylesheet declares the same name', done => {
+    it('should update a namespaced Ignite UI call although the stylesheet declares the same name', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -888,8 +839,8 @@ $var2: igx-theme-func();`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         // the two are separate members under Sass's namespace rules
         appTree.create('styles.scss',
@@ -910,10 +861,9 @@ $var: igx.igx-theme-func($remove-me: 6px);`);
 }
 @include igx-theme-func($remove-me: 2px);
 $var: igx.igx-theme-func();`);
-        done();
     });
 
-    it('should tell a mixin the stylesheet declares from a function of the same name', done => {
+    it('should tell a mixin the stylesheet declares from a function of the same name', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -924,8 +874,8 @@ $var: igx.igx-theme-func();`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         // the mixin does not shadow the library's function, and the function does not shadow a mixin
         appTree.create('styles.scss',
@@ -954,7 +904,6 @@ $var2: app-igx-theme-func($remove-me: 6px);
 $var1: igx-theme-func();
 $var2: app-igx-theme-func($remove-me: 6px);
 @include app-igx-theme-func();`);
-        done();
     });
 
     it('should recognize equivalent underscore and hyphen names for local Sass members', () => {
@@ -964,8 +913,8 @@ $var2: app-igx-theme-func($remove-me: 6px);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `@mixin app_theme($remove-me: 1px) { border-width: $remove-me; }
@@ -1007,8 +956,8 @@ $var2: app-igx-theme-func($remove-me: 6px);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const source =
 `= app-grid-summary-theme($remove-me: 1px)
@@ -1070,8 +1019,8 @@ $var2: app-igx-theme-func($remove-me: 6px);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.sass',
 `=app-theme($remove-me: 1px)
@@ -1113,8 +1062,8 @@ $list: (
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const source =
 `@function theme($remove-me: false) { @return $remove-me; }
@@ -1154,8 +1103,8 @@ $value: theme($remove-me: true);`;
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$before: grid-summary-theme($border-width: 2px);
@@ -1199,8 +1148,8 @@ $outside: app-grid-summary-theme();`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const source =
 `$before: grid-summary-theme($border-width: 2px)
@@ -1252,8 +1201,8 @@ $outside: app-grid-summary-theme()`;
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const scss =
 `@function wrapper($value: grid-summary-theme($border-width: 2px)) {
@@ -1296,8 +1245,8 @@ $outside: app-grid-summary-theme()`;
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$before: theme($remove-me: 2px, $old: red);
@@ -1341,8 +1290,8 @@ $after: theme( $new: red);`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.sass',
 `@media screen
@@ -1380,7 +1329,7 @@ $after: theme(
 @include theme()`);
     });
 
-    it('should update a call another stylesheet of the app could have declared', done => {
+    it('should update a call another stylesheet of the app could have declared', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1391,8 +1340,8 @@ $after: theme(
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         // a stylesheet of the app can forward the library's own members, and can hide or rename
         // what it declares, so what another one holds says nothing about this call
@@ -1412,10 +1361,9 @@ $var2: igx-theme-func($remove-me: 6px);`);
 @use "mixins" as custom;
 $var1: theme.igx-theme-func();
 $var2: igx-theme-func();`);
-        done();
     });
 
-    it('should not let another stylesheet of the app block a migration', done => {
+    it('should not let another stylesheet of the app block a migration', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1426,8 +1374,8 @@ $var2: igx-theme-func();`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const unrelated = `@mixin igx-theme-func($remove-me: 1px) {\n    border-width: $remove-me;\n}`;
         appTree.create('unrelated.scss', unrelated);
@@ -1438,10 +1386,9 @@ $var2: igx-theme-func();`);
 
         expect(appTree.readContent('unrelated.scss')).toEqual(unrelated);
         expect(appTree.readContent('styles.scss')).toEqual(`$var: igx-theme-func();`);
-        done();
     });
 
-    it('should update a theme function whose name the owner is only part of', done => {
+    it('should update a theme function whose name the owner is only part of', async () => {
         // migrations rely on this: `circular-theme` addresses `progress-circular-theme`,
         // and `theme` covers every `*-theme` mixin
         const themeChangesJson: ThemeChanges = {
@@ -1459,8 +1406,8 @@ $var2: igx-theme-func();`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$var1: progress-circular-theme($progress-circle-color: red);
@@ -1474,10 +1421,9 @@ $var2: light-theme($palette: $p, $wc: true);`);
 `$var1: progress-circular-theme($fill-color-default: red);
 @include theme($palette: $p);
 $var2: light-theme($palette: $p);`);
-        done();
     });
 
-    it('should rename a theme property behind a comment that mentions it', done => {
+    it('should rename a theme property behind a comment that mentions it', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1488,8 +1434,8 @@ $var2: light-theme($palette: $p);`);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$var1: igx-theme-func(/* $replace-me docs */ $replace-me: 6px);
@@ -1509,10 +1455,9 @@ $var2: igx-theme-func(
     // $replace-me: keep in sync with the brand color
     $replaced: 6px
 );`);
-        done();
     });
 
-    it('should remove rather than rename a theme property the call already passes under its new name', done => {
+    it('should remove rather than rename a theme property the call already passes under its new name', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1523,8 +1468,8 @@ $var2: igx-theme-func(
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$var1: igx-theme-func($replaced: red, $replace-me: 6px);
@@ -1540,10 +1485,9 @@ $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replace-me: 6px);
 $var2: igx-theme-func( $replaced: red);
 $var3: igx-theme-func($not-replaced: red, $replaced: 6px);
 $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`);
-        done();
     });
 
-    it('should keep the line endings of the stylesheet when carrying a comment over', done => {
+    it('should keep the line endings of the stylesheet when carrying a comment over', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1554,8 +1498,8 @@ $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`)
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss', `$var: igx-theme-func($prop1: red, // brand color\r\n    $remove-me: 6px, $prop2: blue);`);
 
@@ -1564,10 +1508,9 @@ $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`)
 
         expect(appTree.readContent('styles.scss'))
             .toEqual(`$var: igx-theme-func($prop1: red, // brand color\r\n $prop2: blue);`);
-        done();
     });
 
-    it('should update theme properties in stylesheets outside sourceRoot', done => {
+    it('should update theme properties in stylesheets outside sourceRoot', async () => {
         appTree = setupTestTree({
             projects: {
                 testProj: {
@@ -1593,8 +1536,8 @@ $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`)
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const call = `$var: igx-theme-func($remove-me: 1px);`;
         const migrated = `$var: igx-theme-func();`;
@@ -1605,13 +1548,12 @@ $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`)
         const update = new UnitUpdateChanges(__dirname, appTree);
         update.applyChanges();
 
-        updated.forEach(file => expect(appTree.readContent(file)).withContext(file).toEqual(migrated));
+        updated.forEach(file => expect(appTree.readContent(file), file).toEqual(migrated));
         // dependencies and build output are never touched
-        skipped.forEach(file => expect(appTree.readContent(file)).withContext(file).toEqual(call));
-        done();
+        skipped.forEach(file => expect(appTree.readContent(file), file).toEqual(call));
     });
 
-    it('should replace imports', done => {
+    it('should replace imports', async () => {
         const importsJson: ImportsChanges = {
             changes: [
                 {
@@ -1623,13 +1565,13 @@ $var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`)
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'imports.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(importsJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(importsJson));
 
         const fileContent = `
 @NgModule({
@@ -1650,7 +1592,7 @@ export class AppModule { }`;
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getImportsChanges()).toEqual(importsJson);
 
         update.applyChanges();
@@ -1670,65 +1612,54 @@ export class AppModule { }`;
 })
 export class AppModule { }`);
 
-        done();
+        ;
     });
 
-    it('should handle changes with valueTransform functions', done => {
+    it('should handle changes with valueTransform functions', async () => {
         const inputsJson: BindingChanges = {
             changes: [{
-                name: 'someProp',
-                replaceWith: 'someOtherProp',
-                valueTransform: 'some_prop_transform',
-                owner: {
-                    selector: 'igx-component',
-                    type: ElementType.Component
-                }
-            }]
+                    name: 'someProp',
+                    replaceWith: 'someOtherProp',
+                    valueTransform: 'some_prop_transform',
+                    owner: {
+                        selector: 'igx-component',
+                        type: ElementType.Component
+                    }
+                }]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(inputsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(inputsJson));
 
         // bracketed
-        appTree.create(
-            'test.component.html',
-            '<igx-component [someProp]="true"></igx-component>'
-        );
+        appTree.create('test.component.html', '<igx-component [someProp]="true"></igx-component>');
 
         // No brackets
-        appTree.create(
-            'test2.component.html',
-            '<igx-component someProp="otherVal"></igx-component>'
-        );
+        appTree.create('test2.component.html', '<igx-component someProp="otherVal"></igx-component>');
 
         // Small quotes
-        appTree.create(
-            'test3.component.html',
-            `<igx-component someProp='otherVal'></igx-component>`
-        );
+        appTree.create('test3.component.html', `<igx-component someProp='otherVal'></igx-component>`);
 
         // Multiple occurances
-        appTree.create(
-            'test4.component.html',
-            `<igx-component [someProp]="true"><igx-component>
+        appTree.create('test4.component.html', `<igx-component [someProp]="true"><igx-component>
 <igx-component [someProp]="false" [someProp]="false" [someProp]="false" [someProp]="false"><igx-component>
 <igx-component someProp="true"><igx-component>
-<igx-component someProp="false"><igx-component>`
-        );
+<igx-component someProp="false"><igx-component>`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('some_prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {
-                    args.value = args.value === 'true' ? '\'trueValue\'' : '\'falseValue\'';
-            } else {
+                args.value = args.value === 'true' ? '\'trueValue\'' : '\'falseValue\'';
+            }
+            else {
                 args.value = args.value === 'true' ? 'trueValue' : 'falseValue';
             }
         });
@@ -1738,50 +1669,44 @@ export class AppModule { }`);
         expect(appTree.readContent('test2.component.html')).toEqual(`<igx-component someOtherProp="falseValue"></igx-component>`);
         expect(appTree.readContent('test3.component.html')).toEqual(`<igx-component someOtherProp='falseValue'></igx-component>`);
         expect(appTree.readContent('test4.component.html')).toEqual(`<igx-component [someOtherProp]="'trueValue'"><igx-component>\n` +
-// eslint-disable-next-line max-len
-`<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
+            // eslint-disable-next-line max-len
+            `<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
 <igx-component someOtherProp="trueValue"><igx-component>
 <igx-component someOtherProp="falseValue"><igx-component>`);
-        done();
+        ;
     });
 
-    it('Should be able to change binding type via transform function', done => {
+    it('Should be able to change binding type via transform function', async () => {
         const inputsJson: BindingChanges = {
             changes: [{
-                name: 'prop',
-                replaceWith: 'newProp',
-                valueTransform: 'prop_transform',
-                owner: {
-                    selector: 'igx-component',
-                    type: ElementType.Component
-                }
-            }]
+                    name: 'prop',
+                    replaceWith: 'newProp',
+                    valueTransform: 'prop_transform',
+                    owner: {
+                        selector: 'igx-component',
+                        type: ElementType.Component
+                    }
+                }]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(inputsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(inputsJson));
 
         // bracketed
-        appTree.create(
-            'test-bound-to-string.component.html',
-            `<igx-component [prop]="true">STRING</igx-component>
+        appTree.create('test-bound-to-string.component.html', `<igx-component [prop]="true">STRING</igx-component>
 <igx-component [prop]="false">STRING</igx-component>
-<igx-component [prop]="someOtherProperty">BOUND</igx-component>`
-        );
-        appTree.create(
-            'test-string-to-bound.component.html',
-            `<igx-component prop="changeThisToBound">BOUND</igx-component>
-<igx-component prop="leaveMeBe">STRING</igx-component>`
-        );
+<igx-component [prop]="someOtherProperty">BOUND</igx-component>`);
+        appTree.create('test-string-to-bound.component.html', `<igx-component prop="changeThisToBound">BOUND</igx-component>
+<igx-component prop="leaveMeBe">STRING</igx-component>`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
-        expect(fs.readFileSync as jasmine.Spy).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {
@@ -1789,7 +1714,7 @@ export class AppModule { }`);
                     case 'true':
                         args.value = 'TRUTHY-STRING-VALUE';
                         args.bindingType = InputPropertyType.STRING;
-                    break;
+                        break;
                     case 'false':
                         args.value = 'FALSY-STRING-VALUE';
                         args.bindingType = InputPropertyType.STRING;
@@ -1797,7 +1722,8 @@ export class AppModule { }`);
                     default:
                         args.value += ' ? true : false';
                 }
-            } else {
+            }
+            else {
                 if (args.value === 'changeThisToBound') {
                     args.bindingType = InputPropertyType.EVAL;
                     args.value = 'true';
@@ -1806,14 +1732,12 @@ export class AppModule { }`);
         });
 
         update.applyChanges();
-        expect(appTree.readContent('test-bound-to-string.component.html')).toEqual(
-`<igx-component newProp="TRUTHY-STRING-VALUE">STRING</igx-component>
+        expect(appTree.readContent('test-bound-to-string.component.html')).toEqual(`<igx-component newProp="TRUTHY-STRING-VALUE">STRING</igx-component>
 <igx-component newProp="FALSY-STRING-VALUE">STRING</igx-component>
 <igx-component [newProp]="someOtherProperty ? true : false">BOUND</igx-component>`);
-        expect(appTree.readContent('test-string-to-bound.component.html')).toEqual(
-`<igx-component [newProp]="true">BOUND</igx-component>
+        expect(appTree.readContent('test-string-to-bound.component.html')).toEqual(`<igx-component [newProp]="true">BOUND</igx-component>
 <igx-component newProp="leaveMeBe">STRING</igx-component>`);
-        done();
+        ;
     });
 
     describe('Project loading', () => {
@@ -1837,7 +1761,7 @@ export class AppModule { }`);
             appTree.create(sassFile, '');
 
             // skip loading json config files
-            spyOn(fs, 'existsSync').and.returnValue(false);
+            vi.spyOn(fs, 'existsSync').mockReturnValue(false);
 
             const update = new UnitUpdateChanges(__dirname, appTree);
             expect(update.tsFiles).toContain(tsFile);
@@ -1880,7 +1804,7 @@ export class AppModule { }`);
             }
 
             // skip loading json config files
-            spyOn(fs, 'existsSync').and.returnValue(false);
+            vi.spyOn(fs, 'existsSync').mockReturnValue(false);
 
             const update = new UnitUpdateChanges(__dirname, appTree);
             for (const projName of Object.keys(workspace.projects)) {
@@ -1904,13 +1828,16 @@ export class AppModule { }`);
             const jsonPath = path.join(__dirname, 'changes', 'members.json');
 
             // leave callThrough on spies for other files the LS test might want to load:
-            spyOn(fs, 'existsSync').and.callThrough()
-                .withArgs(jsonPath).and.returnValue(true);
-            spyOn(fs, 'readFileSync').and.callThrough()
-                .withArgs(jsonPath, jasmine.any(String)).and.returnValue(JSON.stringify(selectorsJson));
+            const existsSync = fs.existsSync;
+            const readFileSync = fs.readFileSync;
+            vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) =>
+                filePath === jsonPath || existsSync(filePath));
+            vi.spyOn(fs, 'readFileSync').mockImplementation(((filePath: fs.PathOrFileDescriptor, options?: any) =>
+                filePath === jsonPath && typeof options === 'string'
+                    ? JSON.stringify(selectorsJson)
+                    : readFileSync(filePath, options)) as typeof fs.readFileSync);
 
-            const fileContent =
-`import { Component } from '@angular/core';
+            const fileContent = `import { Component } from '@angular/core';
 import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
@@ -1924,8 +1851,7 @@ export class CustomGridComponent {
 }
 `;
             appTree.create('test.component.ts', fileContent);
-            const expectedFileContent =
-`import { Component } from '@angular/core';
+            const expectedFileContent = `import { Component } from '@angular/core';
 import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
@@ -1944,7 +1870,7 @@ export class CustomGridComponent {
         });
     });
 
-    it('Should migrate sass variables names correctly', ()=> {
+    it('Should migrate sass variables names correctly', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1980,16 +1906,15 @@ export class CustomGridComponent {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`$palette: $light-material-palette;
+        const fileContent = `$palette: $light-material-palette;
 $light-material-palette : $some-variable,
 $palette2: $light-material-palette-primary;
 $palette3: mat.define-light-theme($light-palette-primary, $elevation, $light-palette);
@@ -2015,8 +1940,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 );
 `;
         appTree.create('test.component.scss', fileContent);
-        const expectedFileContent =
-`$palette: $igx-light-material-palette;
+        const expectedFileContent = `$palette: $igx-light-material-palette;
 $igx-light-material-palette : $some-variable,
 $palette2: $light-material-palette-primary;
 $palette3: mat.define-light-theme($light-palette-primary, $igx-elevation, $igx-light-palette);
@@ -2042,10 +1966,10 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 );
 `;
 
-    const update = new UnitUpdateChanges(__dirname, appTree);
+        const update = new UnitUpdateChanges(__dirname, appTree);
 
-    update.applyChanges();
-    expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
     });
 
     it('Should migrate aliased scss functions', () => {
@@ -2075,16 +1999,15 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const fileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'some/url' as my-namespace;
@@ -2098,8 +2021,7 @@ $my-other-theme: my-namespace.function1($color1: igniteui2.igx-contrast-color($p
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'some/url' as my-namespace;
@@ -2143,16 +2065,15 @@ $my-other-theme: my-namespace.function1($color1: igniteui2.contrast-color($palet
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as *;
+        const fileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 $my-palette: igx-palette($primary: red, $secondary:  blue);
@@ -2164,8 +2085,7 @@ $my-other-theme: my-namespace.function1($color1: igx-contrast-color($palette: ig
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as *;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 $my-palette: palette($primary: red, $secondary:  blue);
@@ -2202,16 +2122,15 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const fileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'some/url' as my-namespace;
@@ -2224,8 +2143,7 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'some/url' as my-namespace;
@@ -2263,16 +2181,15 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as *;
+        const fileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 @include igx-theme($palette: $my-palette);
@@ -2283,8 +2200,7 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as *;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 @include theme($palette: $my-palette);
@@ -2316,13 +2232,13 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
 
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `.my-dialog {
@@ -2364,13 +2280,13 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         const fileContent =
 `@use 'igniteui-angular/theming' as theme;
@@ -2404,8 +2320,8 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss',
 `$a: palette(red, blue, white);
@@ -2420,7 +2336,7 @@ $c: palette($args...);
   +palette($a)
 `);
 
-        const warn = jasmine.createSpy('warn');
+        const warn = vi.fn();
         const context = { logger: { warn, info: () => {} } } as any;
         new UnitUpdateChanges(__dirname, appTree, context).applyChanges();
 
@@ -2436,7 +2352,7 @@ $c: palette($args...);
 :root
   +palette($a)
 `);
-        const warnings = warn.calls.allArgs().map(args => args[0]);
+        const warnings = warn.mock.calls.map(args => args[0]);
         expect(warnings).toContain(`  - /styles.scss:3 - Add $generator: 'legacy' to the arguments this call of palette() spreads.`);
         expect(warnings).toContain('  - /styles.scss:5 - Remove the include of the mixin card-typography, which passes a content block.');
     });
@@ -2449,8 +2365,8 @@ $c: palette($args...);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss', `$a: $igx-elevations;\n$b: map.get($igx-elevations, $igx-elevation);\n`);
         new UnitUpdateChanges(__dirname, appTree).applyChanges();
@@ -2466,12 +2382,12 @@ $c: palette($args...);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         appTree.create('styles.scss', `$browser-context: 16px;\n$_indigo-elevation-navbar: 2;\n.a { width: math.div(10px, $browser-context); }\n`);
 
-        const warn = jasmine.createSpy('warn');
+        const warn = vi.fn();
         new UnitUpdateChanges(__dirname, appTree, { logger: { warn, info: () => {} } } as any).applyChanges();
 
         expect(appTree.readContent('styles.scss')).toEqual(`.a { width: math.div(10px, $browser-context); }\n`);
@@ -2486,8 +2402,8 @@ $c: palette($args...);
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => filePath === jsonPath);
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
         // the include goes after the palette change is made, and takes three lines with it
         appTree.create('styles.scss',
@@ -2497,7 +2413,7 @@ $c: palette($args...);
 $c: palette($args...);
 `);
 
-        const warn = jasmine.createSpy('warn');
+        const warn = vi.fn();
         new UnitUpdateChanges(__dirname, appTree, { logger: { warn, info: () => {} } } as any).applyChanges();
 
         expect(appTree.readContent('styles.scss')).toEqual(`$c: palette($args...);\n`);
@@ -2513,13 +2429,13 @@ $c: palette($args...);
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(scssUseChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(scssUseChangesJson));
 
         const fileContent =
 `@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;
@@ -2551,13 +2467,13 @@ $c: palette($args...);
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(scssUseChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(scssUseChangesJson));
 
         const fileContent =
 `@use 'igniteui-angular/theming' as *;
@@ -2586,13 +2502,13 @@ $c: palette($args...);
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(scssUseChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(scssUseChangesJson));
 
         const fileContent =
 `@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;

@@ -22,6 +22,9 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
     - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+- `IgxStepperComponent`
+    - In linear mode, the steps after the first invalid step that is not `optional` or `disabled` are disabled, wherever the active step is, as in the Ignite UI for Web Components stepper. Previously only the active step and the steps after it were checked, so an invalid `optional` active step disabled the steps after it, and an invalid step before the active one did not. The disabled steps are also recalculated when the `optional` state of a step changes, and the step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
+    - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 
 ### Bug Fixes
 
@@ -34,6 +37,13 @@ All notable changes for each version of this project will be documented in this 
     - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
     - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxStepperComponent`
+    - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
+    - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
+    - The active step now gets `tabindex="0"` when it is changed with `next`, `prev` or `navigateTo`.
+    - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
+    - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
+    - Setting `animationDuration` from code now applies it to the vertical animations as well.
 
 ## 22.2.3
 
@@ -58,6 +68,19 @@ All notable changes for each version of this project will be documented in this 
     - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
 - `IgxTabsComponent`
     - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
+- `IgxChipComponent`
+    - A selected chip now regains focus after it is dragged and dropped. Previously focus was lost.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - A combo used in a virtualized grid cell template with its `id` bound to row data no longer shows the selection of a combo from another row after the grid is scrolled.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - `recalculateAutoSizes()` now resizes auto-sized columns to the new content in zoneless applications. Previously the columns could keep their previous widths.
+    - With multiple cell selection, the selected cell is no longer lost when `Shift` + arrow keys are pressed at the edge of the grid, so a following `Ctrl` + click keeps both selections.
+    - `findNext`, `findPrev` and navigating to a row on another page now scroll to the row after the page changes. Previously the grid changed the page but did not scroll to the row.
+- `IgxHierarchicalGridComponent`
+    - Child grids no longer fail to initialize or throw `ExpressionChangedAfterItHasBeenCheckedError` when rows are expanded from code running outside the Angular zone or in zoneless applications.
+    - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.
+- `IgxOverlayService`
+    - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
 
 ## 22.2.1
 
