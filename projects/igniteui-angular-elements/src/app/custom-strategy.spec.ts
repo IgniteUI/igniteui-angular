@@ -1,5 +1,5 @@
 import { ApplicationRef, ViewContainerRef } from '@angular/core';
-import { IgxActionStripComponent, IgxColumnComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, PivotGridType, SortingDirection } from 'igniteui-angular';
+import { IgxActionStripComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridComponent, IgxHierarchicalGridComponent, IgxRowIslandComponent, PivotGridType, SortingDirection } from 'igniteui-angular';
 import { html } from 'lit';
 import { filter, firstValueFrom, fromEvent, timer } from 'rxjs';
 import { ComponentRefKey, IgcNgElement } from './custom-strategy';
@@ -12,6 +12,7 @@ import {
     IgcRowIslandComponent,
     IgcPivotGridComponent,
     IgcColumnComponent,
+    IgcColumnGroupComponent,
     IgcPaginatorComponent,
     IgcGridStateComponent,
     IgcColumnLayoutComponent,
@@ -40,6 +41,7 @@ describe('Elements: ', () => {
             IgcPivotGridComponent,
             IgcPivotDataSelectorComponent,
             IgcColumnComponent,
+            IgcColumnGroupComponent,
             IgcColumnLayoutComponent,
             IgcPaginatorComponent,
             IgcGridStateComponent,
@@ -702,6 +704,93 @@ describe('Elements: ', () => {
             expect(grid.selectedColumns()).toEqual([column]);
         });
 
+        it('should apply cached inputs before writable non-input properties set before connect', async () => {
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            // dependent non-input property cached before the input it relies on:
+            columnEl.selected = true;
+            columnEl.field = 'ProductID';
+            gridEl.appendChild(columnEl);
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(fromEvent(gridEl, 'childrenResolved'));
+
+            expect(column.field).toBe('ProductID');
+            expect(column.selected).toBe(true);
+            expect(columnEl.selected).toBe(true);
+            expect(grid.selectedColumns()).toEqual([column]);
+        });
+
+        it('should apply column group selection set before connect once its child columns resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            groupEl.selected = true;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+            expect(groupEl.selected).toBe(true);
+        });
+
+        it('should apply column group selection set after connect but before its child columns resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            expect(group.children.length).toBe(0);
+            groupEl.selected = true;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+        });
+
+        it('should keep a pre-connect group selection repeated before its child columns resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            groupEl.selected = true;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            groupEl.selected = true;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+        });
+
+        it('should not re-apply a pre-connect group selection overridden before its child columns resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            groupEl.selected = true;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            groupEl.selected = false;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(false);
+            expect(group.selected).toBe(false);
+        });
+
         it('should hide opened toggle components in the grid on grid scroll', () => {
             const createToggle = () => {
                 const toggle = document.createElement('div') as HTMLDivElement & { hide: () => void };
@@ -742,6 +831,7 @@ describe('Elements: ', () => {
 
             gridEl.remove();
             await firstValueFrom(timer(10 /* DESTROY_DELAY */ * 2));
+            testContainer.appendChild(toggle);
             gridEl.dispatchEvent(new CustomEvent('gridScroll'));
 
             expect(toggle.hide).not.toHaveBeenCalled();
@@ -835,12 +925,31 @@ describe('Elements: ', () => {
             expect(deep.a.b.c.column).toBe(column);
         });
 
-        it('should only patch columnInit event args', () => {
+        it('should only patch columnInit and columnsAutogenerated event args', () => {
             const args = { column };
 
             expect(strategy.patchOutputComponents('rendered', args)).toBe(args);
             expect(args.column).toBe(column);
             expect(strategy.patchOutputComponents('columnInit', column)).not.toBe(column);
+        });
+
+        it('should proxy autogenerated columns emitted through columnsAutogenerated', async () => {
+            const autoGridEl = document.createElement('igc-grid') as IgcNgElement & InstanceType<typeof IgcGridComponent>;
+            autoGridEl.autoGenerate = true;
+            autoGridEl.data = SampleTestData.foodProductData();
+            const autoGenerated = firstValueFrom(fromEvent<CustomEvent>(autoGridEl, 'columnsAutogenerated'));
+            testContainer.appendChild(autoGridEl);
+
+            const emitted = (await autoGenerated).detail.columns as IgxColumnComponent[];
+            const autoGrid = (await autoGridEl.ngElementStrategy[ComponentRefKey]).instance as IgxGridComponent;
+            const target = autoGrid.columns.find(c => c.field === 'ProductName');
+            const proxy = emitted.find(c => c.field === 'ProductName');
+            expect(proxy).not.toBe(target);
+
+            const headerTemplate = () => html`<span>Header</span>`;
+            proxy.headerTemplate = headerTemplate as any;
+            expect(target.headerTemplate).toBeInstanceOf(TemplateRefWrapper);
+            expect((autoGridEl.ngElementStrategy as any).templateWrapper.getTemplateFunction(target.headerTemplate)).toBe(headerTemplate);
         });
     });
 
