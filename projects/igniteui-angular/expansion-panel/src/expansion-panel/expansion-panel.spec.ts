@@ -682,6 +682,32 @@ describe('igxExpansionPanel', () => {
 
             headerSub.unsubscribe();
         });
+        it('Should prevent the default action of Enter and Space only when the interaction is not cancelled', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const header = fixture.componentInstance.header;
+            // A control projected into the header.
+            const projectedButton = document.createElement('button');
+            fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER).appendChild(projectedButton);
+            const keydown = (key: string, repeat = false) => {
+                const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true });
+                projectedButton.dispatchEvent(event);
+                return event;
+            };
+
+            const headerSub = header.interaction.subscribe((event) => {
+                event.cancel = true;
+            });
+            expect(keydown('Enter').defaultPrevented, 'A cancelled Enter keeps its default action').toBe(false);
+            expect(keydown(' ').defaultPrevented, 'A cancelled Space keeps its default action').toBe(false);
+            expect(panel.collapsed).toBe(true);
+            headerSub.unsubscribe();
+
+            expect(keydown('Enter').defaultPrevented, 'An accepted Enter is prevented').toBe(true);
+            expect(keydown(' ').defaultPrevented, 'An accepted Space is prevented').toBe(true);
+            expect(keydown(' ', true).defaultPrevented, 'A held Space is prevented').toBe(true);
+        });
         it('Should change panel expansion when using different methods', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();

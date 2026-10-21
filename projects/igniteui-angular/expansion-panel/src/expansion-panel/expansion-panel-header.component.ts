@@ -215,7 +215,7 @@ export class IgxExpansionPanelHeaderComponent {
 
         this._keyBindings
             .configure({ skip: () => this.disabled })
-            .setActivateHandler((event) => this.onAction(event))
+            .setActivateHandler((event) => this.onAction(event), { preventDefault: false, repeat: true })
             .set([altKey, arrowDown], (event) => this.openPanel(event))
             .set([altKey, arrowUp], (event) => this.closePanel(event));
     }
