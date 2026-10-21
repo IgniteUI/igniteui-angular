@@ -20,13 +20,14 @@ import {
     shiftKey,
     spaceBar
 } from 'igniteui-angular/core';
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
 
 describe('IgxKeyBindingsService', () => {
     describe('Provided by a component', () => {
         let fixture: ComponentFixture<KeyBindingsHostComponent>;
         let host: HTMLElement;
         let keyBindings: IgxKeyBindingsService;
-        let handler: jasmine.Spy<(event: KeyboardEvent) => void>;
+        let handler: Mock<(event: KeyboardEvent) => void>;
 
         beforeEach(() => {
             TestBed.configureTestingModule({ imports: [KeyBindingsHostComponent] });
@@ -34,7 +35,7 @@ describe('IgxKeyBindingsService', () => {
             fixture.detectChanges();
             host = fixture.nativeElement;
             keyBindings = fixture.componentInstance.keyBindings;
-            handler = jasmine.createSpy('handler');
+            handler = vi.fn();
         });
 
         describe('Triggers', () => {
@@ -45,7 +46,7 @@ describe('IgxKeyBindingsService', () => {
                 expect(handler).not.toHaveBeenCalled();
 
                 const event = dispatch(host, 'keydown', 'a');
-                expect(handler).toHaveBeenCalledOnceWith(event);
+                expect(handler).toHaveBeenCalledExactlyOnceWith(event);
             });
 
             it('should run a keyup binding on keyup only', () => {
@@ -55,7 +56,7 @@ describe('IgxKeyBindingsService', () => {
                 expect(handler).not.toHaveBeenCalled();
 
                 const event = dispatch(host, 'keyup', 's');
-                expect(handler).toHaveBeenCalledOnceWith(event);
+                expect(handler).toHaveBeenCalledExactlyOnceWith(event);
             });
 
             it('should run a binding with both triggers on keydown and keyup', () => {
@@ -63,8 +64,8 @@ describe('IgxKeyBindingsService', () => {
 
                 press(host, 'd');
                 expect(handler).toHaveBeenCalledTimes(2);
-                expect(handler.calls.argsFor(0)[0].type).toBe('keydown');
-                expect(handler.calls.argsFor(1)[0].type).toBe('keyup');
+                expect(handler.mock.calls[0][0].type).toBe('keydown');
+                expect(handler.mock.calls[1][0].type).toBe('keyup');
             });
 
             it('should ignore keys without a binding', () => {
@@ -72,7 +73,7 @@ describe('IgxKeyBindingsService', () => {
 
                 const event = dispatch(host, 'keydown', 'b');
                 expect(handler).not.toHaveBeenCalled();
-                expect(event.defaultPrevented).toBeFalse();
+                expect(event.defaultPrevented).toBe(false);
             });
 
             it('should ignore events without a key', () => {
@@ -116,12 +117,12 @@ describe('IgxKeyBindingsService', () => {
 
             it('should honor a skip callback and pass it the target and the event', () => {
                 let skip = true;
-                const skipCallback = jasmine.createSpy('skip').and.callFake(() => skip);
+                const skipCallback = vi.fn(() => skip);
                 keyBindings.configure({ skip: skipCallback }).set('k', handler);
 
                 const inner = host.querySelector('.inner')!;
                 const event = dispatch(inner, 'keydown', 'k');
-                expect(skipCallback).toHaveBeenCalledOnceWith(inner, event);
+                expect(skipCallback).toHaveBeenCalledExactlyOnceWith(inner, event);
                 expect(handler).not.toHaveBeenCalled();
 
                 skip = false;
@@ -130,7 +131,7 @@ describe('IgxKeyBindingsService', () => {
             });
 
             it('should not call the skip callback for keys without a binding', () => {
-                const skipCallback = jasmine.createSpy('skip').and.returnValue(false);
+                const skipCallback = vi.fn(() => false);
                 keyBindings.configure({ skip: skipCallback }).set('k', handler);
 
                 dispatch(host, 'keydown', 'q');
@@ -160,25 +161,25 @@ describe('IgxKeyBindingsService', () => {
             it('should prevent the default action by default', () => {
                 keyBindings.set('a', handler);
 
-                expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBeTrue();
+                expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBe(true);
             });
 
             it('should not prevent the default action when preventDefault is false', () => {
                 keyBindings.set('a', handler, { preventDefault: false });
 
-                expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBeFalse();
+                expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBe(false);
                 expect(handler).toHaveBeenCalledTimes(1);
             });
 
             it('should prevent the default action on keyup triggers too', () => {
                 keyBindings.set('d', handler, { triggers: ['keydown', 'keyup'] });
 
-                expect(dispatch(host, 'keydown', 'd').defaultPrevented).toBeTrue();
-                expect(dispatch(host, 'keyup', 'd').defaultPrevented).toBeTrue();
+                expect(dispatch(host, 'keydown', 'd').defaultPrevented).toBe(true);
+                expect(dispatch(host, 'keyup', 'd').defaultPrevented).toBe(true);
             });
 
             it('should stop propagation when stopPropagation is true', () => {
-                const parentHandler = jasmine.createSpy('parentHandler');
+                const parentHandler = vi.fn();
                 host.parentElement!.addEventListener('keydown', parentHandler);
                 keyBindings.set('d', handler, { stopPropagation: true });
 
@@ -190,7 +191,7 @@ describe('IgxKeyBindingsService', () => {
             });
 
             it('should let the event propagate by default', () => {
-                const parentHandler = jasmine.createSpy('parentHandler');
+                const parentHandler = vi.fn();
                 host.parentElement!.addEventListener('keydown', parentHandler);
                 keyBindings.set('d', handler);
 
@@ -208,7 +209,7 @@ describe('IgxKeyBindingsService', () => {
                     .set('a', handler)
                     .set('b', handler, { repeat: false });
 
-                expect(dispatch(host, 'keydown', 'a', { repeat: true }).defaultPrevented).toBeFalse();
+                expect(dispatch(host, 'keydown', 'a', { repeat: true }).defaultPrevented).toBe(false);
                 expect(handler).toHaveBeenCalledTimes(1);
 
                 dispatch(host, 'keyup', 'a');
@@ -220,7 +221,7 @@ describe('IgxKeyBindingsService', () => {
                 keyBindings.set('a', handler);
                 keyBindings.configure({ bindingDefaults: { preventDefault: false } });
 
-                expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBeFalse();
+                expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBe(false);
             });
         });
 
@@ -232,8 +233,8 @@ describe('IgxKeyBindingsService', () => {
                 press(host, spaceBar);
 
                 expect(handler).toHaveBeenCalledTimes(2);
-                expect(handler.calls.argsFor(0)[0].key).toBe(enterKey);
-                expect(handler.calls.argsFor(1)[0].key).toBe(spaceBar);
+                expect(handler.mock.calls[0][0].key).toBe(enterKey);
+                expect(handler.mock.calls[1][0].key).toBe(spaceBar);
             });
         });
 
@@ -266,7 +267,7 @@ describe('IgxKeyBindingsService', () => {
             });
 
             it('should match a symbol produced with Shift only together with Shift', () => {
-                const bangHandler = jasmine.createSpy('bangHandler');
+                const bangHandler = vi.fn();
                 keyBindings.set('!', bangHandler).set([shiftKey, '!'], handler);
 
                 // Shift+1 on a US layout: `key` is '!' and `shiftKey` is set.
@@ -301,6 +302,27 @@ describe('IgxKeyBindingsService', () => {
 
                 expect(handler).not.toHaveBeenCalled();
             });
+
+            it('should release the pressed keys when focus leaves the host', () => {
+                const inner = host.querySelector('.inner')!;
+                dispatch(inner, 'keydown', 'x');
+                // The keyup of `x` fires outside the host, where the service does not listen.
+                inner.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: null }));
+                dispatch(inner, 'keydown', 'z');
+
+                expect(handler).not.toHaveBeenCalled();
+            });
+
+            it('should keep the pressed keys when focus moves inside the host', () => {
+                const inner = host.querySelector('.inner')!;
+                const input = host.querySelector('input')!;
+                keyBindings.configure({ skip: [] });
+                dispatch(inner, 'keydown', 'x');
+                inner.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget: input }));
+                dispatch(input, 'keydown', 'z');
+
+                expect(handler).toHaveBeenCalledTimes(1);
+            });
         });
 
         describe('Repeat', () => {
@@ -309,6 +331,30 @@ describe('IgxKeyBindingsService', () => {
 
                 dispatch(host, 'keydown', 'a', { repeat: true });
                 expect(handler).not.toHaveBeenCalled();
+            });
+
+            it('should prevent the default of an ignored repeated keydown', () => {
+                keyBindings
+                    .set('a', handler)
+                    .set('b', handler, { preventDefault: false });
+
+                expect(dispatch(host, 'keydown', 'a', { repeat: true }).defaultPrevented, 'a held key keeps its default prevented')
+                    .toBe(true);
+                dispatch(host, 'keyup', 'a');
+                expect(dispatch(host, 'keydown', 'b', { repeat: true }).defaultPrevented).toBe(false);
+                expect(handler).not.toHaveBeenCalled();
+            });
+
+            it('should stop the propagation of an ignored repeated keydown when stopPropagation is true', () => {
+                const parentHandler = vi.fn();
+                host.parentElement!.addEventListener('keydown', parentHandler);
+                keyBindings.set('a', handler, { stopPropagation: true });
+
+                dispatch(host, 'keydown', 'a', { repeat: true });
+
+                expect(parentHandler).not.toHaveBeenCalled();
+                expect(handler).not.toHaveBeenCalled();
+                host.parentElement!.removeEventListener('keydown', parentHandler);
             });
 
             it('should run for a repeated keydown when repeat is true', () => {
@@ -320,8 +366,8 @@ describe('IgxKeyBindingsService', () => {
             });
 
             it('should run the right binding for overlapping key presses', () => {
-                const downHandler = jasmine.createSpy('downHandler');
-                const upHandler = jasmine.createSpy('upHandler');
+                const downHandler = vi.fn();
+                const upHandler = vi.fn();
                 keyBindings
                     .set(arrowDown, downHandler, { repeat: true })
                     .set(arrowUp, upHandler, { repeat: true });
@@ -343,7 +389,7 @@ describe('IgxKeyBindingsService', () => {
 
         describe('Dev-mode errors', () => {
             it('should throw for a combination bound twice and keep the first binding', () => {
-                const second = jasmine.createSpy('second');
+                const second = vi.fn();
                 keyBindings.set([shiftKey, 'a'], handler);
 
                 expect(() => keyBindings.set(['A', shiftKey], second)).toThrowError(/shift\+a/);
@@ -385,7 +431,7 @@ describe('IgxKeyBindingsService', () => {
                 keyBindings.observeElement(external);
 
                 const event = dispatch(external, 'keydown', escapeKey);
-                expect(handler).toHaveBeenCalledOnceWith(event);
+                expect(handler).toHaveBeenCalledExactlyOnceWith(event);
             });
 
             it('should keep handling the keys of the host while observing', () => {
@@ -424,7 +470,7 @@ describe('IgxKeyBindingsService', () => {
             });
 
             it('should run once for an observed element inside the host and keep bubbling', () => {
-                const parentHandler = jasmine.createSpy('parentHandler');
+                const parentHandler = vi.fn();
                 host.parentElement!.addEventListener('keydown', parentHandler);
                 const inner = host.querySelector<HTMLElement>('.inner')!;
                 keyBindings.observeElement(inner);
@@ -502,7 +548,7 @@ describe('IgxKeyBindingsService', () => {
 
             dispatch(host, 'keydown', enterKey);
             expect(zoneEntries).toBe(1);
-            expect(fixture.componentInstance.ranInZone).toBeTrue();
+            expect(fixture.componentInstance.ranInZone).toBe(true);
             subscription.unsubscribe();
         });
 
@@ -539,14 +585,14 @@ describe('IgxKeyBindingsService', () => {
 
     describe('Server platform', () => {
         it('should not add listeners outside the browser', () => {
-            const addListener = spyOn(window, 'addEventListener').and.callThrough();
+            const addListener = vi.spyOn(window, 'addEventListener');
             TestBed.configureTestingModule({
                 imports: [KeyBindingsHostComponent],
                 providers: [{ provide: PLATFORM_ID, useValue: 'server' }]
             });
             const fixture = TestBed.createComponent(KeyBindingsHostComponent);
             const keyBindings = fixture.componentInstance.keyBindings;
-            const handler = jasmine.createSpy('handler');
+            const handler = vi.fn();
             const external = document.createElement('div');
 
             keyBindings.set('a', handler);
@@ -555,7 +601,7 @@ describe('IgxKeyBindingsService', () => {
             dispatch(external, 'keydown', 'a');
 
             expect(handler).not.toHaveBeenCalled();
-            expect(addListener).not.toHaveBeenCalledWith('blur', jasmine.anything(), jasmine.anything());
+            expect(addListener).not.toHaveBeenCalledWith('blur', expect.anything(), expect.anything());
             expect(() => unsubscribe()).not.toThrow();
         });
     });
@@ -565,10 +611,10 @@ describe('isKey', () => {
     it('should compare the key of the event without regard to case', () => {
         const event = new KeyboardEvent('keydown', { key: 'ArrowUp' });
 
-        expect(isKey(event, arrowUp)).toBeTrue();
-        expect(isKey(event, 'arrowup')).toBeTrue();
-        expect(isKey(event, arrowDown)).toBeFalse();
-        expect(isKey(new KeyboardEvent('keydown', { key: 'Control' }), ctrlKey)).toBeTrue();
+        expect(isKey(event, arrowUp)).toBe(true);
+        expect(isKey(event, 'arrowup')).toBe(true);
+        expect(isKey(event, arrowDown)).toBe(false);
+        expect(isKey(new KeyboardEvent('keydown', { key: 'Control' }), ctrlKey)).toBe(true);
     });
 });
 

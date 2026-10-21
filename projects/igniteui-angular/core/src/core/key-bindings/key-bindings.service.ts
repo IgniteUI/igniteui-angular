@@ -96,7 +96,9 @@ export type IgxKeyBindingTrigger = 'keydown' | 'keyup';
 export interface IgxKeyBindingOptions {
     /** The event types that run the handler. Defaults to `['keydown']`. */
     triggers?: IgxKeyBindingTrigger[];
-    /** Whether the handler runs for a repeated keydown. Defaults to `false`. */
+    /**
+     * Whether the handler runs for a repeated keydown. Defaults to `false`.
+     */
     repeat?: boolean;
     /** Whether to call `preventDefault` before the handler runs. Defaults to `true`. */
     preventDefault?: boolean;
@@ -213,8 +215,9 @@ export class IgxKeyBindingsService {
         const { signal } = this._createListeners();
         this._zone.runOutsideAngular(() => {
             this._listen(this._host, signal);
-            // No keyup arrives when the user leaves the window with a key down.
-            this._document.defaultView?.addEventListener('blur', this._onWindowBlur, { signal });
+            // No keyup arrives when focus leaves the host or the window with a key down.
+            this._host.addEventListener('focusout', this._onHostFocusOut, { signal });
+            this._document.defaultView?.addEventListener('blur', this._releasePressedKeys, { signal });
         });
     }
 
@@ -364,8 +367,16 @@ export class IgxKeyBindingsService {
         element.addEventListener('keyup', this._onKeyEvent, { signal });
     }
 
-    private readonly _onWindowBlur = (): void => {
+    private readonly _releasePressedKeys = (): void => {
         this._pressedKeys.clear();
+    };
+
+    /** Focus that moves inside the host keeps the keys: their keyup still reaches the host. */
+    private readonly _onHostFocusOut = (event: FocusEvent): void => {
+        const next = event.relatedTarget as Node | null;
+        if (!next || !this._host.contains(next)) {
+            this._releasePressedKeys();
+        }
     };
 
     private readonly _onKeyEvent = (event: Event): void => {
@@ -433,15 +444,17 @@ export class IgxKeyBindingsService {
         if (!triggers.includes(event.type as IgxKeyBindingTrigger)) {
             return;
         }
-        if (!isKeyup(event) && event.repeat && !options.repeat) {
-            return;
-        }
 
         if (options.preventDefault) {
             event.preventDefault();
         }
         if (options.stopPropagation) {
             event.stopPropagation();
+        }
+
+        // A held key keeps its default prevented, but the handler runs once.
+        if (!isKeyup(event) && event.repeat && !options.repeat) {
+            return;
         }
 
         // Same as a template listener: enter the zone and mark the view, so
