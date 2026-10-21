@@ -183,6 +183,40 @@ describe('IgxForOf directive -', () => {
             expect(state.startIndex).toBe(1);
         });
 
+        for (const dir of ['ltr', 'rtl']) {
+            it(`should keep the scrolled content in place when growing the container prepends items (${dir})`, () => {
+                const sign = dir === 'rtl' ? -1 : 1;
+                fix.debugElement.nativeElement.dir = dir;
+                fix.componentInstance.width = '200px';
+                fix.componentInstance.cols = [
+                    { field: '1', width: 100 },
+                    { field: '2', width: 100 },
+                    { field: '3', width: 100 },
+                    { field: '4', width: 100 },
+                    { field: '5', width: 100 }
+                ];
+                fix.detectChanges();
+
+                fix.componentInstance.scrollLeft(sign * 250);
+                fix.detectChanges();
+                const firstDir = fix.componentInstance.childVirtDirs.first;
+                expect(firstDir.state.startIndex).toBe(2);
+                expect(firstDir.state.chunkSize).toBe(3);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 50);
+
+                // growing by 1px adds one item but leaves the scroll position unclamped,
+                // so no scroll event follows to restore the offset
+                fix.componentInstance.width = '201px';
+                fix.detectChanges();
+
+                expect(Math.abs(horizontalScroller.scrollLeft)).toBe(250);
+                expect(firstDir.state.startIndex).toBe(1);
+                expect(firstDir.state.chunkSize).toBe(4);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 150);
+                expect(displayContainer.children[0].textContent).toBe(fix.componentInstance.data[0]['2'].toString());
+            });
+        }
+
         it('should display the correct chunk items on resizing the container', async () => {
             // initially the container's width is narrow enough to be scrollable
             fix.componentInstance.width = '200px';
