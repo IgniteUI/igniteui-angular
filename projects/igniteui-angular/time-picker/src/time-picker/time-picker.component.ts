@@ -14,7 +14,6 @@ import {
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    HostListener,
     booleanAttribute,
     inject,
     ChangeDetectionStrategy,
@@ -65,6 +64,7 @@ import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from 'igniteui-angular/core';
 import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, NgControlAdapter } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, altKey, arrowDown, arrowUp, escapeKey, spaceBar } from 'igniteui-angular/core';
 
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
@@ -93,7 +93,8 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             provide: NG_VALIDATORS,
             useExisting: IgxTimePickerComponent,
             multi: true
-        }
+        },
+        IgxKeyBindingsService
     ],
     selector: 'igx-time-picker',
     styleUrl: 'time-picker.component.css',
@@ -132,6 +133,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * Sets the value of the `id` attribute.
@@ -645,30 +647,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     constructor() {
         super();
         this.locale = this.locale || this._localeId;
-    }
 
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public onKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey && this.isDropdown) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey && this.isDropdown) {
-                    this.open();
-                }
-                break;
-            case this.platform.KEYMAP.ESCAPE:
-                this.cancelButtonClick();
-                break;
-            case this.platform.KEYMAP.SPACE:
-                this.open();
-                event.preventDefault();
-                break;
-        }
+        // Alt + arrows only work in drop-down mode; in dialog mode they are skipped and
+        // keep their default action. Escape keeps its default, as before. `open` checks disabled and readOnly.
+        this._keyBindings
+            .configure({ skip: (_target, event) => event.altKey && !this.isDropdown })
+            .set([altKey, arrowDown], () => this.open())
+            .set([altKey, arrowUp], () => this.close())
+            .set(escapeKey, () => this.cancelButtonClick(), { preventDefault: false })
+            .set(spaceBar, () => this.open());
     }
 
     /** @hidden @internal */
