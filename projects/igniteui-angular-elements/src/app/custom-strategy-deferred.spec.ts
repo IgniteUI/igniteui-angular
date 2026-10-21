@@ -7,7 +7,8 @@ import { describe, it, expect } from 'vitest';
 
 describe('Elements: deferred parent definition', () => {
     it('should wait for the parent element to be defined before attaching to it', async () => {
-        // Relies on the per-file isolation of the test runner for a clean custom elements registry
+        // Relies on per-file isolation (`isolate: true` in angular.json) for a clean custom elements registry,
+        // otherwise other spec files sharing the same browser page may have already defined `igc-tree-grid`
         expect(customElements.get('igc-tree-grid')).toBeUndefined();
         defineComponents(IgcColumnComponent);
 
