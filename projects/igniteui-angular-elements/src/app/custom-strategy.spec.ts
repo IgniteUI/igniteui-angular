@@ -702,6 +702,21 @@ describe('Elements: ', () => {
             expect(grid.selectedColumns()).toEqual([column]);
         });
 
+        it('should apply cached inputs before writable non-input properties set before connect', async () => {
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            // dependent non-input property cached before the input it relies on:
+            columnEl.selected = true;
+            columnEl.field = 'ProductID';
+            gridEl.appendChild(columnEl);
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(fromEvent(gridEl, 'childrenResolved'));
+
+            expect(column.field).toBe('ProductID');
+            expect(column.selected).toBe(true);
+            expect(columnEl.selected).toBe(true);
+            expect(grid.selectedColumns()).toEqual([column]);
+        });
+
         it('should hide opened toggle components in the grid on grid scroll', () => {
             const createToggle = () => {
                 const toggle = document.createElement('div') as HTMLDivElement & { hide: () => void };
