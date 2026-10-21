@@ -1,5 +1,5 @@
 import { Component, input, signal, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import { VirtualScrollEngine } from './scroll-engine';
@@ -12,6 +12,7 @@ import {
 } from './types';
 import { IgxVirtualItemDirective } from './virtual-scroll-item.directive';
 import { IgxVirtualScrollComponent } from './virtual-scroll.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 /** The viewport size every engine call and host below uses. */
 const VIEWPORT = 300;
@@ -664,20 +665,20 @@ describe('IgxVsItemContext', () => {
     });
 
     it('first should be true only at index 0', () => {
-        expect(new IgxVsItemContext('a', 0, 5).first).toBeTrue();
-        expect(new IgxVsItemContext('a', 1, 5).first).toBeFalse();
+        expect(new IgxVsItemContext('a', 0, 5).first).toBe(true);
+        expect(new IgxVsItemContext('a', 1, 5).first).toBe(false);
     });
 
     it('last should be true only at index count-1', () => {
-        expect(new IgxVsItemContext('a', 4, 5).last).toBeTrue();
-        expect(new IgxVsItemContext('a', 3, 5).last).toBeFalse();
+        expect(new IgxVsItemContext('a', 4, 5).last).toBe(true);
+        expect(new IgxVsItemContext('a', 3, 5).last).toBe(false);
     });
 
     it('even/odd should reflect index parity', () => {
-        expect(new IgxVsItemContext('a', 0, 5).even).toBeTrue();
-        expect(new IgxVsItemContext('a', 0, 5).odd).toBeFalse();
-        expect(new IgxVsItemContext('a', 1, 5).even).toBeFalse();
-        expect(new IgxVsItemContext('a', 1, 5).odd).toBeTrue();
+        expect(new IgxVsItemContext('a', 0, 5).even).toBe(true);
+        expect(new IgxVsItemContext('a', 0, 5).odd).toBe(false);
+        expect(new IgxVsItemContext('a', 1, 5).even).toBe(false);
+        expect(new IgxVsItemContext('a', 1, 5).odd).toBe(true);
     });
 });
 
@@ -959,8 +960,8 @@ describe('IgxVirtualScrollComponent', () => {
         await settle(fixture, scroll);
     }
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 TestHostComponent,
                 TestRtlHostComponent,
@@ -971,7 +972,7 @@ describe('IgxVirtualScrollComponent', () => {
                 TestRowsHostComponent,
             ],
         }).compileComponents();
-    }));
+    });
 
     describe('basic rendering', () => {
         beforeEach(async () => {
@@ -1067,12 +1068,12 @@ describe('IgxVirtualScrollComponent', () => {
             host.estimatedItemSize.set(80);
             await settle(fixture, scroll);
 
-            const updateSpy = spyOn(engineOf(scroll), 'updateEstimatedSize').and.callThrough();
+            const updateSpy = vi.spyOn(engineOf(scroll), 'updateEstimatedSize');
             host.estimatedItemSize.set(0);
             await settle(fixture, scroll);
 
             // The engine gets the default estimate of 50px rather than zero.
-            expect(updateSpy.calls.mostRecent().args).toEqual([50]);
+            expect(updateSpy.mock.lastCall).toEqual([50]);
         });
 
         it('should clamp a negative overScan to zero', async () => {
@@ -1365,32 +1366,32 @@ describe('IgxVirtualScrollComponent', () => {
 
         it('should keep the measured sizes when the page moves within the collection', async () => {
             await bindWindow(windowHost.pageAt(0));
-            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+            const resizeSpy = vi.spyOn(engineOf(windowScroll), 'resize');
 
             await bindWindow(windowHost.pageAt(400));
 
             // Nothing discarded: the indices still mean what they did.
-            expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
+            expect(resizeSpy.mock.lastCall).toEqual([1000, 50, 1000]);
         });
 
         it('should not do work proportional to the collection when a page is re-fetched', async () => {
             await bindWindow(windowHost.objectPageAt(0));
-            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+            const resizeSpy = vi.spyOn(engineOf(windowScroll), 'resize');
 
             // The same records again as new objects, the way a deserialized response arrives.
             await bindWindow(windowHost.objectPageAt(0));
 
-            expect(resizeSpy.calls.mostRecent().args).toEqual([1000, 50, 1000]);
+            expect(resizeSpy.mock.lastCall).toEqual([1000, 50, 1000]);
         });
 
         it('should measure again when the collection size changes', async () => {
             await bindWindow(windowHost.pageAt(0));
-            const resizeSpy = spyOn(engineOf(windowScroll), 'resize').and.callThrough();
+            const resizeSpy = vi.spyOn(engineOf(windowScroll), 'resize');
 
             // A filter on the server: other records now sit at the same indices.
             await bindWindow(windowHost.pageAt(0, 20, 400));
 
-            expect(resizeSpy.calls.mostRecent().args).toEqual([400, 50, 0]);
+            expect(resizeSpy.mock.lastCall).toEqual([400, 50, 0]);
         });
 
         it('should resize the track when the collection size changes', async () => {
@@ -1857,20 +1858,20 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             const engine = engineOf(scroll);
-            const resizeSpy = spyOn(engine, 'resize').and.callThrough();
+            const resizeSpy = vi.spyOn(engine, 'resize');
 
             // An append keeps the identity of each existing index, so all 20
             // measurements are retained.
             host.items.update((items) => [...items, ...generateItems(5)]);
             await settle(fixture, scroll);
 
-            expect(resizeSpy.calls.mostRecent().args).toEqual([25, 50, 20]);
+            expect(resizeSpy.mock.lastCall).toEqual([25, 50, 20]);
 
             // A replacement invalidates each index from the first difference on.
             host.items.update((items) => items.map((item) => `${item}!`));
             await settle(fixture, scroll);
 
-            expect(resizeSpy.calls.mostRecent().args).toEqual([25, 50, 0]);
+            expect(resizeSpy.mock.lastCall).toEqual([25, 50, 0]);
         });
 
         it('should discard stale measurements when data of the same length is swapped', async () => {
@@ -1878,14 +1879,14 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             const engine = engineOf(scroll);
-            const resizeSpy = spyOn(engine, 'resize').and.callThrough();
+            const resizeSpy = vi.spyOn(engine, 'resize');
 
             // An identical item count used to make `resize` a no-op. That left
             // the previous data's measurements on the new items.
             host.items.set(generateItems(20).map((item) => `${item}!`));
             await settle(fixture, scroll);
 
-            expect(resizeSpy.calls.mostRecent().args).toEqual([20, 50, 0]);
+            expect(resizeSpy.mock.lastCall).toEqual([20, 50, 0]);
         });
 
         it('should remeasure unchanged-size rows after replacing the data', async () => {
@@ -1992,7 +1993,7 @@ describe('IgxVirtualScrollComponent', () => {
 
             const initial = [...before.values()];
             const first = vsIndices(fixture)[0];
-            expect(vsItems(fixture).every((element) => initial.includes(element))).toBeTrue();
+            expect(vsItems(fixture).every((element) => initial.includes(element))).toBe(true);
             expect(vsIndices(fixture)).toEqual(vsItems(fixture).map((_, i) => first + i));
         });
 
@@ -2099,7 +2100,7 @@ describe('IgxVirtualScrollComponent', () => {
             await settle(fixture, scroll);
 
             const element = vsElement(fixture);
-            const scrollToSpy = spyOn(element, 'scrollTo').and.callThrough();
+            const scrollToSpy = vi.spyOn(element, 'scrollTo');
 
             await scroll.scrollToIndex(1, { block: 'nearest' });
 
@@ -2119,7 +2120,7 @@ describe('IgxVirtualScrollComponent', () => {
             await scrollTo(fixture, scroll, 50);
 
             const element = vsElement(fixture);
-            const scrollToSpy = spyOn(element, 'scrollTo').and.callThrough();
+            const scrollToSpy = vi.spyOn(element, 'scrollTo');
 
             await scroll.scrollToIndex(0, { block: 'nearest' });
 
@@ -2234,14 +2235,15 @@ describe('IgxVirtualScrollComponent', () => {
         });
 
         it('should settle when no animation frames are served', async () => {
-            const rafSpy = spyOn(window, 'requestAnimationFrame').and.returnValue(0);
+            const originalRaf = window.requestAnimationFrame;
+            const rafSpy = vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(0);
 
             try {
                 host.items.set(generateItems(200));
                 fixture.detectChanges();
                 await scroll.layoutComplete;
             } finally {
-                rafSpy.and.callThrough();
+                rafSpy.mockImplementation((callback: FrameRequestCallback) => originalRaf.call(window, callback));
             }
 
             expect(rafSpy).toHaveBeenCalled();
@@ -2277,12 +2279,12 @@ describe('IgxVirtualScrollComponent', () => {
 
         it('should scroll to a negative scrollLeft via scrollToIndex', async () => {
             const element = vsElement(rtlFixture);
-            const scrollToSpy = spyOn(element, 'scrollTo').and.callThrough();
+            const scrollToSpy = vi.spyOn(element, 'scrollTo');
 
             await rtlScroll.scrollToIndex(100);
 
             expect(scrollToSpy).toHaveBeenCalled();
-            const args = scrollToSpy.calls.mostRecent().args[0] as ScrollToOptions;
+            const args = scrollToSpy.mock.lastCall[0] as ScrollToOptions;
             expect(args.left).toBeLessThan(0);
         });
 

@@ -13,8 +13,11 @@ function toDockerPath(p) {
 
 /**
  * The shell script executed inside the container: sets up PATH, installs
- * dependencies on first run (cached via the node_modules volume), then runs
- * the inner command.
+ * dependencies on first run (cached via the node_modules volume), makes sure
+ * Playwright's Chromium for the installed Playwright version is present
+ * (stored under node_modules via PLAYWRIGHT_BROWSERS_PATH, see
+ * Dockerfile.test; a no-op when already downloaded), then runs the inner
+ * command.
  * @param {string} innerCmd
  * @returns {string}
  */
@@ -26,6 +29,9 @@ if [ ! -f node_modules/.package-lock.json ]; then
   echo '▶ npm ci (first run — installs linux/amd64 native binaries)…'
   npm ci
 fi
+
+echo '▶ npx playwright install chromium'
+npx playwright install chromium
 
 ${innerCmd}
 `;

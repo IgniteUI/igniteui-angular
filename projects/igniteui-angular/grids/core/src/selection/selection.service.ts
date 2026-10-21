@@ -1,7 +1,8 @@
-import { EventEmitter, Injectable, NgZone, inject } from '@angular/core';
+import { DestroyRef, EventEmitter, Injectable, NgZone, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IRowSelectionEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
+import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree, GridSelectionRange, IColumnSelectionState, IMultiRowLayoutNode, ISelectionKeyboardState, ISelectionNode, ISelectionPointerState, PlatformUtil, SelectionState } from 'igniteui-angular/core';
 import { PivotUtil } from '../pivot-util';
 
@@ -75,6 +76,9 @@ export class IgxGridSelectionService {
         this.initPointerState();
         this.initKeyboardState();
         this.initColumnsState();
+
+        // A pointerdown with no pointerup yet leaves the body listener; drop it with the grid.
+        inject(DestroyRef).onDestroy(() => this.grid?.document.body.removeEventListener('pointerup', this.pointerOriginHandler));
     }
 
     /**
@@ -215,6 +219,12 @@ export class IgxGridSelectionService {
         if (this.keyboardState.shift && !this.keyboardState.node) {
             this.clear();
             this.keyboardState.node = Object.assign({}, node);
+            // Keep the start node selected: when the navigation does not move focus (e.g. at the grid edge),
+            // no focus event follows to build the range and the selection would otherwise be lost.
+            if (this.grid.cellSelection === GridSelectionMode.multiple) {
+                this.add(node, false);
+                this.keyboardState.range = this.generateRange(node);
+            }
         }
     }
 
