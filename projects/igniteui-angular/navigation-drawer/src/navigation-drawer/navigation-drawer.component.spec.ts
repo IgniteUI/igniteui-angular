@@ -162,17 +162,19 @@ describe('Navigation Drawer', () => {
         expect(drawer.isOpen).toBeFalsy();
 
         toggleButton.click();
+        expect(drawer.isOpen).toBeTruthy();
         closeButton.click();
         expect(drawer.isOpen).toBeFalsy();
         closeButton.click(); // should do nothing
         expect(drawer.isOpen).toBeFalsy();
 
         // a target that is not registered in the navigation service is ignored
-        expect(() => {
-            fixture.nativeElement.querySelector('#toggleMissing').click();
-            fixture.nativeElement.querySelector('#closeMissing').click();
-        }).not.toThrow();
+        expect(() => fixture.nativeElement.querySelector('#toggleMissing').click()).not.toThrow();
         expect(drawer.isOpen).toBeFalsy();
+
+        toggleButton.click();
+        expect(() => fixture.nativeElement.querySelector('#closeMissing').click()).not.toThrow();
+        expect(drawer.isOpen).toBeTruthy();
     });
 
     it('async API calls should emit events', async () => {
