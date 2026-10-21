@@ -1,5 +1,5 @@
 
-import { ChangeDetectionStrategy, Component, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output, QueryList, reflectComponentType, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, createComponent, CUSTOM_ELEMENTS_SCHEMA, EnvironmentInjector, EventEmitter, inject, Output, QueryList, reflectComponentType, ViewChildren } from '@angular/core';
 import { NgClass, NgTemplateOutlet, NgStyle } from '@angular/common';
 
 import { IgxHierarchicalGridAPIService } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-grid-api.service';
@@ -50,11 +50,18 @@ export class IgxChildGridRowComponent extends IgxChildGridRow {
      */
     public override hGrid!: IgxHierarchicalGridComponent;
 
+    private elementsEnvInjector = inject(EnvironmentInjector);
+
     /**
      * @hidden
      */
     public override ngOnInit() {
-        const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
+        // Create the child grid detached and insert it only once it is fully set up, because inserting
+        // it can synchronously re-enter change detection (see the base IgxChildGridRowComponent).
+        const ref = createComponent(IgxHierarchicalGridComponent, {
+            environmentInjector: this.elementsEnvInjector,
+            elementInjector: this.container.injector
+        });
         this.hGrid = ref.instance;
         this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
         (this.hGrid.nativeElement as any)["__componentRef"] = ref;
@@ -70,6 +77,7 @@ export class IgxChildGridRowComponent extends IgxChildGridRow {
         this.hGrid.childRow = this;
         // handler logic that re-emits hgrid events on the row island
         this.setupEventEmitters();
+        this.container.insert(ref.hostView);
         this.layout.gridCreated.emit({
             owner: this.layout,
             parentID: this.data.rowID,

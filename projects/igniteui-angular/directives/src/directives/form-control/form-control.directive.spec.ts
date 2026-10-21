@@ -1,10 +1,11 @@
 import { Component, DebugElement, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { defineComponents, IgcColorPickerComponent, IgcRatingComponent } from 'igniteui-webcomponents';
 
 import { IgcFormControlDirective } from './form-control.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgcFormControlDirective - ', () => {
 
@@ -16,32 +17,31 @@ describe('IgcFormControlDirective - ', () => {
 
     describe('Unit tests: ', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             defineComponents(IgcRatingComponent);
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: ElementRef, useValue: elementRef },
                     { provide: Renderer2, useValue: renderer2Mock },
                     IgcFormControlDirective
                 ]
             });
-        }));
+        });
 
         const elementRef = { nativeElement: document.createElement('igc-rating') };
 
-        const mockNgControl = jasmine.createSpyObj('NgControl', [
-            'writeValue',
-            'onChange',
-            'setDisabledState',
-            'onChange',
-            'registerOnChangeCb',
-            'registerOnTouchedCb'
-        ]);
+        const mockNgControl = {
+            writeValue: vi.fn().mockName("NgControl.writeValue"),
+            onChange: vi.fn().mockName("NgControl.onChange"),
+            setDisabledState: vi.fn().mockName("NgControl.setDisabledState"),
+            registerOnChangeCb: vi.fn().mockName("NgControl.registerOnChangeCb"),
+            registerOnTouchedCb: vi.fn().mockName("NgControl.registerOnTouchedCb")
+        };
 
-        const renderer2Mock = jasmine.createSpyObj('renderer2Mock', [
-            'setProperty'
-        ]);
+        const renderer2Mock = {
+            setProperty: vi.fn().mockName("renderer2Mock.setProperty")
+        };
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             directive = TestBed.inject(IgcFormControlDirective);
@@ -70,28 +70,28 @@ describe('IgcFormControlDirective - ', () => {
 
     describe('Unit tests - igc-color-picker: ', () => {
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             defineComponents(IgcColorPickerComponent);
 
-            TestBed.configureTestingModule({
+            await TestBed.configureTestingModule({
                 providers: [
                     { provide: ElementRef, useValue: colorPickerElementRef },
                     { provide: Renderer2, useValue: renderer2Mock },
                     IgcFormControlDirective
                 ]
             });
-        }));
+        });
 
         const colorPickerElementRef = { nativeElement: document.createElement('igc-color-picker') };
 
-        const mockNgControl = jasmine.createSpyObj('NgControl', [
-            'registerOnChangeCb',
-            'registerOnTouchedCb'
-        ]);
+        const mockNgControl = {
+            registerOnChangeCb: vi.fn().mockName("NgControl.registerOnChangeCb"),
+            registerOnTouchedCb: vi.fn().mockName("NgControl.registerOnTouchedCb")
+        };
 
-        const renderer2Mock = jasmine.createSpyObj('renderer2Mock', [
-            'setProperty'
-        ]);
+        const renderer2Mock = {
+            setProperty: vi.fn().mockName("renderer2Mock.setProperty")
+        };
 
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             directive = TestBed.inject(IgcFormControlDirective);
@@ -119,23 +119,23 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('ngModel two-way binding tests: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxFormsControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcRatingComponent);
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxFormsControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelRating`));
             rating = fixture.debugElement.query(By.directive(IgcFormControlDirective)).nativeElement;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Should properly init for igc-rating.', () => {
             directive = fixture.componentInstance.directive;
@@ -162,23 +162,23 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('ngModel two-way binding tests - igc-color-picker: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxFormsColorPickerControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcColorPickerComponent);
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxFormsColorPickerControlComponent);
             fixture.detectChanges();
             input = fixture.debugElement.query(By.css(`#basicModelColor`));
             colorPicker = fixture.debugElement.query(By.directive(IgcFormControlDirective)).nativeElement;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Should properly init for igc-color-picker.', () => {
             directive = fixture.componentInstance.directive;
@@ -205,22 +205,22 @@ describe('IgcFormControlDirective - ', () => {
     });
 
     describe('Reactive forms tests - igc-color-picker: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxReactiveFormsColorPickerControlComponent
                 ]
             }).compileComponents();
             defineComponents(IgcColorPickerComponent);
-        }));
+        });
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(IgxReactiveFormsColorPickerControlComponent);
             fixture.detectChanges();
             colorPicker = fixture.debugElement.query(By.directive(IgcFormControlDirective)).nativeElement;
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
         it('Should write the initial FormControl value to the color-picker', () => {
             expect(colorPicker.value).toEqual('#ff0000');
@@ -236,17 +236,17 @@ describe('IgcFormControlDirective - ', () => {
         });
 
         it('Should mark the FormControl as touched on blur', () => {
-            expect(fixture.componentInstance.form.get('color').touched).toBeFalse();
+            expect(fixture.componentInstance.form.get('color').touched).toBe(false);
             colorPicker.dispatchEvent(new Event('blur'));
             fixture.detectChanges();
-            expect(fixture.componentInstance.form.get('color').touched).toBeTrue();
+            expect(fixture.componentInstance.form.get('color').touched).toBe(true);
         });
 
         it('Should reflect FormControl disabled state to the color-picker', () => {
-            expect(colorPicker.disabled).toBeFalse();
+            expect(colorPicker.disabled).toBe(false);
             fixture.componentInstance.form.get('color').disable();
             fixture.detectChanges();
-            expect(colorPicker.disabled).toBeTrue();
+            expect(colorPicker.disabled).toBe(true);
         });
     });
 });

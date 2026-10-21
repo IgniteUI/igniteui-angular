@@ -1,5 +1,5 @@
 
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridEditActionsComponent, IgxTreeGridEditActionsPinningComponent } from '../../../test-utils/tree-grid-components.spec';
@@ -10,6 +10,7 @@ import { first } from 'rxjs/operators';
 import { wait } from '../../../test-utils/ui-interactions.spec';
 import { IRowDataCancelableEventArgs } from 'igniteui-angular/grids/core';
 import { GridColumnDataType } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxTreeGrid - Add Row UI #tGrid', () => {
     let fix;
@@ -22,15 +23,15 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridEditActionsComponent,
                 IgxTreeGridEditActionsPinningComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Basic', () => {
         beforeEach(() => {
@@ -98,7 +99,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -114,7 +115,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             row.beginAddChild();
             fix.detectChanges();
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
         });
 
         it('should allow adding sibling to child row via the API.', () => {
@@ -162,8 +163,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             treeGrid.pinRow(1);
             treeGrid.pinRow(6);
 
-            expect(treeGrid.getRowByKey(1).pinned).toBeTrue();
-            expect(treeGrid.getRowByKey(6).pinned).toBeTrue();
+            expect(treeGrid.getRowByKey(1).pinned).toBe(true);
+            expect(treeGrid.getRowByKey(6).pinned).toBe(true);
 
             actionStrip.show(treeGrid.rowList.toArray()[1]);
             fix.detectChanges();
@@ -177,8 +178,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
-            expect(addRow.inEditMode).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
+            expect(addRow.inEditMode).toBe(true);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -196,8 +197,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             treeGrid.pinRow(1);
             treeGrid.pinRow(6);
 
-            expect(treeGrid.getRowByKey(1).pinned).toBeTrue();
-            expect(treeGrid.getRowByKey(6).pinned).toBeTrue();
+            expect(treeGrid.getRowByKey(1).pinned).toBe(true);
+            expect(treeGrid.getRowByKey(6).pinned).toBe(true);
 
             actionStrip.show(treeGrid.rowList.last);
             fix.detectChanges();
@@ -211,8 +212,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(10);
-            expect(addRow.addRowUI).toBeTrue();
-            expect(addRow.inEditMode).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
+            expect(addRow.inEditMode).toBe(true);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -230,7 +231,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -250,7 +251,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
+            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
 
@@ -262,7 +263,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
+            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
             treeGrid.gridAPI.crudService.endEdit(false);
             fix.detectChanges();
             expect(treeGrid.rowList.length).toBe(9);
@@ -270,17 +271,15 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
         it('should not spawn the add row UI as a child when beginAddRowByIndex is called with null index', () => {
             // console.warn may already be spied on by the global beforeEach in helper-utils.spec.ts
-            jasmine.getEnv().allowRespy(true);
-            const warnSpy = spyOn(console, 'warn');
-            warnSpy.calls.reset();
+            const warnSpy = vi.spyOn(console, 'warn');
+            warnSpy.mockClear();
 
             treeGrid.beginAddRowByIndex(null, true);
             fix.detectChanges();
 
-            expect(warnSpy).toHaveBeenCalledOnceWith('The record cannot be added as a child to an unspecified record.');
+            expect(warnSpy).toHaveBeenCalledExactlyOnceWith('The record cannot be added as a child to an unspecified record.');
             expect(treeGrid.crudService.row).toBeNull();
-            expect(treeGrid.rowList.toArray().some(row => row.addRowUI)).toBeFalse();
-            jasmine.getEnv().allowRespy(false);
+            expect(treeGrid.rowList.toArray().some(row => row.addRowUI)).toBe(false);
         });
 
         it('should add a sibling of the previous row when beginAddRowByIndex is called with an index', () => {
@@ -295,7 +294,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             const addRow = treeGrid.gridAPI.get_row_by_index(2);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -314,8 +313,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
-            expect(treeGrid.crudService.addRowParent.asChild).toBeFalse();
+            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(treeGrid.crudService.addRowParent.asChild).toBe(false);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -337,8 +336,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            expect(treeGrid.crudService.row.isAddRow).toBeTrue();
-            expect(treeGrid.crudService.addRowParent.asChild).toBeTrue();
+            expect(treeGrid.crudService.row.isAddRow).toBe(true);
+            expect(treeGrid.crudService.addRowParent.asChild).toBe(true);
             expect(treeGrid.crudService.addRowParent.rowID as any).toBe(3);
 
             treeGrid.gridAPI.crudService.endEdit(true);
@@ -355,7 +354,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            expect(treeGrid.crudService.addRowParent.asChild).toBeTrue();
+            expect(treeGrid.crudService.addRowParent.asChild).toBe(true);
             expect(treeGrid.crudService.addRowParent.rowID as any).toBe(1);
 
             treeGrid.gridAPI.crudService.endEdit(true);
@@ -366,7 +365,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             expect(newRecord.level).toBe(1);
         });
 
-        it('should collapse row when child row adding begins and it added row should go under correct parent.', async() => {
+        it('should collapse row when child row adding begins and it added row should go under correct parent.', async () => {
             treeGrid.data = [
                 { ID: 1, ParentID: -1, Name: 'Casey Houston', JobTitle: 'Vice President', Age: 32 },
                 { ID: 2, ParentID: 10, Name: 'Gilberto Todd', JobTitle: 'Director', Age: 41 },
@@ -397,7 +396,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             // last row should be add row
             const addRow = treeGrid.gridAPI.get_row_by_index(4);
-            expect(addRow.addRowUI).toBeTrue();
+            expect(addRow.addRowUI).toBe(true);
             endTransition();
 
             // end edit

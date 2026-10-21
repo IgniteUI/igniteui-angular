@@ -3,9 +3,10 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering
 import { recreateTree, recreateTreeFromFields } from './expressions-tree-util';
 import { IgxBooleanFilteringOperand, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand } from './filtering-condition';
 import type { EntityType, FieldType } from './grid-types';
+import { describe, it, expect } from 'vitest';
 
 function serialize(value: unknown, pretty = false) {
-    return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value)
+    return pretty ? JSON.stringify(value, undefined, ' ') : JSON.stringify(value);
 }
 
 function checkOp(op: IFilteringExpression, reconstructedOp: IFilteringExpression) {
@@ -305,11 +306,11 @@ describe('Unit testing FilteringUtil', () => {
     it('Number search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: [
-                { field: 'Id', dataType: 'number' }
-            ] as any,
-        }];
+                name: 'myEntity',
+                fields: [
+                    { field: 'Id', dataType: 'number' }
+                ] as any,
+            }];
 
         tree.filteringOperands.push({
             fieldName: 'Id',
@@ -328,11 +329,11 @@ describe('Unit testing FilteringUtil', () => {
     it('Boolean search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: [
-                { field: 'Id', dataType: 'boolean' }
-            ] as any,
-        }];
+                name: 'myEntity',
+                fields: [
+                    { field: 'Id', dataType: 'boolean' }
+                ] as any,
+            }];
         tree.filteringOperands.push({
             fieldName: 'Id',
             conditionName: 'false'
@@ -349,11 +350,11 @@ describe('Unit testing FilteringUtil', () => {
     it('String search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: [
-                { field: 'Id', dataType: 'string' }
-            ] as any,
-        }];
+                name: 'myEntity',
+                fields: [
+                    { field: 'Id', dataType: 'string' }
+                ] as any,
+            }];
         tree.filteringOperands.push({
             fieldName: 'Id',
             conditionName: 'equals',
@@ -371,11 +372,11 @@ describe('Unit testing FilteringUtil', () => {
     it('Date search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: [
-                { field: 'Id', dataType: 'date' }
-            ] as any,
-        }];
+                name: 'myEntity',
+                fields: [
+                    { field: 'Id', dataType: 'date' }
+                ] as any,
+            }];
         tree.filteringOperands.push({
             fieldName: 'Id',
             conditionName: 'equals',
@@ -393,11 +394,11 @@ describe('Unit testing FilteringUtil', () => {
     it('DateTime search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: [
-                { field: 'Id', dataType: 'dateTime' }
-            ] as any,
-        }];
+                name: 'myEntity',
+                fields: [
+                    { field: 'Id', dataType: 'dateTime' }
+                ] as any,
+            }];
         const currDate = new Date();
         tree.filteringOperands.push({
             fieldName: 'Id',
@@ -416,11 +417,11 @@ describe('Unit testing FilteringUtil', () => {
     it('Time search values should deserialize correctly', () => {
         const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'myField', 'myEntity', ['*']);
         const entities: EntityType[] = [{
-            name: 'myEntity',
-            fields: [
-                { field: 'Id', dataType: 'time' }
-            ] as any,
-        }];
+                name: 'myEntity',
+                fields: [
+                    { field: 'Id', dataType: 'time' }
+                ] as any,
+            }];
         tree.filteringOperands.push({
             fieldName: 'Id',
             conditionName: 'at',

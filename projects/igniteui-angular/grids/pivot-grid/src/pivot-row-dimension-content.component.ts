@@ -1,7 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ComponentRef,
     createComponent,
+    DestroyRef,
     EnvironmentInjector,
     HostBinding,
     inject,
@@ -51,6 +53,16 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
     protected injector = inject(Injector);
     protected envInjector = inject(EnvironmentInjector);
     protected viewRef = inject(ViewContainerRef);
+    private readonly destroyRef = inject(DestroyRef);
+
+    /** Standalone ref of `rowDimensionColumn`; not part of this view, so destroyed explicitly. */
+    private _colRef: ComponentRef<IgxColumnComponent> | null = null;
+
+    constructor() {
+        super();
+        // Keep the column (and the grid it injects) from outliving this cell.
+        this.destroyRef.onDestroy(() => this._colRef?.destroy());
+    }
 
     @HostBinding('style.grid-row-start')
     public get rowStart(): string {
@@ -130,6 +142,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
         if (changes.rowData) {
             // generate new rowDimension on row data change
             this.rowDimensionData = null!;
+            this._colRef?.destroy();
             this.viewRef.clear();
             this.extractFromDimensions();
             this.viewRef.clear();
@@ -194,6 +207,7 @@ export class IgxPivotRowDimensionContentComponent extends IgxGridHeaderRowCompon
 
     protected _createColComponent(field: string, header: string, dim: IPivotDimension) {
         const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
+        this._colRef = ref;
         ref.instance.field = field;
         ref.instance.header = header;
         ref.instance.width = this.grid.rowDimensionWidthToPixels(this.rootDimension) + 'px';
