@@ -789,7 +789,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
         });
 
         if (this.selected) {
-            this.chipArea.nativeElement.focus();
+            // The chip host is the focusable element, the inner chip area has no tabindex
+            this.nativeElement.focus();
         }
     }
 

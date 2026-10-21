@@ -61,3 +61,7 @@ extras/docs/themes/sassdoc/sassdoc/*
 
 # Localization sources
 i18nRepo
+
+# Vitest artifacts (failure screenshots, attachments, reports) and caches created next to runner configs
+.vitest/
+projects/*/node_modules/

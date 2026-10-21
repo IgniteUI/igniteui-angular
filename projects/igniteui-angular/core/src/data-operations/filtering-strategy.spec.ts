@@ -3,6 +3,7 @@ import { FilteringStrategy } from './filtering-strategy';
 import { FilteringExpressionsTree } from './filtering-expressions-tree';
 import { FilteringLogic } from './filtering-expression.interface';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxBooleanFilteringOperand } from './filtering-condition';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 
 describe('Unit testing FilteringStrategy', () => {
@@ -14,7 +15,7 @@ describe('Unit testing FilteringStrategy', () => {
         data = dataGenerator.data;
         fs = new FilteringStrategy();
     });
-    it ('tests `filter`', () => {
+    it('tests `filter`', () => {
         const expressionTree = new FilteringExpressionsTree(FilteringLogic.And);
         expressionTree.filteringOperands = [
             {
@@ -26,9 +27,9 @@ describe('Unit testing FilteringStrategy', () => {
         ];
         const res = fs.filter(data, expressionTree, null, null);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([2, 3, 4]);
+            .toEqual([2, 3, 4]);
     });
-    it ('tests `matchRecordByExpressions`', () => {
+    it('tests `matchRecordByExpressions`', () => {
         const rec = data[0];
         const expressionTree = new FilteringExpressionsTree(FilteringLogic.Or);
         expressionTree.filteringOperands = [
@@ -49,7 +50,7 @@ describe('Unit testing FilteringStrategy', () => {
         const res = fs.matchRecord(rec, expressionTree);
         expect(res).toBeTruthy();
     });
-    it ('tests `findMatchByExpression` for working with filtering operands with missing condition', () => {
+    it('tests `findMatchByExpression` for working with filtering operands with missing condition', () => {
         const rec = data[0];
         const expressionTree = JSON.parse('{"filteringOperands":[{"fieldName":"Missing","condition":{"name":"notEmpty","isUnary":true,"iconName":"filter_not_empty"},"conditionName":"notEmpty","ignoreCase":true,"searchVal":null,"searchTree":null}],"operator":0,"returnFields":[],"type":1}');
 
@@ -58,7 +59,7 @@ describe('Unit testing FilteringStrategy', () => {
         expect(res).toBeFalsy();
     });
 
-    it ('no error when condition is missing in the filtering expressions tree', () => {
+    it('no error when condition is missing in the filtering expressions tree', () => {
         const rec = data[0];
         const expressionTree = new FilteringExpressionsTree(FilteringLogic.Or);
         expressionTree.filteringOperands = [
@@ -73,7 +74,7 @@ describe('Unit testing FilteringStrategy', () => {
         expect(res).toBeFalsy();
     });
 
-    it ('tests `findMatch`', () => {
+    it('tests `findMatch`', () => {
         const rec = data[0];
         const res = fs.findMatchByExpression(rec, {
             condition: IgxBooleanFilteringOperand.instance().condition('false'),
@@ -82,8 +83,10 @@ describe('Unit testing FilteringStrategy', () => {
         });
         expect(res).toBeTruthy();
     });
-    it ('tests default settings', () => {
-        (data[0] as { string: string }).string = 'ROW';
+    it('tests default settings', () => {
+        (data[0] as {
+            string: string;
+        }).string = 'ROW';
         const filterstr = new FilteringStrategy();
         const expressionTree = new FilteringExpressionsTree(FilteringLogic.And);
         expressionTree.filteringOperands = [
@@ -96,6 +99,6 @@ describe('Unit testing FilteringStrategy', () => {
         ];
         const res = filterstr.filter(data, expressionTree, null, null);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
-                    .toEqual([0]);
+            .toEqual([0]);
     });
 });

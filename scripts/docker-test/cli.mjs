@@ -2,7 +2,7 @@
 /**
  * CLI entry point for the CI-parity Docker test runner, invoked via `just`
  * recipes (see /justfile). Runs the library test suite inside a container
- * matching CI (ubuntu:24.04 + Node 24 + Google Chrome).
+ * matching CI (ubuntu:24.04 + Node 24 + Playwright Chromium).
  *
  * Verbs:
  *   test [component-or-glob]   → spec mode, or CI default (test:lib + test:styles)

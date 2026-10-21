@@ -6,10 +6,7 @@
         "sourceMap": false,
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/migrations",
-        "typeRoots": [
-            "../../../node_modules/@types"
-        ],
-        "types": ["node", "jasmine"],
+        "types": ["node", "vitest/globals"],
         "paths": {
             "igniteui-angular/*": [
                 "../*"

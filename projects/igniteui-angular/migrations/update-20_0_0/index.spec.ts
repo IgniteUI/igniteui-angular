@@ -18,20 +18,15 @@ describe(`Update to ${version}`, () => {
     it('should remove the $focus-background-color property from the grid summary theme', async () => {
         const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
 
-        appTree.create(
-            testFilePath,
-            `$my-grid-theme: grid-summary-theme(
+        appTree.create(testFilePath, `$my-grid-theme: grid-summary-theme(
                 $label-color: white,
                 $focus-background-color: orange,
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent(testFilePath)).toEqual(
-            `$my-grid-theme: grid-summary-theme(
+        expect(tree.readContent(testFilePath)).toEqual(`$my-grid-theme: grid-summary-theme(
                 $label-color: white,
-            );`
-        );
+            );`);
     });
 });

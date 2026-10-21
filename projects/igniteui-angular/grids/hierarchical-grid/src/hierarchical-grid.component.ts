@@ -6,9 +6,11 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    createComponent,
     CUSTOM_ELEMENTS_SCHEMA,
     DoCheck,
     ElementRef,
+    EnvironmentInjector,
     HostBinding,
     Input,
     OnDestroy,
@@ -60,7 +62,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 import { EntityType, FieldType, IFilteringExpressionsTree, IgxOverlayOutletDirective, flatten, IGridResourceStrings } from 'igniteui-angular/core';
 import { IgxPaginatorToken } from 'igniteui-angular/paginator';
 import { IgxGridCellMergePipe, IgxGridComponent, IgxGridFilteringPipe, IgxGridSortingPipe, IgxGridUnmergeActivePipe } from 'igniteui-angular/grids/grid';
-import { registerLifecyclePlaceholderElement } from './lifecycle-placeholder-element';
+import { IgxLifecyclePlaceholderElement, registerLifecyclePlaceholderElement } from './lifecycle-placeholder-element';
 
 let NEXT_ID = 0;
 
@@ -81,6 +83,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public element = inject<ElementRef<HTMLElement>>(ElementRef);
     /* blazorSuppress */
     public cdr = inject(ChangeDetectorRef);
+
+    private envInjector = inject(EnvironmentInjector);
 
     @Input()
     public layout!: IgxRowIslandComponent;
@@ -193,7 +197,14 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * @hidden
      */
     public ngOnInit() {
-        const ref = this.container.createComponent(IgxHierarchicalGridComponent, { injector: this.container.injector });
+        // Create the child grid detached and only insert it into the container once it is fully set up.
+        // Inserting it attaches its elements to the DOM, which may synchronously run arbitrary code
+        // (e.g. custom element reactions) that can re-enter change detection and reach this row's
+        // ngAfterViewInit, so `hGrid` must already be assigned and configured at that point.
+        const ref = createComponent(IgxHierarchicalGridComponent, {
+            environmentInjector: this.envInjector,
+            elementInjector: this.container.injector
+        });
         this.hGrid = ref.instance;
         this.hGrid.setDataInternal(this.data.childGridsData[this.layout.key]);
         (this.hGrid.nativeElement as any)["__componentRef"] = ref;
@@ -209,6 +220,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.childRow = this;
         // handler logic that re-emits hgrid events on the row island
         this.setupEventEmitters();
+        this.container.insert(ref.hostView);
         this.layout.gridCreated.emit({
             owner: this.layout,
             parentID: this.data.rowID,
@@ -393,6 +405,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ViewChild('child_record_template', { read: TemplateRef, static: true })
     protected childTemplate!: TemplateRef<any>;
 
+    @ViewChild('lifecyclePlaceholder', { read: ElementRef, static: true })
+    protected lifecyclePlaceholder?: ElementRef<IgxLifecyclePlaceholderElement>;
+
     // @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected get headerHierarchyExpander() {
         return this.theadRow?.headerHierarchyExpander;
@@ -497,9 +512,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     public override get paginator() {
-        const id = this.id;
+        // Child grid paginators are rendered in the grid footer from the row island template.
+        // Match them by DOM containment rather than layout, as child grids scrolled out of view are detached from the DOM.
+        const footer = this.footer?.nativeElement as HTMLElement | undefined;
         return (!this.parentIsland && this.paginationComponents?.first) || this.rootGrid.paginatorList?.find((pg) =>
-            pg.nativeElement.offsetParent?.id === id);
+            !!footer?.contains(pg.nativeElement));
     }
 
     /** @hidden @internal */
@@ -672,6 +689,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     public override ngOnInit() {
         if (this.platform.isBrowser) {
             registerLifecyclePlaceholderElement();
+            this.attachLifecyclePlaceholderCallbacks();
         }
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
@@ -685,24 +703,41 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         super.ngOnInit();
     }
 
-    // Event that triggers when element gets connected back to the DOM.
+    // Invoked when the grid gets connected back to the DOM.
     // Used to determine when to reopen a previously closed row editing overlay.
     protected onLifecyclePlaceholderConnected(): void {
         if (this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay &&
             this.rowEditingOverlay.collapsed) {
             // Row is in edit mode, but overlay is closed - reopen.
             this.openRowOverlay(this.crudService.rowInEditMode.key);
+            this.cdr.markForCheck();
         }
-
     }
 
-    // Event that triggers when element gets disconnected from the DOM, for example as a result of virtualization or caching.
+    // Invoked when the grid gets disconnected from the DOM, for example as a result of virtualization or caching.
     // Used to determine when to close the row editing overlay.
     protected onLifecyclePlaceholderDisconnected(): void {
         if (this.rowEditable && this.crudService.rowInEditMode && this.rowEditingOverlay) {
             // disconnected from DOM (possibly cached) & row was in edit mode - close overlay.
             this.closeRowEditingOverlay();
+            this.cdr.markForCheck();
         }
+    }
+
+    /**
+     * Connects the lifecycle placeholder to the grid through direct callbacks rather than template
+     * event bindings. The placeholder gets connected while the grid view is inserted in the DOM, which
+     * happens during change detection (e.g. when a child grid is created by its child row). A zone.js
+     * wrapped event listener invoked at that point runs as a new outermost zone task, which drains the
+     * microtask queue and synchronously ticks the application, re-entering change detection.
+     */
+    private attachLifecyclePlaceholderCallbacks(): void {
+        const placeholder = this.lifecyclePlaceholder?.nativeElement;
+        if (!placeholder) {
+            return;
+        }
+        placeholder.onConnected = () => this.onLifecyclePlaceholderConnected();
+        placeholder.onDisconnected = () => this.onLifecyclePlaceholderDisconnected();
     }
 
     /**
@@ -963,6 +998,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (this.parent && this.selectionService.activeElement) {
             // in case selection is in destroyed child grid, selection should be cleared.
             this._clearSeletionHighlights();
+        }
+        const placeholder = this.lifecyclePlaceholder?.nativeElement;
+        if (placeholder) {
+            placeholder.onConnected = undefined;
+            placeholder.onDisconnected = undefined;
         }
         super.ngOnDestroy();
     }

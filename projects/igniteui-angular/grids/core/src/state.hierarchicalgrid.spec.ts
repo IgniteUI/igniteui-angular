@@ -1,40 +1,43 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxGridStateDirective } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GridSelectionMode } from './common/enums';
 import { GridSelectionRange } from '../../../core/src/data-operations/grid-types';
 import { IgxColumnComponent } from './public_api';
-import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
-import { IColumnState, IGridState } from './state-base.directive';
+import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
+import { GridFeatures, IColumnState, IGridState } from './state-base.directive';
 import { FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IGroupingExpression, IgxStringFilteringOperand, IPagingState, ISortingExpression, SortingDirection } from 'igniteui-angular/core';
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxGridNavigationService } from './grid-navigation.service';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
     let fix;
     let grid;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, IgxHierarchicalGridTestExpandedBaseComponent],
             providers: [
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }))
+    });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fix = TestBed.createComponent(IgxHierarchicalGridTestExpandedBaseComponent);
+        fix.detectChanges();
+        await fix.whenStable();
         fix.detectChanges();
         grid = fix.componentInstance.hgrid;
     });
 
     it('should initialize an igxGridState with default options object', () => {
         fix.componentInstance.data = [
-            {ID: 0, ProductName: 'Product: A0'},
-            {ID: 1, ProductName: 'Product: A1', childData: generateDataUneven(1, 1)},
-            {ID: 2, ProductName: 'Product: A2', childData: generateDataUneven(1, 1)}
+            { ID: 0, ProductName: 'Product: A0' },
+            { ID: 1, ProductName: 'Product: A1', childData: generateDataUneven(1, 1) },
+            { ID: 2, ProductName: 'Product: A2', childData: generateDataUneven(1, 1) }
         ];
         fix.detectChanges();
 
@@ -52,15 +55,15 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         };
 
         const state = fix.componentInstance.state;
-        expect(state).toBeDefined('IgxGridState directive is initialized');
-        expect(state.options).toEqual(jasmine.objectContaining(defaultOptions));
+        expect(state, 'IgxGridState directive is initialized').toBeDefined();
+        expect(state.options).toEqual(expect.objectContaining(defaultOptions));
     });
 
     it('should initialize an igxGridState with correct options input', () => {
         fix.componentInstance.data = [
-            {ID: 0, ProductName: 'Product: A0'},
-            {ID: 1, ProductName: 'Product: A1', childData: generateDataUneven(1, 1)},
-            {ID: 2, ProductName: 'Product: A2', childData: generateDataUneven(1, 1)}
+            { ID: 0, ProductName: 'Product: A0' },
+            { ID: 1, ProductName: 'Product: A1', childData: generateDataUneven(1, 1) },
+            { ID: 2, ProductName: 'Product: A2', childData: generateDataUneven(1, 1) }
         ];
 
         fix.detectChanges();
@@ -76,27 +79,62 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             columnSelection: true,
             expansion: true,
             rowIslands: false,
-            moving:true
+            moving: true
         };
 
         const state = fix.componentInstance.state;
         state.options = optionsInput;
-        expect(state.options).toEqual(jasmine.objectContaining(optionsInput));
+        expect(state.options).toEqual(expect.objectContaining(optionsInput));
     });
 
-    it('getState should return corect JSON string', () => {
-        pending();
-        const initialGridState = '{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"ID","resizable":true,"searchable":false,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"parent":null,"columnGroup":false,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"columns":[{"pinned":true,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"testCss","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"number","hasSummary":false,"field":"ID","width":"150px","header":"Product ID","resizable":true,"searchable":false,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":true,"editable":false,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"string","hasSummary":false,"field":"ProductName","width":"150px","header":"Product Name","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":false,"filterable":true,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":false,,"hidden":false,"dataType":"boolean","hasSummary":true,"field":"Col1","width":"140px","header":"Col 1","resizable":true,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col2","width":"110px","header":"Col 2","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false},{"pinned":false,"sortable":true,"filterable":false,"editable":true,"sortingIgnoreCase":true,"filteringIgnoreCase":true,"headerClasses":"","headerGroupClasses":"","maxWidth":"300px","groupable":true,,"hidden":false,"dataType":"date","hasSummary":false,"field":"Col3","width":"110px","header":"Col 3","resizable":false,"searchable":true,"selectable":true,"disableHiding":true,"disablePinning":false}],"filtering":{"filteringOperands":[],"operator":0},"advancedFiltering":{},"sorting":[],"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"cellSelection":[],"rowSelection":[],"columnSelection":[],"rowPinning":[],"expansion":[],"rowIslands":[]}}]}';
-        fix.detectChanges();
-
+    it('getState should return corect JSON string', async () => {
+        await HelperFunctions.displayAllChildGrids(fix, grid);
         const state = fix.componentInstance.state;
-        const gridState = state.getState();
-        expect(gridState).toBe(initialGridState, 'JSON string representation of the initial grid state is not correct');
+        const childGrids = grid.gridAPI.getChildGrids(false) as IgxHierarchicalGridComponent[];
+        // The root grid shows one page of 5 expanded rows, so each of them renders a child grid.
+        expect(childGrids.length).toBe(5);
+
+        const gridState = state.getState() as string;
+        expect(typeof gridState).toBe('string');
+        expect(gridState, 'JSON string representation of the grid state is not the serialized state object')
+            .toBe(JSON.stringify(state.getState(false)));
+
+        const parsedState = JSON.parse(gridState) as IGridState;
+        expect(Object.keys(parsedState)).toEqual([
+            'columns', 'filtering', 'advancedFiltering', 'sorting', 'paging', 'cellSelection', 'rowSelection',
+            'columnSelection', 'rowPinning', 'expansion', 'moving', 'rowIslands'
+        ]);
+        expect(parsedState.columns).toEqual(fix.componentInstance.columns.map(c => expect.objectContaining({ ...c, key: c.field })));
+        expect(parsedState.filtering).toEqual({ filteringOperands: [], operator: FilteringLogic.And });
+        expect(parsedState.advancedFiltering).toEqual({});
+        expect(parsedState.sorting).toEqual([]);
+        expect(parsedState.paging).toEqual(HelperFunctions.pagingState(0, 5, 20));
+        expect(parsedState.cellSelection).toEqual([]);
+        expect(parsedState.rowSelection).toEqual([]);
+        expect(parsedState.columnSelection).toEqual([]);
+        expect(parsedState.rowPinning).toEqual([]);
+        expect(parsedState.expansion).toEqual([]);
+        expect(parsedState.moving).toBe(true);
+
+        const rowIslandId = fix.componentInstance.rowIsland.id;
+        expect(parsedState.rowIslands.map(ri => ri.parentRowID)).toEqual(['0', '1', '2', '3', '4']);
+        parsedState.rowIslands.forEach(rowIslandState => {
+            const childRecords = grid.data.find(r => r.ID === rowIslandState.parentRowID).childData.length;
+            const childState = rowIslandState.state;
+            expect(rowIslandState.id).toBe(rowIslandId);
+            expect(Object.keys(childState)).toEqual(Object.keys(parsedState));
+            expect(childState.columns).toEqual(fix.componentInstance.childColumns.map(c => expect.objectContaining({ ...c, key: c.field })));
+            expect(childState.filtering).toEqual({ filteringOperands: [], operator: FilteringLogic.And });
+            expect(childState.sorting).toEqual([]);
+            expect(childState.paging).toEqual(HelperFunctions.pagingState(0, 5, childRecords));
+            expect(childState.moving).toBe(true);
+            expect(childState.rowIslands).toEqual([]);
+        });
     });
 
     it('getState should return corect IGridState object when using default options', () => {
         fix.detectChanges();
-        grid  = fix.componentInstance.hgrid;
+        grid = fix.componentInstance.hgrid;
         const state = fix.componentInstance.state;
 
         const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -165,7 +203,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyMoving(grid.moving, gridState);
     });
 
-    it('setState should correctly restore grid moving state from string', fakeAsync(() => {
+    it('setState should correctly restore grid moving state from string', async () => {
         const state = fix.componentInstance.state;
 
         const initialState = HelperFunctions.buildStateString(grid, 'moving', 'true', 'true');
@@ -177,7 +215,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(JSON.stringify(movingStateObject));
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         gridState = state.getState(false, ['moving', 'rowIslands']) as IGridState;
         HelperFunctions.verifyMoving(grid.moving, gridState);
@@ -187,7 +225,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         });
         gridState = state.getState(true, ['moving', 'rowIslands']);
         expect(gridState).toBe(movingState);
-    }));
+    });
 
     it('getState should return correct filtering state', () => {
         const state = fix.componentInstance.state;
@@ -203,7 +241,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         HelperFunctions.verifyFilteringExpressions(filtering, gridState);
     });
 
-    it('setState should correctly restore grid filtering state from string', fakeAsync(() => {
+    it('setState should correctly restore grid filtering state from string', async () => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
@@ -219,7 +257,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(JSON.stringify(filteringStateObject));
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
@@ -229,9 +267,9 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         });
         gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
-    }));
+    });
 
-    it('setState should correctly restore grid filtering state from object', fakeAsync(() => {
+    it('setState should correctly restore grid filtering state from object', async () => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
@@ -247,7 +285,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(filteringStateObject);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         gridState = state.getState(false, ['filtering', 'rowIslands']) as IGridState;
         HelperFunctions.verifyFilteringExpressions(grid.filteringExpressionsTree, gridState);
@@ -257,7 +295,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         });
         gridState = state.getState(true, ['filtering', 'rowIslands']);
         expect(gridState).toBe(filteringState);
-    }));
+    });
 
     it('setState should correctly restore grid sorting state from string', () => {
         const state = fix.componentInstance.state;
@@ -319,25 +357,62 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(sortingState);
     });
 
-    it('setState should correctly restore grid paging state from string', () => {
-        pending();
+    it('setState should correctly restore grid paging state from string', async () => {
+        await HelperFunctions.displayAllChildGrids(fix, grid);
         const state = fix.componentInstance.state;
+        const childRecordsCount = (parentRowID: string) => grid.data.find(r => r.ID === parentRowID).childData.length;
 
-        const initialState = '{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":4,"countRecords":20,"error":0}},"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}}]}';
-        const pagingState = '{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":20,"error":0}},"rowIslands":[{"id":"igx-row-island-childData","parentRowID":"0","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"1","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"2","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"3","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"4","state":{"paging":{"index":0,"recordsPerPage":20,"metadata":{"countPages":1,"countRecords":7,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"5","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":3,"countRecords":14,"error":0}},"rowIslands":[]}},{"id":"igx-row-island-childData","parentRowID":"6","state":{"paging":{"index":0,"recordsPerPage":5,"metadata":{"countPages":2,"countRecords":7,"error":0}},"rowIslands":[]}}]}';
+        let gridState = state.getState(false, ['paging', 'rowIslands']) as IGridState;
+        expect(gridState.paging).toEqual(HelperFunctions.pagingState(0, 5, 20));
+        const restoredParentIDs = gridState.rowIslands.map(ri => ri.parentRowID);
+        expect(restoredParentIDs).toEqual(['0', '1', '2', '3', '4']);
+        gridState.rowIslands.forEach(ri => {
+            expect(ri.state.paging).toEqual(HelperFunctions.pagingState(0, 5, childRecordsCount(ri.parentRowID)));
+        });
 
-        let gridState = state.getState(true, ['paging', 'rowIslands']);
-        expect(gridState).toBe(initialState);
+        // Show all root records on a single page and move every child grid to its second page of 3 records.
+        const pagingState = JSON.stringify({
+            paging: HelperFunctions.pagingState(0, 20, 20),
+            rowIslands: gridState.rowIslands.map(ri => ({
+                id: ri.id,
+                parentRowID: ri.parentRowID,
+                state: { paging: HelperFunctions.pagingState(1, 3, childRecordsCount(ri.parentRowID)), rowIslands: [] }
+            }))
+        });
 
         state.setState(pagingState);
-        gridState = state.getState(false, ['paging', 'rowIslands']);
-        HelperFunctions.verifyPaging(grid.pagingState, gridState as IGridState);
+        await fix.whenStable();
+        fix.detectChanges();
+
+        expect(grid.perPage).toBe(20);
+        expect(grid.page).toBe(0);
+        expect(grid.dataView.filter(r => !grid.isChildGridRecord(r)).map(r => r.ID)).toEqual(grid.data.map(r => r.ID));
+
+        // Root rows that became visible after the root perPage change render new child grids, which keep their defaults.
+        await HelperFunctions.displayAllChildGrids(fix, grid);
+        gridState = state.getState(false, ['paging', 'rowIslands']) as IGridState;
+        expect(gridState.paging).toEqual(HelperFunctions.pagingState(0, 20, 20));
+        HelperFunctions.verifyPaging(grid.pagingState, gridState);
+        expect(gridState.rowIslands.length).toBeGreaterThan(restoredParentIDs.length);
+
         const gridsCollection = HelperFunctions.getChildGridsCollection(grid, gridState);
+        expect(gridsCollection.length).toBe(gridState.rowIslands.length);
         gridsCollection.forEach(childGrid => {
+            const records = childRecordsCount(childGrid.parentRowID);
+            const restored = restoredParentIDs.includes(childGrid.parentRowID);
+            const expectedPaging = restored ?
+                HelperFunctions.pagingState(1, 3, records) :
+                HelperFunctions.pagingState(0, 5, records);
+            expect(childGrid.state.paging).toEqual(expectedPaging);
             HelperFunctions.verifyPaging(childGrid.grid.pagingState, childGrid.state);
+            expect(childGrid.grid.perPage).toBe(expectedPaging.recordsPerPage);
+            expect(childGrid.grid.page).toBe(expectedPaging.index);
+            // The child grid displays the records of the restored page.
+            const firstIndex = expectedPaging.index * expectedPaging.recordsPerPage;
+            expect(childGrid.grid.dataView.map(r => r.ID)).toEqual(
+                grid.data.find(r => r.ID === childGrid.parentRowID).childData
+                    .slice(firstIndex, firstIndex + expectedPaging.recordsPerPage).map(r => r.ID));
         });
-        gridState = state.getState(true, ['paging', 'rowIslands']);
-        expect(gridState).toBe(pagingState);
     });
 
     it('setState should correctly restore grid advanced filtering state from string', () => {
@@ -459,7 +534,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(expansionState);
     });
 
-    it('setState should correctly restore grid columns state from string', fakeAsync(() => {
+    it('setState should correctly restore grid columns state from string', async () => {
         fix.detectChanges();
         const state = fix.componentInstance.state;
 
@@ -474,7 +549,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(initialState);
 
         state.setState(newColumnsState);
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         gridState = state.getState(false, ['columns', 'rowIslands']) as IGridState;
@@ -488,42 +563,103 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
 
         gridState = state.getState(true, ['columns', 'rowIslands']);
         expect(gridState).toBe(newColumnsState);
-    }));
+    });
+
+    describe('Destroy', () => {
+        const FEATURES: GridFeatures[] = ['columns', 'rowIslands'];
+        const EXTRA_FIELD = 'ChildLevels';
+
+        // A destroyed column has completed its destroy$, so a late subscriber completes synchronously.
+        const isDestroyed = (column: IgxColumnComponent) => {
+            let completed = false;
+            column.destroy$.subscribe({ complete: () => completed = true }).unsubscribe();
+            return completed;
+        };
+
+        // Adds a column missing from the row island to each first level child grid state, so setState creates it.
+        const withExtraChildColumn = (state: string) => {
+            const gridState = JSON.parse(state) as IGridState;
+            gridState.rowIslands
+                .filter(island => island.id === fix.componentInstance.rowIsland.id)
+                .forEach(island => {
+                    const columns = island.state.columns;
+                    columns.push({ ...columns[1], field: EXTRA_FIELD, header: EXTRA_FIELD, key: EXTRA_FIELD });
+                });
+            return JSON.stringify(gridState);
+        };
+
+        const extraChildColumns = (): IgxColumnComponent[] => fix.componentInstance.rowIsland.rowIslandAPI.getChildGrids()
+            .map(childGrid => childGrid.columns.find(c => c.field === EXTRA_FIELD));
+
+        it('setState should destroy the child grid columns it created once a later setState replaces them', () => {
+            const state = fix.componentInstance.state;
+            const initialState = state.getState(true, FEATURES) as string;
+
+            state.setState(withExtraChildColumn(initialState), FEATURES);
+            fix.detectChanges();
+            const created = extraChildColumns();
+            expect(created.length).toBeGreaterThan(0);
+            expect(created.some(c => !c || isDestroyed(c))).toBe(false);
+
+            // Restoring only the root grid columns keeps the child grid ones.
+            state.setState(state.getState(true, 'columns') as string, 'columns');
+            fix.detectChanges();
+            expect(created.some(isDestroyed)).toBe(false);
+
+            state.setState(initialState, FEATURES);
+            fix.detectChanges();
+            expect(created.every(isDestroyed)).toBe(true);
+        });
+
+        it('should destroy the child grid columns created by setState when the grid is destroyed', () => {
+            const state = fix.componentInstance.state;
+
+            state.setState(withExtraChildColumn(state.getState(true, FEATURES) as string), FEATURES);
+            fix.detectChanges();
+            const created = extraChildColumns();
+            expect(created.length).toBeGreaterThan(0);
+            expect(created.some(c => !c || isDestroyed(c))).toBe(false);
+
+            fix.destroy();
+
+            expect(created.every(isDestroyed)).toBe(true);
+        });
+    });
 });
 
 class HelperFunctions {
     public static verifyColumns(columns: IColumnState[], gridState: IGridState) {
         columns.forEach((c, index) => {
-            expect(gridState.columns[index]).toEqual(jasmine.objectContaining(c));
+            expect(gridState.columns[index]).toEqual(expect.objectContaining(c));
         });
     }
 
     public static verifySortingExpressions(sortingExpressions: ISortingExpression[], gridState: IGridState) {
         sortingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.sorting[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.sorting[i]));
         });
     }
 
     public static verifyGroupingExpressions(groupingExpressions: IGroupingExpression[], gridState: IGridState) {
         groupingExpressions.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.groupBy.expressions[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.groupBy.expressions[i]));
         });
     }
 
     public static verifyFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
-        expect(expressions.fieldName).toBe(gridState.filtering.fieldName, 'Filtering expression field name is not correct');
-        expect(expressions.operator).toBe(gridState.filtering.operator, 'Filtering expression operator value is not correct');
+        expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.filtering.fieldName);
+        expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.filtering.operator);
         expressions.filteringOperands.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.filtering.filteringOperands[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.filtering.filteringOperands[i]));
         });
     }
 
     public static verifyAdvancedFilteringExpressions(expressions: IFilteringExpressionsTree, gridState: IGridState) {
         if (gridState.advancedFiltering) {
-            expect(expressions.fieldName).toBe(gridState.advancedFiltering.fieldName, 'Filtering expression field name is not correct');
-            expect(expressions.operator).toBe(gridState.advancedFiltering.operator, 'Filtering expression operator value is not correct');
+            expect(expressions.fieldName, 'Filtering expression field name is not correct').toBe(gridState.advancedFiltering.fieldName);
+            expect(expressions.operator, 'Filtering expression operator value is not correct').toBe(gridState.advancedFiltering.operator);
             expressions.filteringOperands.forEach((expr, i) => {
-                expect(expr).toEqual(jasmine.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
+                expect(expr).toEqual(expect.objectContaining(gridState.advancedFiltering.filteringOperands[i]));
             });
         } else {
             expect(expressions).toBeFalsy();
@@ -548,7 +684,7 @@ class HelperFunctions {
                     const parentRowId = this.getParentRowID(chGrid);
                     const rowIslandState = state.rowIslands.find(st => st.id === rowIslandComponent.id && st.parentRowID === parentRowId);
                     if (rowIslandState) {
-                        const childGridState = { grid: chGrid, state: rowIslandState.state, rowIslandID: rowIslandState.id, parentRowID: parentRowId};
+                        const childGridState = { grid: chGrid, state: rowIslandState.state, rowIslandID: rowIslandState.id, parentRowID: parentRowId };
                         gridStatesCollection.push(childGridState);
                     }
                 });
@@ -558,17 +694,44 @@ class HelperFunctions {
     }
 
     public static getChildGridState(state, rowIslandID, parentRowID): any {
-        const childGridState = state.rowIslands?.find(
-            st => st.id === rowIslandID && st.parentRowID === parentRowID
-        );
+        const childGridState = state.rowIslands?.find(st => st.id === rowIslandID && st.parentRowID === parentRowID);
         return childGridState?.state;
     }
 
-    public static verifyPaging(paging: IPagingState, gridState: IGridState) {
-        expect(paging).toEqual(jasmine.objectContaining(gridState.paging));
+    public static pagingState(index: number, recordsPerPage: number, countRecords: number): IPagingState {
+        return { index, recordsPerPage, metadata: { countPages: Math.ceil(countRecords / recordsPerPage), countRecords, error: 0 } };
     }
 
-    public static verifyMoving(moving: boolean, gridState: IGridState){
+    /**
+     * Scrolls every record of the root grid into view so that all child grids are displayed at least once.
+     * Child grids create their paginator from the row island template after they render, and their
+     * paging state is calculated the next time they are checked, which for child grids scrolled out of view
+     * (detached from the DOM) is when they are scrolled back into view.
+     */
+    public static async displayAllChildGrids(fix, grid: IgxHierarchicalGridComponent) {
+        const scrollContainer = grid.verticalScrollContainer;
+        for (let i = 0; i < scrollContainer.igxForOf.length; i++) {
+            scrollContainer.scrollTo(i);
+            await new Promise(r => requestAnimationFrame(r));
+            fix.detectChanges();
+        }
+        scrollContainer.scrollTo(0);
+        await vi.waitFor(() => {
+            fix.detectChanges();
+            expect(scrollContainer.state.startIndex).toBe(0);
+            const childGrids = grid.gridAPI.getChildGrids(false);
+            expect(childGrids.length).toBeGreaterThan(0);
+            childGrids.forEach(childGrid => expect(childGrid.pagingState).toBeDefined());
+        });
+        await fix.whenStable();
+        fix.detectChanges();
+    }
+
+    public static verifyPaging(paging: IPagingState, gridState: IGridState) {
+        expect(paging).toEqual(expect.objectContaining(gridState.paging));
+    }
+
+    public static verifyMoving(moving: boolean, gridState: IGridState) {
         expect(moving).toEqual(gridState.moving);
     }
 
@@ -580,7 +743,7 @@ class HelperFunctions {
 
     public static verifyCellSelection(selectedCells: GridSelectionRange[], gridState: IGridState) {
         selectedCells.forEach((expr, i) => {
-            expect(expr).toEqual(jasmine.objectContaining(gridState.cellSelection[i]));
+            expect(expr).toEqual(expect.objectContaining(gridState.cellSelection[i]));
         });
     }
 
@@ -679,20 +842,24 @@ class HelperFunctions {
                     [hidden]="c.hidden">
                 </igx-column>
             }
-            <igx-paginator [perPage]="5"></igx-paginator>
+            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2>
-                <igx-paginator [perPage]="5"></igx-paginator>
+                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxRowIslandComponent, IgxGridStateDirective]
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxPaginatorComponent, IgxPaginatorDirective, IgxRowIslandComponent, IgxGridStateDirective]
 })
 export class IgxHierarchicalGridTestExpandedBaseComponent {
-    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
-    @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
+    @ViewChild(IgxGridStateDirective, { static: true })
+    public state: IgxGridStateDirective;
 
     public data;
     public options = {
@@ -728,13 +895,14 @@ export const generateDataUneven = (count: number, level: number, parentID: strin
     let children;
     for (let i = 0; i < count; i++) {
         const rowID = parentID ? parentID + i : i.toString();
-        if (level > 0 ) {
-           // Have child grids for row with even id less rows by not multiplying by 2
-           children = generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);
+        if (level > 0) {
+            // Have child grids for row with even id less rows by not multiplying by 2
+            children = generateDataUneven((i % 2 + 1) * Math.round(count / 3), currLevel - 1, rowID);
         }
         prods.push({
-            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, Col1: i,
-            Col2: i, Col3: i, childData: children, childData2: children });
+            ID: rowID, ChildLevels: currLevel, ProductName: 'Product: A' + i, Col1: i,
+            Col2: i, Col3: i, childData: children, childData2: children
+        });
     }
     return prods;
 };
