@@ -9,18 +9,9 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# ── Google Chrome (x86 — best-effort match for CI's ubuntu-latest runner) ────
-# NOTE: this always installs whatever apt's "stable" channel currently
-# resolves to; CI's runner image ships a periodically-frozen Chrome snapshot,
-# so exact version parity is not guaranteed (see justfile / SKILL.md caveat).
+# ── Base tools ───────────────────────────────────────────────────────────────
 RUN apt-get update \
  && apt-get install -y curl gnupg ca-certificates \
- && curl -fsSL https://dl.google.com/linux/linux_signing_key.pub \
-    | gpg --dearmor -o /etc/apt/trusted.gpg.d/google-chrome.gpg \
- && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
-    > /etc/apt/sources.list.d/google-chrome.list \
- && apt-get update \
- && apt-get install -y google-chrome-stable \
  && rm -rf /var/lib/apt/lists/*
 
 # ── Node 24 ───────────────────────────────────────────────────────────────────
@@ -28,13 +19,18 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
  && apt-get install -y nodejs \
  && rm -rf /var/lib/apt/lists/*
 
-# ── Chrome wrapper (container-stable flags, no karma config changes needed) ──
-RUN printf '#!/bin/sh\nexec /usr/bin/google-chrome-stable --disable-dev-shm-usage --no-zygote "$@"\n' \
-    > /usr/local/bin/google-chrome-ci \
- && chmod +x /usr/local/bin/google-chrome-ci
+# ── Playwright Chromium OS dependencies ───────────────────────────────────────
+# Vitest browser mode launches Playwright's own Chromium (no system Chrome).
+# Only the OS libraries are baked into the image here (taken from the latest
+# Playwright release at build time; `just build` refreshes them). The browser
+# binary itself is downloaded inside the container by
+# `npx playwright install chromium` (see scripts/docker-test/container.mjs),
+# so it always matches the Playwright version in package-lock.json.
+RUN npx -y playwright install-deps chromium \
+ && rm -rf /var/lib/apt/lists/* /root/.npm
 
-ENV CHROME_BIN=/usr/local/bin/google-chrome-ci \
-    PUPPETEER_SKIP_DOWNLOAD=1 \
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+# Keep downloaded browsers in the cached node_modules volume so they survive
+# `docker run --rm` and are reset together with node_modules.
+ENV PLAYWRIGHT_BROWSERS_PATH=/workspace/node_modules/.cache/ms-playwright
 
 WORKDIR /workspace

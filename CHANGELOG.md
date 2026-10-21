@@ -2,6 +2,65 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### Behavioral Changes
+
+- `IgxCarouselComponent`
+    - `stop()` is now a no-op when the carousel is not playing, so `carouselPaused` is no longer emitted for an already stopped carousel, for example on every `mouseenter` or when navigating with the keyboard past the first or last slide of a non-looping carousel.
+    - The carousel starts playing automatically only once, when its slides are initialized. Adding or removing slides no longer resumes a carousel that was stopped, unless its automatic rotation ended on the last slide of a non-looping carousel.
+    - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
+    - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
+    - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+
+### Bug Fixes
+
+- `IgxAccordionComponent`
+    - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxCarouselComponent`
+    - After slides are added or removed, the `aria-labelledby` of the slides now references the matching indicator.
+    - Destroying the carousel right after it is created no longer leaves an auto-play interval running.
+    - Enabling `gesturesSupport` after the carousel is initialized now enables the touch gestures.
+    - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
+    - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
+    - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+
+## 22.2.3
+
+### Bug Fixes
+
+- `IgxDialogComponent`
+    - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
+- `IgxGridExcelStyleFilteringComponent`
+    - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+
+## 22.2.2
+
+### New Features
+
+- `IgxTabs`
+    - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
+    - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
+
+### Bug Fixes
+
+- **Forms**
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
+- `IgxTabsComponent`
+    - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
+- `IgxChipComponent`
+    - A selected chip now regains focus after it is dragged and dropped. Previously focus was lost.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - A combo used in a virtualized grid cell template with its `id` bound to row data no longer shows the selection of a combo from another row after the grid is scrolled.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - `recalculateAutoSizes()` now resizes auto-sized columns to the new content in zoneless applications. Previously the columns could keep their previous widths.
+    - With multiple cell selection, the selected cell is no longer lost when `Shift` + arrow keys are pressed at the edge of the grid, so a following `Ctrl` + click keeps both selections.
+    - `findNext`, `findPrev` and navigating to a row on another page now scroll to the row after the page changes. Previously the grid changed the page but did not scroll to the row.
+- `IgxHierarchicalGridComponent`
+    - Child grids no longer fail to initialize or throw `ExpressionChangedAfterItHasBeenCheckedError` when rows are expanded from code running outside the Angular zone or in zoneless applications.
+    - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.
+- `IgxOverlayService`
+    - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
 
 ## 22.2.1
 
@@ -51,6 +110,13 @@ All notable changes for each version of this project will be documented in this 
     - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
     - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
     - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
+- `IgxQueryBuilderComponent`
+    - When reordering conditions with the keyboard, `Space` now drops the dragged condition at the chosen location, like `Enter`. Previously it did nothing.
+    - Pressing `Enter` or `Space` during a keyboard drag before a drop location is chosen no longer deletes the dragged condition.
+    - During a keyboard drag, the arrow keys and the `Enter`/`Space` keys that drop the condition no longer scroll the page or the expressions container.
+    - During a keyboard drag, `Tab` and `Shift+Tab` are ignored while the drop ghost is shown, so focus stays on it until the condition is dropped (`Enter`/`Space`) or the drag is cancelled (`Escape`). Previously they cancelled the drag and focus was lost.
+    - While a condition is dragged with the mouse, the arrow keys, `Enter` and `Space` no longer move or drop it, and focusing another condition's drag indicator no longer starts a keyboard drag. Previously, after moving focus into the tree, the keyboard could move the drop ghost or drop the condition while the mouse button was still held.
+    - Selecting a `time` field that has no `editorOptions` no longer throws an error.
 
 ## 22.2.0
 

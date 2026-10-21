@@ -74,6 +74,10 @@ export class RadioSampleComponent {
 }
 ```
 
+## Invalid State in Forms
+
+With a reactive, template-driven or Signal Forms (`[formField]`) binding, the radio group and its buttons show the invalid state only once the control is touched or dirty, so a pristine control stays in its initial state, e.g. right after `reset()`.
+
 # API Summary
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
