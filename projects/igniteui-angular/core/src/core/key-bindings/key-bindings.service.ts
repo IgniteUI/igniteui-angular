@@ -46,9 +46,14 @@ function sortModifiers(modifiers: string[]): string[] {
     return MODIFIER_NAMES.filter((name) => modifiers.includes(name));
 }
 
-/** Returns the modifiers active for `event`, already sorted. */
-function getActiveModifiers(event: KeyboardEvent): string[] {
-    return MODIFIER_ENTRIES.filter(([, property]) => event[property]).map(([name]) => name);
+/**
+ * Returns the modifiers active for `event`, already sorted. A modifier is not
+ * flagged on its own keyup, so `released` adds it.
+ */
+function getActiveModifiers(event: KeyboardEvent, released?: string): string[] {
+    return MODIFIER_ENTRIES
+        .filter(([name, property]) => event[property] || name === released)
+        .map(([name]) => name);
 }
 
 function hasModifiers(event: KeyboardEvent): boolean {
@@ -425,7 +430,7 @@ export class IgxKeyBindingsService {
             return this._bindings.get(key);
         }
 
-        const modifiers = getActiveModifiers(event);
+        const modifiers = getActiveModifiers(event, isModifier && isKeyup(event) ? key : undefined);
         const binding = this._bindings.get(createCombinationKey(Array.from(this._pressedKeys), modifiers));
 
         // Overlapping presses leave several keys down. Fall back to the current

@@ -276,6 +276,28 @@ describe('IgxKeyBindingsService', () => {
                 expect(handler).toHaveBeenCalledTimes(1);
                 expect(bangHandler).not.toHaveBeenCalled();
             });
+
+            it('should run the keyup binding of a modifier on its release', () => {
+                keyBindings.set(altKey, handler, { triggers: ['keyup'] });
+
+                // The browser clears the flag of a modifier on its own keyup.
+                dispatch(host, 'keydown', altKey, { altKey: true });
+                const keyup = dispatch(host, 'keyup', altKey);
+
+                expect(handler).toHaveBeenCalledExactlyOnceWith(keyup);
+            });
+
+            it('should not run the keyup binding of a key when a modifier is released before it', () => {
+                keyBindings.set([ctrlKey, 'a'], vi.fn()).set('a', handler, { triggers: ['keyup'] });
+
+                dispatch(host, 'keydown', ctrlKey, { ctrlKey: true });
+                dispatch(host, 'keydown', 'a', { ctrlKey: true });
+                dispatch(host, 'keyup', ctrlKey);
+                expect(handler, 'A is still down').not.toHaveBeenCalled();
+
+                const keyup = dispatch(host, 'keyup', 'a');
+                expect(handler).toHaveBeenCalledExactlyOnceWith(keyup);
+            });
         });
 
         describe('Chords without modifiers', () => {
