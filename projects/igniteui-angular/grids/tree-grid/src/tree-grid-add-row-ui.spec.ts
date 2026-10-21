@@ -42,6 +42,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
         it('should format dates after leaving the editor in an uncommitted add row', () => {
             fix.componentInstance.data = [];
+            treeGrid.getColumnByName('ID').hidden = true;
+            treeGrid.getColumnByName('ParentID').hidden = true;
             const column = treeGrid.getColumnByName('Name');
             column.dataType = GridColumnDataType.Date;
             column.pipeArgs = { format: 'dd/MM/yyyy' };
@@ -50,7 +52,8 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             treeGrid.beginAddRowById(null);
             fix.detectChanges();
             const cell = treeGrid.gridAPI.get_cell_by_index(0, 'Name');
-            expect(cell.nativeElement?.textContent.trim()).toBe('Name');
+            expect(cell.nativeElement?.tagName.toLowerCase()).toBe('igx-tree-grid-cell');
+            expect(cell.nativeElement.querySelector('.igx-grid__td-text').textContent.trim()).toBe('Name');
 
             cell.setEditMode(true);
             fix.detectChanges();
@@ -58,9 +61,9 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             treeGrid.gridAPI.get_cell_by_index(0, 'JobTitle').setEditMode(true);
             fix.detectChanges();
 
-            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
-            expect(cell.editMode).toBeFalse();
-            expect(cell.nativeElement?.textContent.trim()).toBe('23/01/2024');
+            expect(treeGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(cell.editMode).toBe(false);
+            expect(cell.nativeElement.querySelector('.igx-grid__td-text').textContent.trim()).toBe('23/01/2024');
         });
 
         it('should show action strip "add row" button only for root level rows.', () => {

@@ -56,8 +56,8 @@ describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
             hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ChildLevels').setEditMode(true);
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
-            expect(cell.editMode).toBeFalse();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(cell.editMode).toBe(false);
             expect(cell.nativeElement?.textContent.trim()).toBe('23/01/2024');
         });
 
