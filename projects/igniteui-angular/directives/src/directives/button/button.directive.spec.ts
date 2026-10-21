@@ -1,26 +1,26 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, input, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxButtonDirective } from './button.directive';
+import { IgxButtonDirective, type IgxButtonType } from './button.directive';
 
 import { IgxRippleDirective } from '../ripple/ripple.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-const BUTTON_COMFORTABLE = 'igx-button';
 
 describe('IgxButton', () => {
 
-    const baseClass = BUTTON_COMFORTABLE;
-    const classes = {
-        flat: `${baseClass}--flat`,
-        contained: `${baseClass}--contained`,
-        outlined: `${baseClass}--outlined`,
-        fab: `${baseClass}--fab`,
-        ready: `${baseClass}--ready`,
-    };
+    const CSS_CLASSES = {
+        flat: 'igx-button--flat',
+        contained: 'igx-button--contained',
+        outlined: 'igx-button--outlined',
+        fab: 'igx-button--fab',
+        disabled: 'igx-button--disabled',
+        ready: 'igx-button--ready'
+    } as const;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitButtonComponent,
@@ -28,92 +28,89 @@ describe('IgxButton', () => {
                 ButtonWithRoleComponent
             ]
         }).compileComponents();
-    }));
-
-    it('Initializes a button', () => {
-        const fixture = TestBed.createComponent(InitButtonComponent);
-        fixture.detectChanges();
-
-        expect(fixture.debugElement.query(By.css('span.igx-button--flat'))).toBeTruthy();
-        expect(fixture.debugElement.query(By.css('i.material-icons'))).toBeTruthy();
     });
 
-    it('Button with properties', () => {
-        const fixture = TestBed.createComponent(ButtonWithAttribsComponent);
-        fixture.detectChanges();
+    describe('Initialization', () => {
+        let fixture: ComponentFixture<InitButtonComponent>;
+        let buttonDirective: IgxButtonDirective;
+        let buttonElement: HTMLElement;
 
-        const button = fixture.debugElement.query(By.css('span')).nativeElement;
 
-        expect(button).toBeTruthy();
-        expect(button.classList.contains('igx-button--contained')).toBe(true);
-        expect(button.classList.contains('igx-button--disabled')).toBe(true);
+        beforeEach(() => {
+            fixture = TestBed.createComponent(InitButtonComponent);
+            vi.spyOn(fixture.componentInstance.button().buttonSelected, 'emit');
+            fixture.detectChanges();
 
-        fixture.componentInstance.disabled = false;
-        fixture.detectChanges();
+            buttonDirective = fixture.componentInstance.button();
+            buttonElement = fixture.debugElement.query(By.css('span')).nativeElement as HTMLElement;
+        });
 
-        expect(button.classList.contains('igx-button--disabled')).toBe(false);
+        it('should initialize the button', () => {
+            const icon = fixture.debugElement.query(By.css('i')).nativeElement as HTMLElement;
 
-        fixture.detectChanges();
+            expect(hasClass(buttonElement, CSS_CLASSES.flat)).toBe(true);
+            expect(hasClass(icon, 'material-icons')).toBe(true);
+        });
+
+
+        it('should set the correct CSS classes on the element using the "type" input', () => {
+            fixture.detectChanges(); // applies the post-render `--ready` class
+            expect(buttonElement.classList).lengthOf(3);
+            expect(hasClass(buttonElement, CSS_CLASSES.flat)).toBe(true);
+
+            for (const type of ['contained', 'outlined', 'fab', 'flat'] as const) {
+                fixture.componentRef.setInput('type', type);
+                fixture.detectChanges();
+
+                expect(buttonElement.classList).lengthOf(3);
+                expect(hasClass(buttonElement, CSS_CLASSES[type])).toBe(true);
+            }
+        });
+
+        it('should emit the buttonSelected event only on user interaction, not on initialization', () => {
+            expect(buttonDirective.buttonSelected.emit).not.toHaveBeenCalled();
+
+            for (const times of [1, 2]) {
+                buttonElement.click();
+                fixture.detectChanges();
+                expect(buttonDirective.buttonSelected.emit).toHaveBeenCalledTimes(times);
+            }
+        });
     });
 
-    it('Should set the correct CSS class on the element using the "type" input', () => {
-        const fixture = TestBed.createComponent(InitButtonComponent);
-        fixture.detectChanges();
-        fixture.detectChanges(); // applies the post-render `--ready` class
-        const theButton = fixture.componentInstance.button;
-        const theButtonNativeEl = theButton.nativeElement;
-        expect(theButtonNativeEl.classList.length).toEqual(3);
-        expect(theButtonNativeEl.classList).toContain(classes.flat);
+    describe('Button with properties', () => {
+        let fixture: ComponentFixture<ButtonWithAttribsComponent>;
+        let buttonElement: HTMLElement;
 
-        theButton.type = 'contained';
-        fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(3);
-        expect(theButtonNativeEl.classList).toContain(classes.contained);
+        beforeEach(() => {
+            fixture = TestBed.createComponent(ButtonWithAttribsComponent);
+            fixture.detectChanges();
 
-        theButton.type = 'outlined';
-        fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(3);
-        expect(theButtonNativeEl.classList).toContain(classes.outlined);
+            buttonElement = fixture.debugElement.query(By.css('span')).nativeElement as HTMLElement;
+        });
 
-        theButton.type = 'fab';
-        fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(3);
-        expect(theButtonNativeEl.classList).toContain(classes.fab);
+        it('should initialize the button with the correct CSS classes based on the "type" and "disabled" properties', () => {
+            expect(hasClass(buttonElement, CSS_CLASSES.contained)).toBe(true);
+            expect(hasClass(buttonElement, CSS_CLASSES.disabled)).toBe(true);
 
-        theButton.type = 'flat';
-        fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(3);
-        expect(theButtonNativeEl.classList).toContain(classes.flat);
-    });
+            fixture.componentRef.setInput('disabled', false);
+            fixture.detectChanges();
 
-    it('Should emit the buttonSelected event only on user interaction, not on initialization', () => {
-        const fixture = TestBed.createComponent(InitButtonComponent);
-        fixture.detectChanges();
-        const button = fixture.componentInstance.button;
-        spyOn(button.buttonSelected, 'emit');
-
-        expect(button.buttonSelected.emit).not.toHaveBeenCalled();
-
-        button.nativeElement.click();
-        fixture.detectChanges();
-        expect(button.buttonSelected.emit).toHaveBeenCalledTimes(1);
-
-        button.nativeElement.click();
-        fixture.detectChanges();
-        expect(button.buttonSelected.emit).toHaveBeenCalledTimes(2);
+            expect(hasClass(buttonElement, CSS_CLASSES.disabled)).toBe(false);
+        });
     });
 
     it('Should enable transitions only after the first render', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);
-        const classList = fixture.componentInstance.button.nativeElement.classList;
 
         // First pass renders the resting styles without transitions.
         fixture.detectChanges();
-        expect(classList).not.toContain(classes.ready);
+        const classList = fixture.componentInstance.button().nativeElement.classList;
+        expect(classList).not.toContain(CSS_CLASSES.ready);
 
         // The post-render hook flips the signal; the next pass applies the class.
         fixture.detectChanges();
-        expect(classList).toContain(classes.ready);
+        expect(classList).toContain(CSS_CLASSES.ready);
     });
 
     it('Should let the template override the role attribute', () => {
@@ -126,24 +123,30 @@ describe('IgxButton', () => {
 });
 
 @Component({
-    template: `<span igxButton="flat" igxRipple="white">
-        <i class="material-icons">add</i>
-    </span>`,
+    template: `
+        <span [igxButton]="type()" igxRipple="white">
+            <i class="material-icons">add</i>
+        </span>
+    `,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective]
 })
 class InitButtonComponent {
-    @ViewChild(IgxButtonDirective, { read: IgxButtonDirective, static: true })
-    public button: IgxButtonDirective;
+    public button = viewChild.required(IgxButtonDirective);
+    public type = input<IgxButtonType>('flat');
 }
 
 @Component({
-    template: `<span igxButton="contained" [disabled]="disabled">Test</span>`,
+    template: `<span igxButton="contained" [disabled]="disabled()">Test</span>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective]
 })
 class ButtonWithAttribsComponent {
-    public disabled = true;
+    public disabled = input(true);
+}
+
+function hasClass(element: HTMLElement, className: string): boolean {
+    return element.classList.contains(className);
 }
 
 @Component({

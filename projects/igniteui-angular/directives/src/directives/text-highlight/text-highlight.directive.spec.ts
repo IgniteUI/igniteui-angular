@@ -1,18 +1,19 @@
 import { Component, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight.directive';
+import { IgxTextHighlightDirective, IActiveHighlightInfo } from './text-highlight.directive';
 
 import { IgxTextHighlightService } from './text-highlight.service';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxHighlight', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 HighlightLoremIpsumComponent
             ]
         });
-    }));
+    });
 
     it('Highlight inputs should have the proper values', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
@@ -100,10 +101,8 @@ describe('IgxHighlight', () => {
         fix.detectChanges();
 
         const component: HighlightLoremIpsumComponent = fix.debugElement.componentInstance;
-        const count = component.highlightText(
-            'LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
-            ' Quisque sed suscipit lorem. Vestibulum sit.',
-            false, true);
+        const count = component.highlightText('LoReM ipsuM dolor sit AMET, consectetur adipiscing elit. Vestibulum vulputate LucTUS dui ut maximus.' +
+            ' Quisque sed suscipit lorem. Vestibulum sit.', false, true);
 
         let spans = fix.debugElement.nativeElement.querySelectorAll('.' + component.highlightClass);
         expect(spans.length).toBe(1);
@@ -319,7 +318,7 @@ describe('IgxHighlight', () => {
     });
 
     describe('observe()', () => {
-        it('should create a MutationObserver and watch for DOM changes', fakeAsync(() => {
+        it('should create a MutationObserver and watch for DOM changes', () => {
             const fix = TestBed.createComponent(HighlightLoremIpsumComponent);
             fix.detectChanges();
             const component = fix.componentInstance;
@@ -334,8 +333,8 @@ describe('IgxHighlight', () => {
             // Replace window.MutationObserver to capture the callback synchronously,
             // avoiding any real-timer dependency for deterministic testing.
             let observerCallback: MutationCallback;
-            const disconnectSpy = jasmine.createSpy('disconnect');
-            const observeSpy = jasmine.createSpy('observe');
+            const disconnectSpy = vi.fn();
+            const observeSpy = vi.fn();
             const originalMO = window.MutationObserver;
             (window as any).MutationObserver = function(cb: MutationCallback) {
                 observerCallback = cb;
@@ -366,7 +365,7 @@ describe('IgxHighlight', () => {
                 nextSibling: null, oldValue: null, previousSibling: null
             } as MutationRecord], existingObserver as unknown as MutationObserver);
 
-            expect((directive as any)._nodeWasRemoved).toBeTrue();
+            expect((directive as any)._nodeWasRemoved).toBe(true);
 
             // Simulate container re-insertion as firstElementChild, then invoke the callback
             parent.insertBefore(container, parent.firstChild);
@@ -384,7 +383,7 @@ describe('IgxHighlight', () => {
             } finally {
                 (window as any).MutationObserver = originalMO;
             }
-        }));
+        });
     });
 });
 

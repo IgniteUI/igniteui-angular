@@ -1,4 +1,5 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import type { Mock } from "vitest";
+import { TestBed } from '@angular/core/testing';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxPdfExporterService } from './pdf-exporter';
 import { IgxPdfExporterOptions } from './pdf-exporter-options';
@@ -8,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NestedColumnGroupsGridComponent, ColumnGroupTestComponent, BlueWhaleGridComponent } from '../../../../../test-utils/grid-mch-sample.spec';
 import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridTestBaseComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { IgxTreeGridSortingComponent, IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
-import { CustomSummariesComponent } from 'igniteui-angular/grids/grid/src/grid-summary.spec';
+import { CustomSummariesComponent } from '../../../../../test-utils/grid-summary-components.spec';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxPivotGridComponent } from 'igniteui-angular/grids/pivot-grid';
@@ -19,6 +20,7 @@ import {
     PAGE_SIZES, getDrawnRectangles, getHeaderCellOf, getPageCount, getPageDimensions,
     getRenderedCells, getRenderedRows, getRenderedRowsByPage, getRenderedText
 } from './pdf-exporter-utils.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 /** `GridIDNameJobTitleComponent` as the exporter lays it out, in the order the grid shows it. */
 const GRID_ROWS = [
@@ -35,13 +37,16 @@ const GRID_ROWS = [
     ['10', 'Eduardo Ramirez', 'Manager']
 ];
 
-describe('PDF Grid Exporter #grid', () => {
+// PDF export of hierarchical/large grids can exceed the default 5s test timeout under CI
+// load. Give it room so the export completes within the test — a timed-out export otherwise
+// leaks its (first()) exportEnded subscription into the next test, where the saveBlobToFile
+// spy no longer exists.
+describe('PDF Grid Exporter #grid', { timeout: 10000 }, () => {
     let exporter: IgxPdfExporterService;
     let options: IgxPdfExporterOptions;
-    let originalTimeout: number;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 GridIDNameJobTitleComponent,
@@ -49,28 +54,18 @@ describe('PDF Grid Exporter #grid', () => {
                 IgxPivotGridTestComplexHierarchyComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         exporter = new IgxPdfExporterService();
         options = new IgxPdfExporterOptions('PdfGridExport');
 
-        // PDF export of hierarchical/large grids can exceed Jasmine's default 5s timeout under CI
-        // load. Give it room so the export completes within the test — a timed-out export otherwise
-        // leaks its (first()) exportEnded subscription into the next test, where the saveBlobToFile
-        // spy no longer exists ("Expected a spy, but got Function").
-        originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile').mockImplementation(() => {});
     });
 
-    afterEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
-    });
-
-    it('should export grid as displayed.', (done) => {
+    it('should export grid as displayed.', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -85,9 +80,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export grid with custom page orientation', (done) => {
+    it('should export grid with custom page orientation', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -103,9 +100,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should honor ignoreColumnsVisibility option', (done) => {
+    it('should honor ignoreColumnsVisibility option', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -123,9 +122,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export a hidden column when told to ignore column visibility', (done) => {
+    it('should export a hidden column when told to ignore column visibility', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -143,9 +144,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should handle empty grid', (done) => {
+    it('should handle empty grid', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -162,9 +165,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export grid with landscape orientation', (done) => {
+    it('should export grid with landscape orientation', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -179,9 +184,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export with table borders disabled', (done) => {
+    it('should export with table borders disabled', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -197,9 +204,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export with custom font size', (done) => {
+    it('should export with custom font size', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -213,9 +222,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export with different page sizes', (done) => {
+    it('should export with different page sizes', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -231,9 +242,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should honor ignoreColumnsOrder option', (done) => {
+    it('should honor ignoreColumnsOrder option', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -252,9 +265,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export a pinned column first when not ignoring the column order', (done) => {
+    it('should export a pinned column first when not ignoring the column order', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -273,9 +288,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should honor ignoreFiltering option', (done) => {
+    it('should honor ignoreFiltering option', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -298,9 +315,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export every record when told to ignore filtering', (done) => {
+    it('should export every record when told to ignore filtering', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -318,9 +337,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should honor ignoreSorting option', (done) => {
+    it('should honor ignoreSorting option', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -342,9 +363,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export the records unsorted when told to ignore sorting', (done) => {
+    it('should export the records unsorted when told to ignore sorting', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -362,11 +385,13 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
 
 
-    it('should handle grid with multiple columns', (done) => {
+    it('should handle grid with multiple columns', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -385,9 +410,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export with custom filename from options', (done) => {
+    it('should export with custom filename from options', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -396,20 +423,22 @@ describe('PDF Grid Exporter #grid', () => {
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
-            const callArgs = (ExportUtilities.saveBlobToFile as jasmine.Spy).calls.mostRecent().args;
+            const callArgs = vi.mocked((ExportUtilities.saveBlobToFile as Mock)).mock.lastCall;
             expect(callArgs[1]).toBe('MyCustomGrid.pdf');
             // The exporter hands over the document itself, as a PDF blob.
-            expect(callArgs[0] instanceof Blob).toBeTrue();
+            expect(callArgs[0] instanceof Blob).toBe(true);
             expect(callArgs[0].type).toBe('application/pdf');
             expect(callArgs[0].size).toBeGreaterThan(0);
             done();
         });
 
         exporter.export(grid, customOptions);
+        await exportDone;
     });
 
-    it('should export grid with multi-column headers', (done) => {
-        TestBed.configureTestingModule({
+    it('should export grid with multi-column headers', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ColumnGroupTestComponent
@@ -440,10 +469,12 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export grid with nested multi-column headers', (done) => {
-        TestBed.configureTestingModule({
+    it('should export grid with nested multi-column headers', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 NestedColumnGroupsGridComponent
@@ -471,10 +502,12 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export grid with summaries', (done) => {
-        TestBed.configureTestingModule({
+    it('should export grid with summaries', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CustomSummariesComponent
@@ -503,10 +536,12 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export hierarchical grid', (done) => {
-        TestBed.configureTestingModule({
+    it('should export hierarchical grid', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxHierarchicalGridTestBaseComponent
@@ -548,9 +583,11 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export the correct number of child data rows from a hierarchical grid', (done) => {
+    it('should export the correct number of child data rows from a hierarchical grid', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
         fix.detectChanges();
 
@@ -584,17 +621,19 @@ describe('PDF Grid Exporter #grid', () => {
         const expectedRows = allGrids.reduce((acc, g) => acc + g.data.length, 0);
 
         // Spy PDF row drawing to count exported rows
-        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow').and.callThrough();
+        const drawDataRowSpy = vi.spyOn(exporter as any, 'drawDataRow');
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
-            expect(drawDataRowSpy.calls.count()).toBe(expectedRows);
+            expect(vi.mocked(drawDataRowSpy).mock.calls.length).toBe(expectedRows);
             done();
         });
 
         exporter.export(hGrid, options);
+        await exportDone;
     });
 
-    it('should export hierarchical grid with expanded rows when using primaryKey', (done) => {
+    it('should export hierarchical grid with expanded rows when using primaryKey', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
         const fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
         fix.detectChanges();
 
@@ -622,20 +661,23 @@ describe('PDF Grid Exporter #grid', () => {
         expect(firstChildGrid.data.length).toBeGreaterThan(0);
 
         // Spy on drawDataRow to count exported rows
-        const drawDataRowSpy = spyOn<any>(exporter as any, 'drawDataRow').and.callThrough();
+        const drawDataRowSpy = vi.spyOn(exporter as any, 'drawDataRow');
 
         exporter.exportEnded.pipe(first()).subscribe(() => {
             const minExpectedRows = 1 + firstChildGrid.data.length;
-            expect(drawDataRowSpy.calls.count()).toBeGreaterThanOrEqual(minExpectedRows,
-                'Child rows should be exported when parent is expanded via toggleRow with primaryKey');
+            expect(drawDataRowSpy.mock.calls.length,
+                'Child rows should be exported when parent is expanded via toggleRow with primaryKey')
+                .toBeGreaterThanOrEqual(minExpectedRows);
             done();
         });
 
         exporter.export(hGrid, options);
+        await exportDone;
     });
 
-    it('should export tree grid with hierarchical data', (done) => {
-        TestBed.configureTestingModule({
+    it('should export tree grid with hierarchical data', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridSortingComponent
@@ -677,10 +719,12 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should export tree grid with flat self-referencing data', (done) => {
-        TestBed.configureTestingModule({
+    it('should export tree grid with flat self-referencing data', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridPrimaryForeignKeyComponent
@@ -719,10 +763,12 @@ describe('PDF Grid Exporter #grid', () => {
         });
 
         exporter.export(grid, options);
+        await exportDone;
     });
 
-    it('should truncate long header text with ellipsis in multi-column headers', (done) => {
-        TestBed.configureTestingModule({
+    it('should truncate long header text with ellipsis in multi-column headers', async () => {
+        const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 BlueWhaleGridComponent
@@ -761,21 +807,23 @@ describe('PDF Grid Exporter #grid', () => {
         // Use smaller page size to force truncation
         options.pageSize = 'a5';
         exporter.export(grid, options);
+        await exportDone;
     });
 
 
     describe('Multi column header layout', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     NestedColumnGroupsGridComponent,
                     ColumnGroupTestComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
-        it('should draw each column group exactly over the columns it spans', (done) => {
+        it('should draw each column group exactly over the columns it spans', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
             fix.detectChanges();
 
@@ -829,9 +877,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should draw a group over its columns when the levels are uneven', (done) => {
+        it('should draw a group over its columns when the levels are uneven', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             const fix = TestBed.createComponent(ColumnGroupTestComponent);
             fix.detectChanges();
 
@@ -873,9 +923,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should flatten the groups when told to ignore multi column headers', (done) => {
+        it('should flatten the groups when told to ignore multi column headers', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
             fix.detectChanges();
 
@@ -898,9 +950,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should narrow a group when one of its columns is hidden', (done) => {
+        it('should narrow a group when one of its columns is hidden', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
             fix.detectChanges();
 
@@ -933,9 +987,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should export the groups of an empty grid', (done) => {
+        it('should export the groups of an empty grid', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             const fix = TestBed.createComponent(NestedColumnGroupsGridComponent);
             fix.detectChanges();
 
@@ -956,6 +1012,7 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
     });
 
@@ -964,15 +1021,15 @@ describe('PDF Grid Exporter #grid', () => {
         let fix;
         let grid;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     MultiColumnHeadersExportComponent,
                     GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
@@ -980,7 +1037,8 @@ describe('PDF Grid Exporter #grid', () => {
             grid = fix.componentInstance.grid;
         });
 
-        it('should export the groups as the grid has them collapsed and expanded', (done) => {
+        it('should export the groups as the grid has them collapsed and expanded', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
 
@@ -999,9 +1057,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should follow a group that the grid has collapsed', (done) => {
+        it('should follow a group that the grid has collapsed', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             grid.columnList.find(column => column.header === 'General Information').expanded = false;
             fix.detectChanges();
 
@@ -1025,9 +1085,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should export a pinned column group ahead of the rest', (done) => {
+        it('should export a pinned column group ahead of the rest', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             grid.columnList.find(column => column.header === 'Address Information').pinned = true;
             fix.detectChanges();
 
@@ -1046,9 +1108,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should export a moved column in the place the grid moved it to', (done) => {
+        it('should export a moved column in the place the grid moved it to', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             grid.columnList.get(0).move(2);
             fix.detectChanges();
 
@@ -1067,9 +1131,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should leave out a column group turned away during columnExporting', (done) => {
+        it('should leave out a column group turned away during columnExporting', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             exporter.columnExporting.subscribe((args) => {
                 if (args.header === 'Address Information') {
                     args.cancel = true;
@@ -1093,9 +1159,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
 
-        it('should export three levels of groups over only two records', (done) => {
+        it('should export three levels of groups over only two records', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             const twoRows = TestBed.createComponent(GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent);
             twoRows.detectChanges();
 
@@ -1115,9 +1183,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(twoRows.componentInstance.grid, options);
+            await exportDone;
         });
 
-        it('should draw the headers even when alwaysExportHeaders is turned off', (done) => {
+        it('should draw the headers even when alwaysExportHeaders is turned off', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             grid.data = [];
             options.alwaysExportHeaders = false;
             fix.detectChanges();
@@ -1137,6 +1207,7 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(grid, options);
+            await exportDone;
         });
     });
 
@@ -1154,7 +1225,8 @@ describe('PDF Grid Exporter #grid', () => {
         /** The seven sellers the sample pivots on, which head the table. */
         const SELLER_COLUMNS = ['Stanley', 'Elisa', 'Lydia', 'David', 'John', 'Larry', 'Walter'];
 
-        it('should export basic pivot grid', (done) => {
+        it('should export basic pivot grid', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             exporter.exportEnded.pipe(first()).subscribe((args) => {
                 expect(ExportUtilities.saveBlobToFile).toHaveBeenCalledTimes(1);
 
@@ -1181,9 +1253,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export pivot grid with row headers', (done) => {
+        it('should export pivot grid with row headers', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             pivotGrid.pivotUI.showRowHeaders = true;
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
@@ -1199,9 +1273,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export pivot grid with horizontal row layout', (done) => {
+        it('should export pivot grid with horizontal row layout', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             pivotGrid.pivotUI.showRowHeaders = true;
             pivotGrid.pivotUI.rowLayout = PivotRowLayoutType.Horizontal;
             pivotGrid.pivotConfiguration.rows = [{
@@ -1235,9 +1311,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export pivot grid with custom page size', (done) => {
+        it('should export pivot grid with custom page size', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             options.pageSize = 'letter';
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
@@ -1248,9 +1326,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export pivot grid with landscape orientation', (done) => {
+        it('should export pivot grid with landscape orientation', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             options.pageOrientation = 'landscape';
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
@@ -1261,9 +1341,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export pivot grid without table borders', (done) => {
+        it('should export pivot grid without table borders', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             options.showTableBorders = false;
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
@@ -1275,9 +1357,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export pivot grid with custom font size', (done) => {
+        it('should export pivot grid with custom font size', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             options.fontSize = 14;
 
             exporter.exportEnded.pipe(first()).subscribe((args) => {
@@ -1288,9 +1372,11 @@ describe('PDF Grid Exporter #grid', () => {
             });
 
             exporter.export(pivotGrid, options);
+            await exportDone;
         });
 
-        it('should export hierarchical pivot grid', (done) => {
+        it('should export hierarchical pivot grid', async () => {
+            const { promise: exportDone, resolve: done } = Promise.withResolvers<void>();
             fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();
             fix.whenStable().then(() => {
@@ -1332,6 +1418,7 @@ describe('PDF Grid Exporter #grid', () => {
 
                 exporter.export(pivotGrid, options);
             });
+            await exportDone;
         });
     });
 });

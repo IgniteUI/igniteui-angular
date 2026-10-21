@@ -1,16 +1,17 @@
 import { Component, ViewChild, inject, ChangeDetectionStrategy, signal, provideZonelessChangeDetection } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { IgxSwitchComponent } from './switch.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxSwitch', () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 InitSwitchComponent,
@@ -23,7 +24,7 @@ describe('IgxSwitch', () => {
                 IgxSwitchComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);
@@ -247,10 +248,10 @@ describe('IgxSwitch', () => {
         expect(domSwitch.classList.contains('igx-switch--invalid')).toBe(true);
     });
 
-    it('Should work properly with ngModel', fakeAsync(() => {
+    it('Should work properly with ngModel', async () => {
         const fixture = TestBed.createComponent(SwitchFormComponent);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         const switchEl = fixture.componentInstance.switch;
         expect(switchEl.invalid).toEqual(false);
@@ -259,9 +260,9 @@ describe('IgxSwitch', () => {
         expect(switchEl.invalid).toEqual(true);
 
         fixture.componentInstance.ngForm.resetForm();
-        tick();
+        await fixture.whenStable();
         expect(switchEl.invalid).toEqual(false);
-    }));
+    });
 
     it('Should work properly with reactive forms validation.', () => {
         const fixture = TestBed.createComponent(SwitchFormGroupComponent);
@@ -340,12 +341,12 @@ describe('IgxSwitchComponent - Signal Forms', () => {
     let instance: IgxSwitchComponent;
     let host: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, SwitchSignalFormComponent],
             providers: [provideZonelessChangeDetection()]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(SwitchSignalFormComponent);
@@ -449,7 +450,8 @@ describe('IgxSwitchComponent - Signal Forms', () => {
     imports: [IgxSwitchComponent]
 })
 class InitSwitchComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
 }
 
 @Component({
@@ -459,7 +461,8 @@ class InitSwitchComponent {
     imports: [FormsModule, IgxSwitchComponent]
 })
 class SwitchSimpleComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
     public changeEventCalled = false;
     public subscribed = false;
     public clickCounter = 0;
@@ -477,7 +480,8 @@ class SwitchSimpleComponent {
     imports: [IgxSwitchComponent]
 })
 class SwitchRequiredComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
 }
 
 @Component({
@@ -487,7 +491,8 @@ class SwitchRequiredComponent {
     imports: [IgxSwitchComponent]
 })
 class SwitchExternalLabelComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
     public label = 'My Label';
 }
 
@@ -497,7 +502,8 @@ class SwitchExternalLabelComponent {
     imports: [IgxSwitchComponent]
 })
 class SwitchInvisibleLabelComponent {
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
     public label = 'Invisible Label';
 }
 
@@ -509,7 +515,8 @@ class SwitchInvisibleLabelComponent {
 class SwitchFormGroupComponent {
     private fb = inject(UntypedFormBuilder);
 
-    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true })
+    public switch: IgxSwitchComponent;
 
     public myForm = this.fb.group({ switch: ['', Validators.required] });
 }

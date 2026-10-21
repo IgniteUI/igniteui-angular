@@ -16,18 +16,11 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-24';
 
     it('should remove the $direction prop from the core mixin', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/test.component.scss`,
-`@include igniteui.core($direction: 'rtl');`
-        );
+        appTree.create(`/testSrc/appPrefix/component/test.component.scss`, `@include igniteui.core($direction: 'rtl');`);
 
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.scss')
-        ).toEqual(
-`@include igniteui.core();`
-        );
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(`@include igniteui.core();`);
     });
 });

@@ -7,6 +7,7 @@ import localeFr from '@angular/common/locales/fr';
 import { getCurrentI18n, setCurrentI18n } from 'igniteui-i18n-core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxMonthsViewComponent } from './months-view.component';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 
 const VIEW_ITEM_CSSCLASS = '.igx-calendar-view-item';
 const SELECTED_ITEM_CSSCLASS = 'igx-calendar-view-item--selected';
@@ -58,7 +59,7 @@ describe('IgxMonthsView', () => {
     });
 
     it('should focus the view and update the model when a month is clicked', () => {
-        spyOn(monthsView.selected, 'emit');
+        vi.spyOn(monthsView.selected, 'emit');
 
         UIInteractions.simulateMouseDownEvent(items()[6]);
         fixture.detectChanges();
