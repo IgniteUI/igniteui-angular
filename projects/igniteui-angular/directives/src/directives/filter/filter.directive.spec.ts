@@ -1,17 +1,18 @@
 import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { ComponentFixtureAutoDetect, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { IgxListComponent, IgxListItemComponent } from 'igniteui-angular/list';
 import { IgxFilterDirective, IgxFilterOptions, IgxFilterPipe } from './filter.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Filter', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [DeclarativeListTestComponent, DynamicListTestComponent],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should filter declaratively created list', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);
@@ -23,8 +24,8 @@ describe('Filter', () => {
         const items = list.items;
 
         for (const item of items) {
-                expect(item instanceof IgxListItemComponent).toBeTruthy();
-            }
+            expect(item instanceof IgxListItemComponent).toBeTruthy();
+        }
 
         visibleItems = items.filter((listItem) => !listItem.hidden);
         expect(visibleItems.length).toBe(3);
@@ -107,7 +108,7 @@ describe('Filter', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);
         fixture.componentInstance.filterValue = '1';
         fixture.detectChanges();
-        const filteringSpy = spyOn(fixture.componentInstance, 'filteringHandler').and.callThrough();
+        const filteringSpy = vi.spyOn(fixture.componentInstance, 'filteringHandler');
 
         // The `fo` getter returns a new options instance on every change detection
         fixture.detectChanges();
@@ -146,7 +147,7 @@ describe('Filter', () => {
 
     it('should not filter declaratively created list when the options are set to or from null', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);
-        const filteringSpy = spyOn(fixture.componentInstance, 'filteringHandler').and.callThrough();
+        const filteringSpy = vi.spyOn(fixture.componentInstance, 'filteringHandler');
 
         fixture.componentInstance.noOptions = true;
         fixture.componentInstance.filterValue = '1';
@@ -161,7 +162,7 @@ describe('Filter', () => {
     it('should not filter when the options are not changed', () => {
         const directive = new IgxFilterDirective();
         directive.filterOptions = new IgxFilterOptions();
-        const filteringSpy = spyOn(directive.filtering, 'emit');
+        const filteringSpy = vi.spyOn(directive.filtering, 'emit');
 
         directive.ngOnChanges({});
 
@@ -172,8 +173,8 @@ describe('Filter', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);
         fixture.componentInstance.useListItems = false;
         fixture.detectChanges();
-        const filteringSpy = spyOn(fixture.componentInstance, 'filteringHandler').and.callThrough();
-        const filteredSpy = spyOn(fixture.componentInstance, 'filteredHandler').and.callThrough();
+        const filteringSpy = vi.spyOn(fixture.componentInstance, 'filteringHandler');
+        const filteredSpy = vi.spyOn(fixture.componentInstance, 'filteredHandler');
 
         fixture.componentInstance.filterValue = '1';
         fixture.detectChanges();
@@ -311,34 +312,34 @@ describe('Filter', () => {
         });
 
         it('matchFn should perform a case-insensitive "contains" match against the input value', () => {
-            expect(options.matchFn('golden delicious', 'DELI')).toBeTrue();
-            expect(options.matchFn('golden delicious', 'en de')).toBeTrue();
-            expect(options.matchFn('golden delicious', 'crisp')).toBeFalse();
+            expect(options.matchFn('golden delicious', 'DELI')).toBe(true);
+            expect(options.matchFn('golden delicious', 'en de')).toBe(true);
+            expect(options.matchFn('golden delicious', 'crisp')).toBe(false);
         });
 
         it('matchFn should match every value when the input value is empty', () => {
-            expect(options.matchFn('golden delicious', '')).toBeTrue();
-            expect(options.matchFn('golden delicious', null)).toBeTrue();
-            expect(options.matchFn('golden delicious', undefined)).toBeTrue();
+            expect(options.matchFn('golden delicious', '')).toBe(true);
+            expect(options.matchFn('golden delicious', null)).toBe(true);
+            expect(options.matchFn('golden delicious', undefined)).toBe(true);
         });
 
         it('metConditionFn should show items that have a hidden property', () => {
             const item = { hidden: true };
             options.metConditionFn(item);
-            expect(item.hidden).toBeFalse();
+            expect(item.hidden).toBe(false);
         });
 
         it('overdueConditionFn should hide items that have a hidden property', () => {
             const item = { hidden: false };
             options.overdueConditionFn(item);
-            expect(item.hidden).toBeTrue();
+            expect(item.hidden).toBe(true);
         });
 
         it('metConditionFn and overdueConditionFn should not add a hidden property', () => {
             const item = {};
             options.metConditionFn(item);
             options.overdueConditionFn(item);
-            expect(item.hasOwnProperty('hidden')).toBeFalse();
+            expect(item.hasOwnProperty('hidden')).toBe(false);
         });
     });
 
@@ -418,13 +419,13 @@ describe('Filter', () => {
         });
 
         it('should call metConditionFn for matched and overdueConditionFn for not matched items', () => {
-            const metSpy = spyOn(options, 'metConditionFn').and.callThrough();
-            const overdueSpy = spyOn(options, 'overdueConditionFn').and.callThrough();
+            const metSpy = vi.spyOn(options, 'metConditionFn');
+            const overdueSpy = vi.spyOn(options, 'overdueConditionFn');
             options.inputValue = 'crisp';
 
             pipe.transform(data, options);
 
-            expect(metSpy).toHaveBeenCalledOnceWith(data[1]);
+            expect(metSpy).toHaveBeenCalledExactlyOnceWith(data[1]);
             expect(overdueSpy).toHaveBeenCalledTimes(2);
             expect(overdueSpy).toHaveBeenCalledWith(data[0]);
             expect(overdueSpy).toHaveBeenCalledWith(data[2]);
@@ -451,7 +452,7 @@ describe('Filter', () => {
 
         it('should pass an empty string to matchFn when the input value is null or undefined', () => {
             options.matchFn = (value: string, inputValue: string) => value.includes(inputValue.toLowerCase());
-            const matchSpy = spyOn(options, 'matchFn').and.callThrough();
+            const matchSpy = vi.spyOn(options, 'matchFn');
 
             options.inputValue = undefined;
             expect(pipe.transform(data, options)).toEqual(data);
@@ -459,7 +460,7 @@ describe('Filter', () => {
             options.inputValue = null;
             expect(pipe.transform(data, options)).toEqual(data);
 
-            expect(matchSpy.calls.allArgs().map(args => args[1])).toEqual(['', '', '', '', '', '']);
+            expect(matchSpy.mock.calls.map(args => args[1])).toEqual(['', '', '', '', '', '']);
         });
 
         it('should return the items that match the input value by any of multiple keys', () => {
@@ -490,14 +491,14 @@ describe('Filter', () => {
         });
 
         it('should call metConditionFn and overdueConditionFn once per item for multiple keys', () => {
-            const metSpy = spyOn(options, 'metConditionFn').and.callThrough();
-            const overdueSpy = spyOn(options, 'overdueConditionFn').and.callThrough();
+            const metSpy = vi.spyOn(options, 'metConditionFn');
+            const overdueSpy = vi.spyOn(options, 'overdueConditionFn');
             options.key = ['key', 'text'];
             options.inputValue = '2';
 
             pipe.transform(data, options);
 
-            expect(metSpy).toHaveBeenCalledOnceWith(data[1]);
+            expect(metSpy).toHaveBeenCalledExactlyOnceWith(data[1]);
             expect(overdueSpy).toHaveBeenCalledTimes(2);
             expect(overdueSpy).toHaveBeenCalledWith(data[0]);
             expect(overdueSpy).toHaveBeenCalledWith(data[2]);
@@ -518,8 +519,10 @@ describe('Filter', () => {
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterDirective]
 })
 class DeclarativeListTestComponent {
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
-    @ViewChild('logInput', { static: true }) public logInput: any;
+    @ViewChild(IgxListComponent, { static: true })
+    public list: IgxListComponent;
+    @ViewChild('logInput', { static: true })
+    public logInput: any;
 
     public filterValue: string;
     public isCanceled = false;
@@ -541,13 +544,13 @@ class DeclarativeListTestComponent {
         return options;
     }
 
-    public filteringHandler = function(args) {
+    public filteringHandler = function (args) {
         args.cancel = this.isCanceled;
         this.logInput.nativeElement.value += 'filtering;';
         this.filteringArgs = args;
     };
 
-    public filteredHandler = function(args) {
+    public filteredHandler = function (args) {
         this.logInput.nativeElement.value += 'filtered;';
         this.filteredArgs = args;
     };
@@ -564,7 +567,8 @@ class DeclarativeListTestComponent {
     imports: [IgxListComponent, IgxListItemComponent, IgxFilterPipe]
 })
 class DynamicListTestComponent {
-    @ViewChild(IgxListComponent, { static: true }) public list: IgxListComponent;
+    @ViewChild(IgxListComponent, { static: true })
+    public list: IgxListComponent;
 
     public filterValue: string;
     public key: string | string[] = 'text';

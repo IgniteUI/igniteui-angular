@@ -3,12 +3,14 @@
  *
  * Modes:
  * - "spec"    → run a single component's specs, or an explicit glob.
- * - "run"     → run an arbitrary npm script (e.g. test:lib:others).
+ * - "run"     → run an arbitrary npm script (e.g. test:extras).
  * - "shell"   → drop into an interactive shell.
  * - default   → CI default: test:lib + test:styles.
  */
 
 /**
+ * Same as `npm run test:lib` (component styles first, headless Chromium), but
+ * limited to the specs matched by `--include`.
  * @param {string} componentOrGlob - Bare component name or an explicit glob
  *   (contains "/" or "*").
  * @returns {string}
@@ -19,26 +21,20 @@ function specCommand(componentOrGlob) {
   const glob = looksLikeGlob
     ? componentOrGlob
     : `**/${componentOrGlob}/**/*.spec.ts`;
-  return `ng test igniteui-angular --watch=false --no-progress --include='${glob}'`;
+  return `echo '▶ npm run build:styles:components'
+npm run build:styles:components
+echo "▶ ng test igniteui-angular --include='${glob}'"
+ng test igniteui-angular --browsers=chromiumHeadless --no-progress --no-watch --include='${glob}'`;
 }
 
 /**
- * @param {string} script - npm script name, e.g. "test:lib:others".
+ * @param {string} script - npm script name, e.g. "test:extras".
  * @param {string[]} [extraArgs] - Extra args forwarded after `--`.
  * @returns {string}
  */
 function runCommand(script, extraArgs = []) {
-  // test:lib:others needs the compiled dist CSS (karma.non-grid.conf.js).
-  const checkStyles =
-    script === "test:lib:others"
-      ? `if [ ! -f dist/igniteui-angular/styles/igniteui-angular.css ]; then
-  echo '▶ Building styles (required by karma.non-grid.conf.js)…'
-  npm run build:styles
-fi
-`
-      : "";
   const extra = extraArgs.length > 0 ? ` -- ${extraArgs.join(" ")}` : "";
-  return `${checkStyles}npm run ${script}${extra}`;
+  return `npm run ${script}${extra}`;
 }
 
 /** @returns {string} */

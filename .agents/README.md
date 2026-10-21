@@ -425,7 +425,7 @@ Repository-specific skills for implementation guidance:
 The internal operational skills are shared references for repository commands and validation flow:
 
 - `igniteui-angular-build` — build command reference for full and partial builds such as library, schematics, migrations, elements, i18n, and related repo build targets.
-- `igniteui-angular-testing` — test suite selection guide, Karma config mapping, and command reference for choosing the smallest relevant test run.
+- `igniteui-angular-testing` — test suite selection guide, Vitest/unit-test builder setup, `--include` subset runs, and command reference for choosing the smallest relevant test run.
 - `igniteui-angular-linting` — lint command reference, ESLint and Stylelint config locations, and lint expectations before work is considered complete.
 - `igniteui-angular-skill-authoring` — frontmatter validation rules, the WHEN TO USE / WHEN NOT TO USE description format, and the 500-line body budget for writing or updating skills.
 

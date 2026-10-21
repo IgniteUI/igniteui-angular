@@ -5,6 +5,7 @@ import { IgxOverlayService } from 'igniteui-angular/core';
 import { IgxContextMenuComponent } from './context-menu.component';
 import { CHART_TYPE } from '../directives/chart-integration/chart-types';
 import { IgxChartMenuComponent } from 'igniteui-angular-extras';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxContextMenuComponent', () => {
     let component: IgxContextMenuComponent;
@@ -18,11 +19,11 @@ describe('IgxContextMenuComponent', () => {
         mockOverlay = {
             opening: new Subject(),
             closing: new Subject(),
-            attach: jasmine.createSpy('attach').and.returnValue('dialog-id'),
-            show: jasmine.createSpy('show'),
-            hide: jasmine.createSpy('hide'),
-            detach: jasmine.createSpy('detach'),
-            getOverlayById: jasmine.createSpy('getOverlayById').and.returnValue(null)
+            attach: vi.fn().mockReturnValue('dialog-id'),
+            show: vi.fn(),
+            hide: vi.fn(),
+            detach: vi.fn(),
+            getOverlayById: vi.fn().mockReturnValue(null)
         };
 
         mockContextDirective = {
@@ -31,12 +32,12 @@ describe('IgxContextMenuComponent', () => {
             displayCreationTab: true,
             chartsDirective: {
                 chartTypesDetermined: new EventEmitter(),
-                chartFactory: jasmine.createSpy('chartFactory')
+                chartFactory: vi.fn()
             },
             textFormatter: {
                 formattersReady: new EventEmitter(),
-                formatCells: jasmine.createSpy('formatCells'),
-                clearFormatting: jasmine.createSpy('clearFormatting')
+                formatCells: vi.fn(),
+                clearFormatting: vi.fn()
             },
             buttonClose: new EventEmitter(),
             gridResizeNotify: new Subject(),
@@ -46,17 +47,17 @@ describe('IgxContextMenuComponent', () => {
         mockTabsMenu = {
             collapsed: true,
             element: document.createElement('div'),
-            open: jasmine.createSpy('open'),
-            close: jasmine.createSpy('close')
+            open: vi.fn(),
+            close: vi.fn()
         };
 
         mockChartPreview = {
-            clear: jasmine.createSpy('clear')
+            clear: vi.fn()
         };
 
         mockChartPreviewDialog = {
-            open: jasmine.createSpy('open'),
-            close: jasmine.createSpy('close')
+            open: vi.fn(),
+            close: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -182,7 +183,7 @@ describe('IgxContextMenuComponent', () => {
 
     describe('closeDialog', () => {
         it('should hide and detach the overlay when dialog exists', () => {
-            mockOverlay.getOverlayById.and.returnValue({ id: 'dialog-id' });
+            mockOverlay.getOverlayById.mockReturnValue({ id: 'dialog-id' });
             (component as any)._dialogId = 'dialog-id';
 
             component.closeDialog();
@@ -193,7 +194,7 @@ describe('IgxContextMenuComponent', () => {
         });
 
         it('should not call hide or detach when no dialog is open', () => {
-            mockOverlay.getOverlayById.and.returnValue(null);
+            mockOverlay.getOverlayById.mockReturnValue(null);
             component.closeDialog();
             expect(mockOverlay.hide).not.toHaveBeenCalled();
             expect(mockOverlay.detach).not.toHaveBeenCalled();
@@ -245,7 +246,7 @@ describe('IgxContextMenuComponent', () => {
 
             // Open a dialog first so closeDialog has something to close
             component.openDialog(CHART_TYPE.ColumnGrouped);
-            mockOverlay.getOverlayById.and.returnValue({ id: 'dialog-id' });
+            mockOverlay.getOverlayById.mockReturnValue({ id: 'dialog-id' });
 
             closedEmitter.emit();
 
@@ -256,14 +257,14 @@ describe('IgxContextMenuComponent', () => {
 
     describe('displayCreationTab', () => {
         it('should reflect the contextDirective displayCreationTab value', () => {
-            expect(component.displayCreationTab).toBeTrue();
+            expect(component.displayCreationTab).toBe(true);
         });
 
         it('should be false when contextDirective disables it', () => {
             mockContextDirective.displayCreationTab = false;
             // Re-init to pick up the new value
             component.ngAfterViewInit();
-            expect(component.displayCreationTab).toBeFalse();
+            expect(component.displayCreationTab).toBe(false);
         });
     });
 

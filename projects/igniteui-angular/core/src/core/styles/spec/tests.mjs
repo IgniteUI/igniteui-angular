@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as sassTrue from 'sass-true';
-import { fileURLToPath } from "url";
-import {} from 'jasmine';
+import { fileURLToPath } from 'url';
+import { describe, it } from 'vitest';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const file = path.join(__dirname, '_index.scss');

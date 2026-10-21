@@ -1,5 +1,5 @@
 /**
- * Test-time bootstrap. Registered via `node --require` before jasmine runs so
+ * Test-time bootstrap. Registered via `--require` in the Vitest workers (see vitest.config.mjs) so
  * the `igniteui-angular/...` bare specifier used by migrations (to escape the
  * schematic encapsulation for the dynamic import helper) resolves against the
  * built migrations in dist instead of `node_modules` (which has no
