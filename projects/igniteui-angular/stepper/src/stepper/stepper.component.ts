@@ -9,12 +9,10 @@ import {
     EventEmitter,
     HostBinding,
     Input,
-    OnChanges,
     OnDestroy,
     OnInit,
     Output,
     QueryList,
-    SimpleChanges,
     TemplateRef,
     booleanAttribute,
     inject,
@@ -91,7 +89,7 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
 })
-export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnChanges, OnInit, AfterContentInit, OnDestroy {
+export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnInit, AfterContentInit, OnDestroy {
     private stepperService = inject(IgxStepperService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -113,31 +111,19 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 
     public set verticalAnimationType(value: VerticalAnimationType) {
-        // TODO: activeChange event is not emitted for the collapsing steps (loop through collapsing steps and emit)
-        this.stepperService.collapsingSteps.clear();
+        this.stepperService.collapseAll();
         this._verticalAnimationType = value;
-
-        switch (value) {
-            case 'grow':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(growVerIn, growVerOut);
-                break;
-            case 'fade':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(fadeIn, null!);
-                break;
-            case 'none':
-                this.verticalAnimationSettings = this.updateVerticalAnimationSettings(null!, null!);
-                break;
-        }
+        this.updateVerticalAnimationSettings();
     }
 
     /**
      * Get/Set the animation type of the stepper when the orientation direction is horizontal.
      *
      * @remarks
-     * Default value is `grow`. Other possible values are `fade` and `none`.
+     * Default value is `slide`. Other possible values are `fade` and `none`.
      *
      * ```html
-     * <igx-stepper animationType="none">
+     * <igx-stepper horizontalAnimationType="none">
      * <igx-stepper>
      * ```
      */
@@ -147,13 +133,16 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 
     public set horizontalAnimationType(value: HorizontalAnimationType) {
-        // TODO: activeChange event is not emitted for the collapsing steps (loop through collapsing steps and emit)
-        this.stepperService.collapsingSteps.clear();
+        this.stepperService.collapseAll();
         this.animationType = value;
     }
 
     /**
-     * Get/Set the animation duration.
+     * Get/Set the animation duration in milliseconds.
+     *
+     * @remarks
+     * Default value is `320`. It is also used when the value is not a positive number.
+     *
      * ```html
      * <igx-stepper [animationDuration]="500">
      * <igx-stepper>
@@ -165,18 +154,16 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 
     public set animationDuration(value: number) {
-        if (value && value > 0) {
-            this.defaultAnimationDuration = value;
-            return;
-        }
-        this.defaultAnimationDuration = this._defaultAnimationDuration;
+        this.defaultAnimationDuration = value > 0 ? value : this._defaultAnimationDuration;
+        this.updateVerticalAnimationSettings();
     }
 
     /**
      * Get/Set whether the stepper is linear.
      *
      * @remarks
-     * If the stepper is in linear mode and if the active step is valid only then the user is able to move forward.
+     * If the stepper is in linear mode, the steps after the first invalid step that is not optional or disabled
+     * cannot be reached until it becomes valid. The step activated through the API is not disabled.
      *
      * ```html
      * <igx-stepper [linear]="true"></igx-stepper>
@@ -217,8 +204,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
             return;
         }
 
-        // TODO: activeChange event is not emitted for the collapsing steps
-        this.stepperService.collapsingSteps.clear();
+        this.stepperService.collapseAll();
         this._orientation = value;
         this._defaultTitlePosition = this._orientation === IgxStepperOrientation.Horizontal ?
             IgxStepperTitlePosition.Bottom : IgxStepperTitlePosition.End;
@@ -338,34 +324,30 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     }
 
     /** @hidden @internal */
-    public verticalAnimationSettings: ToggleAnimationSettings = {
-        openAnimation: growVerIn,
-        closeAnimation: growVerOut,
-    };
+    public verticalAnimationSettings!: ToggleAnimationSettings;
     /** @hidden @internal */
     public _defaultTitlePosition: IgxStepperTitlePosition = IgxStepperTitlePosition.Bottom;
     private destroy$ = new Subject<void>();
     private _orientation: IgxStepperOrientation = IgxStepperOrientation.Horizontal;
     private _verticalAnimationType: VerticalAnimationType = VerticalAnimationType.Grow;
     private _linear = false;
-    private readonly _defaultAnimationDuration = 350;
+    private readonly _defaultAnimationDuration = 320;
 
     constructor() {
         super();
         this.stepperService.stepper = this;
-    }
-
-    /** @hidden @internal */
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['animationDuration']) {
-            this.verticalAnimationType = this._verticalAnimationType;
-        }
+        this.defaultAnimationDuration = this._defaultAnimationDuration;
+        this.updateVerticalAnimationSettings();
     }
 
     /** @hidden @internal */
     public ngOnInit(): void {
         this.enterAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.activeStepChanged.emit({ owner: this, index: this.stepperService.activeStep.index });
+            const activeStep = this.stepperService.activeStep;
+            // the step may have been removed during its animation
+            if (activeStep) {
+                this.activeStepChanged.emit({ owner: this, index: activeStep.index });
+            }
         });
         this.leaveAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.stepperService.collapsingSteps.size === 1) {
@@ -375,20 +357,12 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
                     .forEach(step => this.stepperService.collapse(step));
             }
         });
-
-
     }
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        let activeStep: IgxStepComponent | undefined;
-        this.steps.forEach((step, index) => {
-            this.updateStepAria(step, index);
-            if (!activeStep && step.active) {
-                activeStep = step;
-            }
-        });
-        if (!activeStep) {
+        this.steps.forEach((step, index) => this.updateStepAria(step, index));
+        if (!this.stepperService.activeStep) {
             this.activateFirstStep(true);
         }
 
@@ -418,7 +392,7 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
         if (!step || this.stepperService.activeStep === step) {
             return;
         }
-        this.activateStep(step);
+        step.activate();
     }
 
     /**
@@ -454,9 +428,10 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
      */
     public reset(): void {
         this.stepperService.visitedSteps.clear();
-        const activeStep = this.steps.find(s => !s.disabled);
-        if (activeStep) {
-            this.activateStep(activeStep);
+        this.steps.find(s => !s.disabled)?.activate();
+        // the active step is still visited when it is not changed, e.g. it is already the first enabled step
+        if (this.stepperService.activeStep) {
+            this.stepperService.visitedSteps.add(this.stepperService.activeStep);
         }
     }
 
@@ -475,28 +450,25 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
         return this.stepperService.activeStep.contentContainer.nativeElement;
     }
 
-    private updateVerticalAnimationSettings(
-        openAnimation: AnimationReferenceMetadata,
-        closeAnimation: AnimationReferenceMetadata): ToggleAnimationSettings {
-        const customCloseAnimation = useAnimation(closeAnimation, {
-            params: {
-                duration: this.animationDuration + 'ms'
-            }
-        });
-        const customOpenAnimation = useAnimation(openAnimation, {
-            params: {
-                duration: this.animationDuration + 'ms'
-            }
-        });
+    private updateVerticalAnimationSettings(): void {
+        const withDuration = (animation: AnimationReferenceMetadata) =>
+            useAnimation(animation, { params: { duration: `${this.animationDuration}ms` } });
 
-        return {
-            openAnimation: openAnimation ? customOpenAnimation : null!,
-            closeAnimation: closeAnimation ? customCloseAnimation : null!
-        };
+        switch (this._verticalAnimationType) {
+            case VerticalAnimationType.Grow:
+                this.verticalAnimationSettings = { openAnimation: withDuration(growVerIn), closeAnimation: withDuration(growVerOut) };
+                break;
+            case VerticalAnimationType.Fade:
+                this.verticalAnimationSettings = { openAnimation: withDuration(fadeIn), closeAnimation: null! };
+                break;
+            case VerticalAnimationType.None:
+                this.verticalAnimationSettings = { openAnimation: null!, closeAnimation: null! };
+                break;
+        }
     }
 
     private updateStepAria(step: IgxStepComponent, index: number): void {
-        step._index = index;
+        step._index.set(index);
         step.renderer.setAttribute(step.nativeElement, 'aria-setsize', (this.steps.length).toString());
         step.renderer.setAttribute(step.nativeElement, 'aria-posinset', (index + 1).toString());
     }
@@ -508,9 +480,9 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
                     this.updateStepAria(step, index);
                 });
 
+                this.stepperService.removeDetachedSteps();
                 // when the active step is removed
-                const hasActiveStep = this.steps.find(s => s === this.stepperService.activeStep);
-                if (!hasActiveStep) {
+                if (!this.stepperService.activeStep) {
                     this.activateFirstStep();
                 }
                 // TO DO: mark step added before the active as visited?
@@ -524,33 +496,23 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
     private activateFirstStep(activateInitially = false) {
         const firstEnabledStep = this.steps.find(s => !s.disabled);
         if (firstEnabledStep) {
+            // activating the step emits its activeChange event
             firstEnabledStep.active = true;
             if (activateInitially) {
-                firstEnabledStep.activeChange.emit(true);
                 this.activeStepChanged.emit({ owner: this, index: firstEnabledStep.index });
             }
         }
     }
 
-    private activateStep(step: IgxStepComponent) {
-        if (this.orientation === IgxStepperOrientation.Horizontal) {
-            step.changeHorizontalActiveStep();
-        } else {
-            this.stepperService.expand(step);
-        }
-    }
-
     private moveToNextStep(next = true) {
-        let steps: IgxStepComponent[] = this.steps;
-        let activeStepIndex = this.stepperService.activeStep.index;
-        if (!next) {
-            steps = this.steps.reverse();
-            activeStepIndex = steps.findIndex(s => s === this.stepperService.activeStep);
-        }
-
-        const nextStep = steps.find((s, i) => i > activeStepIndex && s.isAccessible);
-        if (nextStep) {
-            this.activateStep(nextStep);
+        // when there is no active step, next activates the first accessible step
+        const activeIndex = this.stepperService.activeStep?.index ?? -1;
+        const accessibleSteps = this.steps.filter(s => s.isAccessible);
+        const step = next
+            ? accessibleSteps.find(s => s.index > activeIndex)
+            : accessibleSteps.findLast(s => s.index < activeIndex);
+        if (step) {
+            step.activate();
         }
     }
 }
