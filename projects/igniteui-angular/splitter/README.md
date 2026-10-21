@@ -56,8 +56,8 @@ export class SplitLayoutComponent {
 
 ## Customization
 
-- **Non-collapsible bars** – set `nonCollapsible` on the splitter or bar to hide expander affordances when panes must stay visible.
-- **Keyboard support** – users can resize with arrow keys; combine with `ctrl` to collapse panes for accessibility.
+- **Non-collapsible bars** – set `nonCollapsible` on the splitter or bar to hide expander affordances and turn off collapsing with `ctrl` + arrow keys when panes must stay visible.
+- **Keyboard support** – users can resize with arrow keys; combine with `ctrl` to collapse and expand panes for accessibility. A splitter bar stays in the tab order unless it can neither resize nor collapse its panes.
 - **Drag constraints** – `minSize` and `maxSize` enforce boundaries while resizing, ensuring important content stays visible.
 - **Custom order** – bind `order` on panes or bars to change layout stacking in complex UIs.
 
@@ -68,7 +68,7 @@ export class SplitLayoutComponent {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `type` | `SplitterType` | `SplitterType.Horizontal` | Orientation of the splitter (`Horizontal` renders a row layout, `Vertical` renders a column layout). |
-| `nonCollapsible` | `boolean` | `false` | Hides collapse/expand affordances on splitter bars. |
+| `nonCollapsible` | `boolean` | `false` | Hides collapse/expand affordances on splitter bars and turns off collapsing and expanding with `ctrl` + arrow keys. |
 
 ### IgxSplitterComponent outputs
 

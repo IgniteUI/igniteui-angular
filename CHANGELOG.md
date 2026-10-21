@@ -35,6 +35,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSplitterComponent`
     - Keys other than the arrow keys, pressed on a splitter bar, now propagate, so for example `Escape` closes a dialog that contains the splitter. Previously the splitter bar stopped the propagation of every key.
     - Holding `Ctrl` and an arrow key on a splitter bar now collapses or expands a pane once, instead of toggling it on every repeated key press.
+    - A splitter bar no longer loses the focus when one of its panes is collapsed, so the pane can be expanded again with `Ctrl` and an arrow key.
+    - A splitter bar next to a pane that is not `resizable` is now in the tab order, so the pane can be collapsed and expanded with `Ctrl` and an arrow key. The bar is removed from the tab order only when it can neither resize nor collapse its panes, that is when `nonCollapsible` is set and a pane is collapsed or not `resizable`.
+    - `Ctrl` and an arrow key no longer collapse or expand a pane when `nonCollapsible` is set.
 - `IgxTimePickerComponent`
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the drop-down, is now prevented.
 

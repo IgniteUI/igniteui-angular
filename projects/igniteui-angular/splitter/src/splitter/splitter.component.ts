@@ -434,7 +434,9 @@ export class IgxSplitBarComponent {
      */
     @HostBinding('attr.tabindex')
     public get tabindex() {
-        return this.resizeDisallowed ? null : 0;
+        // The bar is focusable while it can resize or collapse the panes. A collapsed pane
+        // keeps a collapsible bar focusable, so the pane can be expanded with the keyboard.
+        return this.nonCollapsible && this.resizeDisallowed ? null : 0;
     }
 
     /**
@@ -592,7 +594,7 @@ export class IgxSplitBarComponent {
     }
 
     private collapseWithKey(type: SplitterType, next: boolean) {
-        if (this.type === type) {
+        if (this.type === type && !this.nonCollapsible) {
             this.onCollapsing(next);
         }
     }
