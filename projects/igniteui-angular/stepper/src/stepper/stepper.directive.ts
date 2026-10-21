@@ -167,10 +167,6 @@ export class IgxStepContentDirective {
     private stepperService = inject(IgxStepperService);
     public elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    private get target(): IgxStep {
-        return this.step;
-    }
-
     @HostBinding('class.igx-stepper__step-content')
     public defaultClass = true;
 
@@ -179,12 +175,12 @@ export class IgxStepContentDirective {
 
     @HostBinding('attr.aria-labelledby')
     public get stepId(): string {
-        return this.target.id;
+        return this.step.id;
     }
 
     @HostBinding('attr.id')
     @Input()
-    public id = this.target.id.replace('step', 'content');
+    public id = this.step.id.replace('step', 'content');
 
     @HostBinding('attr.tabindex')
     @Input()
@@ -193,7 +189,7 @@ export class IgxStepContentDirective {
             return this._tabIndex;
         }
 
-        return this.stepperService.activeStep === this.target ? 0 : -1;
+        return this.stepperService.activeStep === this.step ? 0 : -1;
     }
 
     public set tabIndex(val: number) {
