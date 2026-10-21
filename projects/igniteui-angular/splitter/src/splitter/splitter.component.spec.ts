@@ -155,19 +155,19 @@ describe('IgxSplitter', () => {
         const pane2_originalSize = pane2.element.offsetHeight;
         const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
         splitterBarComponent.nativeElement.focus();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', splitterBarComponent.nativeElement);
         fixture.detectChanges();
         expect(pane1.dragSize).toBe(pane1_originalSize - 10 + 'px');
         expect(pane2.dragSize).toBe(pane2_originalSize + 10 + 'px');
 
-        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
-        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement);
         fixture.detectChanges();
         expect(pane1.dragSize).toBe(pane1_originalSize + 10 + 'px');
         expect(pane2.dragSize).toBe(pane2_originalSize - 10 + 'px');
 
         pane2.resizable = false;
-        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement);
         fixture.detectChanges();
         expect(pane1.dragSize).toBe(pane1_originalSize + 10 + 'px');
         expect(pane2.dragSize).toBe(pane2_originalSize - 10 + 'px');
@@ -184,19 +184,19 @@ describe('IgxSplitter', () => {
         const pane2_originalSize = pane2.element.offsetWidth;
         const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
         splitterBarComponent.nativeElement.focus();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', splitterBarComponent.nativeElement);
         fixture.detectChanges();
         expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize - 10, 0);
         expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize + 10, 0);
 
-        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
-        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement);
         fixture.detectChanges();
         expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 10, 0);
         expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 10, 0);
 
         pane1.resizable = false;
-        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement);
         fixture.detectChanges();
         expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 10, 0);
         expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 10, 0);
@@ -211,16 +211,16 @@ describe('IgxSplitter', () => {
         expect(pane2.size).toBe('auto');
         const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
         splitterBarComponent.nativeElement.focus();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane1.collapsed).toBeTruthy();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane1.collapsed).toBeFalsy();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane2.collapsed).toBeTruthy();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane2.collapsed).toBeFalsy();
     });
@@ -234,18 +234,47 @@ describe('IgxSplitter', () => {
         expect(pane2.size).toBe('auto');
         const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
         splitterBarComponent.nativeElement.focus();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane1.collapsed).toBeTruthy();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane1.collapsed).toBeFalsy();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane2.collapsed).toBeTruthy();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', splitterBarComponent.nativeElement, true, false, false, true);
         fixture.detectChanges();
         expect(pane2.collapsed).toBeFalsy();
+    });
+
+    it('should prevent the default action and stop the propagation of the arrow keys in either orientation', () => {
+        const splitterBar: HTMLElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
+        const parentListener = vi.fn();
+        splitter.panes.first.element.parentElement.addEventListener('keydown', parentListener);
+
+        for (const ctrlKey of [false, true]) {
+            for (const key of ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']) {
+                const event = new KeyboardEvent('keydown', { key, ctrlKey, bubbles: true, cancelable: true });
+                splitterBar.dispatchEvent(event);
+                expect(event.defaultPrevented, `${ctrlKey ? 'Ctrl+' : ''}${key} should be prevented`).toBe(true);
+            }
+        }
+        expect(parentListener).not.toHaveBeenCalled();
+    });
+
+    it('should keep resizing the panes while an arrow key is held', () => {
+        const splitterBarDebug = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+        const splitterBar: HTMLElement = splitterBarDebug.nativeElement;
+        vi.spyOn(splitterBarDebug.componentInstance.moving, 'emit');
+
+        splitterBar.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+        const repeated = new KeyboardEvent('keydown', { key: 'ArrowLeft', repeat: true, bubbles: true, cancelable: true });
+        splitterBar.dispatchEvent(repeated);
+
+        expect(splitterBarDebug.componentInstance.moving.emit).toHaveBeenCalledTimes(2);
+        expect(splitterBarDebug.componentInstance.moving.emit).toHaveBeenLastCalledWith(10);
+        expect(repeated.defaultPrevented).toBe(true);
     });
 
     it('should preserve horizontal pane sizes after collapse and expand', () => {
@@ -465,7 +494,7 @@ describe('IgxSplitter pane toggle', () => {
         expect(pane1.collapsed).toBeTruthy();
         expect(pane1.resizable).toBeTruthy();
         splitterBarComponentDebug.nativeElement.focus();
-        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponentDebug);
+        UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponentDebug.nativeElement);
         fixture.detectChanges();
         expect(pane1.size).toEqual(pane1_originalSize);
 
