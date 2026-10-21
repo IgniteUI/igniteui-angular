@@ -1,13 +1,14 @@
 import { AnimationBuilder } from '@angular/animations';
-import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Renderer2, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { config as rxjsConfig, firstValueFrom } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputGroupComponent } from '../../../input-group/src/public_api';
 import { IgxAngularAnimationService, PlatformUtil } from 'igniteui-angular/core';
-import { UIInteractions, nextFrame } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxStepComponent } from './step/step.component';
 import { HorizontalAnimationType, IGX_STEPPER_COMPONENT, IgxStepperOrientation, IgxStepperTitlePosition, IgxStepType, IStepChangedEventArgs, IStepChangingEventArgs, VerticalAnimationType } from './stepper.common';
 import { IgxStepperComponent } from './stepper.component';
@@ -327,6 +328,353 @@ describe('Rendering Tests', () => {
             expect(serviceExpandAPISpy).toHaveBeenCalledTimes(1);
             expect(serviceExpandAPISpy).toHaveBeenCalledWith(stepper.steps[4]);
         });
+
+        it('should activate the previous accessible step with the prev method', async () => {
+            for (const orientation of [IgxStepperOrientation.Horizontal, IgxStepperOrientation.Vertical]) {
+                stepper.orientation = orientation;
+                stepper.steps[2].disabled = false;
+                stepper.steps[3].active = true;
+                fix.detectChanges();
+                await fix.whenStable();
+
+                stepper.steps[2].disabled = true;
+                fix.detectChanges();
+
+                stepper.prev();
+                fix.detectChanges();
+                await nextFrame();
+
+                expect(stepper.steps[1].active, orientation).toBeTruthy();
+                expect(stepper.steps[2].active, orientation).toBeFalsy();
+
+                stepper.prev();
+                fix.detectChanges();
+                await nextFrame();
+
+                expect(stepper.steps[0].active, orientation).toBeTruthy();
+
+                // there is no previous step to activate
+                stepper.prev();
+                fix.detectChanges();
+                await nextFrame();
+
+                expect(stepper.steps[0].active, orientation).toBeTruthy();
+            }
+        });
+
+        it('should not change the active step with the next method when the last step is active', async () => {
+            stepper.steps[4].active = true;
+            fix.detectChanges();
+            const changingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
+
+            stepper.next();
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[4].active).toBeTruthy();
+            expect(changingSpy).not.toHaveBeenCalled();
+        });
+
+        it('should not deactivate the active step when its active property is set to false', () => {
+            const activeChangeSpy = vi.spyOn(stepper.steps[0].activeChange, 'emit');
+
+            stepper.steps[0].active = false;
+            fix.detectChanges();
+
+            expect(stepper.steps[0].active).toBeTruthy();
+            expect(stepper.steps[0].nativeElement.classList.contains(CURRENT_CLASS)).toBe(true);
+            expect(activeChangeSpy).not.toHaveBeenCalled();
+        });
+
+        it('should move the tabIndex to the active step when it is changed with next, prev and navigateTo', async () => {
+            const verifyTabIndex = (activeIndex: number) => {
+                stepper.steps.forEach((step, index) => {
+                    const expected = index === activeIndex ? 0 : -1;
+                    expect(step.tabIndex, `step ${index}`).toBe(expected);
+                    expect(step.nativeElement.getAttribute('tabindex'), `step ${index}`).toBe(`${expected}`);
+                });
+            };
+
+            for (const orientation of [IgxStepperOrientation.Horizontal, IgxStepperOrientation.Vertical]) {
+                stepper.orientation = orientation;
+                stepper.steps[0].active = true;
+                fix.detectChanges();
+                await nextFrame();
+                verifyTabIndex(0);
+
+                stepper.next();
+                fix.detectChanges();
+                await nextFrame();
+                verifyTabIndex(1);
+
+                stepper.navigateTo(3);
+                fix.detectChanges();
+                await nextFrame();
+                verifyTabIndex(3);
+
+                stepper.prev();
+                fix.detectChanges();
+                await nextFrame();
+                verifyTabIndex(2);
+            }
+        });
+
+        it('should emit activeChange(false) once for a collapsing step when the animation type changes before the animation ends', async () => {
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            fix.detectChanges();
+            const activeChangeSpy = vi.spyOn(stepper.steps[0].activeChange, 'emit');
+            const leaveAnimationDone = firstValueFrom(stepper.leaveAnimationDone);
+
+            stepper.next();
+            fix.detectChanges();
+            stepper.horizontalAnimationType = HorizontalAnimationType.fade;
+            fix.detectChanges();
+            // the step is not collapsed again when its leave animation ends
+            await leaveAnimationDone;
+            fix.detectChanges();
+
+            expect(activeChangeSpy).toHaveBeenCalledTimes(1);
+            expect(activeChangeSpy).toHaveBeenCalledWith(false);
+            expect(stepper.steps[0].collapsing).toBe(false);
+            expect(stepper.steps[0].contentContainer.nativeElement.querySelector('.sample-body')).toBeNull();
+        });
+
+        it('should collapse all previously active steps when navigating while the animations are running', async () => {
+            const stepperService: IgxStepperService = (stepper as any).stepperService;
+            const firstStepSpy = vi.spyOn(stepper.steps[0].activeChange, 'emit');
+            const secondStepSpy = vi.spyOn(stepper.steps[1].activeChange, 'emit');
+
+            // the second navigation starts before the animations of the first one end
+            stepper.next();
+            stepper.next();
+            fix.detectChanges();
+
+            expect(stepper.steps[2].active).toBe(true);
+            await vi.waitFor(() => expect(stepperService.collapsingSteps.size).toBe(0));
+
+            expect(firstStepSpy).toHaveBeenCalledTimes(1);
+            expect(firstStepSpy).toHaveBeenCalledWith(false);
+            expect(secondStepSpy).toHaveBeenCalledTimes(2);
+            expect(secondStepSpy.mock.lastCall[0]).toBe(false);
+        });
+
+        it('should not collapse the active step when the activation of a step is canceled and horizontalAnimationType is "fade"', async () => {
+            fix.componentInstance.horizontalAnimationType = HorizontalAnimationType.fade;
+            fix.detectChanges();
+            const activeChangeSpy = vi.spyOn(stepper.steps[0].activeChange, 'emit');
+            stepper.activeStepChanging.pipe(take(1)).subscribe(e => e.cancel = true);
+
+            stepper.navigateTo(1);
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[0].active).toBe(true);
+            expect(stepper.steps[1].active).toBe(false);
+            expect(activeChangeSpy).not.toHaveBeenCalled();
+        });
+
+        it('should emit activeStepChanged only when the open animation of the active step ends', () => {
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+            const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
+
+            // e.g. the step was deactivated again before its open animation ended
+            stepper.steps[1].openAnimationDone.emit();
+
+            expect(changedSpy).not.toHaveBeenCalled();
+
+            stepper.steps[0].openAnimationDone.emit();
+
+            expect(changedSpy).toHaveBeenCalledTimes(1);
+            expect(changedSpy).toHaveBeenCalledWith({ owner: stepper, index: 0 });
+        });
+
+        it('should not disable the steps after an invalid active step in linear mode when it is optional or disabled', () => {
+            stepper.linear = true;
+            stepper.steps[0].optional = true;
+            stepper.steps[0].isValid = false;
+            fix.detectChanges();
+
+            for (let i = 1; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled, `optional, step ${i}`).toBe(false);
+            }
+
+            stepper.steps[0].optional = false;
+            stepper.steps[0].disabled = true;
+            fix.detectChanges();
+
+            for (let i = 1; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled, `disabled, step ${i}`).toBe(false);
+            }
+
+            // a required invalid step after the optional active one still disables the steps after it
+            stepper.steps[0].disabled = false;
+            stepper.steps[0].optional = true;
+            stepper.steps[2].isValid = false;
+            fix.detectChanges();
+
+            expect(stepper.steps[1].linearDisabled).toBe(false);
+            expect(stepper.steps[2].linearDisabled).toBe(false);
+            expect(stepper.steps[3].linearDisabled).toBe(true);
+            expect(stepper.steps[4].linearDisabled).toBe(true);
+        });
+
+        it('should update the linear disabled steps when the optional state of a step changes', () => {
+            stepper.linear = true;
+            stepper.steps[1].isValid = false;
+            fix.detectChanges();
+
+            for (let i = 2; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled, `required, step ${i}`).toBe(true);
+            }
+
+            stepper.steps[1].optional = true;
+            fix.detectChanges();
+
+            expect(stepper.steps[1].optional).toBe(true);
+            for (let i = 2; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled, `optional, step ${i}`).toBe(false);
+                expect(stepper.steps[i].nativeElement.classList.contains(DISABLED_CLASS), `optional, step ${i}`).toBe(false);
+            }
+
+            stepper.steps[1].optional = false;
+            fix.detectChanges();
+
+            for (let i = 2; i < stepper.steps.length; i++) {
+                expect(stepper.steps[i].linearDisabled, `required again, step ${i}`).toBe(true);
+            }
+        });
+
+        it('should keep the steps after the first invalid step disabled when navigating past it with navigateTo', async () => {
+            const verifyLinearDisabled = (disabledIndexes: number[], context: string) => {
+                for (const step of stepper.steps) {
+                    const disabled = disabledIndexes.includes(step.index);
+                    expect(step.linearDisabled, `${context}, step ${step.index}`).toBe(disabled);
+                    expect(step.isAccessible, `${context}, step ${step.index}`).toBe(!disabled);
+                }
+            };
+
+            stepper.linear = true;
+            stepper.steps[0].isValid = false;
+            fix.detectChanges();
+
+            verifyLinearDisabled([1, 2, 3, 4], 'initial');
+
+            // the API can activate a linear disabled step, which is not displayed as disabled
+            stepper.navigateTo(3);
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[3].active).toBe(true);
+            expect(stepper.steps[3].nativeElement.classList.contains(DISABLED_CLASS)).toBe(false);
+            // the steps between the invalid and the active step stay unreachable
+            verifyLinearDisabled([1, 2, 4], 'after navigateTo');
+            expect(stepper.steps[1].nativeElement.classList.contains(DISABLED_CLASS)).toBe(true);
+            expect(stepper.steps[2].nativeElement.classList.contains(DISABLED_CLASS)).toBe(true);
+
+            // the only previous step that can be reached is the invalid one
+            stepper.prev();
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[0].active).toBe(true);
+            verifyLinearDisabled([1, 2, 3, 4], 'after prev');
+
+            stepper.steps[0].isValid = true;
+            fix.detectChanges();
+
+            verifyLinearDisabled([], 'all valid');
+        });
+
+        it('should disable the steps after a previous step that becomes invalid', async () => {
+            stepper.linear = true;
+            stepper.navigateTo(3);
+            fix.detectChanges();
+            await nextFrame();
+
+            stepper.steps[1].isValid = false;
+            fix.detectChanges();
+
+            expect(stepper.steps[3].active).toBe(true);
+            expect(stepper.steps[3].linearDisabled).toBe(false);
+            expect(stepper.steps[0].linearDisabled).toBe(false);
+            expect(stepper.steps[1].linearDisabled).toBe(false);
+            expect(stepper.steps[2].linearDisabled).toBe(true);
+            expect(stepper.steps[4].linearDisabled).toBe(true);
+
+            stepper.steps[1].isValid = true;
+            fix.detectChanges();
+
+            for (const step of stepper.steps) {
+                expect(step.linearDisabled, `step ${step.index}`).toBe(false);
+            }
+        });
+
+        it('should keep the active step visited when the stepper is reset', async () => {
+            const stepperService: IgxStepperService = (stepper as any).stepperService;
+            stepper.steps[0].isValid = false;
+            stepper.steps[1].active = true;
+            stepper.steps[0].active = true;
+            fix.detectChanges();
+
+            stepper.reset();
+            fix.detectChanges();
+
+            expect(stepper.steps[0].active).toBe(true);
+            expect(stepperService.visitedSteps.size).toBe(1);
+            expect(stepperService.visitedSteps).toContain(stepper.steps[0]);
+
+            stepper.next();
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[0].nativeElement.classList.contains(INVALID_CLASS)).toBe(true);
+        });
+
+        it('should get and set the vertical and horizontal animation types', () => {
+            expect(stepper.verticalAnimationType).toBe(VerticalAnimationType.Grow);
+            expect(stepper.horizontalAnimationType).toBe(HorizontalAnimationType.slide);
+
+            fix.componentInstance.verticalAnimationType = VerticalAnimationType.Fade;
+            fix.componentInstance.horizontalAnimationType = HorizontalAnimationType.fade;
+            fix.detectChanges();
+
+            expect(stepper.verticalAnimationType).toBe(VerticalAnimationType.Fade);
+            expect(stepper.horizontalAnimationType).toBe(HorizontalAnimationType.fade);
+            expect(stepper.verticalAnimationSettings.openAnimation).toBeTruthy();
+            expect(stepper.verticalAnimationSettings.closeAnimation).toBeNull();
+
+            fix.componentInstance.verticalAnimationType = VerticalAnimationType.None;
+            fix.detectChanges();
+
+            expect(stepper.verticalAnimationSettings.openAnimation).toBeNull();
+            expect(stepper.verticalAnimationSettings.closeAnimation).toBeNull();
+        });
+
+        it('should activate a step and emit activeStepChanged without animations when horizontalAnimationType is "none"', () => {
+            fix.componentInstance.horizontalAnimationType = HorizontalAnimationType.none;
+            fix.detectChanges();
+            const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
+
+            stepper.navigateTo(1);
+            fix.detectChanges();
+
+            expect(stepper.steps[1].active).toBeTruthy();
+            expect(changedSpy).toHaveBeenCalledTimes(1);
+            expect(changedSpy).toHaveBeenCalledWith({ owner: stepper, index: 1 });
+            expect(serviceExpandSpy).not.toHaveBeenCalled();
+
+            changedSpy.mockClear();
+            stepper.activeStepChanging.pipe(take(1)).subscribe(e => e.cancel = true);
+
+            stepper.navigateTo(2);
+            fix.detectChanges();
+
+            expect(stepper.steps[1].active).toBeTruthy();
+            expect(stepper.steps[2].active).toBeFalsy();
+            expect(changedSpy).not.toHaveBeenCalled();
+        });
     });
 
     describe('Appearance', () => {
@@ -335,7 +683,55 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             expect(stepper.nativeElement.classList.contains('igx-stepper--horizontal')).toBe(true);
+
             // no css class is applied when the stepper is in vertical mode
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+
+            expect(stepper.nativeElement.classList.contains('igx-stepper--horizontal')).toBe(false);
+            for (const step of stepper.steps) {
+                expect(step.nativeElement.classList.contains('igx-step--vertical')).toBe(true);
+                expect(step.nativeElement.classList.contains('igx-step--horizontal')).toBe(false);
+            }
+        });
+
+        it('should restore the default title position when the orientation changes back to horizontal', () => {
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+
+            expect(stepper._defaultTitlePosition).toBe(IgxStepperTitlePosition.End);
+
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            fix.detectChanges();
+
+            expect(stepper._defaultTitlePosition).toBe(IgxStepperTitlePosition.Bottom);
+            for (const step of stepper.steps) {
+                expect(step.nativeElement.classList.contains(`igx-step--${IgxStepperTitlePosition.Bottom}`)).toBe(true);
+            }
+        });
+
+        it('should apply the simple class to the steps when stepType is not "full"', () => {
+            for (const type of [IgxStepType.Indicator, IgxStepType.Title]) {
+                stepper.stepType = type;
+                fix.detectChanges();
+
+                for (const step of stepper.steps) {
+                    expect(step.nativeElement.classList.contains('igx-step--simple'), type).toBe(true);
+                }
+            }
+        });
+
+        it('should allow setting the tabIndex of the step content', () => {
+            const content = stepper.steps[0].content;
+            const contentElement = content.elementRef.nativeElement;
+
+            expect(contentElement.getAttribute('tabindex')).toBe('0');
+
+            content.tabIndex = -1;
+            fix.detectChanges();
+
+            expect(content.tabIndex).toBe(-1);
+            expect(contentElement.getAttribute('tabindex')).toBe('-1');
         });
 
         it('should indicate the currently active step', () => {
@@ -609,6 +1005,43 @@ describe('Rendering Tests', () => {
                 fix.componentInstance.verticalAnimationType = val as any;
                 await testAnimationBehavior(val, fix, false);
             }
+        });
+
+        it('should fall back to the default animation duration of 320ms for invalid values', () => {
+            expect(stepper.animationDuration).toBe(300);
+
+            for (const val of [-1, 0, null, undefined, 'sampleString']) {
+                fix.componentInstance.animationDuration = val as any;
+                fix.detectChanges();
+
+                expect(stepper.animationDuration, `${val}`).toBe(320);
+                expect((stepper.verticalAnimationSettings.openAnimation as any).options.params.duration, `${val}`).toBe('320ms');
+                fix.componentInstance.animationDuration = 300;
+                fix.detectChanges();
+            }
+        });
+
+        it('should use the default animation duration of 320ms for the vertical animations', () => {
+            const fixture = TestBed.createComponent(IgxStepperLinearComponent);
+            fixture.detectChanges();
+            const defaultStepper = fixture.componentInstance.stepper;
+
+            expect(defaultStepper.animationDuration).toBe(320);
+            expect((defaultStepper.verticalAnimationSettings.openAnimation as any).options.params.duration).toBe('320ms');
+            expect((defaultStepper.verticalAnimationSettings.closeAnimation as any).options.params.duration).toBe('320ms');
+        });
+
+        it('should apply the animation duration to the vertical animations when it is set programmatically', () => {
+            stepper.animationDuration = 500;
+
+            expect((stepper.verticalAnimationSettings.openAnimation as any).options.params.duration).toBe('500ms');
+            expect((stepper.verticalAnimationSettings.closeAnimation as any).options.params.duration).toBe('500ms');
+
+            stepper.verticalAnimationType = VerticalAnimationType.Fade;
+            stepper.animationDuration = 600;
+
+            expect((stepper.verticalAnimationSettings.openAnimation as any).options.params.duration).toBe('600ms');
+            expect(stepper.verticalAnimationSettings.closeAnimation).toBeNull();
         });
 
         it('should render dynamically added step and properly set the linear disabled steps with its addition', async () => {
@@ -919,6 +1352,163 @@ describe('Rendering Tests', () => {
                 expect(stepContent).toBeNull();
             }
         });
+
+        it('should activate a step on header click in horizontal and vertical orientation', async () => {
+            const serviceExpandSpy = vi.spyOn((stepper as any).stepperService, 'expand');
+            const getHeader = (index: number) => stepper.steps[index].nativeElement.querySelector('.igx-step__header');
+
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            fix.detectChanges();
+
+            UIInteractions.simulateClickEvent(getHeader(1));
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[1].active).toBeTruthy();
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[1]);
+
+            serviceExpandSpy.mockClear();
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+
+            UIInteractions.simulateClickEvent(getHeader(2));
+            fix.detectChanges();
+            await nextFrame();
+
+            expect(stepper.steps[2].active).toBeTruthy();
+            expect(serviceExpandSpy).toHaveBeenCalledTimes(1);
+            expect(serviceExpandSpy).toHaveBeenCalledWith(stepper.steps[2]);
+        });
+
+        it('should activate the focused step on Enter key press in vertical orientation for every animation type', async () => {
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+
+            const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
+            const animationTypes = [VerticalAnimationType.Grow, VerticalAnimationType.Fade, VerticalAnimationType.None];
+            for (const [i, type] of animationTypes.entries()) {
+                fix.componentInstance.verticalAnimationType = type;
+                fix.detectChanges();
+                const stepElement = stepper.steps[i + 1].nativeElement;
+
+                stepElement.focus();
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', stepElement);
+                fix.detectChanges();
+
+                expect(stepper.steps[i + 1].active, type).toBeTruthy();
+                expect(stepper.steps[i].active, type).toBeFalsy();
+                // activeStepChanged is emitted when the open animation is done
+                await vi.waitFor(() => expect(changedSpy, type).toHaveBeenCalledTimes(1));
+                expect(changedSpy, type).toHaveBeenCalledWith({ owner: stepper, index: i + 1 });
+                changedSpy.mockClear();
+            }
+        });
+
+        it('should not handle keyboard events that originate from the step content', async () => {
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+
+            const input = stepper.steps[0].nativeElement.querySelector('input');
+            input.focus();
+            fix.detectChanges();
+
+            for (const key of ['End', ' ', 'ArrowDown']) {
+                const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                input.dispatchEvent(event);
+                fix.detectChanges();
+
+                expect(event.defaultPrevented, key).toBe(false);
+                expect(document.activeElement, key).toBe(input);
+            }
+            expect(stepper.steps[0].active).toBeTruthy();
+        });
+
+        it('should ignore ArrowUp/ArrowDown in horizontal orientation and keys that are not used for navigation', () => {
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            fix.detectChanges();
+
+            const stepElement = stepper.steps[1].nativeElement;
+            stepElement.focus();
+
+            for (const key of ['ArrowUp', 'ArrowDown', 'a', 'Tab', 'Escape']) {
+                const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                stepElement.dispatchEvent(event);
+                fix.detectChanges();
+
+                expect(event.defaultPrevented, key).toBe(false);
+                expect(document.activeElement, key).toBe(stepElement);
+            }
+        });
+
+        it('should wrap the focus around and skip the disabled steps on arrow key press', () => {
+            for (const orientation of [IgxStepperOrientation.Horizontal, IgxStepperOrientation.Vertical]) {
+                const [nextKey, prevKey] = orientation === IgxStepperOrientation.Horizontal ?
+                    ['ArrowRight', 'ArrowLeft'] : ['ArrowDown', 'ArrowUp'];
+                stepper.orientation = orientation;
+                stepper.steps[0].disabled = false;
+                stepper.steps[4].disabled = false;
+                fix.detectChanges();
+
+                stepper.steps[4].nativeElement.focus();
+                UIInteractions.triggerKeyDownEvtUponElem(nextKey, stepper.steps[4].nativeElement);
+                fix.detectChanges();
+                expect(document.activeElement, orientation).toBe(stepper.steps[0].nativeElement);
+
+                UIInteractions.triggerKeyDownEvtUponElem(prevKey, stepper.steps[0].nativeElement);
+                fix.detectChanges();
+                expect(document.activeElement, orientation).toBe(stepper.steps[4].nativeElement);
+
+                stepper.steps[0].disabled = true;
+                stepper.steps[4].disabled = true;
+                fix.detectChanges();
+
+                // the last accessible step wraps to the first accessible one and vice versa
+                stepper.steps[3].nativeElement.focus();
+                UIInteractions.triggerKeyDownEvtUponElem(nextKey, stepper.steps[3].nativeElement);
+                fix.detectChanges();
+                expect(document.activeElement, orientation).toBe(stepper.steps[1].nativeElement);
+
+                UIInteractions.triggerKeyDownEvtUponElem(prevKey, stepper.steps[1].nativeElement);
+                fix.detectChanges();
+                expect(document.activeElement, orientation).toBe(stepper.steps[3].nativeElement);
+
+                // a disabled step is skipped when focusing the previous step
+                stepper.steps[2].disabled = true;
+                fix.detectChanges();
+                UIInteractions.triggerKeyDownEvtUponElem(prevKey, stepper.steps[3].nativeElement);
+                fix.detectChanges();
+                expect(document.activeElement, orientation).toBe(stepper.steps[1].nativeElement);
+                stepper.steps[2].disabled = false;
+            }
+        });
+
+        it('should reverse the ArrowLeft/ArrowRight navigation in horizontal orientation when the direction is RTL', () => {
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            stepper.nativeElement.setAttribute('dir', 'rtl');
+            fix.detectChanges();
+
+            stepper.steps[1].nativeElement.focus();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', stepper.steps[1].nativeElement);
+            fix.detectChanges();
+            expect(document.activeElement).toBe(stepper.steps[2].nativeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', stepper.steps[2].nativeElement);
+            fix.detectChanges();
+            expect(document.activeElement).toBe(stepper.steps[1].nativeElement);
+
+            // the arrows are not reversed in vertical orientation
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', stepper.steps[1].nativeElement);
+            fix.detectChanges();
+            expect(document.activeElement).toBe(stepper.steps[2].nativeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', stepper.steps[2].nativeElement);
+            fix.detectChanges();
+            expect(document.activeElement).toBe(stepper.steps[1].nativeElement);
+        });
     });
 
     describe('ARIA', () => {
@@ -957,6 +1547,240 @@ describe('Rendering Tests', () => {
                 expect(stepper.steps[i].nativeElement.attributes['aria-selected'].value).toEqual('true');
             }
         });
+    });
+});
+
+describe('Stepper with steps rendered with @for', () => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxStepperForComponent,
+                IgxStepperForEagerComponent,
+                IgxStepperBoundActiveComponent
+            ]
+        }).compileComponents();
+    });
+
+    const verifyFirstStepActive = (stepper: IgxStepperComponent) => {
+        const firstStep = stepper.steps[0].nativeElement;
+        expect(firstStep.getAttribute('aria-selected')).toBe('true');
+        expect(firstStep.getAttribute('tabindex')).toBe('0');
+        expect(firstStep.classList.contains(CURRENT_CLASS)).toBe(true);
+        stepper.steps.forEach((step, index) => {
+            expect(step.nativeElement.querySelector(`.${STEP_INDICATOR_CLASS}`).textContent.trim()).toBe(`${index + 1}`);
+            if (index > 0) {
+                expect(step.nativeElement.getAttribute('aria-selected')).toBe('false');
+                expect(step.nativeElement.getAttribute('tabindex')).toBe('-1');
+            }
+        });
+    };
+
+    it('should activate the first step and render the step indicators on init', () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.detectChanges();
+
+        verifyFirstStepActive(fixture.componentInstance.stepper);
+    });
+
+    it(`should activate the first step and render the step indicators on init in a host with eager change detection,
+    without throwing ExpressionChangedAfterItHasBeenCheckedError`, () => {
+        const fixture = TestBed.createComponent(IgxStepperForEagerComponent);
+        // the dev mode check runs as part of detectChanges and would throw for a stale aria-selected binding
+        expect(() => fixture.detectChanges()).not.toThrow();
+
+        verifyFirstStepActive(fixture.componentInstance.stepper);
+    });
+
+    it('should disable the steps after an invalid active step on init when the stepper is linear', () => {
+        for (const host of [IgxStepperForComponent, IgxStepperForEagerComponent]) {
+            const fixture = TestBed.createComponent<IgxStepperForComponent | IgxStepperForEagerComponent>(host);
+            fixture.componentInstance.linear = true;
+            expect(() => fixture.detectChanges(), host.name).not.toThrow();
+
+            const steps = fixture.componentInstance.stepper.steps;
+            expect(steps[0].nativeElement.classList.contains(DISABLED_CLASS), host.name).toBe(false);
+            expect(steps[1].nativeElement.classList.contains(DISABLED_CLASS), host.name).toBe(true);
+            expect(steps[2].nativeElement.classList.contains(DISABLED_CLASS), host.name).toBe(true);
+        }
+    });
+
+    it('should emit activeChange only once for the step that is activated on init', () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.activeChanges).toEqual(['Step 1:true']);
+    });
+
+    it('should not emit activeChange for the steps that are bound to [active]="false" and are not active', () => {
+        const fixture = TestBed.createComponent(IgxStepperBoundActiveComponent);
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+
+        expect(stepper.steps[1].active).toBe(true);
+        expect(fixture.componentInstance.activeChanges).toEqual(['Step 2:true']);
+
+        stepper.steps[2].active = false;
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.activeChanges).toEqual(['Step 2:true']);
+    });
+
+    it('should remove the steps that are removed from the stepper from its state', async () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.componentInstance.linear = true;
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const stepperService: IgxStepperService = (stepper as any).stepperService;
+        const [firstStep, , lastStep] = stepper.steps;
+
+        expect(stepperService.linearDisabledSteps).toContain(lastStep);
+
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(0, 2));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(stepper.steps.length).toBe(2);
+        expect(stepperService.linearDisabledSteps).not.toContain(lastStep);
+        expect(stepperService.linearDisabledSteps.size).toBe(1);
+
+        // removing the active step activates the first enabled step
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(1, 2));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(stepper.steps.length).toBe(1);
+        expect(stepper.steps[0].active).toBe(true);
+        expect(stepper.steps[0].nativeElement.getAttribute('aria-selected')).toBe('true');
+        expect(stepperService.visitedSteps).not.toContain(firstStep);
+        expect(stepperService.previousActiveStep).not.toBe(firstStep);
+        expect(stepperService.linearDisabledSteps.size).toBe(0);
+    });
+
+    it('should not keep the previously active step in the stepper state when it is removed', async () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const stepperService: IgxStepperService = (stepper as any).stepperService;
+        const [firstStep, secondStep] = stepper.steps;
+
+        secondStep.active = true;
+        fixture.detectChanges();
+
+        expect(stepperService.previousActiveStep).toBe(firstStep);
+
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(1));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(secondStep.active).toBe(true);
+        expect(secondStep.index).toBe(0);
+        expect(secondStep.nativeElement.getAttribute('aria-posinset')).toBe('1');
+        expect(secondStep.nativeElement.getAttribute('aria-setsize')).toBe('2');
+        expect(secondStep.nativeElement.querySelector(`.${STEP_INDICATOR_CLASS}`).textContent.trim()).toBe('1');
+        expect(stepperService.previousActiveStep).toBeUndefined();
+        expect(stepperService.visitedSteps).not.toContain(firstStep);
+    });
+
+    it('should not keep linear disabled steps when the active step is removed and no step can be activated', async () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.componentInstance.linear = true;
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const stepperService: IgxStepperService = (stepper as any).stepperService;
+
+        expect(stepperService.linearDisabledSteps.size).toBe(2);
+
+        // remove the active (invalid) step and disable the rest
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(1).map(step => ({ ...step, disabled: true })));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(stepper.steps.some(step => step.active)).toBe(false);
+        expect(stepperService.linearDisabledSteps.size).toBe(0);
+
+        // a step that is enabled later can be activated
+        fixture.componentInstance.steps.set(STEPS_DATA.slice(1).map((step, index) => ({ ...step, disabled: index === 0 })));
+        fixture.detectChanges();
+
+        expect(stepper.steps[1].isAccessible).toBe(true);
+
+        stepper.next();
+        fixture.detectChanges();
+        await nextFrame();
+
+        expect(stepper.steps[1].active).toBe(true);
+    });
+
+    it('should not throw when the active step is removed during its animation and no step can be activated', async () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
+
+        stepper.next();
+        fixture.detectChanges();
+
+        // remove the step that is being activated and disable the rest
+        fixture.componentInstance.steps.set([STEPS_DATA[0], STEPS_DATA[2]].map(step => ({ ...step, disabled: true })));
+        fixture.detectChanges();
+        await fixture.whenStable();
+        changedSpy.mockClear();
+
+        // the no-op test animations end before the removal is handled, so simulate an animation that ends after it;
+        // RxJS reports an error thrown by the stepper's handler asynchronously, so collect it
+        const errors: unknown[] = [];
+        const { onUnhandledError } = rxjsConfig;
+        rxjsConfig.onUnhandledError = error => errors.push(error);
+        try {
+            stepper.enterAnimationDone.emit();
+            await wait();
+        } finally {
+            rxjsConfig.onUnhandledError = onUnhandledError;
+        }
+
+        expect(errors).toEqual([]);
+        expect(() => fixture.detectChanges()).not.toThrow();
+        expect(stepper.steps.some(step => step.active)).toBe(false);
+        expect(changedSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not throw and should be able to activate a step when there is no active step', async () => {
+        const fixture = TestBed.createComponent(IgxStepperForComponent);
+        fixture.componentInstance.steps.set(STEPS_DATA.map(step => ({ ...step, disabled: true })));
+        fixture.detectChanges();
+        const stepper = fixture.componentInstance.stepper;
+        const changingSpy = vi.spyOn(stepper.activeStepChanging, 'emit');
+        const changedSpy = vi.spyOn(stepper.activeStepChanged, 'emit');
+
+        expect(stepper.steps.some(step => step.active)).toBe(false);
+        expect(() => {
+            stepper.next();
+            stepper.prev();
+            stepper.reset();
+            stepper.linear = true;
+            stepper.steps[0].onFocus();
+            stepper.steps[0].onBlur();
+        }).not.toThrow();
+        expect(changingSpy).not.toHaveBeenCalled();
+
+        stepper.linear = false;
+        fixture.componentInstance.steps.set(STEPS_DATA.map((step, index) => ({ ...step, disabled: index !== 1 })));
+        fixture.detectChanges();
+
+        stepper.next();
+        fixture.detectChanges();
+        await nextFrame();
+
+        expect(stepper.steps[1].active).toBe(true);
+        expect(stepper.steps[1].nativeElement.getAttribute('tabindex')).toBe('0');
+        expect(changingSpy).toHaveBeenCalledTimes(1);
+        expect(changingSpy).toHaveBeenCalledWith({ owner: stepper, newIndex: 1, oldIndex: -1, cancel: false });
+        expect(changedSpy).toHaveBeenCalledTimes(1);
+        expect(changedSpy).toHaveBeenCalledWith({ owner: stepper, index: 1 });
     });
 });
 
@@ -1048,7 +1872,7 @@ describe('Stepper service unit tests', () => {
             stepFixtures.push(fixture);
             fixture.detectChanges();
             const newStep = fixture.componentInstance;
-            newStep._index = index;
+            newStep._index.set(index);
             steps.push(newStep);
         }
     });
@@ -1173,12 +1997,16 @@ describe('Stepper service unit tests', () => {
         expect(steps[1].activeChange.emit).toHaveBeenCalledWith(false);
         expect(steps[0].activeChange.emit).not.toHaveBeenCalledTimes(2);
 
+        // a step that is not collapsing is not collapsed again
+        stepperService.collapse(steps[1]);
+        expect(steps[1].activeChange.emit).toHaveBeenCalledTimes(1);
+
         const testValues = [null, undefined, [], {}, 'sampleString'];
 
         for (const val of testValues) {
             expect(() => {
                 stepperService.collapse(val as any);
-            }).toThrow();
+            }).not.toThrow();
         }
     });
 
@@ -1190,19 +2018,19 @@ describe('Stepper service unit tests', () => {
         stepperService.calculateVisitedSteps();
         expect(stepperService.visitedSteps.size).toEqual(1);
         sampleSet = new Set<IgxStepComponent>([steps[0]]);
-        expect(stepperService.visitedSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.visitedSteps)).toEqual(sampleSet);
 
         stepperService.activeStep = steps[1];
         stepperService.calculateVisitedSteps();
         expect(stepperService.visitedSteps.size).toEqual(2);
         sampleSet = new Set<IgxStepComponent>([steps[0], steps[1]]);
-        expect(stepperService.visitedSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.visitedSteps)).toEqual(sampleSet);
 
         stepperService.activeStep = steps[2];
         stepperService.calculateVisitedSteps();
         expect(stepperService.visitedSteps.size).toEqual(3);
         sampleSet = new Set<IgxStepComponent>([steps[0], steps[1], steps[2]]);
-        expect(stepperService.visitedSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.visitedSteps)).toEqual(sampleSet);
     });
 
     it('should determine the steps that should be disabled in linear mode based on the validity of the active step', () => {
@@ -1220,26 +2048,26 @@ describe('Stepper service unit tests', () => {
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(3);
         let sampleSet = new Set<IgxStepComponent>([steps[1], steps[2], steps[3]]);
-        expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.linearDisabledSteps)).toEqual(sampleSet);
 
         vi.spyOn(steps[0] as any, 'isValid', 'get').mockReturnValue(true);
         stepperService.calculateLinearDisabledSteps();
         sampleSet = new Set<IgxStepComponent>([steps[2], steps[3]]);
         expect(stepperService.linearDisabledSteps.size).toBe(2);
-        expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.linearDisabledSteps)).toEqual(sampleSet);
 
         vi.spyOn(steps[1] as any, 'active', 'get').mockReturnValue(true);
         vi.spyOn(steps[1] as any, 'isValid', 'get').mockReturnValue(false);
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(2);
-        expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.linearDisabledSteps)).toEqual(sampleSet);
 
         vi.spyOn(steps[1] as any, 'isValid', 'get').mockReturnValue(true);
         stepperService.activeStep = steps[1];
         sampleSet = new Set<IgxStepComponent>([steps[3]]);
         stepperService.calculateLinearDisabledSteps();
         expect(stepperService.linearDisabledSteps.size).toBe(1);
-        expect(stepperService.linearDisabledSteps).toEqual(sampleSet);
+        expect(new Set(stepperService.linearDisabledSteps)).toEqual(sampleSet);
         expect(stepperService.linearDisabledSteps).toContain(steps[3]);
 
         vi.spyOn(steps[2] as any, 'isValid', 'get').mockReturnValue(true);
@@ -1286,6 +2114,33 @@ describe('Stepper service unit tests', () => {
         };
 
         expect(activeChangingSpy).toHaveBeenCalledWith(activeChangingEventArgs);
+    });
+
+    it('should not collapse the active step', () => {
+        stepperService.activeStep = steps[0];
+        stepperService.collapsingSteps.add(steps[0]);
+        vi.spyOn(steps[0].activeChange, 'emit');
+
+        stepperService.collapse(steps[0]);
+
+        expect(steps[0].activeChange.emit).not.toHaveBeenCalled();
+        expect(stepperService.collapsingSteps).toContain(steps[0]);
+    });
+
+    it('should calculate the linear disabled steps from the steps validity when there is no active step', () => {
+        vi.spyOn(stepper, 'steps', 'get').mockReturnValue(steps);
+        stepperService.linearDisabledSteps.add(steps[1]);
+        stepperService.linearDisabledSteps.add(steps[2]);
+
+        stepperService.calculateLinearDisabledSteps();
+
+        // the stale disabled steps are cleared when all steps are valid
+        expect(stepperService.linearDisabledSteps.size).toBe(0);
+
+        vi.spyOn(steps[1], 'isValid', 'get').mockReturnValue(false);
+        stepperService.calculateLinearDisabledSteps();
+
+        expect(new Set(stepperService.linearDisabledSteps)).toEqual(new Set([steps[2], steps[3]]));
     });
 });
 
@@ -1441,4 +2296,72 @@ export class IgxStepperIndicatorNoShrinkComponent {
 
     public longTitle =
         'This is a very very very very very very very very very very very very very very very very very very very very very long step title that should not shrink the indicator';
+}
+
+type StepData = Readonly<{ title: string, isValid: boolean, optional: boolean, disabled: boolean }>;
+
+const STEPS_DATA: ReadonlyArray<StepData> = [
+    { title: 'Step 1', isValid: false, optional: false, disabled: false },
+    { title: 'Step 2', isValid: true, optional: false, disabled: false },
+    { title: 'Step 3', isValid: true, optional: false, disabled: false }
+];
+
+const STEPS_FOR_TEMPLATE = `
+    <igx-stepper [linear]="linear">
+        @for (step of steps(); track step.title) {
+            <igx-step [isValid]="step.isValid" [optional]="step.optional" [disabled]="step.disabled"
+                (activeChange)="activeChanges.push(step.title + ':' + $event)">
+                <span igxStepTitle>{{ step.title }}</span>
+                <div igxStepContent>{{ step.title }} content</div>
+            </igx-step>
+        }
+    </igx-stepper>
+    `;
+
+@Component({
+    template: STEPS_FOR_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxStepperComponent, IgxStepComponent, IgxStepTitleDirective, IgxStepContentDirective]
+})
+export class IgxStepperForComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+    public steps = signal(STEPS_DATA);
+    public linear = false;
+    public activeChanges: string[] = [];
+}
+
+@Component({
+    // a distinct selector avoids a component ID collision with the OnPush variant sharing the same template
+    selector: 'igx-stepper-for-eager-test',
+    template: STEPS_FOR_TEMPLATE,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxStepperComponent, IgxStepComponent, IgxStepTitleDirective, IgxStepContentDirective]
+})
+export class IgxStepperForEagerComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+    public steps = signal(STEPS_DATA);
+    public linear = false;
+    public activeChanges: string[] = [];
+}
+
+@Component({
+    template: `
+    <igx-stepper [orientation]="'vertical'">
+        <igx-step [active]="false" (activeChange)="activeChanges.push('Step 1:' + $event)">
+            <div igxStepContent>Step 1 content</div>
+        </igx-step>
+        <igx-step [active]="true" (activeChange)="activeChanges.push('Step 2:' + $event)">
+            <div igxStepContent>Step 2 content</div>
+        </igx-step>
+        <igx-step [active]="false" (activeChange)="activeChanges.push('Step 3:' + $event)">
+            <div igxStepContent>Step 3 content</div>
+        </igx-step>
+    </igx-stepper>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxStepperComponent, IgxStepComponent, IgxStepContentDirective]
+})
+export class IgxStepperBoundActiveComponent {
+    @ViewChild(IgxStepperComponent) public stepper: IgxStepperComponent;
+    public activeChanges: string[] = [];
 }
