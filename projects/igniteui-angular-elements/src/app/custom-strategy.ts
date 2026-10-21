@@ -34,10 +34,12 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
     private maxEventProxyDepth = 3;
     /**
-     * Additional property values set before connect that had no effect on initialization,
+     * Additional property values set before content queries resolve that had no effect,
      * because they depend on content children (e.g. column group `selected`). Retried once content queries resolve.
      */
     private pendingContentValues = new Map<string, any>();
+    /** Whether the initial content queries of the component have resolved */
+    private contentResolved = false;
 
     /**
      * Resolvable component reference.
@@ -91,6 +93,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return;
         }
         this.element = element as IgcNgElement;
+        this.contentResolved = false;
+        this.pendingContentValues.clear();
 
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
@@ -187,6 +191,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const contentQueryChildrenCollection = componentConfig!.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
         if (contentQueryChildrenCollection.length === 0) {
             // no content children, emit event immediately, since there's nothing to be attached.
+            this.contentResolved = true;
             (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
 
@@ -306,6 +311,10 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (!this._inputMap.has(property)) {
             // writable additional properties aren't inputs and can't be set through `setInput`
             componentRef.instance[property] = value;
+            if (!this.contentResolved && componentRef.instance[property] !== value) {
+                // depends on content children that aren't resolved yet, retry once they are:
+                this.pendingContentValues.set(property, value);
+            }
             componentRef.changeDetectorRef.markForCheck();
             this.notifyChanges();
             return;
@@ -317,7 +326,6 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      * Set any stored initial values on the component, applying Angular inputs first.
      * Writable additional properties (e.g. column `selected`) may depend on inputs (e.g. `field`),
      * so they are replayed after them regardless of the order they were set before connect.
-     * Those that don't take effect yet are retried once content queries resolve.
      */
     protected override initializeInputs(): void {
         const initialInputValues = (this as any).initialInputValues as Map<string, any>;
@@ -327,12 +335,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         for (const [property, value] of entries.filter(([prop]) => this._inputMap.has(prop))) {
             this.setInputValue(property, value);
         }
-        const instance = (this as any).componentRef.instance;
         for (const [property, value] of entries.filter(([prop]) => !this._inputMap.has(prop))) {
             this.setInputValue(property, value);
-            if (instance[property] !== value) {
-                this.pendingContentValues.set(property, value);
-            }
         }
     }
 
@@ -404,6 +408,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         }
         if (this.schedule.size === 0) {
             // children are attached and collections are updated, retry values that depend on them and emit event.
+            this.contentResolved = true;
             this.applyPendingContentValues();
             (this as any).componentRef?.instance?.childrenResolved?.emit();
         }

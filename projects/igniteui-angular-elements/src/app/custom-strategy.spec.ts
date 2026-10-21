@@ -737,6 +737,42 @@ describe('Elements: ', () => {
             expect(groupEl.selected).toBe(true);
         });
 
+        it('should apply column group selection set after connect but before its child columns resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            expect(group.children.length).toBe(0);
+            groupEl.selected = true;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+        });
+
+        it('should keep a pre-connect group selection repeated before its child columns resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            groupEl.selected = true;
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            groupEl.selected = true;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+        });
+
         it('should not re-apply a pre-connect group selection overridden before its child columns resolve', async () => {
             const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
             groupEl.selected = true;
