@@ -1463,7 +1463,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _recalcOnContainerChange(containerSizeInfo: { prevSize: number; newSize: number } | null = null) {
         const prevChunkSize = this.state.chunkSize;
+        const prevStartIndex = this.state.startIndex!;
         this.applyChunkSizeChange();
+        if (prevStartIndex !== this.state.startIndex) {
+            // items were prepended to fill the grown container, so shift the display container
+            // by their size to keep the scroll position's content in view
+            this._shiftDisplayContainerOffset(this.sizesCache[prevStartIndex] - this.sizesCache[this.state.startIndex!]);
+        }
         this._recalcScrollBarSize(containerSizeInfo);
         if (prevChunkSize !== this.state.chunkSize) {
             this.chunkLoad.emit(this.state);
@@ -1580,6 +1586,21 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
          -(scrollOffset) + 'px' :
          `translateY(${-scrollOffset}px)`;
+    }
+
+    /**
+     * @hidden
+     * Moves the display container further back by the given size, respecting right-to-left direction.
+     */
+    protected _shiftDisplayContainerOffset(size: number) {
+        const style = this.dc.instance._viewContainer.element.nativeElement.style;
+        if (this.igxForScrollOrientation === 'horizontal') {
+            const left = parseFloat(style.left) || 0;
+            style.left = (this.isRTL ? left + size : left - size) + 'px';
+        } else {
+            const top = Number(style.transform?.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1]) || 0;
+            style.transform = `translateY(${top - size}px)`;
+        }
     }
 
     protected _adjustScrollPositionAfterSizeChange(sizeDiff: number) {
