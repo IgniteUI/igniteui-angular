@@ -306,6 +306,24 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         super.setInputValue(property, value);
     }
 
+    /**
+     * Set any stored initial values on the component, applying Angular inputs first.
+     * Writable additional properties (e.g. column `selected`) may depend on inputs (e.g. `field`),
+     * so they are replayed after them regardless of the order they were set before connect.
+     */
+    protected override initializeInputs(): void {
+        const initialInputValues = (this as any).initialInputValues as Map<string, any>;
+        const entries = Array.from(initialInputValues);
+        initialInputValues.clear();
+
+        for (const [property, value] of entries.filter(([prop]) => this._inputMap.has(prop))) {
+            this.setInputValue(property, value);
+        }
+        for (const [property, value] of entries.filter(([prop]) => !this._inputMap.has(prop))) {
+            this.setInputValue(property, value);
+        }
+    }
+
     public override getInputValue(property: string): any {
         let returnValue = super.getInputValue(property);
 
