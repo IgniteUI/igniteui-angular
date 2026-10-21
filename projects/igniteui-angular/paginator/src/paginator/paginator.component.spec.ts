@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ViewChild, Component, ChangeDetectionStrategy } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,13 +8,14 @@ import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { first } from 'rxjs/operators';
 import { IgxButtonDirective } from '../../../directives/src/directives/button/button.directive';
 import { PaginatorResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxPaginator with default settings', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, DefaultPaginatorComponent]
         }).compileComponents();
-    }));
+    });
     it('should calculate number of pages correctly', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
         fix.detectChanges();
@@ -92,7 +93,7 @@ describe('IgxPaginator with default settings', () => {
         paginator.perPage = 100;
         fix.detectChanges();
 
-        const pagingButtons =  GridFunctions.getPagingButtons(fix.nativeElement);
+        const pagingButtons = GridFunctions.getPagingButtons(fix.nativeElement);
         pagingButtons.forEach(element => {
             expect(element.className.includes('igx-button--disabled')).toBe(true);
         });
@@ -111,9 +112,9 @@ describe('IgxPaginator with default settings', () => {
         const currPage = fix.debugElement.query(By.css('.currPage'));
 
         expect(customPaging).toBeDefined();
-        expect(prevBtn.properties.disabled).toBeTrue();
+        expect(prevBtn.properties.disabled).toBe(true);
         expect(currPage.nativeElement.innerText).toEqual('0');
-        expect(nextBtn.properties.disabled).toBeFalse();
+        expect(nextBtn.properties.disabled).toBe(false);
     });
 
     it('should be able to operate correctly with paging api from custom template', () => {
@@ -131,7 +132,7 @@ describe('IgxPaginator with default settings', () => {
         let currPage = fix.debugElement.query(By.css('.currPage'));
 
         expect(currPage.nativeElement.innerText).toEqual('1');
-        expect(nextBtn.properties.disabled).toBeFalse();
+        expect(nextBtn.properties.disabled).toBe(false);
 
         nextBtn.nativeElement.click();
         fix.detectChanges();
@@ -139,7 +140,7 @@ describe('IgxPaginator with default settings', () => {
         currPage = fix.debugElement.query(By.css('.currPage'));
 
         expect(currPage.nativeElement.innerText).toEqual('2');
-        expect(nextBtn.properties.disabled).toBeTrue();
+        expect(nextBtn.properties.disabled).toBe(true);
     });
 
     it('paging and pagingDone events should be emitted correctly', () => {
@@ -148,8 +149,8 @@ describe('IgxPaginator with default settings', () => {
 
         const paginator = fix.componentInstance.paginator;
 
-        spyOn(paginator.paging, 'emit').and.callThrough();
-        spyOn(paginator.pagingDone, 'emit').and.callThrough();
+        vi.spyOn(paginator.paging, 'emit');
+        vi.spyOn(paginator.pagingDone, 'emit');
         const allBtns = fix.debugElement.queryAll(By.css('.igx-icon-button'));
 
         const prevBtn = allBtns[1];
@@ -162,8 +163,8 @@ describe('IgxPaginator with default settings', () => {
         lastBtn.nativeElement.click();
         fix.detectChanges();
 
-        expect(paginator.paging.emit).toHaveBeenCalledWith({current: 1, next: 2, cancel: false});
-        expect(paginator.pagingDone.emit).toHaveBeenCalledWith({current: 2, previous: 1});
+        expect(paginator.paging.emit).toHaveBeenCalledWith({ current: 1, next: 2, cancel: false });
+        expect(paginator.pagingDone.emit).toHaveBeenCalledWith({ current: 2, previous: 1 });
         expect(paginator.paging.emit).toHaveBeenCalledTimes(2);
         expect(paginator.pagingDone.emit).toHaveBeenCalledTimes(2);
 
@@ -183,7 +184,7 @@ describe('IgxPaginator with default settings', () => {
         fix.detectChanges();
 
         const paginator = fix.componentInstance.paginator;
-        spyOn(paginator.pageChange, 'emit').and.callThrough();
+        vi.spyOn(paginator.pageChange, 'emit');
         const allBtns = fix.debugElement.queryAll(By.css('.igx-icon-button '));
         const nextBtn = allBtns[2];
 
@@ -207,7 +208,7 @@ describe('IgxPaginator with default settings', () => {
         fix.detectChanges();
 
         const paginator = fix.componentInstance.paginator;
-        spyOn(paginator.perPageChange, 'emit').and.callThrough();
+        vi.spyOn(paginator.perPageChange, 'emit');
 
         paginator.perPage = 3;
 
@@ -304,11 +305,11 @@ describe('IgxPaginator with default settings', () => {
 });
 
 describe('IgxPaginator with custom settings', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, CustomizedPaginatorComponent]
         }).compileComponents();
-    }));
+    });
 
     it('should calculate correctly pages when custom select options are given', () => {
         const fix = TestBed.createComponent(CustomizedPaginatorComponent);
@@ -389,7 +390,8 @@ describe('IgxPaginator with custom settings', () => {
     imports: [IgxPaginatorComponent, IgxPaginatorContentDirective, IgxButtonDirective]
 })
 export class DefaultPaginatorComponent {
-    @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
+    @ViewChild(IgxPaginatorComponent, { static: true })
+    public paginator: IgxPaginatorComponent;
     public customContent = false;
 
     public setCustomPager() {
@@ -407,6 +409,7 @@ export class DefaultPaginatorComponent {
     imports: [IgxPaginatorComponent]
 })
 export class CustomizedPaginatorComponent {
-    @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
+    @ViewChild(IgxPaginatorComponent, { static: true })
+    public paginator: IgxPaginatorComponent;
 }
 
