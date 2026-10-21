@@ -61,7 +61,7 @@
             [column]="this.column.field"
             [containerClass]="'igx-grid__td-text'"
             [metadata]="searchMetadata">
-            {{ value
+            {{ !isEmptyAddRowCell
                 ? (formatter
                     ? (value | columnFormatter:formatter:rowData:columnData)
                     : column.dataType === "number"
