@@ -88,8 +88,8 @@ describe('IgxGrid - Row Adding #grid', () => {
                 grid.gridAPI.get_cell_by_index(0, 'CompanyName').setEditMode(true);
                 fixture.detectChanges();
 
-                expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBeTrue();
-                expect(cell.editMode).toBeFalse();
+                expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+                expect(cell.editMode).toBe(false);
                 expect(cell.value).toEqual(value);
                 expect(cell.nativeElement?.textContent.trim()).toBe(expected);
             });
@@ -884,6 +884,32 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             expect(row.expanded).toBeFalse();
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+        });
+
+        it('Should format the expandable first column cell after leaving the editor in an uncommitted add row', () => {
+            grid.rowEditable = true;
+            fixture.componentInstance.data = [];
+            const column = grid.getColumnByName('ContactName');
+            column.dataType = GridColumnDataType.Number;
+            column.pipeArgs = { digitsInfo: '1.2-2' };
+            fixture.detectChanges();
+
+            grid.beginAddRowById(null);
+            fixture.detectChanges();
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+            expect(cell.nativeElement?.tagName.toLowerCase()).toBe('igx-expandable-grid-cell');
+            expect(cell.nativeElement?.querySelector('.igx-grid__td-text')?.textContent.trim()).toBe('ContactName');
+
+            cell.setEditMode(true);
+            fixture.detectChanges();
+            cell.editValue = 0;
+            grid.gridAPI.get_cell_by_index(0, 'CompanyName').setEditMode(true);
+            fixture.detectChanges();
+
+            expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(cell.editMode).toBe(false);
+            expect(cell.value).toBe(0);
+            expect(cell.nativeElement?.querySelector('.igx-grid__td-text')?.textContent.trim()).toBe('0.00');
         });
     });
 
