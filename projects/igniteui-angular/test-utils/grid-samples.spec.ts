@@ -1,14 +1,43 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, QueryList, ViewChildren, OnInit, ChangeDetectionStrategy, signal } from '@angular/core';
-
 import {
-    BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
-    GridWithSizeComponent, PagingComponent
-} from './grid-base-components.spec';
+    Component,
+    TemplateRef,
+    ViewChild,
+    Input,
+    AfterViewInit,
+    QueryList,
+    ViewChildren,
+    OnInit,
+    ChangeDetectionStrategy,
+    signal
+} from '@angular/core';
+
+import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions, TemplateDefinitions, ExternalTemplateDefinitions } from './template-strings.spec';
 
-import { ColumnPinningPosition, ColumnType, FilteringExpressionsTree, FilteringLogic, FilteringStrategy, FormattedValuesSortingStrategy, IDataCloneStrategy, IFilteringExpressionsTree, IgxDateSummaryOperand, IgxFilteringOperand, IgxFilterItem, IgxNumberFilteringOperand, IgxNumberSummaryOperand, IgxSummaryResult, ISortingOptions, ISortingStrategy, IgxOverlayOutletDirective, OverlaySettings, SortingDirection } from 'igniteui-angular/core';
+import {
+    ColumnPinningPosition,
+    ColumnType,
+    FilteringExpressionsTree,
+    FilteringLogic,
+    FilteringStrategy,
+    FormattedValuesSortingStrategy,
+    IDataCloneStrategy,
+    IFilteringExpressionsTree,
+    IgxDateSummaryOperand,
+    IgxFilteringOperand,
+    IgxFilterItem,
+    IgxNumberFilteringOperand,
+    IgxNumberSummaryOperand,
+    IgxSummaryResult,
+    ISortingOptions,
+    ISortingStrategy,
+    IgxOverlayOutletDirective,
+    OverlaySettings,
+    SortingDirection,
+    GridColumnDataType
+} from 'igniteui-angular/core';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -16,7 +45,45 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxPrefixDirective, IgxSuffi
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective, IgxFocusDirective } from 'igniteui-angular/directives';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
-import { CellType, IGridCellEventArgs, IgxAdvancedFilteringDialogComponent, IgxCellEditorTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxCollapsibleIndicatorTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent, IgxExcelStyleColumnOperationsTemplateDirective, IgxExcelStyleConditionalFilterComponent, IgxExcelStyleFilterOperationsTemplateDirective, IgxExcelStyleHeaderIconDirective, IgxExcelStyleMovingComponent, IgxExcelStylePinningComponent, IgxExcelStyleSearchComponent, IgxExcelStyleSelectingComponent, IgxFilterCellTemplateDirective, IgxGridEditingActionsComponent, IgxGridExcelStyleFilteringComponent, IgxGridToolbarActionsComponent, IgxGridToolbarAdvancedFilteringComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGroupByRowSelectorDirective, IgxHeadSelectorDirective, IgxRowAddTextDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowSelectorDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective } from 'igniteui-angular/grids/core';
+import {
+    CellType,
+    IGridCellEventArgs,
+    IgxAdvancedFilteringDialogComponent,
+    IgxCellEditorTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnLayoutComponent,
+    IgxExcelStyleColumnOperationsTemplateDirective,
+    IgxExcelStyleConditionalFilterComponent,
+    IgxExcelStyleFilterOperationsTemplateDirective,
+    IgxExcelStyleHeaderIconDirective,
+    IgxExcelStyleMovingComponent,
+    IgxExcelStylePinningComponent,
+    IgxExcelStyleSearchComponent,
+    IgxExcelStyleSelectingComponent,
+    IgxFilterCellTemplateDirective,
+    IgxGridEditingActionsComponent,
+    IgxGridExcelStyleFilteringComponent,
+    IgxGridToolbarActionsComponent,
+    IgxGridToolbarAdvancedFilteringComponent,
+    IgxGridToolbarComponent,
+    IgxGridToolbarHidingComponent,
+    IgxGroupByRowSelectorDirective,
+    IgxHeadSelectorDirective,
+    IgxRowAddTextDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTabStopDirective,
+    IgxRowEditTemplateDirective,
+    IgxRowEditTextDirective,
+    IgxRowSelectorDirective,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    GridSelectionMode
+} from 'igniteui-angular/grids/core';
 
 @Component({
     template: GridTemplateStrings.declareGrid('', '', `<igx-column field="ID" [hidden]="true"></igx-column>`),
@@ -53,7 +120,8 @@ export class GridAddColumnComponent extends BasicGridComponent implements OnInit
             { field: 'CompanyName', width: 150, type: 'string' },
             { field: 'ContactName', width: 150, type: 'string' },
             { field: 'ContactTitle', width: 150, type: 'string' },
-            { field: 'Address', width: 150, type: 'string' }];
+            { field: 'Address', width: 150, type: 'string' }
+        ];
     }
 }
 
@@ -69,7 +137,10 @@ export class ColumnCellFormatterComponent extends BasicGridComponent {
         return `${value * value}`;
     }
 
-    public containsY(_: number, data: { ID: number; Name: string }) {
+    public containsY(_: number, data: {
+        ID: number;
+        Name: string;
+    }) {
         return data.Name.includes('y') ? 'true' : 'false';
     }
 
@@ -184,7 +255,8 @@ export class ProductsComponent extends BasicGridComponent {
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
-    @ViewChild('nameColumn', { static: true }) public nameColumn;
+    @ViewChild('nameColumn', { static: true })
+    public nameColumn;
 
     public override data = SampleTestData.personIDNameRegionData();
 }
@@ -288,21 +360,20 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
-export class PinningComponent extends GridWithSizeComponent
-    implements IGridSelection {
+export class PinningComponent extends GridWithSizeComponent implements IGridSelection {
 
     public column: IgxColumnComponent;
     public columns = [
-        { field: 'ID', width: 100 },
-        { field: 'CompanyName', width: 300 },
-        { field: 'ContactName', width: 200 },
-        { field: 'ContactTitle', width: 200 },
-        { field: 'Address', width: 300 },
-        { field: 'City', width: 100 },
-        { field: 'Region', width: 100 },
-        { field: 'PostalCode', width: 100 },
-        { field: 'Phone', width: 150 },
-        { field: 'Fax', width: 150 }
+        { field: 'ID', width: "100px" },
+        { field: 'CompanyName', width: "300px" },
+        { field: 'ContactName', width: "200px" },
+        { field: 'ContactTitle', width: "200px" },
+        { field: 'Address', width: "300px" },
+        { field: 'City', width: "100px" },
+        { field: 'Region', width: "100px" },
+        { field: 'PostalCode', width: "100px" },
+        { field: 'Phone', width: "150px" },
+        { field: 'Fax', width: "150px" }
     ];
 
     public override data = SampleTestData.contactMariaAndersData();
@@ -326,7 +397,6 @@ export class PinningComponent extends GridWithSizeComponent
 })
 export class GridFeaturesComponent extends BasicGridComponent {
     public override data = SampleTestData.productInfoData();
-
 }
 
 @Component({
@@ -362,8 +432,7 @@ export class GroupableGridSearchComponent extends ScrollableGridSearchComponent 
 })
 export class GridAllFeaturesComponent extends GridWithSizeComponent {
     @Input()
-    public columnWidth = 200;
-
+    public columnWidth = "200px";
 }
 
 @Component({
@@ -425,7 +494,7 @@ export class GridHireDateComponent extends BasicGridComponent {
 export class MovableColumnsComponent extends BasicGridComponent {
     public override data = SampleTestData.personIDNameRegionData();
     public autoGenerate = false;
-    public rowSelection = 'none';
+    public rowSelection: GridSelectionMode = GridSelectionMode.none;
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
@@ -476,6 +545,9 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
     public isFilterable = false;
     public isSortable = false;
     public isResizable = false;
+    public isEditable = false;
+    public isHidden = false;
+    public isGroupable = false;
 }
 
 @Component({
@@ -491,6 +563,7 @@ export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
     public width = '500px';
     public height = '400px';
+    public paging = false;
 
     public columnInit(column: IgxColumnComponent) {
         column.sortable = true;
@@ -610,10 +683,10 @@ export class VirtualGridComponent extends BasicGridComponent {
     public gridHeight = '300px';
     public defaultWidth = '200px';
     public columns = [
-        { field: 'index' },
-        { field: 'value' },
-        { field: 'other' },
-        { field: 'another' }
+        { field: 'index', width: '100px' },
+        { field: 'value', width: '200px' },
+        { field: 'other', width: '200px' },
+        { field: 'another', width: '200px' }
     ];
     public selectedCell: CellType;
     constructor() {
@@ -625,7 +698,7 @@ export class VirtualGridComponent extends BasicGridComponent {
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth || (j % 8 < 2 ? 100 : (j % 6) * 125)
+                width: defaultColWidth || (j % 8 < 2 ? "100px" : `${(j % 6) * 125}px`)
             });
         }
         return cols;
@@ -704,11 +777,11 @@ export class CustomFilter extends IgxFilteringOperand {
     private constructor() {
         super();
         this.operations = [{
-            name: 'custom',
-            isUnary: false,
-            logic: (target: string): boolean => target === 'custom',
-            iconName: 'custom'
-        }];
+                name: 'custom',
+                isUnary: false,
+                logic: (target: string): boolean => target === 'custom',
+                iconName: 'custom'
+            }];
     }
 }
 @Component({
@@ -899,10 +972,12 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 }
 
 
+// Simulated latency of the remote unique values requests: long enough for the tests to see the loading state.
+export const LOAD_ON_DEMAND_DELAY = 300;
+
 export class LoadOnDemandFilterStrategy extends FilteringStrategy {
     public override getFilterItems(column: ColumnType, tree: IFilteringExpressionsTree): Promise<IgxFilterItem[]> {
-        return new Promise(resolve => setTimeout(() =>
-            resolve(super.getFilterItems(column, tree)), 1000));
+        return new Promise(resolve => setTimeout(() => resolve(super.getFilterItems(column, tree)), LOAD_ON_DEMAND_DELAY));
     }
 }
 
@@ -925,15 +1000,13 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
 
     private _filteringStrategy = new FilteringStrategy();
 
-    public columnValuesStrategy = (column: IgxColumnComponent,
-        columnExprTree: IFilteringExpressionsTree,
-        done: (uniqueValues: any[]) => void) => {
+    public columnValuesStrategy = (column: IgxColumnComponent, columnExprTree: IFilteringExpressionsTree, done: (uniqueValues: any[]) => void) => {
         setTimeout(() => {
             const filteredData = this._filteringStrategy.filter(this.data, columnExprTree, null, null);
             const columnValues = filteredData.map(record => record[column.field]);
             done(columnValues);
             this.doneCallbackCounter++;
-        }, 1000);
+        }, LOAD_ON_DEMAND_DELAY);
     };
 }
 
@@ -1054,7 +1127,7 @@ export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
     public resizable = false;
     public filterable = true;
     public override data = SampleTestData.excelFilteringData();
-    @ViewChild('template', {read: TemplateRef })
+    @ViewChild('template', { read: TemplateRef })
     public customExcelHeaderIcon: TemplateRef<any>;
 }
 
@@ -1167,7 +1240,8 @@ export class IgxGridFilteringTemplateComponent extends BasicGridComponent {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
-export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent { }
+export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent {
+}
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
@@ -1189,7 +1263,8 @@ export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent]
 })
-export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent { }
+export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {
+}
 
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true">
@@ -1258,18 +1333,18 @@ export class IgxGridAdvancedFilteringWithToolbarComponent extends BasicGridCompo
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxGridToolbarComponent]
 })
-export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent implements OnInit  {
+export class IgxGridAdvancedFilteringDynamicColumnsComponent extends BasicGridComponent implements OnInit {
     public override data = [];
-    public columns = [];
+    public columns: Array<{ field: string; header: string; width: string; type: GridColumnDataType }> = [];
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', header: 'HeaderID', width: '100px', type: 'number' },
-            { field: 'ProductName', header: 'Product Name', width: '200px', type: 'string'},
-            { field: 'Downloads', header: 'Downloads', width: '100px', type: 'number' },
-            { field: 'Released', header: 'Released', width: '100px', type: 'boolean' },
-            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: 'date' },
-            { field: 'AnotherField', header: 'Another Field', width: '200px', type: 'string' },
+            { field: 'ID', header: 'HeaderID', width: '100px', type: GridColumnDataType.Number },
+            { field: 'ProductName', header: 'Product Name', width: '200px', type: GridColumnDataType.String },
+            { field: 'Downloads', header: 'Downloads', width: '100px', type: GridColumnDataType.Number },
+            { field: 'Released', header: 'Released', width: '100px', type: GridColumnDataType.Boolean },
+            { field: 'ReleaseDate', header: 'Release Date', width: '200px', type: GridColumnDataType.Date },
+            { field: 'AnotherField', header: 'Another Field', width: '200px', type: GridColumnDataType.String },
         ];
         this.data = SampleTestData.excelFilteringData();
     }
@@ -1386,13 +1461,13 @@ export class IgxGridClipboardComponent extends BasicGridComponent {
 })
 export class DynamicColumnsComponent extends GridWithSizeComponent {
     public columns = [
-        { field: 'ID', width: 100, dataType: 'string' },
-        { field: 'CompanyName', width: 300, dataType: 'string' },
-        { field: 'ContactName', width: 200, dataType: 'string' },
-        { field: 'ContactTitle', width: 200, dataType: 'string' },
-        { field: 'Address', width: 300, dataType: 'string' },
-        { field: 'City', width: 100, dataType: 'string' },
-        { field: 'Region', width: 100, dataType: 'string' }
+        { field: 'ID', width: "100px", dataType: GridColumnDataType.Number },
+        { field: 'CompanyName', width: "300px", dataType: GridColumnDataType.String },
+        { field: 'ContactName', width: "200px", dataType: GridColumnDataType.String },
+        { field: 'ContactTitle', width: "200px", dataType: GridColumnDataType.String },
+        { field: 'Address', width: "300px", dataType: GridColumnDataType.String },
+        { field: 'City', width: "100px", dataType: GridColumnDataType.String },
+        { field: 'Region', width: "100px", dataType: GridColumnDataType.String }
     ];
 
     public override data = SampleTestData.contactInfoDataFull();
@@ -1436,13 +1511,13 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     public override grid: IgxGridComponent;
     public rowCheckboxClick: any;
     public headerCheckboxClick: any;
-    @ViewChild('customRow', {read: TemplateRef, static: true })
+    @ViewChild('customRow', { read: TemplateRef, static: true })
     public customRowTemplate: TemplateRef<any>;
 
-    @ViewChild('customHeader', {read: TemplateRef, static: true })
+    @ViewChild('customHeader', { read: TemplateRef, static: true })
     public customHeaderTemplate: TemplateRef<any>;
 
-    @ViewChild('customGroupRow', {read: TemplateRef, static: true })
+    @ViewChild('customGroupRow', { read: TemplateRef, static: true })
     public customGroupRowTemplate: TemplateRef<any>;
 
     public ngOnInit(): void {
@@ -1596,7 +1671,8 @@ export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxButtonDirective]
 })
 export class IgxGridCustomOverlayComponent extends BasicGridComponent {
-    @ViewChildren(IgxRowEditTabStopDirective) public buttons: QueryList<IgxRowEditTabStopDirective>;
+    @ViewChildren(IgxRowEditTabStopDirective)
+    public buttons: QueryList<IgxRowEditTabStopDirective>;
     public override data = SampleTestData.foodProductData();
 
     public get gridAPI() {
@@ -1664,13 +1740,13 @@ export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
 })
 export class IgxGridCustomRowEditTemplateComponent extends BasicGridComponent {
     public override data = SampleTestData.foodProductData();
-    @ViewChild('editActions', {read: TemplateRef })
+    @ViewChild('editActions', { read: TemplateRef })
     public editActions: TemplateRef<any>;
 
-    @ViewChild('addText', {read: TemplateRef })
+    @ViewChild('addText', { read: TemplateRef })
     public addText: TemplateRef<any>;
 
-    @ViewChild('editText', {read: TemplateRef })
+    @ViewChild('editText', { read: TemplateRef })
     public editText: TemplateRef<any>;
 }
 
@@ -1876,7 +1952,8 @@ export class IgxGridGroupByComponent extends DataParent implements OnInit {
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellEditorTemplateDirective, IgxFocusDirective]
 })
 export class CellEditingCustomEditorTestComponent extends BasicGridComponent {
-    @ViewChild('cellEdit', { read: TemplateRef }) public templateCell;
+    @ViewChild('cellEdit', { read: TemplateRef })
+    public templateCell;
     public override data = [
         { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
         { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
@@ -2269,25 +2346,25 @@ export class IgxGridAdvancedFilteringSerializedTreeComponent extends BasicGridCo
             "operator": 0
         }`);
 
-        this.filterTreeObject =	{
+        this.filterTreeObject = {
             "filteringOperands": [
-              {
-                "fieldName": "ProductName",
-                "condition": {
-                  "name": "contains",
-                  "isUnary": false,
-                  "iconName": "filter_contains"
-                },
-                "conditionName": "contains",
-                "ignoreCase": true,
-                "searchVal": "Ig",
-                "searchTree": null
-              }
+                {
+                    "fieldName": "ProductName",
+                    "condition": {
+                        "name": "contains",
+                        "isUnary": false,
+                        "iconName": "filter_contains"
+                    },
+                    "conditionName": "contains",
+                    "ignoreCase": true,
+                    "searchVal": "Ig",
+                    "searchTree": null
+                }
             ],
             "operator": 1,
             "returnFields": [
-              "ID",
-              "ProductName"
+                "ID",
+                "ProductName"
             ]
         };
     }
@@ -2334,14 +2411,14 @@ export class NoColumnWidthGridComponent extends BasicGridComponent {
     imports: [IgxGridComponent, IgxColumnComponent, IgxIconComponent, IgxSortHeaderIconDirective, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective]
 })
 export class SortByParityComponent extends GridDeclaredColumnsComponent implements ISortingStrategy {
-     @ViewChild('sortIcon', {read: TemplateRef })
-     public sortIconTemplate: TemplateRef<any>;
+    @ViewChild('sortIcon', { read: TemplateRef })
+    public sortIconTemplate: TemplateRef<any>;
 
-     @ViewChild('sortAscIcon', {read: TemplateRef })
-     public sortAscIconTemplate: TemplateRef<any>;
+    @ViewChild('sortAscIcon', { read: TemplateRef })
+    public sortAscIconTemplate: TemplateRef<any>;
 
-     @ViewChild('sortDescIcon', {read: TemplateRef })
-     public sortDescIconTemplate: TemplateRef<any>;
+    @ViewChild('sortDescIcon', { read: TemplateRef })
+    public sortDescIconTemplate: TemplateRef<any>;
 
     public sort(data: any[], fieldName: string, dir: SortingDirection) {
         const key = fieldName;
@@ -2385,8 +2462,8 @@ export class SortByAnotherColumnComponent extends GridDeclaredColumnsComponent i
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SortOnInitComponent extends GridDeclaredColumnsComponent implements OnInit {
-   public sortingOptions: ISortingOptions = { mode: 'single' };
-   public ngOnInit(): void {
+    public sortingOptions: ISortingOptions = { mode: 'single' };
+    public ngOnInit(): void {
         this.grid.sortingExpressions = [{ fieldName: 'Name', dir: SortingDirection.Asc }];
     }
 }
@@ -2416,7 +2493,7 @@ export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
         }
         const prefix = value.length > 10 ? 'a' : 'b';
         return `${prefix}-${value}`;
-    }
+    };
 
     public formatQuantity = (value: string) => {
         if (!value) {
@@ -2424,7 +2501,7 @@ export class IgxGridFormattedValuesSortingComponent extends BasicGridComponent {
         }
         const prefix = value.length > 10 ? 'c' : 'd';
         return `${prefix}-${value}`;
-    }
+    };
 }
 
 @Component({
@@ -2653,7 +2730,8 @@ export class GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent ex
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridWithEmptyColumnsComponent {
-    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+    @ViewChild('grid1', { static: true })
+    public grid: IgxGridComponent;
 
     public data = SampleTestData.personJobDataFull();
 }
@@ -2666,7 +2744,8 @@ export class GridWithEmptyColumnsComponent {
     imports: [IgxGridComponent]
 })
 export class EmptyGridComponent {
-    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+    @ViewChild('grid1', { static: true })
+    public grid: IgxGridComponent;
 }
 
 /** Issue 9872 */
@@ -2682,14 +2761,13 @@ export class ColumnsAddedOnInitComponent extends BasicGridComponent implements O
         this.columns = [
             { field: 'CompanyName' },
             { field: 'ContactName' },
-            { field: 'Address' }];
+            { field: 'Address' }
+        ];
         this.data = SampleTestData.contactInfoData();
 
         for (let i = 0; i < 3; i++) {
             this.columns.push({ field: i.toString() }); //add columns for the horizon
-            this.data.forEach(
-                c => (c[i] = i * 2500)
-            ); //add random quantity to each customer for each period in the horizon
+            this.data.forEach(c => (c[i] = i * 2500)); //add random quantity to each customer for each period in the horizon
         }
     }
 }
@@ -2743,15 +2821,15 @@ class CustomSummaryWithNullAndZero {
         const result = [];
 
         result.push({
-        key: 'total',
-        label: null,
-        summaryResult: 0,
+            key: 'total',
+            label: null,
+            summaryResult: 0,
         });
 
         result.push({
-        key: 'totalDiscontinued',
-        label: 0,
-        summaryResult: null,
+            key: 'totalDiscontinued',
+            label: 0,
+            summaryResult: null,
         });
         return result;
     }
@@ -2762,15 +2840,15 @@ class CustomSummaryWithUndefinedZeroAndValidNumber {
         const result = [];
 
         result.push({
-        key: 'total',
-        label: undefined,
-        summaryResult: 0,
+            key: 'total',
+            label: undefined,
+            summaryResult: 0,
         });
 
         result.push({
-        key: 'totalDiscontinued',
-        label: 23,
-        summaryResult: undefined,
+            key: 'totalDiscontinued',
+            label: 23,
+            summaryResult: undefined,
         });
         return result;
     }
@@ -2781,15 +2859,15 @@ class CustomSummaryWithUndefinedAndNull {
         const result = [];
 
         result.push({
-        key: 'total',
-        label: undefined,
-        summaryResult: null,
+            key: 'total',
+            label: undefined,
+            summaryResult: null,
         });
 
         result.push({
-        key: 'totalDiscontinued',
-        label: null,
-        summaryResult: undefined,
+            key: 'totalDiscontinued',
+            label: null,
+            summaryResult: undefined,
         });
         return result;
     }
@@ -2807,9 +2885,7 @@ class DiscontinuedSummary {
 
         result.push({
             key: 'totalDiscontinued',
-            label: IgxNumberSummaryOperand.sum(
-                allData.filter((rec) => rec['Discontinued']).map((r) => r[fieldName])
-            ).toString(),
+            label: IgxNumberSummaryOperand.sum(allData.filter((rec) => rec['Discontinued']).map((r) => r[fieldName])).toString(),
             summaryResult: '',
         });
         return result;
@@ -2945,7 +3021,7 @@ export class ObjectCloneStrategy implements IDataCloneStrategy {
         if (data) {
             const clone = Object.defineProperties({}, Object.getOwnPropertyDescriptors(data));
             for (const key in clone) {
-                clonedData[key] = clone[key]
+                clonedData[key] = clone[key];
             }
 
             clonedData['cloned'] = true;

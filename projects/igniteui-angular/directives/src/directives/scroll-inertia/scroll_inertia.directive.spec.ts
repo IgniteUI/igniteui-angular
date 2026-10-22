@@ -1,20 +1,21 @@
 import { Component, Directive, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { IgxScrollInertiaDirective } from './scroll_inertia.directive';
 
 import { wait } from '../../../../test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Scroll Inertia Directive - Rendering', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(ScrollInertiaComponent);
@@ -26,47 +27,89 @@ describe('Scroll Inertia Directive - Rendering', () => {
     });
 
     it('should initialize directive on non-scrollable container.', async () => {
-        expect(fix.componentInstance.scrInertiaDir).toBeDefined('scroll inertia initializing through markup failed');
+        expect(fix.componentInstance.scrInertiaDir, 'scroll inertia initializing through markup failed').toBeDefined();
         await fix.whenStable();
     });
 
     // Unit tests for inertia function.
-    it('inertia should accelerate and then deccelerate vertically.', async () => {
-        pending('This should be tested in the e2e test');
-        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+    // The inertia is driven by requestAnimationFrame, so the frames are faked and advanced one by one.
+    // Each inertia frame moves the scroll position with a constant step until the inertia breakpoint
+    // and then decelerates with an ease-out falloff until the inertia ends.
+    const collectInertiaSteps = (axis: 'scrollTop' | 'scrollLeft'): number[] => {
+        const scrollContainer: HTMLElement = fix.componentInstance.scrollContainer.nativeElement;
+        const steps: number[] = [];
+        let prev = scrollContainer[axis];
+        // Safety cap - the inertia should end well before that
+        for (let i = 0; i < 200 && vi.getTimerCount() > 0; i++) {
+            vi.advanceTimersToNextFrame();
+            const current = scrollContainer[axis];
+            steps.push(current - prev);
+            prev = current;
+        }
+        return steps;
+    };
 
-        // vertical inertia
-        scrInertiaDir._inertiaInit(0, 1);
+    const expectAccelerationThenDeceleration = (steps: number[]) => {
+        // inertiaDuration 0.5 => time step of 0.1 until the cancel threshold of 6 => ~60 animation frames
+        expect(vi.getTimerCount(), 'inertia should stop on its own').toBe(0);
+        expect(steps.length).toBeGreaterThanOrEqual(58);
+        expect(steps.length).toBeLessThanOrEqual(63);
 
-        await wait(1500);
-        const scrTopStepArray = fix.componentInstance.scrTopStepArray;
-        expect(scrTopStepArray.length).toEqual(57);
+        // the inertia moves in the direction of the speed during every frame but the very last ones
+        const moving = steps.slice(0, 50);
+        moving.forEach(step => expect(step).toBeGreaterThan(0));
 
-        const first = scrTopStepArray[0];
-        const mid = scrTopStepArray[9];
-        const end = scrTopStepArray[56];
-
-        expect(first).toBeLessThan(mid);
+        // speed * INERTIA_MULTIPLIER (15) * inertiaStep (1.5) per frame before the breakpoint
+        const first = steps[0];
+        const mid = steps[9];
+        const end = steps[steps.length - 3];
+        expect(Math.abs(first - 22.5)).toBeLessThanOrEqual(1);
+        expect(Math.abs(mid - 22.5)).toBeLessThanOrEqual(1);
         expect(end).toBeLessThan(mid);
+        expect(end).toBeLessThan(first);
+
+        // after the breakpoint the steps should only decrease (1px tolerance for scroll offset snapping)
+        for (let i = 11; i < steps.length; i++) {
+            expect(steps[i]).toBeLessThanOrEqual(steps[i - 1] + 1);
+        }
+        const total = steps.reduce((a, b) => a + b, 0);
+        expect(total).toBeGreaterThan(10 * 22.5);
+    };
+
+    it('inertia should accelerate and then deccelerate vertically.', async () => {
+        await fix.whenStable();
+        const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        const scrollContainer: HTMLElement = fix.componentInstance.scrollContainer.nativeElement;
+        expect(scrollContainer.scrollTop).toBe(0);
+
+        vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
+        try {
+            // vertical inertia
+            scrInertiaDir._inertiaInit(0, 1);
+            const steps = collectInertiaSteps('scrollTop');
+            expectAccelerationThenDeceleration(steps);
+            expect(scrollContainer.scrollLeft).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
     });
 
     it('inertia should accelerate and then deccelerate horizontally.', async () => {
-        pending('This should be tested in the e2e test');
+        await fix.whenStable();
         const scrInertiaDir = fix.componentInstance.scrInertiaDir;
+        const scrollContainer: HTMLElement = fix.componentInstance.scrollContainer.nativeElement;
+        expect(scrollContainer.scrollLeft).toBe(0);
 
-        // horizontal inertia
-        scrInertiaDir._inertiaInit(1, 0);
-
-        await wait(1500);
-        const scrLeftStepArray = fix.componentInstance.scrLeftStepArray;
-        expect(scrLeftStepArray.length).toEqual(57);
-
-        const first = scrLeftStepArray[0];
-        const mid = scrLeftStepArray[9];
-        const end = scrLeftStepArray[56];
-
-        expect(first).toBeLessThan(mid);
-        expect(end).toBeLessThan(mid);
+        vi.useFakeTimers({ toFake: ['requestAnimationFrame', 'cancelAnimationFrame'] });
+        try {
+            // horizontal inertia
+            scrInertiaDir._inertiaInit(1, 0);
+            const steps = collectInertiaSteps('scrollLeft');
+            expectAccelerationThenDeceleration(steps);
+            expect(scrollContainer.scrollTop).toBe(0);
+        } finally {
+            vi.useRealTimers();
+        }
     });
 });
 
@@ -74,7 +117,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     let scrollInertiaDir: IgxTestScrollInertiaDirective;
     let scrollContainerMock;
 
-    beforeEach(() => {
+    beforeEach(async () => {
         scrollContainerMock = {
             scrollLeft: 0,
             scrollTop: 0,
@@ -82,12 +125,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
             children: [{ style: { width: '50px', height: '500px', scrollHeight: 100 } }]
         };
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             providers: [
                 { provide: ElementRef, useValue: null },
                 IgxTestScrollInertiaDirective
             ]
-        });
+        }).compileComponents();
 
         scrollInertiaDir = TestBed.inject(IgxTestScrollInertiaDirective);
         scrollInertiaDir.IgxScrollInertiaScrollContainer = scrollContainerMock;
@@ -96,6 +139,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 
     afterEach(() => {
         scrollInertiaDir.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
@@ -186,121 +230,125 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 
     // Unit tests for touch events with inertia - Chrome, FireFox, Safari.
-    it('should change scroll top for related scrollbar on touch start/move/end', fakeAsync(() => {
+    it('should change scroll top for related scrollbar on touch start/move/end', () => {
+        // the inertia velocity depends on the elapsed time, so control it with fake timers
+        vi.useFakeTimers();
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         evt = {
             touches: [{
-                pageX: 0,
-                pageY: -100
-            }],
+                    pageX: 0,
+                    pageY: -100
+                }],
             preventDefault: () => { }
         };
-        tick(10);
+        vi.advanceTimersByTime(10);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
         // wait for inertia to complete
-        tick(300);
+        vi.advanceTimersByTime(300);
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(3000);
-    }));
+    });
 
-    it('should stop inertia if another touch event is initiated while inertia is executing.', fakeAsync(() => {
+    it('should stop inertia if another touch event is initiated while inertia is executing.', async () => {
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         evt = {
             touches: [{
-                pageX: 0,
-                pageY: -100
-            }],
+                    pageX: 0,
+                    pageY: -100
+                }],
             preventDefault: () => { }
         };
-        tick(10);
+        await wait(16);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
-        tick(10);
+        await wait(16);
 
         // don't wait for inertia to end. Instead start another touch interaction.
         evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         expect(scrollContainerMock.scrollTop).toBeLessThan(1000);
-    }));
+    });
 
-    it('should honor the defined swipeToleranceX.', fakeAsync(() => {
+    it('should honor the defined swipeToleranceX.', async () => {
         // if scroll is initiated on Y and on X within the defined tolerance no scrolling should occur on X.
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
         evt = {
             touches: [{
-                pageX: -10,
-                pageY: -50
-            }],
+                    pageX: -10,
+                    pageY: -50
+                }],
             preventDefault: () => { }
         };
-        tick(10);
+        await wait(16);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
 
-        tick(300);
+        await wait(16);
         expect(scrollContainerMock.scrollLeft).toEqual(0);
         expect(scrollContainerMock.scrollTop).toBeGreaterThan(100);
-    }));
+    });
 
-    it('should change scroll left for related scrollbar on touch start/move/end', fakeAsync(() => {
+    it('should change scroll left for related scrollbar on touch start/move/end', () => {
+        // the inertia velocity depends on the elapsed time, so control it with fake timers
+        vi.useFakeTimers();
         let evt = {
             touches: [{
-                pageX: 0,
-                pageY: 0
-            }],
+                    pageX: 0,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
         scrollInertiaDir.onTouchStart(evt);
 
         evt = {
             touches: [{
-                pageX: -100,
-                pageY: 0
-            }],
+                    pageX: -100,
+                    pageY: 0
+                }],
             preventDefault: () => { }
         };
-        tick(10);
+        vi.advanceTimersByTime(10);
         scrollInertiaDir.onTouchMove(evt);
 
         scrollInertiaDir.onTouchEnd(evt);
         // wait for inertia to complete
-        tick(300);
+        vi.advanceTimersByTime(300);
         expect(scrollContainerMock.scrollLeft).toBeGreaterThan(3000);
 
-    }));
+    });
     it('should not throw errors on touch start/move/end if no scrollbar is associated.', () => {
         scrollInertiaDir.IgxScrollInertiaScrollContainer = null;
         const evt = { preventDefault: () => { } };
@@ -315,14 +363,14 @@ describe('Scroll Inertia Directive - Child scrolling', () => {
     let directive: IgxTestScrollInertiaDirective;
     const elements: HTMLElement[] = [];
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(ScrollInertiaComponent);
@@ -359,16 +407,16 @@ describe('Scroll Inertia Directive - Child scrolling', () => {
         const evt = wheelEventOver(scrollable);
 
         // At the top there is room to scroll down, but none to scroll up.
-        expect(directive.didChildScroll(evt, 0, 10)).toBeTruthy('scrolling down from the top');
-        expect(directive.didChildScroll(evt, 0, -10)).toBeFalsy('scrolling up from the top');
+        expect(directive.didChildScroll(evt, 0, 10), 'scrolling down from the top').toBeTruthy();
+        expect(directive.didChildScroll(evt, 0, -10), 'scrolling up from the top').toBeFalsy();
 
         // At the bottom it is the other way round.
         scrollable.scrollTop = scrollable.scrollHeight - scrollable.clientHeight;
-        expect(directive.didChildScroll(evt, 0, 10)).toBeFalsy('scrolling down from the bottom');
-        expect(directive.didChildScroll(evt, 0, -10)).toBeTruthy('scrolling up from the bottom');
+        expect(directive.didChildScroll(evt, 0, 10), 'scrolling down from the bottom').toBeFalsy();
+        expect(directive.didChildScroll(evt, 0, -10), 'scrolling up from the bottom').toBeTruthy();
 
         // A wheel event with no vertical delta never consults the vertical axis.
-        expect(directive.didChildScroll(evt, 0, 0)).toBeFalsy('no vertical delta');
+        expect(directive.didChildScroll(evt, 0, 0), 'no vertical delta').toBeFalsy();
     });
 
     it('should report a child that can still scroll horizontally', () => {
@@ -376,31 +424,31 @@ describe('Scroll Inertia Directive - Child scrolling', () => {
             'width: 100px; height: 100px; overflow-x: auto; overflow-y: hidden;', 'width: 500px; height: 50px;');
         const evt = wheelEventOver(scrollable);
 
-        expect(directive.didChildScroll(evt, 10, 0)).toBeTruthy('scrolling right from the start');
-        expect(directive.didChildScroll(evt, -10, 0)).toBeFalsy('scrolling left from the start');
+        expect(directive.didChildScroll(evt, 10, 0), 'scrolling right from the start').toBeTruthy();
+        expect(directive.didChildScroll(evt, -10, 0), 'scrolling left from the start').toBeFalsy();
 
         scrollable.scrollLeft = scrollable.scrollWidth - scrollable.clientWidth;
-        expect(directive.didChildScroll(evt, 10, 0)).toBeFalsy('scrolling right from the end');
-        expect(directive.didChildScroll(evt, -10, 0)).toBeTruthy('scrolling left from the end');
+        expect(directive.didChildScroll(evt, 10, 0), 'scrolling right from the end').toBeFalsy();
+        expect(directive.didChildScroll(evt, -10, 0), 'scrolling left from the end').toBeTruthy();
 
-        expect(directive.didChildScroll(evt, 0, 0)).toBeFalsy('no horizontal delta');
+        expect(directive.didChildScroll(evt, 0, 0), 'no horizontal delta').toBeFalsy();
     });
 
     it('should ignore children that cannot scroll', () => {
         // Overflowing content that is clipped rather than scrolled.
         const hidden = createElement(
             'width: 100px; height: 100px; overflow: hidden;', 'width: 500px; height: 500px;');
-        expect(directive.didChildScroll(wheelEventOver(hidden), 10, 10))
-            .toBeFalsy('overflow is neither auto nor scroll');
+        expect(directive.didChildScroll(wheelEventOver(hidden), 10, 10), 'overflow is neither auto nor scroll')
+            .toBeFalsy();
 
         // Content that fits, so there is no overflow to begin with.
         const fits = createElement(
             'width: 100px; height: 100px; overflow: auto;', 'width: 10px; height: 10px;');
-        expect(directive.didChildScroll(wheelEventOver(fits), 10, 10))
-            .toBeFalsy('nothing overflows');
+        expect(directive.didChildScroll(wheelEventOver(fits), 10, 10), 'nothing overflows')
+            .toBeFalsy();
 
         // An empty path has nothing to look at.
-        expect(directive.didChildScroll(wheelEventOver(), 10, 10)).toBeFalsy('empty path');
+        expect(directive.didChildScroll(wheelEventOver(), 10, 10), 'empty path').toBeFalsy();
     });
 
     it('should stop looking once it reaches the display container', () => {
@@ -409,10 +457,10 @@ describe('Scroll Inertia Directive - Child scrolling', () => {
         const displayContainer = createElement('width: 100px; height: 100px;', '', 'igx-display-container');
 
         // Anything below the display container belongs to the virtualized grid itself and is skipped.
-        expect(directive.didChildScroll(wheelEventOver(displayContainer, scrollable), 0, 10))
-            .toBeFalsy('the scrollable ancestor is above the display container');
-        expect(directive.didChildScroll(wheelEventOver(scrollable, displayContainer), 0, 10))
-            .toBeTruthy('the scrollable child is below it');
+        expect(directive.didChildScroll(wheelEventOver(displayContainer, scrollable), 0, 10), 'the scrollable ancestor is above the display container')
+            .toBeFalsy();
+        expect(directive.didChildScroll(wheelEventOver(scrollable, displayContainer), 0, 10), 'the scrollable child is below it')
+            .toBeTruthy();
     });
 });
 
@@ -460,8 +508,10 @@ export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
     imports: [IgxTestScrollInertiaDirective]
 })
 export class ScrollInertiaComponent implements OnInit {
-    @ViewChild('container', { static: true }) public container: ElementRef;
-    @ViewChild('scrBar', { static: true }) public scrollContainer: ElementRef;
+    @ViewChild('container', { static: true })
+    public container: ElementRef;
+    @ViewChild('scrBar', { static: true })
+    public scrollContainer: ElementRef;
     @ViewChild('scrInertiaContainer', { read: IgxTestScrollInertiaDirective, static: true })
     public scrInertiaDir: IgxTestScrollInertiaDirective;
 

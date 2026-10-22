@@ -1,7 +1,8 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { ConditionalFormattingType, IFormatColors, IgxConditionalFormattingDirective } from './conditional-formatting.directive';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxConditionalFormattingDirective', () => {
     let directive: IgxConditionalFormattingDirective;
@@ -12,15 +13,15 @@ describe('IgxConditionalFormattingDirective', () => {
             rangeSelected: new Subject(),
             columnSelectionChanging: new Subject(),
             cellEdit: new Subject(),
-            getSelectedData: jasmine.createSpy('getSelectedData').and.returnValue([]),
-            getSelectedColumnsData: jasmine.createSpy('getSelectedColumnsData').and.returnValue([]),
-            getSelectedRanges: jasmine.createSpy('getSelectedRanges').and.returnValue([]),
-            selectedColumns: jasmine.createSpy('selectedColumns').and.returnValue([]),
+            getSelectedData: vi.fn().mockReturnValue([]),
+            getSelectedColumnsData: vi.fn().mockReturnValue([]),
+            getSelectedRanges: vi.fn().mockReturnValue([]),
+            selectedColumns: vi.fn().mockReturnValue([]),
             visibleColumns: [],
             data: [],
-            cdr: { detectChanges: jasmine.createSpy('detectChanges') },
-            notifyChanges: jasmine.createSpy('notifyChanges'),
-            getColumnByName: jasmine.createSpy('getColumnByName').and.returnValue({ visibleIndex: 0 })
+            cdr: { detectChanges: vi.fn() },
+            notifyChanges: vi.fn(),
+            getColumnByName: vi.fn().mockReturnValue({ visibleIndex: 0 })
         };
 
         TestBed.configureTestingModule({
@@ -34,6 +35,7 @@ describe('IgxConditionalFormattingDirective', () => {
     });
 
     afterEach(() => {
+        vi.useRealTimers();
         TestBed.resetTestingModule();
     });
 
@@ -47,35 +49,35 @@ describe('IgxConditionalFormattingDirective', () => {
 
     describe('isWithInFormattedRange', () => {
         it('should return false when no range is set', () => {
-            expect(directive.isWithInFormattedRange(0, 0)).toBeFalse();
+            expect(directive.isWithInFormattedRange(0, 0)).toBe(false);
         });
 
         it('should return true for a row and column that are in the formatted range', () => {
             (directive as any).formatedRange = new Map([[0, new Set([1])]]);
-            expect(directive.isWithInFormattedRange(0, 1)).toBeTrue();
+            expect(directive.isWithInFormattedRange(0, 1)).toBe(true);
         });
 
         it('should return false when the row is not in the range', () => {
             (directive as any).formatedRange = new Map([[0, new Set([1])]]);
-            expect(directive.isWithInFormattedRange(1, 1)).toBeFalse();
+            expect(directive.isWithInFormattedRange(1, 1)).toBe(false);
         });
 
         it('should return false when the column is not in the range', () => {
             (directive as any).formatedRange = new Map([[0, new Set([1])]]);
-            expect(directive.isWithInFormattedRange(0, 2)).toBeFalse();
+            expect(directive.isWithInFormattedRange(0, 2)).toBe(false);
         });
 
         it('should resolve column index by name when colID is a string', () => {
             (directive as any).formatedRange = new Map([[0, new Set([0])]]);
-            mockGrid.getColumnByName.and.returnValue({ visibleIndex: 0 });
-            expect(directive.isWithInFormattedRange(0, 'colName')).toBeTrue();
+            mockGrid.getColumnByName.mockReturnValue({ visibleIndex: 0 });
+            expect(directive.isWithInFormattedRange(0, 'colName')).toBe(true);
             expect(mockGrid.getColumnByName).toHaveBeenCalledWith('colName');
         });
     });
 
     describe('determineFormatters', () => {
         it('should include numeric formatters for numeric-only data', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }]);
             let emitted: string[];
             directive.formattersReady.subscribe(f => emitted = f);
 
@@ -87,7 +89,7 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should include text formatters for text-only data', () => {
-            mockGrid.getSelectedData.and.returnValue([{ name: 'Alice' }, { name: 'Bob' }]);
+            mockGrid.getSelectedData.mockReturnValue([{ name: 'Alice' }, { name: 'Bob' }]);
             let emitted: string[];
             directive.formattersReady.subscribe(f => emitted = f);
 
@@ -98,7 +100,7 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should include both Data Bars and Text Contains for mixed data', () => {
-            mockGrid.getSelectedData.and.returnValue([{ name: 'Alice', val: 10 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ name: 'Alice', val: 10 }]);
             let emitted: string[];
             directive.formattersReady.subscribe(f => emitted = f);
 
@@ -109,7 +111,7 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should use column data when fromColumn is true', () => {
-            mockGrid.getSelectedColumnsData.and.returnValue([{ val: 5 }]);
+            mockGrid.getSelectedColumnsData.mockReturnValue([{ val: 5 }]);
             directive.determineFormatters(true);
             expect(mockGrid.getSelectedColumnsData).toHaveBeenCalled();
             expect(mockGrid.getSelectedData).not.toHaveBeenCalled();
@@ -264,27 +266,27 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should return info color for duplicate values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
             expect(directive.duplicates.backgroundColor(null, 0, 10, 0)).toBe(directive.formatColors.info);
         });
 
         it('should return empty string for unique values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
             expect(directive.duplicates.backgroundColor(null, 0, 10, 0)).toBe('');
         });
 
         it('should return text color for duplicate values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
             expect(directive.duplicates.color(null, 0, 10, 0)).toBe(directive.formatColors.text);
         });
 
         it('should return empty string color for unique values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
             expect(directive.duplicates.color(null, 0, 10, 0)).toBe('');
         });
 
         it('should return undefined when cell is outside the formatted range', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 10 }]);
             expect(directive.duplicates.backgroundColor(null, 0, 10, 5)).toBeUndefined();
         });
     });
@@ -295,27 +297,27 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should return info color for unique values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
             expect(directive.uniques.backgroundColor(null, 0, 10, 0)).toBe(directive.formatColors.info);
         });
 
         it('should return empty string for duplicate values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
             expect(directive.uniques.backgroundColor(null, 0, 10, 0)).toBe('');
         });
 
         it('should return text color for unique values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }, { val: 30 }]);
             expect(directive.uniques.color(null, 0, 10, 0)).toBe(directive.formatColors.text);
         });
 
         it('should return empty string color for duplicate values', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 10 }, { val: 20 }]);
             expect(directive.uniques.color(null, 0, 10, 0)).toBe('');
         });
 
         it('should return undefined when cell is outside the formatted range', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }]);
             expect(directive.uniques.backgroundColor(null, 0, 10, 5)).toBeUndefined();
         });
     });
@@ -328,8 +330,8 @@ describe('IgxConditionalFormattingDirective', () => {
             col1 = { visibleIndex: 1, cellStyles: undefined };
             col2 = { visibleIndex: 2, cellStyles: undefined };
             mockGrid.visibleColumns = [col0, col1, col2];
-            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 1 }]);
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 20 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 1 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 20 }]);
             mockGrid.data = [{ val: 10 }, { val: 20 }];
         });
 
@@ -355,10 +357,10 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should build range from selectedColumns when no cell ranges exist', () => {
-            mockGrid.getSelectedRanges.and.returnValue([]);
-            mockGrid.selectedColumns.and.returnValue([{ visibleIndex: 1 }, { visibleIndex: 3 }]);
-            mockGrid.getSelectedData.and.returnValue([]);
-            mockGrid.getSelectedColumnsData.and.returnValue([{ val: 5 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([]);
+            mockGrid.selectedColumns.mockReturnValue([{ visibleIndex: 1 }, { visibleIndex: 3 }]);
+            mockGrid.getSelectedData.mockReturnValue([]);
+            mockGrid.getSelectedColumnsData.mockReturnValue([{ val: 5 }]);
             mockGrid.data = [{ val: 5 }, { val: 10 }];
             const colA = { visibleIndex: 1, cellStyles: undefined };
             const colB = { visibleIndex: 3, cellStyles: undefined };
@@ -399,8 +401,8 @@ describe('IgxConditionalFormattingDirective', () => {
 
     describe('recalcCachedValues', () => {
         it('should set _startColumn and _endColumn from selected ranges', () => {
-            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 2, columnStart: 1, columnEnd: 3 }]);
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 50 }, { val: 30 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 2, columnStart: 1, columnEnd: 3 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 50 }, { val: 30 }]);
 
             directive.recalcCachedValues(true);
 
@@ -409,8 +411,8 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should set _startColumn and _endColumn from selected columns when no ranges exist', () => {
-            mockGrid.getSelectedRanges.and.returnValue([]);
-            mockGrid.selectedColumns.and.returnValue([{ visibleIndex: 2 }, { visibleIndex: 4 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([]);
+            mockGrid.selectedColumns.mockReturnValue([{ visibleIndex: 2 }, { visibleIndex: 4 }]);
 
             directive.recalcCachedValues(true);
 
@@ -419,8 +421,8 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should set both _startColumn and _endColumn to the same index for a single column', () => {
-            mockGrid.getSelectedRanges.and.returnValue([]);
-            mockGrid.selectedColumns.and.returnValue([{ visibleIndex: 5 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([]);
+            mockGrid.selectedColumns.mockReturnValue([{ visibleIndex: 5 }]);
 
             directive.recalcCachedValues(true);
 
@@ -429,8 +431,8 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should return early when no ranges and no columns are selected', () => {
-            mockGrid.getSelectedRanges.and.returnValue([]);
-            mockGrid.selectedColumns.and.returnValue([]);
+            mockGrid.getSelectedRanges.mockReturnValue([]);
+            mockGrid.selectedColumns.mockReturnValue([]);
 
             directive.recalcCachedValues(true);
 
@@ -438,8 +440,8 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should calculate _maxValue and _minValue from selected numeric data', () => {
-            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 0 }]);
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: -5 }, { val: 30 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 0 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: -5 }, { val: 30 }]);
 
             directive.recalcCachedValues(true);
 
@@ -448,8 +450,8 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should set _minValue to 0 when all values are positive', () => {
-            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 }]);
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 30 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 1, columnStart: 0, columnEnd: 0 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 30 }]);
 
             directive.recalcCachedValues(true);
 
@@ -489,7 +491,7 @@ describe('IgxConditionalFormattingDirective', () => {
     describe('greaterThan formatter', () => {
         beforeEach(() => {
             (directive as any).formatedRange = new Map([[0, new Set([0])]]);
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }, { val: 30 }, { val: 50 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }, { val: 30 }, { val: 50 }]);
         });
 
         it('should return info color for values above the average', () => {
@@ -525,7 +527,7 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should call determineFormatters(false) when rangeSelected fires', () => {
-            mockGrid.getSelectedData.and.returnValue([{ val: 10 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 10 }]);
             let emitted: string[];
             directive.formattersReady.subscribe(f => emitted = f);
 
@@ -535,17 +537,18 @@ describe('IgxConditionalFormattingDirective', () => {
             expect(emitted.length).toBeGreaterThan(0);
         });
 
-        it('should call determineFormatters(true) when columnSelectionChanging fires after debounce', fakeAsync(() => {
-            mockGrid.getSelectedColumnsData.and.returnValue([{ val: 10 }]);
+        it('should call determineFormatters(true) when columnSelectionChanging fires after debounce', () => {
+            vi.useFakeTimers();
+            mockGrid.getSelectedColumnsData.mockReturnValue([{ val: 10 }]);
             let emitted: string[];
             directive.formattersReady.subscribe(f => emitted = f);
 
             mockGrid.columnSelectionChanging.next({ newSelection: ['col1'], oldSelection: [] });
-            tick(200);
+            vi.advanceTimersByTime(200);
 
             expect(emitted).toBeDefined();
             expect(emitted.length).toBeGreaterThan(0);
-        }));
+        });
     });
 
     describe('ngOnDestroy', () => {
@@ -570,8 +573,8 @@ describe('IgxConditionalFormattingDirective', () => {
             (directive as any)._endColumn = 0;
             (directive as any)._maxValue = 100;
             (directive as any)._minValue = 0;
-            mockGrid.getSelectedRanges.and.returnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
-            mockGrid.getSelectedData.and.returnValue([{ val: 50 }]);
+            mockGrid.getSelectedRanges.mockReturnValue([{ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 }]);
+            mockGrid.getSelectedData.mockReturnValue([{ val: 50 }]);
 
             const col0 = { visibleIndex: 0, cellStyles: undefined };
             mockGrid.visibleColumns = [col0];
@@ -588,7 +591,7 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should skip processing when newValue equals oldValue', () => {
-            mockGrid.notifyChanges.calls.reset();
+            mockGrid.notifyChanges.mockClear();
 
             mockGrid.cellEdit.next({
                 newValue: 50,
@@ -601,7 +604,7 @@ describe('IgxConditionalFormattingDirective', () => {
 
         it('should skip processing when no formatter is active', () => {
             directive.formatter = undefined;
-            mockGrid.notifyChanges.calls.reset();
+            mockGrid.notifyChanges.mockClear();
 
             mockGrid.cellEdit.next({
                 newValue: 80,
@@ -613,7 +616,7 @@ describe('IgxConditionalFormattingDirective', () => {
         });
 
         it('should skip processing when edited cell is outside the formatted range', () => {
-            mockGrid.notifyChanges.calls.reset();
+            mockGrid.notifyChanges.mockClear();
 
             mockGrid.cellEdit.next({
                 newValue: 80,
