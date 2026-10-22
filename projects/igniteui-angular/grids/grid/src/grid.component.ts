@@ -2,7 +2,7 @@ import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
     OnInit, AfterViewInit, ContentChildren, CUSTOM_ELEMENTS_SCHEMA, booleanAttribute,
-    IterableDiffer, ViewEncapsulation,
+    IterableDiffer, ViewEncapsulation, DestroyRef, inject,
 } from '@angular/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
 import {
@@ -978,6 +978,20 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * Destroys the cached detail views. Views detached from dead row outlets
+     * live only in this cache, so nothing else would ever destroy them.
+     */
+    private destroyDetailViews(): void {
+        for (const { view } of this.childDetailTemplates.values()) {
+            if (!view.destroyed) {
+                view.destroy();
+            }
+        }
+
+        this.childDetailTemplates.clear();
+    }
+
+    /**
      * @hidden @internal
      */
     public get iconTemplate() {
@@ -986,6 +1000,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else {
             return this.headerCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
+    }
+
+    constructor() {
+        super();
+
+        // Detail views outlive their row outlets, so the grid destroys them itself.
+        inject(DestroyRef).onDestroy(() => this.destroyDetailViews());
     }
 
     /**

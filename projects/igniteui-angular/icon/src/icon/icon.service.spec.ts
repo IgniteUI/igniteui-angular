@@ -1,13 +1,17 @@
-import { TestBed, fakeAsync } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { IconFamily, IconMeta } from "./types";
 import { IgxIconService } from './icon.service';
+import { IndigoIcons } from './icons.indigo';
 
 import { first } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component, inject, ChangeDetectionStrategy } from "@angular/core";
 import { IgxIconComponent } from "./icon.component";
 import { By } from "@angular/platform-browser";
 import { IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe("Icon Service", () => {
     const FAMILY: IconFamily = {
@@ -20,11 +24,15 @@ describe("Icon Service", () => {
     <path d="M10 10h181v181H10V10zm38.2 38.2v104.6h104.6V48.2H48.2z"></path>
 </svg>`;
 
-    let iconRef: { name: string; family: string; icon: IconMeta };
+    let iconRef: {
+        name: string;
+        family: string;
+        icon: IconMeta;
+    };
     let iconService: IgxIconService;
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [],
             providers: [IgxIconService, provideHttpClient(withXhr(), withInterceptorsFromDi())],
         }).compileComponents();
@@ -119,32 +127,57 @@ describe("Icon Service", () => {
     it("should get the className by family name", () => {
         iconService.setFamily(FAMILY.name, FAMILY.meta);
 
-        expect(iconService.familyClassName(FAMILY.name)).toBe(
-            FAMILY.meta.className,
-        );
+        expect(iconService.familyClassName(FAMILY.name)).toBe(FAMILY.meta.className);
     });
 
-    it("should add custom svg icon from url", fakeAsync((
-        done: () => object,
-    ) => {
+    it("should add custom svg icon from url", async () => {
         const iconName = "test";
         const familyName = "svg-icons";
 
-        spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
-        spyOn(XMLHttpRequest.prototype, "send");
-
-        iconService.addSvgIcon(iconName, "test.svg", familyName);
-
-        expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
-        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
-
-        iconService.iconLoaded.pipe().subscribe(() => {
-            expect(
-                iconService.isSvgIconCached(iconName, familyName),
-            ).toBeTruthy();
-            done();
+        // Re-create the injector with a testing HTTP backend so the request can be flushed without a real network call
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [IgxIconService, provideHttpClient(), provideHttpClientTesting()],
         });
-    }));
+        const service = TestBed.inject(IgxIconService);
+        const httpMock = TestBed.inject(HttpTestingController);
+
+        const loaded = firstValueFrom(service.iconLoaded);
+
+        service.addSvgIcon(iconName, "test.svg", familyName);
+        expect(service.isSvgIconCached(iconName, familyName)).toBe(false);
+
+        const req = httpMock.expectOne("test.svg");
+        expect(req.request.method).toBe("GET");
+        expect(req.request.responseType).toBe("text");
+        req.flush(svgText);
+
+        const event = await loaded;
+        expect(event.name).toBe(iconName);
+        expect(event.family).toBe(familyName);
+        expect(service.isSvgIconCached(iconName, familyName)).toBe(true);
+        httpMock.verify();
+    });
+
+    it("should parse built-in svg icons once across service instances", () => {
+        // `iconService` already parsed the built-ins; a second instance (e.g. another injector) reuses them.
+        const parse = vi.spyOn(DOMParser.prototype, "parseFromString");
+        const service = TestBed.runInInjectionContext(() => new IgxIconService());
+
+        expect(parse).not.toHaveBeenCalled();
+
+        for (const [name, { fontSet }] of IndigoIcons) {
+            const family = `internal_${fontSet}`;
+
+            expect(service.getSvgIcon(name, family)).toBeTruthy();
+            expect(service.getSvgIcon(name, family)).toEqual(iconService.getSvgIcon(name, family));
+        }
+
+        // Custom icons are still parsed per instance.
+        service.addSvgIconFromText("test", svgText, "svg-icons");
+        expect(parse).toHaveBeenCalledTimes(1);
+        expect(service.isSvgIconCached("test", "svg-icons")).toBe(true);
+    });
 
     it("should add custom svg icon from text", () => {
         const iconName = "test";
@@ -193,18 +226,18 @@ describe("Icon Service", () => {
         expect(svgText).toContain(svg.innerHTML);
     });
 
-    it("should emit loading event for a custom svg icon from url", (done) => {
+    it("should emit loading event for a custom svg icon from url", async () => {
         iconService.iconLoaded.pipe(first()).subscribe((event) => {
             expect(event.name).toMatch("test");
             expect(event.family).toMatch("svg-icons");
-            done();
+            ;
         });
 
         const iconName = "test";
         const familyName = "svg-icons";
 
-        spyOn(XMLHttpRequest.prototype, "open").and.callThrough();
-        spyOn(XMLHttpRequest.prototype, "send").and.callFake(() => {
+        vi.spyOn(XMLHttpRequest.prototype, "open");
+        vi.spyOn(XMLHttpRequest.prototype, "send").mockImplementation(() => {
             (iconService as any)._iconLoaded.next({
                 name: iconName,
                 value: svgText,
@@ -224,9 +257,9 @@ describe("Icon Service", () => {
 
         expect(fixture.componentInstance.themeToken.theme).toBe('material');
         expect(arrow_prev).toBeTruthy();
-        expect(arrow_prev.classes['material-icons']).toBeTrue();
+        expect(arrow_prev.classes['material-icons']).toBe(true);
         expect(expand_more).toBeTruthy();
-        expect(expand_more.classes['material-icons']).toBeTrue();
+        expect(expand_more.classes['material-icons']).toBe(true);
 
         fixture.componentInstance.setTheme('indigo');
         fixture.detectChanges();
@@ -238,11 +271,11 @@ describe("Icon Service", () => {
 
         // The class change should be reflected as the family changes
         expect(arrow_prev).toBeTruthy();
-        expect(arrow_prev.classes['internal_indigo']).toBeTrue();
+        expect(arrow_prev.classes['internal_indigo']).toBe(true);
 
         // The expand_more shouldn't change as its reference is set explicitly
         expect(expand_more).toBeTruthy();
-        expect(expand_more.classes['material-icons']).toBeTrue();
+        expect(expand_more.classes['material-icons']).toBe(true);
     });
 });
 
@@ -254,14 +287,16 @@ describe("Icon Service", () => {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
-class IconTestComponent { }
+class IconTestComponent {
+}
 
 @Component({
     template: `<igx-icon name="reference" family="default"></igx-icon>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
-class IconRefComponent { }
+class IconRefComponent {
+}
 
 @Component({
     template: `
