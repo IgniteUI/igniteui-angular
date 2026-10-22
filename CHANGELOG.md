@@ -32,6 +32,8 @@ All notable changes for each version of this project will be documented in this 
     - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
     - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
+    - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxStepperComponent`
     - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
     - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
@@ -48,6 +50,8 @@ All notable changes for each version of this project will be documented in this 
     - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
 - `IgxGridExcelStyleFilteringComponent`
     - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+- **Forms**
+    - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` bound to Signal Forms now show the success state again when edited to another valid value after a blur (#17648).
 
 ## 22.2.2
 
