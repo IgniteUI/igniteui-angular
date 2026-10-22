@@ -15,6 +15,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxStepperComponent`
     - In linear mode, the steps after the first invalid step that is not `optional` or `disabled` are disabled, wherever the active step is, as in the Ignite UI for Web Components stepper. Previously only the active step and the steps after it were checked, so an invalid `optional` active step disabled the steps after it, and an invalid step before the active one did not. The disabled steps are also recalculated when the `optional` state of a step changes, and the step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
+- `IgxSplitterComponent`
+    - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
 
 ### Bug Fixes
 
@@ -41,6 +43,15 @@ All notable changes for each version of this project will be documented in this 
     - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
     - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared. A custom `matchFn` now always receives a string, with an empty string passed when `inputValue` is `null` or `undefined`. The `IgxFilterOptions.inputValue` type now includes `null` and `undefined`.
     - The pipe now returns the items as they are, instead of `undefined`, when they are empty, `null` or `undefined`, or when no options are provided. The `filtered` event now emits an empty `filteredItems` array for empty items.
+- `IgxSplitterComponent`
+    - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
+    - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
+    - Releasing a dragged splitter bar now always applies the pane sizes and emits `resizeEnd`, including when the pointer is released at the drag start point.
+    - A splitter bar dragged across the resize direction no longer moves away from its position.
+    - `Ctrl` + arrow keys no longer collapse panes when `nonCollapsible` is set.
+    - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
+- `IgxSplitterPaneComponent`
+    - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
 
 ## 22.2.3
 
