@@ -812,6 +812,75 @@ describe('Elements: ', () => {
             expect(outerGroup.selected).toBe(true);
         });
 
+        it('should deselect a partially selected column group', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            const columnEl1 = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl1.field = 'ProductID';
+            const columnEl2 = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl2.field = 'ProductName';
+            groupEl.append(columnEl1, columnEl2);
+            gridEl.appendChild(groupEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const column1 = (await columnEl1.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            const column2 = (await columnEl2.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            column1.selected = true;
+            expect(group.children.toArray()).toEqual([column1, column2]);
+            expect(groupEl.selected).toBe(false);
+
+            groupEl.selected = false;
+
+            expect(column1.selected).toBe(false);
+            expect(column2.selected).toBe(false);
+            expect(grid.selectedColumns()).toEqual([]);
+        });
+
+        it('should apply a group selection set while a nested group is still resolving its child columns', async () => {
+            const outerGroupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            const leafColumnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            leafColumnEl.field = 'ProductID';
+            const innerGroupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            const innerColumnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            innerColumnEl.field = 'ProductName';
+            innerGroupEl.appendChild(innerColumnEl);
+            outerGroupEl.append(leafColumnEl, innerGroupEl);
+
+            // hold back the nested group's query update to keep the hierarchy partially resolved:
+            const innerStrategy = innerGroupEl.ngElementStrategy;
+            const scheduleQueryUpdate = innerStrategy.scheduleQueryUpdate.bind(innerStrategy);
+            const pendingInnerUpdates: string[] = [];
+            const scheduleSpy = vi.spyOn(innerStrategy, 'scheduleQueryUpdate').mockImplementation((query: string) => {
+                pendingInnerUpdates.push(query);
+            });
+            gridEl.appendChild(outerGroupEl);
+
+            const outerGroup = (await outerGroupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const innerGroup = (await innerGroupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const leafColumn = (await leafColumnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            const innerColumn = (await innerColumnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(outerGroup.children.toArray()).toEqual([leafColumn, innerGroup]);
+            expect(innerGroup.children.length).toBe(0);
+            expect(pendingInnerUpdates.length).toBeGreaterThan(0);
+
+            outerGroupEl.selected = true;
+            // only the resolved leaf is selected so far, making the outer group appear fully selected:
+            expect(leafColumn.selected).toBe(true);
+            expect(outerGroup.selected).toBe(true);
+
+            scheduleSpy.mockRestore();
+            pendingInnerUpdates.forEach(query => scheduleQueryUpdate(query));
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(innerGroup.children.toArray()).toEqual([innerColumn]);
+            expect(leafColumn.selected).toBe(true);
+            expect(innerColumn.selected).toBe(true);
+            expect(outerGroup.selected).toBe(true);
+        });
+
         it('should hide opened toggle components in the grid on grid scroll', () => {
             const createToggle = () => {
                 const toggle = document.createElement('div') as HTMLDivElement & { hide: () => void };

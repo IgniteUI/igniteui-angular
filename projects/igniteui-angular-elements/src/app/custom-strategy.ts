@@ -34,8 +34,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
     private maxEventProxyDepth = 3;
     /**
-     * Additional property values set before content queries resolve that had no effect,
-     * because they depend on content children (e.g. column group `selected`). Retried once content queries resolve.
+     * Additional property values set before content queries resolve, which may depend on
+     * content children (e.g. column group `selected`). Retried once content queries resolve.
      */
     private pendingContentValues = new Map<string, any>();
     /** Whether the initial content queries of the component have resolved */
@@ -274,7 +274,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         const componentConfig = this.config?.find(x => x.component === this._component);
 
-        if (value === componentRef.instance[property]) {
+        // writable additional properties may have derived getters (e.g. column group `selected`),
+        // so a matching value doesn't mean the setter has nothing to update:
+        if (this._inputMap.has(property) && value === componentRef.instance[property]) {
             return;
         }
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
@@ -315,8 +317,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (!this._inputMap.has(property)) {
             // writable additional properties aren't inputs and can't be set through `setInput`
             componentRef.instance[property] = value;
-            if (!this.contentResolved && componentRef.instance[property] !== value) {
-                // depends on content children that aren't resolved yet, retry once they are:
+            if (!this.contentResolved) {
+                // may depend on content children (or their descendants) that aren't resolved yet.
+                // A matching getter can't confirm the value reached all of them, so retry once they are:
                 this.pendingContentValues.set(property, value);
             }
             componentRef.changeDetectorRef.markForCheck();
