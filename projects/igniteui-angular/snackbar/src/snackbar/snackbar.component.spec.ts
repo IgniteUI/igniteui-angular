@@ -98,6 +98,17 @@ describe('IgxSnackbar', () => {
         expect(snackbar.clicked.emit).toHaveBeenCalledWith(snackbar);
     });
 
+    it('should render the action button with type="button" to prevent form submission', async () => {
+        snackbar.actionText = 'undo';
+        snackbar.displayTime = 100;
+
+        snackbar.open();
+        fixture.detectChanges();
+
+        const button = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+        expect(button.getAttribute('type')).toBe('button');
+    });
+
     it('should emit opening when snackbar is shown', async () => {
         vi.spyOn(snackbar.opening, 'emit');
         snackbar.open();

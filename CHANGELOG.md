@@ -18,6 +18,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Forms**
+    - `IgxSnackbarComponent` - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), it became the default button of the form, so pressing Enter in any input of the form clicked it, which triggered the snackbar action and submitted the form.
+    - `IgxQueryBuilderComponent` - The add expression and the group (AND/OR) buttons now render with `type="button"`. Previously, clicking them inside a `form` submitted it.
+    - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent` - Pressing Enter in the grid UI, such as the filtering row, cell and row editors, the toolbar column hiding and pinning, Excel-style filtering and advanced filtering, no longer submits a surrounding `form`.
+    - `IgxAdvancedFilteringDialogComponent`, `IgxColumnActionsComponent`, `IgxPivotDataSelectorComponent` - Pressing Enter in their inputs no longer submits a surrounding `form` when they are rendered outside of the grid, e.g. used standalone, or the advanced filtering dialog opened with custom overlay settings.
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxCarouselComponent`
@@ -75,6 +80,7 @@ All notable changes for each version of this project will be documented in this 
     - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.
 - `IgxOverlayService`
     - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
+
 
 ## 22.2.1
 
