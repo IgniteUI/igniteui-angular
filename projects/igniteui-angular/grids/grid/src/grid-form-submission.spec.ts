@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { FilterMode, IgxAdvancedFilteringDialogComponent, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnHidingDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular/grids/core';
+import { FilterMode, IgxAdvancedFilteringDialogComponent, IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnHidingDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular/grids/core';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -20,10 +20,21 @@ const DATA = [
 ];
 
 const pressEnter = (target: Element): KeyboardEvent => {
-    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+    const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true, composed: true });
     target.dispatchEvent(event);
     return event;
 };
+
+const SHADOW_CONTROLS_TAG = 'igx-test-shadow-controls';
+if (!customElements.get(SHADOW_CONTROLS_TAG)) {
+    customElements.define(SHADOW_CONTROLS_TAG, class extends HTMLElement {
+        constructor() {
+            super();
+            this.attachShadow({ mode: 'open' }).innerHTML =
+                '<button type="button"><span>Click</span></button><textarea></textarea><a href="#">Link</a>';
+        }
+    });
+}
 
 const addAdvancedFilteringCondition = async (fixture: ComponentFixture<any>): Promise<HTMLInputElement> => {
     QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
@@ -144,6 +155,15 @@ describe('IgxGrid - implicit form submission #grid', () => {
         expect(pressEnter(hidingButton).defaultPrevented).toBe(false);
     });
 
+    it('should not prevent the native Enter behavior of controls inside a shadow root in the grid', () => {
+        const shadowRoot = fixture.nativeElement.querySelector(SHADOW_CONTROLS_TAG).shadowRoot as ShadowRoot;
+        expect(grid.nativeElement.contains(shadowRoot.host)).toBe(true);
+
+        expect(pressEnter(shadowRoot.querySelector('button span')!).defaultPrevented).toBe(false);
+        expect(pressEnter(shadowRoot.querySelector('textarea')!).defaultPrevented).toBe(false);
+        expect(pressEnter(shadowRoot.querySelector('a')!).defaultPrevented).toBe(false);
+    });
+
     it('should not affect implicit submission from inputs outside the grid', () => {
         const outerInput: HTMLInputElement = fixture.nativeElement.querySelector('#outerInput');
         expect(pressEnter(outerInput).defaultPrevented).toBe(false);
@@ -195,14 +215,20 @@ describe('IgxGrid - implicit form submission from grid components outside of the
             </igx-grid-toolbar>
             <igx-column field="ProductID" [dataType]="'number'"></igx-column>
             <igx-column field="ProductName" [editable]="true"></igx-column>
-            <igx-column field="InStock" [dataType]="'boolean'"></igx-column>
+            <igx-column field="InStock" [dataType]="'boolean'">
+                <ng-template igxCell>
+                    <igx-test-shadow-controls></igx-test-shadow-controls>
+                </ng-template>
+            </igx-column>
         </igx-grid>
         <button id="submit" type="submit">Submit</button>
     </form>`,
     changeDetection: ChangeDetectionStrategy.Eager,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
         IgxGridComponent,
         IgxColumnComponent,
+        IgxCellTemplateDirective,
         IgxGridToolbarComponent,
         IgxGridToolbarActionsComponent,
         IgxGridToolbarHidingComponent
