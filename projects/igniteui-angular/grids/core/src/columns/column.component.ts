@@ -2615,10 +2615,18 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
 
     /**
      * @hidden
-     * Returns the width and padding of a header cell.
+     * Returns the width and padding of a header cell, or of its quick filtering cell if it needs more space.
      */
     public getHeaderCellWidths() {
-        return this.grid.getHeaderCellWidth(this.headerCell.nativeElement);
+        const headerCellWidths = this.grid.getHeaderCellWidth(this.headerCell.nativeElement);
+        const filterCell = this.filterCell;
+        if (!filterCell || filterCell.collapsesChips || this.filterCellTemplate) {
+            return headerCellWidths;
+        }
+
+        const filterCellWidths = this.grid.getHeaderCellWidth(filterCell.nativeElement);
+        return filterCellWidths.width + filterCellWidths.padding > headerCellWidths.width + headerCellWidths.padding ?
+            filterCellWidths : headerCellWidths;
     }
 
     /**
@@ -2634,7 +2642,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
      */
     public getLargestCellWidth(): string {
         const range = this.grid.document.createRange();
-        const largest = new Map<number, number>();
+        const widths: number[] = [];
 
         if (this._cells.length > 0) {
             const cellsContentWidths: number[] = [];
@@ -2645,18 +2653,17 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             const cellPadding = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight) +
                 parseFloat(cellStyle.borderLeftWidth) + parseFloat(cellStyle.borderRightWidth);
 
-            largest.set(Math.max(...cellsContentWidths), cellPadding);
+            widths.push(cellsContentWidths[index] + cellPadding);
         }
 
         if (this.headerCell && this.autosizeHeader) {
             const headerCellWidths = this.getHeaderCellWidths();
-            largest.set(headerCellWidths.width, headerCellWidths.padding);
+            widths.push(headerCellWidths.width + headerCellWidths.padding);
         }
 
-        const largestCell = Math.max(...Array.from(largest.keys()));
-        const width = Math.ceil(largestCell + largest.get(largestCell)!);
+        const width = Math.ceil(Math.max(...widths));
 
-        if (Number.isNaN(width)) {
+        if (!Number.isFinite(width)) {
             return this.width;
         } else {
             return width + 'px';
