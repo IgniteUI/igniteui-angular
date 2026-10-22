@@ -38,6 +38,11 @@ All notable changes for each version of this project will be documented in this 
     - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
     - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
     - Setting `animationDuration` from code now applies it to the vertical animations as well.
+- `IgxFilterDirective`, `IgxFilterPipe`
+    - When filtering by multiple keys, an item matched by any of the keys is no longer hidden when the last key does not match, and `metConditionFn` / `overdueConditionFn` are called once per item instead of once per key.
+    - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
+    - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared. A custom `matchFn` now always receives a string, with an empty string passed when `inputValue` is `null` or `undefined`. The `IgxFilterOptions.inputValue` type now includes `null` and `undefined`.
+    - The pipe now returns the items as they are, instead of `undefined`, when they are empty, `null` or `undefined`, or when no options are provided. The `filtered` event now emits an empty `filteredItems` array for empty items.
 - `IgxSplitterComponent`
     - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
     - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
