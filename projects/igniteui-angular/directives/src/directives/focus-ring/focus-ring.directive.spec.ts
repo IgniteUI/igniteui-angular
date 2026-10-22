@@ -1,18 +1,19 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusRingDirective } from './focus-ring.directive';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxFocusRing', () => {
     let fixture: ComponentFixture<FocusRingComponent>;
     let ring: IgxFocusRingDirective;
     let element: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [FocusRingComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(FocusRingComponent);

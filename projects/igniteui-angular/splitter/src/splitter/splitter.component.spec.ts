@@ -1,9 +1,10 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
@@ -11,21 +12,19 @@ const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
 
 describe('IgxSplitter', () => {
-    beforeEach(waitForAsync(() =>
-        TestBed.configureTestingModule({
-            imports: [
-                SplitterTestComponent
-            ]
-        }).compileComponents()
-    ));
+    beforeEach(async () => await TestBed.configureTestingModule({
+        imports: [
+            SplitterTestComponent
+        ]
+    }).compileComponents());
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterTestComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
-    }));
+    });
 
     it('should render pane content correctly in splitter.', () => {
         expect(splitter.panes.length).toBe(2);
@@ -68,7 +67,7 @@ describe('IgxSplitter', () => {
     it('should allow resizing vertical splitter', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -87,7 +86,7 @@ describe('IgxSplitter', () => {
         expect(pane2.dragSize).toBe(pane2_originalSize + 100 + 'px');
     });
     it('should allow resizing horizontal splitter', () => {
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -109,7 +108,7 @@ describe('IgxSplitter', () => {
     it('should honor minSize/maxSize when resizing.', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         pane1.minSize = '100px';
         pane1.maxSize = '300px';
@@ -136,10 +135,10 @@ describe('IgxSplitter', () => {
     it('should not allow drag resize if resizable is set to false.', () => {
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
         expect(splitterBarComponent.cursor).toBe('col-resize');
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         pane1.resizable = false;
         fixture.detectChanges();
-        const args = {cancel: false};
+        const args = { cancel: false };
         splitterBarComponent.onDragStart(args);
         expect(args.cancel).toBeTruthy();
         expect(splitterBarComponent.cursor).toBe('');
@@ -148,7 +147,7 @@ describe('IgxSplitter', () => {
     it('should allow resizing with up/down arrow keys', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -177,7 +176,7 @@ describe('IgxSplitter', () => {
     it('should allow resizing with left/right arrow keys', () => {
         fixture.componentInstance.type = SplitterType.Horizontal;
         fixture.detectChanges();
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -206,7 +205,7 @@ describe('IgxSplitter', () => {
     it('should allow expand/collapse with Ctrl + up/down arrow keys', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -229,7 +228,7 @@ describe('IgxSplitter', () => {
     it('should allow expand/collapse with Ctrl + left/right arrow keys', () => {
         fixture.componentInstance.type = SplitterType.Horizontal;
         fixture.detectChanges();
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -320,7 +319,7 @@ describe('IgxSplitter', () => {
     });
 
     it('should allow resize in % when pane size is auto.', () => {
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
@@ -338,15 +337,15 @@ describe('IgxSplitter', () => {
         splitterBarComponent.movingEnd.emit(-100);
         fixture.detectChanges();
 
-        expect(pane1.size.indexOf('%') !== -1).toBeTrue();
-        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane1.size.indexOf('%') !== -1).toBe(true);
+        expect(pane2.size.indexOf('%') !== -1).toBe(true);
 
         expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
     });
 
     it('should allow mixing % and px sizes.', () => {
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         pane1.size = '200px';
         fixture.detectChanges();
@@ -367,14 +366,14 @@ describe('IgxSplitter', () => {
 
         // fist pane should remain in px
         expect(pane1.size).toBe('300px');
-        expect(pane2.size.indexOf('%') !== -1).toBeTrue();
+        expect(pane2.size.indexOf('%') !== -1).toBe(true);
 
         expect(pane1.element.offsetWidth).toBeCloseTo(pane1_originalSize + 100);
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
     });
 
     it('should reset transform style of vertical splitter bar after dragging', async () => {
-        const pane1 =  splitter.panes.toArray()[0];
+        const pane1 = splitter.panes.toArray()[0];
         pane1.size = '200px';
         fixture.detectChanges();
 
@@ -402,19 +401,20 @@ describe('IgxSplitter', () => {
 });
 
 describe('IgxSplitter pane toggle', () => {
-    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(async () => await TestBed.configureTestingModule({
         imports: [
             SplitterTogglePaneComponent
         ]
-    }).compileComponents()));
+    }).compileComponents());
 
-    let fixture; let splitter;
-    beforeEach(waitForAsync(() => {
+    let fixture;
+    let splitter;
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterTogglePaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
         fixture.detectChanges();
-    }));
+    });
 
     it('should collapse/expand panes', () => {
         const pane1 = splitter.panes.toArray()[0];
@@ -478,9 +478,9 @@ describe('IgxSplitter pane toggle', () => {
     it('should emit resizing events on splitter bar move: resizeStart, resizing, resizeEnd.', () => {
         fixture.componentInstance.type = SplitterType.Vertical;
         fixture.detectChanges();
-        spyOn(splitter.resizeStart, 'emit').and.callThrough();
-        spyOn(splitter.resizing, 'emit').and.callThrough();
-        spyOn(splitter.resizeEnd, 'emit').and.callThrough();
+        vi.spyOn(splitter.resizeStart, 'emit');
+        vi.spyOn(splitter.resizing, 'emit');
+        vi.spyOn(splitter.resizeEnd, 'emit');
 
         const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
@@ -506,25 +506,26 @@ describe('IgxSplitter pane toggle', () => {
 });
 
 describe('IgxSplitter pane collapse', () => {
-    beforeEach(waitForAsync(() => TestBed.configureTestingModule({
+    beforeEach(async () => await TestBed.configureTestingModule({
         imports: [
             SplitterCollapsedPaneComponent
         ]
-    }).compileComponents()));
+    }).compileComponents());
 
-    let fixture; let splitter;
-    beforeEach(waitForAsync(() => {
+    let fixture;
+    let splitter;
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterCollapsedPaneComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
-    }));
+    });
 
     it('should preserve sizes and constraints when pane is initially collapsed.', () => {
         const panes = splitter.panes.toArray();
         expect(panes.map(pane => pane.size)).toEqual(['30%', '30%', '30%']);
         expect(panes.map(pane => pane.minWidth)).toEqual(['10%', '20%', '5%']);
         expect(panes.map(pane => pane.maxWidth)).toEqual(['40%', '50%', '35%']);
-        expect(panes[2].collapsed).toBeTrue();
+        expect(panes[2].collapsed).toBe(true);
         expect(panes[2].display).toBe('none');
     });
 
@@ -546,7 +547,7 @@ describe('IgxSplitter pane collapse', () => {
         splitterBar.onCollapsing(true);
         fixedFixture.detectChanges();
 
-        expect(panes[2].collapsed).toBeFalse();
+        expect(panes[2].collapsed).toBe(false);
         expect(panes.map(pane => pane.size)).toEqual(['100px', '100px', '100px']);
         expect(panes.map(pane => pane.element.offsetWidth)).toEqual([100, 100, 100]);
     });
@@ -567,31 +568,32 @@ describe('IgxSplitter pane collapse', () => {
 });
 
 describe('IgxSplitter resizing with minSize and browser window is shrinked', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 SplitterMinSiezComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    let fixture; let splitter;
-    beforeEach(waitForAsync(() => {
+    let fixture;
+    let splitter;
+    beforeEach(async () => {
         fixture = TestBed.createComponent(SplitterMinSiezComponent);
         fixture.detectChanges();
         splitter = fixture.componentInstance.splitter;
-    }));
+    });
 
     it('should set the correct sizes when the user drags one pane to the end of another', () => {
         const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
         const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
         const minSize = parseInt(pane1.minSize);
-        spyOn(splitter, 'onMoveEnd').and.callThrough();
+        vi.spyOn(splitter, 'onMoveEnd');
 
         splitterBarComponent.moveStart.emit(pane1);
         fixture.detectChanges();
-        splitterBarComponent.movingEnd.emit(splitter.getTotalSize() -minSize);
+        splitterBarComponent.movingEnd.emit(splitter.getTotalSize() - minSize);
         fixture.detectChanges();
 
         splitter.elementRef.nativeElement.style.width = '500px';

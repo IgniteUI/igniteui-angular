@@ -1,6 +1,6 @@
 import { useAnimation } from '@angular/animations';
-import { Component, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
-import { waitForAsync, TestBed, fakeAsync, ComponentFixture, tick } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, signal, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -10,6 +10,7 @@ import {
 import { IAccordionCancelableEventArgs, IAccordionEventArgs, IgxAccordionComponent } from './accordion.component';
 import { growVerIn, growVerOut, slideInLeft, slideOutRight } from 'igniteui-angular/animations';
 import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
@@ -24,20 +25,20 @@ const PANELS_DATA: ReadonlyArray<Readonly<{ id: string, title: string, collapsed
 describe('Rendering Tests', () => {
     let fix: ComponentFixture<IgxAccordionSampleTestComponent>;
     let accordion: IgxAccordionComponent;
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    IgxAccordionSampleTestComponent
-                ]
-            }).compileComponents();
-        })
-    );
-    beforeEach(() => {
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxAccordionSampleTestComponent
+            ]
+        }).compileComponents();
+    });
+    beforeEach(async () => {
         fix = TestBed.createComponent(IgxAccordionSampleTestComponent);
         fix.detectChanges();
-        accordion = fix.componentInstance.accordion;
+        await fix.whenStable();
+        fix.detectChanges();
+        accordion = fix.componentInstance.accordion();
     });
 
     describe('General', () => {
@@ -77,131 +78,131 @@ describe('Rendering Tests', () => {
         });
 
         it(`Should be able to expand only one panel when singleBranchExpanded is set to true
-        and expandAll/collapseAll should not update the current expansion state `, fakeAsync(() => {
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+        and expandAll/collapseAll should not update the current expansion state `, async () => {
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(accordion.panelCollapsed, 'emit');
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 
             accordion.expandAll();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(1);
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[3].collapsed).toBe(false);
             expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(0);
 
             accordion.panels[0].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(2);
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeTrue();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBe(false);
+            expect(accordion.panels[1].collapsed).toBe(true);
+            expect(accordion.panels[2].collapsed).toBe(true);
+            expect(accordion.panels[3].collapsed).toBe(false);
 
             accordion.collapseAll();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(3);
 
             accordion.panels[0].expand();
             accordion.panels[1].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(1);
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-            expect(accordion.panels[2].collapsed).toBeTrue();
-            expect(accordion.panels[3].collapsed).toBeTrue();
+            expect(accordion.panels[0].collapsed).toBe(true);
+            expect(accordion.panels[1].collapsed).toBe(false);
+            expect(accordion.panels[2].collapsed).toBe(true);
+            expect(accordion.panels[3].collapsed).toBe(true);
 
-        }));
+        });
 
-        it('Should be able to expand multiple panels when singleBranchExpanded is set to false', fakeAsync(() => {
+        it('Should be able to expand multiple panels when singleBranchExpanded is set to false', async () => {
             accordion.singleBranchExpand = false;
             fix.detectChanges();
 
             accordion.panels[0].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(3);
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBe(false);
+            expect(accordion.panels[1].collapsed).toBe(true);
+            expect(accordion.panels[2].collapsed).toBe(false);
+            expect(accordion.panels[3].collapsed).toBe(false);
 
             accordion.panels[1].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => !panel.collapsed).length).toEqual(4);
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
-        }));
+            expect(accordion.panels[0].collapsed).toBe(false);
+            expect(accordion.panels[1].collapsed).toBe(false);
+            expect(accordion.panels[2].collapsed).toBe(false);
+            expect(accordion.panels[3].collapsed).toBe(false);
+        });
 
         it(`Should update the current expansion state when expandAll/collapseAll is invoked and
-        singleBranchExpaned is set to false`, fakeAsync(() => {
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+        singleBranchExpaned is set to false`, async () => {
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(accordion.panelCollapsed, 'emit');
             accordion.singleBranchExpand = false;
             accordion.panels[3].collapse();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             accordion.expandAll();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(0);
             expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(3);
 
             accordion.collapseAll();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(4);
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(5);
-        }));
+        });
 
         it(`Should collapse all expanded and not disabled panels except for the last one when setting singleBranchExpand to true`, () => {
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBe(true);
+            expect(accordion.panels[1].collapsed).toBe(true);
+            expect(accordion.panels[2].collapsed).toBe(false);
+            expect(accordion.panels[3].collapsed).toBe(false);
 
             accordion.panels[1].collapsed = false;
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBe(true);
+            expect(accordion.panels[1].collapsed).toBe(false);
+            expect(accordion.panels[2].collapsed).toBe(false);
+            expect(accordion.panels[3].collapsed).toBe(false);
 
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBe(true);
+            expect(accordion.panels[1].collapsed).toBe(true);
+            expect(accordion.panels[2].collapsed).toBe(false);
+            expect(accordion.panels[3].collapsed).toBe(false);
         });
 
-        it('Should emit ing and ed events when expand panel state is toggled', fakeAsync(() => {
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(accordion.panelExpanding, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
-            spyOn(accordion.panelCollapsing, 'emit').and.callThrough();
+        it('Should emit ing and ed events when expand panel state is toggled', async () => {
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(accordion.panelExpanding, 'emit');
+            vi.spyOn(accordion.panelCollapsed, 'emit');
+            vi.spyOn(accordion.panelCollapsing, 'emit');
 
-            spyOn(accordion.panels[0].contentCollapsing, 'emit').and.callThrough();
-            spyOn(accordion.panels[0].contentCollapsed, 'emit').and.callThrough();
-            spyOn(accordion.panels[0].contentExpanding, 'emit').and.callThrough();
-            spyOn(accordion.panels[0].contentExpanded, 'emit').and.callThrough();
+            vi.spyOn(accordion.panels[0].contentCollapsing, 'emit');
+            vi.spyOn(accordion.panels[0].contentCollapsed, 'emit');
+            vi.spyOn(accordion.panels[0].contentExpanding, 'emit');
+            vi.spyOn(accordion.panels[0].contentExpanded, 'emit');
 
             accordion.singleBranchExpand = false;
             fix.detectChanges();
@@ -216,7 +217,7 @@ describe('Rendering Tests', () => {
                 argsIng = { event: expArgs.event, cancel: expArgs.cancel, owner: accordion, panel: expArgs.owner };
             });
             accordion.panels[0].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panelExpanding.emit).toHaveBeenCalledTimes(1);
@@ -235,7 +236,7 @@ describe('Rendering Tests', () => {
                 argsIng = { event: expArgs.event, cancel: expArgs.cancel, owner: accordion, panel: expArgs.owner };
             });
             accordion.panels[0].collapse();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panelCollapsing.emit).toHaveBeenCalledTimes(1);
@@ -245,7 +246,7 @@ describe('Rendering Tests', () => {
 
             subsCollapsed.unsubscribe();
             subsCollapsing.unsubscribe();
-        }));
+        });
 
 
         it('Should focus the first/last panel on Home/End key press', () => {
@@ -285,7 +286,7 @@ describe('Rendering Tests', () => {
         });
 
         it(`Should expand/collapse all panels on SHIFT + ALT + ArrowDown/ArrowUp key pressed
-                when singleBranchExpanded is false`, fakeAsync(() => {
+                when singleBranchExpanded is false`, async () => {
             accordion.singleBranchExpand = false;
             fix.detectChanges();
             accordion.panels[1].header.disabled = true;
@@ -295,26 +296,24 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             //  SHIFT + ALT + ArrowDown
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown',
-                accordion.panels[0].header.innerElement, true, true, true, false);
-            tick();
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', accordion.panels[0].header.innerElement, true, true, true, false);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => !p.collapsed && !p.header.disabled).length).toEqual(2);
             expect(accordion.panels.filter(p => !p.collapsed).length).toEqual(3);
 
             //  SHIFT + ALT + ArrowUp
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup',
-                accordion.panels[0].header.innerElement, true, true, true, false);
-            tick();
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', accordion.panels[0].header.innerElement, true, true, true, false);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => p.collapsed && !p.header.disabled).length).toEqual(2);
             expect(accordion.panels.filter(p => p.collapsed).length).toEqual(3);
-        }));
+        });
 
         it(`Should do nothing/collapse the only panel on SHIFT + ALT + ArrowDown/ArrowUp key pressed
-                when singleBranchExpanded is true`, fakeAsync(() => {
+                when singleBranchExpanded is true`, async () => {
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 
@@ -322,21 +321,19 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             //  SHIFT + ALT + ArrowDown
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown',
-                accordion.panels[0].header.innerElement, true, true, true, false);
-            tick();
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', accordion.panels[0].header.innerElement, true, true, true, false);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => !p.collapsed).length).toEqual(2);
 
             //  SHIFT + ALT + ArrowUp
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup',
-                accordion.panels[0].header.innerElement, true, true, true, false);
-            tick();
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', accordion.panels[0].header.innerElement, true, true, true, false);
+            await fix.whenStable();
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => p.collapsed).length).toEqual(3);
-        }));
+        });
 
         it('Should not handle keys that are not used for navigation', () => {
             const header = accordion.panels[0].header.innerElement;
@@ -347,7 +344,7 @@ describe('Rendering Tests', () => {
             header.dispatchEvent(keyboardEvent);
             fix.detectChanges();
 
-            expect(keyboardEvent.defaultPrevented).toBeFalse();
+            expect(keyboardEvent.defaultPrevented).toBe(false);
             expect(document.activeElement).toBe(header);
         });
 
@@ -362,7 +359,7 @@ describe('Rendering Tests', () => {
             firstHeader.dispatchEvent(arrowUpEvent);
             fix.detectChanges();
 
-            expect(arrowUpEvent.defaultPrevented).toBeTrue();
+            expect(arrowUpEvent.defaultPrevented).toBe(true);
             expect(document.activeElement).toBe(firstHeader);
 
             lastHeader.focus();
@@ -372,7 +369,7 @@ describe('Rendering Tests', () => {
             lastHeader.dispatchEvent(arrowDownEvent);
             fix.detectChanges();
 
-            expect(arrowDownEvent.defaultPrevented).toBeTrue();
+            expect(arrowDownEvent.defaultPrevented).toBe(true);
             expect(document.activeElement).toBe(lastHeader);
         });
 
@@ -391,10 +388,10 @@ describe('Rendering Tests', () => {
             expect(document.activeElement).toBe(accordion.panels[0].header.innerElement);
         });
 
-        it('Should not expand a panel when panelExpanding is canceled', fakeAsync(() => {
+        it('Should not expand a panel when panelExpanding is canceled', async () => {
             const panel = accordion.panels[0];
-            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-            spyOn(panel.contentExpanded, 'emit').and.callThrough();
+            vi.spyOn(accordion.panelExpanded, 'emit');
+            vi.spyOn(panel.contentExpanded, 'emit');
             const sub = accordion.panelExpanding.subscribe((args: IAccordionCancelableEventArgs) => {
                 expect(args.owner).toBe(accordion);
                 expect(args.panel).toBe(panel);
@@ -402,28 +399,28 @@ describe('Rendering Tests', () => {
             });
 
             panel.expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(panel.collapsed).toBeTrue();
+            expect(panel.collapsed).toBe(true);
             expect(panel.contentExpanded.emit).not.toHaveBeenCalled();
             expect(accordion.panelExpanded.emit).not.toHaveBeenCalled();
 
             sub.unsubscribe();
 
             panel.expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(panel.collapsed).toBeFalse();
+            expect(panel.collapsed).toBe(false);
             expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('Should not collapse a panel when panelCollapsing is canceled', fakeAsync(() => {
+        it('Should not collapse a panel when panelCollapsing is canceled', async () => {
             const panel = accordion.panels[2];
-            expect(panel.collapsed).toBeFalse();
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
-            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
+            expect(panel.collapsed).toBe(false);
+            vi.spyOn(accordion.panelCollapsed, 'emit');
+            vi.spyOn(panel.contentCollapsed, 'emit');
             const sub = accordion.panelCollapsing.subscribe((args: IAccordionCancelableEventArgs) => {
                 expect(args.owner).toBe(accordion);
                 expect(args.panel).toBe(panel);
@@ -431,50 +428,50 @@ describe('Rendering Tests', () => {
             });
 
             panel.collapse();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(panel.collapsed).toBeFalse();
+            expect(panel.collapsed).toBe(false);
             expect(panel.contentCollapsed.emit).not.toHaveBeenCalled();
             expect(accordion.panelCollapsed.emit).not.toHaveBeenCalled();
 
             sub.unsubscribe();
 
             panel.collapse();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(panel.collapsed).toBeTrue();
+            expect(panel.collapsed).toBe(true);
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         it(`Should collapse the expanded panel when another one is expanded and singleBranchExpand is true,
-        without collapsing panels with disabled headers`, fakeAsync(() => {
+        without collapsing panels with disabled headers`, async () => {
             accordion.singleBranchExpand = true;
             fix.detectChanges();
             // panels[2] is the last expanded enabled panel; panels[3] has a disabled header
-            expect(accordion.panels[2].collapsed).toBeFalse();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[2].collapsed).toBe(false);
+            expect(accordion.panels[3].collapsed).toBe(false);
 
-            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+            vi.spyOn(accordion.panelCollapsed, 'emit');
 
             accordion.panels[0].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeFalse();
-            expect(accordion.panels[1].collapsed).toBeTrue();
-            expect(accordion.panels[2].collapsed).toBeTrue();
-            expect(accordion.panels[3].collapsed).toBeFalse();
+            expect(accordion.panels[0].collapsed).toBe(false);
+            expect(accordion.panels[1].collapsed).toBe(true);
+            expect(accordion.panels[2].collapsed).toBe(true);
+            expect(accordion.panels[3].collapsed).toBe(false);
             expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(1);
-            expect(accordion.panelCollapsed.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+            expect(accordion.panelCollapsed.emit).toHaveBeenCalledWith(expect.objectContaining({
                 owner: accordion,
                 panel: accordion.panels[2]
             }));
-        }));
+        });
 
         it('Should collapse a panel that is still expanding when another one is expanded and singleBranchExpand is true',
-            fakeAsync(() => {
+            async () => {
                 accordion.singleBranchExpand = true;
                 fix.detectChanges();
 
@@ -482,17 +479,17 @@ describe('Rendering Tests', () => {
                 // panels[0] open animation is still running
                 expect(accordion.panels[0].openAnimationPlayer).toBeTruthy();
                 accordion.panels[1].expand();
-                tick();
+                await fix.whenStable();
                 fix.detectChanges();
 
-                expect(accordion.panels[0].collapsed).toBeTrue();
-                expect(accordion.panels[1].collapsed).toBeFalse();
-                expect(accordion.panels[2].collapsed).toBeTrue();
-                expect(accordion.panels[3].collapsed).toBeFalse();
-            }));
+                expect(accordion.panels[0].collapsed).toBe(true);
+                expect(accordion.panels[1].collapsed).toBe(false);
+                expect(accordion.panels[2].collapsed).toBe(true);
+                expect(accordion.panels[3].collapsed).toBe(false);
+            });
 
         it(`Should reset the open animation of a panel that is still expanding when another one is expanded,
-        singleBranchExpand is true and there is no close animation`, fakeAsync(() => {
+        singleBranchExpand is true and there is no close animation`, async () => {
             accordion.singleBranchExpand = true;
             accordion.animationSettings = { openAnimation: growVerIn, closeAnimation: null };
             fix.detectChanges();
@@ -501,23 +498,23 @@ describe('Rendering Tests', () => {
             expandingPanel.expand();
             const openPlayer = expandingPanel.openAnimationPlayer;
             expect(openPlayer).toBeTruthy();
-            spyOn(openPlayer, 'reset').and.callThrough();
+            vi.spyOn(openPlayer, 'reset');
 
             accordion.panels[1].expand();
 
             expect(openPlayer.reset).toHaveBeenCalled();
             // collapsing without animation completes synchronously
-            expect(expandingPanel.collapsed).toBeTrue();
+            expect(expandingPanel.collapsed).toBe(true);
 
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-        }));
+            expect(accordion.panels[0].collapsed).toBe(true);
+            expect(accordion.panels[1].collapsed).toBe(false);
+        });
 
         it(`Should collapse a panel that is still expanding when another one is expanded, singleBranchExpand is true
-        and the open animation is removed during expansion`, fakeAsync(() => {
+        and the open animation is removed during expansion`, async () => {
             accordion.singleBranchExpand = true;
             fix.detectChanges();
 
@@ -526,31 +523,29 @@ describe('Rendering Tests', () => {
 
             accordion.animationSettings = { openAnimation: null, closeAnimation: growVerOut };
             accordion.panels[1].expand();
-            tick();
+            await fix.whenStable();
             fix.detectChanges();
 
-            expect(accordion.panels[0].collapsed).toBeTrue();
-            expect(accordion.panels[1].collapsed).toBeFalse();
-        }));
+            expect(accordion.panels[0].collapsed).toBe(true);
+            expect(accordion.panels[1].collapsed).toBe(false);
+        });
     });
 });
 
 describe('Accordion with singleBranchExpand set initially', () => {
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    IgxAccordionSingleBranchTestComponent,
-                    IgxAccordionSingleBranchForTestComponent,
-                    IgxAccordionSingleBranchForEagerTestComponent
-                ]
-            }).compileComponents();
-        })
-    );
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxAccordionSingleBranchTestComponent,
+                IgxAccordionSingleBranchForTestComponent,
+                IgxAccordionSingleBranchForEagerTestComponent
+            ]
+        }).compileComponents();
+    });
 
     const verifyOnlyLastEnabledPanelExpanded = (accordion: IgxAccordionComponent) => {
-        expect(accordion.singleBranchExpand).toBeTrue();
+        expect(accordion.singleBranchExpand).toBe(true);
         // panels[3] has a disabled header and keeps its expansion state
         const expectedCollapsed = [true, false, true, false];
         accordion.panels.forEach((panel, index) => {
@@ -563,14 +558,14 @@ describe('Accordion with singleBranchExpand set initially', () => {
         const fix = TestBed.createComponent(IgxAccordionSingleBranchTestComponent);
         fix.detectChanges();
 
-        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion);
+        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion());
     });
 
     it('Should collapse all expanded and not disabled panels except for the last one on init when panels are rendered with @for', () => {
         const fix = TestBed.createComponent(IgxAccordionSingleBranchForTestComponent);
         fix.detectChanges();
 
-        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion);
+        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion());
     });
 
     it(`Should collapse all expanded and not disabled panels except for the last one on init when panels are rendered with @for
@@ -579,7 +574,7 @@ describe('Accordion with singleBranchExpand set initially', () => {
         // the dev mode check runs as part of detectChanges and would throw for a stale aria-expanded binding
         expect(() => fix.detectChanges()).not.toThrow();
 
-        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion);
+        verifyOnlyLastEnabledPanelExpanded(fix.componentInstance.accordion());
     });
 });
 
@@ -587,21 +582,19 @@ describe('Accordion with bound inputs and dynamic panels', () => {
     let fix: ComponentFixture<IgxAccordionDynamicTestComponent>;
     let accordion: IgxAccordionComponent;
 
-    beforeEach(
-        waitForAsync(() => {
-            TestBed.configureTestingModule({
-                imports: [
-                    NoopAnimationsModule,
-                    IgxAccordionDynamicTestComponent
-                ]
-            }).compileComponents();
-        })
-    );
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                IgxAccordionDynamicTestComponent
+            ]
+        }).compileComponents();
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(IgxAccordionDynamicTestComponent);
         fix.detectChanges();
-        accordion = fix.componentInstance.accordion;
+        accordion = fix.componentInstance.accordion();
     });
 
     it('Should apply the bound id to the host element', () => {
@@ -616,25 +609,25 @@ describe('Accordion with bound inputs and dynamic panels', () => {
         });
     });
 
-    it('Should not emit panelExpanding when the panel expansion is already canceled', fakeAsync(() => {
+    it('Should not emit panelExpanding when the panel expansion is already canceled', async () => {
         const panel = accordion.panels[2];
-        spyOn(accordion.panelExpanding, 'emit').and.callThrough();
-        spyOn(accordion.panelExpanded, 'emit').and.callThrough();
+        vi.spyOn(accordion.panelExpanding, 'emit');
+        vi.spyOn(accordion.panelExpanded, 'emit');
         fix.componentInstance.cancelContentExpanding = true;
 
         panel.expand();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
-        expect(panel.collapsed).toBeTrue();
+        expect(panel.collapsed).toBe(true);
         expect(accordion.panelExpanding.emit).not.toHaveBeenCalled();
         expect(accordion.panelExpanded.emit).not.toHaveBeenCalled();
-    }));
+    });
 
-    it('Should subscribe to events of panels added and removed at runtime', fakeAsync(() => {
-        spyOn(accordion.panelExpanding, 'emit').and.callThrough();
-        spyOn(accordion.panelExpanded, 'emit').and.callThrough();
-        spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+    it('Should subscribe to events of panels added and removed at runtime', async () => {
+        vi.spyOn(accordion.panelExpanding, 'emit');
+        vi.spyOn(accordion.panelExpanded, 'emit');
+        vi.spyOn(accordion.panelCollapsed, 'emit');
 
         fix.componentInstance.panels.update(panels => [...panels, { id: 'added', title: 'Added', collapsed: true, disabled: false }]);
         fix.detectChanges();
@@ -644,15 +637,15 @@ describe('Accordion with bound inputs and dynamic panels', () => {
         expect(addedPanel.id).toEqual('added');
 
         addedPanel.expand();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
-        expect(addedPanel.collapsed).toBeFalse();
-        expect(accordion.panelExpanding.emit).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+        expect(addedPanel.collapsed).toBe(false);
+        expect(accordion.panelExpanding.emit).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
             owner: accordion,
             panel: addedPanel
         }));
-        expect(accordion.panelExpanded.emit).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+        expect(accordion.panelExpanded.emit).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
             owner: accordion,
             panel: addedPanel
         }));
@@ -672,14 +665,14 @@ describe('Accordion with bound inputs and dynamic panels', () => {
         expect(accordion.panels[0].id).toEqual('css');
 
         // events of the removed panel are no longer forwarded by the accordion
-        spyOn(accordion.panelCollapsing, 'emit').and.callThrough();
+        vi.spyOn(accordion.panelCollapsing, 'emit');
         const removedArgs = { event: null, owner: removedPanel };
         removedPanel.contentExpanding.emit({ ...removedArgs, cancel: false });
         removedPanel.contentExpanded.emit(removedArgs);
         removedPanel.contentCollapsing.emit({ ...removedArgs, cancel: false });
         removedPanel.contentCollapsed.emit(removedArgs);
 
-        const removedPanelArgs = jasmine.objectContaining({ panel: removedPanel });
+        const removedPanelArgs = expect.objectContaining({ panel: removedPanel });
         expect(accordion.panelExpanding.emit).not.toHaveBeenCalledWith(removedPanelArgs);
         expect(accordion.panelExpanded.emit).not.toHaveBeenCalledWith(removedPanelArgs);
         expect(accordion.panelCollapsing.emit).not.toHaveBeenCalled();
@@ -692,15 +685,15 @@ describe('Accordion with bound inputs and dynamic panels', () => {
 
         // re-subscribing after the change must not duplicate the emitted events
         addedPanel.collapse();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
-        expect(addedPanel.collapsed).toBeTrue();
-        expect(accordion.panelCollapsed.emit).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+        expect(addedPanel.collapsed).toBe(true);
+        expect(accordion.panelCollapsed.emit).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
             owner: accordion,
             panel: addedPanel
         }));
-    }));
+    });
 });
 
 @Component({
@@ -774,11 +767,11 @@ describe('Accordion with bound inputs and dynamic panels', () => {
         }
     </igx-accordion>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
+    imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxAccordionSampleTestComponent {
-    @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
+    public accordion = viewChild.required(IgxAccordionComponent);
     public divChild = true;
 }
 
@@ -815,7 +808,7 @@ export class IgxAccordionSampleTestComponent {
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSingleBranchTestComponent {
-    @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
+    public accordion = viewChild.required(IgxAccordionComponent);
 }
 
 const SINGLE_BRANCH_FOR_TEMPLATE = `
@@ -839,7 +832,7 @@ const SINGLE_BRANCH_FOR_TEMPLATE = `
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSingleBranchForTestComponent {
-    @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
+    public accordion = viewChild.required(IgxAccordionComponent);
     public panels = signal(PANELS_DATA);
 }
 
@@ -851,7 +844,7 @@ export class IgxAccordionSingleBranchForTestComponent {
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionSingleBranchForEagerTestComponent {
-    @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
+    public accordion = viewChild.required(IgxAccordionComponent);
     public panels = signal(PANELS_DATA);
 }
 
@@ -875,7 +868,7 @@ export class IgxAccordionSingleBranchForEagerTestComponent {
     imports: [IgxAccordionComponent, IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent, IgxExpansionPanelBodyComponent, IgxExpansionPanelTitleDirective]
 })
 export class IgxAccordionDynamicTestComponent {
-    @ViewChild(IgxAccordionComponent) public accordion: IgxAccordionComponent;
+    public accordion = viewChild.required(IgxAccordionComponent);
     public cancelContentExpanding = false;
     public animationSettings: ToggleAnimationSettings = {
         openAnimation: useAnimation(slideInLeft, { params: { duration: '100ms' } }),
