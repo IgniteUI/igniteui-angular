@@ -2,6 +2,7 @@ import { DataGenerator } from './test-util/data-generator';
 import { DefaultSortingStrategy, FormattedValuesSortingStrategy, GroupMemberCountSortingStrategy,
     SortingDirection } from './sorting-strategy';
 import { IgxSorting } from './grid-sorting-strategy';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Unit testing SortingStrategy', () => {
     let dataGenerator: DataGenerator;
@@ -23,7 +24,8 @@ describe('Unit testing SortingStrategy', () => {
                 fieldName: 'number',
                 ignoreCase: false,
                 strategy: DefaultSortingStrategy.instance()
-            }]);
+            }
+        ]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
             .toEqual([4, 2, 0, 3, 1]);
     });
@@ -31,26 +33,27 @@ describe('Unit testing SortingStrategy', () => {
         const strategy = DefaultSortingStrategy.instance();
         expect(strategy.compareValues(1, 0) === 1 &&
             strategy.compareValues(true, false) === 1 &&
-            strategy.compareValues('bc', 'adfc') === 1)
-            .toBeTruthy('compare first argument greater than second');
+            strategy.compareValues('bc', 'adfc') === 1, 'compare first argument greater than second')
+            .toBeTruthy();
         expect(strategy.compareValues(1, 2) === -1 &&
             strategy.compareValues('a', 'b') === -1 &&
-            strategy.compareValues(false, true) === -1)
-            .toBeTruthy('compare 0, 1');
+            strategy.compareValues(false, true) === -1, 'compare first argument less than second')
+            .toBeTruthy();
         expect(strategy.compareValues(0, 0) === 0 &&
             strategy.compareValues(true, true) === 0 &&
-            strategy.compareValues('test', 'test') === 0
-        )
-            .toBeTruthy('Comare equal variables');
+            strategy.compareValues('test', 'test') === 0, 'compare equal variables')
+            .toBeTruthy();
     });
     it('tests default settings', () => {
-        (data[4] as { string: string }).string = 'ROW';
+        (data[4] as {
+            string: string;
+        }).string = 'ROW';
         const res = sorting.sort(data, [{
-            dir: SortingDirection.Asc,
-            fieldName: 'string',
-            ignoreCase: true,
-            strategy: DefaultSortingStrategy.instance()
-        }]);
+                dir: SortingDirection.Asc,
+                fieldName: 'string',
+                ignoreCase: true,
+                strategy: DefaultSortingStrategy.instance()
+            }]);
         expect(dataGenerator.getValuesForColumn(res, 'number'))
             .toEqual([4, 0, 1, 2, 3]);
     });
@@ -58,11 +61,11 @@ describe('Unit testing SortingStrategy', () => {
     it('should not sort when sorting direction is None', () => {
         const unsortedData = [{ number: 3 }, { number: 1 }, { number: 4 }, { number: 0 }, { number: 2 }];
         const res = sorting.sort(unsortedData, [{
-            dir: SortingDirection.None,
-            fieldName: 'number',
-            ignoreCase: false,
-            strategy: DefaultSortingStrategy.instance()
-        }]);
+                dir: SortingDirection.None,
+                fieldName: 'number',
+                ignoreCase: false,
+                strategy: DefaultSortingStrategy.instance()
+            }]);
         expect(res.map(d => d.number))
             .toEqual([3, 1, 4, 0, 2]);
     });
@@ -87,12 +90,12 @@ describe('Unit testing SortingStrategy', () => {
             { brand: 'Audi' }, { brand: 'BMW' }, { brand: 'Ford' }
         ];
 
-        expect(strategy).toBe(GroupMemberCountSortingStrategy.instance(), 'the strategy is a singleton');
+        expect(strategy, 'the strategy is a singleton').toBe(GroupMemberCountSortingStrategy.instance());
 
         const grouped = strategy.groupBy(records, 'brand');
         expect(Object.keys(grouped).sort()).toEqual(['Audi', 'BMW', 'Ford']);
-        expect(grouped.Ford.length === 3 && grouped.BMW.length === 2 && grouped.Audi.length === 1)
-            .toBeTruthy('every record ends up in the group of its field value');
+        expect(grouped.Ford.length === 3 && grouped.BMW.length === 2 && grouped.Audi.length === 1, 'every record ends up in the group of its field value')
+            .toBeTruthy();
 
         // Ascending orders the groups from the smallest to the largest member count,
         // with the members of equally sized groups kept in alphabetical order.
@@ -111,7 +114,7 @@ describe('Unit testing SortingStrategy', () => {
             getColumnByName: () => ({ formatter: (value: number) => labels[value] })
         } as any;
 
-        expect(strategy).toBe(FormattedValuesSortingStrategy.instance(), 'the strategy is a singleton');
+        expect(strategy, 'the strategy is a singleton').toBe(FormattedValuesSortingStrategy.instance());
 
         // Without a grid there is nothing to format, so the raw values decide the order.
         expect(strategy.sort([...records], 'status', SortingDirection.Asc, false, resolver).map(r => r.status))

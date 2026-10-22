@@ -1,7 +1,8 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
 import { Component, signal, TemplateRef, ViewRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
 import type { IgcChatComponent, IgcChatMessage, IgcChatMessageAttachment, IgcTextareaComponent } from 'igniteui-webcomponents';
+import { describe, it, expect, beforeEach, vi, type Mock, type MockInstance } from 'vitest';
 
 describe('Chat wrapper', () => {
 
@@ -9,18 +10,20 @@ describe('Chat wrapper', () => {
     let chatElement: IgcChatComponent;
     let fixture: ComponentFixture<IgxChatComponent>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxChatComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
         chatComponent = fixture.componentInstance;
         chatElement = getChatElement(fixture);
-        fixture.detectChanges();
-    })
+    });
 
     it('is created', () => {
         expect(chatComponent).toBeDefined();
@@ -36,19 +39,20 @@ describe('Chat wrapper', () => {
 
     it('correct bindings for messages', async () => {
         fixture.componentRef.setInput('messages', [{ id: '1', sender: 'user', text: 'Hello' }]);
-
         fixture.detectChanges();
         await fixture.whenStable();
 
 
-        const messageElement = getChatMessages(chatElement)[0];
-        expect(messageElement).toBeDefined();
-        expect(getChatMessageDOM(messageElement).textContent.trim()).toEqual(chatComponent.messages()[0].text);
+        // The web component renders its messages asynchronously
+        await vi.waitFor(() => {
+            const messageElement = getChatMessages(chatElement)[0];
+            expect(messageElement).toBeDefined();
+            expect(getChatMessageDOM(messageElement).textContent.trim()).toEqual(chatComponent.messages()[0].text);
+        });
     });
 
     it('correct bindings for draft message', async () => {
         fixture.componentRef.setInput('draftMessage', { text: 'Hello world' });
-
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -61,28 +65,26 @@ describe('Chat templates', () => {
     let fixture: ComponentFixture<ChatTemplatesBed>;
     let chatElement: IgcChatComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatTemplatesBed]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(ChatTemplatesBed);
         fixture.detectChanges();
+        await fixture.whenStable();
+
         chatElement = getChatElement(fixture);
     });
 
     it('has correct initially bound template', async () => {
-        await fixture.whenStable();
-
-        // NOTE: This is invoked since in the test bed there is no app ref so fresh embedded view
-        // has no change detection ran on it. In an application scenario this is not the case.
-        // This is so we don't explicitly invoke `viewRef.detectChanges()` inside the returned closure
-        // from the wrapper's `_createTemplateRenderer` call.
         fixture.detectChanges();
-        expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
-            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
+        await fixture.whenStable();
+        // The web component renders its messages asynchronously
+        await vi.waitFor(() => expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
+            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`));
     });
 });
 
@@ -90,27 +92,31 @@ describe('Chat dynamic templates binding', () => {
     let fixture: ComponentFixture<ChatDynamicTemplatesBed>;
     let chatElement: IgcChatComponent;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent, IgxChatMessageContextDirective, ChatDynamicTemplatesBed]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(ChatDynamicTemplatesBed);
         fixture.detectChanges();
+        await fixture.whenStable();
+
         chatElement = getChatElement(fixture);
     });
 
     it('supports late binding', async () => {
         fixture.componentInstance.bindTemplates();
         fixture.detectChanges();
-
         await fixture.whenStable();
+        // The templates effect updates the chat options, which needs another change detection pass
         fixture.detectChanges();
+        await fixture.whenStable();
 
-        expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
-            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`);
+        // The web component renders its messages asynchronously
+        await vi.waitFor(() => expect(getChatMessageDOM(getChatMessages(chatElement)[0]).textContent.trim())
+            .toEqual(`Your message: ${fixture.componentInstance.messages()[0].text}`));
     });
 
 });
@@ -119,15 +125,15 @@ describe('Chat dynamic templates binding', () => {
 describe('Chat _createTemplateRenderer context dispatch', () => {
     let fixture: ComponentFixture<IgxChatComponent>;
     let component: IgxChatComponent;
-    let mockViewRef: { destroy: jasmine.Spy; rootNodes: Node[] };
+    let mockViewRef: { destroy: Mock; rootNodes: Node[] };
     let mockTemplateRef: TemplateRef<any>;
-    let createEmbeddedViewSpy: jasmine.Spy;
+    let createEmbeddedViewSpy: MockInstance;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxChatComponent);
@@ -136,11 +142,11 @@ describe('Chat _createTemplateRenderer context dispatch', () => {
 
         const mockRootNode = document.createElement('div');
         mockRootNode.textContent = 'mock-node';
-        mockViewRef = { destroy: jasmine.createSpy('destroy'), rootNodes: [mockRootNode] };
+        mockViewRef = { destroy: vi.fn(), rootNodes: [mockRootNode] };
         mockTemplateRef = {} as TemplateRef<any>;
 
-        createEmbeddedViewSpy = spyOn((component as any)._view, 'createEmbeddedView')
-            .and.returnValue(mockViewRef as unknown as ViewRef);
+        createEmbeddedViewSpy = vi.spyOn((component as any)._view, 'createEmbeddedView')
+            .mockReturnValue(mockViewRef as unknown as ViewRef);
     });
 
     it('maps attachment render context (message + attachment) to attachment $implicit', () => {
@@ -210,7 +216,7 @@ describe('Chat _createTemplateRenderer context dispatch', () => {
 
         const viewSet: Set<ViewRef> = (component as any)._templateViewRefs.get(mockTemplateRef);
         expect(viewSet).toBeDefined();
-        expect(viewSet.has(mockViewRef as unknown as ViewRef)).toBeTrue();
+        expect(viewSet.has(mockViewRef as unknown as ViewRef)).toBe(true);
     });
 
     it('reuses the existing view set when the same template ref is passed again', () => {
@@ -229,27 +235,27 @@ describe('Chat _createTemplateRenderer context dispatch', () => {
 describe('Chat view lifecycle (_setTemplates)', () => {
     let fixture: ComponentFixture<IgxChatComponent>;
     let component: IgxChatComponent;
-    let mockViewRef: { destroy: jasmine.Spy; rootNodes: Node[] };
+    let mockViewRef: { destroy: Mock; rootNodes: Node[] };
     let mockTemplateRefA: TemplateRef<any>;
     let mockTemplateRefB: TemplateRef<any>;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxChatComponent]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(() => {
         fixture = TestBed.createComponent(IgxChatComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
 
-        mockViewRef = { destroy: jasmine.createSpy('destroy'), rootNodes: [] as any };
+        mockViewRef = { destroy: vi.fn(), rootNodes: [] as any };
         mockTemplateRefA = {} as TemplateRef<any>;
         mockTemplateRefB = {} as TemplateRef<any>;
 
-        spyOn((component as any)._view, 'createEmbeddedView')
-            .and.returnValue(mockViewRef as unknown as ViewRef);
+        vi.spyOn((component as any)._view, 'createEmbeddedView')
+            .mockReturnValue(mockViewRef as unknown as ViewRef);
     });
 
     it('destroys old view refs when a template ref is replaced', () => {
@@ -293,7 +299,7 @@ describe('Chat view lifecycle (_setTemplates)', () => {
 
         (component as any)._setTemplates({ messageContent: mockTemplateRefB });
 
-        expect((component as any)._templateViewRefs.has(mockTemplateRefA)).toBeFalse();
+        expect((component as any)._templateViewRefs.has(mockTemplateRefA)).toBe(false);
     });
 
     it('does not create renderers for falsy template ref values', () => {
@@ -341,10 +347,10 @@ describe('Chat view lifecycle (_setTemplates)', () => {
 })
 class ChatTemplatesBed {
     public messages = signal<IgcChatMessage[]>([{
-        id: '1',
-        sender: 'user',
-        text: 'Hello world'
-    }]);
+            id: '1',
+            sender: 'user',
+            text: 'Hello world'
+        }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
 }
 
@@ -361,10 +367,10 @@ class ChatTemplatesBed {
 class ChatDynamicTemplatesBed {
     public templates = signal<IgxChatTemplates | null>(null);
     public messages = signal<IgcChatMessage[]>([{
-        id: '1',
-        sender: 'user',
-        text: 'Hello world'
-    }]);
+            id: '1',
+            sender: 'user',
+            text: 'Hello world'
+        }]);
     public messageTemplate = viewChild.required<TemplateRef<any>>('message');
 
     public bindTemplates(): void {
