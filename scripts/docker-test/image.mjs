@@ -79,7 +79,7 @@ export async function ensureImage({ projectRoot, dockerfilePath, force = false }
   } else if (existingHash === null) {
     log(
       "docker-test",
-      `Building CI-equivalent image '${IMAGE}' (ubuntu:24.04 + Node 24 + Chrome)…`,
+      `Building CI-equivalent image '${IMAGE}' (ubuntu:24.04 + Node 24 + Playwright Chromium)…`,
     );
   } else {
     log("docker-test", `Dockerfile.test changed — rebuilding '${IMAGE}'…`);

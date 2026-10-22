@@ -1,6 +1,7 @@
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
 import { cloneValue, cloneValueCached, cloneHierarchicalArray, compareMaps, getComponentCssSizeVar,
     intoChunks, isDate, isLeftToRight, isObject, showMessage, uniqueDates } from './utils';
+import { describe, it, expect } from 'vitest';
 
 describe('Utils', () => {
     const complexObject = {
@@ -109,8 +110,18 @@ describe('Utils', () => {
         });
 
         it('Should create shallow copy of array', () => {
-            const input: { Number: any; String: any; Boolean: any; Date: any }[] = SampleTestData.differentTypesData();
-            const clone: { Number: any; String: any; Boolean: any; Date: any }[] = cloneValue(input);
+            const input: {
+                Number: any;
+                String: any;
+                Boolean: any;
+                Date: any;
+            }[] = SampleTestData.differentTypesData();
+            const clone: {
+                Number: any;
+                String: any;
+                Boolean: any;
+                Date: any;
+            }[] = cloneValue(input);
             expect(clone).not.toBe(input);
             expect(clone.length).toBe(input.length);
             expect(clone).toEqual(input);
@@ -266,16 +277,16 @@ describe('Utils', () => {
         it('Should compare maps by size, keys and values', () => {
             const map = new Map([['a', 1], ['b', 2]]);
 
-            expect(compareMaps(map, new Map([['a', 1], ['b', 2]]))).toBeTruthy('equal maps');
-            expect(compareMaps(map, new Map([['a', 1], ['b', 3]]))).toBeFalsy('different value');
-            expect(compareMaps(map, new Map([['a', 1], ['c', 2]]))).toBeFalsy('different key');
-            expect(compareMaps(map, new Map([['a', 1]]))).toBeFalsy('different size');
-            expect(compareMaps(new Map(), new Map())).toBeTruthy('two empty maps');
+            expect(compareMaps(map, new Map([['a', 1], ['b', 2]])), 'equal maps').toBeTruthy();
+            expect(compareMaps(map, new Map([['a', 1], ['b', 3]])), 'different value').toBeFalsy();
+            expect(compareMaps(map, new Map([['a', 1], ['c', 2]])), 'different key').toBeFalsy();
+            expect(compareMaps(map, new Map([['a', 1]])), 'different size').toBeFalsy();
+            expect(compareMaps(new Map(), new Map()), 'two empty maps').toBeTruthy();
         });
 
         it('Should treat a missing second map as equal only to a missing first one', () => {
-            expect(compareMaps(null, null)).toBeTruthy('both missing');
-            expect(compareMaps(new Map([['a', 1]]), null)).toBeFalsy('only the second one missing');
+            expect(compareMaps(null, null), 'both missing').toBeTruthy();
+            expect(compareMaps(new Map([['a', 1]]), null), 'only the second one missing').toBeFalsy();
         });
     });
 
@@ -310,8 +321,8 @@ describe('Utils', () => {
         it('Should always report the message as shown', () => {
             // The warning itself is a console side effect - what the callers act on is the returned flag,
             // which has to stay `true` both for the call that logs and for the one that skips it.
-            expect(showMessage('Deprecated', false)).toBeTruthy('not shown yet');
-            expect(showMessage('Deprecated', true)).toBeTruthy('already shown');
+            expect(showMessage('Deprecated', false), 'not shown yet').toBeTruthy();
+            expect(showMessage('Deprecated', true), 'already shown').toBeTruthy();
         });
     });
 
@@ -333,7 +344,7 @@ describe('Utils', () => {
 
     describe('Utils - isLeftToRight() unit tests', () => {
         it('Should default to left-to-right when there is no element', () => {
-            expect(isLeftToRight(null)).toBeTruthy('no element');
+            expect(isLeftToRight(null), 'no element').toBeTruthy();
         });
     });
 

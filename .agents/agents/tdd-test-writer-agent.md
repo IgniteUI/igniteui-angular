@@ -113,11 +113,11 @@ Use as implementation guidance, not as a checklist.
 | What to test | How |
 |---|---|
 | Signal inputs | `fixture.componentRef.setInput('name', value)` → assert `component.name()` |
-| Outputs | `spyOn(component.event, 'emit')` → trigger → `toHaveBeenCalledWith(...)` |
+| Outputs | `vi.spyOn(component.event, 'emit')` → trigger → `toHaveBeenCalledWith(...)` |
 | Computed state | Set inputs → `fixture.detectChanges()` → assert `component.derived()` |
 | Keyboard navigation | Use `UIInteractions.triggerKeyDownEvtUponElem()` |
 | Mouse interaction | Use `UIInteractions.simulateClickEvent()` |
-| Async | `fakeAsync(() => { ... tick(); ... })` |
+| Async | `async` test → `await fixture.whenStable()` or `await wait(ms)`; `vi.useFakeTimers()` + `vi.advanceTimersByTime(ms)` for timers. No `fakeAsync`/`tick`/`waitForAsync` (tests run zoneless on Vitest) |
 | DOM attributes | `element.getAttribute('aria-...')`, `element.getAttribute('role')` |
 | CSS classes | `element.classList.contains('igx-...')` |
 | Accessibility | Verify `role`, `aria-label`, `aria-expanded`, `aria-selected`, `tabindex`, focus order |
@@ -143,15 +143,21 @@ Run the smallest relevant suite after writing tests.
 Confirm that each new test fails for the intended missing behavior, not merely because of a missing export, missing symbol, or unrelated setup error.
 
 ```bash
-# Non-grid components
-npm run test:lib:others
+# Once per session (and after component SCSS changes)
+npm run build:styles:components
+
+# One component, directive, or spec file
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/<component>/**/*.spec.ts'
 
 # Grid variants
-npm run test:lib:grid
-npm run test:lib:tgrid
-npm run test:lib:hgrid
-npm run test:lib:pgrid
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/**/*.spec.ts'
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/grid/**/*.spec.ts'
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/tree-grid/**/*.spec.ts'
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/hierarchical-grid/**/*.spec.ts'
+ng test igniteui-angular --no-watch --include 'projects/igniteui-angular/grids/pivot-grid/**/*.spec.ts'
 ```
+
+Add `--filter '<regex>'` to run only the tests whose names match.
 
 ---
 
