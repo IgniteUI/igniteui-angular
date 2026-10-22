@@ -33,6 +33,8 @@ All notable changes for each version of this project will be documented in this 
     - Writable properties that are not inputs, such as `selected` of `igc-column` and `totalPages` of `igc-paginator`, are now applied when set on the element. Previously the value was ignored and an `NG0303` error was logged.
     - The deprecated `getFilterFactory` method is now available on `igc-grid`, as intended for backwards compatibility.
     - Icon changes broadcast from other pages now update only the icons or icon references that match the message's action type.
+- `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
+    - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxStepperComponent`
     - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
     - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
@@ -49,6 +51,8 @@ All notable changes for each version of this project will be documented in this 
     - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
 - `IgxGridExcelStyleFilteringComponent`
     - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+- **Forms**
+    - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` bound to Signal Forms now show the success state again when edited to another valid value after a blur (#17648).
 
 ## 22.2.2
 

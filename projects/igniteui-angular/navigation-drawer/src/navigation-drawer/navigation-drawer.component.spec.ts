@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxNavigationDrawerComponent } from './navigation-drawer.component';
-import { IgxNavigationService } from 'igniteui-angular/core';
+import { IgxNavigationCloseDirective, IgxNavigationService, IgxNavigationToggleDirective } from 'igniteui-angular/core';
 import { IgxNavDrawerItemDirective, IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
 import { IgxNavbarComponent } from 'igniteui-angular/navbar';
 import { IgxFlexDirective, IgxLayoutDirective } from 'igniteui-angular/directives';
@@ -146,6 +146,35 @@ describe('Navigation Drawer', () => {
         expect(drawer.isOpen).toBeTruthy();
         drawer.toggle();
         expect(drawer.isOpen).toBeFalsy();
+    });
+
+    it('should open and close through the igxNavToggle and igxNavClose directives', async () => {
+        const fixture = TestBed.createComponent(TestNavDirectivesComponent);
+        fixture.detectChanges();
+        const drawer = fixture.componentInstance.navDrawer;
+        const toggleButton: HTMLElement = fixture.nativeElement.querySelector('#toggle');
+        const closeButton: HTMLElement = fixture.nativeElement.querySelector('#close');
+        expect(drawer.isOpen).toBeFalsy();
+
+        toggleButton.click();
+        expect(drawer.isOpen).toBeTruthy();
+        toggleButton.click();
+        expect(drawer.isOpen).toBeFalsy();
+
+        toggleButton.click();
+        expect(drawer.isOpen).toBeTruthy();
+        closeButton.click();
+        expect(drawer.isOpen).toBeFalsy();
+        closeButton.click(); // should do nothing
+        expect(drawer.isOpen).toBeFalsy();
+
+        // a target that is not registered in the navigation service is ignored
+        expect(() => fixture.nativeElement.querySelector('#toggleMissing').click()).not.toThrow();
+        expect(drawer.isOpen).toBeFalsy();
+
+        toggleButton.click();
+        expect(() => fixture.nativeElement.querySelector('#closeMissing').click()).not.toThrow();
+        expect(drawer.isOpen).toBeTruthy();
     });
 
     it('async API calls should emit events', async () => {
@@ -871,6 +900,24 @@ class TestComponentDIComponent {
     public navDrawer: IgxNavigationDrawerComponent;
     public drawerMiniWidth: string | number;
     public drawerWidth: string | number;
+}
+
+@Component({
+    providers: [IgxNavigationService],
+    selector: 'igx-test-cmp-nav-directives',
+    template: `
+        <igx-nav-drawer id="testNav"></igx-nav-drawer>
+        <button type="button" id="toggle" igxNavToggle="testNav">Toggle</button>
+        <button type="button" id="close" igxNavClose="testNav">Close</button>
+        <button type="button" id="toggleMissing" igxNavToggle="missing">Toggle missing</button>
+        <button type="button" id="closeMissing" igxNavClose="missing">Close missing</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxNavigationDrawerComponent, IgxNavigationToggleDirective, IgxNavigationCloseDirective]
+})
+class TestNavDirectivesComponent {
+    @ViewChild(IgxNavigationDrawerComponent, { static: true })
+    public navDrawer: IgxNavigationDrawerComponent;
 }
 
 @Component({
