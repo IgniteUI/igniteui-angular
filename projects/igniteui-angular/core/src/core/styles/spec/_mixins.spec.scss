@@ -32,6 +32,28 @@
     }
 }
 
+// stylelint-disable max-nesting-depth
+@include describe('Scope') {
+    @include it('should wrap each selector of a list in its own :where()') {
+        @include assert() {
+            @include output() {
+                @include scoping.scope(test, '.a, b, .c .d', ()) using ($schema) {
+                    color: red;
+                }
+            }
+
+            @include expect() {
+                @layer ig.test {
+                    :where(.a), :where(b), :where(.c .d) {
+                        color: red;
+                    }
+                }
+            }
+        }
+    }
+}
+// stylelint-enable max-nesting-depth
+
 @include describe('Generate color class') {
     @include it('should concatenate the name, variant, prefix, and suffix in the correct order.') {
         $name: primary;

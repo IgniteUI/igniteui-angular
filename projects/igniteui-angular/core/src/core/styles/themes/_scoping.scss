@@ -1,4 +1,6 @@
+@use 'sass:list';
 @use 'sass:map';
+@use 'sass:selector';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @forward 'igniteui-theming/sass/themes';
@@ -89,8 +91,10 @@
 }
 
 /// Wraps the passed content in a named cascade layer and scopes it to the given
-/// selector through `:where()`, keeping specificity at zero. The active schema is
-/// yielded to the content block so callers can resolve themes against it.
+/// selector through `:where()`, keeping specificity at zero. Each selector of a list
+/// gets its own `:where()`, as Chromium can't bucket multi-argument `:where()` subjects
+/// and would match them against every element. The active schema is yielded to the
+/// content block so callers can resolve themes against it.
 /// @access private
 /// @param {String} $layer - The cascade layer name (the `ig.` prefix is added by `layer`).
 /// @param {String} $selector - The selector the emitted styles are scoped to.
@@ -98,10 +102,16 @@
 /// @content The declarations to emit; receives `$schema` as its single argument,
 ///   so include it with `using ($schema)`.
 /// @requires {mixin} layer
-/// @output The content wrapped in `@layer ig.#{$layer}` inside a `:where(#{$selector})` rule.
+/// @output The content wrapped in `@layer ig.#{$layer}` inside a `:where(a), :where(b)` rule.
 @mixin scope($layer, $selector, $schema) {
+    $_scoped: ();
+
+    @each $complex in selector.parse($selector) {
+        $_scoped: list.append($_scoped, ':where(#{$complex})', $separator: comma);
+    }
+
     @include layer($layer) {
-        :where(#{$selector}) {
+        #{$_scoped} {
             @content($schema);
         }
     }
