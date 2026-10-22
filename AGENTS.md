@@ -8,7 +8,7 @@ Ignite UI for Angular is a comprehensive UI component library built on the Angul
 
 - **Language**: TypeScript
 - **Framework**: Angular 22+
-- **Test runner**: Karma + Jasmine
+- **Test runner**: Vitest (browser mode with Playwright Chromium via the Angular unit-test builder; Node for schematics, migrations, and Sass style tests)
 - **Package format**: Angular Package Format with multiple entry points
 - **Build**: ng-packagr
 
@@ -41,7 +41,7 @@ projects/
     schematics/                    ← `ng add` / schematics
     src/                           ← shared library sources
     test-utils/                    ← shared test helpers
-    karma*.conf.js                 ← targeted Karma configs for different suites
+    vitest.config.ts               ← Vitest runner config for library browser tests
   igniteui-angular-elements/       ← Angular Elements package/project
   igniteui-angular-i18n/           ← i18n package/resources
   igniteui-angular-performance/    ← performance-focused project
@@ -107,11 +107,10 @@ css-naming-convention.md           ← CSS naming rules
 | Build schematics | `npm run build:schematics` |
 | Build i18n | `npm run build:i18n` |
 | All tests | `npm run test:lib` |
-| Non-grid tests | `npm run test:lib:others` |
-| Grid tests | `npm run test:lib:grid` |
-| Tree-grid tests | `npm run test:lib:tgrid` |
-| Hierarchical-grid tests | `npm run test:lib:hgrid` |
-| Pivot-grid tests | `npm run test:lib:pgrid` |
+| Subset of tests (one component, grid type, or spec file) | `ng test igniteui-angular --no-watch --include '<glob>'` (e.g. `'projects/igniteui-angular/grids/grid/**/*.spec.ts'`) |
+| Tests in watch mode | `npm run test:lib:watch` |
+| Extras tests | `npm run test:extras` |
+| Elements tests | `npm run test:elements` |
 | Schematics tests | `npm run test:schematics` |
 | i18n tests | `npm run test:i18n` |
 | Style tests | `npm run test:styles` |
@@ -128,7 +127,7 @@ Domain-specific knowledge for AI assistants:
 | Generate From Image Design | [`skills/igniteui-angular-generate-from-image-design/SKILL.md`](skills/igniteui-angular-generate-from-image-design/SKILL.md) | Building Angular views from screenshots, mockups, or wireframes with Ignite UI components |
 | Figma to App | [`skills/igniteui-angular-figma-to-app/SKILL.md`](skills/igniteui-angular-figma-to-app/SKILL.md) | Building Angular apps from Figma screens with Ignite UI components, including Indigo.Design kits, third-party kits, and plain frames |
 | Build | [`.agents/skills/igniteui-angular-build/SKILL.md`](.agents/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
-| Testing | [`.agents/skills/igniteui-angular-testing/SKILL.md`](.agents/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
+| Testing | [`.agents/skills/igniteui-angular-testing/SKILL.md`](.agents/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the smallest relevant test run |
 | Linting | [`.agents/skills/igniteui-angular-linting/SKILL.md`](.agents/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
 | Skill Authoring | [`.agents/skills/igniteui-angular-skill-authoring/SKILL.md`](.agents/skills/igniteui-angular-skill-authoring/SKILL.md) | Writing or updating a SKILL.md: frontmatter rules, description format, size budget |
 

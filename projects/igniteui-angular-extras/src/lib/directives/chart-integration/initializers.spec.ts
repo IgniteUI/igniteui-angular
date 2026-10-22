@@ -15,12 +15,13 @@ import {
     IgxStackedBarSeriesComponent,
     IgxStacked100BarSeriesComponent
 } from 'igniteui-angular-charts';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 // Helper to create a mock chart with series and axes arrays
 function createMockDataChart() {
     return {
-        series: { count: 0, clear: jasmine.createSpy('seriesClear'), add: jasmine.createSpy('seriesAdd') },
-        axes: { count: 0, clear: jasmine.createSpy('axesClear'), add: jasmine.createSpy('axesAdd') }
+        series: { count: 0, clear: vi.fn(), add: vi.fn() },
+        axes: { count: 0, clear: vi.fn(), add: vi.fn() }
     };
 }
 
@@ -41,7 +42,7 @@ describe('ChartInitializer.applyOptions', () => {
     it('should subscribe to EventEmitter properties instead of overwriting', () => {
         const emitter = new EventEmitter<string>();
         const target = { onReady: emitter } as any;
-        const callback = jasmine.createSpy('callback');
+        const callback = vi.fn();
 
         initializer.applyOptions(target, { onReady: callback });
 

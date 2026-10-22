@@ -8,6 +8,6 @@
         "declaration": true,
         "outDir": "../../../dist/igniteui-angular/schematics/",
         "skipLibCheck": true,
-        "types": ["node", "jasmine"]
+        "types": ["node", "vitest/globals"]
     }
 }
