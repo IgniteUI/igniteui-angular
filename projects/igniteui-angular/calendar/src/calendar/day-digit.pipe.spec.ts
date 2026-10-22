@@ -1,4 +1,5 @@
 import { DayDigitPipe } from './day-digit.pipe';
+import { describe, it, expect } from 'vitest';
 
 describe('DayDigitPipe', () => {
     const pipe = new DayDigitPipe();

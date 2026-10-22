@@ -1,23 +1,18 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from 'igniteui-angular/grids/core';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, frames, nextFrame, wait, waitForActiveNodeChange } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
-import {
-    VirtualGridComponent,
-    NoScrollsComponent,
-    IgxGridGroupByComponent
-} from '../../../test-utils/grid-samples.spec';
+import { VirtualGridComponent, NoScrollsComponent, IgxGridGroupByComponent } from '../../../test-utils/grid-samples.spec';
 
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, QueryList } from '@angular/core';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { CellType } from 'igniteui-angular/grids/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
-
-const DEBOUNCETIME = 100;
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
 
@@ -25,13 +20,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoScrollsComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(NoScrollsComponent);
@@ -93,9 +88,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('should warn and not enter add row mode on Alt + plus when the grid is not row editable', () => {
-            jasmine.getEnv().allowRespy(true);
-            const warnSpy = spyOn(console, 'warn');
-            jasmine.getEnv().allowRespy(false);
+            const warnSpy = vi.spyOn(console, 'warn');
             GridFunctions.focusFirstCell(fix, grid);
 
             UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true);
@@ -112,13 +105,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             const cell = grid.gridAPI.get_cell_by_index(lastRowIndex, 'Name');
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
-            expect(cell.editMode).toBeTrue();
+            expect(cell.editMode).toBe(true);
 
             grid.crudService.cell.editValue = 'Updated Name';
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fix.detectChanges();
 
-            expect(grid.crudService.cellInEditMode).toBeFalse();
+            expect(grid.crudService.cellInEditMode).toBe(false);
             expect(grid.data[lastRowIndex].Name).toBe('Updated Name');
             expect(grid.navigation.activeNode.row).toBe(lastRowIndex);
             expect(grid.navigation.activeNode.column).toBe(cell.column.visibleIndex);
@@ -173,7 +166,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('Should emit when activeNode ref is changed', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             const args: IActiveNodeChangeEventArgs = {
                 row: 0,
@@ -211,7 +204,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
 
         it('should emit activeNodeChange once when you click over the same element', () => {
-            spyOn(grid.activeNodeChange, 'emit').and.callThrough();
+            vi.spyOn(grid.activeNodeChange, 'emit');
 
             gridContent.triggerEventHandler('focus', null);
             fix.detectChanges();
@@ -254,24 +247,41 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(selectedCell.value).toEqual('Company A');
             expect(selectedCell.column.field).toMatch('Company');
         });
+
+        it('should ignore + and = on a focused cell, with or without ctrl', () => {
+            GridFunctions.focusFirstCell(fix, grid);
+            fix.detectChanges();
+            const activeNode = { ...grid.navigation.activeNode };
+
+            ['+', '='].forEach(key => {
+                [false, true].forEach(ctrlKey => {
+                    const event = new KeyboardEvent('keydown', { key, ctrlKey, bubbles: true, cancelable: true });
+                    expect(() => grid.navigation.handleNavigation(event)).not.toThrow();
+                    fix.detectChanges();
+                    expect(event.defaultPrevented).toBe(false);
+                    expect(grid.navigation.activeNode.row).toBe(activeNode.row);
+                    expect(grid.navigation.activeNode.column).toBe(activeNode.column);
+                });
+            });
+        });
     });
 
     describe('in virtualized grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     VirtualGridComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
-            });
+            }).compileComponents();
             fix = TestBed.createComponent(VirtualGridComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -293,19 +303,22 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             }
             fix.componentInstance.columns = cols;
             fix.componentInstance.data = fix.componentInstance.generateData(100);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
+            fix.detectChanges();
+            // Changing the columns requests a grid re-size in a microtask; apply it so the horizontal scrollbar is shown
+            await fix.whenStable();
             fix.detectChanges();
 
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(200);
+            await frames(2);
             fix.detectChanges();
 
             gridContent.triggerEventHandler('focus', null);
-            await wait(400);
+            await frames(2);
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(4, 'col5');
@@ -321,15 +334,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.row.index).toEqual(3);
@@ -337,7 +350,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
         it('should allow navigating up', async () => {
             grid.verticalScrollContainer.scrollTo(104);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(100, 'value');
@@ -348,15 +361,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.row.index).toEqual(100);
             // Navigate to the 94th row
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.row.index).toEqual(97);
@@ -369,7 +382,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             }
             fix.componentInstance.columns = cols;
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridFunctions.focusFirstCell(fix, grid);
@@ -377,21 +390,21 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.column.index).toEqual(3);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.column.index).toEqual(2);
@@ -409,19 +422,19 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             grid.pinColumn('col1');
             grid.pinColumn('col3');
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             GridFunctions.focusFirstCell(fix, grid);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(2);
@@ -435,11 +448,11 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(0);
@@ -472,7 +485,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             cell = grid.gridAPI.get_cell_by_index(selectedCell.row.index, selectedCell.column.field);
             GridFunctions.verifyGridContentActiveDescendant(GridFunctions.getGridContent(fix), cell.nativeElement.id);
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             selectedCell = fix.componentInstance.selectedCell;
@@ -490,7 +503,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             fix.componentInstance.scrollTop(25);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.navigation.containerTopOffset).toEqual(-25);
@@ -503,7 +516,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             fix.detectChanges();
@@ -519,7 +532,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
 
@@ -532,7 +545,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, false, true);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             cell2 = grid.getCellByColumn(0, 'other');
@@ -546,7 +559,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             grid.verticalScrollContainer.addScrollTop(5000);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             let cell = grid.gridAPI.get_cell_by_index(101, '2');
@@ -554,8 +567,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
 
+            let navigated = waitForActiveNodeChange(grid);
             UIInteractions.triggerKeyDownEvtUponElem('home', cell.nativeElement, true, false, false, true);
-            await wait(150);
+            await navigated;
             fix.detectChanges();
 
             let cell2 = grid.getCellByColumn(0, '0');
@@ -567,8 +581,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
 
+            navigated = waitForActiveNodeChange(grid);
             UIInteractions.triggerKeyDownEvtUponElem('end', cell.nativeElement, true, false, false, true);
-            await wait(200);
+            await navigated;
             fix.detectChanges();
 
             cell2 = grid.getCellByColumn(499, '49');
@@ -580,14 +595,17 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
+            fix.detectChanges();
+            // Changing the columns requests a grid re-size in a microtask; apply it so the horizontal scrollbar is shown
+            await fix.whenStable();
             fix.detectChanges();
 
             const rowDisplayContainer = GridFunctions.getRowDisplayContainer(fix, 1).nativeElement;
             fix.componentInstance.scrollLeft(50);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(rowDisplayContainer.style.left).toEqual('-50px');
@@ -600,7 +618,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.column.field).toMatch('1');
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', grid.tbody.nativeElement, true);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await frames(2);
 
             fix.detectChanges();
             expect(rowDisplayContainer.style.left).toEqual('0px');
@@ -612,22 +630,27 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
+            // Keep the visible area the same regardless of the native scrollbar size (0 when the browser hides scrollbars)
+            fix.componentInstance.gridWidth = (784 + grid.scrollSize) + 'px';
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
+            fix.detectChanges();
+            // Changing the columns requests a grid re-size in a microtask; apply it so the horizontal scrollbar is shown
+            await fix.whenStable();
             fix.detectChanges();
 
             const rowDisplayContainer = GridFunctions.getRowDisplayContainer(fix, 1).nativeElement;
             expect(rowDisplayContainer.style.left).toEqual('0px');
             const curCell = grid.gridAPI.get_cell_by_index(1, '2');
             UIInteractions.simulateClickAndSelectEvent(curCell);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(20);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('2');
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', grid.tbody.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(fix.componentInstance.selectedCell.value).toEqual(30);
@@ -635,10 +658,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(parseInt(rowDisplayContainer.style.left, 10)).toBeLessThanOrEqual(-40);
         });
 
-        it('should scroll first row into view when pressing arrow up', (async () => {
+        it('should scroll first row into view when pressing arrow up', async () => {
             grid.reflow();
             fix.componentInstance.scrollTop(25);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             let scrollContainerOffset = grid.navigation.containerTopOffset;
@@ -652,7 +675,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.value).toEqual(10);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
             UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             scrollContainerOffset = grid.navigation.containerTopOffset;
@@ -660,7 +683,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(scrollContainerOffset).toEqual(0);
             expect(fix.componentInstance.selectedCell.value).toEqual(0);
             expect(fix.componentInstance.selectedCell.column.field).toMatch('value');
-        }));
+        });
 
         it('should allow pageup/pagedown navigation when the grid is focused', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
@@ -698,7 +721,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 args.target.activate(null);
             });
             fix.detectChanges();
-            await wait(200);
+            await frames(2);
             fix.detectChanges();
 
             const target = grid.gridAPI.get_cell_by_index(15, '1');
@@ -711,16 +734,16 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
             fix.componentInstance.data = fix.componentInstance.generateData(100);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await nextFrame();
 
             GridFunctions.focusFirstCell(fix, grid);
 
             grid.navigateTo(50, 50, (args) => {
- args.target.activate(null);
-});
-            await wait(DEBOUNCETIME);
+                args.target.activate(null);
+            });
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             const target = grid.gridAPI.get_cell_by_index(50, '50');
@@ -733,14 +756,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = vi.spyOn(grid.gridKeydown, 'emit');
 
             const cell = grid.gridAPI.get_cell_by_index(1, '2');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(gridKeydown).toHaveBeenCalledTimes(1);
@@ -751,13 +774,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     });
 
     describe('Group By navigation ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     IgxGridGroupByComponent, NoopAnimationsModule
                 ]
             }).compileComponents();
-        }));
+        });
 
         let fix;
         let grid: IgxGridComponent;
@@ -784,15 +807,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             gridContent.triggerEventHandler('focus', null);
-            await wait(200);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
@@ -833,10 +856,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it(`focus should stay over the group row when expanding/collapsing
-        with keyboard and the grid is scrolled to the bottom`, (async () => {
+        with keyboard and the grid is scrolled to the bottom`, async () => {
 
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             let groupedRowsCount = grid.groupsRowList.length;
@@ -848,7 +871,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             GridFunctions.verifyGroupRowIsFocused(groupRow);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             groupedRowsCount = grid.groupsRowList.length;
@@ -856,21 +879,21 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(groupRow.index).toEqual(11);
             expect(groupRow.expanded).toBeFalsy();
             GridFunctions.verifyGroupRowIsFocused(groupRow);
-        }));
+        });
 
         it(`should be able to navigate down to the next row when expand the last group row
-    and grid is scrolled to bottom`, (async () => {
+    and grid is scrolled to bottom`, async () => {
             grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             grid.groupsRowList.last.toggle();
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
             expect(grid.groupsRowList.last.expanded).toBeFalsy();
 
             grid.groupsRowList.last.toggle();
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
             expect(grid.groupsRowList.last.expanded).toBeTruthy();
 
@@ -879,14 +902,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
             UIInteractions.triggerEventHandlerKeyDown('arrowDown', gridContent);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(groupRowIndex + 1, 'Downloads');
             GridSelectionFunctions.verifyCellSelected(cell);
-        }));
+        });
 
-        it('should allow keyboard navigation through group rows.', (async () => {
+        it('should allow keyboard navigation through group rows.', async () => {
             fix.componentInstance.width = '400px';
             fix.componentInstance.height = '300px';
             await wait();
@@ -905,25 +928,25 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowDown', gridContent);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(2);
             expect((row.cells as QueryList<CellType>).toArray()[0].selected).toBe(true);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowUp', gridContent);
-            await wait(DEBOUNCETIME);
+            await frames(2);
             fix.detectChanges();
 
             row = grid.gridAPI.get_row_by_index(1);
-            expect(row.focused).toBeTrue();
-        }));
+            expect(row.focused).toBe(true);
+        });
 
         it('should persist last selected cell column index when navigate through group rows.', async () => {
             fix.componentInstance.width = '400px';
             fix.componentInstance.height = '300px';
             grid.columnWidth = '200px';
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             grid.groupBy({
                 fieldName: 'Released', dir: SortingDirection.Desc,
@@ -932,7 +955,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             grid.headerContainer.getScroll().scrollLeft = 1000;
-            await wait(DEBOUNCETIME);
+            await frames(2);
 
             const cell = grid.gridAPI.get_cell_by_index(2, 'Released');
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -948,7 +971,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                     expect(selectedCell.column.field).toEqual('Released');
                 }
                 UIInteractions.triggerEventHandlerKeyDown('arrowDown', gridContent);
-                await wait(DEBOUNCETIME);
+                await frames(2);
                 fix.detectChanges();
             }
             let cell2 = grid.getCellByColumn(9, 'Released');
@@ -962,7 +985,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                     expect(selectedCell.column.field).toEqual('Released');
                 }
                 UIInteractions.triggerEventHandlerKeyDown('arrowUp', gridContent);
-                await wait(DEBOUNCETIME);
+                await frames(2);
                 fix.detectChanges();
             }
 
@@ -974,7 +997,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(cell2.selected).toBe(true);
         });
 
-        it('should focus grouped row when press arrow keys up or down', (async () => {
+        it('should focus grouped row when press arrow keys up or down', async () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
@@ -1006,9 +1029,9 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             groupRow = grid.groupsRowList.toArray()[1];
             GridFunctions.verifyGroupRowIsFocused(groupRow);
             expect(cell.selected).toBe(true);
-        }));
+        });
 
-        it('should keep selected cell when expand/collapse grouped row ', (async () => {
+        it('should keep selected cell when expand/collapse grouped row ', async () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
@@ -1038,21 +1061,21 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             expect(cell.selected).toBe(true);
             expect(groupRow.expanded).toBe(true);
-        }));
+        });
 
         it('Custom KB navigation:  should be able to scroll to a random row and pass a cb', async () => {
             fix.componentInstance.width = '600px';
             fix.componentInstance.height = '500px';
             grid.columnWidth = '200px';
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             grid.navigateTo(9, -1, (args) => {
- args.target.nativeElement.dispatchEvent(new Event('pointerdown'));
-});
-            await wait(100);
+                args.target.nativeElement.dispatchEvent(new Event('pointerdown'));
+            });
+            await frames(2);
             fix.detectChanges();
-            await wait(100);
+            await frames(2);
             fix.detectChanges();
 
             const target = grid.rowList.find(r => r.index === 9);
@@ -1064,15 +1087,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.width = '600px';
             fix.componentInstance.height = '500px';
             grid.columnWidth = '200px';
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             const rowEl = grid.rowList.find(r => r.index === 0);
             UIInteractions.simulateClickAndSelectEvent(rowEl);
             fix.detectChanges();
 
-            const gridKeydown = spyOn<any>(grid.gridKeydown, 'emit').and.callThrough();
+            const gridKeydown = vi.spyOn(grid.gridKeydown, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Enter', rowEl.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(gridKeydown).toHaveBeenCalledTimes(1);
@@ -1081,7 +1104,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             });
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', rowEl.nativeElement, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(gridKeydown).toHaveBeenCalledTimes(2);

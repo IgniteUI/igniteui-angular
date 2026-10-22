@@ -193,12 +193,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         if (!value) {
             return;
         }
-        const selection = this.selectionService.get(this._id);
-        this.selectionService.clear(this._id);
         this._id = value;
-        if (selection) {
-            this.selectionService.set(this._id, selection);
-        }
     }
 
     /**
@@ -1026,6 +1021,16 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     protected computedStyles: any;
 
     private _id: string = `igx-combo-${NEXT_ID++}`;
+    /**
+     * The key this instance's selection is stored under in the shared `IgxSelectionAPIService`.
+     * It is fixed for the lifetime of the combo and does not follow `id`: when `id` changes
+     * (e.g. a cell template reused by grid virtualization is bound to another record) two
+     * live combos can briefly hold each other's ids, and an id-keyed selection would be
+     * handed from one combo to the other.
+     *
+     * @hidden @internal
+     */
+    protected readonly selectionKey: string = this._id;
     private _disableFiltering = false;
     private _type: IgxInputGroupType | null = null;
     private _dataType = '';
@@ -1087,7 +1092,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public ngOnInit() {
         this.ngControl = this._injector!.get<NgControl>(NgControl, null);
         this.control = NgControlAdapter.from(this.ngControl, this._injector!);
-        this.selectionService.set(this.id, new Set());
+        this.selectionService.set(this.selectionKey, new Set());
         this._iconService?.addSvgIconFromText(caseSensitive.name, caseSensitive.value, 'imx-icons');
         this.computedStyles = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
     }
@@ -1155,7 +1160,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         this.destroy$.next();
         this.destroy$.complete();
         this.comboAPI.clear();
-        this.selectionService.delete(this.id);
+        this.selectionService.delete(this.selectionKey);
     }
 
     /**
@@ -1224,7 +1229,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public get selection(): any[] {
-        const serviceRef = this.selectionService.get(this.id);
+        const serviceRef = this.selectionService.get(this.selectionKey);
         return serviceRef ? this.convertKeysToItems(Array.from(serviceRef)) : [];
     }
 
@@ -1235,7 +1240,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * @internal
      */
     public isItemSelected(item: any): boolean {
-        return this.selectionService.is_item_selected(this.id, item);
+        return this.selectionService.is_item_selected(this.selectionKey, item);
     }
 
     /** @hidden @internal */

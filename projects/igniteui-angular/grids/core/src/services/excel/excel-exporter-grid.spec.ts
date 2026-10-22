@@ -1,43 +1,17 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxExcelExporterService } from './excel-exporter';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
-import {
-    ReorderedColumnsComponent,
-    GridIDNameJobTitleComponent,
-    ProductsComponent,
-    GridIDNameJobTitleHireDataPerformanceComponent,
-    GridHireDateComponent,
-    GridExportGroupedDataComponent,
-    MultiColumnHeadersExportComponent,
-    GridWithEmptyColumnsComponent,
-    ColumnsAddedOnInitComponent,
-    GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent,
-    GroupedGridWithSummariesComponent,
-    GridCurrencySummariesComponent,
-    GridUserMeetingDataComponent,
-    GridCustomSummaryComponent,
-    GridCustomSummaryWithNullAndZeroComponent,
-    GridCustomSummaryWithUndefinedZeroAndValidNumberComponent,
-    GridCustomSummaryWithUndefinedAndNullComponent,
-    GridCustomSummaryWithDateComponent
-} from '../../../../../test-utils/grid-samples.spec';
+import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent, GridIDNameJobTitleHireDataPerformanceComponent, GridHireDateComponent, GridExportGroupedDataComponent, MultiColumnHeadersExportComponent, GridWithEmptyColumnsComponent, ColumnsAddedOnInitComponent, GridWithThreeLevelsOfMultiColumnHeadersAndTwoRowsExportComponent, GroupedGridWithSummariesComponent, GridCurrencySummariesComponent, GridUserMeetingDataComponent, GridCustomSummaryComponent, GridCustomSummaryWithNullAndZeroComponent, GridCustomSummaryWithUndefinedZeroAndValidNumberComponent, GridCustomSummaryWithUndefinedAndNullComponent, GridCustomSummaryWithDateComponent } from '../../../../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
 import { IgxTreeGridPrimaryForeignKeyComponent, IgxTreeGridSummariesKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
 
-import { UIInteractions, wait } from '../../../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, nextFrame } from '../../../../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridExportComponent,
-         IgxHierarchicalGridMCHCollapsibleComponent,
-         IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent,
-         IgxHierarchicalGridMultiColumnHeadersExportComponent,
-         IgxHierarchicalGridSummariesExportComponent,
-         IgxHierarchicalGridEmptyDataExportComponent,
-         IgxHierarchicalGridMissingChildDataExportComponent
-} from '../../../../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridExportComponent, IgxHierarchicalGridMCHCollapsibleComponent, IgxHierarchicalGridMultiColumnHeaderIslandsExportComponent, IgxHierarchicalGridMultiColumnHeadersExportComponent, IgxHierarchicalGridSummariesExportComponent, IgxHierarchicalGridEmptyDataExportComponent, IgxHierarchicalGridMissingChildDataExportComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions } from '../../../../../test-utils/grid-functions.spec';
 import { IgxPivotGridMultipleRowComponent, IgxPivotGridTestComplexHierarchyComponent, SALES_DATA } from '../../../../../test-utils/pivot-grid-samples.spec';
 import { IgxHierarchicalRowComponent } from 'igniteui-angular/grids/hierarchical-grid/src/hierarchical-row.component';
@@ -49,14 +23,15 @@ import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { FileContentData } from './test-data.service.spec';
 import { ZipWrapper } from './zip-verification-wrapper.spec';
 import { DefaultSortingStrategy, FilteringExpressionsTree, FilteringLogic, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Excel Exporter #grid', () => {
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 ReorderedColumnsComponent,
@@ -92,25 +67,25 @@ describe('Excel Exporter #grid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         exporter = new IgxExcelExporterService();
         actualData = new FileContentData();
 
         // Spy the saveBlobToFile method so the files are not really created
-        spyOn(ExportUtilities as any, 'saveBlobToFile');
-    }));
+        vi.spyOn(ExportUtilities as any, 'saveBlobToFile').mockImplementation(() => {});
+    });
 
-    afterEach(waitForAsync(() => {
+    afterEach(async () => {
         exporter.columnExporting.unsubscribe();
         exporter.rowExporting.unsubscribe();
-    }));
+    });
 
     describe('', () => {
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('GridExcelExport', 50);
-        }));
+        });
 
         it('should export grid as displayed.', async () => {
             const currentGrid: IgxGridComponent = null;
@@ -150,7 +125,7 @@ describe('Excel Exporter #grid', () => {
             grid.filter('JobTitle', 'Director', IgxStringFilteringOperand.instance().condition('equals'), true);
             fix.detectChanges();
 
-            expect(grid.rowList.length).toEqual(2, 'Invalid number of rows after filtering!');
+            expect(grid.rowList.length, 'Invalid number of rows after filtering!').toEqual(2);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridDataDirectors, 'Two rows should have been exported!');
         });
@@ -165,7 +140,7 @@ describe('Excel Exporter #grid', () => {
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
@@ -183,28 +158,28 @@ describe('Excel Exporter #grid', () => {
             const grid = fix.componentInstance.grid;
             options.ignoreColumnsVisibility = false;
 
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
             let wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
             grid.columnList.get(0).hidden = true;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(2);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
             grid.columnList.get(0).hidden = false;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
             grid.columnList.get(0).hidden = undefined;
             fix.detectChanges();
 
-            expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
+            expect(grid.visibleColumns.length, 'Invalid number of visible columns!').toEqual(3);
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
         });
@@ -273,20 +248,17 @@ describe('Excel Exporter #grid', () => {
 
             let wrapper = await getExportedData(grid, options);
             wrapper.verifyStructure();
-            await wrapper.verifyDataFilesContent(actualData.gridNameFrozenHeaders,
-                'One frozen column and frozen headers should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.gridNameFrozenHeaders, 'One frozen column and frozen headers should have been exported!');
 
             options.ignorePinning = true;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
-            await wrapper.verifyDataFilesContent(actualData.gridFrozenHeaders,
-                'No frozen columns and frozen headers should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.gridFrozenHeaders, 'No frozen columns and frozen headers should have been exported!');
 
             options.freezeHeaders = false;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
-            await wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle,
-                'No frozen columns and no frozen headers should have been exported!');
+            await wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle, 'No frozen columns and no frozen headers should have been exported!');
         });
 
         it('should honor applied sorting.', async () => {
@@ -322,8 +294,7 @@ describe('Excel Exporter #grid', () => {
             fix.detectChanges();
 
             wrapper = await getExportedData(grid, options);
-            await wrapper.verifyDataFilesContent(
-                actualData.simpleGridSortByNameDesc(), 'Descending sorted data should have been exported.');
+            await wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
             grid.sort({ fieldName: 'ID', dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance() });
@@ -808,13 +779,13 @@ describe('Excel Exporter #grid', () => {
     describe('', () => {
         let fix;
         let hGrid;
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('HierarchicalGridExcelExport');
             fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
             fix.detectChanges();
 
             hGrid = fix.componentInstance.hGrid;
-        }));
+        });
 
         it('should export hierarchical grid', async () => {
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalData);
@@ -986,7 +957,7 @@ describe('Excel Exporter #grid', () => {
             hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridEmptyDataExcelExport');
 
-            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+            await expect(getExportedData(hGrid, options)).resolves.not.toThrow();
         });
 
         it('should export hierarchical grid with empty data and summaries without throwing error', async () => {
@@ -1001,7 +972,7 @@ describe('Excel Exporter #grid', () => {
             options = createExportOptions('HierarchicalGridEmptyDataWithSummariesExcelExport');
             options.exportSummaries = true;
 
-            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+            await expect(getExportedData(hGrid, options)).resolves.not.toThrow();
         });
 
         it('should export hierarchical grid with missing child data key without throwing error', async () => {
@@ -1011,7 +982,7 @@ describe('Excel Exporter #grid', () => {
             hGrid = fix.componentInstance.hGrid;
             options = createExportOptions('HierarchicalGridMissingChildDataExcelExport');
 
-            await expectAsync(getExportedData(hGrid, options)).toBeResolved();
+            await expect(getExportedData(hGrid, options)).resolves.not.toThrow();
         });
     });
 
@@ -1118,19 +1089,19 @@ describe('Excel Exporter #grid', () => {
 
             options = createExportOptions('HierarchicalGridCollapsibleMCHExcelExport');
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithCollapsibleMCH);
-        })
+        });
     });
 
     describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('TreeGridExcelExport', 50);
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-        }));
+        });
 
         it('should export tree grid as displayed with all groups expanded.', async () => {
             await exportAndVerify(treeGrid, options, actualData.treeGridData);
@@ -1212,7 +1183,7 @@ describe('Excel Exporter #grid', () => {
             nestedData.push({ ID: 9, ParentID: 8, Name: 'Test', JobTitle: '', Age: 49 });
             treeGrid.data = nestedData;
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             let error = '';
             try {
@@ -1225,7 +1196,7 @@ describe('Excel Exporter #grid', () => {
 
             treeGrid.deleteRowById(9);
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             error = '';
             try {
@@ -1238,7 +1209,7 @@ describe('Excel Exporter #grid', () => {
 
             treeGrid.addRow({ ID: 9, ParentID: 8, Name: 'Test', JobTitle: '', Age: 49 });
             fix.detectChanges();
-            await wait(16);
+            await nextFrame();
 
             error = '';
             try {
@@ -1310,13 +1281,13 @@ describe('Excel Exporter #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('MultiColumnHeaderGridExcelExport');
             fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
             fix.detectChanges();
 
             grid = fix.componentInstance.grid;
-        }));
+        });
 
         it('should export grid with multi column headers', async () => {
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersData, false);
@@ -1360,6 +1331,8 @@ describe('Excel Exporter #grid', () => {
         });
 
         it('should respect ignoreMultiColumnHeaders when set to true', async () => {
+            // The exported column widths come from the rendered ones - size the grid so all columns get the minimum width
+            grid.width = '800px';
             options.ignoreMultiColumnHeaders = true;
             fix.detectChanges();
 
@@ -1404,14 +1377,14 @@ describe('Excel Exporter #grid', () => {
         let fix;
         let grid: any;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('GirdSummariesExcelExport', 50);
-        }));
+        });
 
         it('should export grid with summaries based on summaryCalculationMode', async () => {
             fix = TestBed.createComponent(GroupedGridWithSummariesComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.grid;
             grid.summaryCalculationMode = 'rootLevelOnly';
@@ -1440,7 +1413,7 @@ describe('Excel Exporter #grid', () => {
         it('should export tree grid with summaries', async () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             grid = fix.componentInstance.treeGrid;
 
             grid.toggleRow(grid.getRowByIndex(2).key);
@@ -1454,7 +1427,7 @@ describe('Excel Exporter #grid', () => {
         it('should export hierarchical grid with summaries', async () => {
             fix = TestBed.createComponent(IgxHierarchicalGridSummariesExportComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             grid = fix.componentInstance.hGrid;
 
             const firstRow = grid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
@@ -1492,7 +1465,7 @@ describe('Excel Exporter #grid', () => {
         it('should export grid with custom summaries, only with summary label as string', async () => {
             fix = TestBed.createComponent(GridCustomSummaryComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.grid;
 
@@ -1502,7 +1475,7 @@ describe('Excel Exporter #grid', () => {
         it('should export grid with custom summaries, with null and zero (as number)', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithNullAndZeroComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             grid = fix.componentInstance.grid;
 
             await exportAndVerify(grid, options, actualData.exportGridCustomSummaryWithNullAndZero);
@@ -1511,7 +1484,7 @@ describe('Excel Exporter #grid', () => {
         it('should export grid with custom summaries, with undefined, zero and positive number (as number)', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithUndefinedZeroAndValidNumberComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.grid;
 
@@ -1521,7 +1494,7 @@ describe('Excel Exporter #grid', () => {
         it('should export grid with custom summaries, with undefined and null', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithUndefinedAndNullComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.grid;
 
@@ -1531,7 +1504,7 @@ describe('Excel Exporter #grid', () => {
         it('should export grid with custom summaries, with date', async () => {
             fix = TestBed.createComponent(GridCustomSummaryWithDateComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.grid;
 
@@ -1543,15 +1516,15 @@ describe('Excel Exporter #grid', () => {
         let fix;
         let grid: IgxPivotGridComponent;
 
-        beforeEach(waitForAsync(() => {
+        beforeEach(async () => {
             options = createExportOptions('PivotGridExcelExport');
             fix = TestBed.createComponent(IgxPivotGridMultipleRowComponent);
             fix.detectChanges();
-        }));
+        });
 
         it('should export pivot grid', async () => {
 
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.pivotGrid;
 
@@ -1565,7 +1538,7 @@ describe('Excel Exporter #grid', () => {
             grid = fix.componentInstance.pivotGrid;
             grid.pivotUI.showRowHeaders = true;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             await exportAndVerify(grid, options, actualData.exportPivotGridDataWithHeaders, false);
         });
@@ -1639,7 +1612,7 @@ describe('Excel Exporter #grid', () => {
             };
             grid.pivotUI.showRowHeaders = true;
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             await exportAndVerify(grid, options, actualData.exportPivotGridHierarchicalRowDimensions, false);
         });
@@ -1647,7 +1620,7 @@ describe('Excel Exporter #grid', () => {
         it('should export hierarchical pivot grid', async () => {
             fix = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
             fix.detectChanges();
-            await wait(300);
+            await nextFrame();
 
             grid = fix.componentInstance.pivotGrid;
 
@@ -1662,20 +1635,20 @@ describe('Excel Exporter #grid', () => {
             grid.pivotUI.showRowHeaders = true;
             grid.pivotUI.rowLayout = PivotRowLayoutType.Horizontal;
             grid.pivotConfiguration.rows = [{
-                memberName: 'ProductCategory',
-                memberFunction: (data) => data.ProductCategory,
-                enabled: true,
-                childLevel: {
-                    memberName: 'Country',
+                    memberName: 'ProductCategory',
+                    memberFunction: (data) => data.ProductCategory,
                     enabled: true,
                     childLevel: {
-                        memberName: 'Date',
-                        enabled: true
+                        memberName: 'Country',
+                        enabled: true,
+                        childLevel: {
+                            memberName: 'Date',
+                            enabled: true
+                        }
                     }
-                }
-            }],
+                }],
                 fix.detectChanges();
-            await wait(300);
+            await nextFrame();
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportPivotGridDataHorizontal, false);

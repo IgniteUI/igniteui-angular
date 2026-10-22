@@ -1,10 +1,9 @@
 <div class="igx-splitter-bar"
-    [class.igx-splitter-bar--horizontal]="type === 1"
-    [class.igx-splitter-bar--vertical]="type === 0"
+    [class.igx-splitter-bar--horizontal]="type === SplitterType.Vertical"
+    [class.igx-splitter-bar--vertical]="type === SplitterType.Horizontal"
     [style.cursor]="cursor"
     igxDrag
     [ghost]="false"
-    [dragDirection]="dragDir"
     (dragStart)="onDragStart($event)"
     (dragMove)="onDragMove($event)"
     (dragEnd)="onDragEnd($event)"
@@ -17,8 +16,8 @@
     </div>
     <div
         class="igx-splitter-bar__handle"
-        [class.igx-splitter-bar__handle--horizontal]="type === 1"
-        [class.igx-splitter-bar__handle--vertical]="type === 0"
+        [class.igx-splitter-bar__handle--horizontal]="type === SplitterType.Vertical"
+        [class.igx-splitter-bar__handle--vertical]="type === SplitterType.Horizontal"
     >
     </div>
     <div
