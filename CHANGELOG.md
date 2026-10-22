@@ -38,6 +38,10 @@ All notable changes for each version of this project will be documented in this 
     - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
     - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
     - Setting `animationDuration` from code now applies it to the vertical animations as well.
+- `IgxFocusTrapDirective`, `IgxDialogComponent`
+    - Tab and Shift+Tab no longer get stuck on elements that cannot receive focus. Hidden inputs, elements that are not rendered or are invisible, elements with a negative `tabindex`, and elements inside a disabled `fieldset` or an `inert` container are now skipped. The `summary` of a `details` element and `contenteditable` editing hosts are now focused.
+    - When the focused element is not part of the tab order (e.g. an element with `tabindex="-1"` or a focused shadow host), Tab and Shift+Tab now move focus to the next or previous focusable element instead of the first or last one.
+    - The keydown listener is now removed when the directive is destroyed.
 - `IgxFilterDirective`, `IgxFilterPipe`
     - When filtering by multiple keys, an item matched by any of the keys is no longer hidden when the last key does not match, and `metConditionFn` / `overdueConditionFn` are called once per item instead of once per key.
     - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
