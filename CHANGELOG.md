@@ -17,6 +17,9 @@ All notable changes for each version of this project will be documented in this 
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 - `IgxSplitterComponent`
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
+- `IgxTimePickerComponent`
+    - When `locale` is not set, the picker now follows the global locale set with `setCurrentI18n` and updates its default formats and resource strings when it changes, as the date picker does. Previously it kept the locale it was created with.
+    - `clear()` with a `Date` value now assigns a new `Date` with its time reset to `00:00:00` and notifies `ngModel` and reactive form controls. Previously it changed the bound `Date` object in place, so forms were not updated or re-validated.
 
 ### Bug Fixes
 
@@ -58,6 +61,15 @@ All notable changes for each version of this project will be documented in this 
     - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
 - `IgxSplitterPaneComponent`
     - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxTimePickerComponent`
+    - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
+    - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
+    - The dialog header and the dropdown/dialog lists now update when the locale, format or `spinLoop` change while the picker is open.
+    - A value or `minValue` that does not match `itemsDelta` is now rounded up to the next available item, for example `10:58` with a minutes delta of `7` selects `11:00` instead of `11:03`. When rounding up passes the last available item, the last item is selected.
+    - Switching from AM to PM in the dropdown/dialog no longer selects a time later than `maxValue`.
+    - The `outlet` input is now applied to the dropdown/dialog.
+    - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
+    - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
 
 ## 22.2.3
 
