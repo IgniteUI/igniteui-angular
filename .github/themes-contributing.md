@@ -350,7 +350,8 @@ projects/igniteui-angular/core/src/core/styles/spec/
   _index.scss           ← barrel: @use the spec files
   _functions.spec.scss  ← tests for functions (is-used, is-component, list-diff)
   _mixins.spec.scss     ← tests for mixins (register-component, gen-color-class)
-  tests.mjs             ← Jasmine runner (do not modify)
+  tests.mjs             ← Vitest runner for the sass-true specs (do not modify)
+  vitest.config.mjs     ← Vitest config (Node environment) for `test:styles`
 ```
 
 Run style tests:
@@ -366,8 +367,8 @@ npm run test:styles
 - You modify the component registry logic in `register-component` or `is-used`
 
 You do **not** need to write style tests for new component theme or component
-structural mixins — those are covered by visual/Karma tests on the Angular
-component side.
+structural mixins — those are covered by the Vitest browser tests on the
+Angular component side.
 
 **Test structure** (sass-true):
 

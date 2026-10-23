@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../../test-utils/ui-interactions.spec';
@@ -8,21 +8,22 @@ import { IgxColumnComponent } from '../public_api';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCETIME = 60;
 describe('igxGridPinningActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripTestingComponent,
                 IgxActionStripPinMenuComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base ', () => {
         beforeEach(() => {
@@ -82,20 +83,20 @@ describe('igxGridPinningActions #grid ', () => {
 
             const pinningActions = fixture.debugElement.query(By.directive(IgxGridPinningActionsComponent))
                 .componentInstance as IgxGridPinningActionsComponent;
-            spyOn<any>(grid, 'scrollTo');
+            vi.spyOn(grid as any, 'scrollTo').mockImplementation(() => {});
 
             pinningActions.scrollToRow(null);
             fixture.detectChanges();
 
             expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
             expect(actionStrip.context).toBe(pinnedRow);
         });
 
         it('should not pin or unpin when the context is not a row', () => {
             const pinningActions = actionStrip.actionButtons.first as IgxGridPinningActionsComponent;
-            spyOn(grid, 'pinRow').and.callThrough();
-            spyOn(grid, 'unpinRow').and.callThrough();
+            vi.spyOn(grid, 'pinRow');
+            vi.spyOn(grid, 'unpinRow');
 
             expect(actionStrip.context).toBeUndefined();
             expect(pinningActions.pinned).toBeUndefined();
@@ -117,13 +118,13 @@ describe('igxGridPinningActions #grid ', () => {
 
             const pinningActionsElement: HTMLElement = fixture.nativeElement.querySelector('igx-grid-pinning-actions');
             const pinButton: HTMLElement = pinningActionsElement.querySelector('button');
-            const parentListener = jasmine.createSpy('parentMouseDown');
+            const parentListener = vi.fn();
             pinningActionsElement.addEventListener('mousedown', parentListener);
 
             const mouseDown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
             pinButton.dispatchEvent(mouseDown);
 
-            expect(mouseDown.defaultPrevented).toBeTrue();
+            expect(mouseDown.defaultPrevented).toBe(true);
             expect(parentListener).not.toHaveBeenCalled();
             pinningActionsElement.removeEventListener('mousedown', parentListener);
         });
@@ -165,12 +166,12 @@ describe('igxGridPinningActions #grid ', () => {
             const jumpMenuItem = actionStrip.menu.items[0];
             expect(jumpMenuItem.element.nativeElement.textContent).toContain(grid.resourceStrings.igx_grid_actions_jumpDown_label);
 
-            spyOn<any>(grid, 'scrollTo').and.callThrough();
+            vi.spyOn(grid as any, 'scrollTo');
             actionStrip.menu.selectItem(jumpMenuItem);
             fixture.detectChanges();
 
             expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
-            expect(actionStrip.hidden).toBeTrue();
+            expect(actionStrip.hidden).toBe(true);
             expect(grid.pinnedRows.length).toBe(1);
         });
     });
@@ -201,8 +202,8 @@ class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    private data: any[];
-    private columns: any[];
+    public data: any[];
+    public columns: any[];
 
     public ngOnInit() {
 

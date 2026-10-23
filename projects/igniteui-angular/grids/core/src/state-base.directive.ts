@@ -1,4 +1,5 @@
-import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject } from '@angular/core';
+import { Directive, Input, ViewContainerRef, createComponent, EnvironmentInjector, Injector, inject, ComponentRef, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { GridType, IGX_GRID_BASE, IPinningConfig, PivotGridType } from './common/grid.interface';
@@ -115,6 +116,9 @@ export class IgxGridStateBaseDirective {
 
     private featureKeys: GridFeatures[] = [];
     private currGrid!: GridType;
+    private readonly destroyRef = inject(DestroyRef);
+    // Columns created on restore. Owned here: grids have no API to adopt standalone refs.
+    private columnRefs: ComponentRef<IgxColumnComponent>[] = [];
     protected _options: IGridStateOptions = {
         columns: true,
         filtering: true,
@@ -210,6 +214,8 @@ export class IgxGridStateBaseDirective {
             },
             restoreFeatureState: (context: IgxGridStateBaseDirective, state: IColumnState[]): void => {
                 const newColumns: any[] = [];
+                // Columns created for this grid by earlier restores; destroyed below once unused.
+                const prevRefs = this.columnRefs.filter(ref => ref.instance.grid === context.currGrid);
 
                 // Helper to restore column state without auto-persisting widths
                 const restoreColumnState = (column: IgxColumnComponent | IgxColumnGroupComponent, colState: IColumnState) => {
@@ -238,6 +244,7 @@ export class IgxGridStateBaseDirective {
                             createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
                             ref1 = component.instance;
                             component.changeDetectorRef.detectChanges();
+                            this.columnRefs.push(component);
                         } else {
                             ref1.children.reset([]);
                         }
@@ -258,6 +265,7 @@ export class IgxGridStateBaseDirective {
                             const component = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector});
                             ref = component.instance;
                             component.changeDetectorRef.detectChanges();
+                            this.columnRefs.push(component);
                         }
 
                         restoreColumnState(ref, colState);
@@ -278,17 +286,19 @@ export class IgxGridStateBaseDirective {
                 if (!context.currGrid._init && !context.currGrid._rendered) {
                     // If grid is not rendered but is initialized (during ngAfterViewInit) wait for it to render.
                     // Otherwise pushing mid detect change (mainly while calculating sizes from `calculateGridWidth` and `calculateGridSizes`) messes up headers detect changing.
-                    context.currGrid.rendered.pipe(first()).subscribe(() => {
+                    context.currGrid.rendered.pipe(first(), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
                         context.currGrid.updateColumns(newColumns);
                         newColumns.forEach(col => {
                             (context.currGrid as any).columnInit.emit(col);
                         });
+                        this.dropColumnRefs(prevRefs, newColumns);
                     });
                 } else {
                     context.currGrid.updateColumns(newColumns);
                     newColumns.forEach(col => {
                         (context.currGrid as any).columnInit.emit(col);
                     });
+                    this.dropColumnRefs(prevRefs, newColumns);
                 }
             }
         },
@@ -486,6 +496,11 @@ export class IgxGridStateBaseDirective {
 
         }
     };
+
+    constructor() {
+        // Restored columns live as long as the directive, i.e. its host grid.
+        this.destroyRef.onDestroy(() => this.columnRefs.forEach(ref => ref.destroy()));
+    }
 
     /**
      *  An object with options determining if a certain feature state should be saved.
@@ -710,6 +725,13 @@ export class IgxGridStateBaseDirective {
             return Array.from(val);
         }
         return val;
+    }
+
+    /** Destroys the restored columns from `refs` that are not among the grid's new `columns`. */
+    private dropColumnRefs(refs: ComponentRef<IgxColumnComponent>[], columns: ColumnType[]) {
+        const dropped = refs.filter(ref => !columns.includes(ref.instance));
+        dropped.forEach(ref => ref.destroy());
+        this.columnRefs = this.columnRefs.filter(ref => !dropped.includes(ref));
     }
 
     private getColumnGroupKey(columnGroup: ColumnType) : string {

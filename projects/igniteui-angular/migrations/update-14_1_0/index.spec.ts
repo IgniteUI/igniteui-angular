@@ -16,21 +16,16 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-25';
 
     it('should remove the $disable-shadow property from the tabs-theme', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/test.component.scss`,
-            `$custom-tabs: tabs-theme(
+        appTree.create(`/testSrc/appPrefix/component/test.component.scss`, `$custom-tabs: tabs-theme(
                 $item-text-color: red,
                 $disable-shadow: false
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
-            `$custom-tabs: tabs-theme(
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(`$custom-tabs: tabs-theme(
                 $item-text-color: red
-            );`
-        );
+            );`);
     });
 });

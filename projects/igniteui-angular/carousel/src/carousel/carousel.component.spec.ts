@@ -1,16 +1,15 @@
 import { Component, ViewChild, TemplateRef, ChangeDetectionStrategy, ElementRef, provideZonelessChangeDetection, inject, ChangeDetectorRef } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import {
-    IgxCarouselComponent,
-    ISlideEventArgs
-} from './carousel.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxCarouselComponent, ISlideEventArgs } from './carousel.component';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { CarouselIndicatorsOrientation, CarouselAnimationType } from './enums';
-import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { CarouselResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { CarouselAnimationDirection } from './carousel-base';
+import { UIInteractions, nextFrame, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { CarouselResourceStringsEN, changei18n, PlatformUtil } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Carousel', () => {
     let fixture;
@@ -18,10 +17,10 @@ describe('Carousel', () => {
     let mockElement: any;
     let mockElementRef: ElementRef;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
         mockElement = document.createElement("div");
         mockElementRef = new ElementRef(mockElement);
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 CarouselTestComponent,
@@ -35,7 +34,7 @@ describe('Carousel', () => {
                 IgxSlideComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests: ', () => {
         beforeEach(() => {
@@ -176,7 +175,7 @@ describe('Carousel', () => {
         });
 
         it('emit events', () => {
-            spyOn(carousel.slideChanged, 'emit');
+            vi.spyOn(carousel.slideChanged, 'emit');
             carousel.next();
             fixture.detectChanges();
             let args: ISlideEventArgs = {
@@ -204,7 +203,7 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledWith(args);
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
 
-            spyOn(carousel.slideAdded, 'emit');
+            vi.spyOn(carousel.slideAdded, 'emit');
             const newSlide = TestBed.inject(IgxSlideComponent);
             carousel.add(newSlide);
             fixture.detectChanges();
@@ -214,7 +213,7 @@ describe('Carousel', () => {
             };
             expect(carousel.slideAdded.emit).toHaveBeenCalledWith(args);
 
-            spyOn(carousel.slideRemoved, 'emit');
+            vi.spyOn(carousel.slideRemoved, 'emit');
             args = {
                 carousel,
                 slide: carousel.get(carousel.current)
@@ -223,12 +222,13 @@ describe('Carousel', () => {
             fixture.detectChanges();
             expect(carousel.slideRemoved.emit).toHaveBeenCalledWith(args);
 
-            spyOn(carousel.carouselPaused, 'emit');
+            carousel.play();
+            vi.spyOn(carousel.carouselPaused, 'emit');
             carousel.stop();
             fixture.detectChanges();
             expect(carousel.carouselPaused.emit).toHaveBeenCalledWith(carousel);
 
-            spyOn(carousel.carouselPlaying, 'emit');
+            vi.spyOn(carousel.carouselPlaying, 'emit');
             carousel.play();
             fixture.detectChanges();
             expect(carousel.carouselPlaying.emit).toHaveBeenCalledWith(carousel);
@@ -238,19 +238,19 @@ describe('Carousel', () => {
             const nextNav = HelperTestFunctions.getNextButton(fixture);
             const prevNav = HelperTestFunctions.getPreviousButton(fixture);
 
-            spyOn(carousel, 'prev');
+            vi.spyOn(carousel, 'prev');
             prevNav.dispatchEvent(new Event('click'));
             fixture.detectChanges();
             expect(carousel.prev).toHaveBeenCalled();
 
-            spyOn(carousel, 'next');
+            vi.spyOn(carousel, 'next');
             nextNav.dispatchEvent(new Event('click'));
             fixture.detectChanges();
             expect(carousel.next).toHaveBeenCalled();
         });
 
         it('keyboard navigation test', () => {
-            spyOn(carousel.slideChanged, 'emit');
+            vi.spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
             const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
 
@@ -294,7 +294,7 @@ describe('Carousel', () => {
         });
 
         it('changing slides with navigation buttons', () => {
-            spyOn(carousel.slideChanged, 'emit');
+            vi.spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
 
             const prevNav = HelperTestFunctions.getPreviousButton(fixture);
@@ -334,7 +334,7 @@ describe('Carousel', () => {
         });
 
         it('changing slides with indicators buttons', () => {
-            spyOn(carousel.slideChanged, 'emit');
+            vi.spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;
 
             const indicators = HelperTestFunctions.getIndicators(fixture);
@@ -430,8 +430,8 @@ describe('Carousel', () => {
             carousel.play();
             fixture.detectChanges();
 
-            spyOn(carousel.carouselPaused, 'emit');
-            spyOn(carousel.carouselPlaying, 'emit');
+            vi.spyOn(carousel.carouselPaused, 'emit');
+            vi.spyOn(carousel.carouselPlaying, 'emit');
 
             expect(carousel.isPlaying).toBeTruthy();
 
@@ -498,7 +498,7 @@ describe('Carousel', () => {
             expect(+tabIndex).toBe(0);
             expect(slide.nativeElement.getAttribute('role')).toEqual(expectedRole);
             carousel.slides.filter(s => !s.active).forEach(s => {
-                expect(s.nativeElement.hasAttribute('tabindex')).toBeFalse();
+                expect(s.nativeElement.hasAttribute('tabindex')).toBe(false);
             });
 
             const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
@@ -511,8 +511,8 @@ describe('Carousel', () => {
             const nextNav = HelperTestFunctions.getNextButton(fixture);
             const prevNav = HelperTestFunctions.getPreviousButton(fixture);
 
-            spyOn(carousel, 'next');
-            spyOn(carousel, 'prev');
+            vi.spyOn(carousel, 'next');
+            vi.spyOn(carousel, 'prev');
 
             UIInteractions.triggerKeyDownEvtUponElem('Enter', nextNav, true);
             UIInteractions.triggerKeyDownEvtUponElem(' ', nextNav, true);
@@ -593,6 +593,155 @@ describe('Carousel', () => {
             fixture.detectChanges();
             expect(carousel.current).toEqual(0);
             expect(indicators.classList).toContain('igx-carousel-indicators--focused');
+        });
+    });
+
+    describe('Playback Tests: ', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(CarouselTestComponent);
+            carousel = fixture.componentInstance.carousel;
+            fixture.detectChanges();
+        });
+        afterEach(() => vi.useRealTimers());
+
+        it('should emit carouselPaused only when a playing carousel is stopped', () => {
+            carousel.play();
+            vi.spyOn(carousel.carouselPaused, 'emit');
+
+            carousel.stop();
+            carousel.stop();
+            UIInteractions.hoverElement(carousel.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+            // a stopped carousel is not resumed on mouse leave
+            UIInteractions.unhoverElement(carousel.nativeElement, true);
+            expect(carousel.isPlaying).toBe(false);
+        });
+
+        it('should end the auto-play on the last slide of a non-looping carousel when `pause` is false', () => {
+            vi.useFakeTimers();
+            carousel.pause = false;
+            carousel.loop = false;
+            carousel.interval = 1000;
+            carousel.play();
+            vi.spyOn(carousel.carouselPaused, 'emit');
+            vi.spyOn(carousel.slideChanged, 'emit');
+            const inner = carousel.nativeElement.querySelector('.igx-carousel__inner');
+
+            vi.advanceTimersByTime(3000);
+            expect(carousel.current).toBe(3);
+            expect(carousel.isPlaying).toBe(true);
+
+            vi.advanceTimersByTime(1000);
+            fixture.detectChanges();
+            expect(carousel.current).toBe(3);
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+            expect(inner.getAttribute('aria-live')).toBe('polite');
+
+            vi.advanceTimersByTime(2000);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+
+            // manual navigation at the boundary does not stop a carousel that does not pause
+            carousel.play();
+            carousel.next();
+            expect(carousel.isPlaying).toBe(true);
+            vi.advanceTimersByTime(1000);
+            expect(carousel.isPlaying).toBe(false);
+        });
+
+        it('should not schedule slide transitions while stopped', () => {
+            vi.useFakeTimers();
+            carousel.play();
+            carousel.stop();
+            vi.spyOn(carousel.carouselPaused, 'emit');
+            vi.spyOn(carousel.slideChanged, 'emit');
+
+            // manual navigation restarts the interval only for a playing carousel
+            carousel.next();
+            vi.advanceTimersByTime(carousel.interval * 3);
+
+            expect(carousel.current).toBe(1);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.carouselPaused.emit).not.toHaveBeenCalled();
+        });
+
+        it('should change slides on each interval tick while playing', () => {
+            vi.useFakeTimers();
+            carousel.interval = 1000;
+            carousel.play();
+            vi.spyOn(carousel.slideChanged, 'emit');
+
+            vi.advanceTimersByTime(1000);
+            expect(carousel.current).toBe(1);
+            vi.advanceTimersByTime(2000);
+            expect(carousel.current).toBe(3);
+            expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(3);
+
+            // the carousel stops on the last slide when it does not loop
+            carousel.loop = false;
+            vi.spyOn(carousel.carouselPaused, 'emit');
+            vi.advanceTimersByTime(1000);
+            expect(carousel.current).toBe(3);
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+            vi.advanceTimersByTime(1000);
+            expect(carousel.carouselPaused.emit).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not start playing when destroyed before the slides selection is initialized', async () => {
+            vi.spyOn(carousel.carouselPlaying, 'emit');
+            fixture.destroy();
+            await HelperTestFunctions.waitAnAnimationFrame();
+
+            expect(carousel.isDestroyed).toBe(true);
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.carouselPlaying.emit).not.toHaveBeenCalled();
+            expect(carousel['lastInterval']).toBeFalsy();
+        });
+
+        it('should turn off aria-live only while the carousel is auto-rotating', () => {
+            const inner = carousel.nativeElement.querySelector('.igx-carousel__inner');
+
+            carousel.play();
+            fixture.detectChanges();
+            expect(inner.getAttribute('aria-live')).toBe('off');
+
+            carousel.stop();
+            fixture.detectChanges();
+            expect(inner.getAttribute('aria-live')).toBe('polite');
+
+            carousel.play();
+            carousel.interval = 0;
+            fixture.detectChanges();
+            expect(inner.getAttribute('aria-live')).toBe('polite');
+        });
+
+        it('should set touch-action according to the carousel orientation', () => {
+            expect(carousel.nativeElement.style.touchAction).toBe('pan-y');
+
+            carousel.vertical = true;
+            fixture.detectChanges();
+            expect(carousel.nativeElement.style.touchAction).toBe('pan-x');
+
+            carousel.gesturesSupport = false;
+            fixture.detectChanges();
+            expect(carousel.nativeElement.style.touchAction).toBe('auto');
+        });
+
+        it('should not subscribe twice to a slide that is removed and added back', () => {
+            const slide = carousel.get(0);
+            vi.spyOn(carousel as any, 'onSlideActivated');
+
+            carousel.remove(slide);
+            carousel.add(slide);
+            fixture.detectChanges();
+            slide.active = true;
+
+            expect(carousel['onSlideActivated']).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -727,22 +876,22 @@ describe('Carousel', () => {
             expect(carousel.animationType).toBe(CarouselAnimationType.slide);
             carousel.next();
             fixture.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
-            await wait(200);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
             carousel.prev();
             fixture.detectChanges();
-            await wait(230);
+            await nextFrame();
 
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
-            await wait(200);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
@@ -759,11 +908,11 @@ describe('Carousel', () => {
             expect(carousel.animationType).toBe(CarouselAnimationType.fade);
             carousel.next();
             fixture.detectChanges();
-            await wait(200);
+            await nextFrame();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
-            await wait(200);
+            await nextFrame();
             fixture.detectChanges();
 
             expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
@@ -780,6 +929,163 @@ describe('Carousel', () => {
             expect(carousel['enterAnimationPlayer']).toBe(null);
             expect(carousel['leaveAnimationPlayer']).toBe(null);
         });
+
+        it('should play the slide animations on the vertical axis when `vertical` is true', async () => {
+            await wait();
+            carousel.vertical = true;
+            fixture.detectChanges();
+
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+            carousel.next();
+
+            const [leave, enter] = builder.mock.calls.map(([metadata]) => metadata.options.params);
+            expect(leave.fromPosition).toBe('translateY(0%)');
+            expect(leave.toPosition).toBe('translateY(-100%)');
+            expect(enter.fromPosition).toBe('translateY(100%)');
+            expect(enter.toPosition).toBe('translateY(0%)');
+
+            builder.mockClear();
+            await wait(400);
+            carousel.prev();
+
+            const [prevLeave, prevEnter] = builder.mock.calls.map(([metadata]) => metadata.options.params);
+            expect(prevLeave.toPosition).toBe('translateY(100%)');
+            expect(prevEnter.fromPosition).toBe('translateY(-100%)');
+        });
+
+        it('should speed up the animation on a fast swipe', async () => {
+            await wait();
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2, 'horizontal');
+
+            expect(carousel.current).toBe(1);
+            // default duration (320ms) divided by velocity, scaled by the remaining distance
+            const { duration } = builder.mock.lastCall[0].options.params;
+            expect(parseFloat(duration)).toBeCloseTo(0.8 * 320 / 2);
+
+            await wait(400);
+            expect(carousel['newDuration']).toBe(0);
+            expect(carousel['animationPosition']).toBe(0);
+        });
+
+        it('should finish the running animations when a new pan starts', async () => {
+            await wait();
+            carousel.next();
+            const enterPlayer = carousel['enterAnimationPlayer'];
+            const leavePlayer = carousel['leaveAnimationPlayer'];
+            vi.spyOn(enterPlayer, 'finish');
+            vi.spyOn(leavePlayer, 'finish');
+
+            expect(carousel.get(0).previous).toBe(true);
+
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            carousel.onPanLeft({ deltaX: -0.1 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            expect(enterPlayer.finish).toHaveBeenCalled();
+            expect(leavePlayer.finish).toHaveBeenCalled();
+            expect(carousel.get(0).previous).toBe(false);
+            expect(carousel.get(2).previous).toBe(true);
+        });
+
+        it('should animate the current slide back in place when a short pan is released', async () => {
+            await wait();
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.2, 0.1, 'horizontal');
+
+            expect(carousel.current).toBe(0);
+            const [leave, enter] = builder.mock.calls.map(([metadata, element]) => ({ params: metadata.options.params, element }));
+            // the incoming slide leaves and the current one returns from where it was released
+            expect(leave.element).toBe(carousel.get(3).nativeElement);
+            expect(enter.element).toBe(carousel.get(0).nativeElement);
+            expect(enter.params.fromPosition).toMatch(/^translateX\(.+%\)$/);
+            expect(parseFloat(enter.params.fromPosition.replace('translateX(', ''))).toBeCloseTo(20);
+            expect(parseFloat(enter.params.duration)).toBeCloseTo(0.2 * 320);
+            expect(carousel.get(3).previous).toBe(true);
+
+            await wait(400);
+            fixture.detectChanges();
+            expect(carousel.get(3).previous).toBe(false);
+        });
+
+        it('should use the swipe speed for the fade duration when a fast pan ends at its origin', async () => {
+            await wait();
+            carousel.animationType = CarouselAnimationType.fade;
+            fixture.detectChanges();
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+
+            carousel.onPanRight({ deltaX: 0.1 * width, deltaY: 0, velocity: 2, preventDefault: () => { } } as any);
+            carousel.onPanEnd({ deltaX: 0, deltaY: 0, velocity: 2, preventDefault: () => { } } as any);
+
+            expect(carousel.current).toBe(3);
+            const { duration, startOpacity } = builder.mock.lastCall[0].options.params;
+            expect(duration).toBe('160ms');
+            expect(startOpacity).toBe('0');
+        });
+
+        it('should not animate the current slide when a pan ends without a matching pan', async () => {
+            await wait();
+            carousel.vertical = true;
+            // the host is OnPush, so the carousel is checked (and its gestures synced) only when marked for check
+            carousel['cdr'].markForCheck();
+            fixture.detectChanges();
+            const host = carousel.nativeElement;
+            const { offsetWidth, offsetHeight } = carousel.get(0).nativeElement;
+
+            HelperTestFunctions.simulatePointerPan(host, 0, -0.7 * offsetHeight);
+            fixture.detectChanges();
+            expect(carousel.current).toBe(1);
+            await wait(400);
+            fixture.detectChanges();
+
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+            // a cross-axis drag does not start a pan, but still reaches the pan end handler
+            HelperTestFunctions.simulatePointerPan(host, -0.3 * offsetWidth, 0);
+            fixture.detectChanges();
+
+            expect(builder).not.toHaveBeenCalled();
+            expect(carousel.current).toBe(1);
+            expect(carousel['incomingSlide']).toBeNull();
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+            carousel.slides.forEach(slide => expect(slide.nativeElement.style.transform).toBe(''));
+        });
+
+        it('should not build animations when `animationType` is none', async () => {
+            await wait();
+            carousel.animationType = CarouselAnimationType.none;
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+
+            carousel.next();
+            carousel['playAnimations']();
+
+            expect(carousel.current).toBe(1);
+            expect(builder).not.toHaveBeenCalled();
+            expect(carousel['enterAnimationPlayer']).toBeFalsy();
+            expect(carousel['leaveAnimationPlayer']).toBeFalsy();
+        });
+
+        it('should play the fade animation when a pan on a `fade` carousel ends', async () => {
+            await wait();
+            carousel.animationType = CarouselAnimationType.fade;
+            fixture.detectChanges();
+            const builder = vi.spyOn(carousel['animationService'], 'buildAnimation');
+
+            // a short pan restores the current slide
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.25, 0.1, 'horizontal');
+            expect(carousel.current).toBe(0);
+            expect(parseFloat(builder.mock.lastCall[0].options.params.startOpacity)).toBeCloseTo(0.75);
+            expect(carousel.get(0).nativeElement.style.opacity).toBe('');
+
+            await wait(400);
+            builder.mockClear();
+
+            // a long pan changes the slide
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 0.1, 'horizontal');
+            expect(carousel.current).toBe(1);
+            expect(parseFloat(builder.mock.lastCall[0].options.params.startOpacity)).toBeCloseTo(0.6);
+        });
     });
 
     describe('Dynamic Slides: ', () => {
@@ -790,9 +1096,11 @@ describe('Carousel', () => {
             carousel = fixture.componentInstance.carousel;
             slides = fixture.componentInstance.slides;
         });
+        afterEach(() => vi.useRealTimers());
 
-        it('should activate slide when change its property active', fakeAsync(() => {
-            tick();
+        it('should activate slide when change its property active', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
             // Verify 3th slide is active
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
 
@@ -801,11 +1109,12 @@ describe('Carousel', () => {
             fixture.detectChanges();
 
             HelperTestFunctions.verifyActiveSlide(carousel, 0);
-        }));
+        });
 
-        it('should add slides to the carousel when collection is changed', fakeAsync(() => {
-            tick();
-            spyOn(carousel.slideAdded, 'emit');
+        it('should add slides to the carousel when collection is changed', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
+            vi.spyOn(carousel.slideAdded, 'emit');
 
             // add a slide
             slides.push({ text: 'Slide 5' });
@@ -817,17 +1126,18 @@ describe('Carousel', () => {
             // add an active slide
             slides.push({ text: 'Slide 6', active: true });
             fixture.detectChanges();
-            tick(100);
+            vi.advanceTimersByTime(100);
 
             HelperTestFunctions.verifyActiveSlide(carousel, 5);
             expect(carousel.total).toEqual(6);
 
             expect(carousel.slideAdded.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should remove slides in the carousel', fakeAsync(() => {
-            tick();
-            spyOn(carousel.slideRemoved, 'emit');
+        it('should remove slides in the carousel', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
+            vi.spyOn(carousel.slideRemoved, 'emit');
 
             // remove a slide
             slides.pop();
@@ -839,19 +1149,226 @@ describe('Carousel', () => {
             // remove active slide
             slides.pop();
             fixture.detectChanges();
-            tick(200);
+            vi.advanceTimersByTime(200);
             fixture.detectChanges();
 
             expect(carousel.total).toEqual(2);
             HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
             expect(carousel.slideRemoved.emit).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should not render navigation buttons and indicators when carousel does not have slides', fakeAsync(() => {
+        it('should keep the slides aria-labelledby in sync with the indicators when slides are added or removed', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
+            fixture.detectChanges();
+            HelperTestFunctions.verifySlidesLabelledByIndicators(fixture, carousel);
+
+            slides.push({ text: 'Slide 5' });
+            fixture.detectChanges();
+            vi.advanceTimersByTime(16);
+            fixture.detectChanges();
+            HelperTestFunctions.verifySlidesLabelledByIndicators(fixture, carousel);
+
+            slides.splice(0, 2);
+            fixture.detectChanges();
+            vi.advanceTimersByTime(16);
+            fixture.detectChanges();
+            HelperTestFunctions.verifySlidesLabelledByIndicators(fixture, carousel);
+        });
+
+        it('should resolve the animation direction when a slide is activated directly', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+
+            carousel.get(3).active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(carousel.get(3).direction).toBe(CarouselAnimationDirection.NEXT);
+
+            carousel.select(0);
+            fixture.detectChanges();
+            expect(carousel.get(0).direction).toBe(CarouselAnimationDirection.PREV);
+
+            // a previously visited slide does not keep its stale direction
+            carousel.get(3).active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(carousel.get(3).direction).toBe(CarouselAnimationDirection.NEXT);
+
+            carousel.get(1).active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+            expect(carousel.get(1).direction).toBe(CarouselAnimationDirection.PREV);
+        });
+
+        it('should keep the direction set on a slide after the carousel transitions away from it', () => {
+            vi.useFakeTimers();
+            vi.runAllTimers();
+            const slide = carousel.get(3);
+            // e.g. set through the slide [direction] input
+            slide.direction = CarouselAnimationDirection.PREV as CarouselAnimationDirection;
+
+            slide.active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+
+            carousel.select(0);
+            fixture.detectChanges();
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+
+            // the carousel overrides the direction while the slide is current and restores it afterwards
+            carousel.select(3, CarouselAnimationDirection.NEXT);
+            fixture.detectChanges();
+            expect(slide.direction).toBe(CarouselAnimationDirection.NEXT);
+            carousel.next();
+            fixture.detectChanges();
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+
+            slide.active = true;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(slide.direction).toBe(CarouselAnimationDirection.PREV);
+        });
+
+        it('should resume playing when the slides change after the auto-play ended on the last slide', () => {
+            vi.useFakeTimers();
+            // created in the fake zone, so the slides selection frames and the interval run on fake time
+            const fix = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            fix.componentInstance.loop = false;
+            fix.detectChanges();
+            vi.advanceTimersByTime(16);
+            const instance = fix.componentInstance.carousel;
+            expect(instance.isPlaying).toBe(true);
+
+            instance.select(3);
+            instance.interval = 100;
+            fix.detectChanges();
+
+            vi.advanceTimersByTime(100);
+            expect(instance.current).toBe(3);
+            expect(instance.isPlaying).toBe(false);
+
+            vi.spyOn(instance.carouselPlaying, 'emit');
+            fix.componentInstance.slides.push({ text: 'Slide 5' });
+            fix.detectChanges();
+            vi.advanceTimersByTime(16);
+            expect(instance.isPlaying).toBe(true);
+            expect(instance.carouselPlaying.emit).toHaveBeenCalledTimes(1);
+
+            vi.advanceTimersByTime(100);
+            expect(instance.current).toBe(4);
+            expect(instance.isPlaying).toBe(true);
+            vi.advanceTimersByTime(100);
+            expect(instance.current).toBe(4);
+            expect(instance.isPlaying).toBe(false);
+
+            // a carousel stopped by the user is not resumed
+            instance.stop();
+            fix.componentInstance.slides.push({ text: 'Slide 6' });
+            fix.detectChanges();
+            vi.advanceTimersByTime(16);
+            expect(instance.isPlaying).toBe(false);
+            expect(instance.carouselPlaying.emit).toHaveBeenCalledTimes(1);
+        });
+
+        it('should not resume playing when the slides change after the carousel was stopped', async () => {
+            await HelperTestFunctions.waitAnAnimationFrame();
+            expect(carousel.isPlaying).toBe(true);
+
+            carousel.stop();
+            slides.push({ text: 'Slide 5' });
+            fixture.detectChanges();
+            await HelperTestFunctions.waitAnAnimationFrame();
+
+            expect(carousel.total).toBe(5);
+            expect(carousel.isPlaying).toBe(false);
+        });
+
+        it('should end the pan and resume playing when all slides are removed during a pan', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const pan = { deltaX: -0.3 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any;
+
+            carousel.onPanLeft(pan);
+            expect(carousel.isPlaying).toBe(false);
+
             fixture.componentInstance.removeAllSlides();
             fixture.detectChanges();
-            tick(200);
+            carousel.onPanEnd(pan);
+
+            expect(carousel.total).toBe(0);
+            expect(carousel.isPlaying).toBe(true);
+            expect(carousel.stoppedByInteraction).toBe(false);
+            expect(carousel['incomingSlide']).toBeNull();
+        });
+
+        it('should discard the incoming slide when the current slide is removed during a pan', async () => {
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const pan = { deltaX: -0.3 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any;
+            carousel.onPanLeft(pan);
+            const incoming = carousel.get(3);
+            expect(carousel['incomingSlide']).toBe(incoming);
+
+            // the slide after the removed current one, i.e. the incoming slide, becomes current
+            slides.splice(2, 1);
+            fixture.detectChanges();
+            await HelperTestFunctions.waitAnAnimationFrame();
+            fixture.detectChanges();
+
+            expect(carousel['incomingSlide']).toBeNull();
+            expect(carousel.get(carousel.current)).toBe(incoming);
+            expect(incoming.previous).toBe(false);
+            expect(incoming.nativeElement.style.transform).toBe('');
+
+            carousel.onPanEnd(pan);
+            fixture.detectChanges();
+            expect(carousel.get(carousel.current)).toBe(incoming);
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+        });
+
+        it('should discard the incoming slide when it is removed during a pan', () => {
+            const current = carousel.get(carousel.current).nativeElement;
+            const pan = (deltaX: number) => ({ deltaX, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            carousel.onPanLeft(pan(-0.3 * current.offsetWidth));
+            expect(carousel['incomingSlide']).toBe(carousel.get(3));
+
+            slides.pop();
+            fixture.detectChanges();
+
+            expect(carousel['incomingSlide']).toBeNull();
+            expect(current.style.transform).toBe('');
+
+            // the pan continues with the new incoming slide
+            carousel.onPanLeft(pan(-0.6 * current.offsetWidth));
+            carousel.onPanEnd(pan(-0.6 * current.offsetWidth));
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
+        });
+
+        it('should ignore pan gestures when the carousel has no slides', () => {
+            vi.useFakeTimers();
+            fixture.componentInstance.removeAllSlides();
+            fixture.detectChanges();
+            vi.advanceTimersByTime(200);
+
+            const pan = { deltaX: -50, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any;
+            expect(() => {
+                carousel.onPanLeft(pan);
+                carousel.onPanEnd(pan);
+            }).not.toThrow();
+        });
+
+        it('should not render navigation buttons and indicators when carousel does not have slides', () => {
+            vi.useFakeTimers();
+            fixture.componentInstance.removeAllSlides();
+            fixture.detectChanges();
+            vi.advanceTimersByTime(200);
 
             expect(carousel.total).toEqual(0);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
@@ -862,14 +1379,14 @@ describe('Carousel', () => {
             // add a slide
             fixture.componentInstance.addSlides();
             fixture.detectChanges();
-            tick(200);
+            vi.advanceTimersByTime(200);
 
             expect(carousel.total).toEqual(2);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
             expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.start)).toBeDefined();
             expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeFalsy();
             expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeFalsy();
-        }));
+        });
     });
 
     describe('Gestures Tests: ', () => {
@@ -884,8 +1401,8 @@ describe('Carousel', () => {
             carousel.play();
             fixture.detectChanges();
 
-            spyOn(carousel.carouselPaused, 'emit');
-            spyOn(carousel.carouselPlaying, 'emit');
+            vi.spyOn(carousel.carouselPaused, 'emit');
+            vi.spyOn(carousel.carouselPlaying, 'emit');
 
             expect(carousel.isPlaying).toBeTruthy();
 
@@ -1072,16 +1589,370 @@ describe('Carousel', () => {
             HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2, 'vertical');
             expect(carousel.current).toEqual(2);
         });
+
+        it('should change slides with horizontal touch pans', () => {
+            const host = carousel.nativeElement;
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePointerPan(host, -0.7 * width, 0);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePointerPan(host, 0.7 * width, 0);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+
+            // vertical pans are ignored by a horizontal carousel
+            HelperTestFunctions.simulatePointerPan(host, 0, -0.7 * width);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('should change slides with vertical touch pans when `vertical` is true', () => {
+            carousel.vertical = true;
+            fixture.detectChanges();
+            const host = carousel.nativeElement;
+            const height = carousel.get(carousel.current).nativeElement.offsetHeight;
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePointerPan(host, 0, -0.7 * height);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePointerPan(host, 0, 0.7 * height);
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('should leave cross-axis touch moves to the browser', () => {
+            const host = carousel.nativeElement;
+            const isTouchMovePrevented = (deltaX: number, deltaY: number) => {
+                HelperTestFunctions.dispatchPointer(host, 'pointerdown', 100, 100);
+                HelperTestFunctions.dispatchPointer(host, 'pointermove', 100 + deltaX, 100 + deltaY);
+                const touchMove = new TouchEvent('touchmove', { cancelable: true, bubbles: true });
+                host.dispatchEvent(touchMove);
+                HelperTestFunctions.dispatchPointer(host, 'pointercancel', 100 + deltaX, 100 + deltaY);
+                return touchMove.defaultPrevented;
+            };
+
+            expect(isTouchMovePrevented(-30, 0)).toBe(true);
+            expect(isTouchMovePrevented(0, -30)).toBe(false);
+
+            carousel.vertical = true;
+            fixture.detectChanges();
+
+            expect(isTouchMovePrevented(0, -30)).toBe(true);
+            expect(isTouchMovePrevented(-30, 0)).toBe(false);
+        });
+
+        it('should restore the slides when `vertical` changes during a pan', () => {
+            const current = carousel.get(carousel.current).nativeElement;
+            HelperTestFunctions.dispatchPointer(carousel.nativeElement, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(carousel.nativeElement, 'pointermove', 250, 100);
+            expect(current.style.transform).not.toBe('');
+
+            carousel.vertical = true;
+            fixture.detectChanges();
+
+            expect(current.style.transform).toBe('');
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+        });
+
+        it('should not resume playing when a cross-axis drag ends', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const slide = carousel.get(carousel.current).nativeElement;
+
+            HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+            expect(carousel.isPlaying).toBe(false);
+
+            // a vertical (page scrolling) drag on a horizontal carousel
+            HelperTestFunctions.simulatePointerPan(slide, 0, -0.5 * slide.offsetHeight);
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.current).toEqual(2);
+        });
+
+        it('should not pan a carousel with a single slide', () => {
+            const fix = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            fix.componentInstance.slides = [{ text: 'Slide 1', active: true }];
+            fix.detectChanges();
+            const instance = fix.componentInstance.carousel;
+            const slide = instance.get(0);
+            const width = slide.nativeElement.offsetWidth;
+            vi.spyOn(instance.slideChanged, 'emit');
+
+            HelperTestFunctions.dispatchPointer(instance.nativeElement, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(instance.nativeElement, 'pointermove', 300 - 0.3 * width, 100);
+            expect(slide.nativeElement.style.transform).toBe('');
+            expect(slide.previous).toBe(false);
+            HelperTestFunctions.dispatchPointer(instance.nativeElement, 'pointerup', 300 - 0.3 * width, 100);
+
+            HelperTestFunctions.simulatePointerPan(instance.nativeElement, 0.7 * width, 0);
+            fix.detectChanges();
+
+            expect(instance.current).toBe(0);
+            expect(slide.nativeElement.style.transform).toBe('');
+            expect(slide.previous).toBe(false);
+            expect(slide.nativeElement.classList).not.toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
+            expect(instance.slideChanged.emit).not.toHaveBeenCalled();
+        });
+
+        it('should treat touch moves below the tap threshold as a tap', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const slide = carousel.get(carousel.current).nativeElement;
+
+            HelperTestFunctions.dispatchPointer(slide, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(slide, 'pointermove', 298, 100);
+            expect(slide.style.transform).toBe('');
+            HelperTestFunctions.dispatchPointer(slide, 'pointerup', 298, 100);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.slides.filter(s => s.previous).length).toBe(0);
+            carousel.slides.forEach(s => expect(s.nativeElement.style.transform).toBe(''));
+        });
+
+        it('should end a pan that is released as a tap', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const slide = carousel.get(carousel.current).nativeElement;
+
+            HelperTestFunctions.dispatchPointer(slide, 'pointerdown', 300, 100);
+            HelperTestFunctions.dispatchPointer(slide, 'pointermove', 290, 100);
+            expect(slide.style.transform).not.toBe('');
+            expect(carousel.isPlaying).toBe(false);
+            // moving back within the tap threshold before releasing
+            HelperTestFunctions.dispatchPointer(slide, 'pointermove', 298, 100);
+            HelperTestFunctions.dispatchPointer(slide, 'pointerup', 298, 100);
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(2);
+            expect(carousel.isPlaying).toBe(true);
+            expect(carousel.stoppedByInteraction).toBe(false);
+            expect(carousel.slides.filter(s => s.previous).length).toBe(0);
+            carousel.slides.forEach(s => expect(s.nativeElement.style.transform).toBe(''));
+
+            carousel.next();
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+            expect(carousel.get(3).nativeElement.style.transform).toBe('');
+        });
+
+        it('should stop/play when tapping a slide with touch', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            const slide = carousel.get(carousel.current).nativeElement;
+            HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+            expect(carousel.isPlaying).toBe(false);
+
+            HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+            expect(carousel.isPlaying).toBe(true);
+        });
+
+        it('should not stop/play when tapping outside of a slide', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            HelperTestFunctions.simulateTap(fixture, carousel, HelperTestFunctions.getNextButton(fixture));
+            expect(carousel.isPlaying).toBe(true);
+        });
+
+        it('should pause while panning and resume playing when the pan ends', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const event = { deltaX: -0.2 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any;
+            carousel.onPanLeft(event);
+
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.stoppedByInteraction).toBe(true);
+
+            carousel.onPanEnd(event);
+            expect(carousel.isPlaying).toBe(true);
+            expect(carousel.stoppedByInteraction).toBe(false);
+        });
+
+        it('should ignore pan moves beyond the slide size', () => {
+            const current = carousel.get(carousel.current).nativeElement;
+            carousel.onPanLeft({ deltaX: -1.2 * current.offsetWidth, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            expect(current.style.transform).toBe('');
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+        });
+
+        it('should switch the incoming slide when the pan changes its direction', () => {
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const pan = (deltaX: number) => ({ deltaX, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            carousel.onPanLeft(pan(-0.2 * width));
+            expect(carousel.get(3).previous).toBe(true);
+            expect(carousel.get(3).nativeElement.style.transform).not.toBe('');
+
+            carousel.onPanRight(pan(0.2 * width));
+            expect(carousel.get(3).previous).toBe(false);
+            expect(carousel.get(3).nativeElement.style.transform).toBe('');
+            expect(carousel.get(1).previous).toBe(true);
+            expect(carousel.get(1).nativeElement.style.transform).not.toBe('');
+
+            carousel.onPanEnd(pan(0.2 * width));
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(2);
+            expect(carousel.get(1).previous).toBe(false);
+        });
+
+        it('should change the slide when the pan ends beyond the slide size', () => {
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+            const pan = (deltaX: number) => ({ deltaX, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            carousel.onPanLeft(pan(-0.3 * width));
+            carousel.onPanEnd(pan(-1.5 * width));
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(3);
+        });
+
+        it('should fade the current slide while panning a `fade` carousel', () => {
+            carousel.animationType = CarouselAnimationType.fade;
+            fixture.detectChanges();
+            const current = carousel.get(carousel.current).nativeElement;
+            const width = current.offsetWidth;
+
+            carousel.onPanLeft({ deltaX: -0.25 * width, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            expect(parseFloat(current.style.opacity)).toBeCloseTo(0.75);
+            expect(current.style.transform).toBe('');
+            expect(carousel.get(3).nativeElement.style.transform).toBe('');
+        });
+
+        it('should register touch gestures only while `gesturesSupport` is enabled', () => {
+            const fix = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            const instance = fix.componentInstance.carousel;
+            instance.gesturesSupport = false;
+            fix.detectChanges();
+
+            expect(instance['_gestures']).toBeNull();
+            expect(instance.nativeElement.style.touchAction).toBe('auto');
+
+            const width = instance.get(instance.current).nativeElement.offsetWidth;
+            HelperTestFunctions.simulatePointerPan(instance.nativeElement, -0.7 * width, 0);
+            fix.detectChanges();
+            expect(instance.current).toEqual(2);
+
+            // the setter updates the gestures registration immediately, without waiting for change detection
+            instance.gesturesSupport = true;
+            expect(instance['_gestures']).not.toBeNull();
+            HelperTestFunctions.simulatePointerPan(instance.nativeElement, -0.7 * width, 0);
+            expect(instance.current).toEqual(3);
+
+            instance.gesturesSupport = false;
+            expect(instance['_gestures']).toBeNull();
+            HelperTestFunctions.simulatePointerPan(instance.nativeElement, -0.7 * width, 0);
+            expect(instance.current).toEqual(3);
+        });
+
+        it('should restore the slides when a touch pan is cancelled', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const width = carousel.get(carousel.current).nativeElement.offsetWidth;
+
+            HelperTestFunctions.simulatePointerPan(carousel.nativeElement, -0.3 * width, 0, 'pointercancel');
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(2);
+            carousel.slides.forEach(slide => {
+                expect(slide.nativeElement.style.transform).toBe('');
+                expect(slide.previous).toBe(false);
+            });
+            expect(carousel.isPlaying).toBe(true);
+        });
+
+        it('should restore the slides when `gesturesSupport` is disabled during a pan', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+            const current = carousel.get(carousel.current).nativeElement;
+
+            carousel.onPanLeft({ deltaX: -0.3 * current.offsetWidth, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+            expect(current.style.transform).not.toBe('');
+            expect(carousel.isPlaying).toBe(false);
+
+            carousel.gesturesSupport = false;
+            fixture.detectChanges();
+
+            expect(carousel['_gestures']).toBeNull();
+            expect(carousel.current).toEqual(2);
+            carousel.slides.forEach(slide => {
+                expect(slide.nativeElement.style.transform).toBe('');
+                expect(slide.previous).toBe(false);
+            });
+            expect(carousel.isPlaying).toBe(true);
+        });
+
+        it('should restore the incoming slide when a pan is reversed past the boundary of a non-looping carousel', () => {
+            carousel.loop = false;
+            carousel.select(0);
+            fixture.detectChanges();
+            const current = carousel.get(0).nativeElement;
+            const incoming = carousel.get(1).nativeElement;
+            const pan = (deltaX: number) => ({ deltaX, deltaY: 0, velocity: 0.1, preventDefault: () => { } } as any);
+
+            carousel.onPanLeft(pan(-0.3 * current.offsetWidth));
+            expect(carousel.get(1).previous).toBe(true);
+            expect(incoming.style.transform).not.toBe('');
+
+            // reversing the same pan towards the (missing) previous slide
+            carousel.onPanRight(pan(0.1 * current.offsetWidth));
+            expect(carousel.get(1).previous).toBe(false);
+            expect(incoming.style.transform).toBe('');
+            expect(current.style.transform).toBe('');
+
+            carousel.onPanEnd(pan(0.1 * current.offsetWidth));
+            fixture.detectChanges();
+            expect(carousel.current).toEqual(0);
+            expect(carousel.slides.filter(slide => slide.previous).length).toBe(0);
+        });
+
+        it('should not resume playing when a touch that did not pan is cancelled', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            UIInteractions.hoverElement(carousel.nativeElement, true);
+            fixture.detectChanges();
+            expect(carousel.isPlaying).toBe(false);
+            expect(carousel.stoppedByInteraction).toBe(true);
+
+            HelperTestFunctions.simulatePointerPan(carousel.get(carousel.current).nativeElement, 0, 0, 'pointercancel');
+
+            expect(carousel.isPlaying).toBe(false);
+        });
+
+        it('should not leave the incoming slide visible when a pan is reverted without animation', () => {
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 0.1, 'horizontal');
+
+            expect(carousel.current).toEqual(2);
+            expect(carousel.get(3).previous).toBe(false);
+            expect(carousel.get(3).nativeElement.classList).not.toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
+        });
     });
 
     describe('Resource Strings', () => {
         let fix: ComponentFixture<CarouselTestComponent>;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, CarouselTestComponent]
             }).compileComponents();
-        }));
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(CarouselTestComponent);
@@ -1115,6 +1986,18 @@ describe('Carousel', () => {
                 changei18n(CarouselResourceStringsEN);
             }
         });
+
+        it('should update the default resource strings when global i18n changes and no custom strings are set', () => {
+            try {
+                changei18n({ igx_carousel_of: 'от' });
+                fix.detectChanges();
+
+                expect(carousel.resourceStrings.igx_carousel_of).toBe('от');
+                expect(carousel.resourceStrings.igx_carousel_slide).toBe('slide');
+            } finally {
+                changei18n(CarouselResourceStringsEN);
+            }
+        });
     });
 });
 
@@ -1130,6 +2013,7 @@ describe('Carousel Zoneless Tests:', () => {
             imports: [
                 NoopAnimationsModule,
                 CarouselDynamicSlidesWithNoActiveComponent,
+                CarouselTestComponent
             ],
             providers: [
                 { provide: ElementRef, useValue: mockElementRef },
@@ -1158,6 +2042,104 @@ describe('Carousel Zoneless Tests:', () => {
         expect(car.total).toEqual(3);
         // the carousel should activate the first slide again
         HelperTestFunctions.verifyActiveSlide(car, 0);
+    });
+
+    it('should update aria-live when the playback is toggled by tapping a slide', async () => {
+        const fix = TestBed.createComponent(CarouselTestComponent);
+        await fix.whenStable();
+        await HelperTestFunctions.waitAnAnimationFrame();
+        await fix.whenStable();
+        const car = fix.componentInstance.carousel;
+        const inner = car.nativeElement.querySelector('.igx-carousel__inner');
+        const slide = car.get(car.current).nativeElement;
+        expect(car.isPlaying).toBe(true);
+        expect(inner.getAttribute('aria-live')).toBe('off');
+
+        HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+        await fix.whenStable();
+        expect(car.isPlaying).toBe(false);
+        expect(inner.getAttribute('aria-live')).toBe('polite');
+
+        HelperTestFunctions.simulatePointerPan(slide, 0, 0);
+        await fix.whenStable();
+        expect(car.isPlaying).toBe(true);
+        expect(inner.getAttribute('aria-live')).toBe('off');
+    });
+});
+
+describe('Carousel Server Platform Tests:', () => {
+    beforeEach(async () => {
+        TestBed.resetTestingModule();
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, CarouselTestComponent],
+            providers: [{
+                provide: PlatformUtil,
+                useFactory: () => Object.assign(new PlatformUtil(), { isBrowser: false })
+            }]
+        }).compileComponents();
+    });
+
+    it('should not register gestures, select slides or auto-play outside of the browser', async () => {
+        vi.spyOn(window, 'requestAnimationFrame');
+        const fix = TestBed.createComponent(CarouselTestComponent);
+        fix.detectChanges();
+        const carousel = fix.componentInstance.carousel;
+
+        expect(carousel['_gestures']).toBeNull();
+        expect(window.requestAnimationFrame).not.toHaveBeenCalled();
+        await wait(16);
+        expect(carousel.isPlaying).toBe(false);
+
+        carousel.play();
+        expect(carousel.isPlaying).toBe(true);
+        expect(carousel['lastInterval']).toBeNull();
+        fix.destroy();
+    });
+});
+
+describe('Carousel Browser Animations Tests:', () => {
+    let fixture: ComponentFixture<CarouselAnimationsComponent>;
+    let carousel: IgxCarouselComponent;
+
+    beforeEach(async () => {
+        TestBed.resetTestingModule();
+        await TestBed.configureTestingModule({
+            imports: [BrowserAnimationsModule, CarouselAnimationsComponent]
+        }).compileComponents();
+        fixture = TestBed.createComponent(CarouselAnimationsComponent);
+        fixture.detectChanges();
+        carousel = fixture.componentInstance.carousel;
+        await wait();
+    });
+
+    it('should reset the running animations when navigating while an animation is in progress', async () => {
+        vi.spyOn(carousel.leaveAnimationDone, 'emit');
+        vi.spyOn(carousel.enterAnimationDone, 'emit');
+
+        carousel.next();
+        const leavePlayer = carousel['leaveAnimationPlayer'];
+        const enterPlayer = carousel['enterAnimationPlayer'];
+        vi.spyOn(leavePlayer, 'reset');
+        vi.spyOn(enterPlayer, 'reset');
+
+        carousel.next();
+        await HelperTestFunctions.waitAnAnimationFrame();
+        fixture.detectChanges();
+
+        // the in-progress animations are reset before the new ones are played
+        expect(leavePlayer.reset).toHaveBeenCalled();
+        expect(enterPlayer.reset).toHaveBeenCalled();
+        expect(carousel.leaveAnimationDone.emit).toHaveBeenCalledTimes(1);
+        expect(carousel.enterAnimationDone.emit).toHaveBeenCalledTimes(1);
+        expect(carousel.current).toBe(2);
+        expect(carousel.get(2).nativeElement.classList).toContain(HelperTestFunctions.ACTIVE_SLIDE_CLASS);
+        expect(carousel.get(1).nativeElement.classList).toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
+
+        await wait(400);
+        fixture.detectChanges();
+        expect(carousel.leaveAnimationDone.emit).toHaveBeenCalledTimes(2);
+        expect(carousel.enterAnimationDone.emit).toHaveBeenCalledTimes(2);
+        expect(carousel.get(1).nativeElement.classList).not.toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
     });
 });
 
@@ -1225,6 +2207,12 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
+    public static verifySlidesLabelledByIndicators(fixture, carousel: IgxCarouselComponent) {
+        const indicatorIds = Array.from(HelperTestFunctions.getIndicators(fixture)).map((indicator: Element) => indicator.id);
+        const labelledBy = carousel.slides.map(slide => slide.nativeElement.getAttribute('aria-labelledby'));
+        expect(labelledBy).toEqual(indicatorIds);
+    }
+
     public static simulateTap(_fixture, carousel, target?) {
         const activeSlide = carousel.get(carousel.current).nativeElement;
         carousel.onTap({ target: target ?? activeSlide });
@@ -1257,6 +2245,29 @@ class HelperTestFunctions {
         fixture.detectChanges();
         carousel.onPanEnd(panOptions);
         fixture.detectChanges();
+    }
+
+    public static dispatchPointer(target: HTMLElement, type: string, clientX: number, clientY: number) {
+        target.dispatchEvent(new PointerEvent(type, {
+            pointerType: 'touch', pointerId: 1, isPrimary: true, clientX, clientY, bubbles: true, cancelable: true
+        }));
+    }
+
+    /** Dispatches a touch pointer sequence (down -> move -> up) on the target; zero deltas produce a tap. */
+    public static simulatePointerPan(target: HTMLElement, deltaX: number, deltaY: number, end: 'pointerup' | 'pointercancel' = 'pointerup') {
+        const rect = target.getBoundingClientRect();
+        const startX = rect.left + rect.width / 2;
+        const startY = rect.top + rect.height / 2;
+        const dispatch = (type: string, x: number, y: number) => target.dispatchEvent(new PointerEvent(type, {
+            pointerType: 'touch', pointerId: 1, isPrimary: true, clientX: x, clientY: y, bubbles: true, cancelable: true
+        }));
+
+        dispatch('pointerdown', startX, startY);
+        if (deltaX || deltaY) {
+            dispatch('pointermove', startX + deltaX / 2, startY + deltaY / 2);
+            dispatch('pointermove', startX + deltaX, startY + deltaY);
+        }
+        dispatch(end, startX + deltaX, startY + deltaY);
     }
 
     public static waitAnAnimationFrame(): Promise<void> {

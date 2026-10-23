@@ -1,5 +1,6 @@
 import { CHART_TYPE, OPTIONS_TYPE } from './chart-types';
 import { IgxChartIntegrationDirective, IDeterminedChartTypesArgs } from './chart-integration.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('IgxChartIntegrationDirective', () => {
     let directive: IgxChartIntegrationDirective;
@@ -142,7 +143,7 @@ describe('IgxChartIntegrationDirective', () => {
 
             expect(emittedArgs.chartsAvailability).toBeDefined();
             expect(emittedArgs.chartsAvailability.size).toBeGreaterThan(0);
-            expect(emittedArgs.chartsAvailability.get(CHART_TYPE.ColumnGrouped)).toBeTrue();
+            expect(emittedArgs.chartsAvailability.get(CHART_TYPE.ColumnGrouped)).toBe(true);
         });
 
         it('should have empty chartsAvailability when data is empty', () => {
@@ -308,18 +309,18 @@ describe('IgxChartIntegrationDirective', () => {
             const mockChart = { width: '', height: '', dataSource: null } as any;
             directive.chartFactory(CHART_TYPE.Pie, undefined, mockChart);
 
-            expect(emitted).toBeTrue();
+            expect(emitted).toBe(true);
         });
     });
 
     describe('useLegend input', () => {
         it('should default to true', () => {
-            expect(directive.useLegend).toBeTrue();
+            expect(directive.useLegend).toBe(true);
         });
 
         it('should accept false', () => {
             directive.useLegend = false;
-            expect(directive.useLegend).toBeFalse();
+            expect(directive.useLegend).toBe(false);
         });
     });
 
@@ -432,8 +433,8 @@ describe('IgxChartIntegrationDirective', () => {
         it('should create a scatter line chart', () => {
             directive.chartData = [{ name: 'A', x: 10, y: 20 }, { name: 'B', x: 30, y: 40 }];
             const mockChart = {
-                series: { count: 0, clear: () => {}, add: jasmine.createSpy('add') },
-                axes: { count: 0, clear: () => {}, add: jasmine.createSpy('add') }
+                series: { count: 0, clear: () => {}, add: vi.fn() },
+                axes: { count: 0, clear: () => {}, add: vi.fn() }
             } as any;
 
             const result = directive.chartFactory(CHART_TYPE.ScatterLine, undefined, mockChart);

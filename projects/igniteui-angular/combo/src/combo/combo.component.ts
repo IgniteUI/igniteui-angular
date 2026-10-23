@@ -231,7 +231,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public writeValue(value: any[]): void {
         const selection = Array.isArray(value) ? value.filter(x => x !== undefined) : [];
         const oldSelection = this.selection;
-        this.selectionService.select_items(this.id, selection, true);
+        this.selectionService.select_items(this.selectionKey, selection, true);
         this.cdr.markForCheck();
         this._displayValue = this.createDisplayText(this.selection, oldSelection);
         this._value = this.valueKey ? this.selection.map(item => item[this.valueKey]) : this.selection;
@@ -292,7 +292,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     public select(newItems: Array<any>, clearCurrentSelection?: boolean, event?: Event) {
         if (newItems) {
-            const newSelection = this.selectionService.add_items(this.id, newItems, clearCurrentSelection);
+            const newSelection = this.selectionService.add_items(this.selectionKey, newItems, clearCurrentSelection);
             this.setSelection(newSelection, event);
         }
     }
@@ -307,7 +307,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     public deselect(items: Array<any>, event?: Event) {
         if (items) {
-            const newSelection = this.selectionService.delete_items(this.id, items);
+            const newSelection = this.selectionService.delete_items(this.selectionKey, items);
             this.setSelection(newSelection, event);
         }
     }
@@ -322,7 +322,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      */
     public selectAllItems(ignoreFilter?: boolean, event?: Event) {
         const allVisible = this.selectionService.get_all_ids(ignoreFilter ? this.data : this.filteredData, this.valueKey);
-        const newSelection = this.selectionService.add_items(this.id, allVisible);
+        const newSelection = this.selectionService.add_items(this.selectionKey, allVisible);
         this.setSelection(newSelection, event);
     }
 
@@ -337,7 +337,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
         let newSelection = this.selectionService.get_empty();
         if (this.filteredData!.length !== this.data!.length && !ignoreFilter) {
-            newSelection = this.selectionService.delete_items(this.id, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
+            newSelection = this.selectionService.delete_items(this.selectionKey, this.selectionService.get_all_ids(this.filteredData, this.valueKey));
         }
         this.setSelection(newSelection, event);
     }
@@ -402,7 +402,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     }
 
     protected setSelection(selection: Set<any>, event?: Event): void {
-        const currentSelection = this.selectionService.get(this.id);
+        const currentSelection = this.selectionService.get(this.selectionKey);
         const removed = this.convertKeysToItems(diffInSets(currentSelection, selection));
         const added = this.convertKeysToItems(diffInSets(selection, currentSelection));
         const newValue = Array.from(selection);
@@ -424,7 +424,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         };
         this.selectionChanging.emit(args);
         if (!args.cancel) {
-            this.selectionService.select_items(this.id, args.newValue, true);
+            this.selectionService.select_items(this.selectionKey, args.newValue, true);
             this._value = args.newValue;
             if (displayText !== args.displayText) {
                 this._displayValue = this._displayText = args.displayText;

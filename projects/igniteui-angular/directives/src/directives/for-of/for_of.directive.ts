@@ -15,6 +15,13 @@ import { VirtualHelperBaseDirective } from './base.helper.component';
 const MAX_PERF_SCROLL_DIFF = 4;
 
 /**
+ * Engine max element size per document, keyed by probe edge and DPR (e.g. 'top@1').
+ * It changes only with zoom, yet each probe forces a full document layout,
+ * so igxFor instances (one per grid row) share one probe instead of each running it.
+ */
+const maxBrowserSizes = new WeakMap<Document, Map<string, number>>();
+
+/**
  *  @publicApi
  */
 export class IgxForOfContext<T, U extends T[] = T[]> {
@@ -1264,14 +1271,30 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (!this.platformUtil.isBrowser) {
             return 0;
         }
+        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
+
+        // Reuse this document's probe; zoom changes the value in CSS px, hence the DPR.
+        const sizes = maxBrowserSizes.get(this.document) ?? new Map<string, number>();
+        const key = `${dir}@${this.document.defaultView?.devicePixelRatio}`;
+        const cached = sizes.get(key);
+
+        if (cached) {
+            return cached;
+        }
+
         const div = this.document.createElement('div');
         const style = div.style;
         style.position = 'absolute';
-        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
         style[dir] = '9999999999999999px';
         this.document.body.appendChild(div);
         const size = Math.abs(div.getBoundingClientRect()[dir]);
         this.document.body.removeChild(div);
+
+        // 0 means no layout yet (e.g. hidden body); probe again next time.
+        if (size) {
+            sizes.set(key, size);
+            maxBrowserSizes.set(this.document, sizes);
+        }
         return size;
     }
 
