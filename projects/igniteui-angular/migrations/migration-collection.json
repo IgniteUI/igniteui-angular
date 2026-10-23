@@ -319,6 +319,11 @@
             "version": "22.2.0",
             "description": "Removes the grid-summary border width properties now driven by the grid's own borders",
             "factory": "./update-22_2_0_grid-summary-borders"
+        },
+        "migration-63": {
+            "version": "22.3.0",
+            "description": "Pins existing palette() calls to the legacy shade generator, which Ignite UI Theming 30.0.0 no longer uses by default",
+            "factory": "./update-22_3_0_palette-generator"
         }
     }
 }
