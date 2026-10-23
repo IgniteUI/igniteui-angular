@@ -1,6 +1,14 @@
+import { Component, ViewChild, ViewContainerRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+    IgxCategoryXAxisModule, IgxCategoryYAxisModule, IgxColumnSeriesComponent, IgxDataChartCategoryModule, IgxDataChartComponent,
+    IgxDataChartCoreModule, IgxDataChartScatterModule, IgxDataChartStackedModule, IgxItemLegendComponent,
+    IgxItemLegendModule, IgxLegendComponent, IgxLegendModule, IgxNumericXAxisModule, IgxNumericYAxisModule,
+    IgxPieChartComponent, IgxPieChartModule, IgxStacked100BarSeriesComponent, IgxStackedColumnSeriesComponent
+} from 'igniteui-angular-charts';
 import { CHART_TYPE, OPTIONS_TYPE } from './chart-types';
 import { IgxChartIntegrationDirective, IDeterminedChartTypesArgs } from './chart-integration.directive';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxChartIntegrationDirective', () => {
     let directive: IgxChartIntegrationDirective;
@@ -440,6 +448,113 @@ describe('IgxChartIntegrationDirective', () => {
             const result = directive.chartFactory(CHART_TYPE.ScatterLine, undefined, mockChart);
 
             expect(result).toBeDefined();
+        });
+    });
+
+    describe('chartFactory with a ViewContainerRef', () => {
+        @Component({
+            template: `<ng-container #host></ng-container>`,
+            imports: [
+                IgxDataChartCoreModule, IgxDataChartCategoryModule, IgxDataChartStackedModule,
+                IgxDataChartScatterModule, IgxPieChartModule, IgxLegendModule, IgxItemLegendModule,
+                IgxNumericXAxisModule, IgxNumericYAxisModule, IgxCategoryXAxisModule, IgxCategoryYAxisModule
+            ]
+        })
+        class ChartHostComponent {
+            @ViewChild('host', { read: ViewContainerRef, static: true })
+            public host!: ViewContainerRef;
+        }
+
+        let fixture: ComponentFixture<ChartHostComponent>;
+        let vcr: ViewContainerRef;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({ imports: [ChartHostComponent] });
+            fixture = TestBed.createComponent(ChartHostComponent);
+            fixture.detectChanges();
+            vcr = fixture.componentInstance.host;
+            directive.chartData = [{ name: 'A', q1: 10, q2: 5 }, { name: 'B', q1: 20, q2: 15 }];
+        });
+
+        afterEach(() => {
+            TestBed.resetTestingModule();
+        });
+
+        it('should create a pie chart with an item legend', () => {
+            let emitted: any;
+            directive.chartCreationDone.subscribe(c => emitted = c);
+
+            const chart = directive.chartFactory(CHART_TYPE.Pie, vcr);
+
+            expect(chart).toBeInstanceOf(IgxPieChartComponent);
+            expect(emitted).toBe(chart);
+            expect(vcr.length).toBe(2);
+            expect(chart.legend).toBeInstanceOf(IgxItemLegendComponent);
+            expect(chart.valueMemberPath).toBe('q1');
+            expect(chart.labelMemberPath).toBe('name');
+        });
+
+        it('should create a data chart with one series per numeric column and a legend', () => {
+            const chart = directive.chartFactory(CHART_TYPE.ColumnGrouped, vcr);
+
+            expect(chart).toBeInstanceOf(IgxDataChartComponent);
+            expect(vcr.length).toBe(2);
+            expect(chart.legend).toBeInstanceOf(IgxLegendComponent);
+            expect(chart.series.count).toBe(2);
+            expect(chart.series.item(0)).toBeInstanceOf(IgxColumnSeriesComponent);
+            expect(chart.series.item(1).valueMemberPath).toBe('q2');
+            expect(chart.axes.count).toBe(2);
+        });
+
+        it('should not create a legend when useLegend is false', () => {
+            directive.useLegend = false;
+
+            const chart = directive.chartFactory(CHART_TYPE.LineGrouped, vcr);
+
+            expect(chart).toBeInstanceOf(IgxDataChartComponent);
+            expect(vcr.length).toBe(1);
+            expect(chart.legend).toBeFalsy();
+        });
+
+        it('should create one stacked series with a fragment per numeric column', () => {
+            const chart = directive.chartFactory(CHART_TYPE.ColumnStacked, vcr);
+
+            expect(chart.series.count).toBe(1);
+            const series = chart.series.item(0);
+            expect(series).toBeInstanceOf(IgxStackedColumnSeriesComponent);
+            expect(series.series.count).toBe(2);
+            expect(series.series.item(0).valueMemberPath).toBe('q1');
+            expect(series.series.item(0).title).toBe('q1');
+            expect(series.series.item(1).valueMemberPath).toBe('q2');
+        });
+
+        it('should not apply the series model to stacked fragments', () => {
+            directive.setChartComponentOptions(CHART_TYPE.ColumnStacked, OPTIONS_TYPE.Series, { title: 'custom' });
+
+            const chart = directive.chartFactory(CHART_TYPE.ColumnStacked, vcr);
+
+            const fragment = chart.series.item(0).series.item(0);
+            expect(fragment.title).toBe('q1');
+        });
+
+        it('should use the label member path on the y axis for stacked bar charts', () => {
+            const chart = directive.chartFactory(CHART_TYPE.Bar100Stacked, vcr);
+
+            const series = chart.series.item(0);
+            expect(series).toBeInstanceOf(IgxStacked100BarSeriesComponent);
+            expect(series.yAxis.label).toBe('name');
+            expect(series.xAxis.label).toBeFalsy();
+        });
+
+        it('should configure the bubble size scale when creating in a container', () => {
+            directive.chartData = [{ name: 'A', x: 1, y: 2, r: 3 }, { name: 'B', x: 4, y: 5, r: 6 }];
+
+            const chart = directive.chartFactory(CHART_TYPE.ScatterBubble, vcr);
+
+            const series = chart.series.item(0);
+            expect(series.radiusMemberPath).toBe('y');
+            expect(series.radiusScale.minimumValue).toBe(10);
+            expect(series.radiusScale.maximumValue).toBe(60);
         });
     });
 });
