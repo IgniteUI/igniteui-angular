@@ -203,7 +203,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden */
     protected override scrollTabHeaderIntoView() {
-        if (this.selectedIndex >= 0) {
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
             const tabItems = this.items.toArray();
             const tabHeaderNativeElement = tabItems[this.selectedIndex].headerComponent.nativeElement;
 
@@ -234,10 +234,23 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden */
     protected override onItemChanges() {
+        // Taken before the selection settles, so that scroll buttons appearing or
+        // disappearing because of this change show up as a different width below.
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+
         super.onItemChanges();
 
         Promise.resolve().then(() => {
             this.updateScrollButtons();
+
+            // The selected tab is scrolled into view against the viewport width it had
+            // when the selection settled. When the change made the header overflow, the
+            // buttons that appeared narrow the viewport, so the tab has to be brought
+            // back into view. Only then, so that adding or removing other tabs keeps a
+            // header the user scrolled away from the selected tab where it is.
+            if (this.viewPort.nativeElement.offsetWidth !== viewPortWidth) {
+                this.scrollTabHeaderIntoView();
+            }
         });
     }
 
@@ -265,14 +278,22 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             if (scrollNext) {
                 if (element.offsetWidth + this.getElementOffset(element) > this.viewPort.nativeElement.offsetWidth + this.offset) {
                     this.scrollElement(element, scrollNext);
-                    break;
+                    return;
                 }
             } else {
                 if (this.getElementOffset(element) >= this.offset) {
-                    this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollNext);
-                    break;
+                    if (index > 0) {
+                        this.scrollElement(tabsArray[index - 1].headerComponent.nativeElement, scrollNext);
+                    }
+                    return;
                 }
             }
+        }
+
+        // Scrolling back from beyond the start of the last header, which happens when a
+        // header is wider than the viewport, brings that header's start into view.
+        if (!scrollNext && tabsArray.length > 0) {
+            this.scrollElement(tabsArray[tabsArray.length - 1].headerComponent.nativeElement, scrollNext);
         }
     }
 
@@ -286,6 +307,17 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     private updateScrollButtons() {
         const itemsContainerWidth = this.getTabItemsContainerWidth();
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+
+        // The browser clamps the scroll position when the items shrink, e.g. after removing
+        // tabs, but a stale offset would keep the buttons displayed. Clamp it the same way,
+        // so the buttons state reflects the header as it is rendered.
+        if (itemsContainerWidth - headerContainerWidth <= 1) {
+            this.offset = 0;
+        } else {
+            this.offset = Math.min(this.offset, Math.max(0, itemsContainerWidth - viewPortWidth));
+        }
 
         const scrollPrevButtonStyle = this.resolveLeftScrollButtonStyle(itemsContainerWidth);
         this.setScrollButtonStyle(this.scrollPrevButton.nativeElement, scrollPrevButtonStyle);
@@ -344,7 +376,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
         let itemsContainerWidth = 0;
 
-        if (itemsContainerChildrenCount > 1) {
+        if (itemsContainerChildrenCount > 0) {
             const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 1] as HTMLElement;
             itemsContainerWidth = this.getElementOffset(lastTab) + lastTab.offsetWidth;
         }
