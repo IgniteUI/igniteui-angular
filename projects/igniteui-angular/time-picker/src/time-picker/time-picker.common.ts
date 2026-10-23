@@ -1,39 +1,40 @@
 import { ElementRef, InjectionToken } from '@angular/core';
-import { DatePartDeltas } from 'igniteui-angular/core';
+import { DatePart, DatePartDeltas } from 'igniteui-angular/core';
 
 /** @hidden */
 export const IGX_TIME_PICKER_COMPONENT = new InjectionToken<IgxTimePickerBase>('IgxTimePickerComponentToken');
 
 /** @hidden */
+export type IgxTimePickerListType = 'hourList' | 'minuteList' | 'secondsList' | 'ampmList';
+
+/**
+ * @hidden
+ * Returns the last value of a minutes/seconds list starting from 0 and generated with the given delta.
+ */
+export function getLastListValue(delta: number): number {
+    return 60 - (60 % delta || delta);
+}
+
+/** @hidden */
 export interface IgxTimePickerBase {
     hourList: ElementRef;
-    locale: string;
     minuteList: ElementRef;
     secondsList: ElementRef;
     ampmList: ElementRef;
-    inputFormat: string;
     itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>;
-	spinLoop: boolean;
     selectedDate: Date;
     maxDropdownValue: Date;
     minDropdownValue: Date;
     isTwelveHourFormat: boolean;
-    showHoursList: boolean;
-    showMinutesList: boolean;
-    showSecondsList: boolean;
     showAmPmList: boolean;
-    minDateValue: Date;
-    maxDateValue: Date;
     /** @hidden @internal */
     appliedFormat: string;
     nextHour(delta: number): void;
     nextMinute(delta: number): void;
     nextSeconds(delta: number): void;
     nextAmPm(delta: number): void;
-    close(): void;
     cancelButtonClick(): void;
     okButtonClick(): void;
-    onItemClick(item: string, dateType: string): void;
-    getPartValue(value: Date, type: string): string;
-    toISOString(value: Date): string;
+    onItemClick(item: string, dateType: IgxTimePickerListType): void;
+    getPartValue(value: Date, type: DatePart): string;
 }
