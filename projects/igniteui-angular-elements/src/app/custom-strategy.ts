@@ -42,6 +42,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     private queriesResolved = false;
     /** Whether the initial content queries of the component and of all its query children have resolved */
     private contentResolved = false;
+    /** Child elements connected under this component that haven't scheduled their content query updates yet */
+    private initializingChildren = new Set<IgxCustomNgElementStrategy>();
 
     /**
      * Resolvable component reference.
@@ -113,6 +115,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // }
         let parentInjector!: Injector;
         let parentAnchor!: ViewContainerRef;
+        let parentStrategy: IgxCustomNgElementStrategy | undefined;
         const parents: WeakRef<IgcNgElement>[] = [];
         const componentConfig = this.config?.find(x => x.component === this._component);
 
@@ -142,6 +145,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
+                // register synchronously, so the parent doesn't resolve its content before this child is in its queries
+                parentStrategy = parent.ngElementStrategy;
+                parentStrategy.addInitializingChild(this);
                 this.angularParent = parent.ngElementStrategy.angularParent;
                 this.parentElement = new WeakRef(parent);
                 const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
@@ -239,6 +245,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 parentRef.changeDetectorRef.detectChanges();
             }
         }
+        parentStrategy?.removeInitializingChild(this);
 
         if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
             this.patchGridPopups();
@@ -352,12 +359,31 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
      * retry pending values that depend on them and notify the parent, which may be waiting on this component.
      */
     private resolveContent(): void {
-        if (this.contentResolved || !this.queriesResolved || this.hasUnresolvedQueryChildren()) {
+        if (this.contentResolved || !this.queriesResolved || this.schedule.size || this.initializingChildren.size || this.hasUnresolvedQueryChildren()) {
             return;
         }
         this.contentResolved = true;
         this.applyPendingContentValues();
         this.parentElement?.deref()?.ngElementStrategy?.resolveContent();
+    }
+
+    /**
+     * Track a newly connected child until it schedules its content query updates.
+     * Content of this component and its ancestors is no longer resolved until then.
+     */
+    private addInitializingChild(child: IgxCustomNgElementStrategy): void {
+        this.initializingChildren.add(child);
+        let strategy: IgxCustomNgElementStrategy | undefined = this;
+        while (strategy) {
+            strategy.contentResolved = false;
+            strategy = strategy.parentElement?.deref()?.ngElementStrategy;
+        }
+    }
+
+    /** Stop tracking a child that has scheduled its content query updates and retry resolving content */
+    private removeInitializingChild(child: IgxCustomNgElementStrategy): void {
+        this.initializingChildren.delete(child);
+        this.resolveContent();
     }
 
     /** Whether any of the component's content query children (e.g. a nested column group) haven't resolved their own content yet */

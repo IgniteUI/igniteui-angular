@@ -812,6 +812,44 @@ describe('Elements: ', () => {
             expect(outerGroup.selected).toBe(true);
         });
 
+        it('should apply a pre-connect selection of an empty group once columns appended after connect resolve', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            groupEl.selected = true;
+            gridEl.appendChild(groupEl);
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+        });
+
+        it('should apply a selection of a resolved empty group set while newly appended columns initialize', async () => {
+            const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
+            gridEl.appendChild(groupEl);
+            const group = (await groupEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnGroupComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+            expect(group.children.length).toBe(0);
+
+            const columnEl = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
+            columnEl.field = 'ProductID';
+            groupEl.appendChild(columnEl);
+            groupEl.selected = true;
+
+            const column = (await columnEl.ngElementStrategy[ComponentRefKey]).instance as IgxColumnComponent;
+            await firstValueFrom(timer(10 /* SCHEDULE_DELAY */ * 4));
+
+            expect(group.children.toArray()).toEqual([column]);
+            expect(column.selected).toBe(true);
+            expect(group.selected).toBe(true);
+            expect(grid.selectedColumns()).toEqual([column]);
+        });
+
         it('should deselect a partially selected column group', async () => {
             const groupEl = document.createElement('igc-column-group') as IgcNgElement & InstanceType<typeof IgcColumnGroupComponent>;
             const columnEl1 = document.createElement('igc-column') as IgcNgElement & InstanceType<typeof IgcColumnComponent>;
