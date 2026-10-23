@@ -4,6 +4,10 @@
 @forward 'igniteui-theming/sass/themes';
 @forward 'igniteui-theming/sass/bem';
 
+/// Wraps the passed content in the `ig.`-prefixed cascade layer with the given name.
+/// @access private
+/// @param {String} $name - The cascade layer name, without the `ig.` prefix.
+/// @content The declarations to emit inside the layer.
 @mixin layer($name) {
     $_layer: 'ig.' + $name;
 
