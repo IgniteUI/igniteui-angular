@@ -4,7 +4,7 @@ import { FormField, disabled, form as signalForm, required } from '@angular/form
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
-import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from '../../../calendar/src/public_api';
+import { IgxCalendarComponent, IgxCalendarDayTemplateDirective, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from '../../../calendar/src/public_api';
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
 import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings, WEEKDAYS } from 'igniteui-angular/core';
@@ -722,6 +722,18 @@ describe('IgxDatePicker', () => {
                 if (headerElement) {
                     expect(headerElement.nativeElement.textContent.trim()).toBe('Nov');
                 }
+            });
+
+            it('Should use the custom template for day cells', async () => {
+                fixture.componentInstance.datePicker.value = new Date(2024, 10, 11);
+                fixture.componentInstance.datePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                const days = fixture.debugElement.queryAll(By.css('.igx-day-item:not(.igx-day-item--hidden)'));
+                const customDays = fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                expect(customDays.length).toBeGreaterThan(0);
+                expect(customDays.length).toBe(days.length);
             });
         });
 
@@ -1747,9 +1759,10 @@ export class IgxDatePickerWithProjectionsComponent {
     <igx-date-picker [mode]="mode">
         <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
         <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
+        <ng-template igxCalendarDay let-date><span class="custom-day">{{ date.getDate() }}</span></ng-template>
     </igx-date-picker>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
+    imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarDayTemplateDirective]
 })
 export class IgxDatePickerWithTemplatesComponent {
     @ViewChild(IgxDatePickerComponent)

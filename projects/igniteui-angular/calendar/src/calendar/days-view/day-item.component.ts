@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CalendarSelection } from '../calendar';
+import { IgxCalendarDayTemplateContext } from '../calendar.directives';
 import { areSameMonth, CalendarDay, DateRangeDescriptor, isDateInRanges, isNextMonth, isPreviousMonth } from 'igniteui-angular/core';
 
 /**
@@ -190,5 +191,32 @@ export class IgxDayItemComponent {
         return this.selection !== CalendarSelection.RANGE;
     }
 
+    /**
+     * Returns the context for the day template.
+     * The same object is updated and returned on every call to avoid re-creating it on each change detection.
+     *
+     * @hidden
+     * @internal
+     */
+    public getTemplateContext(formattedDate: string): IgxCalendarDayTemplateContext {
+        return Object.assign(this._templateContext, {
+            $implicit: this.date.native,
+            date: this.date.native,
+            formattedDate,
+            selected: this.isSelectedCSS,
+            disabled: this.isDisabled,
+            special: this.isSpecial,
+            today: this.isToday,
+            weekend: this.isWeekend,
+            currentMonth: this.isCurrentMonth,
+            active: this.isActive,
+            firstInRange: this.isFirstInRange,
+            lastInRange: this.isLastInRange,
+            withinRange: this.isWithinRange,
+            withinPreviewRange: this.isWithinPreviewRange
+        });
+    }
+
     private _selected = false;
+    private _templateContext = {} as IgxCalendarDayTemplateContext;
 }

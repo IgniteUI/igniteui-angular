@@ -1,5 +1,5 @@
 import { IgxCalendarComponent } from './calendar.component';
-import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarMonthDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarYearDirective } from './calendar.directives';
+import { IgxCalendarDayTemplateDirective, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarMonthDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarYearDirective } from './calendar.directives';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
@@ -24,6 +24,7 @@ export const IGX_CALENDAR_DIRECTIVES = [
     IgxCalendarHeaderTitleTemplateDirective,
     IgxCalendarMonthDirective,
     IgxCalendarYearDirective,
-    IgxCalendarSubheaderTemplateDirective
+    IgxCalendarSubheaderTemplateDirective,
+    IgxCalendarDayTemplateDirective
 ] as const;
 

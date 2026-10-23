@@ -94,7 +94,13 @@
                 (mouseEnter)="changePreviewRange(day.native)"
                 (mouseLeave)="clearPreviewRange()"
             >
-                {{ formattedDate(day.native) | dayDigit:formatViews }}
+                @if (!dayTemplate) {
+                    {{ formattedDate(day.native) | dayDigit:formatViews }}
+                } @else if (!item.isHidden) {
+                    <ng-container
+                        *ngTemplateOutlet="dayTemplate; context: item.getTemplateContext((formattedDate(day.native) | dayDigit:formatViews))"
+                    />
+                }
             </igx-day-item>
         }
     </div>

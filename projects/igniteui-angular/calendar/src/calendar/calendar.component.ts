@@ -13,11 +13,14 @@ import {
     HostListener,
     ChangeDetectionStrategy,
     ViewEncapsulation,
+    TemplateRef,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import {
+    IgxCalendarDayTemplateContext,
+    IgxCalendarDayTemplateDirective,
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarHeaderTitleTemplateDirective,
     IgxCalendarSubheaderTemplateDirective,
@@ -358,6 +361,29 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     }
 
     /**
+     * Sets/gets the template used for the content of the day cells.
+     *
+     * @remarks
+     * When not set, the template marked with the `igxCalendarDay` directive is used, if any.
+     * The template receives an `IgxCalendarDayTemplateContext` and replaces the default day number.
+     * Selection, keyboard navigation, ARIA attributes and state styling of the day cells are preserved.
+     *
+     * @example
+     * ```html
+     * <igx-calendar [dayTemplate]="dayTemplate"></igx-calendar>
+     * <ng-template #dayTemplate let-date let-selected="selected">{{ date.getDate() }}</ng-template>
+     * ```
+     */
+    @Input()
+    public get dayTemplate(): TemplateRef<IgxCalendarDayTemplateContext> | null {
+        return this._dayTemplate ?? this.dayTemplateDirective ?? null;
+    }
+
+    public set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | null) {
+        this._dayTemplate = value;
+    }
+
+    /**
      * Gets the context for the template marked with the `igxCalendarHeader` directive.
      *
      * @example
@@ -413,6 +439,15 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      */
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective!: IgxCalendarSubheaderTemplateDirective;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(forwardRef(() => IgxCalendarDayTemplateDirective), { read: TemplateRef })
+    private dayTemplateDirective?: TemplateRef<IgxCalendarDayTemplateContext>;
+
+    private _dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
 
     /**
      * @hidden
