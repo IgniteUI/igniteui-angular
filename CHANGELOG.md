@@ -2,6 +2,269 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.23
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
+
+## 21.2.22
+
+### Bug Fixes
+
+- `IgxDialogComponent`
+    - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications (#17578).
+
+## 21.2.21
+
+### Bug Fixes
+
+- `IgxDragDirective`
+    - Dragging now starts only with the primary pointer button, such as the left mouse button or a touch contact, also in the components that use the directive, such as the `igx-splitter` bars and the `igx-pivot-data-selector` items. Previously other buttons, such as the right mouse button, also started a drag, and a right-click emitted `dragClick` (#17424).
+- `IgxChipComponent`
+    - Right-clicking a chip no longer emits `chipClick` or toggles the selection of a `selectable` chip, and a `draggable` chip can no longer be dragged with the right mouse button (#17424).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Rows, column headers and group-by chips can no longer be dragged with the right mouse button, and right-clicking a group-by chip no longer toggles the sorting direction of the group (#17424).
+    - Typing `+` or `=` in a cell editor now enters the character. Previously, since 21.2.12, the character was not entered and `TypeError: Cannot read properties of undefined (reading 'rowIndex')` was thrown (#17605).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Pressing `+` or `=` on a focused cell, with or without `Ctrl` (as in the `Ctrl + +` browser zoom shortcut), no longer throws `TypeError: Cannot read properties of undefined (reading 'rowIndex')`, an error introduced in 21.2.12 (#17577).
+- `IgxQueryBuilderComponent`, `IgxAdvancedFilteringDialogComponent`
+    - Condition chips whose condition takes no value, such as `True`, `Today` or `Not Null`, now have the same gap before the remove icon as chips that show a value. Previously the condition name touched the icon (#17747).
+- `IgxTabsComponent`, `IgxBottomNavComponent`
+    - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed (#17676).
+
+## 21.2.20
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - Horizontal scrolling now works when `data` is set after the initial render, for example when it is loaded from a remote service, and the `pivotConfiguration` defines a single value. Previously the horizontal scrollbar did not scroll the column headers and cells (#17682).
+
+## 21.2.19
+
+### General
+
+- No changes to the library. Starting with this release, the GitHub release also provides the package archives with their checksums, a CycloneDX software bill of materials (SBOM) and Sigstore attestations.
+
+## 21.2.18
+
+### Bug Fixes
+
+- `IgxSplitterComponent`
+    - Collapsing or expanding a pane no longer resets the `size` of the panes next to it to `auto`, so after a pane is expanded the panes return to the sizes they had before it was collapsed, including sizes set by dragging a splitter bar. Previously the expanded pane could come back much smaller than before, down to its `minSize` (#17545).
+    - The panes now keep their `size` and stay within their `minSize` and `maxSize` when a pane is initially collapsed, and when panes are added or removed, or a pane's `minSize` or `maxSize` changes, while a pane is collapsed. Previously the `size` of all panes was reset to `auto`, and the panes could grow beyond their `maxSize` or shrink below their `minSize`.
+
+## 21.2.17
+
+### Behavioral Changes
+
+- **Localization**
+    - Assigning a component's `resourceStrings` again now replaces the strings assigned before, so the strings that the new value does not set, or all of them when it is `null` or `undefined`, return to the default ones. Previously each new value was merged into the strings assigned before.
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Pinning and resizing columns in quick succession no longer throws `TypeError: Failed to execute 'unobserve' on 'ResizeObserver': parameter 1 is not of type 'Element'` (#17482).
+- **Localization**
+    - Strings that are not set in the `resourceStrings` of `igx-action-strip`, `igx-banner`, `igx-calendar`, `igx-carousel`, `igx-chip`, `igx-combo`, `igx-date-range-picker`, `igx-input-group`, `igx-list`, `igx-month-picker`, `igx-query-builder`, `igx-simple-combo`, `igx-time-picker` and `igx-tree-node` now fall back to the default resource strings, both in the UI and when reading `resourceStrings`. Previously they were empty, for example the text of a file input's upload button, or an error was thrown, for example by `igx-query-builder` with conditions or by `igx-calendar` showing several months (#17540).
+    - In `igx-grid`, `igx-tree-grid`, `igx-hierarchical-grid`, `igx-pivot-grid` and `igx-paginator`, the strings that are not set in `resourceStrings` now follow later changes of the global resource strings, for example with `changei18n()` or `setCurrentI18n()`, and of the grid `locale`. Previously they kept the values they had when `resourceStrings` was set.
+- `IgxGridExcelStyleFilteringComponent`
+    - The scrollbar thumb of the values list now stays under the mouse pointer while it is dragged. Previously it lagged behind the pointer (#17513).
+    - In the Indigo theme, the values list can now be scrolled until the last value is fully visible. Previously the scrollbar reached the bottom while the last value was still partly hidden (#17521).
+
+## 21.2.16
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Setting `autoGenerate` to `true` on an initialized grid that already has `data` and no columns now generates the columns and renders the data. Previously no columns were generated and no data was rendered (#16830).
+
+## 21.2.15
+
+### Behavioral Changes
+
+- `IgxTooltipTargetDirective`
+    - Hover events from `showTriggers` (`pointerenter`, `pointerover`, `mouseenter` or `mouseover`) that are dispatched on the target from code, e.g. in unit tests, no longer open the tooltip unless the target is actually hovered (matches `:hover`), also when `showDelay` is `0`. Call `showTooltip()` to open the tooltip from code instead.
+- `IgxGridStateDirective`
+    - If `setState` restores the `columns` state after the grid view is initialized but before the grid emits `rendered`, e.g. in `afterNextRender` or in the host component's `ngAfterViewInit`, the grid now updates its `columns` collection to the restored columns, and emits `columnInit` for them, once it emits `rendered`. Previously both happened during the `setState` call.
+
+### Bug Fixes
+
+- `IgxTooltipTargetDirective`
+    - A tooltip triggered by hovering its target now opens after `showDelay` only if the target is still hovered. Previously it could also open after the pointer had left the target, for example when a grid was scrolled with the pointer over its cells, so tooltips showed up away from the pointer and several could be open at once (#17465).
+- `IgxGridStateDirective`
+    - Restoring the `columns` state with `setState` after the grid view is initialized but before the grid emits `rendered` no longer stops the column headers from updating. Previously, with column groups, clicking a column's filter chip could leave the filter row closed until the mouse was moved or clicked again (#16903).
+
+## 21.2.14
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - Opening the filter of a dimension no longer throws an error when its values are listed as a tree, as for an `IgxPivotDateDimension` or another dimension with a `childLevel` (#17478).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The grid now always shows the rows for the final scroll position after vertical scrolling, including a momentum scroll with the mouse wheel or touchpad and a quick drag of the scrollbar thumb. Previously the rows could stop at an intermediate position until the grid was scrolled again, leaving rows cut off or missing, for example the first rows while the scrollbar was at the top (#17287, #17464, #17484).
+    - Rendering a grid on the server, with server-side rendering (SSR) or prerendering, no longer throws an error. Previously the error was thrown because `ResizeObserver` is not available on the server, and the server-rendered grid had no column headers or rows (#17497).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - In grids with many rows, navigating to the last row with `Ctrl + Arrow Down` no longer leaves empty space below the rows (#17432).
+    - Scrolling horizontally to the end no longer leaves a large empty space after the last column when many columns have `width` set to `auto`. Previously the horizontal scrollbar used the auto-sized width only for the columns in the initial view, and the default column width for the rest (#17392).
+- `IgxGridExcelStyleFilteringComponent`
+    - Scrolling the list of column values to the end now shows the last value in full in the Material, Fluent and Bootstrap themes. Previously the list stopped scrolling while part of the last value was still hidden, especially in the Fluent and Bootstrap themes and at a smaller `--ig-size` (#17490).
+- `IgxForOfDirective`
+    - The measured size of rendered items now includes their borders, along with their margins, so a virtualized list whose items have borders, such as `igx-list-item` in the Fluent and Bootstrap themes, can be scrolled until its last item is fully visible.
+
+## 21.2.13
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - A grid with a percentage `width`, such as the default `100%`, no longer gets stuck in an endless sizing loop while hidden, for example inside a container with `display: none`, when its columns without a `width` are displayed at their `minWidth`. Previously the width of these columns became `NaN`, which could throw a `Maximum call stack size exceeded` error and make the page unresponsive (#17418).
+
+## 21.2.12
+
+### Behavioral Changes
+
+- `IgxPivotGridComponent`
+    - The `resourceStrings` of an `IgxPivotDateDimension` are now replaced by the pivot grid's `resourceStrings` when the `pivotConfiguration` is set. Previously a custom `igx_grid_pivot_date_dimension_total` set on the date dimension was used for its `All Periods` headers.
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - Pivot grids with an `IgxPivotDateDimension` that shows the `All Periods` level (the default) no longer freeze the page for seconds when bound to several thousand records, for example on initial render, when rows are expanded or collapsed, or when the data or `pivotConfiguration` changes.
+    - The month names and the `All Periods` headers of an `IgxPivotDateDimension` now use the `locale` and `resourceStrings` that the pivot grid has when its `pivotConfiguration` is set. Previously they used the global Ignite UI locale and resource strings, so for example the month names ignored the application's `LOCALE_ID`.
+    - Row dimensions with `width` set to `auto` are now sized to their content in zoneless applications (#17364).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The last row is now fully displayed when the grid is scrolled to the bottom in zoneless applications. Previously it could be cut off, for example when cell templates made the rows taller than `rowHeight` (#17280).
+    - In zoneless applications, including optimized production builds, keyboard navigation to a cell outside of the view now activates the target cell once the grid has scrolled to it, and `navigateTo` calls its callback after scrolling to the cell. Previously the grid scrolled, but the target cell could stay inactive and the arrow keys, `Home` and `End` could stop navigating the grid (#17385).
+    - `recalculateAutoSizes()` now resizes auto-sized columns to the new content in zoneless applications. Previously the columns could keep their previous widths (#17364).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - In zoneless applications, the headers of auto-sized columns (`width` set to `auto`) now stay aligned with their cells when the columns do not fit in the grid width, also after scrolling horizontally. Previously headers and cells could be rendered with different widths (#17323).
+    - In zoneless applications, when the grid is scrolled horizontally, data and summary rows that are rendered again while scrolling vertically, for example after groups are collapsed and expanded, now stay aligned with the column headers. Previously their cells could remain at an earlier horizontal scroll position (#17364).
+- `IgxGridComponent`
+    - The grid no longer throws `ExpressionChangedAfterItHasBeenCheckedError` for `aria-colcount` on initialization in zoneless applications, for example when grouped columns are hidden with `hideGroupedColumns` (#17318).
+- `IgxForOfDirective`
+    - In zoneless applications, the rendered items are now measured after scrolling, so the content is positioned correctly when the items differ in size from `igxForItemSize`. Previously, for example, a virtualized `igx-list` scrolled to the end could show a gap below the last item (#17388).
+
+## 21.2.11
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - While `isLoading` is `true`, only the loading indicator is shown over the grid rows again. Previously, since 21.2.0, the rows were also covered by the semi-transparent gray background of the loading overlay (#17405).
+
+## 21.2.10
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering of string columns now filters by all values selected in the list when the grid uses remote virtualization (`totalItemCount`) or remote paging (`pagingMode` set to `'remote'`), for example with the list values loaded by `uniqueColumnValuesStrategy`. Previously, when more than two values were selected, the values that were not in the currently loaded data chunk or page were left out of the filter (#17283).
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Applications compiled with `strict` or `strictNullChecks` enabled and `skipLibCheck` disabled no longer fail to build with `TS2416` errors for `focusedItem` in `IgxComboDropDownComponent`. Previously, since 21.2.8, these errors were reported even when no combo was used, for any import from an entry point that includes the combo, such as `igniteui-angular`, `igniteui-angular/combo` or `igniteui-angular/grids/grid` (#17346).
+- `IgxTreeGridComponent`
+    - Excel-style filtering of a string column now shows the records with the selected values when the tree grid data is grouped with the `treeGridGrouping` pipe and three or more items are selected, for example after unselecting a single value. Previously the grid showed no records, or only the group rows and the rows with a blank value when `(Blanks)` was selected, and reopening the menu showed the selected values as unselected (#17293).
+- `IgxHierarchicalGridComponent`
+    - When a row of a child grid is in edit mode, the row editing overlay is now displayed again after the parent row is collapsed and expanded, or after the child grid is scrolled out of view and back. Previously the row stayed in edit mode, but the overlay was no longer visible (#17229).
+
+## 21.2.9
+
+### General
+
+- No changes for Angular applications. This release only contained fixes for the Ignite UI for Web Components and Ignite UI for Blazor grids, which are built from this library.
+
+## 21.2.8
+
+### Bug Fixes
+
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - Scrolling the drop-down list no longer throws `ExpressionChangedAfterItHasBeenCheckedError` in zoneless applications, including when the active item is scrolled out of view (#17310).
+- `IgxHierarchicalGridComponent`
+    - The row editing overlay of a child grid is now clipped to the visible area of the child grid and its parent grids while scrolling, and is hidden once it is scrolled completely out of that area. Previously it remained visible outside the grid boundaries (#17275).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - `addRow()`, `deleteRow()`, a row's `delete()` and the add row UI now change the array bound to `data` in place when batch editing is disabled, so the array stays in sync with the grid. Previously, after the first added or deleted row, the grid replaced `data` with a copy of the array, and later changes reached only that copy, not the application's array (#17317).
+
+## 21.2.7
+
+### Bug Fixes
+
+- `IgxDatePickerComponent`
+    - In zoneless applications, closing the calendar no longer throws `ExpressionChangedAfterItHasBeenCheckedError` in development mode, and the input no longer keeps `aria-expanded="true"` after the calendar is closed. The error is also no longer thrown when the calendar is opened with `open()` or `toggle()` from asynchronous code, such as a `setTimeout` callback (#17305).
+- `IgxHierarchicalGridComponent`
+    - Copying selected cells with `Ctrl + C` now copies their values, and `getSelectedData()` returns them, when rows are expanded, including rows expanded with `expandChildren` or `expandAll()`. Previously values from other rows, or none, could be copied and returned, for example the previous row's value for a cell of an expanded row in a grid without a `primaryKey` (#17295).
+
+## 21.2.6
+
+### General
+
+- **AI-Assisted Development - Copilot Skills**
+    - `igniteui-angular-components` skill - Examples in the component references now use the actual API, such as the `BiState` and `Cascading` tree selection modes, `IgxCardThumbnailDirective`, the snackbar `actionText` input and `clicked` event, `igx-banner-actions`, the tooltip target `showDelay` and `hideDelay` inputs, and the `[igxDrag]` data input with the drop `enter`, `leave` and `over` events. Previously some examples used members that do not exist, such as `IgxSnackbarActionDirective`, `igxTooltipTargetShowDelay`, `is24HourFormat` or the `BiCascade` selection mode, so code generated from them could fail to compile.
+    - `igniteui-angular-components` skill - The charts reference is shortened, now covers `IgxSparklineComponent` and no longer refers to chart APIs that do not exist, such as the Financial Chart `openMemberPath` and `closeMemberPath` properties or a `ChartType` enum. The form controls reference now covers the `igxAutocomplete` directive and when to use it instead of `igx-combo`, `igx-simple-combo` or `igx-select`.
+    - `igniteui-angular-grids` skill - Examples now match the grid API, such as the `sortingDone` and `filteringDone` payloads, cell merging through the grid's `cellMergeMode` and `mergeStrategy` inputs with a strategy that extends `DefaultMergeStrategy`, and the pivot grid `notifyDimensionChange()` and `sortDimension()` methods. Previously some examples used members that do not exist or are internal, such as a column-level `mergeStrategy` or the pivot grid `pipeTrigger`. `sizing.md` now also covers `[width]="null"`, which renders all columns without horizontal column virtualization.
+    - `igniteui-angular-components` and `igniteui-angular-grids` skills - Most per-section links to the online documentation are removed from the references, and the grids skill now directs agents to the `get_doc` and `get_api_reference` tools of the Ignite UI CLI MCP server (`igniteui-cli`) for detailed documentation.
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - With the horizontal row layout, the vertical scrollbar no longer flickers. Previously the row dimensions were re-rendered in an endless loop (#17264).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - In zoneless applications, when keyboard navigation or `navigateTo` scrolls the grid vertically, keyboard navigation now activates the target cell, `navigateTo` now runs its callback, and the arrow keys, `Home`, `End` and `Space` keep working afterwards. In optimized builds, such as the default production build, this requires 21.2.12 or later. Previously these keys were ignored after such a scroll and `gridKeydown` was not emitted for them (#17258).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - In zoneless applications, `beginAddRowByIndex` and `beginAddRowById` now enter add mode when they scroll the grid vertically to a row outside the view, and the row editing overlay follows the edited row when the grid is scrolled vertically and hides when that row is scrolled out of view. In optimized builds, such as the default production build, this requires 21.2.12 or later.
+
+## 21.2.5
+
+### General
+
+- No changes to the library. This release only updated the build of the API reference documentation, which now includes the chat and grid lite components.
+
+## 21.2.4
+
+### Bug Fixes
+
+- `IgxHierarchicalGridComponent`
+    - Drop-downs opened from a child grid, such as the column hiding and pinning drop-downs of its toolbar, now close when the parent grid is scrolled. Previously they stayed open and floated outside the child grid and, once the child grid was scrolled out of view and back, showed behind it (#17215).
+    - The advanced filtering dialog now stays open when another grid of the hierarchy, such as the parent grid or a child grid, is scrolled, as it does when its own grid is scrolled. Previously it closed.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Drop-downs opened from grid rows, such as the date and time picker drop-downs of cell editors or a drop-down in a cell template, now close when the grid is scrolled. Previously they stayed open while the grid scrolled.
+- `IgxPivotGridComponent`
+    - The `data` parameter of `PivotAggregation` is now optional, matching `IPivotAggregator.aggregator`, so custom aggregators typed as `PivotAggregation` can be set as the `aggregator` of a pivot value in applications compiled in strict mode. Previously the assignment failed to compile with error TS2322 (#15145).
+- `IgxGridLiteColumnComponent`
+    - `[field]` now accepts the `field` of a column configuration that has no type argument, e.g. `[field]="column.field"` for columns typed as `IgxGridLiteColumnConfiguration[]`. Previously, in applications with `strictTemplates`, the build failed unless the data model was given as the type argument, as in `IgxGridLiteColumnConfiguration<Product>[]` (#16962).
+
+## 21.2.3
+
+### Behavioral Changes
+
+- `IgxGridComponent`
+    - The `aria-expanded` attribute of a group row is now set on its expand/collapse indicator cell (`.igx-grid__grouping-indicator`) instead of the `igx-grid-groupby-row` element, which now has the `row` role (#16661).
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Accessibility checkers such as Accessibility Insights no longer report "Element has children which are not allowed" (WCAG 1.3.1, `aria-required-children`) on the grid element for the header row and the data and summary row areas, which now have the `rowgroup` role (#16661).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Row selectors and quick filtering cells now have the `gridcell` or `columnheader` role, so accessibility checkers no longer report their checkboxes and filter chips as children that are not allowed in a row (#16661).
+
+## 21.2.2
+
+### General
+
+- **AI-Assisted Development - Copilot Skills**
+    - `igniteui-angular-components` skill - The Ignite UI CLI MCP server setup in the `mcp-setup.md` reference now starts the stable `igniteui-cli` release (`npx -y igniteui-cli mcp`). Previously it started the `igniteui-cli@next` pre-release.
+    - `igniteui-angular-generate-from-image-design` skill - Now instructs agents to apply the component themes returned by the `create_component_theme` MCP tool with `@include tokens($theme)`, which works without `::ng-deep` under the default emulated view encapsulation, and creates the grid dark-theme overrides in its Gotchas reference the same way. Previously the skill told agents to place the themes inside `::ng-deep` and to style internal grid classes directly.
+
+### Bug Fixes
+
+- `IgxDateRangePickerComponent`
+    - The picker no longer modifies the `Date` objects in its `value`. Previously the time of the range start, or of the end when there was no start, was reset to midnight when the picker opened, when the value changed while it was open, or when `activeDate` was read (#17212).
+
+## 21.2.1
+
+### General
+
+- **AI-Assisted Development - Copilot Skills**
+    - `igniteui-angular-components` skill - Added a new `mcp-setup.md` reference with setup steps for the Ignite UI CLI MCP server (`igniteui-cli`) in VS Code, Cursor, Claude Desktop and JetBrains IDEs. Agents using the skill now check that the server is available, add it to the editor's MCP configuration when it is missing, and use its `get_doc` and `get_api_reference` tools for detailed component documentation.
+    - `igniteui-angular-components` skill - The Avatar & Badge example now places `igx-badge` next to `igx-avatar` in a container, with the SCSS that positions the badge over the avatar, and lists the badge types `'primary'`, `'info'`, `'success'`, `'warning'` and `'error'`. Previously it nested the badge in an image avatar, which does not display content placed inside it, used an `igxAvatarBadge` attribute that does not exist, and listed `'default'` instead of `'primary'`.
+
 ## 21.2.0
 
 ### New Features
@@ -21,10 +284,17 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`
     - **Deprecation** - The `outlet` property in `OverlaySettings`, `IgxOverlayOutletDirective`, and `igxToggleOutlet` input on `IgxToggleActionDirective` are deprecated and will be removed in a future version. As overlay service now integrates the HTML Popover API and prefers rendering content in place / in the top layer, significantly reducing the need for outlet containers, new code should rely on the default in-place / top-layer rendering behavior instead of custom outlet containers.
 
-### Bug Fixes
+- **AI-Assisted Development - Copilot Skill: Generate from Image Design**
+    - Added a new `igniteui-angular-generate-from-image-design` Copilot Skill that teaches AI coding assistants/agents (e.g., GitHub Copilot, Cursor, Windsurf, Claude, JetBrains AI, etc.) how to implement Angular application views directly from design images (screenshots, mockups, wireframes).
+    - The skill provides a structured workflow covering image analysis, component discovery via MCP tools (`list_components`, `get_doc`), theme generation (`create_palette`, `create_theme`, `create_component_theme`), layout implementation, and visual refinement (`set_size`, `set_spacing`, `set_roundness`).
+    - Includes reference files:
+        - **Component Mapping** - Maps common UI patterns (dashboards, charts, forms, navigation, data display, gauges) to the most appropriate Ignite UI for Angular component with key properties and decision rules.
+        - **Gotchas** - Documents known pitfalls, component-specific constraints, and corrective patterns to help AI agents avoid common implementation mistakes.
 
-- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
-    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
+- **AI-Assisted Development - Copilot Skills improvements**
+    - `igniteui-angular-grids` skill - Added a new `sizing.md` reference covering grid and column width/height inputs, percentage and auto sizing modes, column sizing (`minWidth`, `maxWidth`, `*` star-sizing, auto-fit), and cell spacing/density control.
+    - `igniteui-angular-components` skill - Corrected Financial Chart (`IgxFinancialChartComponent`) documentation: updated `chartType` enum values to `Auto`, `Candle`, `Line`, `Bar`, `Column` to match the actual `FinancialChartType` API.
+    - `igniteui-angular-theming` skill - Minor cleanup to remove stale internal contributing reference.
 
 ## 21.1.3
 
