@@ -1,6 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject, ChangeDetectionStrategy, provideZonelessChangeDetection, signal, viewChild } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions, frames, nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -1928,6 +1928,32 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             expect(hierarchicalGrid.childLayoutList.length).toBe(1);
         });
+
+        describe('in zoneless change detection', () => {
+            beforeEach(() => {
+                TestBed.configureTestingModule({
+                    imports: [IgxHierarchicalGridReplaceColumnsComponent],
+                    providers: [provideZonelessChangeDetection()]
+                });
+            });
+
+            it('should size replacement columns of the same count when the grid width changes with them', async () => {
+                const fix = TestBed.createComponent(IgxHierarchicalGridReplaceColumnsComponent);
+                const host = fix.componentInstance;
+                await fix.whenStable();
+                const grid = host.hgrid();
+
+                host.data.set(host.makeData(1));
+                host.columns.set(host.makeColumns(1));
+                host.width.set(null);
+                await fix.whenStable();
+
+                const title = grid.nativeElement.querySelector('igx-grid-header .igx-grid-th__title');
+                expect(title.textContent.trim()).toBe('G1 C0');
+                expect(grid.totalWidth).toBe(30 * 140);
+                expect(grid.nativeElement.style.width).toBe(`${30 * 140 + grid.scrollSize}px`);
+            });
+        });
     });
 
     describe('IgxHierarchicalGrid custom template #hGrid', () => {
@@ -3601,4 +3627,38 @@ export class IgxHierarchicalGridInChildGridDialogComponent {
 
     public data: any[] = [{ ID: 1, childData: [{ ID: 10, ProductName: 'Product A' }] }];
     public historyData: any[] = [{ ID: 100, orders: [{ OrderID: 1000 }] }];
+}
+
+@Component({
+    template: `
+    <div style="width: 1000px; height: 600px">
+        <igx-hierarchical-grid #hgrid [data]="data()" [width]="width()" height="500px" primaryKey="id">
+            @for (col of columns(); track col.key) {
+                <igx-column [field]="col.field" [header]="col.header" [width]="col.width"></igx-column>
+            }
+        </igx-hierarchical-grid>
+    </div>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class IgxHierarchicalGridReplaceColumnsComponent {
+    public hgrid = viewChild.required<IgxHierarchicalGridComponent>('hgrid');
+    public data = signal(this.makeData(0));
+    public columns = signal(this.makeColumns(0));
+    public width = signal<string | null>('800px');
+
+    public makeColumns(gen: number) {
+        return Array.from({ length: 30 }, (_, i) =>
+            ({ key: `g${gen}c${i}`, field: `f${i}`, header: `G${gen} C${i}`, width: `${100 + gen * 40}px` }));
+    }
+
+    public makeData(gen: number) {
+        return Array.from({ length: 1000 }, (_, r) => {
+            const row: Record<string, any> = { id: r };
+            for (let c = 0; c < 30; c++) {
+                row[`f${c}`] = `g${gen} r${r} c${c}`;
+            }
+            return row;
+        });
+    }
 }
