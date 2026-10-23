@@ -505,8 +505,10 @@ $transition-timing: .25s $out-cubic;
 
         @include m(disabled) {
             %input-textarea-disabled-colors {
+                --input-text-color: #{var-get($theme, 'disabled-text-color')};
+
                 cursor: default;
-                color: var-get($theme, 'disabled-text-color');
+                color: var(--input-text-color);
 
                 &::placeholder {
                     color: var-get($theme, 'disabled-placeholder-color');
