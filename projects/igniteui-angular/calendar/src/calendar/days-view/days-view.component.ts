@@ -12,11 +12,13 @@ import {
     ChangeDetectorRef,
     ChangeDetectionStrategy,
     ViewEncapsulation,
+    TemplateRef,
     inject
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { TitleCasePipe } from '@angular/common';
+import { NgTemplateOutlet, TitleCasePipe } from '@angular/common';
 import { CalendarSelection, ScrollDirection } from '../../calendar/calendar';
+import { IgxCalendarDayTemplateContext } from '../calendar.directives';
 import { IgxDayItemComponent } from './day-item.component';
 import {
     CalendarDay,
@@ -51,7 +53,7 @@ let NEXT_ID = 0;
     styleUrl: 'days-view.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [IgxDayItemComponent, TitleCasePipe, DayDigitPipe]
+    imports: [IgxDayItemComponent, NgTemplateOutlet, TitleCasePipe, DayDigitPipe]
 })
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     protected el = inject(ElementRef);
@@ -159,6 +161,19 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     public get hideTrailingDays() {
         return this._hideTrailingDays ?? this.hideOutsideDays;
     }
+
+    /**
+     * Sets/gets the template used for the content of the day cells.
+     * When not set, the day cells display the formatted day number.
+     *
+     * @example
+     * ```html
+     * <igx-days-view [dayTemplate]="dayTemplate"></igx-days-view>
+     * <ng-template #dayTemplate let-date>{{ date.getDate() }}</ng-template>
+     * ```
+     */
+    @Input()
+    public dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
 
     @Input({ transform: booleanAttribute })
     public set showActiveDay(value: boolean) {

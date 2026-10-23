@@ -35,6 +35,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import {
     CalendarSelection,
     IgxCalendarComponent,
+    IgxCalendarDayTemplateContext,
+    IgxCalendarDayTemplateDirective,
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarHeaderTitleTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
@@ -484,6 +486,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     @ContentChild(IgxCalendarSubheaderTemplateDirective)
     private subheaderTemplate!: IgxCalendarSubheaderTemplateDirective;
+
+    @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
+    private dayTemplate?: TemplateRef<IgxCalendarDayTemplateContext>;
 
     /** @hidden @internal */
     public get dateSeparator(): string {
@@ -1352,6 +1357,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.dayTemplate = this.dayTemplate ?? null;
         this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.orientation = this.orientation;
         this._calendar.specialDates = this.specialDates;

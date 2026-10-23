@@ -24,7 +24,7 @@ import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { CalendarDay } from 'igniteui-angular/core';
-import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
+import { IgxCalendarDayTemplateDirective, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // The number of milliseconds in one day
@@ -2282,6 +2282,13 @@ describe('IgxDateRangePicker', () => {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test subheader');
                     }
                 });
+
+                it('Should use the custom template for day cells', async () => {
+                    const days = fixture.debugElement.queryAll(By.css('.igx-day-item:not(.igx-day-item--hidden)'));
+                    const customDays = fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                    expect(customDays.length).toBeGreaterThan(0);
+                    expect(customDays.length).toBe(days.length);
+                });
             });
 
             it('should render projected clear icons which clear the range on click', () => {
@@ -2649,6 +2656,7 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         <ng-template igxCalendarHeader let-formatCalendar>Test header</ng-template>
         <ng-template igxCalendarHeaderTitle let-formatCalendar>Test header title</ng-template>
         <ng-template igxCalendarSubheader let-formatCalendar>Test subheader</ng-template>
+        <ng-template igxCalendarDay let-date><span class="custom-day">{{ date.getDate() }}</span></ng-template>
     </igx-date-range-picker>
     <igx-date-range-picker #suffixSingleRange>
         <igx-picker-toggle igxSuffix>
@@ -2702,7 +2710,8 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         IgxSuffixDirective,
         IgxCalendarHeaderTemplateDirective,
         IgxCalendarHeaderTitleTemplateDirective,
-        IgxCalendarSubheaderTemplateDirective
+        IgxCalendarSubheaderTemplateDirective,
+        IgxCalendarDayTemplateDirective
     ]
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {

@@ -4,6 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### New Features
+
+- `IgxCalendarComponent`
+    - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
+
 ### Behavioral Changes
 
 - `IgxCarouselComponent`

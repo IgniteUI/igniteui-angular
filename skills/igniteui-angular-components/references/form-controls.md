@@ -148,6 +148,19 @@ import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 
 Selection modes: `'single'`, `'multi'`, `'range'`.
 
+Custom day cell content (event dots, prices, availability) — import `IgxCalendarDayTemplateDirective` from `igniteui-angular/calendar`. The template replaces only the day number; selection, keyboard navigation and ARIA stay on the cell. Also works inside `igx-date-picker` and `igx-date-range-picker`.
+
+```html
+<igx-calendar [(ngModel)]="selectedDate">
+  <ng-template igxCalendarDay let-date let-selected="selected" let-disabled="disabled">
+    {{ date.getDate() }}
+    @if (hasEvents(date)) { <span class="dot"></span> }
+  </ng-template>
+</igx-calendar>
+```
+
+Context (`IgxCalendarDayTemplateContext`): `$implicit`/`date`, `formattedDate`, `selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active`, `firstInRange`, `lastInRange`, `withinRange`, `withinPreviewRange`. Do not put focusable elements in the template (a click anywhere selects the date; the content is `aria-hidden`); style indicators with `currentColor` so they stay visible on the selected background.
+
 ## Checkbox, Radio, Switch
 
 ```typescript

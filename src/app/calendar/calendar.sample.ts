@@ -14,6 +14,7 @@ import {
     IgxButtonGroupComponent,
     IgxDateRangePickerModule,
     IgxCalendarComponent,
+    IgxCalendarDayTemplateDirective,
     IViewDateChangeEventArgs,
     IgxCalendarView,
     IFormattingOptions,
@@ -48,6 +49,7 @@ defineComponents(IgcCalendarComponent);
         IgxButtonDirective,
         IgxDateRangePickerModule,
         IgxCalendarComponent,
+        IgxCalendarDayTemplateDirective,
         IgxButtonGroupComponent,
         FormsModule,
     ],
@@ -179,6 +181,24 @@ export class CalendarSampleComponent implements OnInit {
     protected get selectionAngular() {
         const selection = this.propertyChangeService.getProperty('selection');
         return this.selectionMap.get(selection) || 'single';
+    }
+
+    // DAY TEMPLATES
+    protected bookingRange: DateRange;
+
+    protected getEvents(date: Date): number[] {
+        const day = date.getDate();
+        const count = day % 6 === 0 ? 2 : day % 4 === 0 ? 1 : 0;
+        return Array.from({ length: count }, (_, i) => i);
+    }
+
+    protected getPrice(date: Date): number {
+        const weekend = date.getDay() === 0 || date.getDay() === 6;
+        return 80 + ((date.getDate() * 37) % 50) + (weekend ? 40 : 0);
+    }
+
+    protected isSoldOut(date: Date): boolean {
+        return date.getDate() % 9 === 0;
     }
 
     protected onSelection(event: Date | Date[]) {
