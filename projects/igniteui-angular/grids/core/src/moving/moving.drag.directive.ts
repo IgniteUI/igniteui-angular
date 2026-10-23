@@ -46,11 +46,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         super.ngOnDestroy();
     }
 
-    public cancelMove(event: PointerEvent) {
-        this.cms.cancelDrop = true;
-        this.onPointerUp(event);
-    }
-
     public override onPointerDown(event: PointerEvent) {
         if (!this.draggable || (event.target as HTMLElement).getAttribute('draggable') === 'false') {
             return;
@@ -71,7 +66,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
             this.column.grid.columnMovingStart.emit(movingStartArgs);
             this.subscription$ = fromEvent<KeyboardEvent>(this.column.grid.document.defaultView, 'keydown').pipe(takeUntil(this._destroy)).subscribe((ev: KeyboardEvent) => {
                 if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                    this.cancelMove(event);
+                    this.cancelMove(event, ev);
                 }
             });
         }
@@ -158,6 +153,17 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
             this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);
             this.ghostTop = this._ghostStartY = pageY - ((this.ghostElement.getBoundingClientRect().height / 3) * 2);
+        }
+    }
+
+    /**
+     * Ends the column moving without dropping, so no drop area (e.g. the group-by area) acts on it.
+     * Before the pointer moves past the drag tolerance there is no drag to cancel yet,
+     * so the pending interaction is ended as a release does.
+     */
+    private cancelMove(pointerEvent: PointerEvent, originalEvent: KeyboardEvent | null = null) {
+        if (!this.cancelDragInternal(originalEvent)) {
+            this.onPointerUp(pointerEvent);
         }
     }
 

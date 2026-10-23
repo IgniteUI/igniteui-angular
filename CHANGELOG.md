@@ -68,6 +68,8 @@ All notable changes for each version of this project will be documented in this 
     - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
 - `IgxSplitterPaneComponent`
     - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Pressing `Escape` while dragging a column header over the group-by area no longer groups by that column. A column move canceled with `Escape` or in a `columnMoving` handler also no longer prevents the next column move from being dropped.
 
 ## 22.2.3
 

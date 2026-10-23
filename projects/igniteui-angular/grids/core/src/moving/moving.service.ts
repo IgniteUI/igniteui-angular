@@ -18,7 +18,6 @@ export enum DropPosition {
  */
 @Injectable({ providedIn: 'root' })
 export class IgxColumnMovingService {
-    public cancelDrop!: boolean;
     public icon!: HTMLElement;
     public column!: ColumnType;
 }
