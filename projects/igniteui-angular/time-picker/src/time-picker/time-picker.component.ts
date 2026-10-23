@@ -452,8 +452,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle')!;
     }
 
+    // the editor can still call this pipe right after the formatter is removed,
+    // so fall back to the display format the editor uses without a pipe
     /** @hidden @internal */
-    public displayValue: PipeTransform = { transform: (date: Date) => this.formatter!(date) };
+    public displayValue: PipeTransform = {
+        transform: (date: Date) => this.formatter
+            ? this.formatter(date)
+            : this.i18nFormatter.formatDate(date, this.dateTimeEditor.displayFormat.replace('tt', 'aa'), this.dateTimeEditor.locale)
+    };
     /** @hidden @internal */
     public minDropdownValue!: Date;
     /** @hidden @internal */
@@ -1097,7 +1103,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private roundUpToDelta(value: number, delta: number): number {
-        return Math.ceil(value / delta) * delta;
+        // a 0 or missing delta leaves the value as is, as in the editor
+        return delta > 0 ? Math.ceil(value / delta) * delta : value;
     }
 
     private toTodayTime(date: Date): Date {
