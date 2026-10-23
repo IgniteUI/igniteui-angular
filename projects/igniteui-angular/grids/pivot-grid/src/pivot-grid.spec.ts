@@ -3520,6 +3520,55 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[0].componentInstance.column.width).toEqual('400px');
         }));
 
+        it("should stop the resizer of a summary row header at the minimum width of its first dimension.", fakeAsync(() => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }, {
+                    memberFunction: () => 'AllProducts',
+                    memberName: 'AllProducts',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberFunction: (data) => data.ProductCategory,
+                        memberName: 'ProductCategory',
+                        enabled: true,
+                        width: '120px'
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+            const summaryHeader = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent))
+                .find(x => x.componentInstance.column.header === 'AllProducts Total');
+            const allProducts = pivotGrid.pivotConfiguration.rows[1];
+            const rootWidth = pivotGrid.rowDimensionWidthToPixels(allProducts);
+            const minWidth = summaryHeader.componentInstance.column.minWidthPx;
+            // the summary header spans the ProductCategory column as well, but only AllProducts is resized
+            expect(summaryHeader.componentInstance.header.nativeElement.getBoundingClientRect().width).toBe(rootWidth + 120);
+            UIInteractions.simulateMouseEvent('mousedown', GridFunctions.getHeaderResizeArea(summaryHeader).nativeElement, 500, 0);
+            tick(200);
+            fixture.detectChanges();
+            tick(16);
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            const startLeft = parseFloat(resizer.style.left);
+
+            UIInteractions.simulateMouseEvent('mousemove', resizer, -500, 5);
+            tick(16);
+            expect(startLeft - parseFloat(resizer.style.left)).toBe(rootWidth - minWidth);
+
+            UIInteractions.simulateMouseEvent('mouseup', resizer, -500, 5);
+            fixture.detectChanges();
+            expect(allProducts.width).toBe(`${minWidth}px`);
+        }));
+
         it("should allow sorting each dimension column from the hierarchy.", () => {
             pivotGrid.pivotConfiguration.rows = [
                 {
