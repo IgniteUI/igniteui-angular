@@ -1823,6 +1823,14 @@ describe('IgxTimePicker', () => {
                 expect(input.value).toEqual('14 hours and 20 minutes');
             });
 
+            it('should not throw when the formatter is removed before the value changes', () => {
+                timePicker.formatter = (val: Date) => `${val.getHours()} hours`;
+                fixture.detectChanges();
+
+                timePicker.formatter = undefined;
+                expect(() => timePicker.value = new Date(2021, 24, 2, 12, 20, 0)).not.toThrow();
+            });
+
             it('should apply custom resource strings and button labels', async () => {
                 timePicker.resourceStrings = {
                     igx_time_picker_ok: 'Apply',
@@ -2350,6 +2358,14 @@ describe('IgxTimePicker', () => {
                 timePicker.itemsDelta = { hours: 1 };
                 expect(timeParts(timePicker.minDropdownValue)).toEqual([9, 30, 0]);
                 expect(timeParts(timePicker.maxDropdownValue)).toEqual([23, 59, 59]);
+            });
+
+            it('should not round a time part whose itemsDelta is 0', () => {
+                timePicker.inputFormat = 'HH:mm';
+                timePicker.itemsDelta = { hours: 1, minutes: 15, seconds: 0 };
+                timePicker.value = new Date(2021, 24, 2, 10, 15, 0);
+
+                expect(timeParts(timePicker.selectedDate)).toEqual([10, 15, 0]);
             });
 
             it('should not exceed the max value when switching from AM to PM', () => {
