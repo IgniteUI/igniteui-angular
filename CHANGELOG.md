@@ -12,6 +12,8 @@ All notable changes for each version of this project will be documented in this 
     - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
 - `IgxChipComponent`, `IgxChipsAreaComponent`
     - For a canceled chip drag (e.g. with `chip.dragDirective.cancelDrag()`), `originalEvent.cancelled` of the `moveEnd` event is `true`.
+- `IgxQueryBuilderComponent`
+    - Pressing `Escape` while dragging a condition with the mouse now cancels the drag. The condition stays where it was and is not dropped when the mouse button is released.
 
 ### Behavioral Changes
 
@@ -68,6 +70,8 @@ All notable changes for each version of this project will be documented in this 
     - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
 - `IgxSplitterPaneComponent`
     - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxQueryBuilderComponent`
+    - When the drag indicator of a condition is focused while another condition is dragged with the mouse, `Arrow Up` and `Arrow Down` now move that condition once the mouse drag ends without a drop. Previously the condition could not be moved with the keyboard until the drag indicator was focused again.
 
 ## 22.2.3
 
