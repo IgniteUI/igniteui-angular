@@ -1823,12 +1823,16 @@ describe('IgxTimePicker', () => {
                 expect(input.value).toEqual('14 hours and 20 minutes');
             });
 
-            it('should not throw when the formatter is removed before the value changes', () => {
+            it('should use the display format when the formatter is removed before the value changes', () => {
                 timePicker.formatter = (val: Date) => `${val.getHours()} hours`;
                 fixture.detectChanges();
 
                 timePicker.formatter = undefined;
                 expect(() => timePicker.value = new Date(2021, 24, 2, 12, 20, 0)).not.toThrow();
+                fixture.detectChanges();
+
+                const input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement as HTMLInputElement;
+                expect(input.value.normalize('NFKC')).toEqual('12:20 PM');
             });
 
             it('should apply custom resource strings and button labels', async () => {

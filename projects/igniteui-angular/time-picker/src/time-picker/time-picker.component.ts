@@ -452,9 +452,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this.inputGroup?.element.nativeElement.querySelector('.igx-input-group__bundle')!;
     }
 
-    // the editor can still call this pipe right after the formatter is removed
+    // the editor can still call this pipe right after the formatter is removed,
+    // so fall back to the display format the editor uses without a pipe
     /** @hidden @internal */
-    public displayValue: PipeTransform = { transform: (date: Date) => this.formatter ? this.formatter(date) : date.toString() };
+    public displayValue: PipeTransform = {
+        transform: (date: Date) => this.formatter
+            ? this.formatter(date)
+            : this.i18nFormatter.formatDate(date, this.dateTimeEditor.displayFormat.replace('tt', 'aa'), this.dateTimeEditor.locale)
+    };
     /** @hidden @internal */
     public minDropdownValue!: Date;
     /** @hidden @internal */
