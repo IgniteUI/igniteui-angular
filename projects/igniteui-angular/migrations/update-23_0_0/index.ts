@@ -30,8 +30,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
     update.addValueTransform('avatar_color_to_style', (args: BoundPropertyObject): void => {
         if (args.bindingType === InputPropertyType.STRING) {
             args.bindingType = InputPropertyType.EVAL;
-            args.value = JSON.stringify(args.value)
-                .replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            // the string literal uses the other quote, so it doesn't end the attribute value
+            const stringQuote = args.quote === '\'' ? '"' : '\'';
+            args.value = `${stringQuote}${args.value.replace(/\\/g, '\\\\').replace(new RegExp(stringQuote, 'g'), `\\${stringQuote}`)}${stringQuote}`;
         }
     });
 
@@ -327,6 +328,8 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
                 const migratable = tss.isExpressionStatement(node.parent) && node.arguments.length <= 3
                     // registerFamilyAlias returns the service, setFamily doesn't, so chained calls are left to the user
                     && alias && isSideEffectFree(alias) && isDefinedString(alias)
+                    // an omitted class name repeats the alias, which for a property access can run a getter twice
+                    && (!isOmitted(className) || tss.isStringLiteralLike(alias) || tss.isIdentifier(alias))
                     && [className, type].every(arg => isOmitted(arg) || isSideEffectFree(arg) && isDefinedString(arg));
                 if (!migratable) {
                     warn(node, 'IgxIconService `registerFamilyAlias` was removed. Use `setFamily(alias, { className, type })` instead.');
@@ -410,6 +413,14 @@ const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: Te
         return existing.name.text;
     }
 
+    // the file can declare or import another `ExpressionsTreeUtil`, so the import gets a free alias then
+    const declared = getTopLevelNames(sourceFile);
+    let local = name;
+    for (let i = 1; declared.has(local); i++) {
+        local = `Igx${name}${i > 1 ? i : ''}`;
+    }
+    const specifier = local === name ? name : `${name} as ${local}`;
+
     // core holds the data operations, the package root re-exports it
     const target = igImports.find(i => {
         const bindings = i.importClause?.namedBindings;
@@ -419,16 +430,51 @@ const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: Te
     if (target) {
         const elements = (target.importClause.namedBindings as tss.NamedImports).elements;
         const last = elements[elements.length - 1];
-        changes.push({ start: last.getEnd(), end: last.getEnd(), text: `, ${name}` });
-        return name;
+        changes.push({ start: last.getEnd(), end: last.getEnd(), text: `, ${specifier}` });
+        return local;
     }
 
     const licensed = igImports.some(i => (i.moduleSpecifier as tss.StringLiteral).text.startsWith(IG_LICENSED_PACKAGE_NAME));
     const lastImport = igImports[igImports.length - 1];
     const position = lastImport ? lastImport.getEnd() : 0;
-    const statement = `import { ${name} } from '${licensed ? IG_LICENSED_PACKAGE_NAME : IG_PACKAGE_NAME}/core';`;
+    const statement = `import { ${specifier} } from '${licensed ? IG_LICENSED_PACKAGE_NAME : IG_PACKAGE_NAME}/core';`;
     changes.push({ start: position, end: position, text: lastImport ? `\n${statement}` : `${statement}\n` });
-    return name;
+    return local;
+};
+
+/** Returns the names the file binds at its top level, through its imports and declarations. */
+const getTopLevelNames = (sourceFile: tss.SourceFile): Set<string> => {
+    const names = new Set<string>();
+    const addBinding = (binding: tss.BindingName) => {
+        if (tss.isIdentifier(binding)) {
+            names.add(binding.text);
+        } else {
+            binding.elements.forEach(e => !tss.isOmittedExpression(e) && addBinding(e.name));
+        }
+    };
+    for (const statement of sourceFile.statements) {
+        if (tss.isImportDeclaration(statement)) {
+            const clause = statement.importClause;
+            const bindings = clause?.namedBindings;
+            if (clause?.name) {
+                names.add(clause.name.text);
+            }
+            if (bindings && tss.isNamespaceImport(bindings)) {
+                names.add(bindings.name.text);
+            } else if (bindings && tss.isNamedImports(bindings)) {
+                bindings.elements.forEach(e => names.add(e.name.text));
+            }
+        } else if (tss.isVariableStatement(statement)) {
+            statement.declarationList.declarations.forEach(d => addBinding(d.name));
+        } else {
+            // classes, functions, enums, interfaces, type aliases, namespaces and `import x = require()`
+            const declarationName = (statement as tss.DeclarationStatement).name;
+            if (declarationName && tss.isIdentifier(declarationName)) {
+                names.add(declarationName.text);
+            }
+        }
+    }
+    return names;
 };
 
 //#endregion
@@ -695,8 +741,10 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
         const changes: TextChange[] = [];
 
         // @include light-theme($palette, ...) -> @include theme($palette: $palette, $schema: $light-material-schema, ...)
+        // indented Sass can also include a mixin with `+light-theme(...)` at the start of a line
         const wrappers = Object.keys(THEME_WRAPPERS).sort((a, b) => b.length - a.length).join('|');
-        const includeRegex = new RegExp(String.raw`@include\s+(?:([\w-]+)\.)?(${wrappers})\s*\(`, 'g');
+        const include = entryPath.endsWith('.sass') ? String.raw`(?:@include\s+|^[ \t]*\+[ \t]*)` : String.raw`@include\s+`;
+        const includeRegex = new RegExp(String.raw`${include}(?:([\w-]+)\.)?(${wrappers})\s*\(`, 'gm');
         let match: RegExpExecArray;
         while ((match = includeRegex.exec(code))) {
             const [, namespace, wrapper] = match;
@@ -732,7 +780,7 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
             const argList = multiline
                 ? `\n${named.map(a => `${indent}${a}`).join(',\n')}\n${closingIndent}`
                 : named.join(', ');
-            const nameStart = match.index + match[0].indexOf(wrapper, namespace ? namespace.length : 0);
+            const nameStart = match.index + match[0].lastIndexOf(wrapper);
             changes.push({ start: nameStart, end: close + 1, text: `theme(${argList})` });
             migratedWrappers = true;
         }

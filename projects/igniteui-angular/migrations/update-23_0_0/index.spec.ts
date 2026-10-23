@@ -76,13 +76,15 @@ describe(`Update to ${version}`, () => {
         it('should replace the avatar `color` and `bgColor` with style bindings', async () => {
             appTree.create(templatePath,
                 `<igx-avatar initials="AB" color="blue" bgColor="#ff0"></igx-avatar>
-<igx-avatar initials="CD" [color]="textColor" [bgColor]="background"></igx-avatar>`);
+<igx-avatar initials="CD" [color]="textColor" [bgColor]="background"></igx-avatar>
+<igx-avatar initials="EF" color='red' bgColor='#000'></igx-avatar>`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent(templatePath)).toEqual(
                 `<igx-avatar initials="AB" [style.color]="'blue'" [style.background]="'#ff0'"></igx-avatar>
-<igx-avatar initials="CD" [style.color]="textColor" [style.background]="background"></igx-avatar>`);
+<igx-avatar initials="CD" [style.color]="textColor" [style.background]="background"></igx-avatar>
+<igx-avatar initials="EF" [style.color]='"red"' [style.background]='"#000"'></igx-avatar>`);
         });
 
         it('should replace the carousel `top` and `bottom` indicators orientation', async () => {
@@ -368,6 +370,12 @@ export class TestComponent {
         this.iconService.registerFamilyAlias(this.getAlias());
         this.iconService.registerFamilyAlias('custom', this.className);
         this.iconService.registerFamilyAlias('a').registerFamilyAlias('b');
+        this.iconService.registerFamilyAlias(this.alias);
+        this.iconService.registerFamilyAlias(this.alias, 'alias-icons');
+    }
+
+    private get alias() {
+        return 'alias';
     }
 
     private getAlias() {
@@ -383,6 +391,9 @@ export class TestComponent {
             expect(content).toContain(`this.iconService.registerFamilyAlias(this.getAlias());`);
             expect(content).toContain(`this.iconService.registerFamilyAlias('custom', this.className);`);
             expect(content).toContain(`this.iconService.registerFamilyAlias('a').registerFamilyAlias('b');`);
+            // the alias isn't repeated as the default class name, as a property access can run a getter
+            expect(content).toContain(`this.iconService.registerFamilyAlias(this.alias);`);
+            expect(content).toContain(`this.iconService.setFamily(this.alias, { className: 'alias-icons', type: 'font' });`);
         });
 
         it('should migrate removed members used in the receiver and arguments of a migrated call', async () => {
@@ -498,6 +509,39 @@ import { ExpressionsTreeUtil } from 'igniteui-angular/core';`);
                 `return ExpressionsTreeUtil.findIndex(tree, 'ID') > -1 || !!ExpressionsTreeUtil.find(tree, 'Name');`);
         });
 
+        it('should import ExpressionsTreeUtil under an alias when the file already declares the name', async () => {
+            const createComponent = (declaration: string) => `import { Component } from '@angular/core';
+import { FilteringExpressionsTree } from 'igniteui-angular';
+${declaration}
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public tree: FilteringExpressionsTree;
+
+    public getFilter() {
+        return this.tree.find('ID');
+    }
+}`;
+            appTree.create(tsPath, createComponent(`import { ExpressionsTreeUtil } from './my-utils';`));
+            let tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+            let content = tree.readContent(tsPath);
+            expect(content).toContain(
+                `import { FilteringExpressionsTree, ExpressionsTreeUtil as IgxExpressionsTreeUtil } from 'igniteui-angular';`);
+            expect(content).toContain(`import { ExpressionsTreeUtil } from './my-utils';`);
+            expect(content).toContain(`return IgxExpressionsTreeUtil.find(this.tree, 'ID');`);
+
+            appTree.overwrite(tsPath, createComponent(`const ExpressionsTreeUtil = {};
+class IgxExpressionsTreeUtil {}`));
+            tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+            content = tree.readContent(tsPath);
+            expect(content).toContain(
+                `import { FilteringExpressionsTree, ExpressionsTreeUtil as IgxExpressionsTreeUtil2 } from 'igniteui-angular';`);
+            expect(content).toContain(`return IgxExpressionsTreeUtil2.find(this.tree, 'ID');`);
+        });
+
         it('should leave the members with no replacement in place', async () => {
             const content = `import { Component } from '@angular/core';
 import { IgxGridComponent, IgxStringFilteringOperand } from 'igniteui-angular';
@@ -599,6 +643,31 @@ export class TestComponent {
 
 @include igx.theme($palette: igx.$light-indigo-palette, $schema: igx.$light-indigo-schema, $elevations: igx.$indigo-elevations);
 @include igx.theme($palette: igx.$light-material-palette, $schema: igx.$light-material-schema);`);
+        });
+
+        it('should replace the removed global theme mixins in indented Sass', async () => {
+            const sassPath = '/testSrc/appPrefix/component/test.component.sass';
+            appTree.create(sassPath,
+                `@use 'igniteui-angular/theming' as *
+@use 'igniteui-angular/theming' as igx
+
++light-theme($my-palette)
+.dark
+    +igx.dark-theme($my-palette, $roundness: 0)
+.indigo
+    @include indigo-light-theme($my-palette)`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(sassPath)).toEqual(
+                `@use 'igniteui-angular/theming' as *
+@use 'igniteui-angular/theming' as igx
+
++theme($palette: $my-palette, $schema: $light-material-schema)
+.dark
+    +igx.theme($palette: $my-palette, $schema: igx.$dark-material-schema, $roundness: 0)
+.indigo
+    @include theme($palette: $my-palette, $schema: $light-indigo-schema, $elevations: $indigo-elevations)`);
         });
 
         it('should not replace mixins that are not the library ones', async () => {
