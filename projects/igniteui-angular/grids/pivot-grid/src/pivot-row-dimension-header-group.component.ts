@@ -145,7 +145,8 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
 
     protected getHeaderWidthFromDimension() {
         if (this.grid.hasHorizontalLayout) {
-            return this.parent.width === -1 ? 'fit-content' : this.width;
+            // Collapsed and summary headers can span several columns.
+            return this.parent.width === -1 ? 'fit-content' : `${this.parent.width}px`;
         }
         return this.grid.rowDimensionWidth(this.parent.rootDimension);
     }
