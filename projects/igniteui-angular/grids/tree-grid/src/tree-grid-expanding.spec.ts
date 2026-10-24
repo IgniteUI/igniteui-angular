@@ -296,7 +296,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(true);
-                expect(args.rowID.ID).toBe(147);
+                expect(args.rowKey.ID).toBe(147);
                 ;
             });
             aRow.expanded = true;
@@ -310,7 +310,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(false);
-                expect(args.rowID.ID).toBe(147);
+                expect(args.rowKey.ID).toBe(147);
                 ;
             });
             aRow.expanded = false;
@@ -322,7 +322,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(true);
-                expect(args.rowID.ID).toBe(147);
+                expect(args.rowKey.ID).toBe(147);
                 ;
             });
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
@@ -339,7 +339,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(false);
-                expect(args.rowID.ID).toBe(147);
+                expect(args.rowKey.ID).toBe(147);
                 ;
             });
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
@@ -738,7 +738,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(true);
-                expect(args.rowID).toBe(1);
+                expect(args.rowKey).toBe(1);
                 ;
             });
             aRow.expanded = true;
@@ -753,7 +753,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(false);
-                expect(args.rowID).toBe(1);
+                expect(args.rowKey).toBe(1);
                 ;
             });
             aRow.expanded = false;
@@ -764,7 +764,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(true);
-                expect(args.rowID).toBe(1);
+                expect(args.rowKey).toBe(1);
                 ;
             });
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
@@ -782,7 +782,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(false);
-                expect(args.rowID).toBe(1);
+                expect(args.rowKey).toBe(1);
                 ;
             });
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));

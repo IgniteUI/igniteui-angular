@@ -15,4 +15,5 @@ $palette: igx.$dark-indigo-palette;
     // $exclude: util.include(vars.$allowed, igx.$components),
     $exclude: vars.$unused-themes,
     $schema: igx.$dark-indigo-schema,
+    $elevations: igx.$indigo-elevations,
 );

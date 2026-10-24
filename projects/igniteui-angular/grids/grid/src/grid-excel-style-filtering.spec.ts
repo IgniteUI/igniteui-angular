@@ -22,6 +22,7 @@ import {
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import {
+    ExpressionsTreeUtil,
     FilteringExpressionsTree,
     FilteringLogic,
     getComponentSize,
@@ -645,7 +646,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            const operands = (grid.filteringExpressionsTree.find('ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            const operands = (ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
             expect(operands.length).toBe(1);
             expect(operands[0].conditionName).toBe('at');
             expect(grid.filteredData.length).toBeGreaterThan(0);
@@ -667,7 +668,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            const operands = (grid.filteringExpressionsTree.find('ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
+            const operands = (ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ReleaseTime') as IFilteringExpressionsTree).filteringOperands as IFilteringExpression[];
             const inOperand = operands.find(o => o.conditionName === 'in');
             expect(inOperand).toBeDefined();
             expect((inOperand.searchVal as Set<string>).has(deselectedTime.toLocaleTimeString())).toBe(false);

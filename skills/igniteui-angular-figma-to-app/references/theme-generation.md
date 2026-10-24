@@ -10,7 +10,7 @@
 
 Check **both** places a theme can come from:
 
-- `src/styles.scss` (or the project's global stylesheet): `@include theme(...)`, `@include palette(...)`, or a named theme mixin such as `light-theme`, `dark-theme`, `fluent-light-theme`, `bootstrap-dark-theme`, `indigo-light-theme`.
+- `src/styles.scss` (or the project's global stylesheet): `@include theme(...)`, `@include palette(...)`, or, in projects on a version older than 23.0.0, a legacy named theme mixin such as `light-theme`, `dark-theme`, `fluent-light-theme`, `bootstrap-dark-theme`, `indigo-light-theme` (removed in 23.0.0; replace with `theme()` and the matching schema).
 - The `styles` array in `angular.json`: a prebuilt theme CSS such as `node_modules/igniteui-angular/styles/igniteui-angular.css` or `…/igniteui-fluent-light.css`.
 
 Then classify what you found:

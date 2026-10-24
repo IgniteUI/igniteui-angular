@@ -173,10 +173,7 @@ export interface FieldType {
 export interface ColumnType extends FieldType {
     /** Represents the instance of the parent `GridType` that contains this column. */
     grid: GridTypeBase;
-    /**
-     * A list containing all the child columns under this column (if any).
-     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
-     */
+    /** @hidden @internal */
     children: QueryList<ColumnType>;
     /**
      * A list containing all the child columns under this column (if any).
@@ -430,11 +427,7 @@ export interface IgxTreeGridAPIService {
 
 /** Interface representing a segment of a path in a hierarchical grid. */
 export interface IPathSegment {
-    /**
-     * The unique identifier of the row within the segment.
-     * @deprecated since version 17.1.0. Use the `rowKey` property instead.
-     */
-    rowID: any;
+    /** The unique identifier of the row within the segment. */
     rowKey: any;
     /** The key representing the row's 'hierarchical level. */
     rowIslandKey: string;

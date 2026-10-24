@@ -103,7 +103,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            expect(grid.crudService.addRowParent.rowKey).toBe('ANATR');
             const addRow = grid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBe(true);
         });
@@ -113,7 +113,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            expect(grid.crudService.addRowParent.rowID).toBe('ANATR');
+            expect(grid.crudService.addRowParent.rowKey).toBe('ANATR');
             const addRow = grid.gridAPI.get_row_by_index(2);
             expect(addRow.addRowUI).toBe(true);
         });
@@ -591,7 +591,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             await vi.waitFor(() => {
                 fixture.detectChanges();
-                expect(grid.crudService.addRowParent?.rowID).toBe('FAMIA');
+                expect(grid.crudService.addRowParent?.rowKey).toBe('FAMIA');
             }, { timeout: 2000, interval: 16 });
             fixture.detectChanges();
             endTransition();

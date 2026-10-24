@@ -34,6 +34,7 @@ import {
 } from '../../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import {
+    ExpressionsTreeUtil,
     FilteringExpressionsTree,
     FilteringLogic,
     GridResourceStringsEN,
@@ -1465,7 +1466,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             expect(grid.filteringService.isFilterRowVisible).toBe(false);
             expect(grid.filteringService.getExpressions('ProductName').length).toBe(0);
-            expect(grid.filteringExpressionsTree.find('ProductName')).toBeFalsy();
+            expect(ExpressionsTreeUtil.find(grid.filteringExpressionsTree, 'ProductName')).toBeFalsy();
             expect(grid.rowList.length).toBe(allRowsCount);
         });
 

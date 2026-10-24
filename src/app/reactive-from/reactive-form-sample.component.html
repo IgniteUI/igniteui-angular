@@ -42,7 +42,7 @@
                 <igx-combo #combo1 class="input-container" [itemsMaxHeight]="130"
                     [data]="genres" [valueKey]="'type'" [displayKey]="'type'"
                     type="line" formControlName="genres" placeholder="Select your favorite genres"
-                    searchPlaceholder="Search...">
+                    [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Search...' }">
                 </igx-combo>
                 <igx-date-picker name="date" formControlName="date" [mode]="'dropdown'"></igx-date-picker>
                 <igx-time-picker name="dateTime" formControlName="dateTime"></igx-time-picker>
