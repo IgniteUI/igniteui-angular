@@ -9,6 +9,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
+    - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
 
 ## 22.2.3
 
