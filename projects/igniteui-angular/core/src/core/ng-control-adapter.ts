@@ -107,7 +107,7 @@ export class NgControlAdapter {
     }
 
     /**
-     * Emits when validity, required, disabled, dirty or pending state changes.
+     * Emits when the value, validity, required, disabled, dirty or pending state changes.
      * Signal Forms `submit()` only marks fields touched, so touched changes count too
      * or the errors would never surface.
      */
@@ -117,7 +117,7 @@ export class NgControlAdapter {
                 this.observeErrors();
 
                 return [
-                    this.ngControl.valid, this.pending, this.required,
+                    this.ngControl.value, this.ngControl.valid, this.pending, this.required,
                     this.ngControl.disabled, this.ngControl.dirty, this.ngControl.touched
                 ];
             });
