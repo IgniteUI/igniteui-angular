@@ -293,6 +293,7 @@ the ARIA attributes and the state styling (selected, range, current, special, di
 templated day works as before and the theme still draws its selected state. The template is not rendered for hidden days
 (see `hideOutsideDays`) and is used in every month view when `monthsViewNumber` is greater than `1`.
 The `igx-date-picker` and `igx-date-range-picker` pass a template marked with `igxCalendarDay` to their calendar.
+The directive is included in `IGX_DATE_PICKER_DIRECTIVES` and `IGX_DATE_RANGE_PICKER_DIRECTIVES`.
 
 **NOTE:** The template content is hidden from assistive technologies, as the day cell is announced through its own
 `aria-label`, and it should not contain focusable or interactive elements, since a click anywhere in the cell selects the date.
@@ -311,5 +312,5 @@ Use `currentColor` or the `selected` context property to keep the content readab
 | active             | boolean | Whether the day is the active (keyboard focused) day.                               |
 | firstInRange       | boolean | Whether the day is the first day of the selected or previewed range.                |
 | lastInRange        | boolean | Whether the day is the last day of the selected or previewed range.                 |
-| withinRange        | boolean | Whether the day is within the selected range.                                       |
+| withinRange        | boolean | Whether the day is within the selected range. Always `false` unless `selection` is `range`. |
 | withinPreviewRange | boolean | Whether the day is within the previewed range while a range is being selected.      |

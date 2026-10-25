@@ -203,7 +203,7 @@ export class IgxDayItemComponent {
             $implicit: this.date.native,
             date: this.date.native,
             formattedDate,
-            selected: this.isSelectedCSS,
+            selected: !!this.isSelectedCSS,
             disabled: this.isDisabled,
             special: this.isSpecial,
             today: this.isToday,
@@ -212,7 +212,7 @@ export class IgxDayItemComponent {
             active: this.isActive,
             firstInRange: this.isFirstInRange,
             lastInRange: this.isLastInRange,
-            withinRange: this.isWithinRange,
+            withinRange: this.isWithinRangeCSS,
             withinPreviewRange: this.isWithinPreviewRange
         });
     }

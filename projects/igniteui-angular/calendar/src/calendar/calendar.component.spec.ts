@@ -2819,6 +2819,35 @@ describe("IgxCalendar - ", () => {
                 expect(customDay(new Date(2017, 5, 9)).classList).not.toContain("custom-day--range");
             });
 
+            it("Should not pass the range state to the day template for a multi selection", async () => {
+                await createFixture((instance) => {
+                    instance.selection = "multi";
+                    instance.model = [new Date(2017, 5, 5), new Date(2017, 5, 8)];
+                });
+
+                expect(customDay(new Date(2017, 5, 5)).classList).toContain("custom-day--selected");
+                expect(customDay(new Date(2017, 5, 8)).classList).toContain("custom-day--selected");
+
+                for (const date of [6, 7]) {
+                    const day = customDay(new Date(2017, 5, date));
+                    expect(day.classList).not.toContain("custom-day--range");
+                    expect(day.classList).not.toContain("custom-day--selected");
+                    expect(dayItem(new Date(2017, 5, date)).classList).not.toContain("igx-day-item--range");
+                }
+            });
+
+            it("Should pass a boolean selected state to the day template when the selection is empty", async () => {
+                for (const selection of ["multi", "range"] as const) {
+                    await createFixture((instance) => {
+                        instance.selection = selection;
+                        instance.model = [];
+                    });
+
+                    expect(customDay(new Date(2017, 5, 14)).getAttribute("data-selected")).toBe("false");
+                    expect(customDay(new Date(2017, 4, 28)).getAttribute("data-selected")).toBe("false");
+                }
+            });
+
             it("Should pass the today state to the day template", async () => {
                 const today = new Date();
                 await createFixture((instance) => {
@@ -3026,6 +3055,7 @@ export class IgxCalendarTemplatesComponent {
                 <span
                     class="custom-day"
                     [attr.data-date]="date.toDateString()"
+                    [attr.data-selected]="selected"
                     [class.custom-day--selected]="selected"
                     [class.custom-day--disabled]="disabled"
                     [class.custom-day--special]="special"

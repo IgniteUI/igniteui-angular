@@ -148,7 +148,7 @@ import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 
 Selection modes: `'single'`, `'multi'`, `'range'`.
 
-Custom day cell content (event dots, prices, availability) — import `IgxCalendarDayTemplateDirective` from `igniteui-angular/calendar`. The template replaces only the day number; selection, keyboard navigation and ARIA stay on the cell. Also works inside `igx-date-picker` and `igx-date-range-picker`.
+Custom day cell content (event dots, prices, availability) — import `IgxCalendarDayTemplateDirective` from `igniteui-angular/calendar`. The template replaces only the day number; selection, keyboard navigation and ARIA stay on the cell. Also works inside `igx-date-picker` and `igx-date-range-picker`; the directive is included in `IGX_DATE_PICKER_DIRECTIVES` and `IGX_DATE_RANGE_PICKER_DIRECTIVES`.
 
 ```html
 <igx-calendar [(ngModel)]="selectedDate">

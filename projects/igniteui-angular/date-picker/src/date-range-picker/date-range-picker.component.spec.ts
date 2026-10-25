@@ -13,7 +13,7 @@ import { CancelableEventArgs, WEEKDAYS, DateRangePickerResourceStringsEN, change
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
-import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
+import { IgxDateRangePickerComponent, IgxDateRangeEndComponent, IGX_DATE_RANGE_PICKER_DIRECTIVES } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from 'igniteui-angular/core';
 import { map, Subject, timer } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -24,7 +24,6 @@ import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { CalendarDay } from 'igniteui-angular/core';
-import { IgxCalendarDayTemplateDirective, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // The number of milliseconds in one day
@@ -2697,21 +2696,11 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     `,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        IgxDateRangePickerComponent,
-        IgxDateRangeStartComponent,
-        IgxDateRangeEndComponent,
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
+        IGX_DATE_RANGE_PICKER_DIRECTIVES,
         IgxIconComponent,
         FormsModule,
         IgxInputDirective,
-        IgxDateTimeEditorDirective,
-        IgxPrefixDirective,
-        IgxSuffixDirective,
-        IgxCalendarHeaderTemplateDirective,
-        IgxCalendarHeaderTitleTemplateDirective,
-        IgxCalendarSubheaderTemplateDirective,
-        IgxCalendarDayTemplateDirective
+        IgxDateTimeEditorDirective
     ]
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {
