@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
 - `IgxOverlayService`
     - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
+- `IgxGridComponent`
+    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
 
 ## 22.2.3
 

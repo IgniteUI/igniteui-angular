@@ -1769,9 +1769,26 @@
             // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
 
+            // A lone chip shrinks to the available cell width and ellipsizes its label
+            // instead of being clipped by the cell. Chips keep their natural width when
+            // there is more than one, so the "more filters" indicator can measure them.
+            // min-content keeps the prefix/remove icons and paddings intact: only the
+            // label track can collapse, and a cell narrower than that clips the chip.
+            igx-chip:only-of-type {
+                min-width: min-content;
+                flex-shrink: 1;
+
+                .igx-chip__content {
+                    // keep room for the ellipsis so no stray glyph peeks out of the padding
+                    min-width: calc(1em + 2 * #{pad-inline(rem(3px), rem(6px), rem(8px))});
+                    text-align: start;
+                }
+            }
 
             igx-chips-area {
-                width: auto;
+                // Span the whole cell so the "more filters" measurement compares the
+                // chips against the available width, not against their own sum.
+                width: 100%;
                 min-width: 0;
                 flex-wrap: nowrap;
 
@@ -1780,7 +1797,8 @@
                     text-transform: uppercase;
                     font-weight: 600;
                     margin: 0 rem(8px);
-                    overflow: hidden;
+                    // no overflow: hidden here, it would let the connector shrink to zero
+                    // and the "more filters" measurement would count it as fitting
                 }
             }
         }
@@ -1820,12 +1838,13 @@
             }
         }
 
-        // Filtering cell indicator hidden state
+        // Filtering cell indicator hidden state.
+        // Hide the indicator element itself: hiding only its children is beaten by
+        // the unlayered @scope display rule of igx-icon, which leaves the icon visible.
+        // visibility keeps its width, which the filtering cell measures to decide how
+        // many chips fit next to the indicator.
         @include e(filtering-cell-indicator, $m: hidden) {
-            .igx-badge,
-            igx-icon {
-                display: none;
-            }
+            visibility: hidden;
         }
 
         // Filtering dropdown items
