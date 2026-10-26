@@ -560,10 +560,11 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
         });
         it('Should change panel expansion state on key interaction', async () => {
-            const enterEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-            const spaceEvent = new KeyboardEvent('keydown', { key: 'Space' });
-            const arrowUpEvent = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true });
-            const arrowDownEvent = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true });
+            // A key press is a new event; the key bindings ignore an event they already handled.
+            const enterEvent = () => new KeyboardEvent('keydown', { key: 'Enter' });
+            const spaceEvent = () => new KeyboardEvent('keydown', { key: ' ' });
+            const arrowUpEvent = () => new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true });
+            const arrowDownEvent = () => new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true });
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const panel = fixture.componentInstance.expansionPanel;
@@ -579,7 +580,7 @@ describe('igxExpansionPanel', () => {
             vi.spyOn(header.interaction, 'emit');
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
-            panelHeader.dispatchEvent(enterEvent);
+            panelHeader.dispatchEvent(enterEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -587,7 +588,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
 
-            panelHeader.dispatchEvent(spaceEvent);
+            panelHeader.dispatchEvent(spaceEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -595,7 +596,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
 
-            panelHeader.dispatchEvent(enterEvent);
+            panelHeader.dispatchEvent(enterEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -604,7 +605,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
 
-            panelHeader.dispatchEvent(spaceEvent);
+            panelHeader.dispatchEvent(spaceEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -612,14 +613,14 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
 
-            panelHeader.dispatchEvent(arrowUpEvent);
+            panelHeader.dispatchEvent(arrowUpEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(5);
 
-            panelHeader.dispatchEvent(arrowDownEvent);
+            panelHeader.dispatchEvent(arrowDownEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -627,7 +628,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(6);
 
-            panelHeader.dispatchEvent(arrowDownEvent);
+            panelHeader.dispatchEvent(arrowDownEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -635,7 +636,7 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(7);
 
-            panelHeader.dispatchEvent(arrowUpEvent);
+            panelHeader.dispatchEvent(arrowUpEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -652,7 +653,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.collapsed).toEqual(true);
 
             // cancel openening
-            panelHeader.dispatchEvent(arrowDownEvent);
+            panelHeader.dispatchEvent(arrowDownEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -670,7 +671,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.collapsed).toEqual(false);
 
             // cancel closing
-            panelHeader.dispatchEvent(arrowUpEvent);
+            panelHeader.dispatchEvent(arrowUpEvent());
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -680,6 +681,32 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(10);
 
             headerSub.unsubscribe();
+        });
+        it('Should prevent the default action of Enter and Space only when the interaction is not cancelled', () => {
+            const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.expansionPanel;
+            const header = fixture.componentInstance.header;
+            // A control projected into the header.
+            const projectedButton = document.createElement('button');
+            fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER).appendChild(projectedButton);
+            const keydown = (key: string, repeat = false) => {
+                const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true });
+                projectedButton.dispatchEvent(event);
+                return event;
+            };
+
+            const headerSub = header.interaction.subscribe((event) => {
+                event.cancel = true;
+            });
+            expect(keydown('Enter').defaultPrevented, 'A cancelled Enter keeps its default action').toBe(false);
+            expect(keydown(' ').defaultPrevented, 'A cancelled Space keeps its default action').toBe(false);
+            expect(panel.collapsed).toBe(true);
+            headerSub.unsubscribe();
+
+            expect(keydown('Enter').defaultPrevented, 'An accepted Enter is prevented').toBe(true);
+            expect(keydown(' ').defaultPrevented, 'An accepted Space is prevented').toBe(true);
+            expect(keydown(' ', true).defaultPrevented, 'A held Space is prevented').toBe(true);
         });
         it('Should change panel expansion when using different methods', async () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
@@ -741,7 +768,7 @@ describe('igxExpansionPanel', () => {
             timesCollapsed++;
             verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
 
-            panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+            panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -801,7 +828,14 @@ describe('igxExpansionPanel', () => {
             verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
-            panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Space' }));
+            panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+            await fixture.whenStable();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            verifyPanelExpansionState(false, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.interaction.emit).toHaveBeenCalledTimes(0);
+
+            panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true }));
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();
@@ -831,6 +865,13 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(0);
 
             panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+            await fixture.whenStable();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            verifyPanelExpansionState(true, panel, panelContainer, panelHeader, button, timesCollapsed, timesExpanded);
+            expect(header.interaction.emit).toHaveBeenCalledTimes(0);
+
+            panelHeader.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
             await fixture.whenStable();
             fixture.detectChanges();
             await fixture.whenStable();

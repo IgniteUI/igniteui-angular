@@ -14,7 +14,17 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import { DatePart, IgxTouchManager } from 'igniteui-angular/core';
+import {
+    DatePart,
+    IgxKeyBindingsService,
+    IgxTouchManager,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    enterKey,
+    escapeKey
+} from 'igniteui-angular/core';
 import {
     IgxTimePickerBase,
     IGX_TIME_PICKER_COMPONENT,
@@ -32,11 +42,13 @@ const LIST_DATE_PARTS: Record<IgxTimePickerListType, DatePart> = {
 /** @hidden */
 @Directive({
     selector: '[igxItemList]',
-    standalone: true
+    standalone: true,
+    providers: [IgxKeyBindingsService]
 })
 export class IgxItemListDirective implements OnInit, OnDestroy {
     public timePicker = inject<IgxTimePickerBase>(IGX_TIME_PICKER_COMPONENT);
     private elementRef = inject(ElementRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     private _gestures: IgxTouchManager | null = null;
 
@@ -81,6 +93,17 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
         return this.type === 'ampmList';
     }
 
+    constructor() {
+        // A held arrow keeps moving through the items and the lists.
+        this._keyBindings
+            .set(arrowDown, () => this.nextItem(1), { repeat: true })
+            .set(arrowUp, () => this.nextItem(-1), { repeat: true })
+            .set(arrowRight, () => this.onKeydownArrowRight(), { repeat: true })
+            .set(arrowLeft, () => this.onKeydownArrowLeft(), { repeat: true })
+            .set(enterKey, () => this.timePicker.okButtonClick())
+            .set(escapeKey, () => this.timePicker.cancelButtonClick());
+    }
+
     @HostListener('focus')
     public onFocus() {
         this.isActive = true;
@@ -94,58 +117,15 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-
-        this.nextItem(1);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-
-        this.nextItem(-1);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event: KeyboardEvent) {
-        event.preventDefault();
+    public onKeydownArrowRight() {
         this.focusSiblingList(1);
     }
 
     /**
      * @hidden
      */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event: KeyboardEvent) {
-        event.preventDefault();
+    public onKeydownArrowLeft() {
         this.focusSiblingList(-1);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.enter', ['$event'])
-    public onKeydownEnter(event: KeyboardEvent) {
-        event.preventDefault();
-        this.timePicker.okButtonClick();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.escape', ['$event'])
-    public onKeydownEscape(event: KeyboardEvent) {
-        event.preventDefault();
-
-        this.timePicker.cancelButtonClick();
     }
 
     /**
