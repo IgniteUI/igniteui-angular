@@ -74,6 +74,10 @@ $transition-timing: .25s $out-cubic;
         color-scheme: var(--ig-theme-variant, light);
         min-height: var-get($theme, 'size');
 
+        &:not([class^='igx-'] > *, [class*=' igx-'] > *) {
+            align-content: start;
+        }
+
         igx-icon,
         igx-icon[igxPrefix],
         igx-icon[igxSuffix] {

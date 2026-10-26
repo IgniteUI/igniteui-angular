@@ -107,8 +107,6 @@ $label-transition-timing: 150ms cubic-bezier(.4, 0, .2, 1);
     }
 
     @include m(base) {
-        align-content: start;
-
         %input-paddings {
             padding-block-start: var(--_input-top-spacing);
             padding-block-end: var(--_input-bottom-spacing);
