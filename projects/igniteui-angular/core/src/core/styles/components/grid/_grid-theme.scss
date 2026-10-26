@@ -2376,6 +2376,22 @@
         padding-block: 0;
         overflow: hidden;
 
+        // A lone chip shrinks to the available cell width and ellipsizes its label
+        // instead of being clipped by the cell. Chips keep their natural width when
+        // there is more than one, so the "more filters" indicator can measure them.
+        // min-content keeps the prefix/remove icons and paddings intact: only the
+        // label track can collapse, and a cell narrower than that clips the chip.
+        igx-chip:only-of-type {
+            min-width: min-content;
+            flex-shrink: 1;
+
+            .igx-chip__content {
+                // keep room for the ellipsis so no stray glyph peeks out of the padding
+                min-width: calc(1em + 2 * #{pad-inline(rem(3px), rem(6px), rem(8px))});
+                text-align: start;
+            }
+        }
+
         igx-chips-area {
             transition: transform .25s $ease-out-back;
             flex-wrap: nowrap;
