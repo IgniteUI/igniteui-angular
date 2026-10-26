@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -10,6 +10,38 @@ const SPLITTERBAR_CLASS = 'igx-splitter-bar';
 const SPLITTERBAR_DIV_CLASS = '.igx-splitter-bar';
 const SPLITTER_BAR_VERTICAL_CLASS = 'igx-splitter-bar--vertical';
 const COLLAPSIBLE_CLASS = 'igx-splitter-bar--collapsible';
+
+/**
+ * Drags the first splitter bar with pointer events. Offsets are relative to the bar center.
+ * The pointer is released at the last move offset unless `end` is provided.
+ */
+const dragSplitterBar = async <T>(fix: ComponentFixture<T>, moves: [number, number][], end?: [number, number]) => {
+    const bar: HTMLElement = fix.debugElement.query(By.css(SPLITTERBAR_DIV_CLASS)).nativeElement;
+    const rect = bar.getBoundingClientRect();
+    const startX = rect.left + rect.width / 2 + window.scrollX;
+    const startY = rect.top + rect.height / 2 + window.scrollY;
+    UIInteractions.simulatePointerEvent('pointerdown', bar, startX, startY);
+    for (const [dx, dy] of moves) {
+        UIInteractions.simulatePointerEvent('pointermove', bar, startX + dx, startY + dy);
+        // pointermove is throttled to animation frames by igxDrag
+        await wait(50);
+        fix.detectChanges();
+    }
+    const [endX, endY] = end ?? moves[moves.length - 1];
+    UIInteractions.simulatePointerEvent('pointerup', bar, startX + endX, startY + endY);
+    fix.detectChanges();
+    await wait();
+    return bar;
+};
+
+const getTranslation = (elem: HTMLElement) => {
+    const matrix = new DOMMatrix(getComputedStyle(elem).transform);
+    return [matrix.m41, matrix.m42];
+};
+
+const expectSizeCloseTo = (actual: number, expected: number) => {
+    expect(Math.abs(actual - expected)).toBeLessThanOrEqual(1);
+};
 
 describe('IgxSplitter', () => {
     beforeEach(async () => await TestBed.configureTestingModule({
@@ -149,6 +181,8 @@ describe('IgxSplitter', () => {
         fixture.detectChanges();
         const pane1 = splitter.panes.toArray()[0];
         const pane2 = splitter.panes.toArray()[1];
+        pane1.element.parentElement.style.height = '600px';
+        fixture.detectChanges();
         expect(pane1.size).toBe('auto');
         expect(pane2.size).toBe('auto');
         const pane1_originalSize = pane1.element.offsetHeight;
@@ -157,20 +191,20 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', splitterBarComponent.nativeElement);
         fixture.detectChanges();
-        expect(pane1.dragSize).toBe(pane1_originalSize - 10 + 'px');
-        expect(pane2.dragSize).toBe(pane2_originalSize + 10 + 'px');
+        expectSizeCloseTo(pane1.element.offsetHeight, pane1_originalSize - 10);
+        expectSizeCloseTo(pane2.element.offsetHeight, pane2_originalSize + 10);
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement);
         UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement);
         fixture.detectChanges();
-        expect(pane1.dragSize).toBe(pane1_originalSize + 10 + 'px');
-        expect(pane2.dragSize).toBe(pane2_originalSize - 10 + 'px');
+        expectSizeCloseTo(pane1.element.offsetHeight, pane1_originalSize + 10);
+        expectSizeCloseTo(pane2.element.offsetHeight, pane2_originalSize - 10);
 
         pane2.resizable = false;
         UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', splitterBarComponent.nativeElement);
         fixture.detectChanges();
-        expect(pane1.dragSize).toBe(pane1_originalSize + 10 + 'px');
-        expect(pane2.dragSize).toBe(pane2_originalSize - 10 + 'px');
+        expectSizeCloseTo(pane1.element.offsetHeight, pane1_originalSize + 10);
+        expectSizeCloseTo(pane2.element.offsetHeight, pane2_originalSize - 10);
     });
 
     it('should allow resizing with left/right arrow keys', () => {
@@ -186,20 +220,74 @@ describe('IgxSplitter', () => {
         splitterBarComponent.nativeElement.focus();
         UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', splitterBarComponent.nativeElement);
         fixture.detectChanges();
-        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize - 10, 0);
-        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize + 10, 0);
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize - 10);
+        expectSizeCloseTo(pane2.element.offsetWidth, pane2_originalSize + 10);
 
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement);
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement);
         fixture.detectChanges();
-        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 10, 0);
-        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 10, 0);
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize + 10);
+        expectSizeCloseTo(pane2.element.offsetWidth, pane2_originalSize - 10);
 
         pane1.resizable = false;
         UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', splitterBarComponent.nativeElement);
         fixture.detectChanges();
-        expect(parseFloat(pane1.dragSize)).toBeCloseTo(pane1_originalSize + 10, 0);
-        expect(parseFloat(pane2.dragSize)).toBeCloseTo(pane2_originalSize - 10, 0);
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize + 10);
+        expectSizeCloseTo(pane2.element.offsetWidth, pane2_originalSize - 10);
+    });
+
+    it('should commit pane sizes and emit resize events when resizing with the keyboard', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const pane1_originalSize = pane1.element.offsetWidth;
+        vi.spyOn(splitter.resizeStart, 'emit');
+        vi.spyOn(splitter.resizing, 'emit');
+        vi.spyOn(splitter.resizeEnd, 'emit');
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent);
+        fixture.detectChanges();
+
+        const args: ISplitterBarResizeEventArgs = { pane: pane1, sibling: pane2 };
+        expect(splitter.resizeStart.emit).toHaveBeenCalledExactlyOnceWith(args);
+        expect(splitter.resizing.emit).toHaveBeenCalledExactlyOnceWith(args);
+        expect(splitter.resizeEnd.emit).toHaveBeenCalledExactlyOnceWith(args);
+        expect(pane1.dragSize).toBeNull();
+        expect(pane2.dragSize).toBeNull();
+        expect(pane1.size).toContain('%');
+        expect(pane2.size).toContain('%');
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize + 10);
+    });
+
+    it('should ignore keys that do not match the splitter orientation', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        vi.spyOn(splitter.resizeStart, 'emit');
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowUp', splitterBarComponent);
+        UIInteractions.triggerEventHandlerKeyDown('ArrowDown', splitterBarComponent, false, false, true);
+        UIInteractions.triggerEventHandlerKeyDown('Enter', splitterBarComponent);
+        fixture.detectChanges();
+
+        expect(splitter.resizeStart.emit).not.toHaveBeenCalled();
+        expect(pane1.collapsed).toBe(false);
+        expect(pane2.collapsed).toBe(false);
+        expect(pane1.size).toBe('auto');
+        expect(pane2.size).toBe('auto');
+    });
+
+    it('should not collapse panes with Ctrl + arrow keys when nonCollapsible is set', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        splitter.nonCollapsible = true;
+        fixture.detectChanges();
+        const splitterBarComponent: DebugElement = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS));
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane1.collapsed).toBe(false);
+
+        UIInteractions.triggerEventHandlerKeyDown('ArrowRight', splitterBarComponent, false, false, true);
+        fixture.detectChanges();
+        expect(pane2.collapsed).toBe(false);
     });
 
     it('should allow expand/collapse with Ctrl + up/down arrow keys', () => {
@@ -446,24 +534,127 @@ describe('IgxSplitter', () => {
         expect(pane2.element.offsetWidth).toBeCloseTo(pane2_originalSize - 100);
     });
 
-    it('should reset transform style of vertical splitter bar after dragging', async () => {
+    it('should resize horizontal panes by dragging the splitter bar with the pointer', async () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const pane1_originalSize = pane1.element.offsetWidth;
+        const pane2_originalSize = pane2.element.offsetWidth;
+        const dragSizes: string[] = [];
+        splitter.resizing.subscribe(() => dragSizes.push(pane1.dragSize));
+        vi.spyOn(splitter.resizeStart, 'emit');
+        vi.spyOn(splitter.resizeEnd, 'emit');
+
+        const bar = await dragSplitterBar(fixture, [[20, 0], [50, 0]]);
+
+        // live resizing follows the current pointer position
+        expectSizeCloseTo(parseFloat(dragSizes[dragSizes.length - 1]), pane1_originalSize + 50);
+        expect(splitter.resizeStart.emit).toHaveBeenCalledTimes(1);
+        expect(splitter.resizeEnd.emit).toHaveBeenCalledTimes(1);
+        expect(pane1.dragSize).toBeNull();
+        expect(pane2.dragSize).toBeNull();
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize + 50);
+        expectSizeCloseTo(pane2.element.offsetWidth, pane2_originalSize - 50);
+        expect(getTranslation(bar)).toEqual([0, 0]);
+    });
+
+    it('should resize vertical panes by dragging the splitter bar with the pointer', async () => {
+        fixture.componentInstance.type = SplitterType.Vertical;
+        fixture.detectChanges();
+        const [pane1, pane2] = splitter.panes.toArray();
+        pane1.element.parentElement.style.height = '600px';
+        fixture.detectChanges();
+        const pane1_originalSize = pane1.element.offsetHeight;
+        const pane2_originalSize = pane2.element.offsetHeight;
+
+        const bar = await dragSplitterBar(fixture, [[0, -20], [0, -40]]);
+
+        expect(pane1.dragSize).toBeNull();
+        expect(pane2.dragSize).toBeNull();
+        expectSizeCloseTo(pane1.element.offsetHeight, pane1_originalSize - 40);
+        expectSizeCloseTo(pane2.element.offsetHeight, pane2_originalSize + 40);
+        expect(getTranslation(bar)).toEqual([0, 0]);
+    });
+
+    it('should not move the splitter bar when dragged perpendicular to the resize direction', async () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const pane1_originalSize = pane1.element.offsetWidth;
+        vi.spyOn(splitter.resizeEnd, 'emit');
+
+        const bar = await dragSplitterBar(fixture, [[0, 30], [0, 60]]);
+
+        expect(getTranslation(bar)).toEqual([0, 0]);
+        expect(splitter.resizeEnd.emit).toHaveBeenCalledTimes(1);
+        expect(pane1.dragSize).toBeNull();
+        expect(pane2.dragSize).toBeNull();
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize);
+    });
+
+    it('should commit pane sizes when the pointer is released at the drag start point', async () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const pane1_originalSize = pane1.element.offsetWidth;
+        const pane2_originalSize = pane2.element.offsetWidth;
+        vi.spyOn(splitter.resizeEnd, 'emit');
+
+        await dragSplitterBar(fixture, [[30, 0], [60, 0]], [0, 0]);
+
+        expect(splitter.resizeEnd.emit).toHaveBeenCalledTimes(1);
+        expect(pane1.dragSize).toBeNull();
+        expect(pane2.dragSize).toBeNull();
+        expectSizeCloseTo(pane1.element.offsetWidth, pane1_originalSize);
+        expectSizeCloseTo(pane2.element.offsetWidth, pane2_originalSize);
+    });
+
+    it('should honor percentage minSize/maxSize when resizing.', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        pane1.element.parentElement.style.width = '600px';
+        pane1.minSize = '40%';
+        pane1.maxSize = '60%';
+        fixture.detectChanges();
+        const pane2_originalSize = pane2.element.getBoundingClientRect().width;
+        const pane1_originalSize = pane1.element.getBoundingClientRect().width;
+
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.moving.emit(200);
+        fixture.detectChanges();
+        expectSizeCloseTo(parseFloat(pane1.dragSize), 240);
+        expectSizeCloseTo(parseFloat(pane2.dragSize), pane2_originalSize + pane1_originalSize - 240);
+
+        splitterBarComponent.moving.emit(-200);
+        fixture.detectChanges();
+        expectSizeCloseTo(parseFloat(pane1.dragSize), 360);
+        expectSizeCloseTo(parseFloat(pane2.dragSize), pane2_originalSize + pane1_originalSize - 360);
+    });
+
+    it('should honor a zero maxSize when resizing.', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        pane1.maxSize = '0';
+        fixture.detectChanges();
+        const pane2_originalSize = pane2.element.getBoundingClientRect().width;
+        expect(pane1.element.getBoundingClientRect().width).toBe(0);
+
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.moving.emit(-100);
+        fixture.detectChanges();
+
+        expect(pane1.dragSize).toBe('0px');
+        expectSizeCloseTo(parseFloat(pane2.dragSize), pane2_originalSize);
+    });
+
+    it('should fall back to auto size when pane size is set to a nullish value.', () => {
         const pane1 = splitter.panes.toArray()[0];
         pane1.size = '200px';
         fixture.detectChanges();
 
-        fixture.componentInstance.type = SplitterType.Vertical;
-        fixture.detectChanges();
-        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).nativeElement;
+        expect(() => {
+            pane1.size = undefined;
+            fixture.detectChanges();
+        }).not.toThrow();
+        expect(pane1.size).toBe('auto');
+        expect(pane1.element.style.flex).toBe('1 1 auto');
 
-        const splitterBar = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
-        splitterBar.moveStart.emit(pane1);
-        splitterBar.moving.emit(-150);
-        fixture.detectChanges();
-
-        splitterBar.movingEnd.emit(50);
-        fixture.detectChanges();
-
-        expect(splitterBarComponent.style.transform).not.toBe('translate3d(0px, 0px, 0px)');
+        pane1.size = null;
+        expect(pane1.size).toBe('auto');
     });
 
     it('should render correctly panes created dynamically using @for', () => {
@@ -681,6 +872,56 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
         expect(splitter.onMoveEnd).toHaveBeenCalled();
         expect(pane1.size).toEqual('80%');
         expect(pane2.size).toEqual('100px');
+    });
+
+    it('should fit the panes in the splitter when shrinking a pane at its minimum after the splitter shrinks', () => {
+        const pane1 = splitter.panes.toArray()[0];
+        const pane2 = splitter.panes.toArray()[1];
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        const minSize = parseInt(pane1.minSize);
+
+        splitterBarComponent.moveStart.emit(pane1);
+        fixture.detectChanges();
+        splitterBarComponent.movingEnd.emit(splitter.getTotalSize() - minSize);
+        fixture.detectChanges();
+
+        splitter.elementRef.nativeElement.style.width = '500px';
+        fixture.detectChanges();
+
+        splitterBarComponent.moveStart.emit(pane1);
+        fixture.detectChanges();
+        splitterBarComponent.movingEnd.emit(50);
+        fixture.detectChanges();
+
+        expect(pane1.size).toEqual('40%');
+        expect(pane2.size).toEqual('300px');
+    });
+
+    it('should not set negative sizes when the splitter is smaller than the minSize of a pane', () => {
+        const [pane1, pane2] = splitter.panes.toArray();
+        const splitterBarComponent = fixture.debugElement.query(By.css(SPLITTERBAR_CLASS)).context;
+        splitter.elementRef.nativeElement.style.width = '150px';
+        fixture.detectChanges();
+
+        // pane1 is protected by its 200px minSize
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.movingEnd.emit(50);
+        fixture.detectChanges();
+
+        expect(pane1.size).toEqual('100%');
+        expect(pane2.size).toEqual('0px');
+
+        // pane2 is protected by its 200px minSize
+        pane1.size = '200px';
+        pane2.size = '200px';
+        pane2.minSize = '200px';
+        fixture.detectChanges();
+        splitterBarComponent.moveStart.emit(pane1);
+        splitterBarComponent.movingEnd.emit(-50);
+        fixture.detectChanges();
+
+        expect(pane1.size).toEqual('0px');
+        expect(pane2.size).toEqual('150px');
     });
 });
 

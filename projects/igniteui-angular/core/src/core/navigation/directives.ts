@@ -15,7 +15,15 @@ import { IgxNavigationService } from './nav.service';
     standalone: true
 })
 export class IgxNavigationToggleDirective {
-    @Input('igxNavToggle') private target: any;
+    /**
+     * The ID of the target registered in the navigation service, which is toggled on click.
+     *
+     * @example
+     * ```html
+     * <button type="button" igxNavToggle="navDrawer">Toggle</button>
+     * ```
+     */
+    @Input('igxNavToggle') public target: any;
 
     public state: IgxNavigationService;
 
@@ -45,7 +53,15 @@ export class IgxNavigationToggleDirective {
     standalone: true
 })
 export class IgxNavigationCloseDirective {
-    @Input('igxNavClose') private target: any;
+    /**
+     * The ID of the target registered in the navigation service, which is closed on click.
+     *
+     * @example
+     * ```html
+     * <button type="button" igxNavClose="navDrawer">Close</button>
+     * ```
+     */
+    @Input('igxNavClose') public target: any;
 
     public state: IgxNavigationService;
 
