@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
 - `IgxDatePickerComponent`
     - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
