@@ -16,7 +16,6 @@ $_theme: digest-schema($indigo-progress-circular);
 @include themed-block(igx-circular-svg, indigo) {
     @include e(outer) {
         stroke-width: var(--stroke-thickness);
-        animation: igx-initial-reveal var(--_transition-duration) linear;
     }
 
     @include m(indeterminate) {
