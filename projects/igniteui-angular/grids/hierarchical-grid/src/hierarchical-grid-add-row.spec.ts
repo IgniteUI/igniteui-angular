@@ -6,6 +6,7 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { GridColumnDataType } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
@@ -36,6 +37,29 @@ describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
             _actionStrip = fixture.componentInstance.actionStrip;
+        });
+
+        it('Should format dates after leaving the editor in an uncommitted add row', () => {
+            const column = hierarchicalGrid.getColumnByName('ProductName');
+            column.dataType = GridColumnDataType.Date;
+            column.pipeArgs = { format: 'dd/MM/yyyy' };
+            fixture.componentInstance.data = [];
+            fixture.detectChanges();
+
+            hierarchicalGrid.beginAddRowById(null);
+            fixture.detectChanges();
+            const cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ProductName');
+            expect(cell.nativeElement?.textContent.trim()).toBe('ProductName');
+
+            cell.setEditMode(true);
+            fixture.detectChanges();
+            cell.editValue = new Date(2024, 0, 23);
+            hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ChildLevels').setEditMode(true);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(cell.editMode).toBe(false);
+            expect(cell.nativeElement?.textContent.trim()).toBe('23/01/2024');
         });
 
         it('Should collapse an expanded record when beginAddRow is called for it', () => {

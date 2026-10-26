@@ -77,7 +77,12 @@ export class GridAddRowSampleComponent implements OnInit {
     }
 
     public add() {
-        this.grid.addRow({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative'});
+        let id = 'TEST';
+        let suffix = 1;
+        while (this.grid.data.some(record => record.ID === id)) {
+            id = `TEST-${suffix++}`;
+        }
+        this.grid.addRow({ ID: id, CompanyName: 'Test Company Name', ContactName: 'Test Contact Name', ContactTitle: 'Test Title'});
     }
 
     public beginAddRowAtIndex(index: string) {
