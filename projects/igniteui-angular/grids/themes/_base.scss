@@ -1797,7 +1797,8 @@
                     text-transform: uppercase;
                     font-weight: 600;
                     margin: 0 rem(8px);
-                    overflow: hidden;
+                    // no overflow: hidden here, it would let the connector shrink to zero
+                    // and the "more filters" measurement would count it as fitting
                 }
             }
         }
@@ -1840,8 +1841,10 @@
         // Filtering cell indicator hidden state.
         // Hide the indicator element itself: hiding only its children is beaten by
         // the unlayered @scope display rule of igx-icon, which leaves the icon visible.
+        // visibility keeps its width, which the filtering cell measures to decide how
+        // many chips fit next to the indicator.
         @include e(filtering-cell-indicator, $m: hidden) {
-            display: none;
+            visibility: hidden;
         }
 
         // Filtering dropdown items
