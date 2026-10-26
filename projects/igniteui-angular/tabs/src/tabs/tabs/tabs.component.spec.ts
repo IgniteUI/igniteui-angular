@@ -506,7 +506,7 @@ describe('IgxTabs', () => {
 
             expect(tabs.items.length).toBe(3);
             expect(tabs.selectedIndex).toBe(2);
-        }));
+        });
 
         it('should keep the added selected tab in view when it makes the header overflow', async () => {
             const fixture = TestBed.createComponent(AddingSelectedTabComponent);
@@ -1532,14 +1532,14 @@ describe('IgxTabs', () => {
         tabs.scrollNext();
         await wait();
         expect(tabs.viewPort.nativeElement.scrollLeft).toBeGreaterThan(0);
-        expect(rightScrollButton.disabled).toBeTrue();
-        expect(leftScrollButton.disabled).toBeFalse();
+        expect(rightScrollButton.disabled).toBe(true);
+        expect(leftScrollButton.disabled).toBe(false);
 
         tabs.scrollPrev();
         await wait();
         expect(tabs.viewPort.nativeElement.scrollLeft).toBe(0);
-        expect(leftScrollButton.disabled).toBeTrue();
-        expect(rightScrollButton.disabled).toBeFalse();
+        expect(leftScrollButton.disabled).toBe(true);
+        expect(rightScrollButton.disabled).toBe(false);
     });
 
     describe('IgxTabs RTL', () => {
