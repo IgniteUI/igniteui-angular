@@ -1179,11 +1179,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(content.scrollWidth).toBeGreaterThan(content.clientWidth);
             expect(getComputedStyle(content).textOverflow).toEqual('ellipsis');
 
-            // the "more filters" indicator is hidden, including its icon
+            // the hidden "more filters" indicator stays measurable but takes no space: the chip spans the chips area
+            const chipsArea: HTMLElement = filterCell.querySelector('igx-chips-area');
+            expect(chipRect.width).toBeCloseTo(chipsArea.getBoundingClientRect().width, 0);
             const indicator: HTMLElement = filterCell.querySelector('.igx-grid__filtering-cell-indicator--hidden');
-            expect(indicator).toBeTruthy();
+            expect(indicator.offsetWidth).toBeGreaterThan(0);
             expect(getComputedStyle(indicator).visibility).toEqual('hidden');
-            expect(getComputedStyle(indicator.querySelector('igx-icon')).visibility).toEqual('hidden');
         });
 
         it('should select chip when open it from filter cell', fakeAsync(() => {
