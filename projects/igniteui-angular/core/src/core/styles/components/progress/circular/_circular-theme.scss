@@ -59,7 +59,7 @@
 	            stroke: var-get($theme, 'fill-color-default');
 
                 @if $variant != 'bootstrap' {
-                    animation: igx-initial-dashoffset var(--_transition-duration) linear;
+                    animation: igx-initial-reveal var(--_transition-duration) linear;
                 } @else {
                     stroke-width: var(--stroke-thickness);
                 }
@@ -73,18 +73,9 @@
     %display-circular:not(%display-circular--indeterminate) {
         svg {
             %outer {
-                animation: igx-initial-dashoffset var(--_transition-duration) linear;
+                animation: igx-initial-reveal var(--_transition-duration) linear;
                 stroke-dasharray: #{$circumference} #{$circumference};
                 stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-            }
-        }
-    }
-
-    %display-circular:dir(rtl):not(%display-circular--indeterminate) {
-        svg {
-            %outer {
-                animation: igx-initial-dashoffset-rtl var(--_transition-duration) linear;
-                animation-direction: reverse;
             }
         }
     }
@@ -161,11 +152,14 @@
     }
 
     %outer {
-        --_progress-percentage: calc(var(--_progress-whole, 0) / 100);
+        --_progress-percentage: calc(var(--_progress-whole, 0) / 100 * var(--_progress-reveal, 1));
 
         stroke-dasharray: #{$circumference} #{$circumference};
-        stroke-dashoffset: calc(#{$circumference} - var(--_progress-whole, 0) * #{$circumference});
-        transition: stroke-dashoffset var(--_transition-duration) linear;
+        stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+
+        // The value is transitioned, not the stroke: the stroke geometry simply
+        // follows the animated --_progress-whole / --_progress-reveal numbers.
+        transition: --_progress-whole var(--_transition-duration) linear;
 
         @if $variant == 'material' {
             stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
@@ -210,7 +204,6 @@
             font-weight: 700;
         }
 
-        animation: igx-initial-counter var(--_transition-duration) ease-in-out;
         counter-reset:
             progress-integer var(--_progress-integer, 0)
             progress-fraction var(--_progress-fraction, 0);
@@ -324,22 +317,15 @@
         }
     }
 
-    @keyframes igx-initial-dashoffset {
+    // Initial reveal: grows the rendered progress from 0 to the actual value on first
+    // render. It animates the registered --_progress-reveal number instead of
+    // stroke-dashoffset so that no property has both a keyframe animation and a
+    // transition. WebKit restarts a transition on every frame while a keyframe
+    // animation changes the same property, which made the stroke overshoot and then
+    // crawl back (igniteui-angular#17649).
+    @keyframes igx-initial-reveal {
         from {
-            /* Start with no progress (0%) */
-            stroke-dashoffset: #{$circumference};
-        }
-
-        to {
-            stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-        }
-    }
-
-    // Generic animations
-    @keyframes igc-initial-counter {
-        from {
-            --_progress-integer: 0;
-            --_progress-fraction: 0;
+            --_progress-reveal: 0;
         }
     }
 
