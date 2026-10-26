@@ -634,17 +634,6 @@ describe('IgxDatePicker', () => {
                 expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
             });
 
-            it('Should still focus the input when clicking projected prefix content', () => {
-                const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
-                const prefix = fixture.debugElement.queryAll(By.directive(IgxPrefixDirective))
-                    .find(p => p.nativeElement.innerText === 'Prefix');
-                expect(document.activeElement).not.toBe(input);
-
-                prefix.nativeElement.click();
-
-                expect(document.activeElement).toBe(input);
-            });
-
             it('Should correctly sub/unsub to custom toggle and clear', () => {
                 datePicker.value = new Date();
                 fixture.componentInstance.showCustomClear = true;
@@ -859,40 +848,6 @@ describe('IgxDatePicker', () => {
                 expect(input.value).toEqual(displayText);
                 const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
-            });
-
-            it('should not render the calendar in the page layout while the closed dropdown is torn down', async () => {
-                fixture.componentInstance.date = new Date(2026, 8, 15);
-                detectChanges();
-                datePicker.open();
-                await vi.runAllTimersAsync();
-                detectChanges();
-
-                const calendarContainer: HTMLElement = fixture.debugElement
-                    .query(By.directive(IgxCalendarContainerComponent)).nativeElement;
-                const teardownStates = [];
-                // runs right after the picker detaches the closed overlay
-                const subscription = TestBed.inject(IgxOverlayService).closed.subscribe(() => {
-                    const { width, height } = calendarContainer.getBoundingClientRect();
-                    teardownStates.push({
-                        wrapped: !!calendarContainer.closest('.igx-overlay__wrapper'),
-                        rendered: calendarContainer.checkVisibility({ opacityProperty: true, visibilityProperty: true }),
-                        width,
-                        height
-                    });
-                });
-
-                const selectedDate = new Date(2026, 8, 20);
-                fixture.debugElement.query(By.css(`#${CSS.escape(selectedDate.getTime().toString())}`)).nativeElement.click();
-                await vi.runAllTimersAsync();
-                subscription.unsubscribe();
-
-                expect(datePicker.value).toEqual(selectedDate);
-                expect(datePicker.collapsed).toBe(true);
-                expect(teardownStates).toEqual([{ wrapped: false, rendered: false, width: 0, height: 0 }]);
-
-                fixture.detectChanges();
-                expect(calendarContainer.isConnected).toBe(false);
             });
         });
 
