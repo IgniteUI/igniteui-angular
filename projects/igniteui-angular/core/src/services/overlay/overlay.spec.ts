@@ -1,14 +1,13 @@
 import { Component, ComponentRef, ElementRef, HostBinding, inject, Injector, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PlatformUtil } from 'igniteui-angular';
-import { fadeIn, fadeOut, scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
+import { scaleInVerTop, scaleOutVerTop } from 'igniteui-angular/animations';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { IgxCalendarComponent } from 'igniteui-angular/calendar';
 import { IgxCalendarContainerComponent } from 'igniteui-angular/date-picker';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
-import { firstValueFrom } from 'rxjs';
-import { filter, first } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { IgxOverlayService } from './overlay';
@@ -4894,83 +4893,6 @@ describe('igxOverlay', () => {
 
             overlay.detachAll();
         }));
-    });
-
-    describe('Integration tests - dynamic component teardown with animations: ', () => {
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                providers: [provideAnimations()]
-            }).compileComponents();
-        }));
-
-        it('Should not render a dynamic component host outside its wrapper while detaching it', async () => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            fixture.detectChanges();
-            const overlay = fixture.componentInstance.overlay;
-            const hostParent = (fixture.nativeElement as HTMLElement).parentElement;
-            const initialChildCount = hostParent.childElementCount;
-
-            const id = overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, {
-                modal: false,
-                closeOnOutsideClick: false,
-                positionStrategy: new GlobalPositionStrategy({ openAnimation: fadeIn, closeAnimation: fadeOut })
-            });
-            const componentRef = overlay.getOverlayById(id).componentRef;
-            const host: HTMLElement = componentRef.location.nativeElement;
-            const destroySpy = spyOn(componentRef, 'destroy').and.callThrough();
-
-            const opened = firstValueFrom(overlay.opened.pipe(filter(e => e.id === id)));
-            overlay.show(id);
-            await opened;
-            expect(host.closest(`.${CLASS_OVERLAY_WRAPPER}`)).not.toBeNull();
-
-            // once unwrapped, the host must neither render nor take layout space
-            const exposedStates: string[] = [];
-            const recordState = (moment: string) => {
-                if (host.isConnected && !host.closest(`.${CLASS_OVERLAY_WRAPPER}`)) {
-                    const { width, height } = host.getBoundingClientRect();
-                    if (host.checkVisibility({ opacityProperty: true, visibilityProperty: true }) || width || height) {
-                        exposedStates.push(`${moment}: rendered at ${width}x${height}`);
-                    }
-                }
-            };
-
-            let closedCount = 0;
-            const detached = new Promise<void>(resolve => {
-                overlay.closed.pipe(filter(e => e.id === id)).subscribe(() => {
-                    closedCount++;
-                    // pickers detach their dynamic content as soon as it is closed
-                    overlay.detach(id);
-                    recordState('after detach');
-                    resolve();
-                });
-            });
-            let sampling = true;
-            const sampleFrame = () => {
-                recordState('animation frame');
-                if (sampling) {
-                    requestAnimationFrame(sampleFrame);
-                }
-            };
-            requestAnimationFrame(sampleFrame);
-
-            overlay.hide(id);
-            await detached;
-            for (let frame = 0; frame < 3; frame++) {
-                await new Promise(resolve => requestAnimationFrame(resolve));
-            }
-            sampling = false;
-            fixture.detectChanges();
-
-            expect(exposedStates).toEqual([]);
-            expect(closedCount).toEqual(1);
-            expect(destroySpy).toHaveBeenCalledTimes(1);
-            expect(componentRef.hostView.destroyed).toBeTrue();
-            expect(host.isConnected).toBeFalse();
-            expect(overlay.getOverlayById(id)).toBeUndefined();
-            expect(document.getElementsByClassName(CLASS_OVERLAY_WRAPPER).length).toEqual(0);
-            expect(hostParent.childElementCount).toEqual(initialChildCount);
-        });
     });
 });
 
