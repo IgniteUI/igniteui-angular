@@ -190,6 +190,11 @@ export class IgxExcelStyleCustomDialogComponent {
     }
 
     private createCondition(conditionName: string) {
+        const condition = this.column.filters?.condition(conditionName);
+        if (condition) {
+            return condition;
+        }
+
         switch (this.column.dataType) {
             case GridColumnDataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
