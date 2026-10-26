@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
+    - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
 - `IgxDatePickerComponent`
     - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
