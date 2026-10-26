@@ -58,22 +58,10 @@
             %outer {
 	            stroke: var-get($theme, 'fill-color-default');
 
-                @if $variant != 'bootstrap' {
-                    animation: igx-initial-reveal var(--_transition-duration) linear;
-                } @else {
+                @if $variant == 'bootstrap' {
                     stroke-width: var(--stroke-thickness);
                 }
 
-                stroke-dasharray: #{$circumference} #{$circumference};
-                stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-            }
-        }
-    }
-
-    %display-circular:not(%display-circular--indeterminate) {
-        svg {
-            %outer {
-                animation: igx-initial-reveal var(--_transition-duration) linear;
                 stroke-dasharray: #{$circumference} #{$circumference};
                 stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
             }
@@ -152,14 +140,21 @@
     }
 
     %outer {
-        --_progress-percentage: calc(var(--_progress-whole, 0) / 100 * var(--_progress-reveal, 1));
+        --_progress-percentage: calc(var(--_progress-whole, 0) / 100);
 
         stroke-dasharray: #{$circumference} #{$circumference};
         stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
 
-        // The value is transitioned, not the stroke: the stroke geometry simply
-        // follows the animated --_progress-whole / --_progress-reveal numbers.
+        // The stroke follows the registered --_progress-whole number: value changes
+        // transition it and @starting-style makes the first render transition from 0
+        // as well. Nothing animates stroke-dashoffset itself, so no property has both
+        // a keyframe animation and a transition, which made WebKit restart the
+        // transition on every frame and overshoot (igniteui-angular#17649).
         transition: --_progress-whole var(--_transition-duration) linear;
+
+        @starting-style {
+            --_progress-whole: 0;
+        }
 
         @if $variant == 'material' {
             stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
@@ -314,18 +309,6 @@
             // Positive offset for opposite direction
             stroke-dashoffset: calc(#{$circumference} / 4);
             transform: rotate(-990deg);
-        }
-    }
-
-    // Initial reveal: grows the rendered progress from 0 to the actual value on first
-    // render. It animates the registered --_progress-reveal number instead of
-    // stroke-dashoffset so that no property has both a keyframe animation and a
-    // transition. WebKit restarts a transition on every frame while a keyframe
-    // animation changes the same property, which made the stroke overshoot and then
-    // crawl back (igniteui-angular#17649).
-    @keyframes igx-initial-reveal {
-        from {
-            --_progress-reveal: 0;
         }
     }
 

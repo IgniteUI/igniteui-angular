@@ -135,14 +135,6 @@
         inherits: true;
     }
 
-    // Scales the rendered progress during the initial reveal animation of the
-    // progress bars; see the igx-initial-reveal keyframes.
-    @property --_progress-reveal {
-        syntax: '<number>';
-        initial-value: 1;
-        inherits: false;
-    }
-
     @property --vhelper-scollbar-size {
         syntax: '<length>';
         initial-value: 16px;

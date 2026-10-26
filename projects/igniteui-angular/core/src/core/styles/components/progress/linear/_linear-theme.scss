@@ -102,13 +102,19 @@ $easing-curves: (
     }
 
     %indicator {
-        width: calc(var(--_progress-whole, 0) * var(--_progress-reveal, 1) * 1%);
+        width: calc(var(--_progress-whole, 0) * 1%);
         position: absolute;
         height: 100%;
 
-        // The value is transitioned, not the width: the width simply follows the
-        // animated --_progress-whole / --_progress-reveal numbers.
+        // The width follows the registered --_progress-whole number: value changes
+        // transition it and @starting-style makes the first render transition from 0
+        // as well. Nothing animates width itself, so no property has both a keyframe
+        // animation and a transition (see the circular bar, igniteui-angular#17649).
         transition: --_progress-whole var(--_transition-duration) linear;
+
+        @starting-style {
+            --_progress-whole: 0;
+        }
     }
 
     %display-linear--indeterminate:dir(rtl) {
@@ -125,7 +131,6 @@ $easing-curves: (
 
     %display-linear:not(%display-linear--indeterminate) {
         %indicator {
-            animation: igx-initial-reveal var(--_transition-duration) linear;
             background-color: var-get($theme, 'fill-color-default')
         }
     }
@@ -385,17 +390,6 @@ $easing-curves: (
         100% {
             transform: translateX(-310%);
             transform-origin: left;
-        }
-    }
-
-    // Initial reveal: grows the rendered progress from 0 to the actual value on first
-    // render. It animates the registered --_progress-reveal number instead of width so
-    // that no property has both a keyframe animation and a transition. WebKit
-    // restarts a transition on every frame while a keyframe animation changes the
-    // same property (igniteui-angular#17649).
-    @keyframes igx-initial-reveal {
-        from {
-            --_progress-reveal: 0;
         }
     }
 }
