@@ -34,8 +34,14 @@ All notable changes for each version of this project will be documented in this 
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
 - `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
     - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial reveal now animates the registered `--_progress-reveal` custom property and value changes transition the registered `--_progress-whole` custom property, so no property has both a keyframe animation and a transition. The determinate circular bar also plays its initial animation in RTL now.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
+- `IgxGridComponent`
+    - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
+- `IgxPivotGridComponent`
+    - Autosizing a column now fits its content, instead of keeping its current width.
 - `IgxStepperComponent`
     - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
     - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
