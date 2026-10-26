@@ -113,8 +113,8 @@ export class CarouselSampleComponent {
             label: 'Indicators Orientation',
             control: {
                 type: 'button-group',
-                options: ['top', 'bottom'],
-                defaultValue: 'bottom'
+                options: ['start', 'end'],
+                defaultValue: 'end'
             }
         },
         maximumIndicatorsCount: {
@@ -145,16 +145,8 @@ export class CarouselSampleComponent {
         this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
     }
 
-    private indicatorsOrientationMap = new Map<string, string>([
-        ['top', 'start'],
-        ['bottom', 'end'],
-    ]);
-
     protected get wcIndicatorsOrientation() {
-        const orientation = this.propertyChangeService.getProperty(
-            'indicatorsOrientation'
-        );
-        return this.indicatorsOrientationMap.get(orientation) || 'end';
+        return this.propertyChangeService.getProperty('indicatorsOrientation') || 'end';
     }
 
     public slides = [];

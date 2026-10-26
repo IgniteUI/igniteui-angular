@@ -314,7 +314,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             expect(treeGrid.crudService.row.isAddRow).toBe(true);
             expect(treeGrid.crudService.addRowParent.asChild).toBe(true);
-            expect(treeGrid.crudService.addRowParent.rowID as any).toBe(3);
+            expect(treeGrid.crudService.addRowParent.rowKey).toBe(3);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
@@ -331,7 +331,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             endTransition();
 
             expect(treeGrid.crudService.addRowParent.asChild).toBe(true);
-            expect(treeGrid.crudService.addRowParent.rowID as any).toBe(1);
+            expect(treeGrid.crudService.addRowParent.rowKey).toBe(1);
 
             treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();

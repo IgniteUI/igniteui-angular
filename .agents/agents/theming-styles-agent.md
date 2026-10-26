@@ -66,8 +66,6 @@ If a task also needs TypeScript, template, or behavior changes, coordinate with 
 | New visual state / modifier | `_<name>-theme.scss` (new placeholder), `_<name>-component.scss` (new `@include m/e`) |
 | Bug fix in existing styles | The relevant `_<name>-theme.scss` or `_<name>-component.scss` only, unless theme wiring truly changes |
 
-Update additional variant generator files only when the component actually requires them.
-
 ---
 
 ## Non-Negotiable Rules
@@ -91,7 +89,6 @@ described in the contributing guide:
 - `projects/igniteui-angular/core/src/core/styles/components/_index.scss`
 - `projects/igniteui-angular/core/src/core/styles/themes/_core.scss`
 - `projects/igniteui-angular/core/src/core/styles/themes/generators/_base.scss`
-- variant generator files when the component requires them
 
 Keep component order consistent with the existing files.
 

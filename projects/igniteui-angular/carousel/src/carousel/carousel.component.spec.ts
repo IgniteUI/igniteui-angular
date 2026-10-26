@@ -425,20 +425,6 @@ describe('Carousel', () => {
             expect(indicatorsContainer).toBeDefined();
         });
 
-        it('should map the deprecated `top`/`bottom` indicatorsOrientation values to `start`/`end`', () => {
-            carousel.indicatorsOrientation = CarouselIndicatorsOrientation.top;
-            fixture.detectChanges();
-
-            expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.start)).not.toBeNull();
-            expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.end)).toBeNull();
-
-            carousel.indicatorsOrientation = CarouselIndicatorsOrientation.bottom;
-            fixture.detectChanges();
-
-            expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.end)).not.toBeNull();
-            expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.start)).toBeNull();
-        });
-
         it('should stop/play on mouse enter/leave ', () => {
             carousel.interval = 1000;
             carousel.play();
@@ -511,6 +497,9 @@ describe('Carousel', () => {
 
             expect(+tabIndex).toBe(0);
             expect(slide.nativeElement.getAttribute('role')).toEqual(expectedRole);
+            carousel.slides.filter(s => !s.active).forEach(s => {
+                expect(s.nativeElement.hasAttribute('tabindex')).toBe(false);
+            });
 
             const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
             const slides = carousel.nativeElement.querySelectorAll('[role="tabpanel"]');

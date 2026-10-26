@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IFilteringExpression, IQueryBuilderResourceStrings, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IFilteringExpression, IgxDateFilteringOperand, IgxDateTimeFilteringOperand, IgxNumberFilteringOperand, IgxStringFilteringOperand, IgxTimeFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -165,17 +165,6 @@ describe('IgxQueryBuilder', () => {
                 expect(field.filters).toBeUndefined();
                 expect(field.pipeArgs).toBeUndefined();
             });
-        });
-
-        it('Should wrap deprecated fields input in a single unnamed entity.', () => {
-            const fields = queryBuilder.entities[0].fields;
-
-            queryBuilder.fields = fields;
-
-            expect(queryBuilder.fields).toBe(fields);
-            expect(queryBuilder.entities.length).toBe(1);
-            expect(queryBuilder.entities[0].name).toBeNull();
-            expect(queryBuilder.entities[0].fields).toBe(fields);
         });
 
         it('Should not throw error when entities are empty and expressionTree is set.', async () => {
@@ -2804,21 +2793,6 @@ describe('IgxQueryBuilder', () => {
             expect(queryBuilder.searchValueTemplate).not.toBe(directiveTemplate);
         });
 
-        it('Should merge custom header resource strings with defaults.', () => {
-            const header = fixture.debugElement.query(By.directive(IgxQueryBuilderHeaderComponent)).componentInstance as IgxQueryBuilderHeaderComponent;
-            const defaultResources = header.resourceStrings;
-            const customAndLabel = 'Custom AND';
-
-            expect(defaultResources).toBeDefined();
-            const defaultOrLabel = defaultResources.igx_query_builder_or_label;
-
-            // Provide only a partial set of strings; the setter must fill the rest from the defaults.
-            header.resourceStrings = { igx_query_builder_and_label: customAndLabel } as IQueryBuilderResourceStrings;
-
-            expect(header.resourceStrings.igx_query_builder_and_label).toBe(customAndLabel);
-            expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultOrLabel);
-        });
-
         it('Should accept the search value template context.', () => {
             expect(IgxQueryBuilderSearchValueTemplateDirective.ngTemplateContextGuard(
                 {} as IgxQueryBuilderSearchValueTemplateDirective,
@@ -4240,21 +4214,24 @@ describe('IgxQueryBuilder', () => {
             }
         });
 
-        it('should update the header default resource strings when global i18n changes', () => {
-            const fixture = TestBed.createComponent(IgxQueryBuilderCustomTemplateSampleTestComponent);
-            fixture.detectChanges();
-            const header = fixture.debugElement.query(By.directive(IgxQueryBuilderHeaderComponent)).componentInstance as IgxQueryBuilderHeaderComponent;
-            const defaultOrLabel = header.resourceStrings.igx_query_builder_or_label;
+        it('should use the search resource string as the return fields combo search placeholder', async () => {
+            useFakeClock();
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+            fix.detectChanges();
+            await advance(fix, 100);
 
-            try {
-                changei18n({ igx_query_builder_and_label: 'und' });
-                fixture.detectChanges();
+            const combo: IgxComboComponent = fix.debugElement.query(By.directive(IgxComboComponent)).componentInstance;
+            expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe(queryBuilder.resourceStrings.igx_query_builder_search);
 
-                expect(header.resourceStrings.igx_query_builder_and_label).toBe('und');
-                expect(header.resourceStrings.igx_query_builder_or_label).toBe(defaultOrLabel);
-            } finally {
-                changei18n(QueryBuilderResourceStringsEN);
-            }
+            queryBuilder.resourceStrings = { igx_query_builder_search: 'Find fields' };
+            fix.detectChanges();
+
+            expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Find fields');
+            expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+
+            combo.open();
+            await advance(fix, 0);
+            expect(combo.searchInput.nativeElement.placeholder).toBe('Find fields');
         });
     });
 });

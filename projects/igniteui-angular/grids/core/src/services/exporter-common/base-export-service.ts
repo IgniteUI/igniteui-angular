@@ -657,7 +657,6 @@ export abstract class IgxBaseExporter {
 
             for (const island of childLayoutList ?? []) {
                 const path: IPathSegment = {
-                    rowID: grid.primaryKey ? entry[grid.primaryKey] : entry,
                     rowKey: grid.primaryKey ? entry[grid.primaryKey] : entry,
                     rowIslandKey: island.key
                 };
@@ -806,7 +805,6 @@ export abstract class IgxBaseExporter {
 
                     for (const childIsland of island.children) {
                         const path: IPathSegment = {
-                            rowID: grid?.primaryKey ? rec[grid.primaryKey] : rec,
                             rowKey: grid?.primaryKey ? rec[grid.primaryKey] : rec,
                             rowIslandKey: childIsland.key
                         };

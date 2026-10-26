@@ -85,10 +85,6 @@ export interface IColumnState {
     rowEnd?: number,
     colStart?: number;
     colEnd?: number,
-    /**
-     * @deprecated
-     */
-    parent?: any;
     key: string;
     parentKey: string;
     disableHiding: boolean;
@@ -256,8 +252,8 @@ export class IgxGridStateBaseDirective {
                         restoreColumnState(ref1, colState);
 
                         ref1.grid = context.currGrid;
-                        if (colState.parent || colState.parentKey) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref1.parent));
+                        if (colState.parentKey) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && e.key === colState.parentKey);
                             columnGroup.children.reset([...columnGroup.children.toArray(), ref1]);
                             ref1.parent = columnGroup;
                         }
@@ -275,8 +271,8 @@ export class IgxGridStateBaseDirective {
                         restoreColumnState(ref, colState);
 
                         ref.grid = context.currGrid;
-                        if (colState.parent || colState.parentKey) {
-                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e =>  e.columnGroup && (e.key ? e.key === colState.parentKey : e.header === ref.parent));
+                        if (colState.parentKey) {
+                            const columnGroup: IgxColumnGroupComponent = newColumns.find(e => e.columnGroup && e.key === colState.parentKey);
                             if (columnGroup) {
                                 ref.parent = columnGroup;
                                 columnGroup.children.reset([...columnGroup.children.toArray(), ref]);

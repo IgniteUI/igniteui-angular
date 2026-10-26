@@ -32,6 +32,8 @@ declare type TransformFunction = (args: BoundPropertyObject) => void;
 export interface BoundPropertyObject {
     value: string;
     bindingType: InputPropertyType;
+    /** The quote delimiting the attribute value in the template */
+    quote?: string;
 }
 
 interface AppliedChange {
@@ -392,7 +394,7 @@ export class UpdateChanges {
                     if (regExpMatch) {
                         const value = regExpMatch[4];
                         const transform = this.valueTransforms.get(change.valueTransform);
-                        const args = { value, bindingType };
+                        const args = { value, bindingType, quote: regExpMatch[3] };
                         transform(args);
                         if (args.bindingType !== bindingType) {
                             replaceStatement = args.bindingType === InputPropertyType.EVAL ?

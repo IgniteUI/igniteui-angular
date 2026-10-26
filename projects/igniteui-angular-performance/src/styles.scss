@@ -5,7 +5,7 @@
     $font-family: $material-typeface,
     $type-scale: $material-type-scale
 );
-@include theme($default-palette);
+@include theme($palette: $light-material-palette, $schema: $light-material-schema);
 
 html,
 body {
