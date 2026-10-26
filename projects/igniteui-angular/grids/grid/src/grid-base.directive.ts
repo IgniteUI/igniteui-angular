@@ -3659,6 +3659,17 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        fromEvent<KeyboardEvent>(this.nativeElement, 'keydown', { capture: true }).pipe(destructor).subscribe((event) => {
+            const target = event.composedPath()[0];
+            if (!(target instanceof Element)) {
+                return;
+            }
+            if (event.key === this.platform.KEYMAP.ENTER && !event.isComposing && !(target instanceof HTMLTextAreaElement) &&
+                !(target instanceof HTMLElement && target.isContentEditable) &&
+                !target.closest('button, a[href], input[type=button], input[type=submit], input[type=reset], input[type=image]')) {
+                event.preventDefault();
+            }
+        });
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
             const activeNode = this.navigation.activeNode;
             if (!this.crudService.cell && !!activeNode &&
