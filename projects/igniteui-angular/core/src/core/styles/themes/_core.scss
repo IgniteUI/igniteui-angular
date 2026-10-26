@@ -92,14 +92,6 @@
         inherits: true;
     }
 
-    // Scales the rendered progress during the initial reveal animation of the
-    // progress bars; see the igx-initial-reveal keyframes.
-    @property --_progress-reveal {
-        syntax: '<number>';
-        initial-value: 1;
-        inherits: false;
-    }
-
     @property --ig-theme {
         syntax: 'material | indigo | fluent | bootstrap';
         initial-value: material;

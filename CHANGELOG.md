@@ -15,7 +15,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`
     - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
 - `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
-    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial reveal now animates the registered `--_progress-reveal` custom property and value changes transition the registered `--_progress-whole` custom property, so no property has both a keyframe animation and a transition. The determinate circular bar also plays its initial animation in RTL now.
+    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
 
 ## 22.2.3
 

@@ -112,15 +112,22 @@ $theme: digest-schema($light-progress-circular);
         }
 
         @include e(outer) {
-            --_progress-percentage: calc(var(--_progress-whole, 0) / 100 * var(--_progress-reveal, 1));
+            --_progress-percentage: calc(var(--_progress-whole, 0) / 100);
 
             @extend %circle;
 
-            // The value is transitioned, not the stroke: the stroke geometry simply
-            // follows the animated --_progress-whole / --_progress-reveal numbers.
+            // The stroke follows the registered --_progress-whole number: value changes
+            // transition it and @starting-style makes the first render transition from 0
+            // as well. Nothing animates stroke-dashoffset itself, so no property has both
+            // a keyframe animation and a transition, which made WebKit restart the
+            // transition on every frame and overshoot (igniteui-angular#17649).
             transition: --_progress-whole var(--_transition-duration) linear;
             stroke-dasharray: #{$circumference} #{$circumference};
             stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+
+            @starting-style {
+                --_progress-whole: 0;
+            }
         }
 
         @include m(indeterminate) {
@@ -134,14 +141,6 @@ $theme: digest-schema($light-progress-circular);
                     stroke-dashoffset: calc(#{$circumference} + var(--_progress-percentage) * #{$circumference});
                 }
             }
-        }
-    }
-
-    .igx-circular-svg:not(.igx-circular-svg--indeterminate) {
-        .igx-circular-svg__outer {
-            animation: igx-initial-reveal var(--_transition-duration) linear;
-            stroke-dasharray: #{$circumference} #{$circumference};
-            stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
         }
     }
 }
