@@ -15,7 +15,7 @@ import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { DefaultSortingStrategy, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
+import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
 import { IgxGridMRLNavigationService } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { DefaultGridMasterDetailComponent, ColumnLayoutTestComponent } from '../../../test-utils/grid-shared-components.spec';
@@ -64,6 +64,37 @@ describe('IgxGrid - Row Adding #grid', () => {
             grid = fixture.componentInstance.grid;
             gridContent = GridFunctions.getGridContent(fixture);
             actionStrip = fixture.componentInstance.actionStrip;
+        });
+
+        [
+            { dataType: GridColumnDataType.Date, value: new Date(2024, 0, 23), pipeArgs: { format: 'dd/MM/yyyy' }, expected: '23/01/2024' },
+            { dataType: GridColumnDataType.Number, value: 0, pipeArgs: { digitsInfo: '1.2-2' }, expected: '0.00' },
+            { dataType: GridColumnDataType.Percent, value: 0.25, pipeArgs: { digitsInfo: '1.1-1' }, expected: '25.0%' },
+            { dataType: GridColumnDataType.Currency, value: 12.5, pipeArgs: { currencyCode: 'USD', digitsInfo: '1.2-2' }, expected: '$12.50' }
+        ].forEach(({ dataType, value, pipeArgs, expected }) => {
+            it(`Should format ${dataType} cells after leaving the editor in an uncommitted add row`, () => {
+                fixture.componentInstance.data = [];
+                const column = grid.getColumnByName('ContactName');
+                column.dataType = dataType;
+                column.pipeArgs = pipeArgs;
+                fixture.detectChanges();
+
+                grid.beginAddRowById(null);
+                fixture.detectChanges();
+                const cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+                expect(cell.nativeElement?.textContent.trim()).toBe('ContactName');
+
+                cell.setEditMode(true);
+                fixture.detectChanges();
+                cell.editValue = value;
+                grid.gridAPI.get_cell_by_index(0, 'CompanyName').setEditMode(true);
+                fixture.detectChanges();
+
+                expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+                expect(cell.editMode).toBe(false);
+                expect(cell.value).toEqual(value);
+                expect(cell.nativeElement?.textContent.trim()).toBe(expected);
+            });
         });
 
         it('Should be able to enter add row mode on action strip click', () => {
@@ -927,6 +958,32 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             expect(row.expanded).toBe(false);
             expect(grid.gridAPI.get_row_by_index(1).addRowUI).toBe(true);
+        });
+
+        it('Should format the expandable first column cell after leaving the editor in an uncommitted add row', () => {
+            grid.rowEditable = true;
+            fixture.componentInstance.data = [];
+            const column = grid.getColumnByName('ContactName');
+            column.dataType = GridColumnDataType.Number;
+            column.pipeArgs = { digitsInfo: '1.2-2' };
+            fixture.detectChanges();
+
+            grid.beginAddRowById(null);
+            fixture.detectChanges();
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+            expect(cell.nativeElement?.tagName.toLowerCase()).toBe('igx-expandable-grid-cell');
+            expect(cell.nativeElement?.querySelector('.igx-grid__td-text')?.textContent.trim()).toBe('ContactName');
+
+            cell.setEditMode(true);
+            fixture.detectChanges();
+            cell.editValue = 0;
+            grid.gridAPI.get_cell_by_index(0, 'CompanyName').setEditMode(true);
+            fixture.detectChanges();
+
+            expect(grid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(cell.editMode).toBe(false);
+            expect(cell.value).toBe(0);
+            expect(cell.nativeElement?.querySelector('.igx-grid__td-text')?.textContent.trim()).toBe('0.00');
         });
     });
 
