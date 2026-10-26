@@ -20,7 +20,7 @@ $_theme: digest-schema($fluent-progress-circular);
 @include themed-block(igx-circular-svg, fluent) {
     @include e(outer) {
         stroke-width: var(--stroke-thickness);
-        animation: igx-initial-dashoffset var(--_transition-duration) linear;
+        animation: igx-initial-reveal var(--_transition-duration) linear;
     }
 
     @include m(indeterminate) {

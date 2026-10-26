@@ -12,7 +12,7 @@ $theme: digest-schema($light-progress-linear);
     // TODO change this once Not selector can be added to the block
     .igx-linear-bar:not(.igx-linear-bar--indeterminate) {
         .igx-linear-bar__indicator {
-            animation: igx-initial-width var(--_transition-duration) linear;
+            animation: igx-initial-reveal var(--_transition-duration) linear;
             background-color: var-get($theme, 'fill-color-default')
         }
     }
@@ -40,10 +40,13 @@ $theme: digest-schema($light-progress-linear);
         }
 
         @include e(indicator) {
-            width: calc(var(--_progress-whole) * 1%);
+            width: calc(var(--_progress-whole, 0) * var(--_progress-reveal, 1) * 1%);
             position: absolute;
             height: 100%;
-            transition: width var(--_transition-duration) linear;
+
+            // The value is transitioned, not the width: the width simply follows the
+            // animated --_progress-whole / --_progress-reveal numbers.
+            transition: --_progress-whole var(--_transition-duration) linear;
         }
 
         @include e(value) {
@@ -53,7 +56,6 @@ $theme: digest-schema($light-progress-linear);
         ;
 
             color: var-get($theme, 'text-color');
-            animation: initial-counter var(--_transition-duration) ease-in-out;
             counter-reset: progress-integer round(down, var(--_progress-integer, 0), 1) progress-fraction round(down, var(--_progress-fraction, 0), 1);
             transition: --_progress-integer var(--_transition-duration) ease-in-out,
             --_progress-fraction var(--_transition-duration) ease-in-out;
