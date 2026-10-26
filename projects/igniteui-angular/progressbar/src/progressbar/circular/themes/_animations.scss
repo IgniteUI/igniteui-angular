@@ -83,22 +83,15 @@ $circumference: calc(#{$radius} * 2 * 3.1416);
     }
 }
 
-@keyframes igx-initial-dashoffset {
+// Initial reveal: grows the rendered progress from 0 to the actual value on first
+// render. It animates the registered --_progress-reveal number instead of
+// stroke-dashoffset so that no property has both a keyframe animation and a
+// transition. WebKit restarts a transition on every frame while a keyframe
+// animation changes the same property, which made the stroke overshoot and then
+// crawl back (igniteui-angular#17649).
+@keyframes igx-initial-reveal {
     from {
-        /* Start with no progress (0%) */
-        stroke-dashoffset: #{$circumference};
-    }
-
-    to {
-        stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-    }
-}
-
-// Generic animations
-@keyframes igc-initial-counter {
-    from {
-        --_progress-integer: 0;
-        --_progress-fraction: 0;
+        --_progress-reveal: 0;
     }
 }
 

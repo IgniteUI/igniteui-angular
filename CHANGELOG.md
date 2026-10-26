@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
 - `IgxOverlayService`
     - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
+- `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
+    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial reveal now animates the registered `--_progress-reveal` custom property and value changes transition the registered `--_progress-whole` custom property, so no property has both a keyframe animation and a transition. The determinate circular bar also plays its initial animation in RTL now.
 
 ## 22.2.3
 

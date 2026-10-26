@@ -149,13 +149,13 @@ $easing-curves: (
     }
 }
 
-// Initial animations
-@keyframes igx-initial-width {
+// Initial reveal: grows the rendered progress from 0 to the actual value on first
+// render. It animates the registered --_progress-reveal number instead of width so
+// that no property has both a keyframe animation and a transition. WebKit
+// restarts a transition on every frame while a keyframe animation changes the
+// same property (igniteui-angular#17649).
+@keyframes igx-initial-reveal {
     from {
-        width: 0;
-    }
-
-    to {
-        width: calc(var(--_progress-whole, 0) * 1%);
+        --_progress-reveal: 0;
     }
 }

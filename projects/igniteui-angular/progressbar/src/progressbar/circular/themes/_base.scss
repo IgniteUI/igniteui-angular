@@ -36,7 +36,6 @@ $theme: digest-schema($light-progress-circular);
             text-align: center;
             font-weight: 600;
 
-            animation: igx-initial-counter var(--_transition-duration) ease-in-out;
             counter-reset:
                 progress-integer round(down, var(--_progress-integer, 0), 1)
                 progress-fraction round(down, var(--_progress-fraction, 0), 1);
@@ -113,11 +112,13 @@ $theme: digest-schema($light-progress-circular);
         }
 
         @include e(outer) {
-            --_progress-percentage: calc(var(--_progress-whole, 0) / 100);
+            --_progress-percentage: calc(var(--_progress-whole, 0) / 100 * var(--_progress-reveal, 1));
 
             @extend %circle;
 
-            transition: stroke-dashoffset var(--_transition-duration) linear;
+            // The value is transitioned, not the stroke: the stroke geometry simply
+            // follows the animated --_progress-whole / --_progress-reveal numbers.
+            transition: --_progress-whole var(--_transition-duration) linear;
             stroke-dasharray: #{$circumference} #{$circumference};
             stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
         }
@@ -138,16 +139,9 @@ $theme: digest-schema($light-progress-circular);
 
     .igx-circular-svg:not(.igx-circular-svg--indeterminate) {
         .igx-circular-svg__outer {
-            animation: igx-initial-dashoffset var(--_transition-duration) linear;
+            animation: igx-initial-reveal var(--_transition-duration) linear;
             stroke-dasharray: #{$circumference} #{$circumference};
             stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-        }
-
-        &:dir(rtl) {
-            .igx-circular-svg__outer {
-                animation: igx-initial-dashoffset-rtl var(--_transition-duration) linear;
-                animation-direction: reverse;
-            }
         }
     }
 }
