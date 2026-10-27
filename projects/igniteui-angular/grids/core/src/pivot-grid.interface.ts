@@ -187,6 +187,8 @@ export interface IPivotValue {
     aggregateList?: IPivotAggregator[];
     /** Enables/Disables a particular value from pivot aggregation. */
     enabled: boolean;
+    /* blazorOnlyScript */
+    /* treatAsRef */
     /**  Allow conditionally styling of the pivot grid cells. */
     styles?: any;
     /** Enables a data type specific template of the cells */

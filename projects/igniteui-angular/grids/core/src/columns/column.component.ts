@@ -1827,6 +1827,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, this.field) as FilteringExpressionsTree;
     }
 
+    /* blazorCSSuppress */
     /* alternateName: parentColumn */
     /* blazorAlternateType: object */
     // We need that because Blazor cannot handle the type correctly.

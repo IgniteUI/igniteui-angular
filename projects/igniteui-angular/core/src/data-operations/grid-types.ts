@@ -157,6 +157,8 @@ export interface FieldType {
      */
     defaultDateTimeFormat?: string;
 
+    /* blazorAlternateType: CellValueFormatterEventHandler */
+    /* blazorOnlyScript */
     /**
      * Optional formatter function to transform the value before display.
      *
@@ -164,7 +166,7 @@ export interface FieldType {
      * @param rowData - Optional row data that contains this field.
      * @returns The formatted value.
      */
-    formatter?(value: any, rowData?: any): any;
+    formatter?: (value: any, rowData?: any) => any;
 }
 
 /**

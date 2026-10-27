@@ -331,6 +331,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
+    /* blazorCSSuppress */
     /**
      * Returns an array of processed (filtered and sorted) root `ITreeGridRecord`s.
      * ```typescript

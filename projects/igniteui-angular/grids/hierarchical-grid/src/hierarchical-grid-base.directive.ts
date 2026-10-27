@@ -127,6 +127,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @hidden
      */
     public parentIsland!: IgxRowIslandComponent;
+    /* blazorCSSuppress */
     public abstract rootGrid: GridType;
 
     /* blazorSuppress */
