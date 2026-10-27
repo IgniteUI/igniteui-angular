@@ -1,5 +1,10 @@
 .items-wrapper {
     height: 400px;
+
+    .igx-tabs--left,
+    .igx-tabs--right {
+        height: 360px;
+    }
 }
 
 strong {

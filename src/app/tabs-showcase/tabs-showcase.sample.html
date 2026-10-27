@@ -3,7 +3,8 @@
         <strong>Angular</strong>
         <igx-tabs
             [tabAlignment]="properties.alignment"
-            [activation]="properties.activation">
+            [activation]="properties.activation"
+            [headerPosition]="properties.headerPosition">
 
             @for (contact of contacts; track contact.id) {
                 <igx-tab-item [selected]="contact.id === selectedTabId">

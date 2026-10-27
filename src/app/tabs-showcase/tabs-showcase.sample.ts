@@ -78,6 +78,14 @@ export class TabsShowcaseSampleComponent implements OnInit {
                     defaultValue: 'start'
                 }
             },
+            headerPosition: {
+                label: 'Header position',
+                control: {
+                    type: 'button-group',
+                    options: ['top', 'left', 'right'],
+                    defaultValue: 'top'
+                }
+            },
             activation: {
                 control: {
                     type: 'button-group',
