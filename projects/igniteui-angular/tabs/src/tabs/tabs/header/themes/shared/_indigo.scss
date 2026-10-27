@@ -29,6 +29,16 @@ $_theme: digest-schema($indigo-tabs);
             border-bottom: rem(1px) solid var-get($_theme, 'border-color');
         }
 
+        @each $side, $content-side in (left: right, right: left) {
+            .igx-tabs-header--#{$side} &,
+            .igx-tabs-header--#{$side} &:hover,
+            .igx-tabs-header--#{$side} &:focus {
+                border-block: none;
+                border-#{$side}: rem(1px) solid transparent;
+                border-#{$content-side}: rem(1px) solid var-get($_theme, 'border-color');
+            }
+        }
+
         @include e(inner) {
             > [igxtabheaderlabel] {
                 @include type-style(subtitle-2) {

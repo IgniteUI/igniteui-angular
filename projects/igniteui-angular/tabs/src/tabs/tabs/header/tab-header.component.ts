@@ -59,12 +59,24 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         const previousIndex = itemsArray.indexOf(this.tab);
         let newIndex = previousIndex;
         const hasDisabledItems = itemsArray.some((item) => item.disabled);
+        const vertical = this.tabs.verticalHeaders();
 
         switch (event.key) {
             case this.platform.KEYMAP.ARROW_RIGHT:
+            case this.platform.KEYMAP.ARROW_LEFT:
+                if (vertical) {
+                    unsupportedKey = true;
+                    break;
+                }
                 newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
                 break;
-            case this.platform.KEYMAP.ARROW_LEFT:
+            case this.platform.KEYMAP.ARROW_DOWN:
+            case this.platform.KEYMAP.ARROW_UP:
+                if (!vertical) {
+                    unsupportedKey = true;
+                    break;
+                }
+                event.preventDefault();
                 newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
                 break;
             case this.platform.KEYMAP.HOME:
@@ -95,10 +107,12 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         }
 
         if (!unsupportedKey) {
-            itemsArray[newIndex].headerComponent.nativeElement.focus({ preventScroll: true });
+            const header = itemsArray[newIndex].headerComponent.nativeElement;
+            header.focus({ preventScroll: true });
             if (this.tabs.activation === 'auto') {
                 this.tabs.selectedIndex = newIndex;
             }
+            this.tabs.scrollToHeader(header);
         }
     }
 
@@ -123,8 +137,10 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
 
     private getNewSelectionIndex(newIndex: number, itemsArray: any[], key: string, hasDisabledItems: boolean): number {
         const rtl = !isLeftToRight(this.nativeElement);
+        const next = key === this.platform.KEYMAP.ARROW_DOWN ||
+            (key === this.platform.KEYMAP.ARROW_RIGHT && !rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && rtl);
 
-        if ((key === this.platform.KEYMAP.ARROW_RIGHT && !rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && rtl)) {
+        if (next) {
             newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
             while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
                 newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;

@@ -5,6 +5,16 @@
 
 $_theme: digest-schema($bootstrap-tabs);
 
+@function _selected-edge($direction, $background) {
+    @return linear-gradient(
+        $direction,
+        var-get($_theme, 'border-color') 1px,
+        var-get($_theme, $background) 1px,
+        var-get($_theme, $background) calc(100% - 1px),
+        var-get($_theme, 'border-color') calc(100% - 1px)
+    );
+}
+
 @include themed-block(igx-tabs, bootstrap) {
     %igx-tab-header--focus {
         border: none;
@@ -49,13 +59,7 @@ $_theme: digest-schema($bootstrap-tabs);
                     inset-inline-start: 0;
                     width: 100%;
                     height: rem(1px);
-                    background: linear-gradient(
-                            to right,
-                            var-get($_theme, 'border-color') 1px,
-                            var-get($_theme, 'item-active-background') 1px,
-                            var-get($_theme, 'item-active-background') calc(100% - 1px),
-                            var-get($_theme, 'border-color') calc(100% - 1px)
-                    );
+                    background: _selected-edge(to right, 'item-active-background');
                     z-index: -1;
                 }
             }
@@ -64,14 +68,34 @@ $_theme: digest-schema($bootstrap-tabs);
                 box-shadow: inset 0 0 0 rem(1px) var-get($_theme, 'border-color');
 
                 &::before {
-                    background: linear-gradient(
-                            to right,
-                            var-get($_theme, 'border-color') 1px,
-                            var-get($_theme, 'item-active-hover-background') 1px,
-                            var-get($_theme, 'item-active-hover-background') calc(100% - 1px),
-                            var-get($_theme, 'border-color') calc(100% - 1px)
-                    );								
+                    background: _selected-edge(to right, 'item-active-hover-background');
                 }
+            }
+        }
+
+        @each $side, $content-side in (left: right, right: left) {
+            .igx-tabs-header--#{$side} & {
+                border-radius: 0;
+                border-top-#{$side}-radius: var-get($_theme, 'border-radius');
+                border-bottom-#{$side}-radius: var-get($_theme, 'border-radius');
+
+                &:focus {
+                    border-top-#{$content-side}-radius: rem(4px);
+                    border-bottom-#{$content-side}-radius: rem(4px);
+                    border-bottom-#{$side}-radius: var-get($_theme, 'border-radius');
+                }
+            }
+
+            .igx-tabs-header--#{$side} &--selected:not(:focus)::before {
+                inset: 0 auto;
+                #{$content-side}: 0;
+                width: rem(1px);
+                height: 100%;
+                background: _selected-edge(to bottom, 'item-active-background');
+            }
+
+            .igx-tabs-header--#{$side} &--selected:hover::before {
+                background: _selected-edge(to bottom, 'item-active-hover-background');
             }
         }
     }

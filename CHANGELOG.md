@@ -4,6 +4,20 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### New Features
+
+- `IgxTabsComponent`
+    - Added the `headerPosition` input, which places the tab headers in a row above the content (`top`, the default) or in a column on the `left` or `right` side of the content. `left` and `right` are physical sides, also in right-to-left layouts. In a column, the headers are navigated with the Up and Down arrow keys, the scroll buttons above and below them scroll them up and down when they do not fit in the height of the tabs, `tabAlignment` aligns them along the column and the active indicator is on the side next to the content. Changing `headerPosition` at runtime keeps the selected tab and does not emit selection events.
+
+        ```html
+        <igx-tabs headerPosition="left">
+            <igx-tab-item>
+                <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
+                <igx-tab-content>Content 1</igx-tab-content>
+            </igx-tab-item>
+        </igx-tabs>
+        ```
+
 ### Behavioral Changes
 
 - `IgxCarouselComponent`
@@ -17,6 +31,8 @@ All notable changes for each version of this project will be documented in this 
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 - `IgxSplitterComponent`
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
+- `IgxTabsComponent`
+    - A selected tab header that is wider than the visible area of the headers is now scrolled so that its start is visible. Previously it was scrolled so that its end was visible.
 - `IgxTimePickerComponent`
     - When `locale` is not set, the picker now follows the global locale set with `setCurrentI18n` and updates its default formats and resource strings when it changes, as the date picker does. Previously it kept the locale it was created with.
     - `clear()` with a `Date` value now assigns a new `Date` with its time reset to `00:00:00` and notifies `ngModel` and reactive form controls. Previously it changed the bound `Date` object in place, so forms were not updated or re-validated.
@@ -67,6 +83,9 @@ All notable changes for each version of this project will be documented in this 
     - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
 - `IgxSplitterPaneComponent`
     - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxTabsComponent`
+    - With `manual` activation, a tab header focused with the keyboard is scrolled into view.
+    - The selected tab header is scrolled into view when hidden tabs become visible, for example in a dialog or a drop-down.
 - `IgxTimePickerComponent`
     - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
     - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.

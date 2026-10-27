@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
+import {
+    IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsAlignment,
+    IgxTabsComponent, IgxTabsHeaderPosition
+} from 'igniteui-angular/tabs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
 import { IgxButtonDirective, IgxToggleActionDirective } from 'igniteui-angular/directives';
@@ -647,4 +650,72 @@ export class ZonelessTabsCollectionComponent {
     public removeSelectedTab(): void {
         this.collection.update(items => items.slice(1));
     }
+}
+
+export interface TabsHeaderPositionItem {
+    id: number;
+    label: string;
+    icon?: string;
+    disabled?: boolean;
+    spacer?: number;
+    prefix?: string;
+    suffix?: string;
+}
+
+@Component({
+    template: `
+    <div #wrapperDiv [attr.dir]="dir()" [style.display]="hidden() ? 'none' : 'block'">
+        <igx-tabs [headerPosition]="headerPosition()" [tabAlignment]="tabAlignment()" [activation]="activation()"
+            [style.height]="height()" [style.width]="width()">
+            @for (tab of items(); track tab.id) {
+                <igx-tab-item [disabled]="!!tab.disabled">
+                    <igx-tab-header>
+                        @if (tab.prefix) {
+                            <span igxPrefix>{{ tab.prefix }}</span>
+                        }
+                        @if (tab.icon) {
+                            <igx-icon igxTabHeaderIcon>{{ tab.icon }}</igx-icon>
+                        }
+                        <span igxTabHeaderLabel>{{ tab.label }}</span>
+                        @if (tab.spacer) {
+                            <span style="display: block" [style.height.px]="tab.spacer"></span>
+                        }
+                        @if (tab.suffix) {
+                            <span igxSuffix>{{ tab.suffix }}</span>
+                        }
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        <button type="button" class="panel-action">{{ tab.label }} action</button>
+                        @for (line of contentLines(); track $index) {
+                            <p>{{ tab.label }} content</p>
+                        }
+                    </igx-tab-content>
+                </igx-tab-item>
+            }
+        </igx-tabs>
+    </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective,
+        IgxTabHeaderIconDirective, IgxIconComponent, IgxPrefixDirective, IgxSuffixDirective
+    ]
+})
+export class TabsHeaderPositionComponent {
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
+    @ViewChild('wrapperDiv', { static: true })
+    public wrapperDiv: ElementRef<HTMLElement>;
+
+    public headerPosition = signal<IgxTabsHeaderPosition>('top');
+    public tabAlignment = signal<IgxTabsAlignment>('start');
+    public activation = signal<'auto' | 'manual'>('auto');
+    public height = signal<string | null>(null);
+    public width = signal<string | null>('600px');
+    public dir = signal<'ltr' | 'rtl' | null>(null);
+    public hidden = signal(false);
+    public contentLines = signal([1]);
+    public items = signal<TabsHeaderPositionItem[]>(
+        Array.from({ length: 8 }, (_, i) => ({ id: i + 1, label: `Tab ${i + 1}`, icon: i % 3 === 1 ? 'folder' : undefined }))
+    );
 }

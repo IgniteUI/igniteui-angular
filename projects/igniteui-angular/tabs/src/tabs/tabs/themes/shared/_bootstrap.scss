@@ -29,6 +29,17 @@ $_theme: digest-schema($bootstrap-tabs);
         @include e(active-indicator) {
             display: none;
         }
+
+        @each $side, $content-side in (left: right, right: left) {
+            @include m($side) {
+                &::after {
+                    inset: 0 auto;
+                    #{$content-side}: 0;
+                    width: rem(1px);
+                    height: 100%;
+                }
+            }
+        }
     }
 
     @include b(igx-tabs-header-button) {

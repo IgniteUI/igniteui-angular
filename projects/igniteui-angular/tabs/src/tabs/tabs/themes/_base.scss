@@ -14,6 +14,22 @@ $theme: digest-schema($material-tabs);
         display: flex;
         flex-direction: column;
         overflow: hidden;
+
+        @include m(left) {
+            flex-direction: row;
+
+            &:dir(rtl) {
+                flex-direction: row-reverse;
+            }
+        }
+
+        @include m(right) {
+            flex-direction: row-reverse;
+
+            &:dir(rtl) {
+                flex-direction: row;
+            }
+        }
     }
 
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
@@ -43,20 +59,57 @@ $theme: digest-schema($material-tabs);
         }
 
         @include e(active-indicator) {
+            --_indicator-thickness: #{rem(2px)};
+
             position: absolute;
             bottom: 0;
             // We need to explicitly set the default for IE 11
             left: 0;
             transform: translateX(0);
-            height: rem(2px);
+            height: var(--_indicator-thickness);
             min-width: rem(90px);
             background: var-get($theme, 'indicator-color');
             transition: transform .3s $tabs-animation-function, width .2s $tabs-animation-function;
+        }
+
+        @include m(vertical) {
+            flex-direction: column;
+            align-items: stretch;
+
+            @include e(content) {
+                flex-direction: column;
+                align-items: stretch;
+                min-height: 0;
+            }
+
+            @include e(wrapper) {
+                display: flex;
+                flex-direction: column;
+                flex: 1 0 auto;
+            }
+
+            @include e(active-indicator) {
+                top: 0;
+                bottom: auto;
+                transform: translateY(0);
+                width: var(--_indicator-thickness);
+                height: 0;
+                min-width: 0;
+                transition: transform .3s $tabs-animation-function, height .2s $tabs-animation-function;
+            }
+        }
+
+        @include m(left) {
+            @include e(active-indicator) {
+                left: auto;
+                right: 0;
+            }
         }
     }
 
     @include b(igx-tabs-header-button) {
         --ig-ripple-color: var(--button-ripple-color);
+        --_nav-btn-size: #{rem(48px)};
 
         display: flex;
         align-items: center;
@@ -64,8 +117,8 @@ $theme: digest-schema($material-tabs);
         z-index: 1;
         border: none;
         padding: 0;
-        min-width: rem(48px);
-        width: rem(48px);
+        min-width: var(--_nav-btn-size);
+        width: var(--_nav-btn-size);
         cursor: pointer;
         position: relative;
         background: var-get($theme, 'button-background');
@@ -103,11 +156,31 @@ $theme: digest-schema($material-tabs);
         [dir='rtl'] & {
             transform: scaleX(-1);
         }
+
+        // Hidden until the headers are measured, so that a column rendered on the server does not change its height
+        .igx-tabs-header--vertical > & {
+            display: none;
+            min-width: 0;
+            width: auto;
+            min-height: var(--_nav-btn-size);
+            height: var(--_nav-btn-size);
+            transform: none;
+
+            igx-icon {
+                transform: rotate(90deg);
+            }
+        }
     }
 
     @include b(igx-tabs-header-scroll) {
         display: flex;
         height: 100%;
+
+        .igx-tabs-header--vertical & {
+            flex-direction: column;
+            flex: 1 0 auto;
+            height: auto;
+        }
 
         @include m(start) {
             justify-content: flex-start;
