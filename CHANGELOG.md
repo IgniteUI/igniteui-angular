@@ -3,12 +3,28 @@
 All notable changes for each version of this project will be documented in this file.
 
 
-## 22.2.4
+## 22.2.5
 
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+
+## 22.2.4
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
+    - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
+    - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
+- `IgxPivotGridComponent`
+    - Autosizing a column now fits its content, instead of keeping its current width.
+- `IgxDatePickerComponent`
+    - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
+    - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
+- `IgxOverlayService`
+    - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
 
 ## 22.2.3
 
