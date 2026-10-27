@@ -3583,7 +3583,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @param rowIndex Index of the record in the `filteredSortedData` collection.
      */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByIndex(rowIndex: number): boolean {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
             (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
     }
@@ -4433,7 +4433,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public getDefaultExpandState(_rec: any) {
+    public getDefaultExpandState(_rec: any): boolean {
         return this._defaultExpandState;
     }
 
@@ -5691,7 +5691,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
-    public getPinnedStartWidth(takeHidden = false) {
+    public getPinnedStartWidth(takeHidden = false): number {
         const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
         let sum = 0;
         for (const col of fc) {
@@ -5714,7 +5714,7 @@ export abstract class IgxGridBaseDirective implements GridType,
  * ```
  * @param takeHidden If we should take into account the hidden columns in the pinned area.
  */
-    public getPinnedEndWidth(takeHidden = false) {
+    public getPinnedEndWidth(takeHidden = false): number {
         const fc = takeHidden ? this._pinnedEndColumns : this.pinnedEndColumns;
         let sum = 0;
         for (const col of fc) {
@@ -5950,7 +5950,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedData(formatters = false, headers = false) {
+    public getSelectedData(formatters = false, headers = false): any[] {
         const source = this.filteredSortedData;
         return this.extractDataFromSelection(source!, formatters, headers);
     }
@@ -6058,7 +6058,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedColumnsData(formatters = false, headers = false) {
+    public getSelectedColumnsData(formatters = false, headers = false): any[] {
         const source = this.filteredSortedData ? this.filteredSortedData : this.data;
         return this.extractDataFromColumnsSelection(source!, formatters, headers);
     }

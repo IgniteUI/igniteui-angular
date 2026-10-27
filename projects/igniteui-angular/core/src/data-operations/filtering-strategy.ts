@@ -237,7 +237,7 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
     }
     private static _instance: NoopFilteringStrategy = null!;
 
-    public static instance() {
+    public static instance(): NoopFilteringStrategy {
         return this._instance || (this._instance = new NoopFilteringStrategy());
     }
 

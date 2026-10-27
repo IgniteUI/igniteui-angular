@@ -96,7 +96,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
      * @hidden
      * @internal
      */
-    public isCellActive(visibleColumnIndex: any) {
+    public isCellActive(visibleColumnIndex: any): boolean {
         const node = this.grid.navigation.activeNode;
         return node ? node.row === this.index && node.column === visibleColumnIndex : false;
     }
