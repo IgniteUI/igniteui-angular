@@ -1,0 +1,30 @@
+@use 'sass-true' as *;
+@use '../base' as *;
+@use '../themes/scoping' as *;
+
+// Loads base and scoping globally, the way theme files do; base must not expose a second block().
+/* stylelint-disable max-nesting-depth -- the expected output nests @layer and @scope inside sass-true's blocks */
+@include describe('Block with base loaded globally') {
+    @include it('should resolve to the scoping block() mixin') {
+        @include assert() {
+            @include output() {
+                @include block(combo) {
+                    :scope {
+                        display: flex;
+                    }
+                }
+            }
+
+            @include expect() {
+                @layer ig.base {
+                        @scope (.igx-combo) to (:scope [ig-scope] > *) {
+                        :scope {
+                            display: flex;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
