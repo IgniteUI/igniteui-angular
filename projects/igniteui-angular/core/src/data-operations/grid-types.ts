@@ -136,6 +136,7 @@ export interface FieldType {
      */
     editorOptions?: IFieldEditorOptions;
 
+    /* blazorCSSuppress */
     /**
      * Optional filtering operands that apply to this field.
      */

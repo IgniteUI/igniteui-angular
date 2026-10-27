@@ -1,5 +1,6 @@
 import { PositionSettings, Size, Point } from './../utilities';
 
+/* blazorCSSuppress */
 /**
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/overlay-position)
  * Position strategies determine where to display the component in the provided overlay.

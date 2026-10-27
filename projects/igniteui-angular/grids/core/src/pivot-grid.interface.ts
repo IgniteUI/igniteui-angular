@@ -36,6 +36,7 @@ export interface IPivotConfigurationChangedEventArgs {
     pivotConfiguration: IPivotConfiguration
 }
 
+/* blazorCSSuppress */
 /**
 * Interface describing Pivot data processing for dimensions.
 * Should contain a process method and return records hierarchy based on the provided dimensions.
@@ -87,8 +88,10 @@ export interface IPivotAggregator {
 * Configuration of the pivot grid.
 */
 export interface IPivotConfiguration {
+    /* blazorCSSuppress */
     /** A strategy to transform the rows. */
     rowStrategy?: IPivotDimensionStrategy | null;
+    /* blazorCSSuppress */
     /** A strategy to transform the columns. */
     columnStrategy?: IPivotDimensionStrategy | null;
     /** A list of the rows. */

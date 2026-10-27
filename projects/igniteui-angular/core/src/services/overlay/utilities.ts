@@ -10,6 +10,7 @@ import { IScrollStrategy } from './scroll';
  */
 const getIntersectionObserver = () => globalThis.window?.IntersectionObserver;
 
+/* blazorCSSuppress */
 /**
  * Mark an element as an igxOverlay outlet container.
  * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
@@ -122,10 +123,13 @@ export interface PositionSettings {
 }
 
 export interface OverlaySettings {
+    /* blazorCSSuppress */
     /** Attaching target for the component to show */
     target?: Point | HTMLElement;
+    /* blazorCSSuppress */
     /** Position strategy to use with these settings */
     positionStrategy?: IPositionStrategy;
+    /* blazorCSSuppress */
     /** Scroll strategy to use with these settings */
     scrollStrategy?: IScrollStrategy;
     /** Set if the overlay should be in modal mode */

@@ -1,3 +1,4 @@
+/* blazorCSSuppress */
 /**
  * Provides base filtering operations
  * Implementations should be Singleton

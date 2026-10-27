@@ -21,6 +21,7 @@ export class FilterUtil {
     }
 }
 
+/* blazorCSSuppress */
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridTypeBase): any[];

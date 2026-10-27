@@ -648,6 +648,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public headerGroupStyles: GridStyleCSSProperty | null = null;
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets a conditional class selector of the column cells.
@@ -671,6 +672,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public cellClasses: any;
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets conditional style properties on the column cells.
@@ -1136,6 +1138,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Gets the column `summaries`.
@@ -1152,6 +1155,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         return this._summaries;
     }
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets the column `summaries`.
@@ -1203,6 +1207,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
         }
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets the column `filters`.
      * ```typescript
@@ -1215,6 +1220,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get filters(): IgxFilteringOperand {
         return this._filters;
     }
+    /* blazorCSSuppress */
     /**
      * Sets the column `filters`.
      * ```typescript
@@ -1226,6 +1232,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public set filters(instance: IgxFilteringOperand) {
         this._filters = instance;
     }
+    /* blazorCSSuppress */
     /**
      * Gets the column `sortStrategy`.
      * ```typescript
@@ -1238,6 +1245,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public get sortStrategy(): ISortingStrategy {
         return this._sortStrategy;
     }
+    /* blazorCSSuppress */
     /**
      * Sets the column `sortStrategy`.
      * ```typescript
