@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.24
+
+### Bug Fixes
+
+- `IgxTabsComponent`
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
+
 ## 21.2.0
 
 ### New Features
