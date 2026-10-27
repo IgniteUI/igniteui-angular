@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, NgZone, OnInit, Type, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideCheckNoChangesConfig, provideZoneChangeDetection, provideZonelessChangeDetection, signal, viewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -18,7 +18,7 @@ import { AsyncPipe } from '@angular/common';
 import { setElementSize, ymd } from '../../../test-utils/helper-utils.spec';
 import { FilteringExpressionsTree, FilteringLogic, getComponentSize, GridColumnDataType, IgxNumberFilteringOperand, IgxStringFilteringOperand, ISortingExpression, ɵSize, SortingDirection, GridResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
-import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
+import { IgxGridBaseDirective, SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
@@ -2249,6 +2249,104 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
+    describe('IgxGrid - sizing after data and column replacement', () => {
+        for (const mode of ['zoneless', 'zoned'] as const) {
+            describe(mode, () => {
+                beforeEach(() => {
+                    TestBed.configureTestingModule({
+                        imports: [NoopAnimationsModule, DynamicColumnsGridComponent, PercentHeightDynamicColumnsGridComponent],
+                        providers: mode === 'zoneless'
+                            // throws NG0100 if a binding changes without a notification
+                            ? [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
+                            : [provideZoneChangeDetection()]
+                    });
+                });
+
+                // ZoneJS apps update state inside the Angular zone
+                const act = (action: () => void) => mode === 'zoned' ? TestBed.inject(NgZone).run(action) : action();
+
+                const create = async <T>(type: Type<T>, init?: (host: T) => void) => {
+                    const fix = TestBed.createComponent(type);
+                    init?.(fix.componentInstance);
+                    if (mode === 'zoned') {
+                        fix.autoDetectChanges(true);
+                    }
+                    await fix.whenStable();
+                    return fix;
+                };
+
+                for (const newFields of [false, true]) {
+                    it(`should not run a duplicate sizing pass when data and columns are replaced in a percentage-height grid (new fields: ${newFields})`, async () => {
+                        const fix = await create(PercentHeightDynamicColumnsGridComponent);
+                        const host = fix.componentInstance;
+                        const grid = host.grid();
+                        expectDynamicColumnsContent(grid, 0);
+                        if (newFields) {
+                            // as in the benchmark data switch: a filter on an old column, which the new data does not have
+                            act(() => grid.filter('f0', 'r1', IgxStringFilteringOperand.instance().condition('contains')));
+                            await fix.whenStable();
+                        }
+                        const sizing = spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes').and.callThrough();
+
+                        act(() => {
+                            host.data.set(makeDynamicData(1, newFields));
+                            host.columns.set(makeDynamicColumns(1, newFields));
+                        });
+                        await fix.whenStable();
+
+                        const rendered = expectDynamicColumnsContent(grid, 1);
+                        expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
+                        // one pass for the data and one for the new columns
+                        expect(sizing.calls.count()).toBeLessThanOrEqual(2);
+                    });
+                }
+
+                for (const width of ['unbound', '100%', '640px', null] as const) {
+                    it(`should render and size new data and columns (width: ${width})`, async () => {
+                        const fix = await create(DynamicColumnsGridComponent,
+                            h => width === 'unbound' ? h.bindWidth.set(false) : h.width.set(width));
+                        const host = fix.componentInstance;
+                        const effectiveWidth = width === 'unbound' ? '100%' : width;
+                        const hostWidth = effectiveWidth?.endsWith('%') ? DYNAMIC_COLUMNS_CONTAINER_WIDTH : parseFloat(effectiveWidth || '0');
+                        expectDynamicColumnsGeometry(host.grid(), 0, effectiveWidth, hostWidth, expectDynamicColumnsContent(host.grid(), 0));
+
+                        for (const gen of [1, 2]) {
+                            // the second replacement uses new fields, so the old columns are removed
+                            act(() => {
+                                host.data.set(makeDynamicData(gen, gen === 2));
+                                host.columns.set(makeDynamicColumns(gen, gen === 2));
+                            });
+                            await fix.whenStable();
+                            expectDynamicColumnsGeometry(host.grid(), gen, effectiveWidth, hostWidth, expectDynamicColumnsContent(host.grid(), gen));
+                        }
+                    });
+                }
+
+                it('should apply the host width when switching between explicit and null width', async () => {
+                    const fix = await create(DynamicColumnsGridComponent);
+                    const host = fix.componentInstance;
+                    for (const width of [null, '640px', null, '100%']) {
+                        act(() => host.width.set(width));
+                        await fix.whenStable();
+                        const hostWidth = width === '100%' ? DYNAMIC_COLUMNS_CONTAINER_WIDTH : parseFloat(width || '0');
+                        expectDynamicColumnsGeometry(host.grid(), 0, width, hostWidth, expectDynamicColumnsContent(host.grid(), 0));
+                    }
+                });
+
+                it('should resize a percentage-width grid with its container', async () => {
+                    const fix = await create(DynamicColumnsGridComponent);
+                    const host = fix.componentInstance;
+                    act(() => host.containerWidth.set(600));
+                    await fix.whenStable();
+                    // wait for the ResizeObserver notification
+                    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+                    await fix.whenStable();
+                    expectDynamicColumnsGeometry(host.grid(), 0, '100%', 600, expectDynamicColumnsContent(host.grid(), 0));
+                });
+            });
+        }
+    });
+
     describe('IgxGrid - min/max width constraints rules', () => {
         beforeEach(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -3680,6 +3778,109 @@ class ZonelessFinJsGridComponent {
     }));
     public data = Array.from({ length: 1000 }, (_row, rowIndex) =>
         Object.fromEntries(this.columns.map((column, columnIndex) => [column, `${rowIndex}-${columnIndex}`])));
+}
+
+const DYNAMIC_COLUMNS_ROWS = 10000;
+const DYNAMIC_COLUMNS_COUNT = 30;
+const DYNAMIC_COLUMNS_CONTAINER_WIDTH = 760;
+
+interface DynamicColumnDef { key: string; field: string; header: string; width: string }
+
+const dynamicColumnWidth = (gen: number) => 100 + (gen % 2) * 40;
+
+const dynamicField = (gen: number, i: number, newFields: boolean) => newFields ? `g${gen}f${i}` : `f${i}`;
+
+const makeDynamicColumns = (gen: number, newFields = false): DynamicColumnDef[] => Array.from({ length: DYNAMIC_COLUMNS_COUNT }, (_, i) =>
+    ({ key: `g${gen}c${i}`, field: dynamicField(gen, i, newFields), header: `G${gen} C${i}`, width: `${dynamicColumnWidth(gen)}px` }));
+
+const makeDynamicData = (gen: number, newFields = false) => Array.from({ length: DYNAMIC_COLUMNS_ROWS }, (_, r) => {
+    const row: Record<string, any> = { id: r };
+    for (let c = 0; c < DYNAMIC_COLUMNS_COUNT; c++) {
+        row[dynamicField(gen, c, newFields)] = `g${gen} r${r} c${c}`;
+    }
+    return row;
+});
+
+@Component({
+    template: `
+    <div [style.width.px]="containerWidth()">
+        @if (bindWidth()) {
+            <igx-grid #grid [data]="data()" [width]="width()" height="500px" primaryKey="id">
+                @for (col of columns(); track col.key) {
+                    <igx-column [field]="col.field" [header]="col.header" [width]="col.width"></igx-column>
+                }
+            </igx-grid>
+        } @else {
+            <igx-grid #grid [data]="data()" height="500px" primaryKey="id">
+                @for (col of columns(); track col.key) {
+                    <igx-column [field]="col.field" [header]="col.header" [width]="col.width"></igx-column>
+                }
+            </igx-grid>
+        }
+    </div>`,
+    imports: [IgxGridComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DynamicColumnsGridComponent {
+    public grid = viewChild.required<IgxGridComponent>('grid');
+    public data = signal(makeDynamicData(0));
+    public columns = signal(makeDynamicColumns(0));
+    public width = signal<string | null>('100%');
+    public bindWidth = signal(true);
+    public containerWidth = signal(DYNAMIC_COLUMNS_CONTAINER_WIDTH);
+}
+
+// the grid setup of the performance benchmark
+@Component({
+    template: `
+    <div style="height: 700px; width: 1200px">
+        <igx-grid #grid [data]="data()" [height]="'100%'" [allowFiltering]="true" [rowSelection]="'multiple'">
+            @for (col of columns(); track col.key) {
+                <igx-column [field]="col.field" [header]="col.header" [sortable]="true" [width]="col.width"></igx-column>
+            }
+        </igx-grid>
+    </div>`,
+    imports: [IgxGridComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class PercentHeightDynamicColumnsGridComponent {
+    public grid = viewChild.required<IgxGridComponent>('grid');
+    public data = signal(makeDynamicData(0));
+    public columns = signal(makeDynamicColumns(0));
+}
+
+function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
+    const titles = Array.from(grid.nativeElement.querySelectorAll('igx-grid-header .igx-grid-th__title'))
+        .map(title => title.textContent!.trim());
+    const cells = Array.from(grid.dataRowList.first.nativeElement.querySelectorAll('igx-grid-cell')) as HTMLElement[];
+    expect(titles[0]).toBe(`G${gen} C0`);
+    expect(cells[0].textContent!.trim()).toBe(`g${gen} r0 c0`);
+    expect(cells.length).withContext('cells follow the header window').toBe(titles.length);
+    expect(cells[cells.length - 1].textContent!.trim()).toBe(`g${gen} r0 c${titles.length - 1}`);
+    expect(grid.columns.length).toBe(DYNAMIC_COLUMNS_COUNT);
+    expect((grid.verticalScrollContainer as any).scrollComponent.size).toBe(DYNAMIC_COLUMNS_ROWS * grid.renderedRowHeight);
+    expect(grid.dataRowList.length).toBe(grid.verticalScrollContainer.state.chunkSize);
+    expect(grid.tbody.nativeElement.offsetHeight).toBe(grid.calcHeight);
+    return titles.length;
+}
+
+function expectDynamicColumnsGeometry(grid: IgxGridComponent, gen: number, width: string | null, hostWidth: number, rendered: number) {
+    const el: HTMLElement = grid.nativeElement;
+    const columnWidth = dynamicColumnWidth(gen);
+    expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
+    if (width === null) {
+        expect(el.style.width).toBe(`${DYNAMIC_COLUMNS_COUNT * columnWidth + grid.scrollSize}px`);
+        expect(el.offsetWidth).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth + grid.scrollSize);
+        expect(grid.isHorizontalScrollHidden).toBeTrue();
+        expect(rendered).toBe(DYNAMIC_COLUMNS_COUNT);
+    } else {
+        const hScroll = grid.headerContainer.getScroll() as HTMLElement;
+        expect(el.offsetWidth).toBe(hostWidth);
+        expect(grid.isHorizontalScrollHidden).toBeFalse();
+        expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
+        expect(hScroll.clientWidth).toBe(grid.unpinnedWidth);
+        expect(rendered).toBeLessThanOrEqual(Math.ceil(grid.unpinnedWidth / columnWidth) + 2);
+    }
 }
 
 @Component({
