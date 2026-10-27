@@ -247,6 +247,7 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
 }
 
 
+/* blazorCSSuppress */
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instance: FilteringStrategy = null!;
 
