@@ -182,6 +182,9 @@ describe('IgxLinearProgressBarComponent', () => {
         // A separate fixture, so the bar is first rendered with the value already set and animates it in.
         const initialFixture = TestBed.createComponent(IgxLinearProgressBarComponent);
         const bar = initialFixture.componentInstance;
+        // A "root"-prefixed id, so the TestBed renderer removes the host element on teardown
+        // (the id host binding would otherwise replace the root element id).
+        bar.id = "root2";
         bar.animationDuration = 600;
         bar.value = 100;
         initialFixture.detectChanges();
