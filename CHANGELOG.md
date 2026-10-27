@@ -32,6 +32,8 @@ All notable changes for each version of this project will be documented in this 
     - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
     - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
+    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
 - `IgxGridComponent`
