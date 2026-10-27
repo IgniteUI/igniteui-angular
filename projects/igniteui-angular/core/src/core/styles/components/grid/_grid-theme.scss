@@ -2376,6 +2376,20 @@
         padding-block: 0;
         overflow: hidden;
 
+        // A chip that is alone in the cell (a single filter, the last visible chip next to
+        // the +N indicator, the empty and the complex-filter chips) shrinks down to its
+        // icons and ellipsizes its label. Several chips keep their natural width so that
+        // updateVisibleFilters() can measure them.
+        .igx-filtering-chips > igx-chip:only-of-type,
+        > igx-chip:only-of-type {
+            min-width: min-content;
+            flex-shrink: 1;
+
+            .igx-chip__content {
+                text-align: start;
+            }
+        }
+
         igx-chips-area {
             transition: transform .25s $ease-out-back;
             flex-wrap: nowrap;
@@ -2417,8 +2431,17 @@
         }
     }
 
+    // Out of the flow but still measurable, updateVisibleFilters() reads its
+    // offsetWidth to reserve room for the badge.
     %igx-grid__filtering-cell-indicator--hidden {
+        position: absolute;
         visibility: hidden;
+        pointer-events: none;
+
+        // keep the badge out of the measured width, as in the visible state
+        .igx-badge {
+            position: absolute;
+        }
     }
 
     %igx-grid__filtering-row {
