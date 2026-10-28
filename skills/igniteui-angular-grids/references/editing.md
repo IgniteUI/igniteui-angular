@@ -394,6 +394,18 @@ onFormGroupCreated(event: IGridFormGroupCreatedEventArgs) {
 }
 ```
 
+### Validation and Error Tooltip Triggers
+
+`validationTrigger` controls when validation runs (`'change'` by default, or `'blur'`). `validationTooltipTrigger` controls when the error tooltip of an invalid cell is displayed:
+
+- `'active'` (default) — shown when an invalid cell becomes active and on error icon hover.
+- `'hover'` — shown only while hovering the error icon. The invalid state, error icon and invalid styles are kept.
+
+```html
+<igx-grid #grid [data]="data()" [primaryKey]="'id'" validationTrigger="blur" validationTooltipTrigger="hover">
+</igx-grid>
+```
+
 ### Validation Service
 
 The grid exposes a `validation` service:

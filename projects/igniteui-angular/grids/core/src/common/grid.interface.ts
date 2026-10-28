@@ -1,4 +1,4 @@
-import { FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryPosition, GridValidationTrigger, RowPinningPosition } from './enums';
+import { FilterMode, GridCellMergeMode, GridPagingMode, GridSelectionMode, GridSummaryPosition, GridValidationTooltipTrigger, GridValidationTrigger, RowPinningPosition } from './enums';
 import {
     ISearchInfo, IGridCellEventArgs, IRowSelectionEventArgs, IColumnSelectionEventArgs,
     IPinColumnCancellableEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs,
@@ -663,6 +663,10 @@ export interface GridType extends IGridDataBindable {
 
     /** The trigger for grid validation. It's value can either be `change` or `blur` */
     validationTrigger: GridValidationTrigger;
+
+    /** Determines when the validation error tooltip of an invalid cell is displayed. Its value can either be `active` or `hover` */
+    validationTooltipTrigger: GridValidationTooltipTrigger;
+
     /**
      * The configuration for columns and rows pinning in the grid
      * It's of type IPinningConfig, which can have value for columns (start, end) and for rows (top, bottom)

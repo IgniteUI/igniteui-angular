@@ -29,6 +29,13 @@ export type GridSummaryPosition = (typeof GridSummaryPosition)[keyof typeof Grid
 export type GridValidationTrigger = 'change' | 'blur' ;
 
 /**
+ * Type representing when the validation error tooltip of an invalid cell is displayed.
+ * - 'active': The tooltip is shown when an invalid cell becomes active and on error icon hover.
+ * - 'hover': The tooltip is shown only while hovering the error icon.
+ */
+export type GridValidationTooltipTrigger = 'active' | 'hover';
+
+/**
  * Type representing the type of the target object (elements of the grid) for keydown (fired when a key is pressed) events in the grid.
  * - 'dataCell': Represents a data cell within the grid. It contains and displays individual data values
  * - 'summaryCell': Summary cells display aggregated/summarized data at the bottom of the grid. They provide insights like total record count, min/max values, etc.

@@ -885,7 +885,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
 
     public ngAfterViewInit() {
         this.errorTooltip.changes.pipe(takeUntil(this._destroy$)).subscribe(() => {
-            if (this.errorTooltip.length > 0 && this.active) {
+            if (this.errorTooltip.length > 0 && this.active && this.openErrorTooltipOnActive) {
                 // error ocurred
                 this.cdr.detectChanges();
                 this.openErrorTooltip();
@@ -898,6 +898,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
      * @internal
      */
     public errorShowing = false;
+
+    private get openErrorTooltipOnActive(): boolean {
+        return this.grid.validationTooltipTrigger !== 'hover';
+    }
 
     private openErrorTooltip() {
         const tooltip = this.errorTooltip.first;
@@ -1146,7 +1150,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy, CellT
         this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex });
 
         const isTargetErrorIcon = event && event.target && event.target === this.errorIcon?.el.nativeElement
-        if (this.isInvalid && !isTargetErrorIcon) {
+        if (this.isInvalid && !isTargetErrorIcon && this.openErrorTooltipOnActive) {
             this.cdr.detectChanges();
             this.openErrorTooltip();
             this.grid.activeNodeChange.pipe(first()).subscribe(() => {

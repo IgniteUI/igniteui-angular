@@ -235,6 +235,126 @@ describe('IgxGrid - Validation #grid', () => {
             expect(cell.errorTooltip.first.collapsed).toBe(false);
         });
 
+        it('should show the error message when an invalid cell becomes active if validationTooltipTrigger is "active" (default).', async () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            expect(grid.validationTooltipTrigger).toBe('active');
+
+            let cell = getCell(grid, 1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell['element']);
+            cell.update('asd');
+            fixture.detectChanges();
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            UIInteractions.simulateClickAndSelectEvent(getCell(grid, 2, 1)['element']);
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            cell = getCell(grid, 1, 1);
+            GridFunctions.verifyCellValid(cell, false);
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
+
+            // activate via click
+            UIInteractions.simulateClickAndSelectEvent(cell['element']);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(cell.errorTooltip.first.collapsed).toBe(false);
+
+            // activate via keyboard navigation
+            GridFunctions.simulateGridContentKeydown(fixture, 'arrowdown');
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
+
+            GridFunctions.simulateGridContentKeydown(fixture, 'arrowup');
+            await fixture.whenStable();
+            fixture.detectChanges();
+            GridSelectionFunctions.verifyCellActive(cell, true);
+            expect(cell.errorTooltip.first.collapsed).toBe(false);
+        });
+
+        it('should not show the error message when a cell becomes invalid while editing if validationTooltipTrigger is "hover".', async () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            grid.validationTooltipTrigger = 'hover';
+            fixture.detectChanges();
+
+            let cell = getCell(grid, 1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell['element']);
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            input.value = 'asd';
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            cell = getCell(grid, 1, 1);
+            // the invalid state and the error indicator are kept
+            GridFunctions.verifyCellValid(cell, false);
+            GridSelectionFunctions.verifyCellActive(cell, true);
+            expect(cell['errorIcon']).toBeDefined();
+            expect(cell.errorTooltip.length).toBe(1);
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
+        });
+
+        it('should not show the error message when an invalid cell becomes active if validationTooltipTrigger is "hover".', async () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            grid.validationTooltipTrigger = 'hover';
+            fixture.detectChanges();
+
+            let cell = getCell(grid, 1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell['element']);
+            cell.update('asd');
+            fixture.detectChanges();
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            UIInteractions.simulateClickAndSelectEvent(getCell(grid, 2, 1)['element']);
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            // activate via click
+            cell = getCell(grid, 1, 1);
+            UIInteractions.simulateClickAndSelectEvent(cell['element']);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            GridSelectionFunctions.verifyCellActive(cell, true);
+            GridFunctions.verifyCellValid(cell, false);
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
+
+            // activate via keyboard navigation
+            GridFunctions.simulateGridContentKeydown(fixture, 'arrowdown');
+            await fixture.whenStable();
+            fixture.detectChanges();
+            GridFunctions.simulateGridContentKeydown(fixture, 'arrowup');
+            await fixture.whenStable();
+            fixture.detectChanges();
+            GridSelectionFunctions.verifyCellActive(cell, true);
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
+        });
+
+        it('should show the error message only on error icon hover if validationTooltipTrigger is "hover".', async () => {
+            const grid = fixture.componentInstance.grid as IgxGridComponent;
+            grid.validationTooltipTrigger = 'hover';
+            fixture.detectChanges();
+
+            let cell = getCell(grid, 1, 1);
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell['element']);
+            cell.update('asd');
+            fixture.detectChanges();
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            cell = getCell(grid, 1, 1);
+            expect(cell.errorTooltip.first.collapsed).toBe(true);
+
+            const element = fixture.debugElement.query(By.directive(IgxTooltipTargetDirective)).nativeElement;
+            vi.spyOn(element, 'matches').mockReturnValue(true);
+            element.dispatchEvent(new MouseEvent('pointerenter'));
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(cell.errorTooltip.first.collapsed).toBe(false);
+        });
+
         it('should allow preventing edit mode for cell/row to end by canceling the related event if isValid event argument is false', () => {
             const grid = fixture.componentInstance.grid as IgxGridComponent;
             grid.cellEdit.pipe(takeUntil($destroyer)).subscribe((args) => {
