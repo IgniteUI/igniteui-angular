@@ -83,25 +83,6 @@ $circumference: calc(#{$radius} * 2 * 3.1416);
     }
 }
 
-@keyframes igx-initial-dashoffset {
-    from {
-        /* Start with no progress (0%) */
-        stroke-dashoffset: #{$circumference};
-    }
-
-    to {
-        stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-    }
-}
-
-// Generic animations
-@keyframes igc-initial-counter {
-    from {
-        --_progress-integer: 0;
-        --_progress-fraction: 0;
-    }
-}
-
 @keyframes igx-rotate-center {
     0% {
         transform: rotate(0);

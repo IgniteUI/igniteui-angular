@@ -55,3 +55,77 @@
         }
     }
 }
+
+/* stylelint-disable max-nesting-depth -- the expected output nests @layer, @container and @scope inside sass-true's blocks */
+@include describe('Block') {
+    @include it('should scope the content to the component in the base layer') {
+        @include assert() {
+            @include output() {
+                @include scoping.block(combo) {
+                    :scope {
+                        display: flex;
+                    }
+                }
+            }
+
+            @include expect() {
+                @layer ig.base {
+                    @scope (.igx-combo) to (:scope [ig-scope] > *) {
+                        :scope {
+                            display: flex;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include it('should scope the content inside the theme layer and style query') {
+        @include assert() {
+            @include output() {
+                @include scoping.block(combo, $theme: indigo) {
+                    [data-part~='toggle'] {
+                        color: red;
+                    }
+                }
+            }
+
+            @include expect() {
+                @layer ig.indigo {
+                    @container style(--ig-theme: indigo) {
+                        @scope (.igx-combo) to (:scope [ig-scope] > *) {
+                            [data-part~='toggle'] {
+                                color: red;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include it('should also match the theme variant when one is given') {
+        @include assert() {
+            @include output() {
+                @include scoping.block(combo, $theme: indigo, $variant: dark) {
+                    :scope {
+                        --_border: 1px;
+                    }
+                }
+            }
+
+            @include expect() {
+                @layer ig.indigo {
+                    @container style(--ig-theme: indigo) and style(--ig-theme-variant: dark) {
+                        @scope (.igx-combo) to (:scope [ig-scope] > *) {
+                            :scope {
+                                --_border: 1px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
