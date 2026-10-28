@@ -338,12 +338,11 @@ export class PlatformUtil {
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      *
      * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+     * ```
      *
      * @remarks
-     * The last parameter is useful when the size of the element to measure is modified by a
-     * parent element that has explicit size. In such cases the calculated size is never lower
-     * and the function may instead remove the parent size while measuring to get the correct value.
-     * ```
+     * While measuring, the last parameter (usually the node itself) is laid out at its `max-content` width,
+     * so neither its explicit width nor a stretching parent affects the result.
      */
     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
@@ -358,7 +357,8 @@ export class PlatformUtil {
         if (sizeHoldingNode) {
             const style = sizeHoldingNode.style;
             nodeStyles = [style.width, style.minWidth, style.flexBasis];
-            style.width = '';
+            // not '' - a flex or grid parent may stretch the node
+            style.width = 'max-content';
             style.minWidth = '';
             style.flexBasis = '';
         }

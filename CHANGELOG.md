@@ -32,8 +32,16 @@ All notable changes for each version of this project will be documented in this 
     - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
     - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
+    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
+- `IgxGridComponent`
+    - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
+- `IgxPivotGridComponent`
+    - Autosizing a column now fits its content, instead of keeping its current width.
 - `IgxStepperComponent`
     - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
     - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
@@ -50,6 +58,8 @@ All notable changes for each version of this project will be documented in this 
     - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
     - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared. A custom `matchFn` now always receives a string, with an empty string passed when `inputValue` is `null` or `undefined`. The `IgxFilterOptions.inputValue` type now includes `null` and `undefined`.
     - The pipe now returns the items as they are, instead of `undefined`, when they are empty, `null` or `undefined`, or when no options are provided. The `filtered` event now emits an empty `filteredItems` array for empty items.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
 - `IgxSplitterComponent`
     - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
     - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
@@ -68,6 +78,13 @@ All notable changes for each version of this project will be documented in this 
     - The `outlet` input is now applied to the dropdown/dialog.
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
+
+## 22.2.4
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
 
 ## 22.2.3
 
