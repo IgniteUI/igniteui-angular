@@ -136,12 +136,19 @@ export class IgxIconComponent implements OnInit, OnChanges, OnDestroy {
 
         this.iconService.iconLoaded
             .pipe(
-                filter((e) => e.name === this.name && e.family === this.family),
+                // A reference can point to an SVG that loads after this icon renders.
+                filter((e) => (e.name === this.name && e.family === this.family) ||
+                    (e.name === this.iconRef?.name && e.family === this.iconRef?.family)),
                 takeUntil(this._destroy$),
             )
             .subscribe(() => {
+                const classes = this.elementClasses;
                 this.setIcon();
-                this.ref.detectChanges()
+                this.ref.detectChanges();
+                // The class host binding is refreshed with the parent view, which may be OnPush.
+                if (this.elementClasses !== classes) {
+                    this.ref.markForCheck();
+                }
             });
     }
 
