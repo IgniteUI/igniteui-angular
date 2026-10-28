@@ -1,11 +1,12 @@
-import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, createComponent, EnvironmentInjector } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
-import { InputResourceStringsEN, changei18n } from 'igniteui-angular/core';
+import { InputResourceStringsEN, changei18n, THEME_TOKEN } from 'igniteui-angular/core';
+import { config } from 'rxjs';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -258,6 +259,24 @@ describe('IgxInputGroup', () => {
         expect(fixture.componentInstance.indigoGroup.isTypeIndigo).toBe(true);
         expect(fixture.componentInstance.materialGroup.isTypeIndigo).toBe(false);
     }));
+
+    it('should not throw on theme change when no igxInput is projected', async () => {
+        const errors: unknown[] = [];
+        const previous = config.onUnhandledError;
+        config.onUnhandledError = error => errors.push(error);
+        const token = TestBed.inject(THEME_TOKEN);
+        // Mirrors the detached instance IgxStylesRegistrar.retain() creates
+        const ref = createComponent(IgxInputGroupComponent, { environmentInjector: TestBed.inject(EnvironmentInjector) });
+
+        try {
+            token.set(token.theme === 'fluent' ? 'material' : 'fluent');
+            await new Promise(resolve => setTimeout(resolve));
+            expect(errors).toEqual([]);
+        } finally {
+            config.onUnhandledError = previous;
+            ref.destroy();
+        }
+    });
 
     describe('Resource Strings', () => {
         it('should return full resource strings when partial resourceStrings are set', () => {
