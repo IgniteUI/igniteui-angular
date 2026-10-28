@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxHierarchicalGridActionStripComponent } from '../../../test-utils/hierarchical-grid-components.spec';
@@ -6,6 +6,8 @@ import { wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from 'igniteui-angular/grids/core';
+import { GridColumnDataType } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
     let fixture;
@@ -18,8 +20,8 @@ describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
         animationElem.dispatchEvent(endEvent);
     };
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridActionStripComponent
             ],
@@ -27,7 +29,7 @@ describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe(' Basic', () => {
         beforeEach(() => {
@@ -37,30 +39,53 @@ describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
             _actionStrip = fixture.componentInstance.actionStrip;
         });
 
+        it('Should format dates after leaving the editor in an uncommitted add row', () => {
+            const column = hierarchicalGrid.getColumnByName('ProductName');
+            column.dataType = GridColumnDataType.Date;
+            column.pipeArgs = { format: 'dd/MM/yyyy' };
+            fixture.componentInstance.data = [];
+            fixture.detectChanges();
+
+            hierarchicalGrid.beginAddRowById(null);
+            fixture.detectChanges();
+            const cell = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ProductName');
+            expect(cell.nativeElement?.textContent.trim()).toBe('ProductName');
+
+            cell.setEditMode(true);
+            fixture.detectChanges();
+            cell.editValue = new Date(2024, 0, 23);
+            hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ChildLevels').setEditMode(true);
+            fixture.detectChanges();
+
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(0).addRowUI).toBe(true);
+            expect(cell.editMode).toBe(false);
+            expect(cell.nativeElement?.textContent.trim()).toBe('23/01/2024');
+        });
+
         it('Should collapse an expanded record when beginAddRow is called for it', () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
-            expect(row.expanded).toBeTrue();
+            expect(row.expanded).toBe(true);
 
             row.beginAddRow();
             fixture.detectChanges();
-            expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+            expect(row.expanded).toBe(false);
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBe(true);
         });
 
         it('Should allow the expansion of a newly added (commited) record', async () => {
             const row = hierarchicalGrid.rowList.first;
             hierarchicalGrid.expandRow(row.key);
             fixture.detectChanges();
-            expect(row.expanded).toBeTrue();
+            expect(row.expanded).toBe(true);
 
             row.beginAddRow();
             fixture.detectChanges();
             endTransition();
-            expect(row.expanded).toBeFalse();
+            expect(row.expanded).toBe(false);
 
-            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBeTrue();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRowUI).toBe(true);
             hierarchicalGrid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
             hierarchicalGrid.addRowSnackbar.triggerAction();
@@ -71,10 +96,10 @@ describe('IgxHierarchicalGrid - Add Row UI #hGrid', () => {
 
             const newRowData = hierarchicalGrid.data[hierarchicalGrid.data.length - 1];
             const newRow = hierarchicalGrid.rowList.find(r => r.key === newRowData[hierarchicalGrid.primaryKey]);
-            expect(newRow.expanded).toBeFalse();
+            expect(newRow.expanded).toBe(false);
             hierarchicalGrid.expandRow(newRow.key);
             fixture.detectChanges();
-            expect(newRow.expanded).toBeTrue();
+            expect(newRow.expanded).toBe(true);
         });
 
         it('Should allow adding to child grid for parent row that has null/undefined child collection.', async () => {

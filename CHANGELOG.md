@@ -2,7 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-
 ## Unreleased
 
 ### General
@@ -35,6 +34,20 @@ All notable changes for each version of this project will be documented in this 
 
 ### Behavioral Changes
 
+- `IgxCarouselComponent`
+    - `stop()` is now a no-op when the carousel is not playing, so `carouselPaused` is no longer emitted for an already stopped carousel, for example on every `mouseenter` or when navigating with the keyboard past the first or last slide of a non-looping carousel.
+    - The carousel starts playing automatically only once, when its slides are initialized. Adding or removing slides no longer resumes a carousel that was stopped, unless its automatic rotation ended on the last slide of a non-looping carousel.
+    - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
+    - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
+    - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+- `IgxStepperComponent`
+    - In linear mode, the steps after the first invalid step that is not `optional` or `disabled` are disabled, wherever the active step is, as in the Ignite UI for Web Components stepper. Previously only the active step and the steps after it were checked, so an invalid `optional` active step disabled the steps after it, and an invalid step before the active one did not. The disabled steps are also recalculated when the `optional` state of a step changes, and the step activated with `navigateTo` or its `active` property is no longer displayed as disabled.
+    - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
+- `IgxSplitterComponent`
+    - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
+- `IgxTimePickerComponent`
+    - When `locale` is not set, the picker now follows the global locale set with `setCurrentI18n` and updates its default formats and resource strings when it changes, as the date picker does. Previously it kept the locale it was created with.
+    - `clear()` with a `Date` value now assigns a new `Date` with its time reset to `00:00:00` and notifies `ngModel` and reactive form controls. Previously it changed the bound `Date` object in place, so forms were not updated or re-validated.
 - `IgxComboComponent`, `IgxSimpleComboComponent`, `IgxDropDownComponent` and `IgxSelectComponent`
     - The components, their items and groups no longer opt out of Angular's default `OnPush` change detection with `ChangeDetectionStrategy.Eager`. Properties set from code still update the view, and combo records mutated in place still render on the next host check.
 - `IgxAutocompleteDirective`
@@ -45,6 +58,57 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
+- `IgxCarouselComponent`
+    - After slides are added or removed, the `aria-labelledby` of the slides now references the matching indicator.
+    - Destroying the carousel right after it is created no longer leaves an auto-play interval running.
+    - Enabling `gesturesSupport` after the carousel is initialized now enables the touch gestures.
+    - Touch pans no longer leave slides partially moved or visible behind the current slide, for example when a pan is cancelled, reversed past the first or last slide of a non-looping carousel, released as a tap, or interrupted by removing slides or changing `gesturesSupport` or `vertical`.
+    - Panning a carousel without slides no longer throws an error, and panning a carousel with a single slide no longer moves the slide against itself.
+    - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
+- `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
+    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
+- `IgxGridComponent`
+    - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
+- `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
+    - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
+- `IgxPivotGridComponent`
+    - Autosizing a column now fits its content, instead of keeping its current width.
+- `IgxStepperComponent`
+    - When the steps are rendered with `@for`, no `ExpressionChangedAfterItHasBeenCheckedError` is thrown on init in development mode, and the active step and the step indicators are rendered on init in `OnPush` hosts.
+    - `activeChange` is no longer emitted twice for the step activated on init, or for steps bound to `[active]="false"` that were not active. It is now emitted for the steps whose collapse animation is interrupted by changing `orientation`, `verticalAnimationType` or `horizontalAnimationType`.
+    - The active step now gets `tabindex="0"` when it is changed with `next`, `prev` or `navigateTo`.
+    - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
+    - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
+    - Setting `animationDuration` from code now applies it to the vertical animations as well.
+- `IgxFocusTrapDirective`, `IgxDialogComponent`
+    - Tab and Shift+Tab no longer get stuck on elements that cannot receive focus. Hidden inputs, elements that are not rendered or are invisible, elements with a negative `tabindex`, and elements inside a disabled `fieldset` or an `inert` container are now skipped. The `summary` of a `details` element and `contenteditable` editing hosts are now focused.
+    - When the focused element is not part of the tab order (e.g. an element with `tabindex="-1"` or a focused shadow host), Tab and Shift+Tab now move focus to the next or previous focusable element instead of the first or last one.
+    - The keydown listener is now removed when the directive is destroyed.
+- `IgxFilterDirective`, `IgxFilterPipe`
+    - When filtering by multiple keys, an item matched by any of the keys is no longer hidden when the last key does not match, and `metConditionFn` / `overdueConditionFn` are called once per item instead of once per key.
+    - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
+    - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared. A custom `matchFn` now always receives a string, with an empty string passed when `inputValue` is `null` or `undefined`. The `IgxFilterOptions.inputValue` type now includes `null` and `undefined`.
+    - The pipe now returns the items as they are, instead of `undefined`, when they are empty, `null` or `undefined`, or when no options are provided. The `filtered` event now emits an empty `filteredItems` array for empty items.
+- `IgxSplitterComponent`
+    - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
+    - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
+    - Releasing a dragged splitter bar now always applies the pane sizes and emits `resizeEnd`, including when the pointer is released at the drag start point.
+    - A splitter bar dragged across the resize direction no longer moves away from its position.
+    - `Ctrl` + arrow keys no longer collapse panes when `nonCollapsible` is set.
+    - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
+- `IgxSplitterPaneComponent`
+    - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxTimePickerComponent`
+    - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
+    - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
+    - The dialog header and the dropdown/dialog lists now update when the locale, format or `spinLoop` change while the picker is open.
+    - A value or `minValue` that does not match `itemsDelta` is now rounded up to the next available item, for example `10:58` with a minutes delta of `7` selects `11:00` instead of `11:03`. When rounding up passes the last available item, the last item is selected.
+    - Switching from AM to PM in the dropdown/dialog no longer selects a time later than `maxValue`.
+    - The `outlet` input is now applied to the dropdown/dialog.
+    - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
+    - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
 - `IgxIconComponent`
     - An icon that resolves through a reference, such as the toggle icon of `igx-select`, now updates as soon as an SVG is registered for the icon its reference points to, with `addSvgIconFromText` or, once the SVG loads, with `addSvgIcon`. Previously it waited until the view that contains it was checked again, or until its own inputs changed.
     - When `setIconRef` or a `THEME_TOKEN` change points the reference of an icon to an icon with other classes, such as one from another family, the icon now also marks the view that contains it for check, so it takes the new classes in an `OnPush` view, such as an app component with `ChangeDetectionStrategy.OnPush`. Previously it kept the old classes, for example the old family class around the new icon, until that view was checked again.
@@ -56,6 +120,60 @@ All notable changes for each version of this project will be documented in this 
     - Fixed the keyboard focus moving to another record when the list was scrolled after Space selected or deselected the focused item. The list reuses its rows for other records as it scrolls, and the focus went with the row: the next arrow key started from the record the row showed then, Space selected or deselected that record, and `aria-activedescendant` named the row. The focus now stays on the record.
 - `IgxToggleDirective`
     - A toggle whose `id` binding changes, such as the toggle of an `igx-drop-down` or `igx-select` whose `id` binding changes, now moves its `IgxNavigationService` entry to the new `id`, so `igxToggleAction` and `IgxNavigationService` find it by that `id`. Previously it stayed registered under its first `id`, even after it was destroyed. Destroying a toggle also no longer removes another component's entry under the same `id`.
+
+## 22.2.4
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
+
+## 22.2.3
+
+### Bug Fixes
+
+- `IgxDialogComponent`
+    - Fixed `open()` leaving dialogs hidden when called through an `OnPush` child component from a parent or an asynchronous callback, in both zoneless and ZoneJS applications.
+- `IgxGridExcelStyleFilteringComponent`
+    - Menu spacing now follows `--ig-size` when `minHeight` or `maxHeight` is set, including when rendered in an external outlet or outside the grid. Previously it could fall back to large spacing (#17589).
+- **Forms**
+    - `igxInput`, `igx-select`, `igx-combo`, `igx-simple-combo`, `igx-date-picker`, `igx-time-picker` and `igx-date-range-picker` bound to Signal Forms now show the success state again when edited to another valid value after a blur (#17648).
+
+## 22.2.2
+
+### New Features
+
+- `IgxTabs`
+    - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
+    - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
+
+### Bug Fixes
+
+- **Forms**
+    - `igx-checkbox`, `igx-switch` and `igx-radio-group` no longer turn invalid while the bound Signal Forms field is untouched and pristine, e.g. right after `reset()` or when a cross-field rule makes a pristine field required. The invalid state now shows only once the field is touched or dirty, as with reactive and template-driven forms.
+- `IgxTabsComponent`
+    - The selected tab is now rendered correctly in zoneless applications, including the initially selected tab, selection changes made from code, and selection changes after tabs are added or removed.
+- `IgxChipComponent`
+    - A selected chip now regains focus after it is dragged and dropped. Previously focus was lost.
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - A combo used in a virtualized grid cell template with its `id` bound to row data no longer shows the selection of a combo from another row after the grid is scrolled.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - `recalculateAutoSizes()` now resizes auto-sized columns to the new content in zoneless applications. Previously the columns could keep their previous widths.
+    - With multiple cell selection, the selected cell is no longer lost when `Shift` + arrow keys are pressed at the edge of the grid, so a following `Ctrl` + click keeps both selections.
+    - `findNext`, `findPrev` and navigating to a row on another page now scroll to the row after the page changes. Previously the grid changed the page but did not scroll to the row.
+- `IgxHierarchicalGridComponent`
+    - Child grids no longer fail to initialize or throw `ExpressionChangedAfterItHasBeenCheckedError` when rows are expanded from code running outside the Angular zone or in zoneless applications.
+    - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.
+- `IgxOverlayService`
+    - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
+
+## 23.0.0
+
+### New Features
+
+- `IgxTabs`
+    - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
+    - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
 
 ## 22.2.1
 
@@ -105,6 +223,13 @@ All notable changes for each version of this project will be documented in this 
     - Setting `expandChildren` now also applies to child grids that are not in the DOM at the time, for example scrolled out of view, when they are rendered again. Previously they kept their previous state.
     - A row island added conditionally inside another row island, for example with `@if`, as well as a nested `igc-row-island` in Ignite UI for Web Components, is now registered under its parent row island. Previously it was registered as a top-level row island, so its child grids were missing from the parent row island's child grids and were not cleaned up when the row island was removed.
     - `resourceStrings` now returns the resource strings of the root grid when none are set on the row island, as documented, instead of the default ones.
+- `IgxQueryBuilderComponent`
+    - When reordering conditions with the keyboard, `Space` now drops the dragged condition at the chosen location, like `Enter`. Previously it did nothing.
+    - Pressing `Enter` or `Space` during a keyboard drag before a drop location is chosen no longer deletes the dragged condition.
+    - During a keyboard drag, the arrow keys and the `Enter`/`Space` keys that drop the condition no longer scroll the page or the expressions container.
+    - During a keyboard drag, `Tab` and `Shift+Tab` are ignored while the drop ghost is shown, so focus stays on it until the condition is dropped (`Enter`/`Space`) or the drag is cancelled (`Escape`). Previously they cancelled the drag and focus was lost.
+    - While a condition is dragged with the mouse, the arrow keys, `Enter` and `Space` no longer move or drop it, and focusing another condition's drag indicator no longer starts a keyboard drag. Previously, after moving focus into the tree, the keyboard could move the drop ghost or drop the condition while the mouse button was still held.
+    - Selecting a `time` field that has no `editorOptions` no longer throws an error.
 
 ## 22.2.0
 

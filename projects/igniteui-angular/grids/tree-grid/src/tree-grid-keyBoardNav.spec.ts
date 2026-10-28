@@ -1,28 +1,27 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridManyColumnsComponent, IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
-import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait, frames, nextFrame, waitForSelectionChange } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { DebugElement, provideZonelessChangeDetection } from '@angular/core';
 import { filter, firstValueFrom } from 'rxjs';
 import { CellType } from 'igniteui-angular/grids/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../../grid/src/grid-base.directive';
 
-const DEBOUNCETIME = 60;
-
 describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridWithNoScrollsComponent,
                 IgxTreeGridWithScrollsComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Navigation with no scroll', () => {
         let fix;
@@ -37,7 +36,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should navigate with arrow keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -72,7 +71,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -106,7 +105,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(0, 'HireDate');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -140,7 +139,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(4, 'Name');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -174,7 +173,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Left/Right keys are pressed', () => {
-            spyOn(treeGrid.rowToggle, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowToggle, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
@@ -222,7 +221,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should expand/collapse row when Alt + arrow Up/Down keys are pressed', () => {
-            spyOn(treeGrid.rowToggle, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowToggle, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(3, 'HireDate');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
@@ -270,7 +269,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should not change selection when press Alt + arrow Left/Right keys on a cell in a row without children', () => {
-            spyOn(treeGrid.rowToggle, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.rowToggle, 'emit');
             const cell = treeGrid.gridAPI.get_cell_by_index(1, 'Name');
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(10);
@@ -396,8 +395,8 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         let gridContent: DebugElement;
         const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
-        beforeEach(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 providers: [{ provide: SCROLL_THROTTLE_TIME_MULTIPLIER, useValue: 0 }]
             });
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);
@@ -413,7 +412,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should navigate with arrow Up and Down keys', async () => {
             fix.autoDetectChanges();
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             const firstCell: CellType = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -448,7 +447,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should navigate with arrow Left and Right', async () => {
             const firstCell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[0]);
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
 
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -460,7 +459,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 0; i < treeColumns.length - 1; i++) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[i]);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[i + 1]);
@@ -478,7 +477,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = treeColumns.length - 1; i > 0; i--) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[i]);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-                await wait(DEBOUNCETIME);
+                await nextFrame();
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(3, treeColumns[i - 1]);
@@ -496,7 +495,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the top/bottom cell when navigate with Ctrl + arrow Up/Down', async () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(1, 'Name');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -506,7 +505,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(9, 'Name');
@@ -514,7 +513,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(100);
+            await nextFrame();
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(0, 'Name');
@@ -523,7 +522,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should move to the leftmost/rightmost cell when navigate with Ctrl + arrow Left/Right keys', async () => {
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(4, treeColumns[1]);
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -533,7 +532,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(4, treeColumns[treeColumns.length - 1]);
@@ -541,7 +540,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(2);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(4, treeColumns[0]);
@@ -549,7 +548,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(3);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(4, treeColumns[treeColumns.length - 1]);
@@ -558,7 +557,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should move to the top left/bottom right cell when navigate with Ctrl + Home/End keys', async () => {
             fix.autoDetectChanges();
-            spyOn(treeGrid.selected, 'emit').and.callThrough();
+            vi.spyOn(treeGrid.selected, 'emit');
             let cell = treeGrid.gridAPI.get_cell_by_index(2, treeColumns[2]);
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -567,16 +566,18 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(1);
 
+            let selected = waitForSelectionChange(treeGrid);
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent, false, false, true);
-            await wait(100);
+            await selected;
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(9, treeColumns[treeColumns.length - 1]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(2);
 
+            selected = waitForSelectionChange(treeGrid);
             UIInteractions.triggerEventHandlerKeyDown('Home', gridContent, false, false, true);
-            await wait(100);
+            await selected;
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(0, treeColumns[0]);
@@ -586,10 +587,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should expand/collapse row when Alt + arrow Left/Right keys are pressed', async () => {
             treeGrid.width = '400px';
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
             treeGrid.headerContainer.scrollTo(4);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             const cell = treeGrid.gridAPI.get_cell_by_index(3, 'OnPTO');
@@ -597,7 +598,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -606,7 +607,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[3]);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
@@ -625,7 +626,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             // testing the pagedown key
             UIInteractions.triggerEventHandlerKeyDown('PageDown', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             currScrollTop = treeGrid.verticalScrollContainer.getScroll().scrollTop;
@@ -633,7 +634,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             // testing the pageup key
             UIInteractions.triggerEventHandlerKeyDown('PageUp', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             currScrollTop = treeGrid.headerContainer.getScroll().scrollTop;
@@ -659,8 +660,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             for (let i = 2; i < treeColumns.length - 1; i++) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[i]);
+                const selected = waitForSelectionChange(treeGrid);
                 UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent);
-                await wait(DEBOUNCETIME);
+                await selected;
                 fix.detectChanges();
 
                 cell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[i + 1]);
@@ -669,17 +671,19 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             }
 
             let newCell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[4]);
+            let rowSelected = waitForSelectionChange(treeGrid);
             UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent);
-            await wait(DEBOUNCETIME * 2);
+            await rowSelected;
             fix.detectChanges();
 
             newCell = treeGrid.gridAPI.get_cell_by_index(6, treeColumns[0]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
             expect(newCell.editMode).toBe(true);
-            expect( treeGrid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
+            expect(treeGrid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
 
+            rowSelected = waitForSelectionChange(treeGrid);
             UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent, false, true);
-            await wait(DEBOUNCETIME * 2);
+            await rowSelected;
             fix.detectChanges();
 
             newCell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[4]);
@@ -688,8 +692,9 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             for (let i = 4; i > 0; i--) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[i]);
+                const selected = waitForSelectionChange(treeGrid);
                 UIInteractions.triggerEventHandlerKeyDown('Tab', gridContent, false, true);
-                await wait(DEBOUNCETIME);
+                await selected;
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(5, treeColumns[i - 1]);
@@ -708,18 +713,20 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
+            const scrolled = firstValueFrom(treeGrid.gridScroll);
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent);
-            await wait(DEBOUNCETIME);
+            // the next change detection completes the navigation once the grid handles the scroll
+            await scrolled;
             fix.detectChanges();
 
             const lastCell = treeGrid.gridAPI.get_cell_by_index(3, columns[4]);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, lastCell);
             expect(treeGrid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
 
-            for (let i = 4; i > 0 ; i--) {
+            for (let i = 4; i > 0; i--) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(3, columns[i]);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
-                await wait(DEBOUNCETIME);
+                await frames(2);
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(3, columns[i - 1]);
@@ -739,8 +746,10 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
+            const scrolled = firstValueFrom(treeGrid.gridScroll);
             UIInteractions.triggerEventHandlerKeyDown('End', gridContent);
-            await wait(DEBOUNCETIME);
+            // the next change detection completes the navigation once the grid handles the scroll
+            await scrolled;
             fix.detectChanges();
 
             let newCell = treeGrid.gridAPI.get_cell_by_index(0, columns[4]);
@@ -754,7 +763,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             for (let i = 0; i < columns.length - 1; i++) {
                 let cell = treeGrid.gridAPI.get_cell_by_index(0, columns[i]);
                 UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent);
-                await wait(DEBOUNCETIME);
+                await frames(2);
                 fix.detectChanges();
                 TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
                 cell = treeGrid.gridAPI.get_cell_by_index(0, columns[i + 1]);
@@ -762,7 +771,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             }
 
             UIInteractions.triggerEventHandlerKeyDown('Home', gridContent);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             newCell = treeGrid.gridAPI.get_cell_by_index(0, columns[0]);
@@ -780,7 +789,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -797,7 +806,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.moveCellLeftRight(fix, treeGrid, 0, 'Name', 'ID', false);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -816,7 +825,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
             // Go to the last parent row and expand collapse
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             cell = treeGrid.gridAPI.get_cell_by_index(9, 'ID');
@@ -826,7 +835,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             cell = treeGrid.gridAPI.get_cell_by_index(8, 'ID');
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -839,7 +848,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             TreeGridFunctions.moveCellLeftRight(fix, treeGrid, 8, 'Name', 'ID', false);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowRight', gridContent, true);
-            await wait(DEBOUNCETIME);
+            await nextFrame();
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -873,7 +882,7 @@ describe('IgxTreeGrid keyboard navigation in zoneless change detection #tGrid', 
     });
 
     it('should activate a virtualized target cell with Ctrl + End', async () => {
-        spyOn(treeGrid.selected, 'emit').and.callThrough();
+        vi.spyOn(treeGrid.selected, 'emit');
         const horizontalScroll = treeGrid.headerContainer.getScroll();
         expect(horizontalScroll.scrollWidth).toBeGreaterThan(horizontalScroll.clientWidth);
         expect(treeGrid.gridAPI.get_cell_by_index(2, treeColumns[treeColumns.length - 1])).toBeUndefined();

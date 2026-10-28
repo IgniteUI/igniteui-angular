@@ -86,7 +86,7 @@ export class IgxSelectionAPIService {
 
     /**
      * Clears the selection of an id that a component moved away from, and drops the id's version.
-     * The selection stays readable, as another component can take the id over, such as a combo
+     * The selection stays readable, as another component can take the id over, such as a drop-down
      * recycled in a grid cell; its readers start a new version when they run again.
      *
      * @param componentID The id the component no longer uses.

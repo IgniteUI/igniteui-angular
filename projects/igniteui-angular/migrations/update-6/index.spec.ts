@@ -13,10 +13,7 @@ describe('Update 6.0.0', () => {
 
     /* eslint-disable arrow-parens */
     it('should update igx-tab-bar selector', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            '<igx-tab-bar> <content> </igx-tab-bar>'
-        );
+        appTree.create('/testSrc/appPrefix/component/test.component.html', '<igx-tab-bar> <content> </igx-tab-bar>');
 
         const tree = await schematicRunner.runSchematic('migration-01', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
@@ -24,13 +21,10 @@ describe('Update 6.0.0', () => {
     });
 
     it('should remove igxForRemote directive', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.html',
-            `<tag attr igxForRemote="true" attr2><tag attr [igxForRemote]="true">`
-        );
+        appTree.create('/testSrc/appPrefix/component/test.component.html', `<tag attr igxForRemote="true" attr2><tag attr [igxForRemote]="true">`);
 
         const tree = await schematicRunner.runSchematic('migration-01', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-                .toEqual('<tag attr attr2><tag attr>');
+            .toEqual('<tag attr attr2><tag attr>');
     });
 });
