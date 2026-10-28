@@ -73,22 +73,22 @@ $_theme: digest-schema($bootstrap-tabs);
             }
         }
 
-        @each $side, $content-side in (left: right, right: left) {
+        @each $side, $content-side in (start: end, end: start) {
             .igx-tabs-header--#{$side} & {
                 border-radius: 0;
-                border-top-#{$side}-radius: var-get($_theme, 'border-radius');
-                border-bottom-#{$side}-radius: var-get($_theme, 'border-radius');
+                border-start-#{$side}-radius: var-get($_theme, 'border-radius');
+                border-end-#{$side}-radius: var-get($_theme, 'border-radius');
 
                 &:focus {
-                    border-top-#{$content-side}-radius: rem(4px);
-                    border-bottom-#{$content-side}-radius: rem(4px);
-                    border-bottom-#{$side}-radius: var-get($_theme, 'border-radius');
+                    border-start-#{$content-side}-radius: rem(4px);
+                    border-end-#{$content-side}-radius: rem(4px);
+                    border-end-#{$side}-radius: var-get($_theme, 'border-radius');
                 }
             }
 
             .igx-tabs-header--#{$side} &--selected:not(:focus)::before {
                 inset: 0 auto;
-                #{$content-side}: 0;
+                inset-inline-#{$content-side}: 0;
                 width: rem(1px);
                 height: 100%;
                 background: _selected-edge(to bottom, 'item-active-background');

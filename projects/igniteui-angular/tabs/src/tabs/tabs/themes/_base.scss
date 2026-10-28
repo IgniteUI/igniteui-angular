@@ -15,20 +15,12 @@ $theme: digest-schema($material-tabs);
         flex-direction: column;
         overflow: hidden;
 
-        @include m(left) {
+        @include m(start) {
             flex-direction: row;
-
-            &:dir(rtl) {
-                flex-direction: row-reverse;
-            }
         }
 
-        @include m(right) {
+        @include m(end) {
             flex-direction: row-reverse;
-
-            &:dir(rtl) {
-                flex-direction: row;
-            }
         }
     }
 
@@ -99,10 +91,12 @@ $theme: digest-schema($material-tabs);
             }
         }
 
-        @include m(left) {
-            @include e(active-indicator) {
-                left: auto;
-                right: 0;
+        @each $side, $content-side in (start: end, end: start) {
+            @include m($side) {
+                @include e(active-indicator) {
+                    left: auto;
+                    inset-inline-#{$content-side}: 0;
+                }
             }
         }
     }

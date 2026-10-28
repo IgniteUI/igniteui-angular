@@ -1,7 +1,7 @@
 # igx-tabs
 
 ## Description
-_igx-tabs component allows you to add a tabs component with tab items and item content in your application. The tab headers are placed at the top, or on the left or right side of the content. The tabs in Ignite UI for Angular can be composed with the following components and directives:_
+_igx-tabs component allows you to add a tabs component with tab items and item content in your application. The tab headers are placed above the content or in a column beside it. The tabs in Ignite UI for Angular can be composed with the following components and directives:_
 
 -  *igx-tab-item* - single content area that holds header and content components
 -  *igx-tab-header* - holds the title and/or icon of the item and you can add them with `igxTabHeaderIcon` and `igxTabHeaderLabel`
@@ -61,9 +61,9 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 ### Header position
 
-By default the tab headers are placed in a row above the content. Set `headerPosition` to `left` or `right` to place them in a column on that side of the content:
+By default the tab headers are placed in a row above the content. Set `headerPosition` to `start` or `end` to place them in a column before or after the content:
 
-    <igx-tabs headerPosition="left" style="height: 320px">
+    <igx-tabs headerPosition="start" style="height: 320px">
         <igx-tab-item>
             <igx-tab-header>
                 <span igxTabHeaderLabel>Inbox</span>
@@ -73,7 +73,7 @@ By default the tab headers are placed in a row above the content. Set `headerPos
         ...
     </igx-tabs>
 
-- `left` and `right` are physical sides, also in right-to-left layouts.
+- `start` and `end` follow the text direction, so `start` is on the right in right-to-left layouts.
 - When the headers do not fit in the height of the tabs, the scroll buttons above and below them scroll them up and down.
 - `tabAlignment` aligns the headers along the column, and with `justify` they share its height.
 - The Up and Down arrow keys move between the tabs. Home, End and `activation` work as in a row.
@@ -89,7 +89,7 @@ By default the tab headers are placed in a row above the content. Set `headerPos
 |:----------|:-------------:|:------|
 | `items` |  QueryList<IgxTabItemDirective> | Observable collection of `IgxTabItemDirective` content children. |
 | `tabAlignment` |  string | Property which determines the tab alignment. Defaults to `start`. |
-| `headerPosition` | `'top'` \| `'left'` \| `'right'` | Determines on which side of the content the tab headers are placed. Defaults to `top`. |
+| `headerPosition` | `'top'` \| `'start'` \| `'end'` | Determines on which side of the content the tab headers are placed. Defaults to `top`. |
 | `selectedIndex` | number | Gets/Sets the index of selected tab in the respective collection. Default value is 0 if content is defined, otherwise defaults to -1. |
 | `disableAnimation` | boolean | Enables/disables the transition animation of the content. |
 | `selectedItem` | IgxTabItemDirective | Gets the selected `IgxTabItemDirective` in the igx-tabs based on selectedIndex. |

@@ -7,15 +7,10 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 
 - `IgxTabsComponent`
-    - Added the `headerPosition` input, which places the tab headers in a row above the content (`top`, the default) or in a column on the `left` or `right` side of the content. `left` and `right` are physical sides, also in right-to-left layouts. In a column, the headers are navigated with the Up and Down arrow keys, the scroll buttons above and below them scroll them up and down when they do not fit in the height of the tabs, `tabAlignment` aligns them along the column and the active indicator is on the side next to the content. Changing `headerPosition` at runtime keeps the selected tab and does not emit selection events.
+    - Added the `headerPosition` input, which places the tab headers above the content (`top`, the default) or in a column before (`start`) or after (`end`) it in the text direction, so `start` is on the right in right-to-left layouts. In a column, the headers are navigated with the Up and Down arrow keys and scroll when they do not fit in the height of the tabs.
 
         ```html
-        <igx-tabs headerPosition="left">
-            <igx-tab-item>
-                <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
-                <igx-tab-content>Content 1</igx-tab-content>
-            </igx-tab-item>
-        </igx-tabs>
+        <igx-tabs headerPosition="start">...</igx-tabs>
         ```
 
 ### Behavioral Changes

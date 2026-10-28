@@ -38,6 +38,9 @@ const contentOf = (tabs: IgxTabsComponent) =>
 const expectNear = (actual: number, expected: number, tolerance = 1) =>
     expect(Math.abs(actual - expected), `${actual} should be within ${tolerance}px of ${expected}`).toBeLessThanOrEqual(tolerance);
 
+const isLeftColumn = (tabs: IgxTabsComponent, position: IgxTabsHeaderPosition) =>
+    (position === 'start') === (getComputedStyle(tabs.headerContainer.nativeElement).direction === 'ltr');
+
 const expectHeaderLayout = (tabs: IgxTabsComponent, position: IgxTabsHeaderPosition) => {
     const host = rectOf(tabs.headerContainer.nativeElement.parentElement);
     const headerContainer = rectOf(tabs.headerContainer.nativeElement);
@@ -59,7 +62,7 @@ const expectHeaderLayout = (tabs: IgxTabsComponent, position: IgxTabsHeaderPosit
     expectNear(headerContainer.width + content.width, host.width);
     expect(content.width).toBeGreaterThan(0);
 
-    if (position === 'left') {
+    if (isLeftColumn(tabs, position)) {
         expectNear(headerContainer.left, host.left);
         expect(headerContainer.right).toBeLessThanOrEqual(content.left + 1);
     } else {
@@ -92,7 +95,7 @@ const expectIndicatorAt = (tabs: IgxTabsComponent, header: HTMLElement, position
     expectNear(indicator.top, headerRect.top);
     expectNear(indicator.height, headerRect.height);
     expectNear(indicator.width, thickness, 0.5);
-    if (position === 'left') {
+    if (isLeftColumn(tabs, position)) {
         expectNear(indicator.right, headerContainer.right);
     } else {
         expectNear(indicator.left, headerContainer.left);
@@ -1759,7 +1762,7 @@ describe('IgxTabs', () => {
             return errors;
         };
 
-        for (const position of ['left', 'right'] as const) {
+        for (const position of ['start', 'end'] as const) {
             for (const dir of ['ltr', 'rtl'] as const) {
                 it(`should place the headers in a column on the ${position} side of the content (${dir})`, async () => {
                     await createTabs(component => {
@@ -1795,7 +1798,7 @@ describe('IgxTabs', () => {
             action.focus();
             const events = spyOnSelectionEvents();
 
-            for (const position of ['left', 'right', 'top', 'right', 'left', 'top'] as const) {
+            for (const position of ['start', 'end', 'top', 'end', 'start', 'top'] as const) {
                 host.headerPosition.set(position);
                 await settle();
 
@@ -1824,7 +1827,7 @@ describe('IgxTabs', () => {
         for (const dir of ['ltr', 'rtl'] as const) {
             it(`should select the next and previous enabled tab with ArrowDown and ArrowUp in a column of headers (${dir})`, async () => {
                 await createTabs(component => {
-                    component.headerPosition.set('left');
+                    component.headerPosition.set('start');
                     component.dir.set(dir);
                     component.items.update(items => items.map((item, i) => ({ ...item, disabled: i === 2 || i === 5 })));
                 });
@@ -1864,7 +1867,7 @@ describe('IgxTabs', () => {
             }
         });
 
-        for (const position of ['top', 'left'] as const) {
+        for (const position of ['top', 'start'] as const) {
             it(`should scroll the header focused in manual activation into view when the headers do not fit (${position})`, async () => {
                 await createTabs(component => {
                     limitSize(component, position, 200);
@@ -1892,7 +1895,7 @@ describe('IgxTabs', () => {
 
         it('should keep the focused header in view when the header position changes', async () => {
             await createTabs(component => {
-                component.headerPosition.set('left');
+                component.headerPosition.set('start');
                 component.height.set('240px');
                 component.activation.set('manual');
             });
@@ -1901,7 +1904,7 @@ describe('IgxTabs', () => {
             keyDown(headers[0], 'End');
             await vi.waitFor(() => expectInView(tabs, headers[7]));
 
-            for (const position of ['top', 'right', 'left', 'top'] as const) {
+            for (const position of ['top', 'end', 'start', 'top'] as const) {
                 host.headerPosition.set(position);
                 await settle();
 
@@ -1918,7 +1921,7 @@ describe('IgxTabs', () => {
             const button = document.createElement('button');
             headers[6].appendChild(button);
             button.focus({ preventScroll: true });
-            host.headerPosition.set('left');
+            host.headerPosition.set('start');
             await settle();
             await vi.waitFor(() => expectInView(tabs, headers[6]));
         });
@@ -1926,7 +1929,7 @@ describe('IgxTabs', () => {
         for (const dir of ['ltr', 'rtl'] as const) {
             it(`should scroll a column of headers with a limited height up and down with the scroll buttons (${dir})`, async () => {
                 await createTabs(component => {
-                    component.headerPosition.set('left');
+                    component.headerPosition.set('start');
                     component.height.set('240px');
                     component.dir.set(dir);
                 });
@@ -1969,14 +1972,14 @@ describe('IgxTabs', () => {
 
         it('should scroll the selected header into view in a column of headers with a limited height', async () => {
             await createTabs(component => {
-                component.headerPosition.set('right');
+                component.headerPosition.set('end');
                 component.height.set('240px');
                 component.tabs.selectedIndex = 7;
             });
             const headers = headersOf(tabs);
             await vi.waitFor(() => {
                 expectInView(tabs, headers[7]);
-                expectIndicatorAt(tabs, headers[7], 'right');
+                expectIndicatorAt(tabs, headers[7], 'end');
             });
 
             tabs.items.get(0).selected = true;
@@ -1984,11 +1987,11 @@ describe('IgxTabs', () => {
             expect(tabs.offset).toBe(0);
             await vi.waitFor(() => {
                 expectInView(tabs, headers[0]);
-                expectIndicatorAt(tabs, headers[0], 'right');
+                expectIndicatorAt(tabs, headers[0], 'end');
             });
         });
 
-        for (const position of ['top', 'left'] as const) {
+        for (const position of ['top', 'start'] as const) {
             it(`should keep the scroll offset in range when the headers get fewer or the tabs larger (${position})`, async () => {
                 await createTabs(component => limitSize(component, position, 240));
                 const viewPort = tabs.viewPort.nativeElement;
@@ -2027,7 +2030,7 @@ describe('IgxTabs', () => {
 
         it('should show and hide the scroll buttons when the headers in a column change their height', async () => {
             await createTabs(component => {
-                component.headerPosition.set('left');
+                component.headerPosition.set('start');
                 component.height.set('320px');
                 component.items.update(items => items.slice(0, 3));
             });
@@ -2054,7 +2057,7 @@ describe('IgxTabs', () => {
             expect(resizeObserverErrors).toEqual([]);
         });
 
-        for (const position of ['top', 'left'] as const) {
+        for (const position of ['top', 'start'] as const) {
             it(`should scroll the headers when the last header is not displayed (${position})`, async () => {
                 await createTabs(component => limitSize(component, position, 200));
                 const headers = headersOf(tabs);
@@ -2079,7 +2082,7 @@ describe('IgxTabs', () => {
             // No icons, which change the header heights when the icon font loads
             const items = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, label: `Tab ${i + 1}`, spacer: i === 1 ? 24 : undefined }));
             await createTabs(component => {
-                component.headerPosition.set('left');
+                component.headerPosition.set('start');
                 component.height.set('480px');
                 component.items.set(items.slice(0, 3));
             });
@@ -2103,7 +2106,7 @@ describe('IgxTabs', () => {
                 expectNear(rectOf(headers[2]).bottom, viewPort().bottom);
                 headers.forEach((header, i) => expect(rectOf(header).height).toBeGreaterThan(heights[i]));
                 expect(rectOf(headers[1]).height - rectOf(headers[0]).height).toBeGreaterThanOrEqual(heights[1] - heights[0]);
-                expectIndicatorAt(tabs, headers[0], 'left');
+                expectIndicatorAt(tabs, headers[0], 'start');
             });
 
             host.items.set(items);
@@ -2122,7 +2125,7 @@ describe('IgxTabs', () => {
         });
 
         it('should not display the scroll buttons of a column before its headers are measured', async () => {
-            await createTabs(component => component.headerPosition.set('left'));
+            await createTabs(component => component.headerPosition.set('start'));
             const buttons = [tabs.scrollPrevButton.nativeElement, tabs.scrollNextButton.nativeElement];
             const height = rectOf(tabs.headerContainer.nativeElement).height;
 
@@ -2143,7 +2146,7 @@ describe('IgxTabs', () => {
             });
             const headers = headersOf(tabs);
 
-            host.headerPosition.set('left');
+            host.headerPosition.set('start');
             await settle();
             await Promise.all(headers.flatMap(header => header.getAnimations()).map(animation => animation.finished));
 
@@ -2151,7 +2154,7 @@ describe('IgxTabs', () => {
         });
 
         it('should hide the scroll buttons when the height limit of a column is removed', async () => {
-            await createTabs(component => component.headerPosition.set('left'));
+            await createTabs(component => component.headerPosition.set('start'));
             const tabsElement = tabs.headerContainer.nativeElement.parentElement;
             const next = tabs.scrollNextButton.nativeElement;
             const resizeObserverErrors = collectResizeObserverErrors();
@@ -2167,7 +2170,7 @@ describe('IgxTabs', () => {
         it('should keep the width of a column of justified headers within the maximum width of a header', async () => {
             const longLabel = 'A long tab header label that is much wider than the maximum width of a header on a single line';
             await createTabs(component => {
-                component.headerPosition.set('left');
+                component.headerPosition.set('start');
                 component.height.set('320px');
                 component.items.set([{ id: 1, label: 'Tab 1' }, { id: 2, label: longLabel }]);
             });
@@ -2179,11 +2182,11 @@ describe('IgxTabs', () => {
             await vi.waitFor(() => {
                 expectNear(rectOf(tabs.headerContainer.nativeElement).width, width);
                 expectNear(rectOf(contentOf(tabs)).width, 600 - width);
-                expectHeaderLayout(tabs, 'left');
+                expectHeaderLayout(tabs, 'start');
             });
         });
 
-        for (const position of ['top', 'left'] as const) {
+        for (const position of ['top', 'start'] as const) {
             it(`should handle no headers and scroll a single header that is larger than the visible area (${position})`, async () => {
                 await createTabs(component => {
                     limitSize(component, position, 200);
@@ -2192,7 +2195,7 @@ describe('IgxTabs', () => {
                 const prev = tabs.scrollPrevButton.nativeElement;
                 const next = tabs.scrollNextButton.nativeElement;
                 const viewPort = tabs.viewPort.nativeElement;
-                const vertical = position === 'left';
+                const vertical = position === 'start';
                 expect(tabs.itemsWrapper.nativeElement.getAttribute('aria-orientation')).toBe(vertical ? 'vertical' : 'horizontal');
                 expect(isDisplayed(prev)).toBe(false);
                 expect(isDisplayed(next)).toBe(false);
@@ -2231,7 +2234,7 @@ describe('IgxTabs', () => {
             });
         }
 
-        for (const position of ['left', 'right'] as const) {
+        for (const position of ['start', 'end'] as const) {
             it(`should run the active indicator along the selected header on the content side of a column on the ${position}`, async () => {
                 await createTabs(component => {
                     component.headerPosition.set(position);
@@ -2258,7 +2261,7 @@ describe('IgxTabs', () => {
             });
         }
 
-        for (const position of ['top', 'left'] as const) {
+        for (const position of ['top', 'start'] as const) {
             it(`should scroll to the selected header and align the indicator when hidden tabs are shown (${position})`, async () => {
                 await createTabs(component => {
                     limitSize(component, position, 240);
@@ -2279,7 +2282,7 @@ describe('IgxTabs', () => {
 
         it('should size a column of headers from the headers and give the rest of the width to the content', async () => {
             await createTabs(component => {
-                component.headerPosition.set('left');
+                component.headerPosition.set('start');
                 component.items.set([
                     { id: 1, label: 'Tab 1', prefix: 'Prefix', suffix: 'Suffix' },
                     { id: 2, label: 'A long tab header label that does not fit on a single line of the header' },
@@ -2335,7 +2338,7 @@ describe('IgxTabs', () => {
             onTestFinished(() => noTransitions.remove());
 
             for (const dir of ['ltr', 'rtl'] as const) {
-                for (const position of ['top', 'left', 'right'] as const) {
+                for (const position of ['top', 'start', 'end'] as const) {
                     for (const variant of ['light', 'dark']) {
                         for (const theme of ['material', 'fluent', 'indigo', 'bootstrap']) {
                             host.dir.set(dir);
@@ -2348,8 +2351,9 @@ describe('IgxTabs', () => {
                             await settle();
                             const context = `${theme} ${variant} ${position} ${dir}`;
                             const vertical = position !== 'top';
-                            const contentSide = position === 'top' ? 'Bottom' : position === 'left' ? 'Right' : 'Left';
-                            const outerSide = position === 'top' ? 'Top' : position === 'left' ? 'Left' : 'Right';
+                            const leftColumn = isLeftColumn(tabs, position);
+                            const contentSide = position === 'top' ? 'Bottom' : leftColumn ? 'Right' : 'Left';
+                            const outerSide = position === 'top' ? 'Top' : leftColumn ? 'Left' : 'Right';
                             const thickness = vertical ? 'width' : 'height';
                             const length = vertical ? 'height' : 'width';
 
@@ -2365,9 +2369,9 @@ describe('IgxTabs', () => {
                                 expect(cover[thickness], context).toBe('1px');
                                 expectNear(parseFloat(cover[length]), rectOf(header)[length]);
                                 expectNear(parseFloat(cover[contentSide.toLowerCase()]), 0);
-                                const corners = (side: string) => vertical
-                                    ? [`borderTop${side}Radius`, `borderBottom${side}Radius`]
-                                    : [`border${side}LeftRadius`, `border${side}RightRadius`];
+                                const corners = (edge: string) => vertical
+                                    ? [`borderTop${edge}Radius`, `borderBottom${edge}Radius`]
+                                    : [`border${edge}LeftRadius`, `border${edge}RightRadius`];
                                 const expectRadii = (contentRadius: string, message: string) => {
                                     const style = getComputedStyle(header);
                                     corners(outerSide).forEach(corner => expect(style[corner], message).toBe('6px'));
@@ -2387,6 +2391,7 @@ describe('IgxTabs', () => {
                                 const buttonLine = getComputedStyle(prev, '::after');
                                 expect(headerStyle[`border${contentSide}Width`], context).toBe('1px');
                                 expect(headerStyle[`border${contentSide}Color`], context).toBe('rgb(255, 0, 0)');
+                                expect(headerStyle[`border${outerSide}Width`], context).toBe('1px');
                                 expect(buttonLine[`border${contentSide}Width`], context).toBe('1px');
                                 expectNear(rectOf(prev)[length], 40);
                                 if (vertical) {
@@ -2418,7 +2423,7 @@ describe('IgxTabs zoneless change detection', () => {
     it('should lay out a column of headers and update it on selection, position and collection changes without zone.js', async () => {
         const fixture = TestBed.createComponent(TabsHeaderPositionComponent);
         const host = fixture.componentInstance;
-        host.headerPosition.set('left');
+        host.headerPosition.set('start');
         host.height.set('240px');
         fixture.detectChanges();
         await fixture.whenStable();
@@ -2426,8 +2431,8 @@ describe('IgxTabs zoneless change detection', () => {
         const tabs = host.tabs;
         const headers = headersOf(tabs);
         await vi.waitFor(() => {
-            expectHeaderLayout(tabs, 'left');
-            expectIndicatorAt(tabs, headers[0], 'left');
+            expectHeaderLayout(tabs, 'start');
+            expectIndicatorAt(tabs, headers[0], 'start');
         });
 
         tabs.selectedIndex = 7;
@@ -2435,16 +2440,16 @@ describe('IgxTabs zoneless change detection', () => {
         expect(headers[7].classList.contains('igx-tab-header--selected')).toBe(true);
         await vi.waitFor(() => {
             expectInView(tabs, headers[7]);
-            expectIndicatorAt(tabs, headers[7], 'left');
+            expectIndicatorAt(tabs, headers[7], 'start');
         });
 
-        host.headerPosition.set('right');
+        host.headerPosition.set('end');
         await fixture.whenStable();
         expect(tabs.selectedIndex).toBe(7);
         await vi.waitFor(() => {
-            expectHeaderLayout(tabs, 'right');
+            expectHeaderLayout(tabs, 'end');
             expectInView(tabs, headers[7]);
-            expectIndicatorAt(tabs, headers[7], 'right');
+            expectIndicatorAt(tabs, headers[7], 'end');
         });
 
         host.items.update(items => items.slice(0, 3));
@@ -2455,7 +2460,7 @@ describe('IgxTabs zoneless change detection', () => {
             expect(remaining[2].classList.contains('igx-tab-header--selected')).toBe(true);
             expect(isDisplayed(tabs.scrollNextButton.nativeElement)).toBe(false);
             expect(tabs.offset).toBe(0);
-            expectIndicatorAt(tabs, remaining[2], 'right');
+            expectIndicatorAt(tabs, remaining[2], 'end');
         });
     });
 

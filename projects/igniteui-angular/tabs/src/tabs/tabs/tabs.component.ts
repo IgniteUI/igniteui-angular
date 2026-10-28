@@ -42,8 +42,8 @@ export type IgxTabsAlignment = (typeof IgxTabsAlignment)[keyof typeof IgxTabsAli
 /** The side of the content on which `igx-tabs` places its tab headers. */
 export const IgxTabsHeaderPosition = {
     top: 'top',
-    left: 'left',
-    right: 'right'
+    start: 'start',
+    end: 'end'
 } as const;
 
 export type IgxTabsHeaderPosition = (typeof IgxTabsHeaderPosition)[keyof typeof IgxTabsHeaderPosition];
@@ -63,7 +63,7 @@ let NEXT_TAB_ID = 0;
  * @igxGroup Layouts
  *
  * @remarks
- * The Ignite UI for Angular Tabs component places tabs at the top, or on the left or right side of the content with `headerPosition`,
+ * The Ignite UI for Angular Tabs component places tabs at the top, or before or after the content with `headerPosition`,
  * and allows for scrolling when there are multiple tab items on the screen.
  *
  * @example
@@ -91,8 +91,8 @@ let NEXT_TAB_ID = 0;
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective],
     host: {
-        '[class.igx-tabs--left]': 'headerPosition() === "left"',
-        '[class.igx-tabs--right]': 'headerPosition() === "right"'
+        '[class.igx-tabs--start]': 'headerPosition() === "start"',
+        '[class.igx-tabs--end]': 'headerPosition() === "end"'
     }
 })
 
@@ -131,12 +131,13 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
      * The side of the content on which the tab headers are placed. Defaults to `top`.
      *
      * @remarks
-     * `left` and `right` place the headers in a column on that physical side, also in right-to-left layouts.
+     * `start` and `end` place the headers in a column before or after the content in the text direction,
+     * so `start` is on the right in right-to-left layouts.
      * The column is navigated with the Up and Down arrow keys and scrolls when the headers do not fit in its height.
      *
      * @example
      * ```html
-     * <igx-tabs headerPosition="left">...</igx-tabs>
+     * <igx-tabs headerPosition="start">...</igx-tabs>
      * ```
      */
     public readonly headerPosition = input<IgxTabsHeaderPosition>(IgxTabsHeaderPosition.top);
@@ -144,7 +145,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden @internal */
     public readonly verticalHeaders = computed(() => {
         const position = this.headerPosition();
-        return position === IgxTabsHeaderPosition.left || position === IgxTabsHeaderPosition.right;
+        return position === IgxTabsHeaderPosition.start || position === IgxTabsHeaderPosition.end;
     });
 
     /** @hidden */

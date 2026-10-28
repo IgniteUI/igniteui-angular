@@ -65,6 +65,7 @@ export class TabsShowcaseSampleComponent implements OnInit {
 
     public selectedTabId = this.contacts[0]?.id;
     public indexMessage: string;
+    public rtlPositions = ['top', 'start', 'end'] as const;
 
     private pcs = inject(PropertyChangeService);
     private cdr = inject(ChangeDetectorRef);
@@ -82,7 +83,7 @@ export class TabsShowcaseSampleComponent implements OnInit {
                 label: 'Header position',
                 control: {
                     type: 'button-group',
-                    options: ['top', 'left', 'right'],
+                    options: ['top', 'start', 'end'],
                     defaultValue: 'top'
                 }
             },

@@ -1,7 +1,7 @@
 <div #headerContainer class="igx-tabs-header"
     [class.igx-tabs-header--vertical]="verticalHeaders()"
-    [class.igx-tabs-header--left]="headerPosition() === 'left'"
-    [class.igx-tabs-header--right]="headerPosition() === 'right'">
+    [class.igx-tabs-header--start]="headerPosition() === 'start'"
+    [class.igx-tabs-header--end]="headerPosition() === 'end'">
     <button #scrollPrevButton type="button" igxIconButton="flat" igxRipple tabindex="-1" class="igx-tabs-header-button" (click)="scrollPrev()">
         <igx-icon family="default" name="prev"></igx-icon>
     </button>

@@ -1,9 +1,25 @@
 .items-wrapper {
     height: 400px;
 
-    .igx-tabs--left,
-    .igx-tabs--right {
+    .igx-tabs--start,
+    .igx-tabs--end {
         height: 360px;
+    }
+}
+
+.rtl-sample {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-block-end: 24px;
+
+    strong {
+        margin-bottom: 0;
+    }
+
+    .igx-tabs--start,
+    .igx-tabs--end {
+        height: 240px;
     }
 }
 
