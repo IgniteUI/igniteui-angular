@@ -1701,6 +1701,7 @@ describe('IgxTabs', () => {
         let tabs: IgxTabsComponent;
 
         const settle = async () => {
+            fixture.detectChanges();
             await fixture.whenStable();
             await frames(2);
             fixture.detectChanges();
@@ -1710,7 +1711,6 @@ describe('IgxTabs', () => {
             fixture = TestBed.createComponent(TabsHeaderPositionComponent);
             host = fixture.componentInstance;
             configure?.(host);
-            fixture.detectChanges();
             tabs = host.tabs;
             await settle();
         };
@@ -1746,7 +1746,7 @@ describe('IgxTabs', () => {
             }
         };
 
-        // ResizeObserver loop errors are reported to the window and do not fail a test by themselves
+        // ResizeObserver loop errors do not fail a test by themselves
         const collectResizeObserverErrors = () => {
             const errors: string[] = [];
             const collect = (event: ErrorEvent) => {
@@ -1789,6 +1789,7 @@ describe('IgxTabs', () => {
             });
 
             const headers = headersOf(tabs);
+            headers[0].style.transition = 'opacity 1s';
             const panels = tabs.panels.map(panel => panel.nativeElement);
             const action = panels[2].querySelector<HTMLButtonElement>('.panel-action');
             action.focus();
@@ -1796,7 +1797,6 @@ describe('IgxTabs', () => {
 
             for (const position of ['left', 'right', 'top', 'right', 'left', 'top'] as const) {
                 host.headerPosition.set(position);
-                fixture.detectChanges();
                 await settle();
 
                 expectHeaderLayout(tabs, position);
@@ -1805,6 +1805,7 @@ describe('IgxTabs', () => {
                     expect(header.getAttribute('role')).toBe('tab');
                     expect(header.getAttribute('aria-controls')).toBe(panels[i].id);
                 });
+                expect(headers[0].style.transition).toBe('opacity 1s');
                 tabs.panels.forEach((panel, i) => {
                     expect(panel.nativeElement).toBe(panels[i]);
                     expect(panels[i].getAttribute('aria-labelledby')).toBe(headers[i].id);
@@ -1813,15 +1814,6 @@ describe('IgxTabs', () => {
                 expect(document.activeElement).toBe(action);
                 expect(tabs.selectedIndex).toBe(2);
                 await vi.waitFor(() => expectIndicatorAt(tabs, headers[2], position));
-
-                const indicatorStyle = tabs.selectedIndicator.nativeElement.style;
-                if (position === 'top') {
-                    expect(indicatorStyle.height).toBe('');
-                    expect(indicatorStyle.width).toBe(`${headers[2].offsetWidth}px`);
-                    expect(indicatorStyle.transform).toBe(`translate(${headers[2].offsetLeft}px)`);
-                } else {
-                    expect(indicatorStyle.width).toBe('');
-                }
             }
 
             expect(events.indexChanging).not.toHaveBeenCalled();
@@ -1911,7 +1903,6 @@ describe('IgxTabs', () => {
 
             for (const position of ['top', 'right', 'left', 'top'] as const) {
                 host.headerPosition.set(position);
-                fixture.detectChanges();
                 await settle();
 
                 expect(isDisplayed(tabs.scrollNextButton.nativeElement), position).toBe(true);
@@ -1928,7 +1919,6 @@ describe('IgxTabs', () => {
             headers[6].appendChild(button);
             button.focus({ preventScroll: true });
             host.headerPosition.set('left');
-            fixture.detectChanges();
             await settle();
             await vi.waitFor(() => expectInView(tabs, headers[6]));
         });
@@ -2010,7 +2000,6 @@ describe('IgxTabs', () => {
                 expectNear(tabs.offset, getMaxOffset());
 
                 host.items.update(items => items.slice(0, 6));
-                fixture.detectChanges();
                 await settle();
                 expect(tabs.selectedIndex).toBe(0);
                 expect(getMaxOffset()).toBeGreaterThan(0);
@@ -2019,7 +2008,6 @@ describe('IgxTabs', () => {
                 await vi.waitFor(() => expectNear(scrollPosition(), tabs.offset));
 
                 limitSize(host, position, 300);
-                fixture.detectChanges();
                 await settle();
                 await vi.waitFor(() => {
                     expectNear(tabs.offset, getMaxOffset());
@@ -2027,7 +2015,6 @@ describe('IgxTabs', () => {
                 });
 
                 limitSize(host, position, 1000);
-                fixture.detectChanges();
                 await settle();
                 await vi.waitFor(() => {
                     expect(isDisplayed(tabs.scrollPrevButton.nativeElement)).toBe(false);
@@ -2073,7 +2060,6 @@ describe('IgxTabs', () => {
                 const headers = headersOf(tabs);
                 headers[7].style.display = 'none';
                 tabs.selectedIndex = 5;
-                fixture.detectChanges();
                 await settle();
 
                 await vi.waitFor(() => {
@@ -2081,11 +2067,16 @@ describe('IgxTabs', () => {
                     expect(isDisplayed(tabs.scrollNextButton.nativeElement)).toBe(true);
                     expect(tabs.scrollPrevButton.nativeElement.disabled).toBe(false);
                 });
+
+                const offset = tabs.offset;
+                tabs.scrollPrevButton.nativeElement.click();
+                expect(tabs.offset).toBeGreaterThan(0);
+                expect(tabs.offset).toBeLessThan(offset);
             });
         }
 
         it('should align a column of headers vertically with tabAlignment', async () => {
-            // Headers of different heights, without icons that change their size when the icon font loads
+            // No icons, which change the header heights when the icon font loads
             const items = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, label: `Tab ${i + 1}`, spacer: i === 1 ? 24 : undefined }));
             await createTabs(component => {
                 component.headerPosition.set('left');
@@ -2098,17 +2089,14 @@ describe('IgxTabs', () => {
             expectNear(rectOf(headers[0]).top, viewPort().top);
 
             host.tabAlignment.set('end');
-            fixture.detectChanges();
             await settle();
             expectNear(rectOf(headers[2]).bottom, viewPort().bottom);
 
             host.tabAlignment.set('center');
-            fixture.detectChanges();
             await settle();
             expectNear(rectOf(headers[0]).top - viewPort().top, viewPort().bottom - rectOf(headers[2]).bottom, 2);
 
             host.tabAlignment.set('justify');
-            fixture.detectChanges();
             await settle();
             await vi.waitFor(() => {
                 expectNear(rectOf(headers[0]).top, viewPort().top);
@@ -2122,7 +2110,6 @@ describe('IgxTabs', () => {
             host.height.set('240px');
             for (const alignment of ['start', 'center', 'end', 'justify'] as const) {
                 host.tabAlignment.set(alignment);
-                fixture.detectChanges();
                 await settle();
                 headers = headersOf(tabs);
                 await vi.waitFor(() => {
@@ -2157,7 +2144,6 @@ describe('IgxTabs', () => {
             const headers = headersOf(tabs);
 
             host.headerPosition.set('left');
-            fixture.detectChanges();
             await settle();
             await Promise.all(headers.flatMap(header => header.getAnimations()).map(animation => animation.finished));
 
@@ -2189,7 +2175,6 @@ describe('IgxTabs', () => {
             expect(width).toBeLessThanOrEqual(360);
 
             host.tabAlignment.set('justify');
-            fixture.detectChanges();
             await settle();
             await vi.waitFor(() => {
                 expectNear(rectOf(tabs.headerContainer.nativeElement).width, width);
@@ -2215,10 +2200,8 @@ describe('IgxTabs', () => {
                 host.items.set([vertical
                     ? { id: 1, label: 'Tall tab', spacer: 400 }
                     : { id: 1, label: 'A long tab header label that does not fit on a single line of the header' }]);
-                fixture.detectChanges();
                 await settle();
                 tabs.selectedIndex = 0;
-                fixture.detectChanges();
                 await settle();
 
                 const header = headersOf(tabs)[0];
@@ -2282,7 +2265,6 @@ describe('IgxTabs', () => {
                     component.hidden.set(true);
                 });
                 tabs.selectedIndex = 6;
-                fixture.detectChanges();
                 await settle();
 
                 host.hidden.set(false);
@@ -2324,14 +2306,12 @@ describe('IgxTabs', () => {
 
             const narrowWidth = Math.round(headerContainer.width) + 100;
             host.width.set(`${narrowWidth}px`);
-            fixture.detectChanges();
             await settle();
             expectNear(rectOf(tabs.headerContainer.nativeElement).width, headerContainer.width);
             expectNear(rectOf(contentOf(tabs)).width, narrowWidth - headerContainer.width);
 
             host.contentLines.set(Array.from({ length: 40 }, (_, i) => i));
             host.height.set('240px');
-            fixture.detectChanges();
             await settle();
             const panel = tabs.panels.get(0).nativeElement;
             expect(panel.scrollHeight).toBeGreaterThan(panel.clientHeight);
@@ -2360,17 +2340,16 @@ describe('IgxTabs', () => {
                         for (const theme of ['material', 'fluent', 'indigo', 'bootstrap']) {
                             host.dir.set(dir);
                             host.headerPosition.set(position);
-                            // The icon buttons of the page set the theme of the Material tokens on themselves
+                            // Icon buttons set their own --ig-theme
                             for (const element of [wrapper, prev, tabs.scrollNextButton.nativeElement]) {
                                 element.style.setProperty('--ig-theme', theme);
                                 element.style.setProperty('--ig-theme-variant', variant);
                             }
-                            fixture.detectChanges();
                             await settle();
                             const context = `${theme} ${variant} ${position} ${dir}`;
                             const vertical = position !== 'top';
                             const contentSide = position === 'top' ? 'Bottom' : position === 'left' ? 'Right' : 'Left';
-                            const outerSide = position === 'left' ? 'Left' : 'Right';
+                            const outerSide = position === 'top' ? 'Top' : position === 'left' ? 'Left' : 'Right';
                             const thickness = vertical ? 'width' : 'height';
                             const length = vertical ? 'height' : 'width';
 
@@ -2386,31 +2365,17 @@ describe('IgxTabs', () => {
                                 expect(cover[thickness], context).toBe('1px');
                                 expectNear(parseFloat(cover[length]), rectOf(header)[length]);
                                 expectNear(parseFloat(cover[contentSide.toLowerCase()]), 0);
-                                const headerStyle = getComputedStyle(header);
-                                if (vertical) {
-                                    expect(headerStyle[`borderTop${outerSide}Radius`], context).toBe('6px');
-                                    expect(headerStyle[`borderBottom${outerSide}Radius`], context).toBe('6px');
-                                    expect(headerStyle[`borderTop${contentSide}Radius`], context).toBe('0px');
-                                    expect(headerStyle[`borderBottom${contentSide}Radius`], context).toBe('0px');
-                                } else {
-                                    expect(headerStyle.borderTopLeftRadius, context).toBe('6px');
-                                    expect(headerStyle.borderTopRightRadius, context).toBe('6px');
-                                    expect(headerStyle.borderBottomLeftRadius, context).toBe('0px');
-                                    expect(headerStyle.borderBottomRightRadius, context).toBe('0px');
-                                }
+                                const corners = (side: string) => vertical
+                                    ? [`borderTop${side}Radius`, `borderBottom${side}Radius`]
+                                    : [`border${side}LeftRadius`, `border${side}RightRadius`];
+                                const expectRadii = (contentRadius: string, message: string) => {
+                                    const style = getComputedStyle(header);
+                                    corners(outerSide).forEach(corner => expect(style[corner], message).toBe('6px'));
+                                    corners(contentSide).forEach(corner => expect(style[corner], message).toBe(contentRadius));
+                                };
+                                expectRadii('0px', context);
                                 header.focus({ preventScroll: true });
-                                const focusedStyle = getComputedStyle(header);
-                                if (vertical) {
-                                    expect(focusedStyle[`borderTop${outerSide}Radius`], `${context} focus`).toBe('6px');
-                                    expect(focusedStyle[`borderBottom${outerSide}Radius`], `${context} focus`).toBe('6px');
-                                    expect(focusedStyle[`borderTop${contentSide}Radius`], `${context} focus`).toBe('4px');
-                                    expect(focusedStyle[`borderBottom${contentSide}Radius`], `${context} focus`).toBe('4px');
-                                } else {
-                                    expect(focusedStyle.borderTopLeftRadius, `${context} focus`).toBe('6px');
-                                    expect(focusedStyle.borderTopRightRadius, `${context} focus`).toBe('6px');
-                                    expect(focusedStyle.borderBottomLeftRadius, `${context} focus`).toBe('4px');
-                                    expect(focusedStyle.borderBottomRightRadius, `${context} focus`).toBe('4px');
-                                }
+                                expectRadii('4px', `${context} focus`);
                                 header.blur();
                                 continue;
                             }

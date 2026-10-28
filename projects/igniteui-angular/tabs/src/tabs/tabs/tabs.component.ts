@@ -39,11 +39,7 @@ const enum TabScrollButtonStyle {
 
 export type IgxTabsAlignment = (typeof IgxTabsAlignment)[keyof typeof IgxTabsAlignment];
 
-/**
- * The side of the content, on which the tab headers of `igx-tabs` are placed.
- * `top` places the headers in a row above the content, while `left` and `right` place them in a column
- * on that side of the content, also in right-to-left layouts.
- */
+/** The side of the content on which `igx-tabs` places its tab headers. */
 export const IgxTabsHeaderPosition = {
     top: 'top',
     left: 'left',
@@ -132,23 +128,15 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public activation: 'auto' | 'manual' = 'auto';
 
     /**
-     * The side of the content, on which the tab headers are placed. Defaults to `top`.
+     * The side of the content on which the tab headers are placed. Defaults to `top`.
      *
      * @remarks
-     * With `left` or `right`, the headers are placed in a column on that side of the content, also in right-to-left layouts.
-     * The tabs are then navigated with the Up and Down arrow keys, and the scroll buttons scroll the headers up and down
-     * when they do not fit in the height of the tabs.
+     * `left` and `right` place the headers in a column on that physical side, also in right-to-left layouts.
+     * The column is navigated with the Up and Down arrow keys and scrolls when the headers do not fit in its height.
      *
      * @example
      * ```html
-     * <igx-tabs headerPosition="left">
-     *     <igx-tab-item>
-     *         <igx-tab-header>
-     *             <span igxTabHeaderLabel>Tab 1</span>
-     *         </igx-tab-header>
-     *         <igx-tab-content>Content 1</igx-tab-content>
-     *     </igx-tab-item>
-     * </igx-tabs>
+     * <igx-tabs headerPosition="left">...</igx-tabs>
      * ```
      */
     public readonly headerPosition = input<IgxTabsHeaderPosition>(IgxTabsHeaderPosition.top);
@@ -200,7 +188,6 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private _tabAlignment: string | IgxTabsAlignment = 'start';
     private _resizeObserver!: ResizeObserver;
     private _layoutFrame = 0;
-    private _renderedVertical: boolean | null = null;
     private _headersRendered = false;
 
     constructor() {
@@ -208,14 +195,13 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
         afterNextRender(() => this.updateHeaderLayout());
 
+        let firstRun = true;
         afterRenderEffect(() => {
-            const vertical = this.verticalHeaders();
-            const previous = this._renderedVertical;
-            this._renderedVertical = vertical;
-
-            if (previous !== null && previous !== vertical) {
+            this.verticalHeaders();
+            if (!firstRun) {
                 untracked(() => this.updateHeaderAxis());
             }
+            firstRun = false;
         });
     }
 
@@ -226,8 +212,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this.ngZone.runOutsideAngular(() => {
             if (this.platform.isBrowser) {
                 this._resizeObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
-                    // Showing or hiding the scroll buttons resizes the viewport of a row, which is handled in the same frame only
-                    // when the header container is notified too. In a column, it can resize the header container itself.
+                    // Toggling the scroll buttons resizes the viewport, and in a column it can resize the header container too.
+                    // Only a row whose header container is notified can be updated in this frame without a "ResizeObserver loop" error.
                     if (!this.verticalHeaders() && entries.some(entry => entry.target === this.headerContainer.nativeElement)) {
                         this.updateHeaderLayout();
                     } else {
@@ -248,7 +234,9 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver?.disconnect();
-            cancelAnimationFrame(this._layoutFrame);
+            if (this._layoutFrame) {
+                cancelAnimationFrame(this._layoutFrame);
+            }
         });
     }
 
@@ -335,6 +323,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private updateHeaderAxis(): void {
         // The headers are measured in their final size, without the transitions of the themes
         const headers = this.items.map(item => item.headerComponent.nativeElement);
+        const transitions = headers.map(element => element.style.transition);
         headers.forEach(element => element.style.transition = 'none');
 
         this.offset = 0;
@@ -342,22 +331,18 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this.viewPort.nativeElement.scrollTop = 0;
         this.updateScrollButtons();
 
-        const header = this.getFocusedHeader() ?? this.selectedHeader;
+        const root = this._element.nativeElement.getRootNode() as Document | ShadowRoot;
+        const header = headers.find(element => element.contains(root.activeElement)) ?? this.selectedHeader;
         if (header) {
             this.scrollToHeader(header);
         }
 
         this.realignSelectedIndicator();
-        headers.forEach(element => element.style.transition = '');
+        headers.forEach((element, i) => element.style.transition = transitions[i]);
     }
 
     private get selectedHeader(): HTMLElement | undefined {
         return this.selectedItem?.headerComponent.nativeElement;
-    }
-
-    private getFocusedHeader(): HTMLElement | undefined {
-        const root = this._element.nativeElement.getRootNode() as Document | ShadowRoot;
-        return this.items.map(item => item.headerComponent.nativeElement).find(header => header.contains(root.activeElement));
     }
 
     private updateHeaderLayout(): void {
@@ -397,7 +382,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     private scroll(scrollNext: boolean): void {
-        const headers = this.items.map(item => item.headerComponent.nativeElement);
+        const headers = this.items.map(item => item.headerComponent.nativeElement).filter(header => header.offsetParent !== null);
         const viewPortSize = this.getElementSize(this.viewPort.nativeElement);
 
         const header = scrollNext
@@ -444,14 +429,11 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     private setScrollButtonStyle(button: HTMLButtonElement, buttonStyle: TabScrollButtonStyle) {
-        if (buttonStyle === TabScrollButtonStyle.Enabled) {
-            button.disabled = false;
-            button.style.display = 'flex';
-        } else if (buttonStyle === TabScrollButtonStyle.Disabled) {
-            button.disabled = true;
-            button.style.display = 'flex';
-        } else if (buttonStyle === TabScrollButtonStyle.NotDisplayed) {
+        if (buttonStyle === TabScrollButtonStyle.NotDisplayed) {
             button.style.display = 'none';
+        } else {
+            button.disabled = buttonStyle === TabScrollButtonStyle.Disabled;
+            button.style.display = 'flex';
         }
     }
 

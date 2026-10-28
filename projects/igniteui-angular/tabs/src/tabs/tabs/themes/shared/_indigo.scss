@@ -36,16 +36,11 @@ $_theme: digest-schema($indigo-tabs);
             border-bottom: rem(1px) solid var(--nav-btn-border-color);
         }
 
-        .igx-tabs-header--vertical > &::after {
-            border-bottom: none;
-        }
-
-        .igx-tabs-header--left > &::after {
-            border-right: rem(1px) solid var(--nav-btn-border-color);
-        }
-
-        .igx-tabs-header--right > &::after {
-            border-left: rem(1px) solid var(--nav-btn-border-color);
+        @each $side, $content-side in (left: right, right: left) {
+            .igx-tabs-header--#{$side} > &::after {
+                border-bottom: none;
+                border-#{$content-side}: rem(1px) solid var(--nav-btn-border-color);
+            }
         }
     }
 }
