@@ -129,6 +129,12 @@
         inherits: true;
     }
 
+    @property --_progress-whole {
+        syntax: '<number>';
+        initial-value: 0;
+        inherits: true;
+    }
+
     @property --vhelper-scollbar-size {
         syntax: '<length>';
         initial-value: 16px;
