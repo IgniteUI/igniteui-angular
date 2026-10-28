@@ -1,9 +1,11 @@
 import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
+import { IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
+import { IgxCardComponent, IgxCardContentDirective } from 'igniteui-angular/card';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
 import { InputResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -25,7 +27,8 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
                 InputGroupDisabledWithoutValueComponent,
-                InputGroupNestedThemeScopeComponent
+                InputGroupNestedThemeScopeComponent,
+                InputGroupFormRowComponent
             ]
         }).compileComponents();
     });
@@ -291,7 +294,61 @@ describe('IgxInputGroup', () => {
             }
         });
     });
+
+    describe('IgxInputGroup label alignment in a stretched row (#17704)', () => {
+        const labelTops = (fix) => fix.debugElement.queryAll(By.css('igx-input-group'))
+            .map(({ nativeElement: g }) => Math.round(g.querySelector('label').getBoundingClientRect().top - g.getBoundingClientRect().top));
+
+        for (const container of ['div', 'card'] as const) {
+            it(`keeps the neighbour's label in place when a hint appears (${container} container)`, async () => {
+                const fix = TestBed.createComponent(InputGroupFormRowComponent);
+                fix.componentInstance.container = container;
+                fix.detectChanges();
+                await fix.whenStable();
+                const [userBefore] = labelTops(fix);
+
+                fix.componentInstance.showHint = true;
+                fix.detectChanges();
+                await fix.whenStable();
+                const [userAfter, emailAfter] = labelTops(fix);
+
+                expect(userAfter).toBe(userBefore);
+                expect(userAfter).toBe(emailAfter);
+            });
+        }
+    });
 });
+
+@Component({
+    template: `
+        <ng-template #fields>
+            <igx-input-group>
+                <label igxLabel>Username</label>
+                <input igxInput value="john" />
+            </igx-input-group>
+            <igx-input-group>
+                <label igxLabel>Email</label>
+                <input igxInput value="not-an-email" />
+                @if (showHint) {
+                    <igx-hint>Please enter a valid email address</igx-hint>
+                }
+            </igx-input-group>
+        </ng-template>
+        @if (container === 'div') {
+            <div class="form-row"><ng-container *ngTemplateOutlet="fields" /></div>
+        } @else {
+            <igx-card>
+                <igx-card-content class="form-row"><ng-container *ngTemplateOutlet="fields" /></igx-card-content>
+            </igx-card>
+        }`,
+    styles: `.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 600px; }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxHintDirective, IgxCardComponent, IgxCardContentDirective, NgTemplateOutlet]
+})
+class InputGroupFormRowComponent {
+    public container: 'div' | 'card' = 'div';
+    public showHint = false;
+}
 
 @Component({
     template: `<igx-input-group #rootGroup><input igxInput/></igx-input-group>
