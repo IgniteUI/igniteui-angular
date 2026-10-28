@@ -174,7 +174,7 @@ export interface IgxCalendarDayTemplateContext {
  * @remarks
  * The template replaces the default content (the day number) of each visible day cell.
  * Selection, keyboard navigation, ARIA attributes and state styling stay on the day cell.
- * The template content is hidden from assistive technologies and should not contain focusable elements.
+ * The template text is announced as the day cell description and the template should not contain focusable elements.
  *
  * @example
  * ```html

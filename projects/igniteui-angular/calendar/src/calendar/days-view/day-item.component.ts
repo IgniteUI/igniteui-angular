@@ -69,6 +69,11 @@ export class IgxDayItemComponent {
     @Input({ transform: booleanAttribute })
     public hideTrailingDays = false;
 
+    /** The id of the templated content, which describes the day cell for assistive technologies. */
+    @Input()
+    @HostBinding('attr.aria-describedby')
+    public contentId: string | null = null;
+
     private get hideLeading() {
         return this.hideLeadingDays && this.isPreviousMonth;
     }
@@ -111,10 +116,12 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-day-item--selected')
     public get isSelectedCSS(): boolean {
-    const selectable =
-        !this.isInactive || this.isWithinPreviewRange ||
-        (this.isWithinRange && this.selection === "range");
-    return !this.isDisabled && selectable && this.selected;
+        return !this.isDisabled && this.isSelectable && this.selected;
+    }
+
+    private get isSelectable(): boolean {
+        return !this.isInactive || this.isWithinPreviewRange ||
+            (this.isWithinRange && this.selection === "range");
     }
 
     @HostBinding('class.igx-day-item--inactive')
@@ -193,28 +200,30 @@ export class IgxDayItemComponent {
 
     /**
      * Returns the context for the day template.
-     * The same object is updated and returned on every call to avoid re-creating it on each change detection.
+     * The same object is updated in place on every call, and each date range is checked once.
      *
      * @hidden
      * @internal
      */
     public getTemplateContext(formattedDate: string): IgxCalendarDayTemplateContext {
-        return Object.assign(this._templateContext, {
-            $implicit: this.date.native,
-            date: this.date.native,
-            formattedDate,
-            selected: !!this.isSelectedCSS,
-            disabled: this.isDisabled,
-            special: this.isSpecial,
-            today: this.isToday,
-            weekend: this.isWeekend,
-            currentMonth: this.isCurrentMonth,
-            active: this.isActive,
-            firstInRange: this.isFirstInRange,
-            lastInRange: this.isLastInRange,
-            withinRange: this.isWithinRangeCSS,
-            withinPreviewRange: this.isWithinPreviewRange
-        });
+        const context = this._templateContext;
+        const disabled = this.isDisabled;
+
+        context.$implicit = context.date = this.date.native;
+        context.formattedDate = formattedDate;
+        context.selected = !disabled && this.isSelectable && !!this.selected;
+        context.disabled = disabled;
+        context.special = this.isSpecial;
+        context.today = this.isToday;
+        context.weekend = this.isWeekend;
+        context.currentMonth = this.isCurrentMonth;
+        context.active = this.isActive;
+        context.firstInRange = this.isFirstInRange;
+        context.lastInRange = this.isLastInRange;
+        context.withinRange = this.isWithinRangeCSS;
+        context.withinPreviewRange = this.isWithinPreviewRange;
+
+        return context;
     }
 
     private _selected = false;

@@ -736,6 +736,24 @@ describe('IgxDatePicker', () => {
                 expect(customDays.length).toBeGreaterThan(0);
                 expect(customDays.length).toBe(days.length);
             });
+
+            it('Should update the open calendar when the day template is removed or added', async () => {
+                const customDays = () => fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                fixture.componentInstance.datePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(customDays().length).toBeGreaterThan(0);
+
+                fixture.componentInstance.showDayTemplate = false;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(customDays().length).toBe(0);
+
+                fixture.componentInstance.showDayTemplate = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(customDays().length).toBeGreaterThan(0);
+            });
         });
 
         describe('UI Interaction', () => {
@@ -1760,7 +1778,9 @@ export class IgxDatePickerWithProjectionsComponent {
     <igx-date-picker [mode]="mode">
         <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
         <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
-        <ng-template igxCalendarDay let-date><span class="custom-day">{{ date.getDate() }}</span></ng-template>
+        @if (showDayTemplate) {
+            <ng-template igxCalendarDay let-date><span class="custom-day">{{ date.getDate() }}</span></ng-template>
+        }
     </igx-date-picker>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_DATE_PICKER_DIRECTIVES]
@@ -1769,6 +1789,7 @@ export class IgxDatePickerWithTemplatesComponent {
     @ViewChild(IgxDatePickerComponent)
     public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.Dialog;
+    public showDayTemplate = true;
 }
 
 @Component({

@@ -381,6 +381,7 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
 
     public set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | null) {
         this._dayTemplate = value;
+        this.cdr?.markForCheck();
     }
 
     /**

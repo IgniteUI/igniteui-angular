@@ -89,6 +89,7 @@
                 [specialDates]="specialDates"
                 [hideLeadingDays]="hideLeadingDays"
                 [hideTrailingDays]="hideTrailingDays"
+                [contentId]="dayTemplate && !item.isHidden ? id + '-' + day.timestamp : null"
                 [attr.tabindex]="-1"
                 (click)="handleDateClick(item)"
                 (mouseEnter)="changePreviewRange(day.native)"

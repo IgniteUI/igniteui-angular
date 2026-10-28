@@ -2733,6 +2733,18 @@ describe("IgxCalendar - ", () => {
                 expect(dayItem(new Date(2017, 5, 13)).getAttribute("aria-label")).toBe(new Date(2017, 5, 13).toDateString());
             });
 
+            it("Should describe visible templated day cells with their template content", async () => {
+                await createFixture((instance) => instance.hideOutsideDays = true);
+
+                const cell = dayItem(new Date(2017, 5, 13));
+                const description = document.getElementById(cell.getAttribute("aria-describedby")!);
+                expect(description).toBe(customDay(new Date(2017, 5, 13)).parentElement);
+                expect(cell.getAttribute("aria-label")).toBe(new Date(2017, 5, 13).toDateString());
+
+                dom.queryAll(By.css(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS))
+                    .forEach((day) => expect(day.nativeElement.hasAttribute("aria-describedby")).toBe(false));
+            });
+
             it("Should not render the day template for hidden days", async () => {
                 await createFixture((instance) => instance.hideOutsideDays = true);
 

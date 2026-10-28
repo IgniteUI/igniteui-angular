@@ -295,8 +295,9 @@ templated day works as before and the theme still draws its selected state. The 
 The `igx-date-picker` and `igx-date-range-picker` pass a template marked with `igxCalendarDay` to their calendar.
 The directive is included in `IGX_DATE_PICKER_DIRECTIVES` and `IGX_DATE_RANGE_PICKER_DIRECTIVES`.
 
-**NOTE:** The template content is hidden from assistive technologies, as the day cell is announced through its own
-`aria-label`, and it should not contain focusable or interactive elements, since a click anywhere in the cell selects the date.
+**NOTE:** The day cell is announced through its own `aria-label`, and the text rendered by the template is announced as
+the cell description, so render readable text (e.g. "3 events") rather than symbols only. The template should not contain
+focusable or interactive elements, since a click anywhere in the cell selects the date.
 Use `currentColor` or the `selected` context property to keep the content readable on the selected background.
 
 | Name               | Type    | Description                                                                         |

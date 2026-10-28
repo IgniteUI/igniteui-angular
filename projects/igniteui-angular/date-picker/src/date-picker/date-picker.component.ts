@@ -438,8 +438,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ContentChild(IgxCalendarSubheaderTemplateDirective)
     private subheaderTemplate!: IgxCalendarSubheaderTemplateDirective;
 
+    /** @hidden @internal */
     @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
-    private dayTemplate?: TemplateRef<IgxCalendarDayTemplateContext>;
+    protected set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | undefined) {
+        this._dayTemplate = value ?? null;
+        if (this._calendar) this._calendar.dayTemplate = this._dayTemplate;
+    }
+
+    private _dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
 
     @ContentChild(IgxPickerActionsDirective)
     private pickerActions!: IgxPickerActionsDirective;
@@ -961,7 +967,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
-        this._calendar.dayTemplate = this.dayTemplate ?? null;
+        this._calendar.dayTemplate = this._dayTemplate;
         this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;
