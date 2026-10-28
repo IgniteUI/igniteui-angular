@@ -74,6 +74,9 @@
         > igx-input-group {
 	        --_bundle-row: 1;
 
+            // The editor fills the cell, so its single row has to stretch.
+            align-content: stretch;
+
             input,
             .igx-input-group__input {
 	            height: 100%;
