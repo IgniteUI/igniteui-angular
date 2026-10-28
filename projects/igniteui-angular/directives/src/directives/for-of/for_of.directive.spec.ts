@@ -158,6 +158,39 @@ describe('IgxForOf directive -', () => {
             expect(parseInt(displayContainer.style.left, 10)).toEqual(0);
         });
 
+        for (const dir of ['ltr', 'rtl']) {
+            it(`should keep the horizontal scroll offset if igxForOf changes while scrolled (${dir})`, () => {
+                const sign = dir === 'rtl' ? -1 : 1;
+                fix.debugElement.nativeElement.dir = dir;
+                fix.componentInstance.width = '500px';
+                fix.componentInstance.cols = [
+                    { field: '1', width: 100 },
+                    { field: '2', width: 200 },
+                    { field: '3', width: 200 },
+                    { field: '4', width: 200 },
+                    { field: '5', width: 300 }
+                ];
+                fix.detectChanges();
+
+                fix.componentInstance.scrollLeft(sign * 250);
+                fix.detectChanges();
+                const firstDir = fix.componentInstance.childVirtDirs.first;
+                expect(firstDir.state.startIndex).toBe(1);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 150);
+
+                // widening the last column keeps the scroll position and the start index
+                fix.componentInstance.cols = [
+                    ...fix.componentInstance.cols.slice(0, 4),
+                    { field: '5', width: 400 }
+                ];
+                fix.detectChanges();
+
+                expect(Math.abs(horizontalScroller.scrollLeft)).toBe(250);
+                expect(firstDir.state.startIndex).toBe(1);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 150);
+            });
+        }
+
         it('should allow scroll in rtl direction.', () => {
             fix.debugElement.nativeElement.dir = 'rtl';
             fix.detectChanges();
