@@ -7,22 +7,6 @@
     }
 }
 
-.rtl-sample {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    padding-block-end: 24px;
-
-    strong {
-        margin-bottom: 0;
-    }
-
-    .igx-tabs--start,
-    .igx-tabs--end {
-        height: 240px;
-    }
-}
-
 strong {
     color: hsla(var(--ig-secondary-500));
     display: block;

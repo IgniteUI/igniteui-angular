@@ -65,7 +65,6 @@ export class TabsShowcaseSampleComponent implements OnInit {
 
     public selectedTabId = this.contacts[0]?.id;
     public indexMessage: string;
-    public rtlPositions = ['top', 'start', 'end'] as const;
 
     private pcs = inject(PropertyChangeService);
     private cdr = inject(ChangeDetectorRef);

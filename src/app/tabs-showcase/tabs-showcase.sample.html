@@ -43,22 +43,6 @@
             }
         </igc-tabs>
     </div>
-
-    <div class="sample-wrapper rtl-sample" dir="rtl">
-        <strong>Right-to-left</strong>
-        @for (position of rtlPositions; track position) {
-            <igx-tabs [headerPosition]="position">
-                @for (contact of contacts; track contact.id) {
-                    <igx-tab-item>
-                        <igx-tab-header>
-                            <span igxTabHeaderLabel>{{ contact.text }}</span>
-                        </igx-tab-header>
-                        <igx-tab-content><code dir="ltr">headerPosition="{{ position }}"</code></igx-tab-content>
-                    </igx-tab-item>
-                }
-            </igx-tabs>
-        }
-    </div>
 </div>
 
 <ng-template #customControlsTemplate>
