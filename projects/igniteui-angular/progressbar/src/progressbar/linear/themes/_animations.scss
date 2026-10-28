@@ -148,14 +148,3 @@ $easing-curves: (
         transform-origin: left;
     }
 }
-
-// Initial animations
-@keyframes igx-initial-width {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: calc(var(--_progress-whole, 0) * 1%);
-    }
-}
