@@ -50,7 +50,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridMissingChildDataComponent,
                 IgxHierarchicalGridNestedKeyComponent,
                 IgxHierarchicalGridActionStripComponent,
-                IgxHierarchicalGridInChildGridDialogComponent
+                IgxHierarchicalGridInChildGridDialogComponent,
+                IgxHierarchicalGridAutosizeFilteringComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -2870,6 +2871,130 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         });
     });
 
+    describe('IgxHierarchicalGrid Column Autosizing #hGrid', () => {
+        type AutosizeMode = 'autosize' | 'autosizeByHeader' | 'dblclick';
+        type AutosizeFixture = ComponentFixture<IgxHierarchicalGridAutosizeFilteringComponent>;
+
+        const AUTOSIZE_MODES: AutosizeMode[] = ['autosize', 'autosizeByHeader', 'dblclick'];
+        const AUTOSIZED_FIELDS = ['ID', 'ProductName'];
+        const INITIAL_WIDTH = 250;
+        const NARROW_WIDTH = '100px';
+        // snaps the 1px header border to 0.8px, like 125% display scaling
+        const FRACTIONAL_ZOOM = '1.25';
+
+        const createAutosizeHGrid = async (allowFiltering: boolean, zoom = ''): Promise<AutosizeFixture> => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridAutosizeFilteringComponent);
+            if (zoom) {
+                fix.nativeElement.style.zoom = zoom;
+            }
+            fix.componentInstance.allowFiltering = allowFiltering;
+            fix.detectChanges();
+            await nextFrame();
+            fix.detectChanges();
+            return fix;
+        };
+
+        const getRootGrid = async (fix: AutosizeFixture): Promise<IgxHierarchicalGridComponent> => fix.componentInstance.hgrid;
+
+        const expandFirstChildGrid = async (fix: AutosizeFixture): Promise<IgxHierarchicalGridComponent> => {
+            const rootGrid = fix.componentInstance.hgrid;
+            rootGrid.expandRow(rootGrid.dataRowList.first.key);
+            fix.detectChanges();
+            await nextFrame();
+            fix.detectChanges();
+            return rootGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+        };
+
+        const getWidths = (grid: IgxHierarchicalGridComponent): string[] =>
+            AUTOSIZED_FIELDS.map(field => grid.getColumnByName(field).width);
+
+        const setWidths = (fix: AutosizeFixture, grid: IgxHierarchicalGridComponent, width: string) => {
+            AUTOSIZED_FIELDS.forEach(field => {
+                grid.getColumnByName(field).width = width;
+            });
+            fix.detectChanges();
+        };
+
+        const autosizeColumns = async (fix: AutosizeFixture, grid: IgxHierarchicalGridComponent, mode: AutosizeMode): Promise<string[]> => {
+            for (const field of AUTOSIZED_FIELDS) {
+                if (mode === 'dblclick') {
+                    const header = GridFunctions.getColumnHeader(field, fix, grid);
+                    UIInteractions.simulateMouseEvent('dblclick', GridFunctions.getHeaderResizeArea(header).nativeElement, 0, 0);
+                    await nextFrame();
+                } else {
+                    grid.getColumnByName(field).autosize(mode === 'autosizeByHeader');
+                }
+                fix.detectChanges();
+            }
+            return getWidths(grid);
+        };
+
+        const getFilteringCell = (fix: AutosizeFixture, grid: IgxHierarchicalGridComponent, field: string): HTMLElement =>
+            GridFunctions.getColumnHeader(field, fix, grid).parent.query(By.css('igx-grid-filtering-cell')).nativeElement;
+
+        // the chips area shrinks with the cell, so overflowing chips reach the cell padding before the cell overflows
+        const overflowsContentBox = (cell: HTMLElement) =>
+            [cell, cell.querySelector<HTMLElement>('igx-chips-area')].some(element => !!element && element.scrollWidth - element.clientWidth > 1);
+
+        /**
+         * Compares autosizing the root or child grid with and without quick filtering. Each grid is measured before
+         * the next one is created, as creating a fixture detaches the previous one.
+         */
+        const verifyAutosizeWithFilteringCells = async (getGrid: (fix: AutosizeFixture) => Promise<IgxHierarchicalGridComponent>, zoom = '') => {
+            for (const mode of AUTOSIZE_MODES) {
+                const context = `${mode}, zoom: ${zoom || 1}`;
+
+                const referenceFix = await createAutosizeHGrid(false, zoom);
+                const referenceGrid = await getGrid(referenceFix);
+                const reference = await autosizeColumns(referenceFix, referenceGrid, mode);
+                reference.forEach(width =>
+                    expect(parseFloat(width), `${context}, without filtering`).toBeLessThan(INITIAL_WIDTH));
+                // autosizing from the narrow width has to widen the Product column
+                expect(parseFloat(reference[AUTOSIZED_FIELDS.indexOf('ProductName')]), context)
+                    .toBeGreaterThan(parseFloat(NARROW_WIDTH));
+                expect(await autosizeColumns(referenceFix, referenceGrid, mode), `${context}, without filtering`).toEqual(reference);
+                setWidths(referenceFix, referenceGrid, NARROW_WIDTH);
+                expect(await autosizeColumns(referenceFix, referenceGrid, mode), `${context}, without filtering, from ${NARROW_WIDTH}`)
+                    .toEqual(reference);
+
+                const fix = await createAutosizeHGrid(true, zoom);
+                const grid = await getGrid(fix);
+                expect(getWidths(grid), context).toEqual(AUTOSIZED_FIELDS.map(() => `${INITIAL_WIDTH}px`));
+                const widths = await autosizeColumns(fix, grid, mode);
+                for (let i = 2; i <= 3; i++) {
+                    expect(await autosizeColumns(fix, grid, mode), `${context}, with filtering, call ${i}`).toEqual(widths);
+                }
+                AUTOSIZED_FIELDS.forEach((field, i) => {
+                    const fieldContext = `${context}, with filtering, ${field}`;
+                    const columnWidth = grid.getColumnByName(field).width;
+                    const filteringCell = getFilteringCell(fix, grid, field);
+                    expect(parseFloat(widths[i]), fieldContext).toBeLessThan(INITIAL_WIDTH);
+                    expect(parseFloat(widths[i]), fieldContext).toBeGreaterThanOrEqual(parseFloat(reference[i]));
+                    expect(overflowsContentBox(filteringCell), `${fieldContext}, filtering cell overflows`).toBe(false);
+                    expect(GridFunctions.getColumnHeader(field, fix, grid).nativeElement.style.width, `${fieldContext}, header width`)
+                        .toBe(columnWidth);
+                    expect(filteringCell.style.width, `${fieldContext}, filtering cell width`).toBe(columnWidth);
+                });
+
+                setWidths(fix, grid, NARROW_WIDTH);
+                expect(await autosizeColumns(fix, grid, mode), `${context}, with filtering, from ${NARROW_WIDTH}`).toEqual(widths);
+            }
+        };
+
+        it('should autosize root grid columns to their content when filtering is enabled.', async () => {
+            await verifyAutosizeWithFilteringCells(getRootGrid);
+        });
+
+        it('should autosize child grid columns to their content when filtering is enabled.', async () => {
+            await verifyAutosizeWithFilteringCells(expandFirstChildGrid);
+        });
+
+        it('should not grow root and child grid columns on repeated autosizing with fractional CSS zoom when filtering is enabled.', async () => {
+            await verifyAutosizeWithFilteringCells(getRootGrid, FRACTIONAL_ZOOM);
+            await verifyAutosizeWithFilteringCells(expandFirstChildGrid, FRACTIONAL_ZOOM);
+        });
+    });
+
     describe('IgxHierarchicalGrid Destroy #hGrid', () => {
         // A destroyed column has completed its destroy$, so a late subscriber completes synchronously.
         const isDestroyed = (column: IgxColumnComponent) => {
@@ -3661,4 +3786,30 @@ export class IgxHierarchicalGridReplaceColumnsComponent {
             return row;
         });
     }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [primaryKey]="'ID'"
+        [height]="'600px'" [width]="'800px'" [allowFiltering]="allowFiltering">
+        <igx-column field="ID" header="ID" dataType="number" width="250px" [resizable]="true"></igx-column>
+        <igx-column field="ProductName" header="Product" width="250px" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [primaryKey]="'ID'" [allowFiltering]="allowFiltering">
+            <igx-column field="ID" header="ID" dataType="number" width="250px" [resizable]="true"></igx-column>
+            <igx-column field="ProductName" header="Product" width="250px" [sortable]="true" [resizable]="true"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridAutosizeFilteringComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    public allowFiltering = true;
+    public data: any[] = [
+        { ID: 1, ProductName: 'Product A', childData: [{ ID: 11, ProductName: 'Product A1' }, { ID: 12, ProductName: 'Product A2' }] },
+        { ID: 2, ProductName: 'Product B', childData: [{ ID: 21, ProductName: 'Product B1' }] },
+        { ID: 3, ProductName: 'Product C', childData: [{ ID: 31, ProductName: 'Product C1' }] }
+    ];
 }
