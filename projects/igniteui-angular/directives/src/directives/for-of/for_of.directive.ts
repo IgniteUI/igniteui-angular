@@ -1511,7 +1511,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     /**
-     * @hidden
      * Creates an embedded view for the item after the current chunk and updates chunkSize.
      * When the chunk already reaches the end of the data, the view is created for the item before it
      * and prepended instead, so that the rendered items stay in order.
@@ -1592,8 +1591,6 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _updateScrollOffset() {
         let scrollOffset = 0;
-        // the horizontal scroll position is negative in right-to-left direction
-        const isRTL = this.scrollPosition < 0;
         const currentScroll = Math.abs(this.scrollPosition);
         if (this._virtRatio !== 1) {
             this._calcVirtualScrollPosition(currentScroll);
@@ -1605,7 +1602,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'transform';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
-         (isRTL ? scrollOffset : -scrollOffset) + 'px' :
+         (this.isRTL ? scrollOffset : -scrollOffset) + 'px' :
          `translateY(${-scrollOffset}px)`;
     }
 
