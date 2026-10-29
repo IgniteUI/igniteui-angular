@@ -21,6 +21,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxForOfDirective`
     - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
+- `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
+    - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
 
 ## 22.2.3
 
