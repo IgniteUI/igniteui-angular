@@ -6156,7 +6156,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.addRowSnackbar.open();
     }
 
-    /* blazorCSSuppress */
+    /* csSuppress */
     /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      *
@@ -6203,7 +6203,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorCSSuppress */
+    /* csSuppress */
     /**
      * Returns `ICellPosition` which defines the next cell,
      * according to the current position, that match specific criteria.
@@ -6239,7 +6239,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorCSSuppress */
+    /* csSuppress */
     /**
      * Returns `ICellPosition` which defines the previous cell,
      * according to the current position, that match specific criteria.
