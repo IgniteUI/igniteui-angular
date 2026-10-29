@@ -11,7 +11,7 @@ import {
     afterRenderEffect,
     computed,
     inject,
-    input,
+    signal,
     untracked,
     ChangeDetectionStrategy,
     ViewEncapsulation,
@@ -91,8 +91,8 @@ let NEXT_TAB_ID = 0;
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxRippleDirective, IgxIconComponent, NgClass, NgTemplateOutlet, IgxIconButtonDirective],
     host: {
-        '[class.igx-tabs--start]': 'headerPosition() === "start"',
-        '[class.igx-tabs--end]': 'headerPosition() === "end"'
+        '[class.igx-tabs--start]': 'headerPosition === "start"',
+        '[class.igx-tabs--end]': 'headerPosition === "end"'
     }
 })
 
@@ -140,11 +140,18 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
      * <igx-tabs headerPosition="start">...</igx-tabs>
      * ```
      */
-    public readonly headerPosition = input<IgxTabsHeaderPosition>(IgxTabsHeaderPosition.top);
+    @Input()
+    public get headerPosition(): IgxTabsHeaderPosition {
+        return this._headerPosition();
+    }
+
+    public set headerPosition(value: IgxTabsHeaderPosition) {
+        this._headerPosition.set(value);
+    }
 
     /** @hidden @internal */
     public readonly verticalHeaders = computed(() => {
-        const position = this.headerPosition();
+        const position = this._headerPosition();
         return position === IgxTabsHeaderPosition.start || position === IgxTabsHeaderPosition.end;
     });
 
@@ -187,6 +194,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     protected override componentName = 'igx-tabs';
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
+    private readonly _headerPosition = signal<IgxTabsHeaderPosition>(IgxTabsHeaderPosition.top);
     private _resizeObserver!: ResizeObserver;
     private _layoutFrame = 0;
     private _headersRendered = false;
@@ -412,6 +420,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     private updateScrollButtons() {
+        this.headerContainer.nativeElement.classList.add('igx-tabs-header--measured');
         const itemsContainerSize = this.getTabItemsContainerSize();
         const maxOffset = this.headersFit(itemsContainerSize)
             ? 0
@@ -434,7 +443,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             button.style.display = 'none';
         } else {
             button.disabled = buttonStyle === TabScrollButtonStyle.Disabled;
-            button.style.display = 'flex';
+            button.style.display = '';
         }
     }
 

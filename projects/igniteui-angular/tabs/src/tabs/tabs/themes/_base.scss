@@ -152,8 +152,6 @@ $theme: digest-schema($material-tabs);
         }
 
         .igx-tabs-header--vertical > & {
-            // Hidden until the headers are measured, so that a server-rendered column keeps its height
-            display: none;
             min-width: 0;
             width: auto;
             min-height: var(--_nav-btn-size);
@@ -163,6 +161,11 @@ $theme: digest-schema($material-tabs);
             igx-icon {
                 transform: rotate(90deg);
             }
+        }
+
+        .igx-tabs-header--vertical:not(.igx-tabs-header--measured) > & {
+            // Hidden until the headers are measured, so that a server-rendered column keeps its height
+            display: none;
         }
     }
 

@@ -2129,12 +2129,27 @@ describe('IgxTabs', () => {
             const buttons = [tabs.scrollPrevButton.nativeElement, tabs.scrollNextButton.nativeElement];
             const height = rectOf(tabs.headerContainer.nativeElement).height;
 
-            // The buttons as rendered on the server
+            // The header container and the buttons as rendered on the server
+            tabs.headerContainer.nativeElement.classList.remove('igx-tabs-header--measured');
             buttons.forEach(button => button.style.removeProperty('display'));
 
             buttons.forEach(button => expect(isDisplayed(button)).toBe(false));
             expectNear(rectOf(tabs.headerContainer.nativeElement).height, height);
         });
+
+        for (const position of ['top', 'start'] as const) {
+            it(`should keep the scroll buttons hidden by an application style when the headers overflow (${position})`, async () => {
+                const style = document.createElement('style');
+                style.textContent = 'igx-tabs .igx-tabs-header-button { display: none; }';
+                document.head.appendChild(style);
+                onTestFinished(() => style.remove());
+
+                await createTabs(component => limitSize(component, position, 200));
+
+                expect(isDisplayed(tabs.scrollPrevButton.nativeElement)).toBe(false);
+                expect(isDisplayed(tabs.scrollNextButton.nativeElement)).toBe(false);
+            });
+        }
 
         it('should keep the selected header in view when justified headers move to a column', async () => {
             const longLabel = 'A long tab header label that is much wider than the maximum width of a header on a single line';
@@ -2165,25 +2180,6 @@ describe('IgxTabs', () => {
             tabsElement.style.maxHeight = '';
             await vi.waitFor(() => expect(isDisplayed(next)).toBe(false));
             expect(resizeObserverErrors).toEqual([]);
-        });
-
-        it('should keep the width of a column of justified headers within the maximum width of a header', async () => {
-            const longLabel = 'A long tab header label that is much wider than the maximum width of a header on a single line';
-            await createTabs(component => {
-                component.headerPosition.set('start');
-                component.height.set('320px');
-                component.items.set([{ id: 1, label: 'Tab 1' }, { id: 2, label: longLabel }]);
-            });
-            const width = rectOf(tabs.headerContainer.nativeElement).width;
-            expect(width).toBeLessThanOrEqual(360);
-
-            host.tabAlignment.set('justify');
-            await settle();
-            await vi.waitFor(() => {
-                expectNear(rectOf(tabs.headerContainer.nativeElement).width, width);
-                expectNear(rectOf(contentOf(tabs)).width, 600 - width);
-                expectHeaderLayout(tabs, 'start');
-            });
         });
 
         for (const position of ['top', 'start'] as const) {
@@ -2306,6 +2302,10 @@ describe('IgxTabs', () => {
 
             expectNear(rectOf(tabsElement).height, headerContainer.height);
             expect(isDisplayed(tabs.scrollNextButton.nativeElement)).toBe(false);
+
+            host.tabAlignment.set('justify');
+            await settle();
+            await vi.waitFor(() => expectNear(rectOf(tabs.headerContainer.nativeElement).width, headerContainer.width));
 
             const narrowWidth = Math.round(headerContainer.width) + 100;
             host.width.set(`${narrowWidth}px`);
