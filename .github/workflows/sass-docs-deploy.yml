@@ -1,0 +1,144 @@
+name: SassDoc deploy
+
+# Builds the SassDoc site for a release and hands it to IgniteUI/igniteui-actions, which deploys it
+# to the internal web servers. The theme serves the site from a fixed base path
+# (/products/ignite-ui-angular/docs/sass/latest/), so only the newest release is deployed:
+# staging takes the newest tag, production the newest stable one.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to deploy the SassDoc for (e.g. 22.2.4)'
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: sass-docs-deploy
+
+env:
+  VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}
+
+jobs:
+  resolve:
+    name: Resolve environments
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      environments: ${{ steps.environments.outputs.environments }}
+
+    steps:
+      - name: Compare the release with the newest tags
+        id: environments
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+            set -euo pipefail
+
+            # sort -V orders "~" before anything, so 22.2.0~rc.1 sorts below 22.2.0.
+            versions=$(
+              { gh api --paginate "repos/${GITHUB_REPOSITORY}/tags?per_page=100" --jq '.[].name'; echo "$VERSION"; } \
+                | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$' \
+                | sed 's/-/~/' | sort -uV | sed 's/~/-/'
+            )
+            newest=$(tail -n1 <<< "$versions")
+            newest_stable=$(grep -v -- - <<< "$versions" | tail -n1)
+
+            environments=()
+            if [[ "$VERSION" == "$newest" ]]; then environments+=(staging); fi
+            if [[ "$VERSION" == "$newest_stable" ]]; then environments+=(production); fi
+
+            echo "environments=$(jq -nc '$ARGS.positional' --args "${environments[@]}")" >> "$GITHUB_OUTPUT"
+
+            {
+              echo "### SassDoc ${VERSION}"
+              echo "- Newest tag: ${newest}"
+              echo "- Newest stable tag: ${newest_stable}"
+              echo "- Deploying to: ${environments[*]:-nothing, a newer release owns the docs}"
+            } >> "$GITHUB_STEP_SUMMARY"
+
+  # Builds the site per environment: each one embeds its own URLs, analytics ID and header/footer.
+  build:
+    name: Build (${{ matrix.environment }})
+    needs: resolve
+    if: needs.resolve.outputs.environments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        environment: ${{ fromJSON(needs.resolve.outputs.environments) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ env.VERSION }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.x
+
+      - run: npm ci
+
+      - name: Build SassDoc
+        run: npm run build:sassdoc:en:${{ matrix.environment }}
+
+      - name: Upload SassDoc
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sass-docs-${{ matrix.environment }}-${{ env.VERSION }}
+          path: dist/igniteui-angular/docs/sass
+          retention-days: 7
+          if-no-files-found: error
+
+  # Holds the app token and never runs repository code.
+  deploy:
+    name: Deploy (${{ matrix.environment }})
+    needs: [resolve, build]
+    if: needs.resolve.outputs.environments != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    strategy:
+      matrix:
+        environment: ${{ fromJSON(needs.resolve.outputs.environments) }}
+
+    steps:
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}
+          private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+          owner: IgniteUI
+          repositories: igniteui-actions
+
+      # igniteui-actions downloads the artifact from this run and syncs it into angular-docs\sass\latest,
+      # which the site serves at /products/ignite-ui-angular/docs/sass/latest/.
+      - name: Trigger deploy workflow in IgniteUI Actions
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # equivalent to release v4.0.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: IgniteUI/igniteui-actions
+          event-type: igniteui-angular-sass-docs-cd
+          client-payload: |
+            {
+              "calling_branch": "${{ github.ref }}",
+              "environment": "${{ matrix.environment }}",
+              "artifact_name": "sass-docs-${{ matrix.environment }}-${{ env.VERSION }}",
+              "base_href": "angular-docs\\sass\\latest",
+              "platform": "angular",
+              "repository": "${{ github.repository }}",
+              "run_id": "${{ github.run_id }}",
+              "locale": "en"
+            }
