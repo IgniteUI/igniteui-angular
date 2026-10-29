@@ -209,7 +209,9 @@ export class IgxDayItemComponent {
         const context = this._templateContext;
         const disabled = this.isDisabled;
 
-        context.$implicit = context.date = this.date.native;
+        if (context.date?.getTime() !== this.date.timestamp) {
+            context.$implicit = context.date = this.date.native;
+        }
         context.formattedDate = formattedDate;
         context.selected = !disabled && this.isSelectable && !!this.selected;
         context.disabled = disabled;

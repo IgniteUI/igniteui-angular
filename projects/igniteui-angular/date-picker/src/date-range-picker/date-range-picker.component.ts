@@ -487,7 +487,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ContentChild(IgxCalendarSubheaderTemplateDirective)
     private subheaderTemplate!: IgxCalendarSubheaderTemplateDirective;
 
-    /** @hidden @internal */
     @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
     protected set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | undefined) {
         this._dayTemplate = value ?? null;

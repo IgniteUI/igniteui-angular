@@ -186,8 +186,7 @@ export interface IgxCalendarDayTemplateContext {
  * ```
  */
 @Directive({
-    selector: '[igxCalendarDay]',
-    standalone: true
+    selector: '[igxCalendarDay]'
 })
 export class IgxCalendarDayTemplateDirective {
     public template = inject<TemplateRef<IgxCalendarDayTemplateContext>>(TemplateRef);

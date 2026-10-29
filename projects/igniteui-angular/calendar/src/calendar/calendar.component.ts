@@ -376,12 +376,11 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
      */
     @Input()
     public get dayTemplate(): TemplateRef<IgxCalendarDayTemplateContext> | null {
-        return this._dayTemplate ?? this.dayTemplateDirective ?? null;
+        return this._dayTemplate ?? this.contentDayTemplate ?? null;
     }
 
     public set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | null) {
         this._dayTemplate = value;
-        this.cdr?.markForCheck();
     }
 
     /**
@@ -441,12 +440,8 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
     @ContentChild(forwardRef(() => IgxCalendarSubheaderTemplateDirective), { read: IgxCalendarSubheaderTemplateDirective, static: true })
     private subheaderTemplateDirective!: IgxCalendarSubheaderTemplateDirective;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @ContentChild(forwardRef(() => IgxCalendarDayTemplateDirective), { read: TemplateRef })
-    private dayTemplateDirective?: TemplateRef<IgxCalendarDayTemplateContext>;
+    @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
+    private contentDayTemplate?: TemplateRef<IgxCalendarDayTemplateContext>;
 
     private _dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
 

@@ -2753,6 +2753,21 @@ describe("IgxCalendar - ", () => {
                 expect(dom.queryAll(By.css(".custom-day--inactive")).length).toBe(0);
             });
 
+            it("Should keep the same date reference in the day template context until the day changes", async () => {
+                await createFixture();
+                const firstDayItem = () => dom.query(By.directive(IgxDayItemComponent)).componentInstance as IgxDayItemComponent;
+
+                const date = firstDayItem().getTemplateContext("").date;
+                fixture.detectChanges();
+                expect(firstDayItem().getTemplateContext("").date).toBe(date);
+
+                calendar.viewDate = new Date(2017, 6, 1);
+                fixture.detectChanges();
+                const nextDate = firstDayItem().getTemplateContext("").date;
+                expect(nextDate).not.toBe(date);
+                expect(nextDate.getTime()).toBe(firstDayItem().date.timestamp);
+            });
+
             it("Should pass the day states to the day template", async () => {
                 await createFixture();
 
