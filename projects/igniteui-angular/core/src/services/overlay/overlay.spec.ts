@@ -590,6 +590,16 @@ describe('igxOverlay', () => {
             overlay.detachAll();
         });
 
+        it('Should remove the dynamic component element from the DOM on detach.', () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            const overlay = fixture.componentInstance.overlay;
+            const id = overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef);
+            const element: HTMLElement = overlay.getOverlayById(id).elementRef.nativeElement;
+
+            overlay.detach(id);
+            expect(element.isConnected).toBe(false);
+        });
+
         it('Should show component passed to overlay.', async () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
             fixture.detectChanges();

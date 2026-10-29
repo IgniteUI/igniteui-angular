@@ -851,6 +851,7 @@ export class IgxOverlayService implements OnDestroy {
             if (!info.componentRef.hostView.destroyed) {
                 info.componentRef.destroy();
             }
+            info.componentRef.location.nativeElement.remove();
             delete info.componentRef;
         }
     }
