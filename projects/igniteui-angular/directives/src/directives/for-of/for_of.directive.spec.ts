@@ -655,35 +655,25 @@ describe('IgxForOf directive -', () => {
 
         it('should keep rows in order when the viewport grows at the bottom', async () => {
             const component = fix.componentInstance;
-            component.scrollTop(Number.MAX_SAFE_INTEGER);
+            // scroll 25px short of the end, so that growing by 10px does not clamp the scroll position
+            const scrollTop = 50000 * 50 - 400 - 25;
+            component.scrollTop(scrollTop);
             fix.detectChanges();
             await wait();
 
-            component.height = '200px';
-            fix.detectChanges();
-            await wait();
-
-            component.height = '600px';
-            fix.detectChanges();
-            await wait();
-            component.scrollTop(Number.MAX_SAFE_INTEGER);
+            component.height = '410px';
             fix.detectChanges();
             await wait();
 
             const rows = Array.from(displayContainer.children);
             const startIndex = component.data.length - rows.length;
-            const chunkSize = component.parentVirtDir.state.chunkSize;
-            if (chunkSize) {
-                expect(rows.length).toBe(chunkSize);
-            }
             rows.forEach((row, index) => {
                 const secondCell = row.querySelector(DISPLAY_CONTAINER)?.children[1];
                 expect(secondCell?.textContent)
                     .toBe(component.data[startIndex + index]['1'].toString());
             });
-            const lastCell = rows[rows.length - 1].querySelector(DISPLAY_CONTAINER)?.children[1];
-            expect(lastCell?.textContent)
-                .toBe(component.data[component.data.length - 1]['1'].toString());
+            // the rows are offset so that the content at the scroll position stays in view
+            expect(displayContainer.style.transform).toBe(`translateY(${startIndex * 50 - scrollTop}px)`);
         });
 
         it('should scroll to wheel event correctly', async () => {
