@@ -92,6 +92,12 @@
         inherits: true;
     }
 
+    @property --_overlay-backdrop {
+        syntax: '<color>';
+        initial-value: transparent;
+        inherits: false;
+    }
+
     @property --ig-theme {
         syntax: 'material | indigo | fluent | bootstrap';
         initial-value: material;
