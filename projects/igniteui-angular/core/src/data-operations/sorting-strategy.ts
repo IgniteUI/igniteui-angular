@@ -16,9 +16,11 @@ export interface ISortingExpression<T = any> extends IBaseEventArgs {
     /* mustCoerceToInt */
     dir: SortingDirection;
     ignoreCase?: boolean;
+    /* blazorCSSuppress */
     strategy?: ISortingStrategy;
 }
 
+/* blazorCSSuppress */
 export interface ISortingStrategy {
     /* blazorSuppress */
     sort: (

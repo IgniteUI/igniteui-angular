@@ -168,7 +168,7 @@ export class IgxPivotRowComponent extends IgxRowDirective {
         return values.find(v => v.member === measureName)?.styles;
     }
 
-    public override isCellActive(visibleColumnIndex: number) {
+    public override isCellActive(visibleColumnIndex: number): boolean {
         const nav = this.grid.navigation
         const node = nav.activeNode;
         return node && Object.keys(node).length !== 0 ?

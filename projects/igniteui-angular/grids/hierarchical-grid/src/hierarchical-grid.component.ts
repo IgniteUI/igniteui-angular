@@ -1162,7 +1162,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return hasExpandedEntry;
     }
 
-    public override getDefaultExpandState(record: any) {
+    public override getDefaultExpandState(record: any): boolean {
         if (this.hasChildrenKey && !record[this.hasChildrenKey]) {
             return false;
         }

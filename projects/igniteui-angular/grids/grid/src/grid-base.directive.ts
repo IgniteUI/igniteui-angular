@@ -316,6 +316,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._columns.some(x => x.width === 'fit-content');
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the data clone strategy of the grid when in edit mode.
      *
@@ -329,6 +330,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._dataCloneStrategy;
     }
 
+    /* blazorCSSuppress */
     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
         if (strategy) {
             this._dataCloneStrategy = strategy;
@@ -399,6 +401,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public gridScroll = new EventEmitter<IGridScrollEventArgs>();
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets a conditional class selector to the grid's row element.
@@ -418,6 +421,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Input()
     public rowClasses: any;
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets conditional style properties on the grid row element.
@@ -2423,6 +2427,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.notifyChanges();
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the filtering strategy of the grid.
      *
@@ -2436,10 +2441,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._filterStrategy;
     }
 
+    /* blazorCSSuppress */
     public set filterStrategy(classRef: IFilteringStrategy) {
         this._filterStrategy = classRef;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the sorting strategy of the grid.
      *
@@ -2453,6 +2460,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._sortingStrategy;
     }
 
+    /* blazorCSSuppress */
     public set sortStrategy(value: IGridSortingStrategy) {
         this._sortingStrategy = value;
     }
@@ -3575,7 +3583,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @param rowIndex Index of the record in the `filteredSortedData` collection.
      */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByIndex(rowIndex: number): boolean {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
             (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
     }
@@ -4425,7 +4433,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public getDefaultExpandState(_rec: any) {
+    public getDefaultExpandState(_rec: any): boolean {
         return this._defaultExpandState;
     }
 
@@ -4441,6 +4449,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.elementRef.nativeElement;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
@@ -4455,6 +4464,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.resolveOutlet();
     }
 
+    /* blazorCSSuppress */
     public set outlet(val: IgxOverlayOutletDirective) {
         this._userOutletDirective = val;
     }
@@ -5681,7 +5691,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
-    public getPinnedStartWidth(takeHidden = false) {
+    public getPinnedStartWidth(takeHidden = false): number {
         const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
         let sum = 0;
         for (const col of fc) {
@@ -5704,7 +5714,7 @@ export abstract class IgxGridBaseDirective implements GridType,
  * ```
  * @param takeHidden If we should take into account the hidden columns in the pinned area.
  */
-    public getPinnedEndWidth(takeHidden = false) {
+    public getPinnedEndWidth(takeHidden = false): number {
         const fc = takeHidden ? this._pinnedEndColumns : this.pinnedEndColumns;
         let sum = 0;
         for (const col of fc) {
@@ -5940,7 +5950,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedData(formatters = false, headers = false) {
+    public getSelectedData(formatters = false, headers = false): any[] {
         const source = this.filteredSortedData;
         return this.extractDataFromSelection(source!, formatters, headers);
     }
@@ -6048,7 +6058,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedColumnsData(formatters = false, headers = false) {
+    public getSelectedColumnsData(formatters = false, headers = false): any[] {
         const source = this.filteredSortedData ? this.filteredSortedData : this.data;
         return this.extractDataFromColumnsSelection(source!, formatters, headers);
     }
@@ -6146,7 +6156,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.addRowSnackbar.open();
     }
 
-    /* blazorCsSuppress */
+    /* csSuppress */
     /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      *
@@ -6193,7 +6203,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorCsSuppress */
+    /* csSuppress */
     /**
      * Returns `ICellPosition` which defines the next cell,
      * according to the current position, that match specific criteria.
@@ -6229,7 +6239,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorCsSuppress */
+    /* csSuppress */
     /**
      * Returns `ICellPosition` which defines the previous cell,
      * according to the current position, that match specific criteria.

@@ -85,6 +85,7 @@ export interface IColumnState {
     rowEnd?: number,
     colStart?: number;
     colEnd?: number,
+    /* blazorCSSuppress */
     /**
      * @deprecated
      */

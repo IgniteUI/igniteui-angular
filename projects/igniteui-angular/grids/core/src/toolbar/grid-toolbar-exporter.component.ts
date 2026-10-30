@@ -18,6 +18,7 @@ export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions
 /* jsonAPIComplexObject */
 /* wcAlternateName: ExporterEventArgs */
 export interface IgxExporterEvent {
+    /* blazorCSSuppress */
     exporter: IgxBaseExporter;
     /* alternateType: ExporterOptionsBase */
     options: IgxExporterOptions;

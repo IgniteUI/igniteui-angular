@@ -547,7 +547,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy, RowTy
         this.grid.deleteRowById(this.key);
     }
 
-    public isCellActive(visibleColumnIndex: number) {
+    public isCellActive(visibleColumnIndex: number): boolean {
         const node = this.grid.navigation.activeNode;
         const field = this.grid.visibleColumns[visibleColumnIndex]?.field;
         const rowSpan = this.metaData?.cellMergeMeta?.get(field)?.rowSpan;
@@ -567,7 +567,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy, RowTy
      * this.grid.selectedRows[0].pin();
      * ```
      */
-    public pin() {
+    public pin(): boolean {
         return this.grid.pinRow(this.key);
     }
 
@@ -580,7 +580,7 @@ export class IgxRowDirective implements DoCheck, AfterViewInit, OnDestroy, RowTy
      * this.grid.selectedRows[0].unpin();
      * ```
      */
-    public unpin() {
+    public unpin(): boolean {
         return this.grid.unpinRow(this.key);
     }
 
