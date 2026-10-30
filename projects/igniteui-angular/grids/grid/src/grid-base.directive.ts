@@ -3194,6 +3194,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate!: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
+    private _postRenderChecks = 0;
+    private _postRenderChecksBeforeSizing = 0;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage: string = null!;
     private _emptyFilteredGridMessage: string = null!;
@@ -4217,6 +4219,19 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
         this.cdr.markForCheck();
+    }
+
+    /**
+     * @hidden @internal
+     * Repaints after the current change detection pass, unless the grid was re-sized after rendering it.
+     */
+    public notifyChangesAfterCurrentPass() {
+        const postRenderChecks = this._postRenderChecks;
+        Promise.resolve().then(() => {
+            if (this._postRenderChecksBeforeSizing <= postRenderChecks) {
+                this.notifyChanges(true);
+            }
+        });
     }
 
     /**
@@ -7005,11 +7020,9 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected onColumnsAddedOrRemoved() {
         this.summaryService.clearSummaryCache();
-        Promise.resolve().then(() => {
-            // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
-            // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
-            this.notifyChanges(true);
-        });
+        // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+        // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+        this.notifyChangesAfterCurrentPass();
     }
 
     /**
@@ -7024,6 +7037,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
+        this._postRenderChecksBeforeSizing = this._postRenderChecks;
         this.cdr.detectChanges();
         this.resetCaches(recalcFeatureWidth);
         const hasScroll = this.hasVerticalScroll();
@@ -7048,7 +7062,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
+        // also re-runs ngDoCheck after render, which notifyChangesAfterCurrentPass relies on
         runAfterRenderOnce(this.injector, () => {
+            this._postRenderChecks++;
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
