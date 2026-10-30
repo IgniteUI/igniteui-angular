@@ -131,7 +131,7 @@ jobs:
         with:
           name: sass-docs-${{ matrix.environment }}-${{ env.VERSION }}
           path: angular-docs
-          retention-days: 7
+          retention-days: 1
           if-no-files-found: error
 
   # Holds the app token and never runs repository code.
