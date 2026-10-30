@@ -1,5 +1,5 @@
 <span
-    aria-hidden="true"
+    [attr.aria-hidden]="contentId ? null : true"
     class="igx-day-item__inner"
     [attr.id]="contentId"
     (mouseenter)="onMouseEnter()"

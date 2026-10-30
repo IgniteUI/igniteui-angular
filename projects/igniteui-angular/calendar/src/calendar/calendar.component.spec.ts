@@ -2745,6 +2745,19 @@ describe("IgxCalendar - ", () => {
                     .forEach((day) => expect(day.nativeElement.hasAttribute("aria-describedby")).toBe(false));
             });
 
+            it("Should not hide the templated content, so hidden template parts stay out of the description", async () => {
+                await createFixture();
+
+                const description = customDay(new Date(2017, 5, 13)).parentElement;
+                expect(description.id).toBe(dayItem(new Date(2017, 5, 13)).getAttribute("aria-describedby"));
+                expect(description.hasAttribute("aria-hidden")).toBe(false);
+
+                const defaultFixture = TestBed.createComponent(IgxCalendarRangeValueComponent);
+                defaultFixture.detectChanges();
+                defaultFixture.debugElement.queryAll(By.css(".igx-day-item__inner"))
+                    .forEach((inner) => expect(inner.nativeElement.getAttribute("aria-hidden")).toBe("true"));
+            });
+
             it("Should not render the day template for hidden days", async () => {
                 await createFixture((instance) => instance.hideOutsideDays = true);
 
@@ -2755,17 +2768,15 @@ describe("IgxCalendar - ", () => {
 
             it("Should keep the same date reference in the day template context until the day changes", async () => {
                 await createFixture();
-                const firstDayItem = () => dom.query(By.directive(IgxDayItemComponent)).componentInstance as IgxDayItemComponent;
+                const day: IgxDayItemComponent = dom.query(By.directive(IgxDayItemComponent)).componentInstance;
+                const date = day.getTemplateContext("").date;
 
-                const date = firstDayItem().getTemplateContext("").date;
-                fixture.detectChanges();
-                expect(firstDayItem().getTemplateContext("").date).toBe(date);
+                expect(day.getTemplateContext("").date).toBe(date);
 
-                calendar.viewDate = new Date(2017, 6, 1);
+                // June 2023 has the same layout as June 2017, so the first cell (May 28) is reused with the new year.
+                calendar.viewDate = new Date(2023, 5, 13);
                 fixture.detectChanges();
-                const nextDate = firstDayItem().getTemplateContext("").date;
-                expect(nextDate).not.toBe(date);
-                expect(nextDate.getTime()).toBe(firstDayItem().date.timestamp);
+                expect(day.getTemplateContext("").date).toEqual(new Date(2023, 4, 28));
             });
 
             it("Should pass the day states to the day template", async () => {

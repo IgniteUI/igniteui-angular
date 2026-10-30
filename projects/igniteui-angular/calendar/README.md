@@ -267,6 +267,17 @@ and `combined` is as the name suggests the combined output of the two.
 
 Decorate a `ng-template` inside the calendar with the `igxCalendarDay` directive to customize the content of the day cells,
 for example to show event indicators, availability or prices. The template can also be set through the `dayTemplate` input.
+Import `IgxCalendarDayTemplateDirective` (or `IGX_CALENDAR_DIRECTIVES`) together with the calendar, otherwise the
+`igxCalendarDay` attribute is ignored and the default day content is rendered.
+
+```typescript
+import { IgxCalendarComponent, IgxCalendarDayTemplateDirective } from 'igniteui-angular/calendar';
+
+@Component({
+    imports: [IgxCalendarComponent, IgxCalendarDayTemplateDirective],
+    ...
+})
+```
 
 ```html
 <igx-calendar>
