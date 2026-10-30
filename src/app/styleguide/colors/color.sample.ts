@@ -14,6 +14,14 @@ interface ColorGroup {
 
 const COLOR_SHADES: (string | number)[] = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700'];
 const GRAY_SHADES: (string | number)[] = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+const SURFACE_ROLES: string[] = ['base', 'sunken', 'raised', 'overlay', 'container'];
+
+type Generator = 'legacy' | 'fitted';
+
+/** The surface roles, plus the numbered shades that a legacy palette derives from `500`. */
+function surfaceShades(generator: Generator): (string | number)[] {
+    return generator === 'fitted' ? SURFACE_ROLES : [...SURFACE_ROLES, ...COLOR_SHADES];
+}
 
 function buildGroup(name: string, shades: (string | number)[]): ColorGroup {
     return {
@@ -38,11 +46,12 @@ export class ColorsSampleComponent implements OnDestroy {
     private snackbar = viewChild<IgxSnackbarComponent>('snackbar');
 
     public copiedHex = '';
+    public generator: Generator = 'legacy';
 
     public colors: ColorGroup[] = [
         buildGroup('primary', COLOR_SHADES),
         buildGroup('secondary', COLOR_SHADES),
-        buildGroup('surface', COLOR_SHADES),
+        buildGroup('surface', surfaceShades(this.generator)),
         buildGroup('gray', GRAY_SHADES),
         buildGroup('success', COLOR_SHADES),
         buildGroup('info', COLOR_SHADES),
@@ -76,8 +85,21 @@ export class ColorsSampleComponent implements OnDestroy {
         }
     }
 
+    /** The color shown in the title of a group: `base` for the surface, `500` for the rest. */
+    public titleShade(name: string): string | number {
+        return name === 'surface' ? 'base' : 500;
+    }
+
     private refreshHexValues(): void {
         const styles = getComputedStyle(this.el.nativeElement);
+        const generator = this.detectGenerator(styles);
+
+        if (generator !== this.generator) {
+            this.generator = generator;
+            this.colors = this.colors.map(color =>
+                color.name === 'surface' ? buildGroup('surface', surfaceShades(generator)) : color
+            );
+        }
 
         for (const color of this.colors) {
             for (const variant of color.variants) {
@@ -86,6 +108,15 @@ export class ColorsSampleComponent implements OnDestroy {
         }
 
         this.cdr.markForCheck();
+    }
+
+    /**
+     * A legacy palette emits its shades as relative colors of `500`, such as
+     * `hsl(from var(--ig-primary-500) ...)`, while a fitted palette emits fixed colors.
+     */
+    private detectGenerator(styles: CSSStyleDeclaration): Generator {
+        const shade = styles.getPropertyValue('--ig-primary-600');
+        return /\(\s*from\s/.test(shade) ? 'legacy' : 'fitted';
     }
 
     private resolveHex(styles: CSSStyleDeclaration, name: string, shade: string | number): string {
@@ -125,7 +156,9 @@ export class ColorsSampleComponent implements OnDestroy {
         ctx.fillStyle = '#000';
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, 1, 1);
-        const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
-        return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+        const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+        const hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+        // a translucent color, such as the surface container, keeps its alpha
+        return a < 255 ? `${hex}${a.toString(16).padStart(2, '0').toUpperCase()}` : hex;
     }
 }

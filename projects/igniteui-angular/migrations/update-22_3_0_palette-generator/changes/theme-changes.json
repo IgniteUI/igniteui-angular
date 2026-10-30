@@ -1,0 +1,14 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$generator",
+      "add": "'legacy'",
+      "type": "property",
+      "owner": "palette",
+      "exactOwner": true,
+      "ownerType": "function",
+      "parameterIndex": 10
+    }
+  ]
+}

@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.0
+
+### Themes
+
+- **Breaking Change** - Updated to Ignite UI Theming 30.0.0. The `palette()` function builds palettes with the new `fitted` generator by default, which places every shade by contrast and emits it as a fixed color. The predefined palettes and the pre-built themes keep the `legacy` generator and are unchanged.
+    - `ng update` adds `$generator: 'legacy'` to existing `palette()` calls, so they keep the colors they produced before. Remove the argument to switch a palette to the `fitted` generator.
+    - The deprecated `light-theme`, `dark-theme`, and the other deprecated theme wrapper mixins build their palettes with the `legacy` generator.
+- **Breaking Change** - Component themes take their background from the `base` surface role, `--ig-surface-base`, instead of `--ig-surface-500`. Override the surface roles (`--ig-surface-base`, `--ig-surface-raised`, `--ig-surface-overlay`, `--ig-surface-sunken`, `--ig-surface-container`) instead of `--ig-surface-500` to change the surface at runtime.
+    - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
+
 ## Unreleased
 
 ### Behavioral Changes
@@ -38,6 +48,9 @@ All notable changes for each version of this project will be documented in this 
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
+    - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxPivotGridComponent`
