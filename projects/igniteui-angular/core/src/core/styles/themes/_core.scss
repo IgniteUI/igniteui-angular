@@ -86,6 +86,12 @@
         inherits: true;
     }
 
+    @property --_progress-whole {
+        syntax: '<number>';
+        initial-value: 0;
+        inherits: true;
+    }
+
     @property --ig-theme {
         syntax: 'material | indigo | fluent | bootstrap';
         initial-value: material;
