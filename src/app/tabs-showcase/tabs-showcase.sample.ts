@@ -132,6 +132,13 @@ export class TabsShowcaseSampleComponent implements OnInit {
         this.cdr.detectChanges(); // Notify Angular of the programmatic change
     }
 
+    public onSelectedIndexChange(index: number) {
+        // -1 is reported while the previous tab is deselected, before the next one is selected
+        if (index >= 0) {
+            this.selectedTabId = this.contacts[index].id;
+        }
+    }
+
     /**
      * Add a new tab and automatically select it.
      */
