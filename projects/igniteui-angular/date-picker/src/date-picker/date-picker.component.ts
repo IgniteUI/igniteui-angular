@@ -586,6 +586,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
+        if (!this.collapsed) {
+            // do not leave a focused input in edit mode during the opening animation
+            this._calendar?.wrapper?.nativeElement?.focus();
+        }
     }
 
     /**
@@ -810,6 +814,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
+    /** @hidden @internal */
+    public onToggleClick(event: MouseEvent): void {
+        // do not focus input on click
+        event.stopPropagation();
+        this.toggle();
+    }
+
     private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
@@ -909,8 +920,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-
-            this._calendar.wrapper?.nativeElement?.focus();
         });
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {

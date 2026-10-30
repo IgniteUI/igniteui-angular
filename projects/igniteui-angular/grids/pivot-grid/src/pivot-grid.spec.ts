@@ -2087,6 +2087,34 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             }));
 
+            it('should auto-size value columns to their content via the API.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                const valueColumn = pivotGrid.columns.find(column => !column.columnGroup);
+                const initialWidth = parseFloat(valueColumn.width);
+
+                valueColumn.autosize(true);
+                fixture.detectChanges();
+                const autosizedWidth = valueColumn.width;
+                expect(parseFloat(autosizedWidth)).toBeLessThan(initialWidth);
+                const title: HTMLElement = valueColumn.headerCell.nativeElement.querySelector('.igx-grid-th__title');
+                expect(title.scrollWidth - title.clientWidth).toBeLessThanOrEqual(1);
+
+                valueColumn.autosize(true);
+                fixture.detectChanges();
+                expect(valueColumn.width).toBe(autosizedWidth);
+
+                valueColumn.autosize();
+                fixture.detectChanges();
+                expect(parseFloat(valueColumn.width)).toBeLessThan(initialWidth);
+                expect(parseFloat(valueColumn.width)).toBeGreaterThanOrEqual(parseFloat(autosizedWidth));
+
+                valueColumn.width = '40px';
+                fixture.detectChanges();
+                valueColumn.autosize(true);
+                fixture.detectChanges();
+                expect(valueColumn.width).toBe(autosizedWidth);
+            });
+
             it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration = undefined;
