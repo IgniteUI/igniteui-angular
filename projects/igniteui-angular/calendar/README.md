@@ -167,6 +167,9 @@ Controls the number of month views displayed. Default is 1.
 - `hideOusideDays: boolean`
 Controls the visibility of the dates that do not belong to the current month.
 
+- `dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null`
+Sets a template for the content of the day cells. When not set, the template marked with the `igxCalendarDay` directive is used, if any. See [Day template](#day-template).
+
 
 ### Outputs
 
@@ -259,3 +262,67 @@ In the `igxCalendarSubheader` context this is the same as the `viewDate` (offset
 ```
 where `value` is the locale string representation of the date component, `literal` is the locale string separator (if any),
 and `combined` is as the name suggests the combined output of the two.
+
+#### Day template
+
+Decorate a `ng-template` inside the calendar with the `igxCalendarDay` directive to customize the content of the day cells,
+for example to show event indicators, availability or prices. The template can also be set through the `dayTemplate` input.
+Import `IgxCalendarDayTemplateDirective` (or `IGX_CALENDAR_DIRECTIVES`) together with the calendar, otherwise the
+`igxCalendarDay` attribute is ignored and the default day content is rendered.
+
+```typescript
+import { IgxCalendarComponent, IgxCalendarDayTemplateDirective } from 'igniteui-angular/calendar';
+
+@Component({
+    imports: [IgxCalendarComponent, IgxCalendarDayTemplateDirective],
+    ...
+})
+```
+
+```html
+<igx-calendar>
+        <ng-template igxCalendarDay let-date let-selected="selected" let-disabled="disabled">
+                <span class="day">
+                        {{ date.getDate() }}
+                        @if (hasEvents(date)) {
+                                <span class="day__dot"></span>
+                        }
+                </span>
+        </ng-template>
+</igx-calendar>
+```
+
+```scss
+.day__dot {
+        // `currentColor` follows the day cell foreground, so the dot stays visible on the selected background.
+        background: currentColor;
+}
+```
+
+The template replaces only the default day number. The day cell keeps the selection, the keyboard navigation,
+the ARIA attributes and the state styling (selected, range, current, special, disabled, etc.), so selecting a
+templated day works as before and the theme still draws its selected state. The template is not rendered for hidden days
+(see `hideOutsideDays`) and is used in every month view when `monthsViewNumber` is greater than `1`.
+The `igx-date-picker` and `igx-date-range-picker` pass a template marked with `igxCalendarDay` to their calendar.
+The directive is included in `IGX_DATE_PICKER_DIRECTIVES` and `IGX_DATE_RANGE_PICKER_DIRECTIVES`.
+
+**NOTE:** The day cell is announced through its own `aria-label`, and the text rendered by the template is announced as
+the cell description, so render readable text (e.g. "3 events") rather than symbols only. The template should not contain
+focusable or interactive elements, since a click anywhere in the cell selects the date.
+Use `currentColor` or the `selected` context property to keep the content readable on the selected background.
+
+| Name               | Type    | Description                                                                         |
+| :----------------- | :-----: | :---------------------------------------------------------------------------------- |
+| $implicit, date    | Date    | The date of the day cell.                                                           |
+| formattedDate      | string  | The default text of the day cell, formatted with `formatOptions` and `formatViews`. |
+| selected           | boolean | Whether the day is rendered as selected.                                            |
+| disabled           | boolean | Whether the day is disabled through `disabledDates`.                                |
+| special            | boolean | Whether the day is marked as special through `specialDates`.                        |
+| today              | boolean | Whether the day is the current date.                                                |
+| weekend            | boolean | Whether the day is a weekend day.                                                   |
+| currentMonth       | boolean | Whether the day belongs to the displayed month.                                     |
+| active             | boolean | Whether the day is the active (keyboard focused) day.                               |
+| firstInRange       | boolean | Whether the day is the first day of the selected or previewed range.                |
+| lastInRange        | boolean | Whether the day is the last day of the selected or previewed range.                 |
+| withinRange        | boolean | Whether the day is within the selected range. Always `false` unless `selection` is `range`. |
+| withinPreviewRange | boolean | Whether the day is within the previewed range while a range is being selected.      |

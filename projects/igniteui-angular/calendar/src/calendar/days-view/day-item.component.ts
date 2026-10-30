@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CalendarSelection } from '../calendar';
+import { IgxCalendarDayTemplateContext } from '../calendar.directives';
 import { areSameMonth, CalendarDay, DateRangeDescriptor, isDateInRanges, isNextMonth, isPreviousMonth } from 'igniteui-angular/core';
 
 /**
@@ -68,6 +69,11 @@ export class IgxDayItemComponent {
     @Input({ transform: booleanAttribute })
     public hideTrailingDays = false;
 
+    /** The id of the templated content, which describes the day cell for assistive technologies. */
+    @Input()
+    @HostBinding('attr.aria-describedby')
+    public contentId: string | null = null;
+
     private get hideLeading() {
         return this.hideLeadingDays && this.isPreviousMonth;
     }
@@ -110,10 +116,12 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-day-item--selected')
     public get isSelectedCSS(): boolean {
-    const selectable =
-        !this.isInactive || this.isWithinPreviewRange ||
-        (this.isWithinRange && this.selection === "range");
-    return !this.isDisabled && selectable && this.selected;
+        return !this.isDisabled && this.isSelectable && this.selected;
+    }
+
+    private get isSelectable(): boolean {
+        return !this.isInactive || this.isWithinPreviewRange ||
+            (this.isWithinRange && this.selection === "range");
     }
 
     @HostBinding('class.igx-day-item--inactive')
@@ -190,5 +198,36 @@ export class IgxDayItemComponent {
         return this.selection !== CalendarSelection.RANGE;
     }
 
+    /**
+     * Returns the context for the day template.
+     * The same object is updated in place on every call, and each date range is checked once.
+     *
+     * @hidden
+     * @internal
+     */
+    public getTemplateContext(formattedDate: string): IgxCalendarDayTemplateContext {
+        const context = this._templateContext;
+        const disabled = this.isDisabled;
+
+        if (context.date?.getTime() !== this.date.timestamp) {
+            context.$implicit = context.date = this.date.native;
+        }
+        context.formattedDate = formattedDate;
+        context.selected = !disabled && this.isSelectable && !!this.selected;
+        context.disabled = disabled;
+        context.special = this.isSpecial;
+        context.today = this.isToday;
+        context.weekend = this.isWeekend;
+        context.currentMonth = this.isCurrentMonth;
+        context.active = this.isActive;
+        context.firstInRange = this.isFirstInRange;
+        context.lastInRange = this.isLastInRange;
+        context.withinRange = this.isWithinRangeCSS;
+        context.withinPreviewRange = this.isWithinPreviewRange;
+
+        return context;
+    }
+
     private _selected = false;
+    private _templateContext = {} as IgxCalendarDayTemplateContext;
 }

@@ -1,4 +1,4 @@
-import { Component, DebugElement, LOCALE_ID, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, DebugElement, LOCALE_ID, ViewChild, ChangeDetectionStrategy, TemplateRef } from "@angular/core";
 import { TestBed, ComponentFixture } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
@@ -7,7 +7,7 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { registerLocaleData } from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 
-import { Calendar, IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarView, isLeap, IViewDateChangeEventArgs, monthRange, range, weekDay, } from "./public_api";
+import { Calendar, IgxCalendarComponent, IgxCalendarDayTemplateContext, IgxCalendarDayTemplateDirective, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarView, isLeap, IViewDateChangeEventArgs, monthRange, range, weekDay, } from "./public_api";
 import { getCurrentI18n, setCurrentI18n } from "igniteui-i18n-core";
 import { UIInteractions } from "../../../test-utils/ui-interactions.spec";
 import { advance, useFakeClock } from "../../../test-utils/helper-utils.spec";
@@ -142,6 +142,8 @@ describe("IgxCalendar - ", () => {
                     IgxCalendarValueComponent,
                     IgxCalendarTemplatesComponent,
                     IgxCalendarRangeValueComponent,
+                    IgxCalendarDayTemplateComponent,
+                    IgxCalendarDayTemplateInputComponent,
                 ],
             }).compileComponents();
         });
@@ -2695,6 +2697,268 @@ describe("IgxCalendar - ", () => {
                 }
             });
         });
+
+        describe("Day template - ", () => {
+            let fixture: ComponentFixture<IgxCalendarDayTemplateComponent>;
+            let dom: DebugElement;
+            let calendar: IgxCalendarComponent;
+
+            const createFixture = async (setup?: (instance: IgxCalendarDayTemplateComponent) => void) => {
+                fixture = TestBed.createComponent(IgxCalendarDayTemplateComponent);
+                setup?.(fixture.componentInstance);
+                fixture.detectChanges();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                dom = fixture.debugElement;
+                calendar = fixture.componentInstance.calendar;
+            };
+
+            const customDay = (date: Date): HTMLElement =>
+                dom.query(By.css(`.custom-day[data-date="${date.toDateString()}"]`))?.nativeElement;
+
+            const dayItem = (date: Date): HTMLElement => customDay(date).closest(HelperTestFunctions.DAY_CSSCLASS);
+
+            it("Should render the day template inside every day cell with the date and formatted date", async () => {
+                await createFixture();
+
+                expect(calendar.dayTemplate).not.toBeNull();
+
+                const days = dom.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                const customDays = dom.queryAll(By.css(".custom-day"));
+                expect(customDays.length).toBe(days.length);
+
+                const day = customDay(new Date(2017, 5, 13));
+                expect(day.textContent.trim()).toBe("13!");
+                expect(day.parentElement.classList).toContain("igx-day-item__inner");
+                expect(dayItem(new Date(2017, 5, 13)).getAttribute("aria-label")).toBe(new Date(2017, 5, 13).toDateString());
+            });
+
+            it("Should describe visible templated day cells with their template content", async () => {
+                await createFixture((instance) => instance.hideOutsideDays = true);
+
+                const cell = dayItem(new Date(2017, 5, 13));
+                const description = document.getElementById(cell.getAttribute("aria-describedby")!);
+                expect(description).toBe(customDay(new Date(2017, 5, 13)).parentElement);
+                expect(cell.getAttribute("aria-label")).toBe(new Date(2017, 5, 13).toDateString());
+
+                dom.queryAll(By.css(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS))
+                    .forEach((day) => expect(day.nativeElement.hasAttribute("aria-describedby")).toBe(false));
+            });
+
+            it("Should not hide the templated content, so hidden template parts stay out of the description", async () => {
+                await createFixture();
+
+                const description = customDay(new Date(2017, 5, 13)).parentElement;
+                expect(description.id).toBe(dayItem(new Date(2017, 5, 13)).getAttribute("aria-describedby"));
+                expect(description.hasAttribute("aria-hidden")).toBe(false);
+
+                const defaultFixture = TestBed.createComponent(IgxCalendarRangeValueComponent);
+                defaultFixture.detectChanges();
+                defaultFixture.debugElement.queryAll(By.css(".igx-day-item__inner"))
+                    .forEach((inner) => expect(inner.nativeElement.getAttribute("aria-hidden")).toBe("true"));
+            });
+
+            it("Should not render the day template for hidden days", async () => {
+                await createFixture((instance) => instance.hideOutsideDays = true);
+
+                const customDays = dom.queryAll(By.css(".custom-day"));
+                expect(customDays.length).toBe(30);
+                expect(dom.queryAll(By.css(".custom-day--inactive")).length).toBe(0);
+            });
+
+            it("Should keep the same date reference in the day template context until the day changes", async () => {
+                await createFixture();
+                const day: IgxDayItemComponent = dom.query(By.directive(IgxDayItemComponent)).componentInstance;
+                const date = day.getTemplateContext("").date;
+
+                expect(day.getTemplateContext("").date).toBe(date);
+
+                // June 2023 has the same layout as June 2017, so the first cell (May 28) is reused with the new year.
+                calendar.viewDate = new Date(2023, 5, 13);
+                fixture.detectChanges();
+                expect(day.getTemplateContext("").date).toEqual(new Date(2023, 4, 28));
+            });
+
+            it("Should pass the day states to the day template", async () => {
+                await createFixture();
+
+                expect(customDay(new Date(2017, 5, 13)).classList).toContain("custom-day--selected");
+                expect(customDay(new Date(2017, 5, 14)).classList).not.toContain("custom-day--selected");
+                expect(customDay(new Date(2017, 5, 21)).classList).toContain("custom-day--disabled");
+                expect(customDay(new Date(2017, 5, 2)).classList).toContain("custom-day--special");
+                expect(customDay(new Date(2017, 5, 17)).classList).toContain("custom-day--weekend");
+                expect(customDay(new Date(2017, 4, 28)).classList).toContain("custom-day--inactive");
+                expect(customDay(new Date(2017, 5, 14)).classList).not.toContain("custom-day--inactive");
+            });
+
+            it("Should select a templated day on click and update the template state", async () => {
+                await createFixture();
+                vi.spyOn(calendar.selected, "emit");
+
+                customDay(new Date(2017, 5, 14)).click();
+                fixture.detectChanges();
+
+                expect(calendar.selected.emit).toHaveBeenCalledWith(new Date(2017, 5, 14));
+                expect(calendar.value).toEqual(new Date(2017, 5, 14));
+                expect(customDay(new Date(2017, 5, 14)).classList).toContain("custom-day--selected");
+                expect(customDay(new Date(2017, 5, 13)).classList).not.toContain("custom-day--selected");
+
+                const cell = dayItem(new Date(2017, 5, 14));
+                expect(cell.getAttribute("aria-selected")).toBe("true");
+                expect(cell.classList).toContain(HelperTestFunctions.SELECTED_DATE);
+            });
+
+            it("Should keep keyboard navigation and selection working with a day template", async () => {
+                await createFixture();
+                const wrapper = dom.query(By.css(HelperTestFunctions.CALENDAR_WRAPPER_CLASS)).nativeElement;
+                wrapper.focus();
+                calendar.activeDate = new Date(2017, 5, 13);
+                fixture.detectChanges();
+
+                UIInteractions.triggerKeyDownEvtUponElem("ArrowRight", wrapper);
+                fixture.detectChanges();
+
+                expect(calendar.activeDate).toEqual(new Date(2017, 5, 14));
+                expect(customDay(new Date(2017, 5, 14)).classList).toContain("custom-day--active");
+
+                UIInteractions.triggerKeyDownEvtUponElem("Enter", wrapper);
+                fixture.detectChanges();
+
+                expect(calendar.value).toEqual(new Date(2017, 5, 14));
+                expect(customDay(new Date(2017, 5, 14)).classList).toContain("custom-day--selected");
+            });
+
+            it("Should update the template state when the value is changed through the API", async () => {
+                await createFixture();
+
+                calendar.selectDate(new Date(2017, 5, 26));
+                fixture.detectChanges();
+
+                expect(customDay(new Date(2017, 5, 26)).classList).toContain("custom-day--selected");
+                expect(customDay(new Date(2017, 5, 13)).classList).not.toContain("custom-day--selected");
+            });
+
+            it("Should pass the range states to the day template", async () => {
+                await createFixture((instance) => {
+                    instance.selection = "range";
+                    instance.model = [new Date(2017, 5, 5), new Date(2017, 5, 8)];
+                });
+
+                const first = customDay(new Date(2017, 5, 5)).classList;
+                const middle = customDay(new Date(2017, 5, 6)).classList;
+                const last = customDay(new Date(2017, 5, 8)).classList;
+
+                expect(first).toContain("custom-day--first");
+                expect(first).toContain("custom-day--range");
+                expect(middle).toContain("custom-day--range");
+                expect(middle).not.toContain("custom-day--first");
+                expect(middle).not.toContain("custom-day--last");
+                expect(last).toContain("custom-day--last");
+                expect(customDay(new Date(2017, 5, 9)).classList).not.toContain("custom-day--range");
+            });
+
+            it("Should not pass the range state to the day template for a multi selection", async () => {
+                await createFixture((instance) => {
+                    instance.selection = "multi";
+                    instance.model = [new Date(2017, 5, 5), new Date(2017, 5, 8)];
+                });
+
+                expect(customDay(new Date(2017, 5, 5)).classList).toContain("custom-day--selected");
+                expect(customDay(new Date(2017, 5, 8)).classList).toContain("custom-day--selected");
+
+                for (const date of [6, 7]) {
+                    const day = customDay(new Date(2017, 5, date));
+                    expect(day.classList).not.toContain("custom-day--range");
+                    expect(day.classList).not.toContain("custom-day--selected");
+                    expect(dayItem(new Date(2017, 5, date)).classList).not.toContain("igx-day-item--range");
+                }
+            });
+
+            it("Should pass a boolean selected state to the day template when the selection is empty", async () => {
+                for (const selection of ["multi", "range"] as const) {
+                    await createFixture((instance) => {
+                        instance.selection = selection;
+                        instance.model = [];
+                    });
+
+                    expect(customDay(new Date(2017, 5, 14)).getAttribute("data-selected")).toBe("false");
+                    expect(customDay(new Date(2017, 4, 28)).getAttribute("data-selected")).toBe("false");
+                }
+            });
+
+            it("Should pass the today state to the day template", async () => {
+                const today = new Date();
+                await createFixture((instance) => {
+                    instance.viewDate = today;
+                    instance.model = today;
+                });
+
+                const todayDays = dom.queryAll(By.css(".custom-day--today"));
+                expect(todayDays.length).toBe(1);
+                expect(todayDays[0].nativeElement.getAttribute("data-date")).toBe(today.toDateString());
+            });
+
+            it("Should pass the preview range state to the day template while a range is being selected", async () => {
+                await createFixture((instance) => {
+                    instance.selection = "range";
+                    instance.model = [new Date(2017, 5, 5)];
+                });
+
+                expect(dom.queryAll(By.css(".custom-day--preview")).length).toBe(0);
+
+                UIInteractions.simulateMouseEvent("mouseenter", customDay(new Date(2017, 5, 8)).parentElement, 0, 0);
+                fixture.detectChanges();
+
+                for (const date of [5, 6, 7, 8]) {
+                    expect(customDay(new Date(2017, 5, date)).classList).toContain("custom-day--preview");
+                }
+                expect(customDay(new Date(2017, 5, 9)).classList).not.toContain("custom-day--preview");
+
+                UIInteractions.simulateMouseEvent("mouseleave", customDay(new Date(2017, 5, 8)).parentElement, 0, 0);
+                fixture.detectChanges();
+
+                expect(dom.queryAll(By.css(".custom-day--preview")).length).toBe(0);
+            });
+
+            it("Should give the dayTemplate input priority over the igxCalendarDay template", async () => {
+                await createFixture();
+                expect(dom.queryAll(By.css(".override-day")).length).toBe(0);
+
+                fixture.componentInstance.customTemplate = fixture.componentInstance.overrideTemplate;
+                fixture.detectChanges();
+
+                expect(calendar.dayTemplate).toBe(fixture.componentInstance.overrideTemplate);
+                expect(dom.queryAll(By.css(".custom-day")).length).toBe(0);
+                expect(dom.queryAll(By.css(".override-day")).length)
+                    .toBe(dom.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS)).length);
+
+                fixture.componentInstance.customTemplate = null;
+                fixture.detectChanges();
+
+                expect(dom.queryAll(By.css(".override-day")).length).toBe(0);
+                expect(dom.queryAll(By.css(".custom-day")).length).toBeGreaterThan(0);
+            });
+
+            it("Should render the day template in every month view", async () => {
+                await createFixture((instance) => instance.monthsViewNumber = 2);
+
+                const views = dom.queryAll(By.css(HelperTestFunctions.DAYS_VIEW));
+                expect(views.length).toBe(2);
+                views.forEach((view) => expect(view.queryAll(By.css(".custom-day")).length).toBeGreaterThan(0));
+                expect(customDay(new Date(2017, 6, 20))).toBeTruthy();
+            });
+
+            it("Should render a day template passed through the dayTemplate input", () => {
+                const inputFixture = TestBed.createComponent(IgxCalendarDayTemplateInputComponent);
+                inputFixture.detectChanges();
+
+                const days = inputFixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                const customDays = inputFixture.debugElement.queryAll(By.css(".input-day"));
+
+                expect(inputFixture.componentInstance.calendar.dayTemplate).toBe(inputFixture.componentInstance.template);
+                expect(customDays.length).toBe(days.length);
+            });
+        });
     });
 });
 
@@ -2795,6 +3059,96 @@ export class IgxCalendarTemplatesComponent {
     @ViewChild(IgxCalendarComponent, { static: true })
     public calendar: IgxCalendarComponent;
     public model = new Date(2017, 5, 13);
+    public viewDate = new Date(2017, 5, 13);
+}
+
+@Component({
+    template: `
+        <igx-calendar
+            [viewDate]="viewDate"
+            [selection]="selection"
+            [(ngModel)]="model"
+            [monthsViewNumber]="monthsViewNumber"
+            [hideOutsideDays]="hideOutsideDays"
+            [disabledDates]="disabledDates"
+            [specialDates]="specialDates"
+            [dayTemplate]="customTemplate"
+        >
+            <ng-template
+                igxCalendarDay
+                let-date
+                let-formattedDate="formattedDate"
+                let-selected="selected"
+                let-disabled="disabled"
+                let-special="special"
+                let-today="today"
+                let-weekend="weekend"
+                let-currentMonth="currentMonth"
+                let-active="active"
+                let-firstInRange="firstInRange"
+                let-lastInRange="lastInRange"
+                let-withinRange="withinRange"
+                let-withinPreviewRange="withinPreviewRange"
+            >
+                <span
+                    class="custom-day"
+                    [attr.data-date]="date.toDateString()"
+                    [attr.data-selected]="selected"
+                    [class.custom-day--selected]="selected"
+                    [class.custom-day--disabled]="disabled"
+                    [class.custom-day--special]="special"
+                    [class.custom-day--today]="today"
+                    [class.custom-day--weekend]="weekend"
+                    [class.custom-day--inactive]="!currentMonth"
+                    [class.custom-day--active]="active"
+                    [class.custom-day--first]="firstInRange"
+                    [class.custom-day--last]="lastInRange"
+                    [class.custom-day--range]="withinRange"
+                    [class.custom-day--preview]="withinPreviewRange"
+                >{{ formattedDate }}!</span>
+            </ng-template>
+        </igx-calendar>
+        <ng-template #overrideTemplate let-date>
+            <span class="override-day">{{ date.getDate() }}</span>
+        </ng-template>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCalendarComponent, IgxCalendarDayTemplateDirective, FormsModule]
+})
+export class IgxCalendarDayTemplateComponent {
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
+    @ViewChild("overrideTemplate", { static: true })
+    public overrideTemplate: TemplateRef<IgxCalendarDayTemplateContext>;
+    public customTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
+    public viewDate = new Date(2017, 5, 13);
+    public selection: "single" | "multi" | "range" = "single";
+    public model: Date | Date[] = new Date(2017, 5, 13);
+    public monthsViewNumber = 1;
+    public hideOutsideDays = false;
+    public disabledDates: DateRangeDescriptor[] = [
+        { type: DateRangeType.Between, dateRange: [new Date(2017, 5, 20), new Date(2017, 5, 22)] },
+    ];
+    public specialDates: DateRangeDescriptor[] = [
+        { type: DateRangeType.Specific, dateRange: [new Date(2017, 5, 2)] },
+    ];
+}
+
+@Component({
+    template: `
+        <igx-calendar [viewDate]="viewDate" [dayTemplate]="template"></igx-calendar>
+        <ng-template #dayTemplate let-date>
+            <span class="input-day">{{ date.getDate() }}</span>
+        </ng-template>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxCalendarComponent]
+})
+export class IgxCalendarDayTemplateInputComponent {
+    @ViewChild(IgxCalendarComponent, { static: true })
+    public calendar: IgxCalendarComponent;
+    @ViewChild("dayTemplate", { static: true })
+    public template: TemplateRef<IgxCalendarDayTemplateContext>;
     public viewDate = new Date(2017, 5, 13);
 }
 
