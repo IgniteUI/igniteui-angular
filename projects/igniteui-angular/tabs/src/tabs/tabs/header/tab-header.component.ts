@@ -10,9 +10,10 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import { IgxTabHeaderDirective } from '../../tab-header.directive';
+import { IgxTabItemDirective } from '../../tab-item.directive';
 import { IgxTabHeaderBase } from '../../tabs.base';
 import { IgxTabsComponent } from './../tabs.component';
-import { getResizeObserver, isLeftToRight } from 'igniteui-angular/core';
+import { getResizeObserver, isLeftToRight, modulo } from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-tab-header',
@@ -54,32 +55,25 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     /** @hidden @internal */
     @HostListener('keydown', ['$event'])
     public keyDown(event: KeyboardEvent) {
-        let unsupportedKey = false;
         const itemsArray = this.tabs.items.toArray();
-        const previousIndex = itemsArray.indexOf(this.tab);
-        let newIndex = previousIndex;
-        const hasDisabledItems = itemsArray.some((item) => item.disabled);
+        const index = itemsArray.indexOf(this.tab);
+        let newIndex: number;
 
         switch (event.key) {
             case this.platform.KEYMAP.ARROW_RIGHT:
-                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
+            case this.platform.KEYMAP.ARROW_LEFT: {
+                const rtl = !isLeftToRight(this.nativeElement);
+                const next = (event.key === this.platform.KEYMAP.ARROW_RIGHT) !== rtl;
+                newIndex = this.getEnabledItemIndex(itemsArray, index, next ? 1 : -1);
                 break;
-            case this.platform.KEYMAP.ARROW_LEFT:
-                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
-                break;
+            }
             case this.platform.KEYMAP.HOME:
                 event.preventDefault();
-                newIndex = 0;
-                while (itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
-                    newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
-                }
+                newIndex = this.getEnabledItemIndex(itemsArray, -1, 1);
                 break;
             case this.platform.KEYMAP.END:
                 event.preventDefault();
-                newIndex = itemsArray.length - 1;
-                while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex > 0) {
-                    newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
-                }
+                newIndex = this.getEnabledItemIndex(itemsArray, itemsArray.length, -1);
                 break;
             case this.platform.KEYMAP.ENTER:
             case this.platform.KEYMAP.SPACE:
@@ -87,18 +81,18 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
                 if (this.tabs.activation === 'manual') {
                     this.nativeElement.click();
                 }
-                unsupportedKey = true;
-                break;
+                return;
             default:
-                unsupportedKey = true;
-                break;
+                return;
         }
 
-        if (!unsupportedKey) {
-            itemsArray[newIndex].headerComponent.nativeElement.focus({ preventScroll: true });
-            if (this.tabs.activation === 'auto') {
-                this.tabs.selectedIndex = newIndex;
-            }
+        if (newIndex < 0) {
+            return;
+        }
+
+        itemsArray[newIndex].headerComponent.nativeElement.focus({ preventScroll: true });
+        if (this.tabs.activation === 'auto') {
+            this.tabs.selectedIndex = newIndex;
         }
     }
 
@@ -121,20 +115,13 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         });
     }
 
-    private getNewSelectionIndex(newIndex: number, itemsArray: any[], key: string, hasDisabledItems: boolean): number {
-        const rtl = !isLeftToRight(this.nativeElement);
-
-        if ((key === this.platform.KEYMAP.ARROW_RIGHT && !rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && rtl)) {
-            newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
-            while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
-                newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
-            }
-        } else {
-            newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
-            while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex >= 0) {
-                newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
+    private getEnabledItemIndex(itemsArray: IgxTabItemDirective[], start: number, step: 1 | -1): number {
+        for (let i = 1; i <= itemsArray.length; i++) {
+            const index = modulo(start + step * i, itemsArray.length);
+            if (!itemsArray[index].disabled) {
+                return index;
             }
         }
-        return newIndex;
+        return -1;
     }
 }
