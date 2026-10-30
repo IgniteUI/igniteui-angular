@@ -2587,7 +2587,9 @@
             flex-flow: column nowrap;
             position: relative;
 
-            :where(.igx-grid-th, .igx-grid-thead__group) {
+            // Split :where()s, a multi-argument subject defeats Chromium's rule bucketing.
+            :where(.igx-grid-th),
+            :where(.igx-grid-thead__group) {
                 flex: 1 1 auto;
             }
 
