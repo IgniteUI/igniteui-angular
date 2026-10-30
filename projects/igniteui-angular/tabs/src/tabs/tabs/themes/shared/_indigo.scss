@@ -14,19 +14,18 @@ $_theme: digest-schema($indigo-tabs);
         min-height: rem(40px);
 
         @include e(active-indicator) {
-            height: rem(3px);
+            --_indicator-thickness: #{rem(3px)};
         }
     }
 
     @include b(igx-tabs-header-button) {
+        --_nav-btn-size: #{rem(40px)};
+
         // The scroll buttons are icon buttons, which set their own icon size on the
         // button, so the size of the header icons is restated on the icon itself.
         igx-icon {
             --ig-icon-size: #{rem(16px)};
         }
-
-        min-width: rem(40px);
-        width: rem(40px);
 
         &::after {
             content: '';
@@ -35,6 +34,13 @@ $_theme: digest-schema($indigo-tabs);
             width: 100%;
             height: 100%;
             border-bottom: rem(1px) solid var(--nav-btn-border-color);
+        }
+
+        @each $side, $content-side in (start: end, end: start) {
+            .igx-tabs-header--#{$side} > &::after {
+                border-bottom: none;
+                border-inline-#{$content-side}: rem(1px) solid var(--nav-btn-border-color);
+            }
         }
     }
 }

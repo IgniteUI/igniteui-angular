@@ -78,6 +78,14 @@ export class TabsShowcaseSampleComponent implements OnInit {
                     defaultValue: 'start'
                 }
             },
+            headerPosition: {
+                label: 'Header position',
+                control: {
+                    type: 'button-group',
+                    options: ['top', 'start', 'end'],
+                    defaultValue: 'top'
+                }
+            },
             activation: {
                 control: {
                     type: 'button-group',
@@ -122,6 +130,13 @@ export class TabsShowcaseSampleComponent implements OnInit {
     public selectTab(id: string) {
         this.selectedTabId = id;
         this.cdr.detectChanges(); // Notify Angular of the programmatic change
+    }
+
+    public onSelectedIndexChange(index: number) {
+        // -1 is reported while the previous tab is deselected, before the next one is selected
+        if (index >= 0) {
+            this.selectedTabId = this.contacts[index].id;
+        }
     }
 
     /**
