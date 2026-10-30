@@ -14,13 +14,15 @@ $file-theme: digest-schema($material-file-input);
 $transition-timing: .25s $out-cubic;
 
 @mixin input-display() {
+    --input-text-color: #{var-get($theme, 'filled-text-color')};
+
     position: relative;
     display: block;
     border: none;
     width: 100%;
     min-width: 0;
     background: transparent;
-    color: var-get($theme, 'filled-text-color');
+    color: var(--input-text-color);
     outline-style: none;
     box-shadow: none;
     text-overflow: ellipsis;
@@ -39,8 +41,16 @@ $transition-timing: .25s $out-cubic;
         line-height: normal;
     }
 
+    // Keeps the autofill background from covering the floating label and preserves the text color
+    &:is(:-webkit-autofill, :autofill) {
+        background-clip: text;
+        -webkit-text-fill-color: var(--input-text-color, currentcolor);
+    }
+
     &:hover {
-        color: var-get($theme, 'filled-text-hover-color');
+        --input-text-color: #{var-get($theme, 'filled-text-hover-color')};
+
+        color: var(--input-text-color);
 
         &::placeholder {
             color: var-get($theme, 'hover-placeholder-color');
@@ -48,8 +58,10 @@ $transition-timing: .25s $out-cubic;
     }
 
     &:focus {
+        --input-text-color: #{var-get($theme, 'focused-text-color')};
+
         cursor: text;
-        color: var-get($theme, 'focused-text-color');
+        color: var(--input-text-color);
 
         &::placeholder {
             color: var-get($theme, 'hover-placeholder-color');
@@ -73,6 +85,7 @@ $transition-timing: .25s $out-cubic;
         color: var-get($theme, 'idle-text-color');
         color-scheme: var(--ig-theme-variant, light);
         min-height: var-get($theme, 'size');
+        align-content: start;
 
         igx-icon,
         igx-icon[igxPrefix],
@@ -381,8 +394,10 @@ $transition-timing: .25s $out-cubic;
 
             @include e(input) {
                 &:hover {
+                    --input-text-color: #{var-get($theme, 'filled-text-color')};
+
                     cursor: default;
-                    color: var-get($theme, 'filled-text-color');
+                    color: var(--input-text-color);
                 }
 
                 &:hover:not(:focus-within) {
@@ -491,8 +506,10 @@ $transition-timing: .25s $out-cubic;
 
         @include m(disabled) {
             %input-textarea-disabled-colors {
+                --input-text-color: #{var-get($theme, 'disabled-text-color')};
+
                 cursor: default;
-                color: var-get($theme, 'disabled-text-color');
+                color: var(--input-text-color);
 
                 &::placeholder {
                     color: var-get($theme, 'disabled-placeholder-color');

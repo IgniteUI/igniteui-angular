@@ -114,6 +114,20 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(editTemplate.nativeElement.type).toBe('number');
         });
 
+        it('the input group editor should fill the cell height - string and number', () => {
+            for (const field of ['fullName', 'age']) {
+                const cell = grid.gridAPI.get_cell_by_index(0, field);
+                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                fixture.detectChanges();
+
+                const bundle = cell.nativeElement.querySelector<HTMLElement>('.igx-input-group__bundle');
+                expect(bundle.offsetHeight).toBe(cell.nativeElement.offsetHeight);
+
+                UIInteractions.triggerEventHandlerKeyDown('escape', gridContent);
+                fixture.detectChanges();
+            }
+        });
+
         it('should validate input data when edit numeric column', () => {
             const cell = grid.gridAPI.get_cell_by_index(0, 'age');
             const cellDomNumber = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1];
