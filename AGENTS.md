@@ -87,6 +87,13 @@ css-naming-convention.md           ← CSS naming rules
 - Before introducing a breaking rename/removal without a migration plan.
 - Before creating a migration schematic — confirm the change is truly breaking.
 
+### GitHub Actions workflows
+
+- Pin every action and reusable workflow to a full commit SHA with a `# vX.Y.Z` comment.
+- Use each action's current inputs instead of copying older workflows. For example, `actions/create-github-app-token` takes `client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}`; `app-id` is deprecated since v3.1.0.
+- Deploys to Infragistics infrastructure go through a `repository_dispatch` to `IgniteUI/igniteui-actions`.
+- Validate changed workflows with `actionlint`.
+
 ## Commands
 
 | Action | Command |
