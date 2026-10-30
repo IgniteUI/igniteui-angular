@@ -2007,8 +2007,8 @@
             padding-block: pad-block(4px, 6px, 8px);
             padding-inline: pad-inline(4px, 8px, 16px);
             min-width: rem(320px);
-            color: var(--ig-grid-foreground, contrast-color($color: 'surface', $variant: 500));
-            background: var(--ig-grid-background, color($color: 'surface', $variant: 500));
+            color: var(--ig-grid-foreground, contrast-color($color: 'surface'));
+            background: var(--ig-grid-background, color($color: 'surface'));
             border-radius: 0;
 
             igc-icon,
