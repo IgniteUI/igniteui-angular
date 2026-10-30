@@ -2197,7 +2197,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected autoSizeDimensionsInView() {
         if (!this.hasDimensionsToAutosize) return;
         for (const dim of this.visibleRowDimensions) {
-            if (dim.width === 'auto') {
+            // Skip sized dimensions, their merged headers span several columns.
+            if (dim.width === 'auto' && !dim.autoWidth) {
                 const contentWidths = [];
                 const relatedDims = PivotUtil.flatten([dim]).map(x => x.memberName);
                 const contentCollection = this.getContentCollection(dim);
