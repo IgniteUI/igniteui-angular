@@ -96,6 +96,10 @@ All notable changes for each version of this project will be documented in this 
     - The `outlet` input is now applied to the dropdown/dialog.
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
+- `IgxTooltipDirective`, `IgxTooltipTargetDirective`
+    - The arrow now points at the target when the tooltip is pushed into the viewport at a viewport edge. Previously it stayed at the center of the tooltip.
+    - The arrow is now positioned correctly when the tooltip is repositioned while its open animation runs, for example on a window resize. Previously it was placed for the scaled-down tooltip until the tooltip opened again.
+    - An open tooltip now follows layout changes, such as another theme, a web font that loads, or a change of its content: it moves with its target and takes its new size. Previously it kept the position and the width it had when it opened.
 
 ## 22.2.4
 
