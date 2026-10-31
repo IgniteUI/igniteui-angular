@@ -1139,6 +1139,38 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(indicatorBadge.nativeElement.innerText.trim()).toEqual('1');
         });
 
+        it('should shrink a single long filter chip to the filter cell and ellipsize its label', () => {
+            grid.columnList.get(1).width = '150px';
+            fix.detectChanges();
+
+            grid.filter('ProductName', 'A very long filtering value that does not fit in the cell',
+                IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+
+            const chips = GridFunctions.getFilterChipsForColumn('ProductName', fix);
+            expect(chips.length).toEqual(1);
+
+            const filterCell: HTMLElement = GridFunctions.getFilterCell(fix, 'ProductName').nativeElement;
+            const chip: HTMLElement = chips[0].nativeElement;
+            const content: HTMLElement = chip.querySelector('.igx-chip__content');
+            const cellRect = filterCell.getBoundingClientRect();
+            const chipRect = chip.getBoundingClientRect();
+
+            // the chip stays inside the cell instead of being clipped by it
+            expect(chipRect.width).toBeLessThan(cellRect.width);
+            expect(chipRect.right).toBeLessThanOrEqual(cellRect.right);
+            // the label is truncated with an ellipsis
+            expect(content.scrollWidth).toBeGreaterThan(content.clientWidth);
+            expect(getComputedStyle(content).textOverflow).toEqual('ellipsis');
+
+            // the hidden "more filters" indicator stays measurable but takes no space: the chip spans the chips area
+            const chipsArea: HTMLElement = filterCell.querySelector('igx-chips-area');
+            expect(chipRect.width).toBeCloseTo(chipsArea.getBoundingClientRect().width, 0);
+            const indicator: HTMLElement = filterCell.querySelector('.igx-grid__filtering-cell-indicator--hidden');
+            expect(indicator.offsetWidth).toBeGreaterThan(0);
+            expect(getComputedStyle(indicator).visibility).toEqual('hidden');
+        });
+
         it('should select chip when open it from filter cell', async () => {
             grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('startsWith'));
             fix.detectChanges();

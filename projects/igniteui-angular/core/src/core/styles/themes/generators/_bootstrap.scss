@@ -38,7 +38,8 @@
             $info: $info,
             $success: $success,
             $warn: $warn,
-            $error: $error
+            $error: $error,
+            $generator: 'legacy'
         ),
         $schema: $light-bootstrap-schema,
         $exclude: $exclude,
@@ -76,7 +77,8 @@
             $info: $info,
             $success: $success,
             $warn: $warn,
-            $error: $error
+            $error: $error,
+            $generator: 'legacy'
         ),
         $schema: $dark-bootstrap-schema,
         $exclude: $exclude,
