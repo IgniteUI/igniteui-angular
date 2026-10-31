@@ -1,9 +1,16 @@
+@use 'sass:list';
 @use 'sass:map';
+@use 'sass:selector';
+@use 'sass:string';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
 @forward 'igniteui-theming/sass/themes';
-@forward 'igniteui-theming/sass/bem';
+@forward 'igniteui-theming/sass/bem' hide block;
 
+/// Wraps the passed content in the `ig.`-prefixed cascade layer with the given name.
+/// @access private
+/// @param {String} $name - The cascade layer name, without the `ig.` prefix.
+/// @content The declarations to emit inside the layer.
 @mixin layer($name) {
     $_layer: 'ig.' + $name;
 
@@ -66,6 +73,46 @@
     }
 }
 
+/// Scopes a component's rules to its root, stopping at nested components,
+/// inside the base layer or, when a theme is given, the theme's layer and style query.
+/// @access private
+/// @param {String} $name - The component name without the `igx-` prefix, e.g. `combo`.
+/// @param {String} $theme [null] - The target theme - material, bootstrap, fluent, indigo.
+/// @param {String} $variant [null] - The target variant - light, dark. Requires `$theme`.
+/// @requires {mixin} layer
+/// @requires {mixin} themed
+/// @content The component's rules. Use `:scope` for the root and plain selectors for its parts.
+/// @example scss
+///   @include block(combo) {
+///       :scope { display: flex; }
+///       [data-part~='toggle'] { color: var(--_toggle-color); }
+///   }
+@mixin block($name, $theme: null, $variant: null) {
+    $_name: '' + $name;
+
+    @if string.index($_name, 'igx-') == 1 or string.index($_name, '.') == 1 {
+        @error 'block() expects a component name without the `igx-` prefix or a leading `.`, got `#{$_name}`.';
+    }
+
+    @if $variant and not $theme {
+        @error 'block() needs a $theme when a $variant is given.';
+    }
+
+    @if $theme {
+        @include themed($theme, $variant) {
+            @scope (.igx-#{$_name}) to (:scope [ig-scope] > *) {
+                @content;
+            }
+        }
+    } @else {
+        @include layer(base) {
+            @scope (.igx-#{$_name}) to (:scope [ig-scope] > *) {
+                @content;
+            }
+        }
+    }
+}
+
 /// Emits the scoped CSS custom properties (tokens) for a component into the
 /// global theme, gated by the theme's exclude list. Structural styles for the
 /// component live in its own `*.component.scss`; this only declares the tokens
@@ -89,8 +136,10 @@
 }
 
 /// Wraps the passed content in a named cascade layer and scopes it to the given
-/// selector through `:where()`, keeping specificity at zero. The active schema is
-/// yielded to the content block so callers can resolve themes against it.
+/// selector through `:where()`, keeping specificity at zero. Each selector of a list
+/// gets its own `:where()`, as Chromium can't bucket multi-argument `:where()` subjects
+/// and would match them against every element. The active schema is yielded to the
+/// content block so callers can resolve themes against it.
 /// @access private
 /// @param {String} $layer - The cascade layer name (the `ig.` prefix is added by `layer`).
 /// @param {String} $selector - The selector the emitted styles are scoped to.
@@ -98,10 +147,16 @@
 /// @content The declarations to emit; receives `$schema` as its single argument,
 ///   so include it with `using ($schema)`.
 /// @requires {mixin} layer
-/// @output The content wrapped in `@layer ig.#{$layer}` inside a `:where(#{$selector})` rule.
+/// @output The content wrapped in `@layer ig.#{$layer}` inside a `:where(a), :where(b)` rule.
 @mixin scope($layer, $selector, $schema) {
+    $_scoped: ();
+
+    @each $complex in selector.parse($selector) {
+        $_scoped: list.append($_scoped, ':where(#{$complex})', $separator: comma);
+    }
+
     @include layer($layer) {
-        :where(#{$selector}) {
+        #{$_scoped} {
             @content($schema);
         }
     }
