@@ -604,6 +604,7 @@
         $error: color($palette, error),
         $surface: if($surface != #fff, $surface, #fff),
         $gray: if($gray != #9e9e9e, $gray, #000),
+        $generator: 'legacy',
     );
 
     @include theme(
@@ -633,6 +634,7 @@
         $error: color($palette, error),
         $surface: if($surface != #fff, $surface, #222),
         $gray: if($gray != #9e9e9e, $gray, #fff),
+        $generator: 'legacy',
     );
 
     @include theme(

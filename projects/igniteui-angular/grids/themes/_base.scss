@@ -74,6 +74,9 @@
         > igx-input-group {
 	        --_bundle-row: 1;
 
+            // The editor fills the cell, so its single row has to stretch.
+            align-content: stretch;
+
             input,
             .igx-input-group__input {
 	            height: 100%;
@@ -2004,8 +2007,8 @@
             padding-block: pad-block(4px, 6px, 8px);
             padding-inline: pad-inline(4px, 8px, 16px);
             min-width: rem(320px);
-            color: var(--ig-grid-foreground, contrast-color($color: 'surface', $variant: 500));
-            background: var(--ig-grid-background, color($color: 'surface', $variant: 500));
+            color: var(--ig-grid-foreground, contrast-color($color: 'surface'));
+            background: var(--ig-grid-background, color($color: 'surface'));
             border-radius: 0;
 
             igc-icon,
@@ -2584,7 +2587,9 @@
             flex-flow: column nowrap;
             position: relative;
 
-            :where(.igx-grid-th, .igx-grid-thead__group) {
+            // Split :where()s, a multi-argument subject defeats Chromium's rule bucketing.
+            :where(.igx-grid-th),
+            :where(.igx-grid-thead__group) {
                 flex: 1 1 auto;
             }
 
