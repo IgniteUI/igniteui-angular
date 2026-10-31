@@ -96,6 +96,9 @@ All notable changes for each version of this project will be documented in this 
     - The `outlet` input is now applied to the dropdown/dialog.
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
+- `IgxForOfDirective`
+    - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
+    - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
 
 ## 22.2.4
 
