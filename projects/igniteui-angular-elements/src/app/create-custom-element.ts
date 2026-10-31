@@ -61,7 +61,8 @@ export function createIgxCustomElement<T>(component: Type<T>, config: IgxNgEleme
         });
     });
 
-    if (component === IgxGridComponent) {
+    // Elements register their own grid that extends the base one:
+    if (component === IgxGridComponent || component.prototype instanceof IgxGridComponent) {
         /**
          * @deprecated API access workaround moved from Grid for possible existing use compat. Remove in future version
          */

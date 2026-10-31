@@ -33,6 +33,17 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     private setComponentRef!: (value: ComponentRef<any>) => void;
     /** The maximum depth at which event arguments are processed and angular components wrapped with Proxies, that handle template set */
     private maxEventProxyDepth = 3;
+    /**
+     * Additional property values set before content queries resolve, which may depend on
+     * content children (e.g. column group `selected`). Retried once content queries resolve.
+     */
+    private pendingContentValues = new Map<string, any>();
+    /** Whether the initial content queries of the component have resolved */
+    private queriesResolved = false;
+    /** Whether the initial content queries of the component and of all its query children have resolved */
+    private contentResolved = false;
+    /** Child elements connected under this component that haven't scheduled their content query updates yet */
+    private initializingChildren = new Set<IgxCustomNgElementStrategy>();
 
     /**
      * Resolvable component reference.
@@ -86,6 +97,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             return;
         }
         this.element = element as IgcNgElement;
+        this.queriesResolved = false;
+        this.contentResolved = false;
+        this.pendingContentValues.clear();
 
         // set componentRef to non-null to prevent DOM moves from re-initializing
         // TODO: Fail handling or cancellation needed?
@@ -101,6 +115,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         // }
         let parentInjector!: Injector;
         let parentAnchor!: ViewContainerRef;
+        let parentStrategy: IgxCustomNgElementStrategy | undefined;
         const parents: WeakRef<IgcNgElement>[] = [];
         const componentConfig = this.config?.find(x => x.component === this._component);
 
@@ -130,6 +145,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
 
             // ngElementStrategy getter is protected and also has initialization logic, though that should be safe at this point
             if (parent?.ngElementStrategy) {
+                // register synchronously, so the parent doesn't resolve its content before this child is in its queries
+                parentStrategy = parent.ngElementStrategy;
+                parentStrategy.addInitializingChild(this);
                 this.angularParent = parent.ngElementStrategy.angularParent;
                 this.parentElement = new WeakRef(parent);
                 const parentComponentRef = await parent?.ngElementStrategy[ComponentRefKey];
@@ -182,6 +200,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         const contentQueryChildrenCollection = componentConfig!.contentQueries.filter(x => contentChildrenTypes.includes(x.childType));
         if (contentQueryChildrenCollection.length === 0) {
             // no content children, emit event immediately, since there's nothing to be attached.
+            this.queriesResolved = true;
+            this.resolveContent();
             (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
 
@@ -225,6 +245,7 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 parentRef.changeDetectorRef.detectChanges();
             }
         }
+        parentStrategy?.removeInitializingChild(this);
 
         if (['igc-grid', 'igc-tree-grid', 'igc-hierarchical-grid'].includes(element.tagName.toLocaleLowerCase())) {
             this.patchGridPopups();
@@ -255,10 +276,14 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             (this as any).initialInputValues.set(property, value);
             return;
         }
+        // a newer value always takes precedence over one pending content resolution
+        this.pendingContentValues.delete(property);
         const componentRef = (this as any).componentRef as ComponentRef<any>;
         const componentConfig = this.config?.find(x => x.component === this._component);
 
-        if (value === componentRef.instance[property]) {
+        // writable additional properties may have derived getters (e.g. column group `selected`),
+        // so a matching value doesn't mean the setter has nothing to update:
+        if (this._inputMap.has(property) && value === componentRef.instance[property]) {
             return;
         }
         if (componentRef && componentConfig?.templateProps?.includes(property)) {
@@ -296,7 +321,89 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
         if (componentConfig!.selector === 'igc-pivot-data-selector' && property === 'grid' && value) {
             value = value.ngElementStrategy?.componentRef?.instance || value;
         }
+        if (!this._inputMap.has(property)) {
+            // writable additional properties aren't inputs and can't be set through `setInput`
+            componentRef.instance[property] = value;
+            if (!this.contentResolved) {
+                // may depend on content children (or their descendants) that aren't resolved yet.
+                // A matching getter can't confirm the value reached all of them, so retry once they are:
+                this.pendingContentValues.set(property, value);
+            }
+            componentRef.changeDetectorRef.markForCheck();
+            this.notifyChanges();
+            return;
+        }
         super.setInputValue(property, value);
+    }
+
+    /**
+     * Set any stored initial values on the component, applying Angular inputs first.
+     * Writable additional properties (e.g. column `selected`) may depend on inputs (e.g. `field`),
+     * so they are replayed after them regardless of the order they were set before connect.
+     */
+    protected override initializeInputs(): void {
+        const initialInputValues = (this as any).initialInputValues as Map<string, any>;
+        const entries = Array.from(initialInputValues);
+        initialInputValues.clear();
+
+        for (const [property, value] of entries.filter(([prop]) => this._inputMap.has(prop))) {
+            this.setInputValue(property, value);
+        }
+        for (const [property, value] of entries.filter(([prop]) => !this._inputMap.has(prop))) {
+            this.setInputValue(property, value);
+        }
+    }
+
+    /**
+     * Mark content as resolved once the component's own queries and those of all its query children have resolved,
+     * retry pending values that depend on them and notify the parent, which may be waiting on this component.
+     */
+    private resolveContent(): void {
+        if (this.contentResolved || !this.queriesResolved || this.schedule.size || this.initializingChildren.size || this.hasUnresolvedQueryChildren()) {
+            return;
+        }
+        this.contentResolved = true;
+        this.applyPendingContentValues();
+        this.parentElement?.deref()?.ngElementStrategy?.resolveContent();
+    }
+
+    /**
+     * Track a newly connected child until it schedules its content query updates.
+     * Content of this component and its ancestors is no longer resolved until then.
+     */
+    private addInitializingChild(child: IgxCustomNgElementStrategy): void {
+        this.initializingChildren.add(child);
+        let strategy: IgxCustomNgElementStrategy | undefined = this;
+        while (strategy) {
+            strategy.contentResolved = false;
+            strategy = strategy.parentElement?.deref()?.ngElementStrategy;
+        }
+    }
+
+    /** Stop tracking a child that has scheduled its content query updates and retry resolving content */
+    private removeInitializingChild(child: IgxCustomNgElementStrategy): void {
+        this.initializingChildren.delete(child);
+        this.resolveContent();
+    }
+
+    /** Whether any of the component's content query children (e.g. a nested column group) haven't resolved their own content yet */
+    private hasUnresolvedQueryChildren(): boolean {
+        const componentConfig = this.config?.find(x => x.component === this._component);
+        return !!componentConfig?.contentQueries.some(query =>
+            this.runQueryInDOM(this.element, query).some(child => child.ngElementStrategy?.contentResolved === false)
+        );
+    }
+
+    /** Retry pending additional property values once content queries have resolved */
+    private applyPendingContentValues(): void {
+        if (!this.pendingContentValues.size || !(this as any).componentRef?.instance) {
+            return;
+        }
+        const entries = Array.from(this.pendingContentValues);
+        this.pendingContentValues.clear();
+        for (const [property, value] of entries) {
+            this.setInputValue(property, value);
+        }
     }
 
     public override getInputValue(property: string): any {
@@ -354,7 +461,9 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
             list.notifyOnChanges();
         }
         if (this.schedule.size === 0) {
-            // children are attached and collections are updated, emit event.
+            // children are attached and collections are updated, retry values that depend on them and emit event.
+            this.queriesResolved = true;
+            this.resolveContent();
             (this as any).componentRef?.instance?.childrenResolved?.emit();
         }
     }
@@ -477,8 +586,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
     }
 
     protected patchOutputComponents(eventName: string, eventArgs: any) {
-        // Single out only `columnInit` event for now. If more events pop up will require a config generation.
-        if (eventName !== "columnInit") {
+        // Single out only column events for now. If more events pop up will require a config generation.
+        if (eventName !== "columnInit" && eventName !== "columnsAutogenerated") {
             return eventArgs;
         }
         return this.createProxyForComponentValue(eventArgs, 1).value;
@@ -508,8 +617,8 @@ class IgxCustomNgElementStrategy extends ComponentNgElementStrategy {
                 // For array limit their parsing to first level and check if first item has created proxy inside.
                 const firstItem = this.createProxyForComponentValue(value[0], this.maxEventProxyDepth);
                 if (firstItem.hasProxies) {
-                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1));
-                    mappedArray.unshift(firstItem);
+                    const mappedArray = value.slice(1, value.length).map(item => this.createProxyForComponentValue(item, depth + 1).value);
+                    mappedArray.unshift(firstItem.value);
                     return { value: mappedArray, hasProxies: true };
                 }
             }

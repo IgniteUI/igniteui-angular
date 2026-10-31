@@ -42,11 +42,11 @@ export class IgxIconBroadcastService {
     public handleEvent({ data }: MessageEvent<BroadcastIconsChangeMessage>) {
         const { actionType, collections, references } = data;
 
-        if (actionType === ActionType.SyncState || ActionType.RegisterIcon) {
+        if (actionType === ActionType.SyncState || actionType === ActionType.RegisterIcon) {
             this.updateIconsFromCollection(collections!);
         }
 
-        if (actionType === ActionType.SyncState || ActionType.UpdateIconReference) {
+        if (actionType === ActionType.SyncState || actionType === ActionType.UpdateIconReference) {
             this.updateRefsFromCollection(references!);
         }
     }
