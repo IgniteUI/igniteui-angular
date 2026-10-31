@@ -101,11 +101,32 @@ import {
     IgxGridTransaction,
     GridSelectionRange,
     runAfterRenderOnce,
-    GridStyleCSSProperty
+    GridStyleCSSProperty,
+    I18N_FORMATTER,
+    IgxStylesRegistrar
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile, throttle, take, switchMap } from 'rxjs/operators';
+import {
+    Subject,
+    pipe,
+    fromEvent,
+    animationFrameScheduler,
+    merge,
+    BehaviorSubject,
+    timer
+} from 'rxjs';
+import {
+    takeUntil,
+    first,
+    filter,
+    throttleTime,
+    map,
+    shareReplay,
+    takeWhile,
+    throttle,
+    take,
+    switchMap
+} from 'rxjs/operators';
 import {
     IgxToggleDirective,
     IForOfDataChangeEventArgs,
@@ -124,9 +145,119 @@ import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
-import { CellType, CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
+import {
+    CellType,
+    CharSeparatedValueData,
+    DropPosition,
+    FilterMode,
+    getUUID,
+    GridCellMergeMode,
+    GridKeydownTargetType,
+    GridPagingMode,
+    GridSelectionMode,
+    GridServiceType,
+    GridSummaryPosition,
+    GridType,
+    GridValidationTooltipTrigger,
+    GridValidationTrigger,
+    IActiveNode,
+    IActiveNodeChangeEventArgs,
+    ICellPosition,
+    IClipboardOptions,
+    IColumnMovingEndEventArgs,
+    IColumnMovingEventArgs,
+    IColumnMovingStartEventArgs,
+    IColumnResizeEventArgs,
+    IColumnSelectionEventArgs,
+    IColumnVisibilityChangedEventArgs,
+    IColumnVisibilityChangingEventArgs,
+    IFilteringEventArgs,
+    IGridCellEventArgs,
+    IGridClipboardEvent,
+    IGridContextMenuEventArgs,
+    IGridEditDoneEventArgs,
+    IGridEditEventArgs,
+    IGridFormGroupCreatedEventArgs,
+    IGridKeydownEventArgs,
+    IGridRowEventArgs,
+    IGridScrollEventArgs,
+    IGridToolbarExportEventArgs,
+    IGridValidationStatusEventArgs,
+    IGX_GRID_SERVICE_BASE,
+    IgxAdvancedFilteringDialogComponent,
+    IgxCell,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnResizingService,
+    IgxDragIndicatorIconDirective,
+    IgxEditRow,
+    IgxExcelStyleHeaderIconDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective,
+    IgxFilteringService,
+    IgxGridBodyDirective,
+    IgxGridCellComponent,
+    IgxGridColumnResizerComponent,
+    IgxGridEmptyTemplateContext,
+    IgxGridEmptyTemplateDirective,
+    IgxGridExcelStyleFilteringComponent,
+    IgxGridFilteringCellComponent,
+    IgxGridFilteringRowComponent,
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent,
+    IgxGridHeaderTemplateContext,
+    IgxGridLoadingTemplateDirective,
+    IgxGridNavigationService,
+    IgxGridPinningActionsComponent,
+    IgxGridRowDragGhostContext,
+    IgxGridRowEditActionsTemplateContext,
+    IgxGridRowEditTemplateContext,
+    IgxGridRowEditTextTemplateContext,
+    IgxGridRowTemplateContext,
+    IgxGridSelectionService,
+    IgxGridSummaryService,
+    IgxGridTemplateContext,
+    IgxGridToolbarComponent,
+    IgxGridValidationService,
+    IgxHeaderCollapsedIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeadSelectorDirective,
+    IgxHeadSelectorTemplateContext,
+    IgxRowAddTextDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxRowDirective,
+    IgxRowDragGhostDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTabStopDirective,
+    IgxRowEditTemplateDirective,
+    IgxRowEditTextDirective,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowSelectorDirective,
+    IgxRowSelectorTemplateContext,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    IgxSummaryRowComponent,
+    IgxToolbarToken,
+    IPinColumnCancellableEventArgs,
+    IPinColumnEventArgs,
+    IPinningConfig,
+    IPinRowEventArgs,
+    IRowDataCancelableEventArgs,
+    IRowDataEventArgs,
+    IRowDragEndEventArgs,
+    IRowDragStartEventArgs,
+    IRowSelectionEventArgs,
+    IRowToggleEventArgs,
+    ISearchInfo,
+    ISizeInfo,
+    ISortingEventArgs,
+    RowEditPositionStrategy,
+    RowPinningPosition,
+    RowType,
+    WatchChanges
+} from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
-import { I18N_FORMATTER, IgxStylesRegistrar } from 'igniteui-angular/core';
 import { GRID_BASE_CSS } from './grid-base.styles';
 
 /**
@@ -2050,6 +2181,24 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     @Input()
     public validationTrigger: GridValidationTrigger = 'change';
+
+    /**
+     * Gets/Sets when the validation error tooltip of an invalid cell is displayed.
+     *
+     * @remarks
+     * - `active` (default) - the tooltip is shown when an invalid cell becomes active and on error icon hover.
+     * - `hover` - the tooltip is shown only while hovering the error icon.
+     *
+     * The option affects only the tooltip's visibility. The invalid state, the error icon and
+     * the invalid styles are not affected, nor is the moment validation runs (see `validationTrigger`).
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid validationTooltipTrigger='hover'></igx-grid>
+     * ```
+     */
+    @Input()
+    public validationTooltipTrigger: GridValidationTooltipTrigger = 'active';
 
     /**
      * @hidden

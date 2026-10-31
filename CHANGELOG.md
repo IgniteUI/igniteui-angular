@@ -14,6 +14,15 @@ All notable changes for each version of this project will be documented in this 
 
 ## Unreleased
 
+### New Features
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
+
+        ```html
+        <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
+        ```
+
 ### Behavioral Changes
 
 - `IgxCarouselComponent`
