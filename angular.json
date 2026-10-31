@@ -455,6 +455,7 @@
             "buildTarget": "igniteui-angular-elements:build:development,test",
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
             "browsers": ["chromium"],
+            "isolate": true,
             "coverageInclude": [
                 "projects/igniteui-angular-elements/src/**/*.ts",
                 "projects/igniteui-angular-elements/src/**/*.html"

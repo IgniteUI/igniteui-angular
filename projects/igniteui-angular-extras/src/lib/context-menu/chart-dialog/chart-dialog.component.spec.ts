@@ -1,7 +1,7 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ElementRef } from '@angular/core';
 import { IgxChartMenuComponent } from './chart-dialog.component';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxChartMenuComponent', () => {
     let component: IgxChartMenuComponent;
@@ -232,5 +232,112 @@ describe('IgxChartMenuComponent', () => {
         it('should initialize images from charts module', () => {
             expect(component.images).toBeDefined();
         });
+    });
+});
+
+describe('IgxChartMenuComponent rendering', () => {
+    let fixture: ComponentFixture<IgxChartMenuComponent>;
+    let component: IgxChartMenuComponent;
+    let chartDirective: { chartFactory: ReturnType<typeof vi.fn> };
+
+    const query = (selector: string): HTMLElement => fixture.nativeElement.querySelector(selector);
+    const queryAll = (selector: string): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll(selector));
+    const headerButtons = () => queryAll('.action-buttons-wrapper button');
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [IgxChartMenuComponent] });
+        fixture = TestBed.createComponent(IgxChartMenuComponent);
+        component = fixture.componentInstance;
+        chartDirective = { chartFactory: vi.fn() };
+        component.chartDirective = chartDirective;
+        component.allCharts = ['ColumnGrouped', 'ColumnStacked', 'BarGrouped', 'Pie'];
+        component.width = 1000;
+        component.height = 500;
+        fixture.detectChanges();
+        component.createChart('ColumnStacked');
+        fixture.detectChanges();
+    });
+
+    afterEach(() => {
+        TestBed.resetTestingModule();
+    });
+
+    it('should create the chart in the chart area and show its title in the header', () => {
+        expect(chartDirective.chartFactory).toHaveBeenCalledWith('ColumnStacked', component.chartArea);
+        expect(query('.header-text').textContent!.trim()).toBe('Column Stacked Chart');
+    });
+
+    it('should bind the host size to 70% of the given dimensions and to 100% in full screen', () => {
+        const host: HTMLElement = fixture.nativeElement;
+        expect(host.style.width).toBe('700px');
+        expect(host.style.height).toBe('350px');
+
+        headerButtons()[0].click();
+        fixture.detectChanges();
+
+        expect(component.fullScreen).toBe(true);
+        expect(host.style.width).toBe('1000px');
+        expect(host.style.height).toBe('500px');
+        expect(headerButtons()[0].textContent!.trim()).toBe('fullscreen_exit');
+
+        headerButtons()[0].click();
+        fixture.detectChanges();
+
+        expect(component.fullScreen).toBe(false);
+        expect(headerButtons()[0].textContent!.trim()).toBe('fullscreen');
+    });
+
+    it('should emit closed when the close button is clicked', () => {
+        const closedSpy = vi.fn();
+        component.closed.subscribe(closedSpy);
+
+        headerButtons()[1].click();
+
+        expect(closedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should toggle the chart config area with the chevron button', () => {
+        const configArea = query('.chart-config-area');
+        const toggleButton = query('.selection-area > div > button');
+        expect(configArea.classList).toContain('opened');
+        expect(query('.chart-area').classList).not.toContain('expanded');
+        expect(toggleButton.textContent!.trim()).toBe('chevron_right');
+
+        toggleButton.click();
+        fixture.detectChanges();
+
+        expect(component.isConfigAreaExpanded).toBe(true);
+        expect(configArea.classList).toContain('closed');
+        expect(configArea.classList).not.toContain('opened');
+        expect(query('.chart-area').classList).toContain('expanded');
+        expect(toggleButton.textContent!.trim()).toBe('chevron_left');
+    });
+
+    it('should render a section only for the main chart types that have available charts', () => {
+        const sections = queryAll('.wrapper')
+            .filter(w => w.querySelector('.types-section'))
+            .map(w => w.firstElementChild!.textContent!.trim());
+
+        expect(sections).toEqual(['Column Chart', 'Bar Chart', 'Pie Chart']);
+    });
+
+    it('should render a button per available chart and mark the current one as selected', () => {
+        const buttons = queryAll('.types-section-btn');
+
+        expect(buttons.map(b => b.title)).toEqual(['ColumnGrouped', 'ColumnStacked', 'BarGrouped', 'Pie']);
+        expect(buttons[1].classList).toContain('selected');
+        expect(buttons[0].classList).not.toContain('selected');
+    });
+
+    it('should create the chosen chart when a chart type button is clicked', () => {
+        const pieButton = queryAll('.types-section-btn').find(b => b.title === 'Pie')!;
+
+        pieButton.click();
+        fixture.detectChanges();
+
+        expect(chartDirective.chartFactory).toHaveBeenLastCalledWith('Pie', component.chartArea);
+        expect(component.currentChartType).toBe('Pie');
+        expect(pieButton.classList).toContain('selected');
+        expect(query('.header-text').textContent!.trim()).toBe('Pie Chart');
     });
 });
