@@ -1463,8 +1463,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _recalcOnContainerChange(containerSizeInfo: { prevSize: number; newSize: number } | null = null) {
         const prevChunkSize = this.state.chunkSize;
+        const prevStartIndex = this.state.startIndex!;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize(containerSizeInfo);
+        if (prevStartIndex !== this.state.startIndex) {
+            // items were prepended to fill the grown container, so sync the display container offset
+            // to keep the scroll position's content in view
+            this._updateScrollOffset();
+        }
         if (prevChunkSize !== this.state.chunkSize) {
             this.chunkLoad.emit(this.state);
         }
@@ -1500,24 +1506,53 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize
      */
     protected addLastElem() {
-        let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        if (this.insertChunkElem()) {
+            this._zone.run(() => this.cdr.markForCheck());
+        }
+    }
+
+    /**
+     * Creates an embedded view for the item after the current chunk and updates chunkSize.
+     * When the chunk already reaches the end of the data, the view is created for the item before it
+     * and prepended instead, so that the rendered items stay in order.
+     */
+    protected insertChunkElem(): EmbeddedViewRef<any> | null {
         if (!this.isRemote && !this.igxForOf) {
-            return;
+            return null;
         }
 
+        let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        let prepend = false;
         if (elemIndex >= this.igxForOf!.length) {
-            elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            if (!this.isRemote && this.state.startIndex! > 0) {
+                elemIndex = --this.state.startIndex!;
+                prepend = true;
+            } else {
+                elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            }
         }
         const input = this.igxForOf![elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,
-            new IgxForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length) as any
+            this.createTemplateContext(input) as any,
+            { index: prepend ? 0 : undefined }
         );
 
-        this._embeddedViews.push(embeddedView);
+        if (prepend) {
+            this._embeddedViews.unshift(embeddedView);
+        } else {
+            this._embeddedViews.push(embeddedView);
+        }
         this.state.chunkSize!++;
+        return embeddedView;
+    }
 
-        this._zone.run(() => this.cdr.markForCheck());
+    /**
+     * @hidden
+     * Creates the template context for an item rendered by insertChunkElem().
+     */
+    protected createTemplateContext(input: T): IgxForOfContext<T, U> {
+        return new IgxForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length);
     }
 
     /**
@@ -1557,9 +1592,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _updateScrollOffset() {
         let scrollOffset = 0;
-        const currentScroll = this.scrollPosition;
+        const currentScroll = Math.abs(this.scrollPosition);
         if (this._virtRatio !== 1) {
-            this._calcVirtualScrollPosition(this.scrollPosition);
+            this._calcVirtualScrollPosition(currentScroll);
             scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         } else {
             const scroll = this.scrollComponent.nativeElement;
@@ -1568,7 +1603,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'transform';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
-         -(scrollOffset) + 'px' :
+         (this.isRTL ? scrollOffset : -scrollOffset) + 'px' :
          `translateY(${-scrollOffset}px)`;
     }
 
@@ -1945,23 +1980,14 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     protected override addLastElem() {
-        let elemIndex = this.state.startIndex! + this.state.chunkSize!;
-        if (!this.isRemote && !this.igxForOf) {
-            return;
+        const embeddedView = this.insertChunkElem();
+        if (embeddedView) {
+            this.subscribeToViewObserver(this.getViewObservedNode(embeddedView));
         }
+    }
 
-        if (elemIndex >= this.igxForOf!.length) {
-            elemIndex = this.igxForOf!.length - this.state.chunkSize!;
-        }
-        const input = this.igxForOf![elemIndex];
-        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
-            this._template,
-            new IgxGridForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length) as any
-        );
-
-        this._embeddedViews.push(embeddedView);
-        this.subscribeToViewObserver(this.getViewObservedNode(embeddedView));
-        this.state.chunkSize!++;
+    protected override createTemplateContext(input: T): IgxGridForOfContext<T, U> {
+        return new IgxGridForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length);
     }
 
     protected _updateViews(prevChunkSize: number | undefined) {
