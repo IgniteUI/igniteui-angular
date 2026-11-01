@@ -18,6 +18,12 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCalendarComponent`
     - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
+
+        ```html
+        <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
+        ```
 
 ### Behavioral Changes
 
@@ -49,6 +55,9 @@ All notable changes for each version of this project will be documented in this 
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
 - `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
     - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
+- `IgxDatePickerComponent`
+    - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
+    - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
 - `IgxGridComponent`
@@ -58,6 +67,8 @@ All notable changes for each version of this project will be documented in this 
     - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
+- `IgxOverlayService`
+    - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
 - `IgxPivotGridComponent`
     - Autosizing a column now fits its content, instead of keeping its current width.
 - `IgxStepperComponent`
@@ -96,6 +107,9 @@ All notable changes for each version of this project will be documented in this 
     - The `outlet` input is now applied to the dropdown/dialog.
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
+- `IgxForOfDirective`
+    - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
+    - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
 
 ## 22.2.4
 
