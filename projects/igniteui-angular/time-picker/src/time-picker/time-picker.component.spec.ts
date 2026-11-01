@@ -2491,6 +2491,54 @@ describe('IgxTimePicker', () => {
                 expect(selectedItemsText()).toEqual(['11', '49', 'AM']);
             });
 
+            it('should restore the selection from the value when the min value is loosened while open', async () => {
+                timePicker.itemsDelta = { hours: 1, minutes: 7, seconds: 1 };
+                timePicker.value = new Date(2021, 24, 2, 10, 58, 0);
+                fixture.detectChanges();
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(selectedItemsText()).toEqual(['11', '00', 'AM']);
+
+                fixture.componentInstance.minValue = new Date(2021, 24, 2, 13, 3, 0);
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([13, 7, 0]);
+
+                fixture.componentInstance.minValue = null;
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([11, 0, 0]);
+                expect(selectedItemsText()).toEqual(['11', '00', 'AM']);
+
+                fixture.componentInstance.maxValue = new Date(2021, 24, 2, 9, 30, 0);
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([9, 28, 59]);
+
+                fixture.componentInstance.maxValue = null;
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([11, 0, 0]);
+                expect(selectedItemsText()).toEqual(['11', '00', 'AM']);
+            });
+
+            it('should keep an unconfirmed selection when the min value changes while open', async () => {
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                timePicker.onItemClick('2', 'hourList');
+                timePicker.onItemClick('PM', 'ampmList');
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([14, 45, 0]);
+
+                fixture.componentInstance.minValue = new Date(2021, 24, 2, 15, 0, 0);
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([15, 0, 0]);
+
+                fixture.componentInstance.minValue = null;
+                fixture.detectChanges();
+                expect(timeParts(timePicker.selectedDate)).toEqual([14, 45, 0]);
+                expect(selectedItemsText()).toEqual(['02', '45', 'PM']);
+            });
+
             it('should update the dialog header when the locale changes while open', async () => {
                 registerLocaleData(localeBg);
                 timePicker.mode = PickerInteractionMode.Dialog;

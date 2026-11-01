@@ -180,7 +180,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super.inputFormat = value;
         // the rendered lists depend on the format
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
     }
 
     public override get inputFormat(): string {
@@ -215,7 +215,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const date = this.parseToDate(value);
         this._dateMinValue = DateTimeUtil.isValidDate(date) ? this.toTodayTime(date) : null!;
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
         this._onValidatorChange();
     }
 
@@ -251,7 +251,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const date = this.parseToDate(value);
         this._dateMaxValue = DateTimeUtil.isValidDate(date) ? this.toTodayTime(date) : null!;
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
         this._onValidatorChange();
     }
 
@@ -470,6 +470,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue!: Date;
     private _dateMaxValue!: Date;
     private _selectedDate!: Date;
+    /** The time the selection was derived from, before rounding and clamping to the dropdown range */
+    private _selectionSource!: Date;
     private _resourceStrings: ITimePickerResourceStrings = null!;
     private _customResourceStrings: ITimePickerResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
@@ -606,7 +608,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>) {
         Object.assign(this._itemsDelta, value);
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
     }
 
     public get itemsDelta(): Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> {
@@ -989,7 +991,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public setSelectedValue(value: Date) {
-        this._selectedDate = value ? new Date(value) : null!;
+        // kept so a later range or itemsDelta change re-derives the selection instead of re-clamping it
+        this._selectedDate = this._selectionSource = value ? new Date(value) : null!;
         if (!DateTimeUtil.isValidDate(this._selectedDate)) {
             this._selectedDate = new Date(this.minDropdownValue);
             return;
@@ -1133,7 +1136,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private updateSelectedDate(date: Date, isAmPm = false): void {
-        this._selectedDate = new Date(this.validateDropdownValue(date, isAmPm));
+        this._selectedDate = this._selectionSource = new Date(this.validateDropdownValue(date, isAmPm));
         this.updateEditorValue();
     }
 
