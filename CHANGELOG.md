@@ -16,6 +16,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 
+- `IgxCalendarComponent`
+    - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
 

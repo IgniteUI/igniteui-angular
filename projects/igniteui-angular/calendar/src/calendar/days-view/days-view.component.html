@@ -89,12 +89,19 @@
                 [specialDates]="specialDates"
                 [hideLeadingDays]="hideLeadingDays"
                 [hideTrailingDays]="hideTrailingDays"
+                [contentId]="dayTemplate && !item.isHidden ? id + '-' + day.timestamp : null"
                 [attr.tabindex]="-1"
                 (click)="handleDateClick(item)"
                 (mouseEnter)="changePreviewRange(day.native)"
                 (mouseLeave)="clearPreviewRange()"
             >
-                {{ formattedDate(day.native) | dayDigit:formatViews }}
+                @if (!dayTemplate) {
+                    {{ formattedDate(day.native) | dayDigit:formatViews }}
+                } @else if (!item.isHidden) {
+                    <ng-container
+                        *ngTemplateOutlet="dayTemplate; context: item.getTemplateContext((formattedDate(day.native) | dayDigit:formatViews))"
+                    />
+                }
             </igx-day-item>
         }
     </div>
