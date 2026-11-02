@@ -37,7 +37,7 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 </igx-tabs>
 ```
 
-Key inputs: `[(selectedIndex)]`, `[tabAlignment]` (`'start'` | `'end'` | `'center'` | `'justify'`), `[disableAnimation]`.
+Key inputs: `[(selectedIndex)]`, `[tabAlignment]` (`'start'` | `'end'` | `'center'` | `'justify'`), `[disableAnimation]`, `[headerPosition]` (`'top'` | `'start'` | `'end'`, default `'top'`; `start`/`end` put the headers in a column before or after the content in the text direction, navigated with Up/Down; give the tabs a height for the column to scroll).
 
 ## Bottom Navigation
 
