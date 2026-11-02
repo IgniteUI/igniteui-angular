@@ -141,7 +141,8 @@
 /// theme (button, icon-button, tooltip, ripple, charts, ...).
 ///
 /// When nested, the tokens go on the selector inside the parent, and on the parent itself
-/// only when it matches the selector (`& <selector>, &:is(<selector>)`). Including the global
+/// only when it matches the selector (`& <selector>, &:where(<selector>)`; `:where()` keeps the
+/// parent's own specificity). Including the global
 /// theme inside a class (`.dark-theme { @include theme(...); }`) therefore never puts generic
 /// component tokens such as `--background` on that class element, where every descendant
 /// would inherit them, while the class still limits the tokens to its own subtree.
@@ -165,7 +166,7 @@
         }
     } @else {
         #{$_selector},
-        &:is(#{$_selector}) {
+        &:where(#{$_selector}) {
             @include css-vars-from-theme($theme);
             @content;
         }

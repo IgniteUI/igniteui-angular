@@ -190,7 +190,7 @@
 
             @include expect($selector: false) {
                 .dark-theme .custom-scope,
-                .dark-theme:is(.custom-scope) {
+                .dark-theme:where(.custom-scope) {
                     @include scoping.css-vars-from-theme($test-theme);
 
                     color: blue;
@@ -215,12 +215,12 @@
 
             @include expect($selector: false) {
                 .first .igx-test,
-                .first:is(.igx-test) {
+                .first:where(.igx-test) {
                     @include scoping.css-vars-from-theme($test-theme);
                 }
 
                 .second .igx-test,
-                .second:is(.igx-test) {
+                .second:where(.igx-test) {
                     @include scoping.css-vars-from-theme($other-theme);
                 }
             }
@@ -261,7 +261,7 @@
 
             @include expect($selector: false) {
                 .dark-theme .ig-scrollbar,
-                .dark-theme:is(.ig-scrollbar) {
+                .dark-theme:where(.ig-scrollbar) {
                     @include scoping.css-vars-from-theme($sb-theme);
 
                     scrollbar-width: var(--sb-width, auto);
