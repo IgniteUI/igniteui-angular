@@ -520,6 +520,40 @@ describe('igxOverlay', () => {
             overlay.detach(id2);
             parent.remove();
         });
+
+        it('Should restore a caller-owned element with its own styles on detach', () => {
+            const parent = document.createElement('div');
+            document.body.appendChild(parent);
+            const element = document.createElement('div');
+            element.style.display = 'flex';
+            element.style.height = '20px';
+            parent.appendChild(element);
+            const elementRef = new ElementRef(element);
+            const settings: OverlaySettings = {
+                modal: false,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+
+            let id = overlay.attach(elementRef, settings);
+            overlay.show(id);
+            overlay.hide(id);
+            overlay.detach(id);
+
+            expect(element.parentElement).toBe(parent);
+            expect(element.style.display).toEqual('flex');
+            expect(element.getBoundingClientRect().height).toEqual(20);
+
+            // the restored element can be shown again
+            id = overlay.attach(elementRef, settings);
+            overlay.show(id);
+            expect(overlay.getOverlayById(id).visible).toBe(true);
+            expect(element.closest(`.${CLASS_OVERLAY_WRAPPER}`)).not.toBeNull();
+
+            overlay.detach(id);
+            expect(element.parentElement).toBe(parent);
+            expect(element.style.display).toEqual('flex');
+            parent.remove();
+        });
     });
 
     describe('Unit Tests: ', () => {
@@ -588,6 +622,34 @@ describe('igxOverlay', () => {
             expect(wrapperElement.parentNode).toBe(outlet);
 
             overlay.detachAll();
+        });
+
+        it('Should not expose the host of a destroyed dynamic component on detach', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+            const overlay = fixture.componentInstance.overlay;
+            const variants: { name: string, settings: OverlaySettings }[] = [
+                { name: 'in-place', settings: { modal: false } },
+                { name: 'outlet', settings: { modal: false, outlet: fixture.componentInstance.divElement } },
+                { name: 'container', settings: { modal: false, positionStrategy: new ContainerPositionStrategy() } }
+            ];
+
+            for (const { name, settings } of variants) {
+                const id = overlay.attach(SimpleDynamicComponent, fixture.componentInstance.viewContainerRef, settings);
+                const host: HTMLElement = overlay.getOverlayById(id).componentRef.location.nativeElement;
+                overlay.show(id);
+                await nextFrame();
+                overlay.hide(id);
+                await fixture.whenStable();
+
+                overlay.detach(id);
+                // the host may stay in the DOM until Angular removes the destroyed view
+                expect(host.isConnected && host.checkVisibility(), name).toBe(false);
+                expect(host.getBoundingClientRect().height, name).toEqual(0);
+
+                fixture.detectChanges();
+                expect(host.isConnected, name).toBe(false);
+            }
         });
 
         it('Should show component passed to overlay.', async () => {

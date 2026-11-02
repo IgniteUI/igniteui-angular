@@ -3,6 +3,14 @@
     "definitions": {
         "ThemeChange": {
             "properties": {
+                "add": {
+                    "description": "Add the property with this value, as Sass source, to calls of the owner that do not pass it",
+                    "type": "string"
+                },
+                "exactOwner": {
+                    "description": "Match only the owner's exact name. By default, any member whose name ends with the owner matches",
+                    "type": "boolean"
+                },
                 "name": {
                     "description": "Name of the theme property",
                     "type": "string"
@@ -10,6 +18,18 @@
                 "owner": {
                     "description": "Theming function this parameter belongs to",
                     "type": "string"
+                },
+                "ownerType": {
+                    "description": "Apply the property change only where the owner is called as a function or included as a mixin",
+                    "enum": [
+                        "function",
+                        "mixin"
+                    ],
+                    "type": "string"
+                },
+                "parameterIndex": {
+                    "description": "The property's 1-based index in the owner's parameters. It only detects calls that pass the property by position: add leaves them alone, and remove reports them for manual review",
+                    "type": "number"
                 },
                 "remove": {
                     "description": "Remove directive/component/property",
@@ -54,4 +74,3 @@
     ],
     "type": "object"
 }
-

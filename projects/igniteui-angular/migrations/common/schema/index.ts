@@ -19,6 +19,14 @@ export interface ThemeChange extends ChangeAction {
     owner?: string;
     /** The type of the change: variable, function, mixin */
     type: ThemeType;
+    /** Add the property with this value, as Sass source, to calls of the owner that do not pass it */
+    add?: string;
+    /** Match only the owner's exact name. By default, any member whose name ends with the owner matches */
+    exactOwner?: boolean;
+    /** Apply the property change only where the owner is called as a function or included as a mixin */
+    ownerType?: ThemeType.Function | ThemeType.Mixin;
+    /** The property's 1-based index in the owner's parameters. It only detects calls that pass the property by position: add leaves them alone, and remove reports them for manual review */
+    parameterIndex?: number;
 }
 
 export interface SelectorChanges {

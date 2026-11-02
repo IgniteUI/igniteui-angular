@@ -190,6 +190,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`groupsExpanded`| boolean | Determines whether created groups are rendered expanded or collapsed.  |
 |`hideGroupedColumns`| boolean | Determines whether the grouped columns are hidden as well.  |
 |`rowEditable` | boolean | enables/disables row editing mode |
+|`validationTooltipTrigger`| GridValidationTooltipTrigger | Determines when the validation error tooltip of an invalid cell is displayed - `active` (default) shows it when an invalid cell becomes active and on error icon hover, `hover` shows it only on error icon hover. |
 |`transactions`| `TransactionService` | Transaction provider allowing access to all transactions and states of the modified rows. |
 |`summaryPosition`| GridSummaryPosition | The summary row position for the child levels. The default is top. |
 |`summaryCalculationMode`| GridSummaryCalculationMode | The summary calculation mode. The default is rootAndChildLevels, which means summaries are calculated for root and child levels.|
