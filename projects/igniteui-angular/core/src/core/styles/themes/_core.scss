@@ -86,6 +86,18 @@
         inherits: true;
     }
 
+    @property --_progress-whole {
+        syntax: '<number>';
+        initial-value: 0;
+        inherits: true;
+    }
+
+    @property --_overlay-backdrop {
+        syntax: '<color>';
+        initial-value: transparent;
+        inherits: false;
+    }
+
     @property --ig-theme {
         syntax: 'material | indigo | fluent | bootstrap';
         initial-value: material;

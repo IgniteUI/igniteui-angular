@@ -1,23 +1,32 @@
-import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, booleanAttribute, inject } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
 import { PlatformUtil } from 'igniteui-angular/core';
+
+const NATIVELY_FOCUSABLE = [
+    'a[href]',
+    'button',
+    'input:not([type="hidden"])',
+    'select',
+    'textarea',
+    'details > summary:first-of-type'
+].join(', ');
+
+/** Elements that take part in the sequential focus navigation, unless excluded by `isTabbable`. */
+const TABBABLE_CANDIDATES = `${NATIVELY_FOCUSABLE}, [contenteditable], [tabindex]`;
 
 @Directive({
     selector: '[igxFocusTrap]',
-    standalone: true
+    host: {
+        '(keydown)': 'onKeydown($event)'
+    }
 })
-export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
-    private elementRef = inject(ElementRef);
+export class IgxFocusTrapDirective {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected platformUtil = inject(PlatformUtil);
 
     /** @hidden */
-    public get element(): HTMLElement | null {
+    public get element(): HTMLElement {
         return this.elementRef.nativeElement;
     }
-
-    private destroy$ = new Subject();
-    private _focusTrap = true;
 
     /**
      * Sets whether the Tab key focus is trapped within the element.
@@ -28,73 +37,57 @@ export class IgxFocusTrapDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     @Input({ alias: 'igxFocusTrap', transform: booleanAttribute })
-    public set focusTrap(focusTrap: boolean) {
-        this._focusTrap = focusTrap;
-    }
+    public focusTrap = true;
 
     /** @hidden */
-    public get focusTrap(): boolean {
-        return this._focusTrap;
-    }
-
-    /** @hidden */
-    public ngAfterViewInit(): void {
-        fromEvent<KeyboardEvent>(this.element!, 'keydown')
-            .pipe(takeUntil(this.destroy$))
-            .subscribe((event: KeyboardEvent) => {
-                if (this._focusTrap && event.key === this.platformUtil.KEYMAP.TAB) {
-                    this.handleTab(event);
-                }
-            });
-    }
-
-    /** @hidden */
-    public ngOnDestroy() {
-        this.destroy$.complete();
-    }
-
-    private handleTab(event: KeyboardEvent) {
-        const elements = this.getFocusableElements(this.element!);
-        if (elements.length > 0) {
-            const focusedElement = this.getFocusedElement();
-            const focusedElementIndex = elements.findIndex((element) => element as HTMLElement === focusedElement);
-            const direction = event.shiftKey ? -1 : 1;
-            let nextFocusableElementIndex = focusedElementIndex + direction;
-            if (nextFocusableElementIndex < 0) {
-                nextFocusableElementIndex = elements.length - 1;
-            }
-            if (nextFocusableElementIndex >= elements.length) {
-                nextFocusableElementIndex = 0;
-            }
-            (elements[nextFocusableElementIndex] as HTMLElement).focus();
-        } else {
-            this.element!.focus();
+    protected onKeydown(event: KeyboardEvent): void {
+        if (!this.focusTrap || event.key !== this.platformUtil.KEYMAP.TAB) {
+            return;
         }
 
+        const elements = this.getTabbableElements();
+        const next = elements.length ? this.getNextElement(elements, event.shiftKey) : this.element;
+        next.focus();
         event.preventDefault();
     }
 
-    private getFocusableElements(element: Element) {
-        return Array.from(element.querySelectorAll(
-            'a[href], button, input, textarea, select, details,[tabindex]:not([tabindex="-1"])'
-        )).filter(el => !el.hasAttribute('disabled') && !el.closest('[aria-hidden="true"]'));
+    private getTabbableElements(): HTMLElement[] {
+        return Array.from(this.element.querySelectorAll<HTMLElement>(TABBABLE_CANDIDATES))
+            .filter(element => this.isTabbable(element));
     }
 
-    private getFocusedElement(): HTMLElement | null {
-        let activeElement =
-            typeof document !== 'undefined' && document
-                ? (document.activeElement as HTMLElement | null)
-                : null;
+    private isTabbable(element: HTMLElement): boolean {
+        // An explicit tabindex decides whether the element is in the tab order. Otherwise, contenteditable elements
+        // are in it only when they are editing hosts - editable, unlike their parent, which they are part of otherwise.
+        const inTabOrder = element.hasAttribute('tabindex')
+            ? element.tabIndex >= 0
+            : element.matches(NATIVELY_FOCUSABLE) || this.isEditingHost(element);
 
-        while (activeElement && activeElement.shadowRoot) {
-            const newActiveElement = activeElement.shadowRoot.activeElement as HTMLElement | null;
-            if (newActiveElement === activeElement) {
-                break;
-            } else {
-                activeElement = newActiveElement;
-            }
+        return inTabOrder
+            && !element.matches(':disabled, [disabled]')
+            && !element.closest('[aria-hidden="true"], [inert]')
+            // `checkVisibility` is not implemented in some environments (e.g. jsdom)
+            && (element.checkVisibility?.({ visibilityProperty: true }) ?? true);
+    }
+
+    private isEditingHost(element: HTMLElement): boolean {
+        return element.isContentEditable && !element.parentElement?.isContentEditable;
+    }
+
+    /**
+     * Returns the element after (or before, when moving backwards) the focused element in DOM order,
+     * wrapping around at the boundaries of the focus trap.
+     */
+    private getNextElement(elements: HTMLElement[], backwards: boolean): HTMLElement {
+        // The active element of the trap's root is either the focused element or the shadow host containing it
+        const root = this.element.getRootNode() as Document | ShadowRoot;
+        const focused = root.activeElement ?? this.element;
+
+        if (backwards) {
+            return elements.findLast(element => focused.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_PRECEDING)
+                ?? elements[elements.length - 1];
         }
-
-        return activeElement;
+        return elements.find(element => focused.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING)
+            ?? elements[0];
     }
 }
