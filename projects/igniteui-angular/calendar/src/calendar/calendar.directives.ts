@@ -135,6 +135,82 @@ export class IgxCalendarSubheaderTemplateDirective {
 }
 
 /**
+ * The context passed to a template marked with the `igxCalendarDay` directive.
+ */
+export interface IgxCalendarDayTemplateContext {
+    /** The date of the day cell. */
+    $implicit: Date;
+    /** The date of the day cell. */
+    date: Date;
+    /** The default text of the day cell, formatted with the calendar `formatOptions` and `formatViews`. */
+    formattedDate: string;
+    /** Whether the day is rendered as selected. */
+    selected: boolean;
+    /** Whether the day is disabled through `disabledDates`. */
+    disabled: boolean;
+    /** Whether the day is marked as special through `specialDates`. */
+    special: boolean;
+    /** Whether the day is the current date. */
+    today: boolean;
+    /** Whether the day is a weekend day. */
+    weekend: boolean;
+    /** Whether the day belongs to the displayed month. */
+    currentMonth: boolean;
+    /** Whether the day is the active (keyboard focused) day. */
+    active: boolean;
+    /** Whether the day is the first day of the selected or previewed range. */
+    firstInRange: boolean;
+    /** Whether the day is the last day of the selected or previewed range. */
+    lastInRange: boolean;
+    /** Whether the day is within the selected range. */
+    withinRange: boolean;
+    /** Whether the day is within the previewed range while a range is being selected. */
+    withinPreviewRange: boolean;
+}
+
+/**
+ * Marks an `ng-template` as the content template of the calendar day cells.
+ *
+ * @remarks
+ * The template replaces the default content (the day number) of each visible day cell.
+ * Selection, keyboard navigation, ARIA attributes and state styling stay on the day cell.
+ * The template text is announced as the day cell description and the template should not contain focusable elements.
+ *
+ * @example
+ * ```html
+ * <igx-calendar>
+ *     <ng-template igxCalendarDay let-date let-selected="selected">
+ *         <span>{{ date.getDate() }}</span>
+ *     </ng-template>
+ * </igx-calendar>
+ * ```
+ */
+@Directive({
+    selector: '[igxCalendarDay]'
+})
+export class IgxCalendarDayTemplateDirective {
+    public template = inject<TemplateRef<IgxCalendarDayTemplateContext>>(TemplateRef);
+
+    /**
+     * Narrows the type of the template context.
+     *
+     * @param _directive The directive instance.
+     * @param _context The template context.
+     * @returns Always `true`.
+     * @example
+     * ```html
+     * <ng-template igxCalendarDay let-date>{{ date.getDate() }}</ng-template>
+     * ```
+     */
+    public static ngTemplateContextGuard(
+        _directive: IgxCalendarDayTemplateDirective,
+        _context: unknown
+    ): _context is IgxCalendarDayTemplateContext {
+        return true;
+    }
+}
+
+/**
  * @hidden
  */
 @Directive({
