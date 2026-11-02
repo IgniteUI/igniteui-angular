@@ -1,12 +1,13 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/scoping' as *;
 @use 'igniteui-theming/sass/animations/easings' as *;
 
 /// @access private
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin overlay($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
+    @include scoped-tokens($theme, '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
 
     %overlay-display {
         width: 0;

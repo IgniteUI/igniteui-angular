@@ -3,6 +3,7 @@
 @use 'sass:selector';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/utils' as utils;
 @forward 'igniteui-theming/sass/themes';
 @forward 'igniteui-theming/sass/bem';
 
@@ -90,6 +91,43 @@
     @include themed($_theme, $_variant) {
         @include b($selector) {
             @include tokens(digest-schema(map.get($schema, $key)), $mode: 'scoped');
+        }
+    }
+}
+
+/// Emits the scoped CSS custom properties (tokens) of an already resolved component
+/// theme map. Used by the components whose structural styles still ship with the global
+/// theme (button, icon-button, tooltip, ripple, charts, ...).
+///
+/// When nested, the tokens go on the selector inside the parent, and on the parent itself
+/// only when it matches the selector (`& <selector>, &:where(<selector>)`; `:where()` keeps the
+/// parent's own specificity). Including the global
+/// theme inside a class (`.dark-theme { @include theme(...); }`) therefore never puts generic
+/// component tokens such as `--background` on that class element, where every descendant
+/// would inherit them, while the class still limits the tokens to its own subtree.
+/// At the stylesheet root the tokens go on the selector alone.
+/// @access private
+/// @param {Map} $theme - The resolved component theme, e.g. the result of `tooltip-theme()`.
+/// @param {String} $selector [null] - The selector to emit the tokens on. Defaults to the theme's `selector`.
+/// @requires {mixin} css-vars-from-theme
+/// @content Extra declarations emitted on the same selector, alongside the tokens.
+@mixin scoped-tokens($theme, $selector: null) {
+    $_selector: map.get($theme, 'selector');
+
+    @if $selector {
+        $_selector: $selector;
+    }
+
+    @if utils.is-root() {
+        #{$_selector} {
+            @include css-vars-from-theme($theme);
+            @content;
+        }
+    } @else {
+        #{$_selector},
+        &:where(#{$_selector}) {
+            @include css-vars-from-theme($theme);
+            @content;
         }
     }
 }

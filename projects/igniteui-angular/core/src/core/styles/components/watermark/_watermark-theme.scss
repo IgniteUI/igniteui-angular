@@ -1,11 +1,12 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/scoping' as *;
 
 /// @access private
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin watermark($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: 'igc-trial-watermark');
+    @include scoped-tokens($theme, 'igc-trial-watermark');
 
     igc-trial-watermark::part(link) {
         font-family: var(--ig-font-family);

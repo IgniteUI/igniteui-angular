@@ -6,7 +6,7 @@
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin ripple($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: '[igxRipple]');
+    @include scoped-tokens($theme, '[igxRipple]');
 
     [igxRipple] {
         --ig-theme: inherit;

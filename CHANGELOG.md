@@ -23,6 +23,9 @@ All notable changes for each version of this project will be documented in this 
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
 - `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
     - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
+- **Theming**
+    - Including the global theme inside a class, e.g. `.dark-theme { @include theme(...); }`, no longer puts component tokens such as `--background` on the element with that class. Components inside it no longer inherit them, so the grid toolbar no longer picks up the tooltip background (#17901).
+    - The cascade layer order is now declared at the top level of the stylesheet when the theme is included inside a class. Browsers ignored the declaration inside the class.
 
 ## 22.2.3
 

@@ -3,6 +3,7 @@
 @use '../base' as *;
 @use '../components' as *;
 @use '../themes/scoping' as scoping;
+@use '../themes/schemas';
 
 @include describe('Register Component') {
     $components: () !default;
@@ -72,6 +73,125 @@
             @include expect() {
                 .#{$selector} {
                     content: 'test'
+                }
+            }
+        }
+    }
+}
+
+@include describe('Scoped tokens') {
+    $test-theme: (
+        selector: '.igx-test',
+        background: red,
+        _meta: (
+            name: 'test',
+            theme: material,
+            variant: dark,
+        ),
+    );
+
+    @include it('should emit the tokens on the selector at the stylesheet root') {
+        @include assert() {
+            @include output($selector: false) {
+                @include scoping.scoped-tokens($test-theme);
+            }
+
+            @include expect($selector: false) {
+                .igx-test {
+                    @include scoping.css-vars-from-theme($test-theme);
+                }
+            }
+        }
+    }
+
+    @include it('should keep a wrapping class as an ancestor, never as a token target') {
+        @include assert() {
+            @include output($selector: false) {
+                .dark-theme {
+                    @include scoping.scoped-tokens($test-theme, '.custom-scope') {
+                        color: blue;
+                    }
+                }
+            }
+
+            @include expect($selector: false) {
+                .dark-theme .custom-scope,
+                .dark-theme:where(.custom-scope) {
+                    @include scoping.css-vars-from-theme($test-theme);
+
+                    color: blue;
+                }
+            }
+        }
+    }
+
+    @include it('should keep tokens of different wrappers apart') {
+        $other-theme: map.merge($test-theme, (background: blue));
+
+        @include assert() {
+            @include output($selector: false) {
+                .first {
+                    @include scoping.scoped-tokens($test-theme);
+                }
+
+                .second {
+                    @include scoping.scoped-tokens($other-theme);
+                }
+            }
+
+            @include expect($selector: false) {
+                .first .igx-test,
+                .first:where(.igx-test) {
+                    @include scoping.css-vars-from-theme($test-theme);
+                }
+
+                .second .igx-test,
+                .second:where(.igx-test) {
+                    @include scoping.css-vars-from-theme($other-theme);
+                }
+            }
+        }
+    }
+}
+
+@include describe('Scrollbar tokens') {
+    $sb-theme: scrollbar-theme($schema: schemas.$light-material-schema);
+
+    @include it('should keep the parent selector when nested, for the derived themes') {
+        @include assert() {
+            @include output() {
+                .host {
+                    @include scrollbar($sb-theme);
+                }
+            }
+
+            @include expect() {
+                .host,
+                .host .ig-scrollbar {
+                    @include scoping.css-vars-from-theme($sb-theme);
+
+                    scrollbar-width: var(--sb-width, auto);
+                    scrollbar-color: var(--sb-thumb-bg-color) var(--sb-track-bg-color);
+                }
+            }
+        }
+    }
+
+    @include it('should only target .ig-scrollbar elements from the global theme') {
+        @include assert() {
+            @include output($selector: false) {
+                .dark-theme {
+                    @include scrollbar-tokens($sb-theme);
+                }
+            }
+
+            @include expect($selector: false) {
+                .dark-theme .ig-scrollbar,
+                .dark-theme:where(.ig-scrollbar) {
+                    @include scoping.css-vars-from-theme($sb-theme);
+
+                    scrollbar-width: var(--sb-width, auto);
+                    scrollbar-color: var(--sb-thumb-bg-color) var(--sb-track-bg-color);
                 }
             }
         }

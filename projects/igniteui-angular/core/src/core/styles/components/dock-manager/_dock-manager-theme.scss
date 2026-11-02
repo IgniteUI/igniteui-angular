@@ -1,11 +1,12 @@
 @use 'sass:map';
 @use '../../base' as *;
+@use '../../../styles/themes/scoping' as *;
 
 /// @access private
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin dock-manager($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: 'igc-dockmanager');
+    @include scoped-tokens($theme, 'igc-dockmanager');
 }
 
 /// Adds typography styles for the dock manager component.

@@ -6,7 +6,7 @@
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin highlight($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: '.igx-highlight');
+    @include scoped-tokens($theme, '.igx-highlight');
 
     @include layer(base) {
         %igx-highlight {
