@@ -112,6 +112,21 @@ describe('IgxToggle', () => {
         expect(toggle.closed.emit).toHaveBeenCalledTimes(1);
     });
 
+    it('should hide the content before it is moved back to its original position on close', async () => {
+        const fixture = TestBed.createComponent(IgxToggleHostTestComponent);
+        fixture.detectChanges();
+        const toggle = fixture.debugElement.injector.get(IgxToggleDirective);
+        toggle.open();
+        await fixture.whenStable();
+
+        let display = '';
+        toggle.closed.subscribe(() => display = getComputedStyle(toggle.element).display);
+        toggle.close();
+        await fixture.whenStable();
+
+        expect(display).toBe('none');
+    });
+
     it('should propagate IgxOverlay opened/closed events', async () => {
         const fixture = TestBed.createComponent(IgxOverlayServiceComponent);
         fixture.detectChanges();
@@ -750,3 +765,10 @@ export class TestWithThreeToggleActionsComponent implements OnInit {
         this.overlaySettings.closeOnOutsideClick = false;
     }
 }
+
+@Component({
+    template: `<p>Toggle content</p>`,
+    hostDirectives: [IgxToggleDirective],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class IgxToggleHostTestComponent { }

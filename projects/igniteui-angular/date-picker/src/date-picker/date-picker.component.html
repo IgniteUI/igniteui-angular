@@ -1,6 +1,6 @@
 <igx-input-group [type]="type">
     @if (!toggleComponents.length) {
-        <igx-prefix (click)="toggle()">
+        <igx-prefix (click)="onToggleClick($event)">
             <igx-icon
                 [title]="
                     value

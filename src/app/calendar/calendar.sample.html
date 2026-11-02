@@ -24,6 +24,69 @@
         </div>
 
         <div class="calendar-wrapper">
+            <strong>Angular Calendar - Day Template</strong>
+            <igx-calendar
+                [selection]="selectionAngular"
+                [hideOutsideDays]="properties.hideOutsideDays"
+                [monthsViewNumber]="properties.monthsViewNumber"
+                [weekStart]="weekStartAngular"
+                [headerOrientation]="properties.headerOrientation"
+                [orientation]="properties.viewOrientation"
+                [showWeekNumbers]="properties.showWeekNumbers"
+                [hasHeader]="!properties.hideHeader"
+                [formatOptions]="formatOptions"
+                [formatViews]="formatViews"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [dayTemplate]="eventsDayTemplate"
+                (selected)="onSelection($event)"
+            >
+            </igx-calendar>
+            <div class="day-legend">
+                <span><span class="event-day__dot"></span> 1 event</span>
+                <span><span class="event-day__dot"></span><span class="event-day__dot"></span> 2+ events</span>
+            </div>
+
+            <strong>Date Range Picker - igxCalendarDay</strong>
+            <igx-date-range-picker
+                type="box"
+                [displayMonthsCount]="2"
+                [(ngModel)]="bookingRange"
+            >
+                <ng-template
+                    igxCalendarDay
+                    let-date
+                    let-formattedDate="formattedDate"
+                    let-disabled="disabled"
+                    let-currentMonth="currentMonth"
+                >
+                    <span class="price-day" [class.price-day--muted]="disabled || !currentMonth">
+                        <span>{{ formattedDate }}</span>
+                        <span class="price-day__price">
+                            {{ isSoldOut(date) ? 'full' : '$' + getPrice(date) }}
+                        </span>
+                    </span>
+                </ng-template>
+            </igx-date-range-picker>
+        </div>
+
+        <ng-template
+            #eventsDayTemplate
+            let-formattedDate="formattedDate"
+            let-date
+            let-disabled="disabled"
+        >
+            <span class="event-day" [class.event-day--disabled]="disabled">
+                <span>{{ formattedDate }}</span>
+                <span class="event-day__dots">
+                    @for (event of getEvents(date); track $index) {
+                        <span class="event-day__dot"></span>
+                    }
+                </span>
+            </span>
+        </ng-template>
+
+        <div class="calendar-wrapper">
             <strong>WC Calendar</strong>
             <igc-calendar
                 [visibleMonths]="properties.monthsViewNumber"
