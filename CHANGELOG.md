@@ -6,7 +6,6 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Functionality
 
-
 - `IgxTabsComponent`
     - Added the `headerPosition` input, which places the tab headers above the content (`top`, the default) or in a column before (`start`) or after (`end`) it in the text direction, so `start` is on the right in right-to-left layouts. In a column, the headers are navigated with the Up and Down arrow keys and scroll when they do not fit in the height of the tabs.
         ```html
@@ -16,7 +15,6 @@ All notable changes for each version of this project will be documented in this 
     - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
-
         ```html
         <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
         ```
