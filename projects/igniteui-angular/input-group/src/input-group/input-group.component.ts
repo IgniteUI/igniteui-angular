@@ -390,13 +390,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--file')
     public get isFileType() {
-        return this.input.type === 'file';
+        return this.input?.type === 'file';
     }
 
     /** @hidden @internal */
     @HostBinding('class.igx-file-input')
     public get isFileInput() {
-        return this.input.type === 'file';
+        return this.input?.type === 'file';
     }
 
     /** @hidden @internal */
@@ -419,7 +419,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
 
     /** @hidden @internal */
     public get fileNames() {
-        return this.input.fileNames || this.resourceStrings.igx_input_file_placeholder;
+        return this.input?.fileNames || this.resourceStrings.igx_input_file_placeholder;
     }
 
     /**

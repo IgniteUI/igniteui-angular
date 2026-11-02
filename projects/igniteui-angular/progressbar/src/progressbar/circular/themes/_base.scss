@@ -36,7 +36,6 @@ $theme: digest-schema($light-progress-circular);
             text-align: center;
             font-weight: 600;
 
-            animation: igx-initial-counter var(--_transition-duration) ease-in-out;
             counter-reset:
                 progress-integer round(down, var(--_progress-integer, 0), 1)
                 progress-fraction round(down, var(--_progress-fraction, 0), 1);
@@ -117,9 +116,18 @@ $theme: digest-schema($light-progress-circular);
 
             @extend %circle;
 
-            transition: stroke-dashoffset var(--_transition-duration) linear;
+            // The stroke follows the registered --_progress-whole number: value changes
+            // transition it and @starting-style makes the first render transition from 0
+            // as well. Nothing animates stroke-dashoffset itself, so no property has both
+            // a keyframe animation and a transition, which made WebKit restart the
+            // transition on every frame and overshoot (igniteui-angular#17649).
+            transition: --_progress-whole var(--_transition-duration) linear;
             stroke-dasharray: #{$circumference} #{$circumference};
             stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+
+            @starting-style {
+                --_progress-whole: 0;
+            }
         }
 
         @include m(indeterminate) {
@@ -132,21 +140,6 @@ $theme: digest-schema($light-progress-circular);
                 @include e(outer) {
                     stroke-dashoffset: calc(#{$circumference} + var(--_progress-percentage) * #{$circumference});
                 }
-            }
-        }
-    }
-
-    .igx-circular-svg:not(.igx-circular-svg--indeterminate) {
-        .igx-circular-svg__outer {
-            animation: igx-initial-dashoffset var(--_transition-duration) linear;
-            stroke-dasharray: #{$circumference} #{$circumference};
-            stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-        }
-
-        &:dir(rtl) {
-            .igx-circular-svg__outer {
-                animation: igx-initial-dashoffset-rtl var(--_transition-duration) linear;
-                animation-direction: reverse;
             }
         }
     }
