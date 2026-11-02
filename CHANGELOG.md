@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
 
