@@ -110,6 +110,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxForOfDirective`
     - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
+- **Theming**
+    - Including the global theme inside a class, e.g. `.dark-theme { @include theme(...); }`, no longer puts component tokens such as `--background` on the element with that class. Components inside it no longer inherit them, so the grid toolbar no longer picks up the tooltip background (#17901).
+    - The cascade layer order is now declared at the top level of the stylesheet when the theme is included inside a class. Browsers ignored the declaration inside the class.
 
 ## 22.2.4
 
