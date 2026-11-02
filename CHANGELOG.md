@@ -4,6 +4,21 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.0
 
+### New Functionality
+
+- `IgxTabsComponent`
+    - Added the `headerPosition` input, which places the tab headers above the content (`top`, the default) or in a column before (`start`) or after (`end`) it in the text direction, so `start` is on the right in right-to-left layouts. In a column, the headers are navigated with the Up and Down arrow keys and scroll when they do not fit in the height of the tabs.
+        ```html
+        <igx-tabs headerPosition="start">...</igx-tabs>
+        ```
+- `IgxCalendarComponent`
+    - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
+        ```html
+        <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
+        ```
+
 ### Themes
 
 - **Breaking Change** - Updated to Ignite UI Theming 30.0.0. The `palette()` function builds palettes with the new `fitted` generator by default, which places every shade by contrast and emits it as a fixed color. The predefined palettes and the pre-built themes keep the `legacy` generator and are unchanged.
@@ -12,18 +27,6 @@ All notable changes for each version of this project will be documented in this 
 - **Breaking Change** - Component themes take their background from the `base` surface role, `--ig-surface-base`, instead of `--ig-surface-500`. Override the surface roles (`--ig-surface-base`, `--ig-surface-raised`, `--ig-surface-overlay`, `--ig-surface-sunken`, `--ig-surface-container`) instead of `--ig-surface-500` to change the surface at runtime.
     - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
 
-## Unreleased
-
-### New Features
-
-- `IgxCalendarComponent`
-    - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
-- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
-    - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
-
-        ```html
-        <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
-        ```
 
 ### Behavioral Changes
 
@@ -38,6 +41,8 @@ All notable changes for each version of this project will be documented in this 
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 - `IgxSplitterComponent`
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
+- `IgxTabsComponent`
+    - A selected tab header that is wider than the visible area of the headers is now scrolled so that its start is visible. Previously it was scrolled so that its end was visible.
 - `IgxTimePickerComponent`
     - When `locale` is not set, the picker now follows the global locale set with `setCurrentI18n` and updates its default formats and resource strings when it changes, as the date picker does. Previously it kept the locale it was created with.
     - `clear()` with a `Date` value now assigns a new `Date` with its time reset to `00:00:00` and notifies `ngModel` and reactive form controls. Previously it changed the bound `Date` object in place, so forms were not updated or re-validated.
@@ -98,6 +103,9 @@ All notable changes for each version of this project will be documented in this 
     - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
 - `IgxSplitterPaneComponent`
     - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxTabsComponent`
+    - With `manual` activation, a tab header focused with the keyboard is scrolled into view.
+    - The selected tab header is scrolled into view when hidden tabs become visible, for example in a dialog or a drop-down.
 - `IgxTimePickerComponent`
     - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
     - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
@@ -112,11 +120,19 @@ All notable changes for each version of this project will be documented in this 
     - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
 
+## 22.2.5
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
+
 ## 22.2.4
 
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
     - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
 
 ## 22.2.3
