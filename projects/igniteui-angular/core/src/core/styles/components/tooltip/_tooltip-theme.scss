@@ -6,7 +6,7 @@
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin tooltip($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: '.igx-tooltip');
+    @include themed-tokens($theme, '.igx-tooltip');
 
     @include layer(base) {
         $variant: map.get($theme, '_meta', 'theme');

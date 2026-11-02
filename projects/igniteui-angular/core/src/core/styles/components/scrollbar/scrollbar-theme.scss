@@ -1,5 +1,6 @@
 @use 'sass:meta' as *;
 @use '../../base' as *;
+@use '../../../styles/themes/scoping' as *;
 
 /// Emits the scrollbar tokens and the standard scrollbar properties.
 /// `scrollbar-color`/`scrollbar-width` substitute their `var()`s on the declaring element and
@@ -11,18 +12,32 @@
 @mixin scrollbar($theme, $scope: null) {
     $_scope: if(sass($scope): $scope; else: '.ig-scrollbar');
 
-    @include tokens($theme, $mode: 'scoped', $scope: $_scope);
-
-    // `&` is only valid when nested; at root it leaks out and invalidates the selector list.
+    // When nested, the tokens and properties are deliberately put on the parent selector
+    // too (e.g. `:where(.igx-grid)` in the grid derived themes) so the whole subtree inherits
+    // them. `&` is only valid when nested; at root it leaks out and invalidates the selector list.
     @if is-root() {
         #{$_scope} {
+            @include css-vars-from-theme($theme);
             @include _scrollbar-properties($theme);
         }
     } @else {
         &,
         #{$_scope} {
+            @include css-vars-from-theme($theme);
             @include _scrollbar-properties($theme);
         }
+    }
+}
+
+/// Emits the scrollbar tokens and the standard scrollbar properties for the global theme.
+/// Unlike `scrollbar`, it never targets the parent selector, so a global theme included
+/// inside a class (`.dark-theme { @include theme(...); }`) only styles `.ig-scrollbar` elements.
+/// @access private
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} themed-tokens
+@mixin scrollbar-tokens($theme) {
+    @include themed-tokens($theme, '.ig-scrollbar') {
+        @include _scrollbar-properties($theme);
     }
 }
 

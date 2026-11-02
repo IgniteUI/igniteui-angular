@@ -3,6 +3,7 @@
 @use '../base' as *;
 @use '../components' as *;
 @use '../themes/scoping' as scoping;
+@use '../themes/schemas';
 
 @include describe('Register Component') {
     $components: () !default;
@@ -143,6 +144,132 @@
                             :scope {
                                 --_border: 1px;
                             }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
+
+/* stylelint-disable max-nesting-depth -- the expected output nests @layer and @container inside sass-true's blocks */
+@include describe('Themed tokens') {
+    $test-theme: (
+        selector: '.igx-test',
+        background: red,
+        _meta: (
+            name: 'test',
+            theme: material,
+            variant: dark,
+        ),
+    );
+
+    @include it('should gate the tokens by theme and variant in the theme layer') {
+        @include assert() {
+            @include output($selector: false) {
+                @include scoping.themed-tokens($test-theme);
+            }
+
+            @include expect($selector: false) {
+                @layer ig.material {
+                    @container style(--ig-theme: material) and style(--ig-theme-variant: dark) {
+                        .igx-test {
+                            @include scoping.css-vars-from-theme($test-theme);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include it('should never emit the tokens on a wrapping selector, such as a theme class') {
+        @include assert() {
+            @include output($selector: false) {
+                .dark-theme {
+                    @include scoping.themed-tokens($test-theme, '.custom-scope') {
+                        color: blue;
+                    }
+                }
+            }
+
+            @include expect($selector: false) {
+                @layer ig.material {
+                    @container style(--ig-theme: material) and style(--ig-theme-variant: dark) {
+                        .custom-scope {
+                            @include scoping.css-vars-from-theme($test-theme);
+
+                            color: blue;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include it('should emit ungated tokens when the theme has no design system metadata') {
+        $no-meta: (
+            selector: '.igx-test',
+            background: red,
+        );
+
+        @include assert() {
+            @include output($selector: false) {
+                .dark-theme {
+                    @include scoping.themed-tokens($no-meta);
+                }
+            }
+
+            @include expect($selector: false) {
+                .igx-test {
+                    @include scoping.css-vars-from-theme($no-meta);
+                }
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
+
+/* stylelint-disable max-nesting-depth -- the expected output nests @layer and @container inside sass-true's blocks */
+@include describe('Scrollbar tokens') {
+    $sb-theme: scrollbar-theme($schema: schemas.$light-material-schema);
+
+    @include it('should keep the parent selector when nested, for the derived themes') {
+        @include assert() {
+            @include output() {
+                .host {
+                    @include scrollbar($sb-theme);
+                }
+            }
+
+            @include expect() {
+                .host,
+                .host .ig-scrollbar {
+                    @include scoping.css-vars-from-theme($sb-theme);
+
+                    scrollbar-width: var(--sb-width, auto);
+                    scrollbar-color: var(--sb-thumb-bg-color) var(--sb-track-bg-color);
+                }
+            }
+        }
+    }
+
+    @include it('should only target .ig-scrollbar from the global theme') {
+        @include assert() {
+            @include output($selector: false) {
+                .dark-theme {
+                    @include scrollbar-tokens($sb-theme);
+                }
+            }
+
+            @include expect($selector: false) {
+                @layer ig.material {
+                    @container style(--ig-theme: material) and style(--ig-theme-variant: light) {
+                        .ig-scrollbar {
+                            @include scoping.css-vars-from-theme($sb-theme);
+
+                            scrollbar-width: var(--sb-width, auto);
+                            scrollbar-color: var(--sb-thumb-bg-color) var(--sb-track-bg-color);
                         }
                     }
                 }
