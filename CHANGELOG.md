@@ -3,6 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 22.2.5
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
+
 ## 22.2.4
 
 ### Bug Fixes
