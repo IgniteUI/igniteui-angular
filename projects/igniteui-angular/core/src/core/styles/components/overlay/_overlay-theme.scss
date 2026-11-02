@@ -7,7 +7,7 @@
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin overlay($theme) {
-    @include themed-tokens($theme, '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
+    @include scoped-tokens($theme, '.igx-overlay__wrapper--modal, .igx-overlay__content--modal');
 
     %overlay-display {
         width: 0;

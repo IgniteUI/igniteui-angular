@@ -30,13 +30,14 @@
 }
 
 /// Emits the scrollbar tokens and the standard scrollbar properties for the global theme.
-/// Unlike `scrollbar`, it never targets the parent selector, so a global theme included
-/// inside a class (`.dark-theme { @include theme(...); }`) only styles `.ig-scrollbar` elements.
+/// Unlike `scrollbar`, it only targets the parent selector when the parent is itself an
+/// `.ig-scrollbar`, so a global theme included inside a class (`.dark-theme { @include theme(...); }`)
+/// only styles `.ig-scrollbar` elements.
 /// @access private
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} themed-tokens
+/// @requires {mixin} scoped-tokens
 @mixin scrollbar-tokens($theme) {
-    @include themed-tokens($theme, '.ig-scrollbar') {
+    @include scoped-tokens($theme, '.ig-scrollbar') {
         @include _scrollbar-properties($theme);
     }
 }

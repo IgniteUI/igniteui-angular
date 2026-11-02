@@ -4,6 +4,7 @@
 @use 'sass:string';
 @use 'igniteui-theming/sass/bem' as *;
 @use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/utils' as utils;
 @forward 'igniteui-theming/sass/themes';
 @forward 'igniteui-theming/sass/bem' hide block;
 
@@ -136,38 +137,35 @@
 }
 
 /// Emits the scoped CSS custom properties (tokens) of an already resolved component
-/// theme map, gated by the map's theme and variant exactly like `component-tokens`.
-/// Used by the components whose structural styles still ship with the global theme
-/// (button, icon-button, tooltip, ripple, charts, ...).
+/// theme map. Used by the components whose structural styles still ship with the global
+/// theme (button, icon-button, tooltip, ripple, charts, ...).
 ///
-/// The selector is always emitted at the stylesheet root, so including the global theme
-/// inside a class (`.dark-theme { @include theme(...); }`) never puts component tokens
-/// such as `--background` on that class element, where every descendant would inherit them.
-/// The class still scopes the theme through the `--ig-theme` / `--ig-theme-variant` signal.
+/// When nested, the tokens go on the selector inside the parent, and on the parent itself
+/// only when it matches the selector (`& <selector>, &:is(<selector>)`). Including the global
+/// theme inside a class (`.dark-theme { @include theme(...); }`) therefore never puts generic
+/// component tokens such as `--background` on that class element, where every descendant
+/// would inherit them, while the class still limits the tokens to its own subtree.
+/// At the stylesheet root the tokens go on the selector alone.
 /// @access private
 /// @param {Map} $theme - The resolved component theme, e.g. the result of `tooltip-theme()`.
 /// @param {String} $selector [null] - The selector to emit the tokens on. Defaults to the theme's `selector`.
-/// @requires {mixin} themed
 /// @requires {mixin} css-vars-from-theme
 /// @content Extra declarations emitted on the same selector, alongside the tokens.
-@mixin themed-tokens($theme, $selector: null) {
-    $_theme: map.get($theme, '_meta', 'theme');
-    $_variant: map.get($theme, '_meta', 'variant');
+@mixin scoped-tokens($theme, $selector: null) {
     $_selector: map.get($theme, 'selector');
 
     @if $selector {
         $_selector: $selector;
     }
 
-    @if $_theme {
-        @include themed($_theme, $_variant) {
-            @at-root #{$_selector} {
-                @include css-vars-from-theme($theme);
-                @content;
-            }
+    @if utils.is-root() {
+        #{$_selector} {
+            @include css-vars-from-theme($theme);
+            @content;
         }
     } @else {
-        @at-root #{$_selector} {
+        #{$_selector},
+        &:is(#{$_selector}) {
             @include css-vars-from-theme($theme);
             @content;
         }

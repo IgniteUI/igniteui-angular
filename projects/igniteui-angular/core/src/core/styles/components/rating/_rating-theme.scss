@@ -6,7 +6,7 @@
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin rating($theme) {
-    @include themed-tokens($theme, 'igc-rating');
+    @include scoped-tokens($theme, 'igc-rating');
 
     @include layer(base) {
         igc-rating::part(label) {

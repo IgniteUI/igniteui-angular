@@ -65,7 +65,7 @@
     }
 
     @each $key, $theme in meta.keywords($themes) {
-        @include themed-tokens($theme);
+        @include scoped-tokens($theme);
     }
 
     @include layer(base) {

@@ -383,7 +383,7 @@
             $schema: $schema,
         );
         $data-chart-theme-map: meta.call($theme-handler, $data-chart-theme-map);
-        @include std.themed-tokens($data-chart-theme-map);
+        @include std.scoped-tokens($data-chart-theme-map);
     }
 
     @if is-used('doughnut-chart', $exclude) {
@@ -394,7 +394,7 @@
             $theme-handler,
             $doughnut-chart-theme-map
         );
-        @include std.themed-tokens($doughnut-chart-theme-map);
+        @include std.scoped-tokens($doughnut-chart-theme-map);
     }
 
     @if is-used('linear-gauge', $exclude) {
@@ -405,7 +405,7 @@
             $theme-handler,
             $linear-gauge-theme-map
         );
-        @include std.themed-tokens($linear-gauge-theme-map);
+        @include std.scoped-tokens($linear-gauge-theme-map);
     }
 
     @if is-used('radial-gauge', $exclude) {
@@ -416,7 +416,7 @@
             $theme-handler,
             $radial-gauge-theme-map
         );
-        @include std.themed-tokens($radial-gauge-theme-map);
+        @include std.scoped-tokens($radial-gauge-theme-map);
     }
 
     @if is-used('financial-chart', $exclude) {
@@ -427,7 +427,7 @@
             $theme-handler,
             $financial-chart-theme-map
         );
-        @include std.themed-tokens($financial-chart-theme-map);
+        @include std.scoped-tokens($financial-chart-theme-map);
     }
 
     @if is-used('bullet-graph', $exclude) {
@@ -438,7 +438,7 @@
             $theme-handler,
             $bullet-graph-theme-map
         );
-        @include std.themed-tokens($bullet-graph-theme-map);
+        @include std.scoped-tokens($bullet-graph-theme-map);
     }
 
     @if is-used('category-chart', $exclude) {
@@ -449,7 +449,7 @@
             $theme-handler,
             $category-chart-theme-map
         );
-        @include std.themed-tokens($category-chart-theme-map);
+        @include std.scoped-tokens($category-chart-theme-map);
     }
 
     @if is-used('geo-map', $exclude) {
@@ -457,7 +457,7 @@
             $schema: $schema,
         );
         $geo-map-theme-map: meta.call($theme-handler, $geo-map-theme-map);
-        @include std.themed-tokens($geo-map-theme-map);
+        @include std.scoped-tokens($geo-map-theme-map);
     }
 
     @if is-used('pie-chart', $exclude) {
@@ -465,7 +465,7 @@
             $schema: $schema,
         );
         $pie-chart-theme-map: meta.call($theme-handler, $pie-chart-theme-map);
-        @include std.themed-tokens($pie-chart-theme-map);
+        @include std.scoped-tokens($pie-chart-theme-map);
     }
 
     @if is-used('sparkline', $exclude) {
@@ -473,7 +473,7 @@
             $schema: $schema,
         );
         $sparkline-theme-map: meta.call($theme-handler, $sparkline-theme-map);
-        @include std.themed-tokens($sparkline-theme-map);
+        @include std.scoped-tokens($sparkline-theme-map);
     }
 
     @if is-used('funnel-chart', $exclude) {
@@ -484,7 +484,7 @@
             $theme-handler,
             $funnel-chart-theme-map
         );
-        @include std.themed-tokens($funnel-chart-theme-map);
+        @include std.scoped-tokens($funnel-chart-theme-map);
     }
 
     @if is-used('shape-chart', $exclude) {
@@ -495,7 +495,7 @@
             $theme-handler,
             $shape-chart-theme-map
         );
-        @include std.themed-tokens($shape-chart-theme-map);
+        @include std.scoped-tokens($shape-chart-theme-map);
     }
 
     @if is-used('igc-dockmanager', $exclude) {
