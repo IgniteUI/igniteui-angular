@@ -433,7 +433,11 @@
                     background: var-get($theme, 'row-selected-hover-background');
                 }
 
-                .igx-grid__td:not(.igx-grid__td--pinned-last),
+                .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
+                }
+
+                // Kept separate, an unsupported :has() would drop the whole selector list
                 #{$indentation-before-pinned} {
                     border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
                 }
@@ -509,7 +513,10 @@
                 background: var-get($theme, 'cell-selected-within-background');
             }
 
-            .igx-grid__td:not(.igx-grid__td--pinned-last),
+            .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+            }
+
             #{$indentation-before-pinned} {
                 border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
             }
@@ -526,7 +533,10 @@
                 color: var-get($theme, 'row-selected-hover-text-color');
                 background: var-get($theme, 'row-selected-hover-background');
 
-                .igx-grid__td:not(.igx-grid__td--pinned-last),
+                .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
+                }
+
                 #{$indentation-before-pinned} {
                     border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
                 }
