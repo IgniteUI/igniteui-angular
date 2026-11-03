@@ -1124,7 +1124,13 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const origScrollHeight = parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10);
+        // the scroll size uses the measured heights of the rendered rows once they are rendered
+        const settledScrollHeight = async () => {
+            await frames(3);
+            await fix.whenStable();
+            return parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10);
+        };
+        const origScrollHeight = await settledScrollHeight();
 
         // collapse all group rows currently in the view
         const grRows = grid.groupsRowList.toArray();
@@ -1137,9 +1143,10 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(1);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        // verify scrollbar is updated - 4 rows x 51px are hidden.
-        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
-            .toEqual(origScrollHeight - 204);
+        // verify scrollbar is updated - the collapsed group hides 4 rows (2 group rows and 2 data rows)
+        const groupRowHeight = grid.groupsRowList.first.nativeElement.offsetHeight;
+        const dataRowHeight = grid.dataRowList.first.nativeElement.offsetHeight;
+        expect(await settledScrollHeight()).toEqual(origScrollHeight - 4 * dataRowHeight + (groupRowHeight - dataRowHeight));
 
         grRows[0].toggle();
         await fix.whenStable();
@@ -1149,8 +1156,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
-            .toEqual(origScrollHeight);
+        expect(await settledScrollHeight()).toEqual(origScrollHeight);
     });
 
     it('should persist group row expand/collapse state when scrolling.', async () => {

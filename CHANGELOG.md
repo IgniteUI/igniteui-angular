@@ -78,6 +78,8 @@ All notable changes for each version of this project will be documented in this 
     - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
     - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`
