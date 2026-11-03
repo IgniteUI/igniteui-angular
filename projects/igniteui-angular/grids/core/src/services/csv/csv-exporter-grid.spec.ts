@@ -1,5 +1,5 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
+import { GRID_LEVEL_COL, IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
@@ -427,6 +427,25 @@ describe('CSV Grid Exporter', () => {
         );
 
         expect(hasProperlySummary).toBe(true, 'Summary data should be formatted as "label: value"');
+    });
+
+    it('should not export the internal GRID_LEVEL_COL column when exporting summaries (#17908)', async () => {
+        const fix = TestBed.createComponent(GridCustomSummaryComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.grid;
+        expect(options.exportSummaries).toBe(true);
+
+        const wrapper = await getExportedData(grid, options);
+        const exportedData: string = wrapper['_data'];
+        const lines = exportedData.split('\r\n').filter(line => line.length);
+
+        expect(exportedData).not.toContain(GRID_LEVEL_COL);
+        expect(lines[0]).toBe('Product ID,UnitPrice,UnitsInStock');
+        // Every data and summary row has exactly as many fields as the grid has columns
+        for (const line of lines) {
+            expect(line.split(',').length).toBe(3, `Unexpected field count in "${line}"`);
+        }
     });
 
     describe('Tree Grid CSV export', () => {
