@@ -72,7 +72,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - The filter row cells of pinned columns now have the pinned border. Previously they had the regular header border.
-    - The row selector cells in the body rows now use the action border color, as the other row action cells do.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied, the group-by indentation in the header and the body rows has the pinned border if no column is pinned at the start, since it is then the only pinned element. When a pinned start column follows it, it has the header and body column borders, including the hover and selected colors of the body cells.

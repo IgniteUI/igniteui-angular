@@ -1240,12 +1240,6 @@
             // this is very important especially of the borders have slide alpha
             background-clip: border-box !important;
         }
-	    
-	    .igx-grid__tr--odd .igx-grid__cbx-selection,
-	    .igx-grid__tr--even .igx-grid__cbx-selection {
-		    border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
-		}
-
 
         // Checkbox selection pushed to top (for header alignment)
         @include e(cbx-selection, $m: push) {
