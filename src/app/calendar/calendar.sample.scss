@@ -11,6 +11,63 @@
     }
 }
 
+// Day template content: `currentColor` follows the day cell foreground,
+// so the indicators stay visible on the selected background.
+.event-day {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+
+    &--disabled {
+        opacity: .4;
+    }
+
+    &__dots {
+        position: absolute;
+        inset-block-start: calc(100% + 1px);
+        display: flex;
+        gap: 2px;
+    }
+
+    &__dot {
+        display: inline-block;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+}
+
+.day-legend {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 8px;
+    font-size: 12px;
+
+    .event-day__dot {
+        vertical-align: middle;
+        margin-inline-end: 2px;
+    }
+}
+
+.price-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+
+    &__price {
+        font-size: 9px;
+        opacity: .75;
+    }
+
+    &--muted {
+        opacity: .4;
+    }
+}
+
 .preview {
     display: flex;
     overflow: hidden;

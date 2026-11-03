@@ -3679,7 +3679,7 @@ describe('igxOverlay', () => {
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
             expect(styles.findIndex(
-                (e) => e.includes('background: var(--background-color);')))
+                (e) => e.includes('--_overlay-backdrop: var(--background-color);')))
                 .toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();
@@ -3702,7 +3702,7 @@ describe('igxOverlay', () => {
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             expect(wrapperElement).toBeDefined();
             const styles = css(wrapperElement);
-            expect(styles.findIndex((e) => e.includes('background: var(--background-color);'))).toBeGreaterThan(-1);
+            expect(styles.findIndex((e) => e.includes('--_overlay-backdrop: var(--background-color);'))).toBeGreaterThan(-1);
 
             fixture.componentInstance.overlay.detachAll();
         });
