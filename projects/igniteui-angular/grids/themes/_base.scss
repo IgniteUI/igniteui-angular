@@ -74,6 +74,9 @@
         > igx-input-group {
 	        --_bundle-row: 1;
 
+            // The editor fills the cell, so its single row has to stretch.
+            align-content: stretch;
+
             input,
             .igx-input-group__input {
 	            height: 100%;
@@ -1769,9 +1772,23 @@
             // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
 
+            // A chip that is alone in the cell (a single filter, the last visible chip next to
+            // the +N indicator, the empty and the complex-filter chips) shrinks down to its
+            // icons and ellipsizes its label. Several chips keep their natural width so that
+            // updateVisibleFilters() can measure them.
+            .igx-filtering-chips > igx-chip:only-of-type,
+            > igx-chip:only-of-type {
+                min-width: min-content;
+                flex-shrink: 1;
+
+                .igx-chip__content {
+                    text-align: start;
+                }
+            }
 
             igx-chips-area {
-                width: auto;
+                // Span the cell so updateVisibleFilters() measures against the available width.
+                width: 100%;
                 min-width: 0;
                 flex-wrap: nowrap;
 
@@ -1780,7 +1797,7 @@
                     text-transform: uppercase;
                     font-weight: 600;
                     margin: 0 rem(8px);
-                    overflow: hidden;
+                    // no overflow: hidden, it would let the connector collapse to 0 and "fit"
                 }
             }
         }
@@ -1820,11 +1837,17 @@
             }
         }
 
-        // Filtering cell indicator hidden state
+        // Filtering cell indicator hidden state: out of the flow but still measurable,
+        // updateVisibleFilters() reads its offsetWidth to reserve room for the badge.
+        // (Hiding only the icon loses to the unlayered @scope display rule of igx-icon.)
         @include e(filtering-cell-indicator, $m: hidden) {
-            .igx-badge,
-            igx-icon {
-                display: none;
+            position: absolute;
+            visibility: hidden;
+            pointer-events: none;
+
+            // keep the badge out of the measured width, as in the visible state
+            .igx-badge {
+                position: absolute;
             }
         }
 
@@ -1984,8 +2007,8 @@
             padding-block: pad-block(4px, 6px, 8px);
             padding-inline: pad-inline(4px, 8px, 16px);
             min-width: rem(320px);
-            color: var(--ig-grid-foreground, contrast-color($color: 'surface', $variant: 500));
-            background: var(--ig-grid-background, color($color: 'surface', $variant: 500));
+            color: var(--ig-grid-foreground, contrast-color($color: 'surface'));
+            background: var(--ig-grid-background, color($color: 'surface'));
             border-radius: 0;
 
             igc-icon,
@@ -2564,7 +2587,9 @@
             flex-flow: column nowrap;
             position: relative;
 
-            :where(.igx-grid-th, .igx-grid-thead__group) {
+            // Split :where()s, a multi-argument subject defeats Chromium's rule bucketing.
+            :where(.igx-grid-th),
+            :where(.igx-grid-thead__group) {
                 flex: 1 1 auto;
             }
 
