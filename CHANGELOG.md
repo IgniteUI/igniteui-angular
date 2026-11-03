@@ -4,6 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.0
 
+### General
+
+- **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
+
 ### New Functionality
 
 - `IgxTabsComponent`
@@ -181,10 +185,6 @@ All notable changes for each version of this project will be documented in this 
     - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
 
 ## 23.0.0
-
-### General
-
-- **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
 
 ### New Features
 
