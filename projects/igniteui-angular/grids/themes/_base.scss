@@ -1973,10 +1973,15 @@
         @include e(summaries-patch) {
             position: relative;
             background: inherit;
-            border-inline-end: var-get($theme, 'header-border-width')
+            border-inline-end: var-get($theme, 'pinned-border-width')
             var(--ig-grid-summary-border-style, solid)
             var(--ig-grid-summary-border-color, $grid-action-border-color);
             z-index: $z-grid-base;
+
+            // Pinned border width when no pinned start column follows, header border width otherwise
+            &:has(+ .igx-grid-summary--pinned) {
+                border-inline-end-width: var-get($theme, 'header-border-width');
+            }
         }
 
         // ============================================================================
