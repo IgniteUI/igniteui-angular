@@ -1036,7 +1036,7 @@
         // Action row (for row actions like edit, delete buttons)
         @include e(tr-action) {
             &:last-of-type {
-                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
                 min-height: var(--cell-height);
             }
         }
