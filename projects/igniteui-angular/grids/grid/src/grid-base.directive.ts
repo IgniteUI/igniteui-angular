@@ -3289,7 +3289,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _defaultExpandState = false;
     protected _headerFeaturesWidth = NaN;
     /**
-     * Whether there was a pinned start column when `_headerFeaturesWidth` was measured.
+     * Whether there was a pinned start column on the last check.
      * The group-by indentation border width depends on it.
      */
     protected _headerFeaturesPinnedStart?: boolean;
@@ -4716,7 +4716,6 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
             const expanderWidth = expander?.nativeElement?.getBoundingClientRect ? expander.nativeElement.getBoundingClientRect().width : 0;
             this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
-            this._headerFeaturesPinnedStart = this.hasPinnedStartColumns();
         }
         return this._headerFeaturesWidth;
     }
@@ -4727,16 +4726,14 @@ export abstract class IgxGridBaseDirective implements GridType,
      * The cached feature columns width is measured before that, so it is measured again once the grid is rendered.
      */
     protected checkHeaderFeaturesWidth() {
-        if (this._headerFeaturesPinnedStart === undefined || !this.headerGroupContainer) {
-            return;
-        }
-
         const hasPinnedStart = this.hasPinnedStartColumns();
-        if (hasPinnedStart === this._headerFeaturesPinnedStart) {
+        const changed = this._headerFeaturesPinnedStart !== undefined && hasPinnedStart !== this._headerFeaturesPinnedStart;
+        this._headerFeaturesPinnedStart = hasPinnedStart;
+
+        if (!changed || !this.headerGroupContainer) {
             return;
         }
 
-        this._headerFeaturesPinnedStart = hasPinnedStart;
         runAfterRenderOnce(this.injector, () => {
             this._headerFeaturesWidth = NaN;
             this.notifyChanges(true);

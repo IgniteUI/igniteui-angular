@@ -76,7 +76,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied, the group-by indentation in the header and the body rows has the pinned border if no column is pinned at the start, since it is then the only pinned element. When a pinned start column follows it, it has the header and body column borders, including the hover and selected colors of the body cells.
-    - The border of the summary row area under the row selectors and the group-by indentation follows the same rule: the pinned border width when no column is pinned at the start, the header border width otherwise.
+    - When grouping is applied, the border of the summary row area under the row selectors and the group-by indentation follows the same rule: the pinned border width when no column is pinned at the start, the header border width otherwise.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
