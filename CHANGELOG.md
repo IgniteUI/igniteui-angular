@@ -26,6 +26,12 @@ All notable changes for each version of this project will be documented in this 
     - The deprecated `light-theme`, `dark-theme`, and the other deprecated theme wrapper mixins build their palettes with the `legacy` generator.
 - **Breaking Change** - Component themes take their background from the `base` surface role, `--ig-surface-base`, instead of `--ig-surface-500`. Override the surface roles (`--ig-surface-base`, `--ig-surface-raised`, `--ig-surface-overlay`, `--ig-surface-sunken`, `--ig-surface-container`) instead of `--ig-surface-500` to change the surface at runtime.
     - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
+- **Behavioral Change** - `tokens($theme, $mode: 'scoped')` included inside a selector no longer declares the component tokens on that selector itself, unless it is the component. The tokens go on the component inside the selector and, through `:where()`, on the selector when it also matches the component, so `.my-avatar` on an `igx-avatar` element is still themed with the same specificity. Previously the selector always received the tokens, and generic tokens such as `--background` were inherited by every element below it.
+    - To override a component's tokens for a whole section of a page, use the default global mode instead: `.promo { @include tokens(tooltip-theme($background: red)); }` only declares `--ig-tooltip-*` tokens, which no other component reads.
+- Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
+    - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
+    - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
+- The grid, grid toolbar, paginator, column actions, Excel-style filtering and query builder themes no longer pick up `--background`, `--foreground` or `--accent-color` declared on an ancestor or on `:root`, for example by the application's own CSS. Their themes now declare these tokens on the component, without a value unless one is passed to the theme function.
 
 
 ### Behavioral Changes
@@ -68,6 +74,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
     - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
