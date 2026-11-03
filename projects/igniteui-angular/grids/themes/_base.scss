@@ -1197,6 +1197,42 @@
             // this is very important especially of the borders have slide alpha
             background-clip: border-box !important;
         }
+	    
+	    .igx-grid__tr--odd .igx-grid__cbx-selection,
+	    .igx-grid__tr--even .igx-grid__cbx-selection {
+		    border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
+		}
+
+        // With no pinned start columns the row indentation is the only pinned element,
+        // so it takes the pinned border. When pinned start cells follow it directly
+        // (unpinned cells always live inside the display container), it uses the
+        // odd/even column border like the rest of the body cells.
+        .igx-grid__tr--odd .igx-grid__row-indentation,
+        .igx-grid__tr--even .igx-grid__row-indentation {
+            border-inline-end: $grid-pinned-border;
+        }
+
+        .igx-grid__tr--odd .igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block) {
+            border-inline-end: $grid-body-column-border-odd;
+        }
+
+        .igx-grid__tr--even .igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block) {
+            border-inline-end: $grid-body-column-border-even;
+        }
+
+        // Follow the body cells' border color on hover and selection
+        .igx-grid__tr:hover .igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block) {
+            border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
+        }
+
+        .igx-grid__tr--selected .igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block) {
+            border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+        }
+
+        .igx-grid__tr--selected:hover .igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block) {
+            border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
+        }
+
 
         // Checkbox selection pushed to top (for header alignment)
         @include e(cbx-selection, $m: push) {
@@ -1771,6 +1807,17 @@
             // (!) the background-clip: padding-box; makes sure the background never go under the border,
             // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
+
+            // The block-scoped selector above outweighs the generic .igx-grid-th--pinned-*
+            // modifiers, so the pinned borders have to be restated here.
+            &.igx-grid-th--pinned-last {
+                border-inline-end: $grid-pinned-border;
+            }
+
+            &.igx-grid-th--pinned-first {
+                border-inline-start: $grid-pinned-border;
+                border-inline-end: none;
+            }
 
             // A chip that is alone in the cell (a single filter, the last visible chip next to
             // the +N indicator, the empty and the complex-filter chips) shrinks down to its
@@ -2798,6 +2845,17 @@
         .igx-grid__header-indentation {
             igx-icon {
                 --component-size: 3;
+            }
+        }
+
+        // Mirrors the body row indentation: with no pinned start columns the header
+        // indentation is the only pinned element and takes the pinned border, otherwise
+        // it uses the regular header border like the rest of the headers.
+        .igx-grid__header-indentation:not(.igx-grid__header-indentation--no-border) {
+            border-inline-end: $grid-pinned-border;
+
+            &:has(+ .igx-grid-th--pinned) {
+                border-inline-end: $grid-header-border;
             }
         }
 
