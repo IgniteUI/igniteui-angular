@@ -3227,8 +3227,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
-    private _postRenderChecks = 0;
-    private _postRenderChecksBeforeSizing = 0;
+    private _repaintAfterRender = false;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
@@ -4260,19 +4259,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
         this.cdr.markForCheck();
-    }
-
-    /**
-     * @hidden @internal
-     * Repaints after the current change detection pass, unless the grid was re-sized after rendering it.
-     */
-    public notifyChangesAfterCurrentPass() {
-        const postRenderChecks = this._postRenderChecks;
-        Promise.resolve().then(() => {
-            if (this._postRenderChecksBeforeSizing <= postRenderChecks) {
-                this.notifyChanges(true);
-            }
-        });
     }
 
     /**
@@ -6853,6 +6839,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected resetNotifyChanges() {
         this._cdrRequestRepaint = false;
         this._cdrRequests = false;
+        this._repaintAfterRender = false;
     }
 
     /** @hidden @internal */
@@ -7094,9 +7081,11 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     protected onColumnsAddedOrRemoved() {
         this.summaryService.clearSummaryCache();
-        // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
-        // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
-        this.notifyChangesAfterCurrentPass();
+        Promise.resolve().then(() => {
+            // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+            // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+            this.notifyChanges(true);
+        });
     }
 
     /**
@@ -7111,7 +7100,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this._postRenderChecksBeforeSizing = this._postRenderChecks;
         this.cdr.detectChanges();
         this.resetCaches(recalcFeatureWidth);
         const hasScroll = this.hasVerticalScroll();
@@ -7136,12 +7124,17 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.cdr.detectChanges();
         }
 
-        // also re-runs ngDoCheck after render, which notifyChangesAfterCurrentPass relies on
         runAfterRenderOnce(this.injector, () => {
-            this._postRenderChecks++;
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
+                if (this._cdrRequestRepaint) {
+                    // A repaint was requested after ngDoCheck in this pass, for example by a column input. Request it
+                    // again after the repaints deferred by this pass, so that they all run in a single sizing pass.
+                    // The flag keeps a plain notifyChanges() in between, such as the isLoading setter's, from cancelling it.
+                    this._repaintAfterRender = true;
+                    Promise.resolve().then(() => this._repaintAfterRender && this.notifyChanges(true));
+                }
             });
         });
         this.resetCaches(recalcFeatureWidth);
@@ -7793,6 +7786,11 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             width = currentWidth + 'px';
             this.resetCaches();
+        }
+        if (this._hostWidth === width) {
+            // Marking the host dirty here re-runs ngDoCheck in the same tick, and with it a sizing pass for any repaint
+            // requested after the first ngDoCheck (#17792). _hostWidth starts unset, so the first pass always marks the host.
+            return;
         }
         this._hostWidth = width;
         this.cdr.markForCheck();

@@ -152,7 +152,7 @@ export class IgxGridSummaryService {
             this.grid.summaryPipeTrigger++;
             if (this.grid.rootSummariesEnabled) {
                 this.retriggerRootPipe++;
-                this.grid.notifyChangesAfterCurrentPass();
+                Promise.resolve().then(() => this.grid.notifyChanges(true));
             }
         }
     }
