@@ -1,0 +1,178 @@
+name: SassDoc deploy
+
+# Builds the SassDoc site for a release and hands it to IgniteUI/igniteui-actions, which deploys it
+# under angular-docs on the internal web servers: to <version>/sass, one folder per minor line, and
+# to sass/latest for the newest release. Staging takes every release, production stable ones only.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to deploy the SassDoc for (e.g. 22.2.4)'
+        required: true
+        type: string
+
+permissions: {}
+
+# One run per release. Runs for different releases go ahead, and their deploys queue in igniteui-actions.
+concurrency:
+  group: sass-docs-deploy-${{ github.event.release.tag_name || inputs.release_tag }}
+
+env:
+  VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.event.release.tag_name }}
+
+jobs:
+  resolve:
+    name: Resolve environments
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      include: ${{ steps.environments.outputs.include }}
+
+    steps:
+      - name: Compare the release with the newest tags
+        id: environments
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+            set -euo pipefail
+
+            if [[ ! "$VERSION" =~ ^([0-9]+)\.([0-9]+)\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+              echo "::error::${VERSION} is not a release version."
+              exit 1
+            fi
+            minor_line="^${BASH_REMATCH[1]}\.${BASH_REMATCH[2]}\."
+
+            # sort -V orders "~" before anything, so 22.2.0~rc.1 sorts below 22.2.0.
+            all=$(
+              { gh api --paginate "repos/${GITHUB_REPOSITORY}/tags?per_page=100" --jq '.[].name'; echo "$VERSION"; } \
+                | grep -E '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$' \
+                | sed 's/-/~/' | sort -uV | sed 's/~/-/'
+            )
+            stable=$(grep -v -- - <<< "$all")
+
+            # A release owns its minor line's folder while it is the newest of that line,
+            # and sass/latest while it is the newest overall.
+            entries=()
+            add() {
+              local environment=$1 versions=$2 latest=false
+              if [[ "$VERSION" != "$(grep -E "$minor_line" <<< "$versions" | tail -n1)" ]]; then return 0; fi
+              if [[ "$VERSION" == "$(tail -n1 <<< "$versions")" ]]; then latest=true; fi
+              entries+=("{\"environment\":\"${environment}\",\"latest\":${latest}}")
+            }
+            add staging "$all"
+            if [[ "$VERSION" != *-* ]]; then add production "$stable"; fi
+
+            include=$(printf '%s\n' "${entries[@]}" | jq -sc .)
+            echo "include=${include}" >> "$GITHUB_OUTPUT"
+
+            {
+              echo "### SassDoc ${VERSION}"
+              echo "Newest tag: $(tail -n1 <<< "$all"), newest stable tag: $(tail -n1 <<< "$stable")"
+              echo
+              jq -r '.[] | "- \(.environment): \(if .latest then "version folder and latest" else "version folder" end)"' <<< "$include"
+              if [[ "$include" == "[]" ]]; then echo "Nothing to deploy, a newer release of this minor line exists."; fi
+            } >> "$GITHUB_STEP_SUMMARY"
+
+  # Builds the site per environment: each one embeds its own URLs, analytics ID and header/footer.
+  build:
+    name: Build (${{ matrix.environment }})
+    needs: resolve
+    if: needs.resolve.outputs.include != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.resolve.outputs.include) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ env.VERSION }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.x
+
+      - run: npm ci
+
+      - name: Build SassDoc
+        run: npm run build:sassdoc:en:${{ matrix.environment }}
+
+      # Lays the site out as it goes under angular-docs: the version folder, kept out of search
+      # results like the earlier ones, and sass/latest when this release is the newest.
+      - name: Stage the angular-docs folders
+        env:
+          LATEST: ${{ matrix.latest }}
+        run: |
+            set -euo pipefail
+
+            mkdir -p "angular-docs/${VERSION}"
+            cp -r dist/igniteui-angular/docs/sass "angular-docs/${VERSION}/sass"
+            find "angular-docs/${VERSION}/sass" -name index.html \
+              -exec sed -i 's|</head>|<meta name="robots" content="noindex,nofollow"></head>|' {} +
+
+            if [[ "$LATEST" == "true" ]]; then
+              mkdir -p angular-docs/sass
+              cp -r dist/igniteui-angular/docs/sass angular-docs/sass/latest
+            fi
+
+      - name: Upload SassDoc
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: sass-docs-${{ matrix.environment }}-${{ env.VERSION }}
+          path: angular-docs
+          retention-days: 1
+          if-no-files-found: error
+
+  # Holds the app token and never runs repository code.
+  deploy:
+    name: Deploy (${{ matrix.environment }})
+    needs: [resolve, build]
+    if: needs.resolve.outputs.include != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    strategy:
+      matrix:
+        include: ${{ fromJSON(needs.resolve.outputs.include) }}
+
+    steps:
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}
+          private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+          owner: IgniteUI
+          repositories: igniteui-actions
+
+      # igniteui-actions downloads the artifact from this run, syncs its folders into angular-docs,
+      # removes the other folders of this minor line and refreshes the version selector's list.
+      - name: Trigger deploy workflow in IgniteUI Actions
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # equivalent to release v4.0.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: IgniteUI/igniteui-actions
+          event-type: igniteui-angular-sass-docs-cd
+          client-payload: |
+            {
+              "calling_branch": "${{ github.ref }}",
+              "environment": "${{ matrix.environment }}",
+              "artifact_name": "sass-docs-${{ matrix.environment }}-${{ env.VERSION }}",
+              "version": "${{ env.VERSION }}",
+              "latest": ${{ matrix.latest }},
+              "platform": "angular",
+              "repository": "${{ github.repository }}",
+              "run_id": "${{ github.run_id }}",
+              "locale": "en"
+            }
