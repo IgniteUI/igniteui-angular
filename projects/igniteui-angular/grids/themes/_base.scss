@@ -1203,10 +1203,7 @@
 		    border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
 		}
 
-        // With no pinned start columns the row indentation is the only pinned element,
-        // so it takes the pinned border. When pinned start cells follow it directly
-        // (unpinned cells always live inside the display container), it uses the
-        // odd/even column border like the rest of the body cells.
+        // Pinned border when no pinned start column follows, odd/even border otherwise
         .igx-grid__tr--odd .igx-grid__row-indentation,
         .igx-grid__tr--even .igx-grid__row-indentation {
             border-inline-end: $grid-pinned-border;
@@ -1220,7 +1217,7 @@
             border-inline-end: $grid-body-column-border-even;
         }
 
-        // Follow the body cells' border color on hover and selection
+        // Hover and selected border colors
         .igx-grid__tr:hover .igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block) {
             border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
         }
@@ -1808,8 +1805,7 @@
             // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
 
-            // The block-scoped selector above outweighs the generic .igx-grid-th--pinned-*
-            // modifiers, so the pinned borders have to be restated here.
+            // Pinned borders, the generic pinned modifiers lose to this selector
             &.igx-grid-th--pinned-last {
                 border-inline-end: $grid-pinned-border;
             }
@@ -2848,9 +2844,7 @@
             }
         }
 
-        // Mirrors the body row indentation: with no pinned start columns the header
-        // indentation is the only pinned element and takes the pinned border, otherwise
-        // it uses the regular header border like the rest of the headers.
+        // Pinned border when no pinned start column follows, header border otherwise
         .igx-grid__header-indentation:not(.igx-grid__header-indentation--no-border) {
             border-inline-end: $grid-pinned-border;
 
