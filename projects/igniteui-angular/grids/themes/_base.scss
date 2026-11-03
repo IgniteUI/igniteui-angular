@@ -1192,6 +1192,11 @@
             margin-inline-end: pad-inline($indent-scroll-sm, $indent-scroll-md, $indent-scroll-lg);
         }
 
+        // The padding makes up for the thinner border, so the width stays the same
+        #{$indentation-before-pinned} {
+            padding-inline-end: calc(#{pad-inline(rem(12px), rem(16px), rem(24px))} + #{var-get($theme, 'pinned-border-width')} - #{var-get($theme, 'header-border-width')});
+        }
+
         // Row indentation levels for tree/grouping (1-10)
         @for $i from 1 through 10 {
             @include e(row-indentation, $m: level-#{$i}) {
@@ -1225,8 +1230,10 @@
         @include e(header-indentation, $not: no-border) {
             border-inline-end: $grid-pinned-border;
 
+            // The padding makes up for the thinner border, so the width stays the same
             &:has(+ .igx-grid-th--pinned) {
                 border-inline-end: $grid-header-border;
+                padding-inline-end: calc(#{sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg)} + #{var-get($theme, 'pinned-border-width')} - #{var-get($theme, 'header-border-width')});
             }
         }
 

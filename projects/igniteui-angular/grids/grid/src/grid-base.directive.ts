@@ -3288,11 +3288,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
     protected _defaultExpandState = false;
     protected _headerFeaturesWidth = NaN;
-    /**
-     * Whether there was a pinned start column on the last check.
-     * The group-by indentation border width depends on it.
-     */
-    protected _headerFeaturesPinnedStart?: boolean;
     protected _init = true;
     protected _firstAutoResize = true;
     protected _autoSizeColumnsNotify = new Subject<void>();
@@ -4392,8 +4387,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
 
-        this.checkHeaderFeaturesWidth();
-
         if (this._cdrRequestRepaint) {
             this.resetNotifyChanges();
             this.calculateGridSizes();
@@ -4718,30 +4711,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
         }
         return this._headerFeaturesWidth;
-    }
-
-    /**
-     * The group-by indentation takes the pinned border width only when no pinned start column follows it,
-     * so pinning or hiding the first pinned start column changes its width after the next render.
-     * The cached feature columns width is measured before that, so it is measured again once the grid is rendered.
-     */
-    protected checkHeaderFeaturesWidth() {
-        const hasPinnedStart = this.hasPinnedStartColumns();
-        const changed = this._headerFeaturesPinnedStart !== undefined && hasPinnedStart !== this._headerFeaturesPinnedStart;
-        this._headerFeaturesPinnedStart = hasPinnedStart;
-
-        if (!changed || !this.headerGroupContainer) {
-            return;
-        }
-
-        runAfterRenderOnce(this.injector, () => {
-            this._headerFeaturesWidth = NaN;
-            this.notifyChanges(true);
-        });
-    }
-
-    private hasPinnedStartColumns() {
-        return this._pinnedStartColumns.some(col => !col.hidden);
     }
 
     /**
