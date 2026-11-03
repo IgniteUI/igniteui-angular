@@ -330,9 +330,14 @@
         }
 
         // Scroll start section - border shown only while column selection is enabled
-        // Uses the same border color as the cbx-selection cell it lines up with
+        // Uses the same border as the row action cells it lines up with
         @include e(scroll-start, $m: column-selection) {
-            border-inline-end: var-get($theme, 'row-border-width') solid $grid-header-border-color;
+            border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
+        }
+
+        // Under the group-by indentation, which has the pinned border
+        @include e(scroll-start, $mods: (column-selection, grouped)) {
+            border-inline-end: $grid-pinned-border;
         }
 
         // Scroll start section - a pinned column always takes precedence with a thicker border
@@ -457,7 +462,7 @@
             color: var-get($theme, 'row-odd-text-color');
 
             .igx-grid__tr-action {
-                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
             }
 
             .igx-grid__td:not(.igx-grid__td--pinned-last) {
@@ -497,7 +502,7 @@
             }
 
             .igx-grid__tr-action {
-                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
             }
         }
 
@@ -1129,7 +1134,7 @@
             cursor: default;
             pointer-events: none;
             padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
-	        border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+	        border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
         }
 
         // Hierarchical expander in header
