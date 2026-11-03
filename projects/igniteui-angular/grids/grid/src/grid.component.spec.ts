@@ -2413,7 +2413,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 await fix.whenStable();
 
                 const rendered = expectDynamicColumnsContent(grid, 1);
-                expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
+                expectDynamicColumnsGeometry(grid, 1, 1200, rendered);
                 // one pass for the data and one for the new columns
                 expect(sizing.mock.calls.length).toBeLessThanOrEqual(2);
             });
@@ -2435,6 +2435,25 @@ describe('IgxGrid Component Tests #grid', () => {
             // a grid without width shows all columns and grows with them
             expect(expectDynamicColumnsContent(grid, 1)).toBe(DYNAMIC_COLUMNS_COUNT);
             expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * dynamicColumnWidth(1));
+            expect(grid.nativeElement.offsetWidth).toBe(hostWidth + DYNAMIC_COLUMNS_COUNT * (dynamicColumnWidth(1) - dynamicColumnWidth(0)));
+        });
+
+        it('should size the grid when isLoading turns off together with a column width change', async () => {
+            const fix = TestBed.createComponent(PercentHeightDynamicColumnsGridComponent);
+            fix.componentInstance.width.set(null);
+            fix.componentInstance.loading.set(true);
+            await fix.whenStable();
+            const host = fix.componentInstance;
+            const grid = host.grid();
+            const hostWidth = grid.nativeElement.offsetWidth;
+
+            // the isLoading setter defers a plain notification, which must not cancel the repaint the new widths request
+            host.loading.set(false);
+            host.data.set(makeDynamicData(1));
+            host.columns.set(makeDynamicColumns(1).map((col, i) => ({ ...col, key: `g0c${i}` })));
+            await fix.whenStable();
+
+            expect(expectDynamicColumnsContent(grid, 1)).toBe(DYNAMIC_COLUMNS_COUNT);
             expect(grid.nativeElement.offsetWidth).toBe(hostWidth + DYNAMIC_COLUMNS_COUNT * (dynamicColumnWidth(1) - dynamicColumnWidth(0)));
         });
     });
@@ -3988,7 +4007,8 @@ const makeDynamicData = (gen: number, newFields = false) => Array.from({ length:
 @Component({
     template: `
     <div style="height: 700px; width: 1200px">
-        <igx-grid #grid [data]="data()" [width]="width()" [height]="'100%'" [allowFiltering]="true" [rowSelection]="'multiple'">
+        <igx-grid #grid [data]="data()" [width]="width()" [height]="'100%'" [allowFiltering]="true" [rowSelection]="'multiple'"
+            [isLoading]="loading()">
             @for (col of columns(); track col.key) {
                 <igx-column [field]="col.field" [header]="col.header" [sortable]="true" [width]="col.width"></igx-column>
             }
@@ -4002,6 +4022,7 @@ class PercentHeightDynamicColumnsGridComponent {
     public data = signal(makeDynamicData(0));
     public columns = signal(makeDynamicColumns(0));
     public width = signal<string | null>('100%');
+    public loading = signal(false);
 }
 
 function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
@@ -4019,23 +4040,16 @@ function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
     return titles.length;
 }
 
-function expectDynamicColumnsGeometry(grid: IgxGridComponent, gen: number, width: string | null, hostWidth: number, rendered: number) {
+function expectDynamicColumnsGeometry(grid: IgxGridComponent, gen: number, hostWidth: number, rendered: number) {
     const el: HTMLElement = grid.nativeElement;
     const columnWidth = dynamicColumnWidth(gen);
+    const hScroll = grid.headerContainer.getScroll() as HTMLElement;
     expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
-    if (width === null) {
-        expect(el.style.width).toBe(`${DYNAMIC_COLUMNS_COUNT * columnWidth + grid.scrollSize}px`);
-        expect(el.offsetWidth).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth + grid.scrollSize);
-        expect(grid.isHorizontalScrollHidden).toBe(true);
-        expect(rendered).toBe(DYNAMIC_COLUMNS_COUNT);
-    } else {
-        const hScroll = grid.headerContainer.getScroll() as HTMLElement;
-        expect(el.offsetWidth).toBe(hostWidth);
-        expect(grid.isHorizontalScrollHidden).toBe(false);
-        expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
-        expect(hScroll.clientWidth).toBe(grid.unpinnedWidth);
-        expect(rendered).toBeLessThanOrEqual(Math.ceil(grid.unpinnedWidth / columnWidth) + 2);
-    }
+    expect(el.offsetWidth).toBe(hostWidth);
+    expect(grid.isHorizontalScrollHidden).toBe(false);
+    expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
+    expect(hScroll.clientWidth).toBe(grid.unpinnedWidth);
+    expect(rendered).toBeLessThanOrEqual(Math.ceil(grid.unpinnedWidth / columnWidth) + 2);
 }
 
 @Component({
