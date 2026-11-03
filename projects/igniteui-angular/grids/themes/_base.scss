@@ -443,7 +443,7 @@
                 }
 
                 // Kept separate, an unsupported :has() would drop the whole selector list
-                #{$indentation-before-pinned} {
+                #{$indentation-before-pinned}::after {
                     border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
                 }
             }
@@ -472,11 +472,11 @@
             }
 
             // Pinned border when no pinned start column follows, odd border otherwise
-            .igx-grid__row-indentation {
+            .igx-grid__row-indentation::after {
                 border-inline-end: $grid-pinned-border;
             }
 
-            #{$indentation-before-pinned} {
+            #{$indentation-before-pinned}::after {
                 border-inline-end: $grid-body-column-border-odd;
             }
         }
@@ -493,11 +493,11 @@
             }
 
             // Pinned border when no pinned start column follows, even border otherwise
-            .igx-grid__row-indentation {
+            .igx-grid__row-indentation::after {
                 border-inline-end: $grid-pinned-border;
             }
 
-            #{$indentation-before-pinned} {
+            #{$indentation-before-pinned}::after {
                 border-inline-end: $grid-body-column-border-even;
             }
 
@@ -522,7 +522,7 @@
                 border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
             }
 
-            #{$indentation-before-pinned} {
+            #{$indentation-before-pinned}::after {
                 border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
             }
 
@@ -542,7 +542,7 @@
                     border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
                 }
 
-                #{$indentation-before-pinned} {
+                #{$indentation-before-pinned}::after {
                     border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
                 }
             }
@@ -1095,13 +1095,20 @@
             justify-content: center;
             align-items: center;
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
-            border-inline-end: $grid-header-border;
+            // Room for the end border, the same whatever border is drawn in it
+            padding-inline-end: calc(#{pad-inline(rem(12px), rem(16px), rem(24px))} + #{var-get($theme, 'pinned-border-width')});
             background: inherit;
             z-index: $z-grid-base;
 
-            // (!) the background-clip: padding-box; makes sure the background never go under the border,
-            // this is very important especially of the borders have slide alpha
-            background-clip: padding-box !important;
+            // The end border is drawn here, so its width and style never change the indentation width
+            &::after {
+                content: '';
+                position: absolute;
+                inset-block: 0;
+                inset-inline-end: 0;
+                border-inline-end: $grid-header-border;
+                pointer-events: none;
+            }
         }
 
         // Hierarchical grid expander (expand/collapse child grids)
@@ -1192,11 +1199,6 @@
             margin-inline-end: pad-inline($indent-scroll-sm, $indent-scroll-md, $indent-scroll-lg);
         }
 
-        // The padding makes up for the thinner border, so the width stays the same
-        #{$indentation-before-pinned} {
-            padding-inline-end: calc(#{pad-inline(rem(12px), rem(16px), rem(24px))} + #{var-get($theme, 'pinned-border-width')} - #{var-get($theme, 'header-border-width')});
-        }
-
         // Row indentation levels for tree/grouping (1-10)
         @for $i from 1 through 10 {
             @include e(row-indentation, $m: level-#{$i}) {
@@ -1215,11 +1217,21 @@
         // Header indentation for tree/grouping
         @include e(header-indentation) {
             position: relative;
-            padding-inline-end: sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
-            border-inline-end: $grid-header-border;
+            // Room for the end border, the same whatever border is drawn in it
+            padding-inline-end: calc(#{sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg)} + #{var-get($theme, 'pinned-border-width')});
             background: var-get($theme, 'header-background');
             z-index: $z-grid-selection;
             height: 100%;
+
+            // The end border is drawn here, so its width and style never change the indentation width
+            &::after {
+                content: '';
+                position: absolute;
+                inset-block: 0;
+                inset-inline-end: 0;
+                border-inline-end: $grid-header-border;
+                pointer-events: none;
+            }
 
             igx-icon {
                 --component-size: 3;
@@ -1228,18 +1240,20 @@
 
         // Pinned border when no pinned start column follows, header border otherwise
         @include e(header-indentation, $not: no-border) {
-            border-inline-end: $grid-pinned-border;
+            &::after {
+                border-inline-end: $grid-pinned-border;
+            }
 
-            // The padding makes up for the thinner border, so the width stays the same
-            &:has(+ .igx-grid-th--pinned) {
+            &:has(+ .igx-grid-th--pinned)::after {
                 border-inline-end: $grid-header-border;
-                padding-inline-end: calc(#{sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg)} + #{var-get($theme, 'pinned-border-width')} - #{var-get($theme, 'header-border-width')});
             }
         }
 
         // Header indentation without border
         @include e(header-indentation, $m: no-border) {
-            border-inline-end: rem(1px) solid transparent;
+            &::after {
+                border-inline-end-color: transparent;
+            }
         }
 
         // Checkbox padding
