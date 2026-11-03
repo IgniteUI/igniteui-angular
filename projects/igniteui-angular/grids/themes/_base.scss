@@ -2931,7 +2931,10 @@
     }
 
 	// MRL cell borders keep the row border color in every row state
-	.igx-grid__tr--mrl .igx-grid__td {
+	.igx-grid__tr--mrl .igx-grid__td,
+	.igx-grid__tr--mrl .igx-grid__row-indentation {
+		--body-column-border-color-odd: #{var-get($theme, 'row-border-color')};
+		--body-column-border-color-even: #{var-get($theme, 'row-border-color')};
 		--body-column-hover-border-color: #{var-get($theme, 'row-border-color')};
 		--body-column-selected-border-color: #{var-get($theme, 'row-border-color')};
 		--body-column-hover-selected-border-color: #{var-get($theme, 'row-border-color')};
