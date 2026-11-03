@@ -156,6 +156,39 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.columns[1].field).toBe('index');
         });
 
+        it('should preserve row ordering when the viewport grows at the bottom', async () => {
+            const fix = TestBed.createComponent(IgxGridTestComponent);
+            fix.componentInstance.data = Array.from({ length: 1000 }, (_, index) => ({ index, value: index }));
+            fix.detectChanges();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const lastIndex = fix.componentInstance.data.length - 1;
+
+            grid.verticalScrollContainer.scrollTo(lastIndex);
+            await wait(100);
+
+            grid.height = '200px';
+            fix.detectChanges();
+            await wait(100);
+
+            grid.height = '600px';
+            fix.detectChanges();
+            await wait(100);
+
+            grid.verticalScrollContainer.scrollTo(lastIndex);
+            await wait(100);
+
+            const renderedIndexes = grid.rowList.toArray().map(row => row.data.index);
+            expect(renderedIndexes[renderedIndexes.length - 1]).toBe(lastIndex);
+            renderedIndexes.forEach((index, position) => {
+                if (position > 0) {
+                    expect(index).toBe(renderedIndexes[position - 1] + 1);
+                }
+            });
+            fix.destroy();
+        });
+
         it('should initialize grid with remote virtualization', async () => {
             const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
             fix.detectChanges();
