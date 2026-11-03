@@ -1,5 +1,5 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
-import { IColumnInfo } from '../exporter-common/base-export-service';
+import { GRID_LEVEL_COL, IColumnInfo } from '../exporter-common/base-export-service';
 import { yieldingLoop } from '../exporter-common/yielding-loop';
 
 /**
@@ -46,7 +46,11 @@ export class CharSeparatedValueData {
         const columns = this.columns?.filter(c => !c.skip)
                         .sort((a, b) => a.startIndex! - b.startIndex!)
                         .sort((a, b) => a.pinnedIndex! - b.pinnedIndex!);
-        const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
+        // Without a column list (e.g. hierarchical grids) the keys come from the records, which may
+        // hold the internal GRID_LEVEL_COL used only for Excel summary formulas
+        const keys = columns && columns.length ?
+                        columns.map(c => c.field) :
+                        ExportUtilities.getKeysFromData(this._data).filter(key => key !== GRID_LEVEL_COL);
 
         if (this._data && this._data.length > 0) {
             this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);

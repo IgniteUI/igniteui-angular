@@ -5,6 +5,7 @@ import { TestMethods } from '../exporter-common/test-methods.spec';
 import { IgxCsvExporterService } from './csv-exporter';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../../../../test-utils/tree-grid-components.spec';
+import { IgxHierarchicalGridSummariesExportComponent } from '../../../../../test-utils/hierarchical-grid-components.spec';
 import { ReorderedColumnsComponent, GridIDNameJobTitleComponent, ProductsComponent, ColumnsAddedOnInitComponent, EmptyGridComponent, GridCustomSummaryComponent } from '../../../../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../../../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -35,7 +36,8 @@ describe('CSV Grid Exporter #grid', () => {
                 ProductsComponent,
                 ColumnsAddedOnInitComponent,
                 EmptyGridComponent,
-                GridCustomSummaryComponent
+                GridCustomSummaryComponent,
+                IgxHierarchicalGridSummariesExportComponent
             ]
         }).compileComponents();
     });
@@ -449,6 +451,20 @@ describe('CSV Grid Exporter #grid', () => {
         for (const line of lines) {
             expect(line.split(',').length, `Unexpected field count in "${line}"`).toBe(3);
         }
+    });
+
+    it('should not export the internal GRID_LEVEL_COL column when exporting hierarchical grid summaries (#17908)', async () => {
+        const fix = TestBed.createComponent(IgxHierarchicalGridSummariesExportComponent);
+        fix.detectChanges();
+
+        const wrapper = await getExportedData(fix.componentInstance.hGrid, options);
+        const exportedData: string = wrapper['_data'];
+        const lines = exportedData.split('\r\n');
+
+        expect(exportedData).not.toContain(GRID_LEVEL_COL);
+        // The child grid fields are still exported, only the record level is left out
+        expect(lines[0]).toBe('Artist,Debut,GrammyNominations,GrammyAwards,Album,LaunchDate,BillboardReview,USBillboard200');
+        expect(lines[1]).toBe('Naomí Yepes,2011,6,0,,,,');
     });
 
     describe('Tree Grid CSV export', () => {
