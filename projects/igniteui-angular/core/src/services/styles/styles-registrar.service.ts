@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { ApplicationRef, ComponentRef, createComponent, EnvironmentInjector, inject, Injectable, Type } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { PlatformUtil } from '../../core/utils';
 
@@ -27,10 +27,14 @@ import { PlatformUtil } from '../../core/utils';
  */
 const _registries = new WeakMap<Document, Map<symbol, CSSStyleSheet | null>>();
 
+/** Keyed by application, as Angular shares component styles per application. */
+const _retained = new WeakMap<ApplicationRef, Map<Type<unknown>, ComponentRef<unknown>>>();
+
 @Injectable({ providedIn: 'root' })
 export class IgxStylesRegistrar {
     private readonly _document = inject(DOCUMENT);
     private readonly _platform = inject(PlatformUtil);
+    private readonly _injector = inject(EnvironmentInjector);
 
     /**
      * Registers a stylesheet identified by `id`. Subsequent calls with the same
@@ -60,6 +64,38 @@ export class IgxStylesRegistrar {
             const style = this._document.createElement('style');
             style.textContent = css;
             this._document.head?.appendChild(style);
+        }
+    }
+
+    /**
+     * Keeps the components' styles in the document for the application's lifetime, through a
+     * detached instance of each. Otherwise Angular removes them with the last instance and
+     * re-inserts them with the next one, restyling the page each time.
+     *
+     * @param components - The components whose styles to retain.
+     *
+     * @example
+     * ```typescript
+     * inject(IgxStylesRegistrar).retain(IgxBadgeComponent, IgxChipComponent);
+     * ```
+     */
+    public retain(...components: Type<unknown>[]): void {
+        const appRef = this._injector.get(ApplicationRef);
+        let refs = _retained.get(appRef);
+
+        if (!refs) {
+            refs = new Map();
+            _retained.set(appRef, refs);
+            appRef.onDestroy(() => {
+                _retained.get(appRef)?.forEach(ref => ref.destroy());
+                _retained.delete(appRef);
+            });
+        }
+
+        for (const type of components) {
+            if (!refs.has(type)) {
+                refs.set(type, createComponent(type, { environmentInjector: this._injector }));
+            }
         }
     }
 }
