@@ -2115,29 +2115,14 @@
             gap: 0.5rem;
         }
 
-        .igx-grid__tr {
-            &:hover {
-                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-                    border-inline-end-color: var-get($theme, 'cell-selected-background');
-                }
-            }
-        }
-
-        .igx-grid__tr--selected {
-            &:hover {
-                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-                    border-inline-end-color: var-get($theme, 'cell-selected-within-background');
-                }
-            }
-        }
-
-        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-            border-inline-end-color: var-get($theme, 'cell-selected-within-background');
-        }
-
-
-        .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-            border-inline-end-color: var-get($theme, 'cell-selected-background');
+        // No border between adjacent selected cells: the cell background runs under a transparent border,
+        // so it matches the cell in every state (selected row or column, hover)
+        .igx-grid__td--selected:has(+ .igx-grid__td--selected),
+        .igx-grid__tr:hover .igx-grid__td--selected:has(+ .igx-grid__td--selected),
+        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected),
+        .igx-grid__tr--selected:hover .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+            border-inline-end-color: transparent;
+            background-clip: border-box !important;
         }
     }
 

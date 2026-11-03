@@ -72,6 +72,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - The filter row cells of pinned columns now have the pinned border. Previously they had the regular header border.
+    - The border between adjacent selected cells stays hidden when the row is hovered and the cells are in a selected column. Previously it was painted with the selected cell background, which differs from the background of a hovered cell in a selected column.
     - The borders of the row action cells, such as the row selector and the empty hierarchical expander, now use the header border width and style, as the column borders do, instead of the row border width and style.
     - With column selection enabled, the border at the start of the horizontal scrollbar under the row action cells uses the action border color and the header border width and style, as the row action cells do. Previously it used the header border color and the row border width. When grouping is applied and no column is pinned at the start, it has the pinned border, as the group-by indentation above it does.
 - `IgxGridComponent`
