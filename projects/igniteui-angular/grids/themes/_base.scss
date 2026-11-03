@@ -548,6 +548,17 @@
             }
         }
 
+        // Column-selected cells use the selected border color in every row state
+        @include e(tr) {
+            .igx-grid__td--column-selected:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+            }
+
+            &:hover .igx-grid__td--column-selected:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
+            }
+        }
+
         // Deleted row state - shows strikethrough text
         @include e(tr, $m: deleted) {
             // WARN: This doesn't follow the BEM structure, needs work
@@ -2897,6 +2908,13 @@
     .igx-grid__mrl-block.igx-grid__tbody-pivot-dimension .igx-grid-th {
         border-block-end: 0;
     }
+
+	// MRL cell borders keep the row border color in every row state
+	.igx-grid__tr--mrl .igx-grid__td {
+		--body-column-hover-border-color: #{var-get($theme, 'row-border-color')};
+		--body-column-selected-border-color: #{var-get($theme, 'row-border-color')};
+		--body-column-hover-selected-border-color: #{var-get($theme, 'row-border-color')};
+	}
 
 	.igx-grid__tr--odd.igx-grid__tr--mrl {
 		.igx-grid__td {
