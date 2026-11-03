@@ -1108,6 +1108,35 @@ describe('IgxInput - Signal Forms', () => {
         expect(igxInput.valid).toBe(IgxInputState.VALID);
     });
 
+    it('should restore the valid state when a refocused field stays valid while edited', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const customInputGroup: HTMLElement = customFixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        nativeInput.dispatchEvent(new Event('blur'));
+        customFixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        // Only the value changes on these edits
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcde', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        UIInteractions.setInputElementValue(nativeInput, 'abcdef', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+    });
+
     it('should update the field value from the view when the input is cleared', () => {
         const igxInput = fixture.debugElement.query(By.directive(IgxInputDirective)).injector.get(IgxInputDirective);
 

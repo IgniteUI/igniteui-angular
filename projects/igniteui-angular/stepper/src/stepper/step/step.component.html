@@ -1,8 +1,6 @@
 <ng-template #defaultTitle>
     @if (isTitleVisible) {
         <ng-content select="[igxStepTitle]"></ng-content>
-    }
-    @if (isTitleVisible) {
         <ng-content select="[igxStepSubtitle]"></ng-content>
     }
 </ng-template>
@@ -23,7 +21,7 @@
     <ng-content select="[igxStepIndicator]"></ng-content>
 </ng-template>
 
-<div class="igx-step__header igx-step-header" igxRipple (keydown)="handleKeydown($event)"
+<div class="igx-step__header igx-step-header" igxRipple
      [ngClass]="stepHeaderClasses"
      (click)="onPointerDown($event)">
 
