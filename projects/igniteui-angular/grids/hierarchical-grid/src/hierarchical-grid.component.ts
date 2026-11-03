@@ -1290,11 +1290,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => layout.columnList.toArray());
         const colsArray = ([] as IgxColumnComponent[]).concat.apply([], nestedColumns);
+        const colLength = this.columns.length;
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         if (topCols.length > 0) {
             this.initColumns(topCols, (col: IgxColumnComponent) => this.columnInit.emit(col));
-            if (recalcColSizes) {
-                // size the new columns in the next change detection, which also updates the host bindings and the search
+            if (recalcColSizes && this.columns.length !== colLength) {
+                this.calculateGridSizes(false);
+                // the pass ran outside the parent's check, so the host bindings, such as aria-colcount, need one
+                this.cdr.markForCheck();
+            } else if (recalcColSizes) {
+                // columns replaced with the same count can still have different sizes
                 this.notifyChanges(true);
             }
         }
