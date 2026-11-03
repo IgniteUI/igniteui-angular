@@ -58,15 +58,20 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         const itemsArray = this.tabs.items.toArray();
         const index = itemsArray.indexOf(this.tab);
         let newIndex: number;
+        const { ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT } = this.platform.KEYMAP;
+        const vertical = this.tabs.verticalHeaders();
+        const rtl = !isLeftToRight(this.nativeElement);
+        const nextKey = vertical ? ARROW_DOWN : rtl ? ARROW_LEFT : ARROW_RIGHT;
+        const prevKey = vertical ? ARROW_UP : rtl ? ARROW_RIGHT : ARROW_LEFT;
 
         switch (event.key) {
-            case this.platform.KEYMAP.ARROW_RIGHT:
-            case this.platform.KEYMAP.ARROW_LEFT: {
-                const rtl = !isLeftToRight(this.nativeElement);
-                const next = (event.key === this.platform.KEYMAP.ARROW_RIGHT) !== rtl;
-                newIndex = this.getEnabledItemIndex(itemsArray, index, next ? 1 : -1);
+            case nextKey:
+            case prevKey:
+                if (vertical) {
+                    event.preventDefault();
+                }
+                newIndex = this.getEnabledItemIndex(itemsArray, index, event.key === nextKey ? 1 : -1);
                 break;
-            }
             case this.platform.KEYMAP.HOME:
                 event.preventDefault();
                 newIndex = this.getEnabledItemIndex(itemsArray, -1, 1);
@@ -90,10 +95,12 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
             return;
         }
 
-        itemsArray[newIndex].headerComponent.nativeElement.focus({ preventScroll: true });
+        const header = itemsArray[newIndex].headerComponent.nativeElement;
+        header.focus({ preventScroll: true });
         if (this.tabs.activation === 'auto') {
             this.tabs.selectedIndex = newIndex;
         }
+        this.tabs.scrollToHeader(header);
     }
 
     /** @hidden @internal */

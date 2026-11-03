@@ -2,7 +2,37 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## Unreleased
+## 22.3.0
+
+### New Functionality
+
+- `IgxTabsComponent`
+    - Added the `headerPosition` input, which places the tab headers above the content (`top`, the default) or in a column before (`start`) or after (`end`) it in the text direction, so `start` is on the right in right-to-left layouts. In a column, the headers are navigated with the Up and Down arrow keys and scroll when they do not fit in the height of the tabs.
+        ```html
+        <igx-tabs headerPosition="start">...</igx-tabs>
+        ```
+- `IgxCalendarComponent`
+    - Added the `igxCalendarDay` template directive and the `dayTemplate` input to customize the content of the day cells, e.g. to show event indicators, availability or prices. The template receives the date and the day states (`selected`, `disabled`, `special`, `today`, `weekend`, `currentMonth`, `active` and the range states) through the `IgxCalendarDayTemplateContext`. The day cells keep their selection, keyboard navigation, ARIA attributes and theme styling. `IgxDatePickerComponent` and `IgxDateRangePickerComponent` pass an `igxCalendarDay` template to their calendar.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Added the `validationTooltipTrigger` input, which controls when the validation error tooltip of an invalid cell is displayed. With the default `active` value the tooltip is shown when an invalid cell becomes active and on error icon hover, as before. With `hover` it is shown only while hovering the error icon, while the invalid state, the error icon and the invalid styles are kept.
+        ```html
+        <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
+        ```
+
+### Themes
+
+- **Breaking Change** - Updated to Ignite UI Theming 30.0.0. The `palette()` function builds palettes with the new `fitted` generator by default, which places every shade by contrast and emits it as a fixed color. The predefined palettes and the pre-built themes keep the `legacy` generator and are unchanged.
+    - `ng update` adds `$generator: 'legacy'` to existing `palette()` calls, so they keep the colors they produced before. Remove the argument to switch a palette to the `fitted` generator.
+    - The deprecated `light-theme`, `dark-theme`, and the other deprecated theme wrapper mixins build their palettes with the `legacy` generator.
+- **Breaking Change** - Component themes take their background from the `base` surface role, `--ig-surface-base`, instead of `--ig-surface-500`. Override the surface roles (`--ig-surface-base`, `--ig-surface-raised`, `--ig-surface-overlay`, `--ig-surface-sunken`, `--ig-surface-container`) instead of `--ig-surface-500` to change the surface at runtime.
+    - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
+- **Behavioral Change** - `tokens($theme, $mode: 'scoped')` included inside a selector no longer declares the component tokens on that selector itself, unless it is the component. The tokens go on the component inside the selector and, through `:where()`, on the selector when it also matches the component, so `.my-avatar` on an `igx-avatar` element is still themed with the same specificity. Previously the selector always received the tokens, and generic tokens such as `--background` were inherited by every element below it.
+    - To override a component's tokens for a whole section of a page, use the default global mode instead: `.promo { @include tokens(tooltip-theme($background: red)); }` only declares `--ig-tooltip-*` tokens, which no other component reads.
+- Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
+    - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
+    - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
+- The grid, grid toolbar, paginator, column actions, Excel-style filtering and query builder themes no longer pick up `--background`, `--foreground` or `--accent-color` declared on an ancestor or on `:root`, for example by the application's own CSS. Their themes now declare these tokens on the component, without a value unless one is passed to the theme function.
+
 
 ### Behavioral Changes
 
@@ -17,6 +47,8 @@ All notable changes for each version of this project will be documented in this 
     - The vertical animations now use the default `animationDuration` of `320` milliseconds instead of `350`. `animationDuration` also falls back to `320` instead of `350` when it is set to a value that is not a positive number.
 - `IgxSplitterComponent`
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
+- `IgxTabsComponent`
+    - A selected tab header that is wider than the visible area of the headers is now scrolled so that its start is visible. Previously it was scrolled so that its end was visible.
 - `IgxTimePickerComponent`
     - When `locale` is not set, the picker now follows the global locale set with `setCurrentI18n` and updates its default formats and resource strings when it changes, as the date picker does. Previously it kept the locale it was created with.
     - `clear()` with a `Date` value now assigns a new `Date` with its time reset to `00:00:00` and notifies `ngModel` and reactive form controls. Previously it changed the bound `Date` object in place, so forms were not updated or re-validated.
@@ -34,12 +66,21 @@ All notable changes for each version of this project will be documented in this 
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
 - `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
     - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
+- `IgxDatePickerComponent`
+    - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
+    - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
+    - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
+    - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
+- `IgxOverlayService`
+    - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
 - `IgxPivotGridComponent`
     - Autosizing a column now fits its content, instead of keeping its current width.
 - `IgxStepperComponent`
@@ -58,6 +99,8 @@ All notable changes for each version of this project will be documented in this 
     - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
     - The directive now filters the items again when the `inputValue` changes to `undefined`, so all items are shown when the input is cleared. A custom `matchFn` now always receives a string, with an empty string passed when `inputValue` is `null` or `undefined`. The `IgxFilterOptions.inputValue` type now includes `null` and `undefined`.
     - The pipe now returns the items as they are, instead of `undefined`, when they are empty, `null` or `undefined`, or when no options are provided. The `filtered` event now emits an empty `filteredItems` array for empty items.
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
 - `IgxSplitterComponent`
     - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
     - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
@@ -67,6 +110,9 @@ All notable changes for each version of this project will be documented in this 
     - Ending a resize after the splitter shrinks no longer sets negative pane sizes, including when the splitter is smaller than the `minSize` of a pane.
 - `IgxSplitterPaneComponent`
     - Setting `size` to `null` or `undefined` no longer throws an error. The pane falls back to the default `'auto'` size.
+- `IgxTabsComponent`
+    - With `manual` activation, a tab header focused with the keyboard is scrolled into view.
+    - The selected tab header is scrolled into view when hidden tabs become visible, for example in a dialog or a drop-down.
 - `IgxTimePickerComponent`
     - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
     - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
@@ -76,19 +122,30 @@ All notable changes for each version of this project will be documented in this 
     - The `outlet` input is now applied to the dropdown/dialog.
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
+- `IgxForOfDirective`
+    - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
+    - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
 
-## 22.2.5
+## 22.2.6
 
 ### Bug Fixes
 
 - `IgxTabsComponent`
     - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
 
+## 22.2.5
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
+
 ## 22.2.4
 
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
     - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
 
 ## 22.2.3
