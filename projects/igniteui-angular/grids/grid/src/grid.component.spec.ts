@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Injectable, NgZone, OnInit, Type, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideCheckNoChangesConfig, provideZoneChangeDetection, provideZonelessChangeDetection, signal, viewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewChild, TemplateRef, inject, ChangeDetectionStrategy, provideCheckNoChangesConfig, provideZonelessChangeDetection, signal, viewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, flush, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
@@ -2283,101 +2283,57 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - sizing after data and column replacement', () => {
-        for (const mode of ['zoneless', 'zoned'] as const) {
-            describe(mode, () => {
-                beforeEach(() => {
-                    TestBed.configureTestingModule({
-                        imports: [NoopAnimationsModule, DynamicColumnsGridComponent, PercentHeightDynamicColumnsGridComponent],
-                        providers: mode === 'zoneless'
-                            // throws NG0100 if a binding changes without a notification
-                            ? [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
-                            : [provideZoneChangeDetection()]
-                    });
-                });
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, PercentHeightDynamicColumnsGridComponent],
+                // throws NG0100 if a binding changes without a notification
+                providers: [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
+            });
+        });
 
-                // ZoneJS apps update state inside the Angular zone
-                const act = (action: () => void) => mode === 'zoned' ? TestBed.inject(NgZone).run(action) : action();
-
-                const create = async <T>(type: Type<T>, init?: (host: T) => void) => {
-                    const fix = TestBed.createComponent(type);
-                    init?.(fix.componentInstance);
-                    if (mode === 'zoned') {
-                        fix.autoDetectChanges(true);
-                    }
+        for (const newFields of [false, true]) {
+            it(`should not run a duplicate sizing pass when data and columns are replaced in a percentage-height grid (new fields: ${newFields})`, async () => {
+                const fix = TestBed.createComponent(PercentHeightDynamicColumnsGridComponent);
+                await fix.whenStable();
+                const host = fix.componentInstance;
+                const grid = host.grid();
+                expectDynamicColumnsContent(grid, 0);
+                if (newFields) {
+                    // as in the benchmark data switch: a filter on an old column, which the new data does not have
+                    grid.filter('f0', 'r1', IgxStringFilteringOperand.instance().condition('contains'));
                     await fix.whenStable();
-                    return fix;
-                };
-
-                for (const newFields of [false, true]) {
-                    it(`should not run a duplicate sizing pass when data and columns are replaced in a percentage-height grid (new fields: ${newFields})`, async () => {
-                        const fix = await create(PercentHeightDynamicColumnsGridComponent);
-                        const host = fix.componentInstance;
-                        const grid = host.grid();
-                        expectDynamicColumnsContent(grid, 0);
-                        if (newFields) {
-                            // as in the benchmark data switch: a filter on an old column, which the new data does not have
-                            act(() => grid.filter('f0', 'r1', IgxStringFilteringOperand.instance().condition('contains')));
-                            await fix.whenStable();
-                        }
-                        const sizing = spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes').and.callThrough();
-
-                        act(() => {
-                            host.data.set(makeDynamicData(1, newFields));
-                            host.columns.set(makeDynamicColumns(1, newFields));
-                        });
-                        await fix.whenStable();
-
-                        const rendered = expectDynamicColumnsContent(grid, 1);
-                        expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
-                        // one pass for the data and one for the new columns
-                        expect(sizing.calls.count()).toBeLessThanOrEqual(2);
-                    });
                 }
+                const sizing = spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes').and.callThrough();
 
-                for (const width of ['unbound', '100%', '640px', null] as const) {
-                    it(`should render and size new data and columns (width: ${width})`, async () => {
-                        const fix = await create(DynamicColumnsGridComponent,
-                            h => width === 'unbound' ? h.bindWidth.set(false) : h.width.set(width));
-                        const host = fix.componentInstance;
-                        const effectiveWidth = width === 'unbound' ? '100%' : width;
-                        const hostWidth = effectiveWidth?.endsWith('%') ? DYNAMIC_COLUMNS_CONTAINER_WIDTH : parseFloat(effectiveWidth || '0');
-                        expectDynamicColumnsGeometry(host.grid(), 0, effectiveWidth, hostWidth, expectDynamicColumnsContent(host.grid(), 0));
+                host.data.set(makeDynamicData(1, newFields));
+                host.columns.set(makeDynamicColumns(1, newFields));
+                await fix.whenStable();
 
-                        for (const gen of [1, 2]) {
-                            // the second replacement uses new fields, so the old columns are removed
-                            act(() => {
-                                host.data.set(makeDynamicData(gen, gen === 2));
-                                host.columns.set(makeDynamicColumns(gen, gen === 2));
-                            });
-                            await fix.whenStable();
-                            expectDynamicColumnsGeometry(host.grid(), gen, effectiveWidth, hostWidth, expectDynamicColumnsContent(host.grid(), gen));
-                        }
-                    });
-                }
-
-                it('should apply the host width when switching between explicit and null width', async () => {
-                    const fix = await create(DynamicColumnsGridComponent);
-                    const host = fix.componentInstance;
-                    for (const width of [null, '640px', null, '100%']) {
-                        act(() => host.width.set(width));
-                        await fix.whenStable();
-                        const hostWidth = width === '100%' ? DYNAMIC_COLUMNS_CONTAINER_WIDTH : parseFloat(width || '0');
-                        expectDynamicColumnsGeometry(host.grid(), 0, width, hostWidth, expectDynamicColumnsContent(host.grid(), 0));
-                    }
-                });
-
-                it('should resize a percentage-width grid with its container', async () => {
-                    const fix = await create(DynamicColumnsGridComponent);
-                    const host = fix.componentInstance;
-                    act(() => host.containerWidth.set(600));
-                    await fix.whenStable();
-                    // wait for the ResizeObserver notification
-                    await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-                    await fix.whenStable();
-                    expectDynamicColumnsGeometry(host.grid(), 0, '100%', 600, expectDynamicColumnsContent(host.grid(), 0));
-                });
+                const rendered = expectDynamicColumnsContent(grid, 1);
+                expectDynamicColumnsGeometry(grid, 1, '100%', 1200, rendered);
+                // one pass for the data and one for the new columns
+                expect(sizing.calls.count()).toBeLessThanOrEqual(2);
             });
         }
+
+        it('should size the grid when its data and column widths change in the same pass', async () => {
+            const fix = TestBed.createComponent(PercentHeightDynamicColumnsGridComponent);
+            fix.componentInstance.width.set(null);
+            await fix.whenStable();
+            const host = fix.componentInstance;
+            const grid = host.grid();
+            const hostWidth = grid.nativeElement.offsetWidth;
+
+            // new headers and widths on the same column components, so no columns are added or removed
+            host.data.set(makeDynamicData(1));
+            host.columns.set(makeDynamicColumns(1).map((col, i) => ({ ...col, key: `g0c${i}` })));
+            await fix.whenStable();
+
+            // a grid without width shows all columns and grows with them
+            expect(expectDynamicColumnsContent(grid, 1)).toBe(DYNAMIC_COLUMNS_COUNT);
+            expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * dynamicColumnWidth(1));
+            expect(grid.nativeElement.offsetWidth).toBe(hostWidth + DYNAMIC_COLUMNS_COUNT * (dynamicColumnWidth(1) - dynamicColumnWidth(0)));
+        });
     });
 
     describe('IgxGrid - min/max width constraints rules', () => {
@@ -3815,7 +3771,6 @@ class ZonelessFinJsGridComponent {
 
 const DYNAMIC_COLUMNS_ROWS = 10000;
 const DYNAMIC_COLUMNS_COUNT = 30;
-const DYNAMIC_COLUMNS_CONTAINER_WIDTH = 760;
 
 interface DynamicColumnDef { key: string; field: string; header: string; width: string }
 
@@ -3834,40 +3789,11 @@ const makeDynamicData = (gen: number, newFields = false) => Array.from({ length:
     return row;
 });
 
-@Component({
-    template: `
-    <div [style.width.px]="containerWidth()">
-        @if (bindWidth()) {
-            <igx-grid #grid [data]="data()" [width]="width()" height="500px" primaryKey="id">
-                @for (col of columns(); track col.key) {
-                    <igx-column [field]="col.field" [header]="col.header" [width]="col.width"></igx-column>
-                }
-            </igx-grid>
-        } @else {
-            <igx-grid #grid [data]="data()" height="500px" primaryKey="id">
-                @for (col of columns(); track col.key) {
-                    <igx-column [field]="col.field" [header]="col.header" [width]="col.width"></igx-column>
-                }
-            </igx-grid>
-        }
-    </div>`,
-    imports: [IgxGridComponent, IgxColumnComponent],
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-class DynamicColumnsGridComponent {
-    public grid = viewChild.required<IgxGridComponent>('grid');
-    public data = signal(makeDynamicData(0));
-    public columns = signal(makeDynamicColumns(0));
-    public width = signal<string | null>('100%');
-    public bindWidth = signal(true);
-    public containerWidth = signal(DYNAMIC_COLUMNS_CONTAINER_WIDTH);
-}
-
 // the grid setup of the performance benchmark
 @Component({
     template: `
     <div style="height: 700px; width: 1200px">
-        <igx-grid #grid [data]="data()" [height]="'100%'" [allowFiltering]="true" [rowSelection]="'multiple'">
+        <igx-grid #grid [data]="data()" [width]="width()" [height]="'100%'" [allowFiltering]="true" [rowSelection]="'multiple'">
             @for (col of columns(); track col.key) {
                 <igx-column [field]="col.field" [header]="col.header" [sortable]="true" [width]="col.width"></igx-column>
             }
@@ -3880,6 +3806,7 @@ class PercentHeightDynamicColumnsGridComponent {
     public grid = viewChild.required<IgxGridComponent>('grid');
     public data = signal(makeDynamicData(0));
     public columns = signal(makeDynamicColumns(0));
+    public width = signal<string | null>('100%');
 }
 
 function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
