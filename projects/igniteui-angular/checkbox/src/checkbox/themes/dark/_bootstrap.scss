@@ -14,7 +14,7 @@ $_theme: digest-schema($dark-bootstrap-checkbox);
 
     @include m(disabled) {
         @include e(composite) {
-            background: color($color: 'surface', $variant: 500);
+            background: color($color: 'surface');
         }
 
         @include e(composite-mark) {

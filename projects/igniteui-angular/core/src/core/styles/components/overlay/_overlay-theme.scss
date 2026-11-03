@@ -17,8 +17,8 @@
     %overlay-wrapper {
         position: fixed;
         inset: 0;
-        background: transparent;
-        transition: background .25s $in-out-quad;
+        background: var(--_overlay-backdrop);
+        transition: --_overlay-backdrop .25s $in-out-quad;
         pointer-events: none;
         box-sizing: content-box;
 
@@ -40,7 +40,7 @@
     }
 
     %overlay-wrapper--modal {
-        background: var-get($theme, 'background-color');
+        --_overlay-backdrop: #{var-get($theme, 'background-color')};
         pointer-events: initial;
     }
 

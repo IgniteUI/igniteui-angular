@@ -59,13 +59,19 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         const previousIndex = itemsArray.indexOf(this.tab);
         let newIndex = previousIndex;
         const hasDisabledItems = itemsArray.some((item) => item.disabled);
+        const { ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT } = this.platform.KEYMAP;
+        const vertical = this.tabs.verticalHeaders();
+        const rtl = !isLeftToRight(this.nativeElement);
+        const nextKey = vertical ? ARROW_DOWN : rtl ? ARROW_LEFT : ARROW_RIGHT;
+        const prevKey = vertical ? ARROW_UP : rtl ? ARROW_RIGHT : ARROW_LEFT;
 
         switch (event.key) {
-            case this.platform.KEYMAP.ARROW_RIGHT:
-                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
-                break;
-            case this.platform.KEYMAP.ARROW_LEFT:
-                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key, hasDisabledItems);
+            case nextKey:
+            case prevKey:
+                if (vertical) {
+                    event.preventDefault();
+                }
+                newIndex = this.getNewSelectionIndex(newIndex, itemsArray, event.key === nextKey, hasDisabledItems);
                 break;
             case this.platform.KEYMAP.HOME:
                 event.preventDefault();
@@ -95,10 +101,12 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         }
 
         if (!unsupportedKey) {
-            itemsArray[newIndex].headerComponent.nativeElement.focus({ preventScroll: true });
+            const header = itemsArray[newIndex].headerComponent.nativeElement;
+            header.focus({ preventScroll: true });
             if (this.tabs.activation === 'auto') {
                 this.tabs.selectedIndex = newIndex;
             }
+            this.tabs.scrollToHeader(header);
         }
     }
 
@@ -121,10 +129,8 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         });
     }
 
-    private getNewSelectionIndex(newIndex: number, itemsArray: any[], key: string, hasDisabledItems: boolean): number {
-        const rtl = !isLeftToRight(this.nativeElement);
-
-        if ((key === this.platform.KEYMAP.ARROW_RIGHT && !rtl) || (key === this.platform.KEYMAP.ARROW_LEFT && rtl)) {
+    private getNewSelectionIndex(newIndex: number, itemsArray: any[], next: boolean, hasDisabledItems: boolean): number {
+        if (next) {
             newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
             while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
                 newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;

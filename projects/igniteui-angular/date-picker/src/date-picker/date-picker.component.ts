@@ -14,6 +14,7 @@ import {
     Output,
     PipeTransform,
     Renderer2,
+    TemplateRef,
     ViewChild,
     ViewContainerRef,
     booleanAttribute,
@@ -32,7 +33,7 @@ import {
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective,
-     IFormattingViews, IFormattingOptions
+     IFormattingViews, IFormattingOptions, IgxCalendarDayTemplateContext, IgxCalendarDayTemplateDirective
 } from 'igniteui-angular/calendar';
 import {
     IgxLabelDirective, IgxInputState, toInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
@@ -443,6 +444,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ContentChild(IgxCalendarSubheaderTemplateDirective)
     private subheaderTemplate!: IgxCalendarSubheaderTemplateDirective;
 
+    @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
+    protected set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | undefined) {
+        this._dayTemplate = value ?? null;
+        if (this._calendar) this._calendar.dayTemplate = this._dayTemplate;
+    }
+
+    private _dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
+
     @ContentChild(IgxPickerActionsDirective)
     private pickerActions!: IgxPickerActionsDirective;
 
@@ -577,6 +586,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
+        if (!this.collapsed) {
+            // do not leave a focused input in edit mode during the opening animation
+            this._calendar?.wrapper?.nativeElement?.focus();
+        }
     }
 
     /**
@@ -801,6 +814,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
+    /** @hidden @internal */
+    public onToggleClick(event: MouseEvent): void {
+        // do not focus input on click
+        event.stopPropagation();
+        this.toggle();
+    }
+
     private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
@@ -889,8 +909,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-
-            this._calendar.wrapper?.nativeElement?.focus();
         });
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayEventArgs | OverlayCancelableEventArgs) => {
@@ -949,6 +967,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.dayTemplate = this._dayTemplate;
         this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;

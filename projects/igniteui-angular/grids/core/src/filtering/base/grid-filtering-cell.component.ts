@@ -28,6 +28,7 @@ import { ColumnType, IFilteringExpression, ɵSize } from 'igniteui-angular/core'
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     public cdr = inject(ChangeDetectorRef);
     public filteringService = inject(IgxFilteringService);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
 
     @Input()
     public column!: ColumnType;
@@ -143,6 +144,21 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     /**
+     * @hidden @internal
+     */
+    public get nativeElement() {
+        return this.ref.nativeElement;
+    }
+
+    /**
+     * @hidden @internal
+     * Whether the chips that do not fit are collapsed into the "more" indicator.
+     */
+    public get collapsesChips() {
+        return !!this.chipsArea && this.expressionsList.length > 1;
+    }
+
+    /**
      * Chip clicked event handler.
      */
     public onChipClicked(expression?: IFilteringExpression) {
@@ -217,7 +233,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         }
         this.cdr.detectChanges();
 
-        if (this.chipsArea && this.expressionsList.length > 1) {
+        if (this.collapsesChips) {
             const areaWidth = this.chipsArea.element.nativeElement.offsetWidth;
             let viewWidth = 0;
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
