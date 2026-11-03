@@ -15,7 +15,6 @@ $_theme: digest-schema($material-progress-circular);
 
 @include themed-block(igx-circular-svg, material) {
     @include e(outer) {
-        animation: igx-initial-dashoffset var(--_transition-duration) linear;
         stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
     }
 
