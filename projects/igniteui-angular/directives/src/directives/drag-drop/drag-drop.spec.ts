@@ -1612,6 +1612,83 @@ describe('General igxDrag/igxDrop', () => {
             await wait();
         });
 
+        it('should not finish the return animation early when transitionToOrigin() is called again during it.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.dragEnd.pipe(first()).subscribe(() => firstDrag.transitionToOrigin({ duration: 0.3 }));
+            const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait(100);
+            const ghost = firstDrag.ghostElement;
+            expect(ghost).toBeTruthy();
+
+            // The target is the same as the one already animating to.
+            firstDrag.transitionToOrigin({ duration: 0.3 });
+            await wait(20);
+
+            expect(transitionedSpy).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBe(ghost);
+            expect(firstDrag.animInProgress).toBe(true);
+
+            await wait(500);
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(firstDrag.ghostElement).toBeNull();
+            expect(firstDrag.animInProgress).toBe(false);
+        });
+
+        it('should not finish early when transitionTo() is called again with the same target during the ghost animation.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const target = new IgxDragLocation(dropAreaRects.left, dropAreaRects.top);
+            const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+
+            // Creates a ghost and animates it to the target.
+            firstDrag.transitionTo(target, { duration: 0.3 });
+            await wait(100);
+            const ghost = firstDrag.ghostElement;
+            expect(ghost).toBeTruthy();
+
+            firstDrag.transitionTo(target, { duration: 0.3 });
+            await wait(20);
+
+            expect(transitionedSpy).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBe(ghost);
+            expect(firstDrag.animInProgress).toBe(true);
+
+            await wait(500);
+            expect(transitionedSpy).toHaveBeenCalledTimes(1);
+            expect(firstDrag.ghostElement).toBeNull();
+            expect(firstDrag.animInProgress).toBe(false);
+        });
+
+        it('should report the pointer position moved by a window auto-scroll step when cancelled with a ghost.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            // Make the page scrollable, so the auto-scroll step actually scrolls the window.
+            const spacer = document.createElement('div');
+            spacer.style.height = '3000px';
+            document.body.appendChild(spacer);
+            window.scrollTo(0, 0);
+            const dragEndSpy = vi.spyOn(firstDrag.dragEnd, 'emit');
+
+            try {
+                const pos = await dragFirstOverDropArea(firstDrag);
+                (firstDrag as any)._originalScrollContainerHeight = document.documentElement.scrollHeight;
+                (firstDrag as any).onScrollContainerStep(1 /* DragScrollDirection.DOWN */);
+                await wait(50);
+                const scrolledBy = window.scrollY;
+                expect(scrolledBy).toBeGreaterThan(0);
+
+                firstDrag.cancelDrag();
+
+                expect(dragEndSpy.mock.lastCall[0].pageX).toEqual(pos.x);
+                expect(dragEndSpy.mock.lastCall[0].pageY).toEqual(pos.y + scrolledBy);
+            } finally {
+                spacer.remove();
+                window.scrollTo(0, 0);
+            }
+        });
+
         it('should finish right away when transitionTo() does not move the base element.', async () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             firstDrag.ghost = false;

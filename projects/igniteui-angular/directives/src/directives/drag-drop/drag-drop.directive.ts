@@ -941,7 +941,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 }
             }
 
-            if (this.getTransitionPosition(movedElem) === positionBefore) {
+            if (this.getTransitionPosition(movedElem) === positionBefore && !this.hasRunningTransition(movedElem)) {
                 // Already at the origin, so no transition runs and transitionend never fires: finish right away.
                 this.onTransitionEnd(null);
             }
@@ -1004,7 +1004,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 ));
             }
 
-            if (this.getTransitionPosition(movedElem) === positionBefore) {
+            if (this.getTransitionPosition(movedElem) === positionBefore && !this.hasRunningTransition(movedElem)) {
                 // Already at the target, so no transition runs and transitionend never fires: finish right away.
                 this.onTransitionEnd(null);
             }
@@ -1723,6 +1723,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return `${elem.style.transform}|${elem.style.left}|${elem.style.top}`;
     }
 
+    /**
+     * Whether a transition of the position is still running on the element (e.g. one started by an earlier call),
+     * in which case its transitionend finishes the movement.
+     */
+    protected hasRunningTransition(elem: HTMLElement) {
+        if (typeof elem.getAnimations !== 'function' || typeof CSSTransition === 'undefined') {
+            return false;
+        }
+        return elem.getAnimations().some(anim => anim instanceof CSSTransition &&
+            ['left', 'top', 'transform'].includes(anim.transitionProperty));
+    }
+
     protected getTransformX(elem: any) {
         let posX = 0;
         if (elem.style.transform) {
@@ -1846,6 +1858,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             // Scroll the corresponding window or container.
             if (!this.scrollContainer) {
                 window.scrollBy(scrollByX, scrollByY);
+                // The pointer stays still on screen, so its page position moves with the window.
+                this._pointerPageX += scrollByX;
+                this._pointerPageY += scrollByY;
             } else {
                 this.scrollContainer.scrollLeft += scrollByX;
                 this.scrollContainer.scrollTop += scrollByY;
@@ -1865,8 +1880,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 if (!this.scrollContainer) {
                     this._lastX += scrollByX;
                     this._lastY += scrollByY;
-                    this._pointerPageX += scrollByX;
-                    this._pointerPageY += scrollByY;
                 }
             }
         })

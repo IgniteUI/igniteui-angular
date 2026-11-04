@@ -77,6 +77,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
 
         super.onPointerMove(event);
+        if (!this._clicked) {
+            // The drag ended or was cancelled, e.g. in a ghostCreate or dragMove handler.
+            return;
+        }
         if (this._dragStarted && this.ghostElement && !this.cms.column) {
             this.cms.column = this.column;
             this.column.grid.cdr.detectChanges();

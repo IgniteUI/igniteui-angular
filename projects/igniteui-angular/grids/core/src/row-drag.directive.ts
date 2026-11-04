@@ -48,6 +48,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     public override onPointerMove(event: PointerEvent) {
         super.onPointerMove(event);
+        if (!this._clicked) {
+            // The drag ended or was cancelled, e.g. in a ghostCreate or dragMove handler.
+            return;
+        }
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {

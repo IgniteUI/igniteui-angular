@@ -334,6 +334,34 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         });
 
+        it('Should not continue column moving when cancelled in a ghostCreate handler with a return animation.', async () => {
+            const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
+                .injector.get(IgxColumnMovingDragDirective);
+            const ghostCreateSub = dragDir.ghostCreate.subscribe(() => {
+                ghostCreateSub.unsubscribe();
+                dragDir.cancelDrag();
+            });
+            const dragEndSub = dragDir.dragEnd.subscribe(() => {
+                dragEndSub.unsubscribe();
+                dragDir.transitionToOrigin({ duration: 0.1 });
+            });
+            const columnMovingSpy = vi.spyOn(grid.columnMoving, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragDir.element.nativeElement, 130, 65);
+            await wait();
+            dragDir.onPointerMove(UIInteractions.createPointerEvent('pointermove', { x: 140, y: 75 } as any));
+            fixture.detectChanges();
+
+            expect(grid.columnInDrag).toBeFalsy();
+            expect(columnMovingSpy).not.toHaveBeenCalled();
+
+            await wait(300);
+            fixture.detectChanges();
+            expect(grid.columnInDrag).toBeFalsy();
+            expect(dragDir.ghostElement).toBeFalsy();
+            expect(dragDir.animInProgress).toBe(false);
+        });
+
         it('Should not throw when the column move is cancelled in a ghostCreate handler.', async () => {
             const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
                 .injector.get(IgxColumnMovingDragDirective);

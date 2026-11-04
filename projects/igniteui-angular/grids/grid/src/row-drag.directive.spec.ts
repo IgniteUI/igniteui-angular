@@ -459,6 +459,38 @@ describe('Row Drag Tests', () => {
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
                 });
 
+                it('should not start row dragging when cancelled in a ghostCreate handler with a return animation.', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    const ghostCreateSub = rowDragDirective.ghostCreate.subscribe(() => {
+                        ghostCreateSub.unsubscribe();
+                        rowDragDirective.cancelDrag();
+                    });
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.1 });
+                    });
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragStart.emit).not.toHaveBeenCalled();
+                    expect(grid.rowDragEnd.emit).not.toHaveBeenCalled();
+                    expect(grid.rowDragging).toBe(false);
+
+                    await wait(300);
+                    fixture.detectChanges();
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowDragDirective.animInProgress).toBe(false);
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                });
+
                 it('should not throw when the drag is cancelled in a ghostCreate handler.', () => {
                     rowToDrag = rows[2];
                     rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
