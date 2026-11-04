@@ -133,7 +133,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.zone.run(() => {
                 this.row.grid.rowDragEnd.emit(args);
             });
-            this.endDragging();
+            // The base cancel already removed the ghost, or a dragEnd handler animates it back and its transitionend removes it.
+            this.resetRowDragging();
         }
         return cancelled;
     }
@@ -187,6 +188,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private endDragging() {
         this.onTransitionEnd(null);
+        this.resetRowDragging();
+    }
+
+    private resetRowDragging() {
         this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
         this.row.grid.cdr.detectChanges();
