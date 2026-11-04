@@ -144,6 +144,10 @@ The `IgxTooltipTarget` uses the `TooltipPositionStrategy` to position the toolti
 
 The arrow element is positioned based on the provided position settings. If the directions and starting points do not correspond to any of the predefined position values, the arrow is positioned in the top middle side of the tooltip (default tooltip position `bottom`).
 
+When the tooltip does not fit in the viewport and cannot flip, it is pushed into the viewport, and the arrow moves back by the same amount, so it keeps pointing at the target.
+
+While the tooltip is open, it follows changes of its own size and of the size and the position of its target, for example after a theme change, after a web font loads or when its content changes, and is positioned again.
+
 
 | Position     | Horizontal Direction          | Horizontal Start Point         | Vertical Direction            | Vertical Start Point           |
 |--------------|-------------------------------|--------------------------------|-------------------------------|--------------------------------|
