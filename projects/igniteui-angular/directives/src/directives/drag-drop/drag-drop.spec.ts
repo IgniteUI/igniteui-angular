@@ -1662,6 +1662,95 @@ describe('General igxDrag/igxDrop', () => {
             expect(firstDrag.animInProgress).toBe(false);
         });
 
+        it('should keep reporting the cancel when the element is pressed during the cancelled return animation.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.ghost = false;
+            const elem = firstDrag.element.nativeElement;
+            firstDrag.dragEnd.pipe(first()).subscribe(() => firstDrag.transitionToOrigin({ duration: 0.3 }));
+            const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+            const dragClickSpy = vi.spyOn(firstDrag.dragClick, 'emit');
+
+            await dragFirstOverDropArea(firstDrag);
+            firstDrag.cancelDrag();
+            await wait(100);
+            expect(firstDrag.animInProgress).toBe(true);
+
+            // Click the element while it animates back.
+            const rect = elem.getBoundingClientRect();
+            UIInteractions.simulatePointerEvent('pointerdown', elem, rect.left + 5, rect.top + 5);
+            UIInteractions.simulatePointerEvent('pointerup', elem, rect.left + 5, rect.top + 5);
+            await wait(500);
+
+            expect(transitionedSpy).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ cancelled: true }));
+            expect(dragClickSpy).not.toHaveBeenCalled();
+            expect(firstDrag.animInProgress).toBe(false);
+        });
+
+        it('should not cancel on Escape when cancelOnEscape is turned off during the drag.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const dragEndSpy = vi.spyOn(firstDrag.dragEnd, 'emit');
+
+            const pos = await dragFirstOverDropArea(firstDrag);
+            firstDrag.cancelOnEscape = false;
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            await wait();
+
+            expect(escape.defaultPrevented).toBe(false);
+            expect(dragEndSpy).not.toHaveBeenCalled();
+            expect(firstDrag.ghostElement).toBeTruthy();
+
+            UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, pos.x, pos.y);
+            fix.detectChanges();
+            await wait();
+        });
+
+        it('should cancel on Escape when cancelOnEscape is turned on during the drag.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            firstDrag.cancelOnEscape = false;
+            const dragEndSpy = vi.spyOn(firstDrag.dragEnd, 'emit');
+
+            await dragFirstOverDropArea(firstDrag);
+            firstDrag.cancelOnEscape = true;
+            const escape = escapeEvent();
+            document.body.dispatchEvent(escape);
+            await wait();
+
+            expect(escape.defaultPrevented).toBe(true);
+            expect(dragEndSpy).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ cancelled: true }));
+            expect(firstDrag.ghostElement).toBeNull();
+        });
+
+        it('should report the actual window scroll when an auto-scroll step reaches the end of the page.', async () => {
+            const firstDrag = fix.componentInstance.dragElems.first;
+            const spacer = document.createElement('div');
+            spacer.style.height = '3000px';
+            document.body.appendChild(spacer);
+            window.scrollTo(0, 0);
+            const dragEndSpy = vi.spyOn(firstDrag.dragEnd, 'emit');
+
+            try {
+                const pos = await dragFirstOverDropArea(firstDrag);
+                // Leave only 2px to scroll, less than the 5px auto-scroll step.
+                const maxScrollY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                window.scrollTo(0, maxScrollY - 2);
+                const scrollYBefore = window.scrollY;
+                (firstDrag as any)._originalScrollContainerHeight = document.documentElement.scrollHeight;
+                (firstDrag as any).onScrollContainerStep(1 /* DragScrollDirection.DOWN */);
+                await wait(50);
+                const scrolledBy = window.scrollY - scrollYBefore;
+                expect(scrolledBy).toBeGreaterThan(0);
+                expect(scrolledBy).toBeLessThan(5);
+
+                firstDrag.cancelDrag();
+
+                expect(dragEndSpy.mock.lastCall[0].pageY).toEqual(pos.y + scrolledBy);
+            } finally {
+                spacer.remove();
+                window.scrollTo(0, 0);
+            }
+        });
+
         it('should report the pointer position moved by a window auto-scroll step when cancelled with a ghost.', async () => {
             const firstDrag = fix.componentInstance.dragElems.first;
             // Make the page scrollable, so the auto-scroll step actually scrolls the window.
