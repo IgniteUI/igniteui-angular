@@ -1934,7 +1934,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             beforeEach(() => {
                 TestBed.configureTestingModule({
                     imports: [IgxHierarchicalGridReplaceColumnsComponent],
-                    // throws NG0100 if a binding changes without a notification
                     providers: [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
                 });
             });
@@ -1945,7 +1944,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 await fix.whenStable();
                 const grid = host.hgrid();
 
-                // the same number of columns with new sizes
                 host.data.set(host.makeData(1));
                 host.columns.set(host.makeColumns(1));
                 await fix.whenStable();
@@ -1954,7 +1952,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 const hScroll = grid.headerContainer.getScroll() as HTMLElement;
                 expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(30 * 140);
 
-                // fewer columns
                 host.columns.set(host.makeColumns(2).slice(0, 20));
                 await fix.whenStable();
                 expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('20');
