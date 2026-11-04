@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCsvExporterService`
     - Exporting a grid with summaries no longer adds an extra `GRID_LEVEL_COL` column with the nesting level of each record. Only the grid's columns are exported, as with the Excel and PDF exporters (#17908).
+- `IgxTabsComponent`
+    - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
 
 ## 21.2.23
 

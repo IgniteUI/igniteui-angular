@@ -181,7 +181,7 @@
         min-width: $item-min-width;
         max-width: $item-max-width;
         min-height: $item-min-height;
-        word-wrap: break-word;
+        overflow-wrap: anywhere;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
         flex-shrink: 0;
