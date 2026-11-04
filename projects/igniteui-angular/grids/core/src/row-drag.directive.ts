@@ -74,6 +74,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 this._pointerDownId = null;
                 this._pointerCaptureTarget = null;
+                // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started.
+                this.unsubscribeFromEscape();
                 return;
             }
             this.row.grid.dragRowID = this.row.key;

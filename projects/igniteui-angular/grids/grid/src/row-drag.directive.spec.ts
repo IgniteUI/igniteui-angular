@@ -402,6 +402,8 @@ describe('Row Drag Tests', () => {
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(0);
                     const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
                     expect(ghostElements.length).toEqual(0);
+                    // The Escape listener registered when the drag started is removed.
+                    expect((rowDragDirective as any)._escapeSubscription).toBeNull();
                 });
 
                 it('should end row dragging when cancelDrag() is called during the drag.', () => {
