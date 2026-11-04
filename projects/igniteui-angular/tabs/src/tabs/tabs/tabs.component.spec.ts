@@ -1403,6 +1403,26 @@ describe('IgxTabs', () => {
             const updatedStyle = window.getComputedStyle(scrollButtons);
             expect(updatedStyle.display).toBe('none');
         });
+
+        for (const alignment of [IgxTabsAlignment.start, IgxTabsAlignment.justify]) {
+            it(`should truncate a long header label within the bounds of the header (${alignment})`, async () => {
+                tabs.tabAlignment = alignment;
+                const label = headers[1].querySelector('[igxTabHeaderLabel]');
+                label.textContent = `Long header ${'Supercalifragilisticexpialidocious'.repeat(4)} text`;
+                fixture.detectChanges();
+                await wait(200);
+
+                const headerRect = headers[1].getBoundingClientRect();
+                const labelRect = label.getBoundingClientRect();
+                const lineHeight = headers[2].querySelector('[igxTabHeaderLabel]').getBoundingClientRect().height;
+
+                expect(headerRect.width).toBeLessThanOrEqual(360);
+                expect(labelRect.left).toBeGreaterThanOrEqual(headerRect.left);
+                expect(labelRect.right).toBeLessThanOrEqual(headerRect.right);
+                expect(labelRect.height).toBeLessThanOrEqual(lineHeight * 2 + 1);
+                expect(label.scrollHeight).toBeGreaterThan(label.clientHeight);
+            });
+        }
     });
 
     it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
