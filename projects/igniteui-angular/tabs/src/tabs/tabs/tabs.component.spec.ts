@@ -2322,6 +2322,30 @@ describe('IgxTabs', () => {
             expectNear(rectOf(tabs.headerContainer.nativeElement).height, 240);
         });
 
+        for (const [position, alignment] of [['top', 'start'], ['top', 'justify'], ['start', 'start']] as const) {
+            it(`should truncate a long header label within the bounds of the header (${position}, ${alignment})`, async () => {
+                await createTabs(component => {
+                    component.headerPosition.set(position);
+                    component.tabAlignment.set(alignment);
+                    component.items.set([
+                        { id: 1, label: `Long header ${'Supercalifragilisticexpialidocious'.repeat(4)} text` },
+                        { id: 2, label: 'Tab 2' }
+                    ]);
+                });
+                const header = headersOf(tabs)[0];
+                const label = header.querySelector<HTMLElement>('[igxTabHeaderLabel]');
+                const headerRect = rectOf(header);
+                const labelRect = rectOf(label);
+                const lineHeight = rectOf(headersOf(tabs)[1].querySelector('[igxTabHeaderLabel]')).height;
+
+                expect(headerRect.width).toBeLessThanOrEqual(360);
+                expect(labelRect.left).toBeGreaterThanOrEqual(headerRect.left);
+                expect(labelRect.right).toBeLessThanOrEqual(headerRect.right);
+                expect(labelRect.height).toBeLessThanOrEqual(lineHeight * 2 + 1);
+                expect(label.scrollHeight).toBeGreaterThan(label.clientHeight);
+            });
+        }
+
         it('should place the theme specific selection indicators and borders on the content side of the headers', async () => {
             await createTabs(component => component.height.set('240px'));
             const wrapper = host.wrapperDiv.nativeElement;

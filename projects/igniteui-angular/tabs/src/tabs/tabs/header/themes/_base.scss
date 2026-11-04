@@ -25,7 +25,7 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
         align-items: center;
         min-width: rem(90px);
         max-width: $header-max-width;
-        word-wrap: break-word;
+        overflow-wrap: anywhere;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
         flex-shrink: 0;

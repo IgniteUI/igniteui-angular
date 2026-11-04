@@ -119,6 +119,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTabsComponent`
     - With `manual` activation, a tab header focused with the keyboard is scrolled into view.
     - The selected tab header is scrolled into view when hidden tabs become visible, for example in a dialog or a drop-down.
+    - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
 - `IgxTimePickerComponent`
     - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
     - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
