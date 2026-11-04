@@ -7129,9 +7129,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
                 if (this._cdrRequestRepaint) {
-                    // A repaint was requested after ngDoCheck in this pass, for example by a column input. Request it
-                    // again after the repaints deferred by this pass, so that they all run in a single sizing pass.
-                    // The flag keeps a plain notifyChanges() in between, such as the isLoading setter's, from cancelling it.
+                    // repaint again after the deferred repaints; the flag survives a plain notifyChanges() in between
                     this._repaintAfterRender = true;
                     Promise.resolve().then(() => this._repaintAfterRender && this.notifyChanges(true));
                 }
@@ -7788,8 +7786,6 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.resetCaches();
         }
         if (this._hostWidth === width) {
-            // Marking the host dirty here re-runs ngDoCheck in the same tick, and with it a sizing pass for any repaint
-            // requested after the first ngDoCheck (#17792). _hostWidth starts unset, so the first pass always marks the host.
             return;
         }
         this._hostWidth = width;

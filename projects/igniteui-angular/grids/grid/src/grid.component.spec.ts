@@ -2286,7 +2286,6 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [NoopAnimationsModule, PercentHeightDynamicColumnsGridComponent],
-                // throws NG0100 if a binding changes without a notification
                 providers: [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
             });
         });
@@ -2299,7 +2298,6 @@ describe('IgxGrid Component Tests #grid', () => {
                 const grid = host.grid();
                 expectDynamicColumnsContent(grid, 0);
                 if (newFields) {
-                    // as in the benchmark data switch: a filter on an old column, which the new data does not have
                     grid.filter('f0', 'r1', IgxStringFilteringOperand.instance().condition('contains'));
                     await fix.whenStable();
                 }
@@ -2311,7 +2309,6 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 const rendered = expectDynamicColumnsContent(grid, 1);
                 expectDynamicColumnsGeometry(grid, 1, 1200, rendered);
-                // one pass for the data and one for the new columns
                 expect(sizing.calls.count()).toBeLessThanOrEqual(2);
             });
         }
@@ -2324,12 +2321,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = host.grid();
             const hostWidth = grid.nativeElement.offsetWidth;
 
-            // new headers and widths on the same column components, so no columns are added or removed
             host.data.set(makeDynamicData(1));
             host.columns.set(makeDynamicColumns(1).map((col, i) => ({ ...col, key: `g0c${i}` })));
             await fix.whenStable();
 
-            // a grid without width shows all columns and grows with them
             expect(expectDynamicColumnsContent(grid, 1)).toBe(DYNAMIC_COLUMNS_COUNT);
             expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * dynamicColumnWidth(1));
             expect(grid.nativeElement.offsetWidth).toBe(hostWidth + DYNAMIC_COLUMNS_COUNT * (dynamicColumnWidth(1) - dynamicColumnWidth(0)));
@@ -2344,7 +2339,6 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = host.grid();
             const hostWidth = grid.nativeElement.offsetWidth;
 
-            // the isLoading setter defers a plain notification, which must not cancel the repaint the new widths request
             host.loading.set(false);
             host.data.set(makeDynamicData(1));
             host.columns.set(makeDynamicColumns(1).map((col, i) => ({ ...col, key: `g0c${i}` })));
@@ -3806,7 +3800,6 @@ const makeDynamicData = (gen: number, newFields = false) => Array.from({ length:
     return row;
 });
 
-// the grid setup of the performance benchmark
 @Component({
     template: `
     <div style="height: 700px; width: 1200px">
