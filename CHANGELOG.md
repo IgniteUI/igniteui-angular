@@ -164,6 +164,8 @@ All notable changes for each version of this project will be documented in this 
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
     - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
 
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Pressing `Escape` while dragging a column header over the group-by area no longer groups by that column. A column move canceled with `Escape` or in a `columnMoving` handler also no longer prevents the next column move from being dropped.
 ## 22.2.5
 
 ### Bug Fixes
