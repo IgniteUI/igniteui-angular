@@ -202,6 +202,7 @@
     <div class="igx-grid__scroll-start"
         [class.igx-grid__scroll-start--pinned]="pinnedStartColumns.length > 0"
         [class.igx-grid__scroll-start--column-selection]="columnSelection !== 'none'"
+        [class.igx-grid__scroll-start--grouped]="groupingExpressions.length > 0"
         [style.width.px]="pinnedStartWidth" [style.min-width.px]="pinnedStartWidth"></div>
     <div class="igx-grid__scroll-main" [style.width.px]="unpinnedWidth">
         <ng-template igxGridFor [igxGridForOf]="EMPTY_DATA" #scrollContainer>

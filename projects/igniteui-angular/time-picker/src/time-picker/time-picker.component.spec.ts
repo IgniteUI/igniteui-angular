@@ -10,7 +10,7 @@ import { nextFrame, UIInteractions } from '../../../test-utils/ui-interactions.s
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { PickerInteractionMode } from '../../../core/src/date-common/types';
-import { PlatformUtil, provideIgniteIntl } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, PlatformUtil, provideIgniteIntl } from 'igniteui-angular/core';
 import { DatePart } from '../../../core/src/date-common/public_api';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { IgxItemListDirective, IgxTimeItemDirective } from './time-picker.directives';
@@ -106,7 +106,8 @@ describe('IgxTimePicker', () => {
                 nativeElement: {
                     blur: vi.fn().mockName("mockElement.blur"),
                     click: vi.fn().mockName("mockElement.click"),
-                    focus: vi.fn().mockName("mockElement.focus")
+                    focus: vi.fn().mockName("mockElement.focus"),
+                    addEventListener: vi.fn().mockName("mockElement.addEventListener")
                 }
             };
             mockControlInstance = {
@@ -217,6 +218,7 @@ describe('IgxTimePicker', () => {
                     { provide: Injector, useValue: mockInjector },
                     { provide: ChangeDetectorRef, useValue: mockCdr },
                     { provide: IGX_TIME_PICKER_COMPONENT, useExisting: IgxTimePickerComponent },
+                    IgxKeyBindingsService,
                     IgxTimePickerComponent,
                     PlatformUtil,
                     IgxItemListDirective
@@ -573,7 +575,7 @@ describe('IgxTimePicker', () => {
             });
 
             it('should open the dropdown with `ArrowDown` + `Alt` key press and close it on outside click', async () => {
-                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerDebElement, true);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement, true, true);
                 await fixture.whenStable();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
@@ -656,7 +658,7 @@ describe('IgxTimePicker', () => {
             });
 
             it('should open/close the dropdown and keep the current selection on Space/Enter key press', async () => {
-                UIInteractions.triggerEventHandlerKeyDown(' ', timePickerDebElement);
+                UIInteractions.triggerKeyDownEvtUponElem(' ', fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement, true);
                 await fixture.whenStable();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
@@ -696,7 +698,7 @@ describe('IgxTimePicker', () => {
                 const selectedMinutes = fixture.componentInstance.date.getMinutes();
                 expect((dateTimeEditor.nativeElement.value).normalize('NFKC')).toEqual(`0${selectedHour}:${selectedMinutes} ${selectedAmpm}`);
 
-                UIInteractions.triggerEventHandlerKeyDown('Escape', timePickerDebElement);
+                UIInteractions.triggerKeyDownEvtUponElem('Escape', fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement, true);
                 await fixture.whenStable();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeTruthy();
@@ -1729,7 +1731,7 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.isFocused).toBe(false);
 
-                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerDebElement, true);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement, true, true);
 
                 await fixture.whenStable();
                 fixture.detectChanges();
@@ -1755,13 +1757,15 @@ describe('IgxTimePicker', () => {
                 vi.spyOn(timePicker.opened, 'emit');
                 expect(timePicker.collapsed).toBeTruthy();
 
-                UIInteractions.triggerEventHandlerKeyDown(' ', timePickerDebElement);
+                const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+                fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement.dispatchEvent(space);
                 await fixture.whenStable();
                 fixture.detectChanges();
 
                 expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
+                expect(space.defaultPrevented, 'Space should not be typed in the input').toBe(true);
             });
 
             it('should close the dropdown with ESC', async () => {
@@ -1774,12 +1778,80 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeFalsy();
 
-                UIInteractions.triggerKeyDownEvtUponElem('Escape', timePickerElement, true);
+                const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+                timePickerElement.dispatchEvent(escape);
                 await fixture.whenStable();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
+                expect(escape.defaultPrevented, 'Escape keeps its default action').toBe(false);
+            });
+
+            it('should prevent the default action of ALT + DOWN/UP ARROW key in dropdown mode', async () => {
+                const input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement;
+                const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                input.dispatchEvent(altArrowDown);
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(timePicker.collapsed).toBeFalsy();
+                expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown should be prevented').toBe(true);
+
+                const altArrowUp = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true, bubbles: true, cancelable: true });
+                input.dispatchEvent(altArrowUp);
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(timePicker.collapsed).toBeTruthy();
+                expect(altArrowUp.defaultPrevented, 'Alt+ArrowUp should be prevented').toBe(true);
+            });
+
+            it('should not handle ALT + DOWN/UP ARROW key in dialog mode', async () => {
+                fixture.componentInstance.mode = PickerInteractionMode.Dialog;
+                fixture.detectChanges();
+                vi.spyOn(timePicker.opening, 'emit');
+
+                const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement.dispatchEvent(altArrowDown);
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(timePicker.collapsed).toBeTruthy();
+                expect(timePicker.opening.emit).not.toHaveBeenCalled();
+                expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown keeps its default in dialog mode').toBe(false);
+            });
+
+            it('should not open the dropdown with SPACE or ALT + DOWN ARROW key if readOnly is set to true', async () => {
+                timePicker.readOnly = true;
+                fixture.detectChanges();
+                vi.spyOn(timePicker.opening, 'emit');
+
+                const input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT)).nativeElement;
+                const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+                input.dispatchEvent(space);
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(timePicker.collapsed).toBeTruthy();
+                expect(timePicker.opening.emit).not.toHaveBeenCalled();
+                expect(space.defaultPrevented, 'Space should not be typed in a read-only picker').toBe(true);
+            });
+
+            it('should keep moving through the items while an ARROW key is held', async () => {
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                const hourList = hourColumn.injector.get(IgxItemListDirective);
+                const nextItem = vi.spyOn(hourList as any, 'nextItem');
+                hourColumn.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true }));
+                const repeated = new KeyboardEvent('keydown', { key: 'ArrowDown', repeat: true, bubbles: true, cancelable: true });
+                hourColumn.nativeElement.dispatchEvent(repeated);
+
+                expect(nextItem).toHaveBeenCalledTimes(2);
+                expect(repeated.defaultPrevented).toBe(true);
             });
         });
 
