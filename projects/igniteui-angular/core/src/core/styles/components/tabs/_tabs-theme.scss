@@ -198,6 +198,14 @@
             color: var-get($theme, 'item-icon-color');
         }
 
+        > [igxprefix],
+        > igx-prefix,
+        > [igxsuffix],
+        > igx-suffix {
+            flex-shrink: 0;
+            max-width: 30%;
+        }
+
         @if $bootstrap-theme {
             padding-block: pad-block(rem(12px));
             border-start-start-radius: var-get($theme, 'border-radius');
