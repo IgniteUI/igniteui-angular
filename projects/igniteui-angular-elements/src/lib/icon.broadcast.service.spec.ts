@@ -114,6 +114,27 @@ describe('Icon broadcast service', () => {
             expect(addSvgSpy).not.toHaveBeenCalled();
             expect(setRefSpy).not.toHaveBeenCalled();
         });
+
+        it('should only process the part of the message that matches its action type.', async () => {
+            const iconService = fixture.componentInstance.iconService;
+            const addSvgSpy = vi.spyOn(iconService, 'addSvgIconFromText');
+            const setRefSpy = vi.spyOn(iconService, 'setIconRef');
+            const collections = new Map([["customCollection", new Map([["customIcon", { svg: buildIcon }]])]]);
+            const references = new Map([["customCollection", new Map([["customIcon", { name: "customIcon", collection: "customCollection" }]])]]);
+
+            broadcastChannel.postMessage({ actionType: ActionType.RegisterIcon, collections, references });
+            await wait(50);
+
+            expect(addSvgSpy).toHaveBeenCalledExactlyOnceWith("customIcon", buildIcon, "customCollection");
+            expect(setRefSpy).not.toHaveBeenCalled();
+
+            addSvgSpy.mockClear();
+            broadcastChannel.postMessage({ actionType: ActionType.UpdateIconReference, collections, references });
+            await wait(50);
+
+            expect(addSvgSpy).not.toHaveBeenCalled();
+            expect(setRefSpy).toHaveBeenCalledExactlyOnceWith("customIcon", "default", { family: "customCollection", name: "customIcon" });
+        });
     });
 
     describe('Page lifecycle', () => {
