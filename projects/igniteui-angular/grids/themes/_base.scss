@@ -2016,12 +2016,14 @@
             z-index: $z-grid-base;
         }
 
-        // Under the group-by indentation: pinned border width when no pinned start column follows
+        // Under the group-by indentation: pinned border when no pinned start column follows
         @include e(summaries-patch, $m: grouped) {
-            border-inline-end-width: var-get($theme, 'pinned-border-width');
+            border-inline-end: $grid-pinned-border;
 
             &:has(+ .igx-grid-summary--pinned) {
-                border-inline-end-width: var-get($theme, 'header-border-width');
+                border-inline-end: var-get($theme, 'header-border-width')
+                var(--ig-grid-summary-border-style, solid)
+                var(--ig-grid-summary-border-color, $grid-action-border-color);
             }
         }
 
