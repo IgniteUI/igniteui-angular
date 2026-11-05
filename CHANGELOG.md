@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxCsvExporterService`
     - Exporting a grid with summaries no longer adds an extra `GRID_LEVEL_COL` column with the nesting level of each record. Only the grid's columns are exported, as with the Excel and PDF exporters (#17908).
+- `IgxForOfDirective`
+    - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
 
 ## 21.2.23
 
