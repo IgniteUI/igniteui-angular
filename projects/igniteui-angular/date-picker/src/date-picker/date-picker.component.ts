@@ -7,7 +7,6 @@ import {
     ContentChild,
     EventEmitter,
     HostBinding,
-    HostListener,
     Injector,
     Input,
     OnDestroy,
@@ -66,7 +65,12 @@ import {
     DatePart,
     isDateInRanges,
     I18N_FORMATTER,
-    NgControlAdapter
+    NgControlAdapter,
+    IgxKeyBindingsService,
+    altKey,
+    arrowDown,
+    arrowUp,
+    spaceBar
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -91,7 +95,8 @@ let NEXT_ID = 0;
 @Component({
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true },
-        { provide: NG_VALIDATORS, useExisting: IgxDatePickerComponent, multi: true }
+        { provide: NG_VALIDATORS, useExisting: IgxDatePickerComponent, multi: true },
+        IgxKeyBindingsService
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
@@ -118,6 +123,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
     private _i18nFormatter = inject(I18N_FORMATTER);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -528,6 +534,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     constructor() {
         super();
         this.initLocale();
+
+        // The keys come from the inner input, so none are skipped. `open` checks disabled and readOnly.
+        this._keyBindings
+            .configure({ skip: [] })
+            .set([altKey, arrowDown], () => this.open())
+            .set([altKey, arrowUp], () => this.close())
+            .set(spaceBar, () => this.open());
     }
 
     /** @hidden @internal */
@@ -542,27 +555,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     protected override get toggleContainer(): HTMLElement | undefined {
         return this._calendarContainer;
-    }
-
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public onKeyDown(event: KeyboardEvent) {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey) {
-                    this.open();
-                }
-                break;
-            case this.platform.KEYMAP.SPACE:
-                event.preventDefault();
-                this.open();
-                break;
-        }
     }
 
     /**
