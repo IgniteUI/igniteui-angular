@@ -1,0 +1,9 @@
+# Angular's default targets, minus the versions the library's styles can't support:
+# container style queries need Firefox 151 and Safari 18, relative colors need Chrome and Edge 131.
+# Keep the baseline date in sync with Angular's default (BASELINE_DATE in @angular/build).
+baseline widely available on 2026-05-07
+not Chrome < 131
+not Edge < 131
+not Firefox < 151
+not Safari < 18
+not iOS < 18
