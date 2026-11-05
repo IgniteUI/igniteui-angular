@@ -275,6 +275,17 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
         });
 
+        it('should auto-generate columns when data is set before the grid is initialized', async () => {
+            grid.childDataKey = 'Employees';
+            expect(() => grid.data = SampleTestData.employeeAllTypesTreeData()).not.toThrow();
+
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const expectedColumns = [...Object.keys(grid.data[0])].filter(col => col !== grid.childDataKey);
+            expect(grid.columns.map(c => c.field)).toEqual(expectedColumns);
+        });
+
         it('should recreate columns when data changes and autoGenerate is true', async () => {
             grid.width = '500px';
             grid.height = '500px';
