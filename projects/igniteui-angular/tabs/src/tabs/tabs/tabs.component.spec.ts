@@ -1423,6 +1423,45 @@ describe('IgxTabs', () => {
                 expect(label.scrollHeight).toBeGreaterThan(label.clientHeight);
             });
         }
+
+        it('should not wrap the prefix next to a long header label', async () => {
+            const prefix = headers[1].querySelector('[igxPrefix]');
+            headers[1].querySelector('[igxTabHeaderLabel]').textContent =
+                'A long tab header label that does not fit on a single line of the header';
+            fixture.detectChanges();
+            await wait(200);
+
+            const range = document.createRange();
+            range.selectNodeContents(prefix);
+            expect(range.getClientRects().length).toBe(1);
+        });
+
+        for (const slot of ['prefix', 'suffix'] as const) {
+            it(`should keep a long ${slot} within the bounds of the header`, async () => {
+                const label = headers[1].querySelector('[igxTabHeaderLabel]');
+                let element = headers[1].querySelector('[igxPrefix]');
+                if (slot === 'suffix') {
+                    // The second header has no suffix in the test component
+                    element.textContent = '';
+                    element = document.createElement('span');
+                    element.setAttribute('igxSuffix', '');
+                    headers[1].appendChild(element);
+                }
+                element.textContent = `Long${'x'.repeat(80)}${slot}`;
+                fixture.detectChanges();
+                await wait(200);
+
+                const headerRect = headers[1].getBoundingClientRect();
+                for (const el of [element, label]) {
+                    const rect = el.getBoundingClientRect();
+                    expect(rect.left).toBeGreaterThanOrEqual(headerRect.left);
+                    expect(rect.right).toBeLessThanOrEqual(headerRect.right);
+                }
+                const range = document.createRange();
+                range.selectNodeContents(label);
+                expect(range.getClientRects().length).toBe(1);
+            });
+        }
     });
 
     it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
