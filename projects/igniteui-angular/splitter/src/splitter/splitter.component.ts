@@ -5,7 +5,6 @@ import {
     ElementRef,
     EventEmitter,
     HostBinding,
-    HostListener,
     Input,
     Output,
     QueryList,
@@ -23,6 +22,7 @@ import {
     IgxDragDirective,
     IgxDragIgnoreDirective
 } from 'igniteui-angular/directives';
+import { IgxKeyBindingsService, arrowDown, arrowLeft, arrowRight, arrowUp, ctrlKey } from 'igniteui-angular/core';
 import { IgxSplitterPaneComponent } from './splitter-pane/splitter-pane.component';
 
 /**
@@ -45,22 +45,6 @@ interface IPaneSizeConstraints {
     max: number;
     maxSibling: number;
 }
-
-interface IKeyboardAction {
-    /** The splitter orientation the key applies to. */
-    type: SplitterType;
-    /** The resize delta in px. Positive values shrink the pane before the bar. */
-    delta: number;
-    /** Whether Ctrl + key collapses towards the pane after the bar. */
-    collapseNext: boolean;
-}
-
-const KEYBOARD_ACTIONS = new Map<string, IKeyboardAction>([
-    ['arrowup', { type: SplitterType.Vertical, delta: 10, collapseNext: false }],
-    ['arrowdown', { type: SplitterType.Vertical, delta: -10, collapseNext: true }],
-    ['arrowleft', { type: SplitterType.Horizontal, delta: 10, collapseNext: false }],
-    ['arrowright', { type: SplitterType.Horizontal, delta: -10, collapseNext: true }]
-]);
 
 /**
  * Provides a framework for a simple layout, splitting the view horizontally or vertically
@@ -433,9 +417,12 @@ export class IgxSplitterComponent implements AfterContentInit {
     selector: 'igx-splitter-bar',
     templateUrl: './splitter-bar.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
+    providers: [IgxKeyBindingsService],
     imports: [IgxDragDirective, IgxDragIgnoreDirective]
 })
 export class IgxSplitBarComponent {
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+
     /**
      * Set css class to the host element.
      */
@@ -467,7 +454,9 @@ export class IgxSplitBarComponent {
      */
     @HostBinding('attr.tabindex')
     public get tabindex() {
-        return this.resizeDisallowed ? null : 0;
+        // The bar is focusable while it can resize or collapse the panes. A collapsed pane
+        // keeps a collapsible bar focusable, so the pane can be expanded with the keyboard.
+        return this.nonCollapsible && this.resizeDisallowed ? null : 0;
     }
 
     /**
@@ -530,6 +519,21 @@ export class IgxSplitBarComponent {
      */
     private startPoint!: number;
 
+    constructor() {
+        // Every arrow is prevented and stops propagating in either orientation.
+        // A held arrow keeps resizing the panes; a held Ctrl + arrow collapses or expands a pane once.
+        this._keyBindings
+            .configure({ bindingDefaults: { stopPropagation: true } })
+            .set(arrowUp, () => this.resizeWithKey(SplitterType.Vertical, 10), { repeat: true })
+            .set(arrowDown, () => this.resizeWithKey(SplitterType.Vertical, -10), { repeat: true })
+            .set(arrowLeft, () => this.resizeWithKey(SplitterType.Horizontal, 10), { repeat: true })
+            .set(arrowRight, () => this.resizeWithKey(SplitterType.Horizontal, -10), { repeat: true })
+            .set([ctrlKey, arrowUp], () => this.collapseWithKey(SplitterType.Vertical, false))
+            .set([ctrlKey, arrowDown], () => this.collapseWithKey(SplitterType.Vertical, true))
+            .set([ctrlKey, arrowLeft], () => this.collapseWithKey(SplitterType.Horizontal, false))
+            .set([ctrlKey, arrowRight], () => this.collapseWithKey(SplitterType.Horizontal, true));
+    }
+
     /**
      * @hidden @internal
      */
@@ -542,31 +546,6 @@ export class IgxSplitBarComponent {
      */
     public get nextButtonHidden() {
         return this.siblings[1]?.collapsed && !this.siblings[0]?.collapsed;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostListener('keydown', ['$event'])
-    public keyEvent(event: KeyboardEvent) {
-        event.stopPropagation();
-        const action = KEYBOARD_ACTIONS.get(event.key.toLowerCase());
-        if (!action) {
-            return;
-        }
-        event.preventDefault();
-        if (action.type !== this.type) {
-            return;
-        }
-        if (event.ctrlKey) {
-            if (!this.nonCollapsible) {
-                this.onCollapsing(action.collapseNext);
-            }
-        } else if (!this.resizeDisallowed) {
-            this.moveStart.emit(this.pane);
-            this.moving.emit(action.delta);
-            this.movingEnd.emit(action.delta);
-        }
     }
 
     /**
@@ -612,6 +591,20 @@ export class IgxSplitBarComponent {
             // if prev is clicked when next pane is hidden, show next pane, else hide prev pane.
             : (nextSibling.collapsed ? nextSibling : prevSibling);
         target.toggle();
+    }
+
+    private resizeWithKey(type: SplitterType, delta: number) {
+        if (this.type === type && !this.resizeDisallowed) {
+            this.moveStart.emit(this.pane);
+            this.moving.emit(delta);
+            this.movingEnd.emit(delta);
+        }
+    }
+
+    private collapseWithKey(type: SplitterType, next: boolean) {
+        if (this.type === type && !this.nonCollapsible) {
+            this.onCollapsing(next);
+        }
     }
 
     private getPointerPosition(pageX: number, pageY: number) {
