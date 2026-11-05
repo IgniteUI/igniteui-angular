@@ -141,6 +141,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxTimePickerComponent`
     - Resetting a bound form control, for example with `reset()`, no longer keeps the previous time selected in the dropdown/dialog.
     - Setting `minValue` or `maxValue` back to `null` now restores the full range of the dropdown/dialog, and changing `itemsDelta` or `inputFormat` at runtime now updates it and the selected time.
+    - Loosening or removing `minValue` or `maxValue` while the dropdown/dialog is open now selects the time of the picker value, or the time picked but not yet confirmed, again. Previously the time clamped by the earlier `minValue` or `maxValue` stayed selected (#17845).
     - The dialog header and the dropdown/dialog lists now update when the locale, format or `spinLoop` change while the picker is open.
     - A value or `minValue` that does not match `itemsDelta` is now rounded up to the next available item, for example `10:58` with a minutes delta of `7` selects `11:00` instead of `11:03`. When rounding up passes the last available item, the last item is selected.
     - Switching from AM to PM in the dropdown/dialog no longer selects a time later than `maxValue`.
