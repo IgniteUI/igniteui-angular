@@ -43,6 +43,14 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
             color: var-get($theme, 'item-icon-color');
         }
 
+        > [igxprefix],
+        > igx-prefix,
+        > [igxsuffix],
+        > igx-suffix {
+            flex-shrink: 0;
+            max-width: 30%;
+        }
+
         &::-moz-focus-inner {
             border: 0;
         }
