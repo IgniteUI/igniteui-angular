@@ -3,7 +3,7 @@
     <h4 class="sample-title">Grid without transactions</h4>
     <igx-switch [(ngModel)]="rowEditNoTransactions">Row edit</igx-switch>
     <igx-grid
-      [rowStyles]="rowStyles"
+      [rowClasses]="rowClasses"
       validationTrigger="change"
       (validationStatusChange)="validationChange($event)"
       (cellEdit)="cellEdit($event)"
@@ -136,7 +136,7 @@
       #treegrid
       [data]="treeData"
       primaryKey="employeeID"
-      [rowStyles]="rowStyles"
+      [rowClasses]="rowClasses"
       foreignKey="PID"
       [width]="'900px'"
       [height]="'800px'"
