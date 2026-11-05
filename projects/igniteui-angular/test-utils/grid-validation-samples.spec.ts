@@ -55,7 +55,7 @@ export class IgxGridValidationTestBaseComponent {
         { field: 'UnitPrice', dataType: GridColumnDataType.String },
         { field: 'UnitsInStock', dataType: GridColumnDataType.Number }
     ];
-    public data = [...data];
+    public data = data.map(record => ({ ...record }));
 
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;

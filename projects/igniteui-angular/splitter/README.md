@@ -56,10 +56,9 @@ export class SplitLayoutComponent {
 
 ## Customization
 
-- **Non-collapsible bars** – set `nonCollapsible` on the splitter or bar to hide expander affordances when panes must stay visible.
-- **Keyboard support** – users can resize with arrow keys; combine with `ctrl` to collapse panes for accessibility.
-- **Drag constraints** – `minSize` and `maxSize` enforce boundaries while resizing, ensuring important content stays visible.
-- **Custom order** – bind `order` on panes or bars to change layout stacking in complex UIs.
+- **Non-collapsible bars** – set `nonCollapsible` on the splitter to hide the expanders and disable collapsing with `Ctrl` + arrow keys when panes must stay visible.
+- **Keyboard support** – users can resize with the arrow keys (by 10px per key press, emitting the same resize events as a drag); combine with `Ctrl` to collapse or expand panes.
+- **Drag constraints** – `minSize` and `maxSize` (px or % of the splitter size) enforce boundaries while resizing, ensuring important content stays visible.
 
 ## API Reference
 
@@ -74,9 +73,9 @@ export class SplitLayoutComponent {
 
 | Event | Payload | Description |
 | --- | --- | --- |
-| `resizeStart` | `ISplitterBarResizeEventArgs` | Fires when a drag gesture begins; exposes the active pane and its sibling. |
-| `resizing` | `ISplitterBarResizeEventArgs` | Emits while dragging to allow live layout updates. |
-| `resizeEnd` | `ISplitterBarResizeEventArgs` | Emits after the drag completes with the final pane references. |
+| `resizeStart` | `ISplitterBarResizeEventArgs` | Fires when a drag gesture or a keyboard resize begins; exposes the active pane and its sibling. |
+| `resizing` | `ISplitterBarResizeEventArgs` | Emits while resizing to allow live layout updates. |
+| `resizeEnd` | `ISplitterBarResizeEventArgs` | Emits after the resize completes and the pane sizes are updated. |
 
 ### IgxSplitterComponent properties
 
@@ -86,9 +85,9 @@ export class SplitLayoutComponent {
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `string` | `'auto'` | Desired pane size (`px` or `%`). Automatically recalculated during drag. |
-| `minSize` | `string` | `undefined` | Minimum allowed size for the pane. |
-| `maxSize` | `string` | `undefined` | Maximum allowed size for the pane. |
+| `size` | `string` | `'auto'` | Desired pane size (`px` or `%`). Updated when a resize ends, keeping the pane units. Nullish values fall back to `'auto'`. |
+| `minSize` | `string` | `undefined` | Minimum allowed size for the pane (`px` or `%`). |
+| `maxSize` | `string` | `undefined` | Maximum allowed size for the pane (`px` or `%`). |
 | `resizable` | `boolean` | `true` | Prevents drag interactions when set to `false`. |
 | `collapsed` | `boolean` | `false` | Controls pane visibility. Collapsed panes free space for siblings. |
 

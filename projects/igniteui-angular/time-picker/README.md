@@ -84,7 +84,7 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `minValue` | `Date | string` | The minimum value required for the picker to remain valid. |
 | `maxValue` | `Date | string` | The maximum value required for the editor to remain valid. |
 | `headerOrientation` | `'horizontal' | 'vertical'` | Determines whether the dialog's header renders in vertical or horizontal state. Applies only in dialog mode. |
-| `locale` | `string` | Sets the locale used for formatting and displaying time in the dropdown/dialog. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. |
+| `locale` | `string` | Sets the locale used for formatting and displaying time in the dropdown/dialog. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. When not set, the picker follows the global locale (`setCurrentI18n`) and updates when it changes. |
 | `displayFormat` | `string` | The format used to display the picker's value when it's not being edited. |
 | `inputFormat` | `string` | The editor's input mask. |
 | `formatter` | `function` | Applied custom formatter on the selected or passed in date. |
