@@ -73,6 +73,7 @@ const stripComments = () => {
 
 stripComments.postcss = true;
 
+// Autoprefixer resolves browserslist from each file's `from` path, i.e. projects/igniteui-angular/.browserslistrc.
 const postProcessor = postcss([
   autoprefixer({
     cascade: false,
@@ -101,7 +102,7 @@ async function buildThemePresets() {
           .replace(/\.scss$/, '.css')
           .replace(THEMES.SRC, '');
 
-        let outCss = stripBom(postProcessor.process(result.css).css);
+        let outCss = stripBom(postProcessor.process(result.css, { from: srcPath, map: false }).css);
 
         const outputFile = DEST_DIR(fileName);
 
@@ -174,7 +175,7 @@ export function createStylesBuilder(compiler) {
 
     trackDeps(result.loadedUrls, srcPath);
 
-    let css = stripBom(postProcessor.process(result.css).css);
+    let css = stripBom(postProcessor.process(result.css, { from: srcPath, map: false }).css);
 
     if (result.sourceMap) {
       const smBase64 = Buffer.from(JSON.stringify(result.sourceMap)).toString('base64');
@@ -188,7 +189,7 @@ export function createStylesBuilder(compiler) {
     const result = await compiler.compileAsync(srcPath, BASE_STYLES.CONFIG);
     trackDeps(result.loadedUrls, srcPath);
 
-    const css = stripBom(postProcessor.process(result.css).css);
+    const css = stripBom(postProcessor.process(result.css, { from: srcPath, map: false }).css);
     const exportName =
       path.basename(srcPath, '.styles.scss').toUpperCase().replace(/-/g, '_') + '_CSS';
     const ts = [

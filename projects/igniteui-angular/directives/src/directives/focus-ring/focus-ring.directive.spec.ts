@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusRingDirective } from './focus-ring.directive';
+import * as publicApi from '../../public_api';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxFocusRing', () => {
@@ -45,6 +46,11 @@ describe('IgxFocusRing', () => {
         element.dispatchEvent(new FocusEvent('focusout'));
 
         expect(ring.hasKeyboardFocus()).toBe(false);
+    });
+
+    // Host directives must be importable from the entry point for template type-checking
+    it('Should be exported from the public API', () => {
+        expect(publicApi.IgxFocusRingDirective).toBe(IgxFocusRingDirective);
     });
 });
 

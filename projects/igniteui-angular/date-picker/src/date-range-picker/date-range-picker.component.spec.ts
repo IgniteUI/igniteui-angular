@@ -788,8 +788,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.isFocused).toBe(false);
 
-                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    const input = singleInputElement.nativeElement;
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -801,7 +801,7 @@ describe('IgxDateRangePicker', () => {
                     expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
                     expect(dateRange.isFocused).toBe(true);
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', range, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -838,6 +838,56 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.isFocused).toBe(true);
                 });
 
+                it('should prevent the default action of ALT + DOWN/UP ARROW key', async () => {
+                    const input = singleInputElement.nativeElement;
+                    const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                    input.dispatchEvent(altArrowDown);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown should not scroll the page').toBe(true);
+
+                    const altArrowUp = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true, bubbles: true, cancelable: true });
+                    input.dispatchEvent(altArrowUp);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(altArrowUp.defaultPrevented, 'Alt+ArrowUp should not scroll the page').toBe(true);
+                });
+
+                it('should not open the calendar with ALT alone after ALT + DOWN ARROW was released outside the picker', async () => {
+                    const outlet = document.createElement('div');
+                    document.body.appendChild(outlet);
+                    dateRange.overlaySettings = { outlet: new ElementRef(outlet) };
+                    detectChanges();
+
+                    const input = singleInputElement.nativeElement;
+                    input.focus();
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    const calendarWrapper = outlet.querySelector('.igx-calendar__wrapper');
+                    expect(calendarWrapper.contains(document.activeElement), 'focus should move to the calendar, outside the picker').toBe(true);
+
+                    // The keys are released in the calendar, so the picker sees no keyup.
+                    calendarWrapper.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', altKey: true, bubbles: true }));
+                    dateRange.close();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+
+                    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Alt', altKey: true, bubbles: true }));
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed, 'Alt alone should not open the calendar').toBeTruthy();
+
+                    outlet.remove();
+                });
+
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', async () => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.disabled = true;
@@ -853,6 +903,22 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
+                });
+
+                it('should not open calendar with ALT + DOWN ARROW key if readOnly is set to true', async () => {
+                    dateRange.readOnly = true;
+                    detectChanges();
+
+                    vi.spyOn(dateRange.opening, 'emit');
+
+                    const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                    singleInputElement.nativeElement.dispatchEvent(altArrowDown);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
+                    expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown should not scroll the page').toBe(true);
                 });
             });
 
@@ -1345,8 +1411,7 @@ describe('IgxDateRangePicker', () => {
                     startInput.nativeElement.focus();
                     // await fixture.whenStable();
 
-                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', startInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -1367,8 +1432,8 @@ describe('IgxDateRangePicker', () => {
                     expect(startInput.nativeElement.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
                     expect(dateRange.isFocused).toBe(true);
 
-                    // reopen and close again
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    // reopen from the end input and close again
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', endInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -1393,8 +1458,7 @@ describe('IgxDateRangePicker', () => {
                     vi.spyOn(dateRange.closed, 'emit');
 
                     expect(dateRange.collapsed).toBeTruthy();
-                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', startInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
@@ -1458,7 +1522,7 @@ describe('IgxDateRangePicker', () => {
                     vi.spyOn(dateRange.opening, 'emit');
                     vi.spyOn(dateRange.opened, 'emit');
 
-                    // UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', startInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
