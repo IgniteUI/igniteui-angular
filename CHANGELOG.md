@@ -166,6 +166,14 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - Pressing `Escape` while dragging a column header over the group-by area no longer groups by that column. A column move canceled with `Escape` or in a `columnMoving` handler also no longer prevents the next column move from being dropped.
+
+## 22.2.6
+
+### Bug Fixes
+
+- `IgxTabsComponent`
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
+
 ## 22.2.5
 
 ### Bug Fixes
