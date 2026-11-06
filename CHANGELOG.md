@@ -16,6 +16,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxPivotGridComponent`
     - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
+- `IgxForOfDirective`
+    - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
 
 ## 22.2.4
 
