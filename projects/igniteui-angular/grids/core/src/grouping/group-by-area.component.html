@@ -1,4 +1,4 @@
-<igx-chips-area (reorder)="handleReorder($event)" (moveEnd)="handleMoveEnd()">
+<igx-chips-area (reorder)="handleReorder($event)" (moveEnd)="handleMoveEnd($event)">
     @for (expression of chipExpressions; track expression.fieldName; let last = $last) {
         <igx-chip
             [id]="expression.fieldName"
