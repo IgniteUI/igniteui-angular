@@ -389,6 +389,32 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips.length).toBe(1);
         });
 
+        it('Should keep the focus in the calendar after Alt + ArrowDown in the date input', async () => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent)).componentInstance as IgxDatePickerComponent;
+            (datePicker.getEditElement() as HTMLElement).focus();
+            const opened = firstValueFrom(datePicker.opened);
+            await userEvent.keyboard('{Alt>}{ArrowDown}{/Alt}');
+            await opened;
+            await fix.whenStable();
+            fix.detectChanges();
+
+            expect(document.querySelector('igx-calendar').contains(document.activeElement)).toBe(true);
+
+            await userEvent.keyboard('{ArrowRight}{Enter}');
+            await fix.whenStable();
+            fix.detectChanges();
+
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+            const expr = (grid.filteringExpressionsTree.filteringOperands[0] as IFilteringExpressionsTree)
+                .filteringOperands[0] as IFilteringExpression;
+            expect((expr.searchVal as Date).toDateString()).toBe(tomorrow.toDateString());
+        });
+
         it('Should correctly select month from month view datepicker/calendar component', async () => {
             GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
 

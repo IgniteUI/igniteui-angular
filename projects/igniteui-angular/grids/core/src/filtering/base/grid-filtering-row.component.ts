@@ -343,7 +343,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
                 return;
             }
             this.commitInput();
-        } else if (event.altKey && (event.key === this.platform.KEYMAP.ARROW_DOWN)) {
+        } else if (event.altKey && (event.key === this.platform.KEYMAP.ARROW_DOWN) && !event.defaultPrevented) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (this.platform.isFilteringKeyCombo(event)) {
