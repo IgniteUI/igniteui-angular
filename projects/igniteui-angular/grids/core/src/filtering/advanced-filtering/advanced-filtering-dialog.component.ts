@@ -32,6 +32,7 @@ import {
 @Component({
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html',
+    host: { class: 'igx-advanced-filtering-dialog' },
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxDragDirective, NgClass, IgxQueryBuilderComponent, IgxQueryBuilderHeaderComponent, IgxDragHandleDirective, IgxButtonDirective]
 })
@@ -50,12 +51,6 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
      */
     @HostBinding('style.display')
     public display = 'block';
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-advanced-filtering-dialog')
-    public cssClass = true;
 
     /**
      * @hidden @internal
