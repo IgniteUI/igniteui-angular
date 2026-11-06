@@ -37,6 +37,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     constructor() {
         super();
         this.ghostClass = this._ghostClass;
+        // Column moving handles Escape itself, so it can reset the moving state.
+        this.cancelOnEscape = false;
     }
 
     public override ngOnDestroy() {
@@ -75,6 +77,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         }
 
         super.onPointerMove(event);
+        if (!this._clicked) {
+            // The drag ended or was cancelled, e.g. in a ghostCreate or dragMove handler.
+            return;
+        }
         if (this._dragStarted && this.ghostElement && !this.cms.column) {
             this.cms.column = this.column;
             this.column.grid.cdr.detectChanges();
@@ -104,8 +110,28 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this._unsubscribe();
     }
 
+    /**
+     * @hidden
+     * Ends the column moving without dropping, as releasing outside a drop area does.
+     */
+    protected override cancelDragInternal(originalEvent: KeyboardEvent | null): boolean {
+        const cancelled = super.cancelDragInternal(originalEvent);
+        if (cancelled) {
+            this.zone.run(() => {
+                this.cms.column = null!;
+                this.column.grid.cdr.detectChanges();
+            });
+            this._unsubscribe();
+        }
+        return cancelled;
+    }
+
     protected override createGhost(pageX: number, pageY: number) {
         super.createGhost(pageX, pageY);
+        if (!this.ghostElement) {
+            // The ghost creation or the drag was cancelled.
+            return;
+        }
 
         this.ghostElement.style.height = null;
         this.ghostElement.style.minWidth = null;
