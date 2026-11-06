@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
 - `IgxTabsComponent`
     - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
 
