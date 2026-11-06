@@ -941,7 +941,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 }
             }
 
-            if (this.getTransitionPosition(movedElem) === positionBefore) {
+            if (this.getTransitionPosition(movedElem) === positionBefore && !this.hasRunningTransition(movedElem)) {
                 // Already at the origin, so no transition runs and transitionend never fires: finish right away.
                 this.onTransitionEnd(null);
             }
@@ -1004,7 +1004,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 ));
             }
 
-            if (this.getTransitionPosition(movedElem) === positionBefore) {
+            if (this.getTransitionPosition(movedElem) === positionBefore && !this.hasRunningTransition(movedElem)) {
                 // Already at the target, so no transition runs and transitionend never fires: finish right away.
                 this.onTransitionEnd(null);
             }
@@ -1019,6 +1019,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public onPointerDown(event: PointerEvent | TouchEvent | MouseEvent) {
         // Start drag only with the primary pointer button.
         if ((this.pointerEventsEnabled || !this.touchEventsEnabled) && 'button' in event && event.button !== 0) {
+            return;
+        }
+
+        if (this._dragCancelled && this.animInProgress) {
+            // A cancelled drag is still animating back; a new drag would report its end as not cancelled.
             return;
         }
 
@@ -1439,9 +1444,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      * Listens for `Escape` on the document while dragging, since focus is usually on the body during a pointer drag.
      * Uses the capture phase so that an `Escape` that cancels the drag does not reach other handlers (e.g. closing a dialog).
+     * `cancelOnEscape` is checked when the key is pressed, so changing it during the drag takes effect.
      */
     protected subscribeToEscape() {
-        if (!this.cancelOnEscape || this._escapeSubscription || !this.platformUtil.isBrowser) {
+        if (this._escapeSubscription || !this.platformUtil.isBrowser) {
             return;
         }
 
@@ -1450,7 +1456,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 filter(event => event.key === 'Escape' || event.key === 'Esc'),
                 takeUntil(this._destroy)
             ).subscribe(event => {
-                if (this.cancelDragInternal(event)) {
+                if (this.cancelOnEscape && this.cancelDragInternal(event)) {
                     event.preventDefault();
                     event.stopPropagation();
                 }
@@ -1723,6 +1729,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return `${elem.style.transform}|${elem.style.left}|${elem.style.top}`;
     }
 
+    /**
+     * Whether a transition of the position is still running on the element (e.g. one started by an earlier call),
+     * in which case its transitionend finishes the movement.
+     */
+    protected hasRunningTransition(elem: HTMLElement) {
+        if (typeof elem.getAnimations !== 'function' || typeof CSSTransition === 'undefined') {
+            return false;
+        }
+        return elem.getAnimations().some(anim => anim instanceof CSSTransition &&
+            ['left', 'top', 'transform'].includes(anim.transitionProperty));
+    }
+
     protected getTransformX(elem: any) {
         let posX = 0;
         if (elem.style.transform) {
@@ -1845,7 +1863,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
             // Scroll the corresponding window or container.
             if (!this.scrollContainer) {
+                const scrollXBefore = window.scrollX;
+                const scrollYBefore = window.scrollY;
                 window.scrollBy(scrollByX, scrollByY);
+                // The pointer stays still on screen, so its page position moves with the window,
+                // by the actual scroll, which is less than requested at the end of the page.
+                this._pointerPageX += window.scrollX - scrollXBefore;
+                this._pointerPageY += window.scrollY - scrollYBefore;
             } else {
                 this.scrollContainer.scrollLeft += scrollByX;
                 this.scrollContainer.scrollTop += scrollByY;
@@ -1865,8 +1889,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 if (!this.scrollContainer) {
                     this._lastX += scrollByX;
                     this._lastY += scrollByY;
-                    this._pointerPageX += scrollByX;
-                    this._pointerPageY += scrollByY;
                 }
             }
         })

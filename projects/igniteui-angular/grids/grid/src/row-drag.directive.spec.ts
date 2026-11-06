@@ -402,6 +402,8 @@ describe('Row Drag Tests', () => {
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(0);
                     const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
                     expect(ghostElements.length).toEqual(0);
+                    // The Escape listener registered when the drag started is removed.
+                    expect((rowDragDirective as any)._escapeSubscription).toBeNull();
                 });
 
                 it('should end row dragging when cancelDrag() is called during the drag.', () => {
@@ -431,6 +433,45 @@ describe('Row Drag Tests', () => {
                     expect(grid.rowDragging).toBe(false);
                 });
 
+                it('should keep the return animation when the row drag is cancelled and dragEnd handler calls transitionToOrigin().', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.3 });
+                    });
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+                    const transitionedSpy = vi.spyOn(rowDragDirective.transitioned, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    expect(grid.rowDragging).toBe(true);
+                    const ghost = rowDragDirective.ghostElement;
+                    expect(ghost).toBeTruthy();
+
+                    rowDragDirective.cancelDrag();
+                    fixture.detectChanges();
+                    await wait(50);
+
+                    // The grid state is reset right away, while the ghost still animates back.
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowDragDirective.ghostElement).toBe(ghost);
+                    expect(rowDragDirective.animInProgress).toBe(true);
+                    expect(transitionedSpy).not.toHaveBeenCalled();
+
+                    await wait(500);
+                    fixture.detectChanges();
+                    expect(transitionedSpy).toHaveBeenCalledTimes(1);
+                    expect(rowDragDirective.ghostElement).toBeFalsy();
+                    expect(rowDragDirective.animInProgress).toBe(false);
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+
                 it('should not start row dragging when cancelDrag() is called in a rowDragStart handler.', () => {
                     const rowDragStartSub = grid.rowDragStart.subscribe((e: IRowDragStartEventArgs) => {
                         rowDragStartSub.unsubscribe();
@@ -457,6 +498,38 @@ describe('Row Drag Tests', () => {
                     // Escape no longer reaches a row drag listener.
                     UIInteractions.triggerKeyDownEvtUponElem('Escape', dragIndicatorElement);
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+
+                it('should not start row dragging when cancelled in a ghostCreate handler with a return animation.', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    const ghostCreateSub = rowDragDirective.ghostCreate.subscribe(() => {
+                        ghostCreateSub.unsubscribe();
+                        rowDragDirective.cancelDrag();
+                    });
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.1 });
+                    });
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragStart.emit).not.toHaveBeenCalled();
+                    expect(grid.rowDragEnd.emit).not.toHaveBeenCalled();
+                    expect(grid.rowDragging).toBe(false);
+
+                    await wait(300);
+                    fixture.detectChanges();
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowDragDirective.animInProgress).toBe(false);
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
                 });
 
                 it('should not throw when the drag is cancelled in a ghostCreate handler.', () => {

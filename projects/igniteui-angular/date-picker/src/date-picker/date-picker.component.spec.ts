@@ -1,13 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
-import { IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective } from '../../../calendar/src/public_api';
+import { IgxCalendarComponent } from '../../../calendar/src/public_api';
 import { IgxCalendarContainerComponent } from './calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
-import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings, WEEKDAYS } from 'igniteui-angular/core';
+import { IGX_DATE_PICKER_DIRECTIVES } from './public_api';
+import { IgxKeyBindingsService, IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings, WEEKDAYS } from 'igniteui-angular/core';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, viewChild, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
@@ -20,8 +21,6 @@ import localeES from "@angular/common/locales/es";
 import localeBg from "@angular/common/locales/bg";
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-
-const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 const DATE_PICKER_TOGGLE_ICON = 'calendar_today';
 const DATE_PICKER_CLEAR_ICON = 'clear';
@@ -272,8 +271,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.isFocused).toBe(false);
 
-                const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
-                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', picker, true);
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+                UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
                 await vi.runAllTimersAsync();
                 detectChanges();
 
@@ -301,17 +300,77 @@ describe('IgxDatePicker', () => {
                 vi.spyOn(datePicker.opened, 'emit');
                 expect(datePicker.collapsed).toBeTruthy();
 
-                const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
-                UIInteractions.triggerEventHandlerKeyDown(' ', picker);
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+                const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+                input.dispatchEvent(space);
                 await vi.runAllTimersAsync();
                 detectChanges();
 
                 expect(datePicker.collapsed).toBeFalsy();
                 expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+                expect(space.defaultPrevented, 'Space should not be typed in the input').toBe(true);
 
                 // wait datepicker to get destroyed and test to cleanup
                 await fixture.whenStable();
+            });
+
+            it('should keep the default action of a held SPACE key prevented', async () => {
+                vi.spyOn(datePicker.opening, 'emit');
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+                const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+                // Focus moves to the calendar when it has opened, so the repeats reach the input meanwhile.
+                const repeatedSpace = new KeyboardEvent('keydown', { key: ' ', repeat: true, bubbles: true, cancelable: true });
+                input.dispatchEvent(space);
+                input.dispatchEvent(repeatedSpace);
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                expect(datePicker.collapsed).toBeFalsy();
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(space.defaultPrevented).toBe(true);
+                expect(repeatedSpace.defaultPrevented, 'a held Space should not be typed in the input').toBe(true);
+
+                await fixture.whenStable();
+            });
+
+            it('should prevent the default action of ALT + DOWN/UP ARROW key', async () => {
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+                const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                input.dispatchEvent(altArrowDown);
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                expect(datePicker.collapsed).toBeFalsy();
+                expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown should be prevented').toBe(true);
+
+                const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                const altArrowUp = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true, bubbles: true, cancelable: true });
+                calendarWrapper.dispatchEvent(altArrowUp);
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                expect(datePicker.collapsed).toBeTruthy();
+                expect(altArrowUp.defaultPrevented, 'Alt+ArrowUp should be prevented').toBe(true);
+            });
+
+            it('should not open the calendar with ALT + DOWN ARROW or SPACE key if readOnly is set to true', async () => {
+                datePicker.readOnly = true;
+                detectChanges();
+                vi.spyOn(datePicker.opening, 'emit');
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input')).nativeElement;
+                const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                const space = new KeyboardEvent('keydown', { key: ' ', bubbles: true, cancelable: true });
+                input.dispatchEvent(altArrowDown);
+                input.dispatchEvent(space);
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                expect(datePicker.collapsed).toBeTruthy();
+                expect(datePicker.opening.emit).not.toHaveBeenCalled();
+                expect(space.defaultPrevented, 'Space should not be typed in a read-only picker').toBe(true);
             });
 
             it('should close the calendar with ESC', async () => {
@@ -723,6 +782,36 @@ describe('IgxDatePicker', () => {
                     expect(headerElement.nativeElement.textContent.trim()).toBe('Nov');
                 }
             });
+
+            it('Should use the custom template for day cells', async () => {
+                fixture.componentInstance.datePicker.value = new Date(2024, 10, 11);
+                fixture.componentInstance.datePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                const days = fixture.debugElement.queryAll(By.css('.igx-day-item:not(.igx-day-item--hidden)'));
+                const customDays = fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                expect(customDays.length).toBeGreaterThan(0);
+                expect(customDays.length).toBe(days.length);
+            });
+
+            it('Should update the open calendar when the day template is removed or added', async () => {
+                const customDays = () => fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                fixture.componentInstance.datePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(customDays().length).toBeGreaterThan(0);
+
+                fixture.componentInstance.showDayTemplate = false;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(customDays().length).toBe(0);
+
+                fixture.componentInstance.showDayTemplate = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+                expect(customDays().length).toBeGreaterThan(0);
+            });
         });
 
         describe('UI Interaction', () => {
@@ -802,6 +891,52 @@ describe('IgxDatePicker', () => {
                 detectChanges();
                 expect(datePicker.value).toEqual(today);
                 expect(inputGroup.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
+            });
+
+            it('should open the calendar from the default toggle without focusing or reformatting the input', async () => {
+                datePicker.locale = 'en-US';
+                fixture.componentInstance.date = new Date(2026, 8, 15);
+                detectChanges();
+
+                const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+                const displayText = input.value;
+                expect(displayText).toEqual('9/15/2026');
+                expect(document.activeElement).not.toBe(input);
+
+                const valueWrites: string[] = [];
+                const valueProperty = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+                Object.defineProperty(input, 'value', {
+                    configurable: true,
+                    get: () => valueProperty.get.call(input),
+                    set: (value: string) => {
+                        valueWrites.push(value);
+                        valueProperty.set.call(input, value);
+                    }
+                });
+                const focusSpy = vi.fn();
+                input.addEventListener('focus', focusSpy);
+                const selectSpy = vi.spyOn(input, 'select');
+                vi.spyOn(datePicker.opening, 'emit');
+                vi.spyOn(datePicker.opened, 'emit');
+
+                // a native click bubbles from the icon through the input group
+                const toggleIcon: HTMLElement = fixture.debugElement.query(By.directive(IgxPrefixDirective))
+                    .query(By.css('igx-icon')).nativeElement;
+                toggleIcon.click();
+                // flush any deferred (requestAnimationFrame) text selection
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                expect(datePicker.collapsed).toBe(false);
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+                expect(input.getAttribute('aria-expanded')).toEqual('true');
+                expect(focusSpy).not.toHaveBeenCalled();
+                expect(selectSpy).not.toHaveBeenCalled();
+                expect(valueWrites.filter(value => value !== displayText)).toEqual([]);
+                expect(input.value).toEqual(displayText);
+                const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
             });
         });
 
@@ -889,7 +1024,8 @@ describe('IgxDatePicker', () => {
             nativeElement: {
                 blur: vi.fn(),
                 click: vi.fn(),
-                focus: vi.fn()
+                focus: vi.fn(),
+                addEventListener: vi.fn()
             }
         };
 
@@ -1023,6 +1159,7 @@ describe('IgxDatePicker', () => {
                     { provide: Injector, useValue: mockInjector },
                     { provide: Renderer2, useValue: renderer2 },
                     { provide: ChangeDetectorRef, useValue: mockCdr },
+                    IgxKeyBindingsService,
                     IgxDatePickerComponent
                 ]
             });
@@ -1576,6 +1713,43 @@ describe('IgxDatePicker', () => {
         });
     });
 
+    describe('With animations', () => {
+        let fixture: ComponentFixture<IgxDatePickerTestComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [IgxDatePickerTestComponent],
+                providers: [provideAnimations()]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+            fixture.componentInstance.date = new Date(2026, 8, 15);
+            fixture.detectChanges();
+            datePicker = fixture.componentInstance.datePicker();
+            datePicker.locale = 'en-US';
+            fixture.detectChanges();
+        });
+
+        it('should move the focus from the input to the calendar as soon as the toggle icon opens it', () => {
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            input.focus();
+            expect(input.value).toEqual('09/15/2026');
+            vi.spyOn(datePicker.opened, 'emit');
+
+            const toggleIcon: HTMLElement = fixture.debugElement.query(By.directive(IgxPrefixDirective))
+                .query(By.css('igx-icon')).nativeElement;
+            toggleIcon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+            toggleIcon.click();
+
+            // the opening animation is still running
+            expect(datePicker.opened.emit).not.toHaveBeenCalled();
+            const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+            expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
+            expect(input.value).toEqual('9/15/2026');
+        });
+    });
+
     describe('Zoneless', () => {
         let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
         let datePicker: IgxDatePickerComponent;
@@ -1747,14 +1921,18 @@ export class IgxDatePickerWithProjectionsComponent {
     <igx-date-picker [mode]="mode">
         <ng-template igxCalendarHeaderTitle let-formatCalendar>{{ formatCalendar.year.value }}</ng-template>
         <ng-template igxCalendarHeader let-formatCalendar>{{ formatCalendar.month.value }}</ng-template>
+        @if (showDayTemplate) {
+            <ng-template igxCalendarDay let-date><span class="custom-day">{{ date.getDate() }}</span></ng-template>
+        }
     </igx-date-picker>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxDatePickerComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective]
+    imports: [IGX_DATE_PICKER_DIRECTIVES]
 })
 export class IgxDatePickerWithTemplatesComponent {
     @ViewChild(IgxDatePickerComponent)
     public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.Dialog;
+    public showDayTemplate = true;
 }
 
 @Component({

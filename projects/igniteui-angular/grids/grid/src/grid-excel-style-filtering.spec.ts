@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxExcelStyleSearchComponent, GridSelectionMode, FilterMode } from 'igniteui-angular/grids/core';
 import { IgxGridComponent } from './grid.component';
+import { IgxExcelStyleCustomDialogComponent } from '../../core/src/filtering/excel-style/excel-style-custom-dialog.component';
 import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { SCROLL_FRAMES, verifyFilteringExpression } from '../../../test-utils/grid-filtering-functions.spec';
@@ -537,6 +538,57 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify Drop Down values
             expect(GridFunctions.getExcelFilteringDDInput(fix, 0).value).toEqual('Equals');
             expect(GridFunctions.getExcelFilteringDDInput(fix, 1).value).toEqual('Less Than');
+        });
+
+        it('Should preselect custom string condition when opening the custom filter dialog.', async () => {
+            await GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            await fix.whenStable();
+
+            expect(GridFunctions.getExcelFilteringDDInput(fix, 0).value).toEqual('custom');
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('');
+        });
+
+        it('Should preselect custom number condition when opening the custom filter dialog.', async () => {
+            grid.getColumnByName('Downloads').filters = fix.componentInstance.customFilter;
+            fix.detectChanges();
+
+            await GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            await fix.whenStable();
+
+            expect(GridFunctions.getExcelFilteringDDInput(fix, 0).value).toEqual('custom');
+            expect(GridFunctions.getExcelFilteringInput(fix, 0).value).toEqual('');
+        });
+
+        it('Should use the default condition when it is not defined in the column filters.', async () => {
+            await GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            await fix.whenStable();
+
+            const dialog = fix.debugElement.query(By.directive(IgxExcelStyleCustomDialogComponent))
+                .componentInstance as IgxExcelStyleCustomDialogComponent;
+            dialog.selectedOperator = 'contains';
+            dialog.onCustomDialogOpening();
+
+            const expression = dialog.expressionsList[0].expression;
+            expect(expression.condition).toBe(IgxStringFilteringOperand.instance().condition('contains'));
+            expect(expression.conditionName).toEqual('contains');
         });
 
         it('Should display friendly conditions\' names in custom filter dialog.', async () => {

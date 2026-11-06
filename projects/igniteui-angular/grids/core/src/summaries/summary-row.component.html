@@ -2,6 +2,7 @@
     @if (grid.summariesMargin) {
         <div
             class="igx-grid__summaries-patch"
+            [class.igx-grid__summaries-patch--grouped]="!!grid.groupingExpressions?.length"
             [style.min-width.px]="grid.summariesMargin"
             [style.flex-basis.px]="grid.summariesMargin"
             (pointerdown)="$event.preventDefault()"

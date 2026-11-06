@@ -7,7 +7,6 @@ import {
     ContentChild,
     EventEmitter,
     HostBinding,
-    HostListener,
     Injector,
     Input,
     OnDestroy,
@@ -15,6 +14,7 @@ import {
     Output,
     PipeTransform,
     Renderer2,
+    TemplateRef,
     ViewChild,
     ViewContainerRef,
     booleanAttribute,
@@ -33,7 +33,7 @@ import {
 } from '@angular/forms';
 import {
     IgxCalendarComponent, IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective,
-     IFormattingViews, IFormattingOptions
+     IFormattingViews, IFormattingOptions, IgxCalendarDayTemplateContext, IgxCalendarDayTemplateDirective
 } from 'igniteui-angular/calendar';
 import {
     IgxLabelDirective, IgxInputState, toInputState, IgxInputGroupComponent, IgxPrefixDirective, IgxInputDirective, IgxSuffixDirective,
@@ -65,7 +65,12 @@ import {
     DatePart,
     isDateInRanges,
     I18N_FORMATTER,
-    NgControlAdapter
+    NgControlAdapter,
+    IgxKeyBindingsService,
+    altKey,
+    arrowDown,
+    arrowUp,
+    spaceBar
 } from 'igniteui-angular/core';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -90,7 +95,8 @@ let NEXT_ID = 0;
 @Component({
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDatePickerComponent, multi: true },
-        { provide: NG_VALIDATORS, useExisting: IgxDatePickerComponent, multi: true }
+        { provide: NG_VALIDATORS, useExisting: IgxDatePickerComponent, multi: true },
+        IgxKeyBindingsService
     ],
     selector: 'igx-date-picker',
     templateUrl: 'date-picker.component.html',
@@ -117,6 +123,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
     private _i18nFormatter = inject(I18N_FORMATTER);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * Gets/Sets whether the inactive dates will be hidden.
@@ -437,6 +444,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     @ContentChild(IgxCalendarSubheaderTemplateDirective)
     private subheaderTemplate!: IgxCalendarSubheaderTemplateDirective;
 
+    @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
+    protected set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | undefined) {
+        this._dayTemplate = value ?? null;
+        if (this._calendar) this._calendar.dayTemplate = this._dayTemplate;
+    }
+
+    private _dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
+
     @ContentChild(IgxPickerActionsDirective)
     private pickerActions!: IgxPickerActionsDirective;
 
@@ -519,6 +534,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     constructor() {
         super();
         this.initLocale();
+
+        // The keys come from the inner input, so none are skipped. `open` checks disabled and readOnly.
+        this._keyBindings
+            .configure({ skip: [] })
+            .set([altKey, arrowDown], () => this.open())
+            .set([altKey, arrowUp], () => this.close())
+            .set(spaceBar, () => this.open());
     }
 
     /** @hidden @internal */
@@ -533,27 +555,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     protected override get toggleContainer(): HTMLElement | undefined {
         return this._calendarContainer;
-    }
-
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public onKeyDown(event: KeyboardEvent) {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey) {
-                    this.open();
-                }
-                break;
-            case this.platform.KEYMAP.SPACE:
-                event.preventDefault();
-                this.open();
-                break;
-        }
     }
 
     /**
@@ -585,6 +586,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, this.viewContainerRef, overlaySettings);
         this._overlayService.show(this._overlayId);
+        if (!this.collapsed) {
+            // do not leave a focused input in edit mode during the opening animation
+            this._calendar?.wrapper?.nativeElement?.focus();
+        }
     }
 
     /**
@@ -809,6 +814,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
+    /** @hidden @internal */
+    public onToggleClick(event: MouseEvent): void {
+        // do not focus input on click
+        event.stopPropagation();
+        this.toggle();
+    }
+
     private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
@@ -897,8 +909,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.opened.emit({ owner: this });
-
-            this._calendar.wrapper?.nativeElement?.focus();
         });
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayEventArgs | OverlayCancelableEventArgs) => {
@@ -957,6 +967,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.dayTemplate = this._dayTemplate;
         this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.hideOutsideDays = this.hideOutsideDays;
         this._calendar.monthsViewNumber = this.displayMonthsCount;

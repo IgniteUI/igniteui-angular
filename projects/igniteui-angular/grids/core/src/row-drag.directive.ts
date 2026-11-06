@@ -48,6 +48,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     public override onPointerMove(event: PointerEvent) {
         super.onPointerMove(event);
+        if (!this._clicked) {
+            // The drag ended or was cancelled, e.g. in a ghostCreate or dragMove handler.
+            return;
+        }
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
@@ -70,6 +74,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 this._pointerDownId = null;
                 this._pointerCaptureTarget = null;
+                // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started.
+                this.unsubscribeFromEscape();
                 return;
             }
             this.row.grid.dragRowID = this.row.key;
@@ -129,7 +135,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.zone.run(() => {
                 this.row.grid.rowDragEnd.emit(args);
             });
-            this.endDragging();
+            // The base cancel already removed the ghost, or a dragEnd handler animates it back and its transitionend removes it.
+            this.resetRowDragging();
         }
         return cancelled;
     }
@@ -183,6 +190,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private endDragging() {
         this.onTransitionEnd(null);
+        this.resetRowDragging();
+    }
+
+    private resetRowDragging() {
         this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
         this.row.grid.cdr.detectChanges();

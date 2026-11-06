@@ -334,6 +334,34 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         });
 
+        it('Should not continue column moving when cancelled in a ghostCreate handler with a return animation.', async () => {
+            const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
+                .injector.get(IgxColumnMovingDragDirective);
+            const ghostCreateSub = dragDir.ghostCreate.subscribe(() => {
+                ghostCreateSub.unsubscribe();
+                dragDir.cancelDrag();
+            });
+            const dragEndSub = dragDir.dragEnd.subscribe(() => {
+                dragEndSub.unsubscribe();
+                dragDir.transitionToOrigin({ duration: 0.1 });
+            });
+            const columnMovingSpy = vi.spyOn(grid.columnMoving, 'emit');
+
+            UIInteractions.simulatePointerEvent('pointerdown', dragDir.element.nativeElement, 130, 65);
+            await wait();
+            dragDir.onPointerMove(UIInteractions.createPointerEvent('pointermove', { x: 140, y: 75 } as any));
+            fixture.detectChanges();
+
+            expect(grid.columnInDrag).toBeFalsy();
+            expect(columnMovingSpy).not.toHaveBeenCalled();
+
+            await wait(300);
+            fixture.detectChanges();
+            expect(grid.columnInDrag).toBeFalsy();
+            expect(dragDir.ghostElement).toBeFalsy();
+            expect(dragDir.animInProgress).toBe(false);
+        });
+
         it('Should not throw when the column move is cancelled in a ghostCreate handler.', async () => {
             const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
                 .injector.get(IgxColumnMovingDragDirective);
@@ -405,6 +433,126 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             UIInteractions.simulatePointerEvent('pointerup', header, 270, 71);
             await wait();
+            fixture.detectChanges();
+
+            const columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        });
+
+        it('Should reorder columns after a column move is cancelled with ESCAPE outside the headers.', async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const header = headers[0].nativeElement;
+
+            // step 1 - start moving a column and hit ESCAPE over the cells area
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 380, 350);
+            await wait();
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape', bubbles: true }));
+            fixture.detectChanges();
+            UIInteractions.simulatePointerEvent('pointerup', header, 380, 350);
+            await wait();
+            fixture.detectChanges();
+
+            expect(grid.columnInDrag).toBeFalsy();
+            let columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+
+            // step 2 - move the column again and verify it is reordered
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            // Pointer moves are throttled to one per animation frame.
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait(50);
+            fixture.detectChanges();
+
+            columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('Name');
+            expect(columnsList[1].field).toEqual('ID');
+            expect(columnsList[2].field).toEqual('LastName');
+        });
+
+        it('Should not reorder columns when ESCAPE is hit before the pointer moves past the drag tolerance.', async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const header = headers[0].nativeElement;
+
+            // step 1 - move the pointer less than the drag tolerance and hit ESCAPE
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 151, 65);
+            await wait();
+            fixture.detectChanges();
+            expect(grid.columnInDrag).toBeTruthy();
+
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape', bubbles: true }));
+            // Pointer moves are throttled to one per animation frame.
+            await wait(50);
+            fixture.detectChanges();
+            expect(grid.columnInDrag).toBeFalsy();
+
+            // step 2 - continue the same gesture and verify the column is not dragged or reordered
+            const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
+                .injector.get(IgxColumnMovingDragDirective);
+            expect(dragDir.element.nativeElement).toBe(header);
+            UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait(50);
+            fixture.detectChanges();
+            expect(dragDir.ghostElement).toBeFalsy();
+            expect(grid.columnInDrag).toBeFalsy();
+
+            UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait(50);
+            fixture.detectChanges();
+
+            const columnsList = grid.columns;
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        });
+
+        it('Should not reorder columns when columnMoving is canceled before the pointer moves past the drag tolerance.', async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+            const header = headers[0].nativeElement;
+            // Cancel only the first columnMoving notification.
+            const columnMovingSub = grid.columnMoving.subscribe((e) => {
+                columnMovingSub.unsubscribe();
+                e.cancel = true;
+            });
+
+            // step 1 - move the pointer less than the drag tolerance
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 151, 65);
+            // Pointer moves are throttled to one per animation frame.
+            await wait(50);
+            fixture.detectChanges();
+            expect(columnMovingSub.closed).toBe(true);
+            expect(grid.columnInDrag).toBeFalsy();
+
+            // step 2 - continue the same gesture and verify the column is not dragged or reordered
+            const dragDir = fixture.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[0]
+                .injector.get(IgxColumnMovingDragDirective);
+            expect(dragDir.element.nativeElement).toBe(header);
+            UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait(50);
+            fixture.detectChanges();
+            expect(dragDir.ghostElement).toBeFalsy();
+            expect(grid.columnInDrag).toBeFalsy();
+
+            UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait(50);
             fixture.detectChanges();
 
             const columnsList = grid.columns;

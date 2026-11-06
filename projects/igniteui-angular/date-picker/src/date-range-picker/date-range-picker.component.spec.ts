@@ -13,7 +13,7 @@ import { CancelableEventArgs, WEEKDAYS, DateRangePickerResourceStringsEN, change
 import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
-import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
+import { IgxDateRangePickerComponent, IgxDateRangeEndComponent, IGX_DATE_RANGE_PICKER_DIRECTIVES } from './public_api';
 import { AutoPositionStrategy, IgxOverlayService } from 'igniteui-angular/core';
 import { map, Subject, timer } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
@@ -24,7 +24,6 @@ import { registerLocaleData } from "@angular/common";
 import localeJa from "@angular/common/locales/ja";
 import localeBg from "@angular/common/locales/bg";
 import { CalendarDay } from 'igniteui-angular/core';
-import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 
 // The number of milliseconds in one day
@@ -789,8 +788,8 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.isFocused).toBe(false);
 
-                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    const input = singleInputElement.nativeElement;
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -802,7 +801,7 @@ describe('IgxDateRangePicker', () => {
                     expect(calendarWrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
                     expect(dateRange.isFocused).toBe(true);
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', range, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', input, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -839,6 +838,56 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.isFocused).toBe(true);
                 });
 
+                it('should prevent the default action of ALT + DOWN/UP ARROW key', async () => {
+                    const input = singleInputElement.nativeElement;
+                    const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                    input.dispatchEvent(altArrowDown);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown should not scroll the page').toBe(true);
+
+                    const altArrowUp = new KeyboardEvent('keydown', { key: 'ArrowUp', altKey: true, bubbles: true, cancelable: true });
+                    input.dispatchEvent(altArrowUp);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(altArrowUp.defaultPrevented, 'Alt+ArrowUp should not scroll the page').toBe(true);
+                });
+
+                it('should not open the calendar with ALT alone after ALT + DOWN ARROW was released outside the picker', async () => {
+                    const outlet = document.createElement('div');
+                    document.body.appendChild(outlet);
+                    dateRange.overlaySettings = { outlet: new ElementRef(outlet) };
+                    detectChanges();
+
+                    const input = singleInputElement.nativeElement;
+                    input.focus();
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    const calendarWrapper = outlet.querySelector('.igx-calendar__wrapper');
+                    expect(calendarWrapper.contains(document.activeElement), 'focus should move to the calendar, outside the picker').toBe(true);
+
+                    // The keys are released in the calendar, so the picker sees no keyup.
+                    calendarWrapper.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', altKey: true, bubbles: true }));
+                    dateRange.close();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+
+                    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Alt', altKey: true, bubbles: true }));
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed, 'Alt alone should not open the calendar').toBeTruthy();
+
+                    outlet.remove();
+                });
+
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', async () => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.disabled = true;
@@ -854,6 +903,22 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.collapsed).toBeTruthy();
                     expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
                     expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
+                });
+
+                it('should not open calendar with ALT + DOWN ARROW key if readOnly is set to true', async () => {
+                    dateRange.readOnly = true;
+                    detectChanges();
+
+                    vi.spyOn(dateRange.opening, 'emit');
+
+                    const altArrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true, cancelable: true });
+                    singleInputElement.nativeElement.dispatchEvent(altArrowDown);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
+                    expect(altArrowDown.defaultPrevented, 'Alt+ArrowDown should not scroll the page').toBe(true);
                 });
             });
 
@@ -1346,8 +1411,7 @@ describe('IgxDateRangePicker', () => {
                     startInput.nativeElement.focus();
                     // await fixture.whenStable();
 
-                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', startInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -1368,8 +1432,8 @@ describe('IgxDateRangePicker', () => {
                     expect(startInput.nativeElement.contains(document.activeElement), 'focus should return to the picker input').toBe(true);
                     expect(dateRange.isFocused).toBe(true);
 
-                    // reopen and close again
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    // reopen from the end input and close again
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', endInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -1394,8 +1458,7 @@ describe('IgxDateRangePicker', () => {
                     vi.spyOn(dateRange.closed, 'emit');
 
                     expect(dateRange.collapsed).toBeTruthy();
-                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', startInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
@@ -1459,7 +1522,7 @@ describe('IgxDateRangePicker', () => {
                     vi.spyOn(dateRange.opening, 'emit');
                     vi.spyOn(dateRange.opened, 'emit');
 
-                    // UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', startInput.nativeElement, true, true);
                     await vi.runAllTimersAsync();
                     detectChanges();
 
@@ -2282,6 +2345,28 @@ describe('IgxDateRangePicker', () => {
                         expect(headerElement.nativeElement.textContent.trim()).toBe('Test subheader');
                     }
                 });
+
+                it('Should use the custom template for day cells', async () => {
+                    const days = fixture.debugElement.queryAll(By.css('.igx-day-item:not(.igx-day-item--hidden)'));
+                    const customDays = fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                    expect(customDays.length).toBeGreaterThan(0);
+                    expect(customDays.length).toBe(days.length);
+                });
+
+                it('Should update the open calendar when the day template is removed or added', async () => {
+                    const customDays = () => fixture.debugElement.queryAll(By.css('.igx-day-item__inner .custom-day'));
+                    const host = fixture.componentInstance as DateRangeTemplatesComponent;
+
+                    host.showDayTemplate = false;
+                    detectChanges();
+                    await vi.runAllTimersAsync();
+                    expect(customDays().length).toBe(0);
+
+                    host.showDayTemplate = true;
+                    detectChanges();
+                    await vi.runAllTimersAsync();
+                    expect(customDays().length).toBeGreaterThan(0);
+                });
             });
 
             it('should render projected clear icons which clear the range on click', () => {
@@ -2649,6 +2734,9 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
         <ng-template igxCalendarHeader let-formatCalendar>Test header</ng-template>
         <ng-template igxCalendarHeaderTitle let-formatCalendar>Test header title</ng-template>
         <ng-template igxCalendarSubheader let-formatCalendar>Test subheader</ng-template>
+        @if (showDayTemplate) {
+            <ng-template igxCalendarDay let-date><span class="custom-day">{{ date.getDate() }}</span></ng-template>
+        }
     </igx-date-range-picker>
     <igx-date-range-picker #suffixSingleRange>
         <igx-picker-toggle igxSuffix>
@@ -2689,24 +2777,16 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     `,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        IgxDateRangePickerComponent,
-        IgxDateRangeStartComponent,
-        IgxDateRangeEndComponent,
-        IgxPickerToggleComponent,
-        IgxPickerClearComponent,
+        IGX_DATE_RANGE_PICKER_DIRECTIVES,
         IgxIconComponent,
         FormsModule,
         IgxInputDirective,
-        IgxDateTimeEditorDirective,
-        IgxPrefixDirective,
-        IgxSuffixDirective,
-        IgxCalendarHeaderTemplateDirective,
-        IgxCalendarHeaderTitleTemplateDirective,
-        IgxCalendarSubheaderTemplateDirective
+        IgxDateTimeEditorDirective
     ]
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {
     public range;
+    public showDayTemplate = true;
 }
 
 @Component({
