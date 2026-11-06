@@ -114,7 +114,9 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             }
 
             this.setActiveNode(newActiveNode);
-            if (!this.grid.hasHorizontalLayout && verticalContainer.isIndexOutsideView(newActiveNode.row)) {
+            if (this.grid.hasHorizontalLayout) {
+                this.grid.notifyChanges();
+            } else if (verticalContainer.isIndexOutsideView(newActiveNode.row)) {
                 verticalContainer.scrollTo(newActiveNode.row);
             }
         } else {
