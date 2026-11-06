@@ -14,7 +14,6 @@ import {
     Injector,
     PipeTransform,
     ChangeDetectorRef,
-    HostListener,
     booleanAttribute,
     inject,
     ChangeDetectionStrategy,
@@ -65,6 +64,7 @@ import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxToggleDirective } from 'igniteui-angular/directives';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from 'igniteui-angular/core';
 import { IBaseEventArgs, isEqual, isDate, PlatformUtil, IBaseCancelableBrowserEventArgs, NgControlAdapter } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, altKey, arrowDown, arrowUp, escapeKey, spaceBar } from 'igniteui-angular/core';
 
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
@@ -93,7 +93,8 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             provide: NG_VALIDATORS,
             useExisting: IgxTimePickerComponent,
             multi: true
-        }
+        },
+        IgxKeyBindingsService
     ],
     selector: 'igx-time-picker',
     styleUrl: 'time-picker.component.css',
@@ -132,6 +133,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private platform = inject(PlatformUtil);
     private cdr = inject(ChangeDetectorRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * Sets the value of the `id` attribute.
@@ -180,7 +182,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super.inputFormat = value;
         // the rendered lists depend on the format
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
     }
 
     public override get inputFormat(): string {
@@ -215,7 +217,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const date = this.parseToDate(value);
         this._dateMinValue = DateTimeUtil.isValidDate(date) ? this.toTodayTime(date) : null!;
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
         this._onValidatorChange();
     }
 
@@ -251,7 +253,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const date = this.parseToDate(value);
         this._dateMaxValue = DateTimeUtil.isValidDate(date) ? this.toTodayTime(date) : null!;
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
         this._onValidatorChange();
     }
 
@@ -470,6 +472,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _dateMinValue!: Date;
     private _dateMaxValue!: Date;
     private _selectedDate!: Date;
+    /** The time the selection was derived from, before rounding and clamping to the dropdown range */
+    private _selectionSource!: Date;
     private _resourceStrings: ITimePickerResourceStrings = null!;
     private _customResourceStrings: ITimePickerResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(TimePickerResourceStringsEN);
@@ -606,7 +610,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'>) {
         Object.assign(this._itemsDelta, value);
         this.updateDropdownRange();
-        this.setSelectedValue(this._selectedDate);
+        this.setSelectedValue(this._selectionSource);
     }
 
     public get itemsDelta(): Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds' | 'fractionalSeconds'> {
@@ -616,30 +620,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     constructor() {
         super();
         this.updateResources();
-    }
 
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public onKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey && this.isDropdown) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey && this.isDropdown) {
-                    this.open();
-                }
-                break;
-            case this.platform.KEYMAP.ESCAPE:
-                this.cancelButtonClick();
-                break;
-            case this.platform.KEYMAP.SPACE:
-                this.open();
-                event.preventDefault();
-                break;
-        }
+        // Alt + arrows only work in drop-down mode; in dialog mode they are skipped and
+        // keep their default action. Escape keeps its default, as before. `open` checks disabled and readOnly.
+        this._keyBindings
+            .configure({ skip: (_target, event) => event.altKey && !this.isDropdown })
+            .set([altKey, arrowDown], () => this.open())
+            .set([altKey, arrowUp], () => this.close())
+            .set(escapeKey, () => this.cancelButtonClick(), { preventDefault: false })
+            .set(spaceBar, () => this.open());
     }
 
     /** @hidden @internal */
@@ -989,7 +978,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public setSelectedValue(value: Date) {
-        this._selectedDate = value ? new Date(value) : null!;
+        // kept so a later range or itemsDelta change re-derives the selection instead of re-clamping it
+        this._selectedDate = this._selectionSource = value ? new Date(value) : null!;
         if (!DateTimeUtil.isValidDate(this._selectedDate)) {
             this._selectedDate = new Date(this.minDropdownValue);
             return;
@@ -1133,7 +1123,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private updateSelectedDate(date: Date, isAmPm = false): void {
-        this._selectedDate = new Date(this.validateDropdownValue(date, isAmPm));
+        this._selectedDate = this._selectionSource = new Date(this.validateDropdownValue(date, isAmPm));
         this.updateEditorValue();
     }
 

@@ -2322,6 +2322,69 @@ describe('IgxTabs', () => {
             expectNear(rectOf(tabs.headerContainer.nativeElement).height, 240);
         });
 
+        for (const [position, alignment] of [['top', 'start'], ['top', 'justify'], ['start', 'start']] as const) {
+            it(`should truncate a long header label within the bounds of the header (${position}, ${alignment})`, async () => {
+                await createTabs(component => {
+                    component.headerPosition.set(position);
+                    component.tabAlignment.set(alignment);
+                    component.items.set([
+                        { id: 1, label: `Long header ${'Supercalifragilisticexpialidocious'.repeat(4)} text` },
+                        { id: 2, label: 'Tab 2' }
+                    ]);
+                });
+                const header = headersOf(tabs)[0];
+                const label = header.querySelector<HTMLElement>('[igxTabHeaderLabel]');
+                const headerRect = rectOf(header);
+                const labelRect = rectOf(label);
+                const lineHeight = rectOf(headersOf(tabs)[1].querySelector('[igxTabHeaderLabel]')).height;
+
+                expect(headerRect.width).toBeLessThanOrEqual(360);
+                expect(labelRect.left).toBeGreaterThanOrEqual(headerRect.left);
+                expect(labelRect.right).toBeLessThanOrEqual(headerRect.right);
+                expect(labelRect.height).toBeLessThanOrEqual(lineHeight * 2 + 1);
+                expect(label.scrollHeight).toBeGreaterThan(label.clientHeight);
+            });
+        }
+
+        for (const label of [
+            'A long tab header label that does not fit on a single line of the header',
+            `Long header ${'Supercalifragilisticexpialidocious'.repeat(4)} text`
+        ]) {
+            it(`should not wrap the prefix and the suffix next to a long header label (${label.length} characters)`, async () => {
+                await createTabs(component => component.items.set([{ id: 1, label, prefix: 'Prefix', suffix: 'Suffix' }]));
+                const header = headersOf(tabs)[0];
+                const headerRect = rectOf(header);
+
+                for (const selector of ['[igxPrefix]', '[igxSuffix]']) {
+                    const range = document.createRange();
+                    range.selectNodeContents(header.querySelector(selector));
+                    expect(range.getClientRects().length, selector).toBe(1);
+                }
+                const labelRect = rectOf(header.querySelector('[igxTabHeaderLabel]'));
+                expect(labelRect.left).toBeGreaterThanOrEqual(headerRect.left);
+                expect(labelRect.right).toBeLessThanOrEqual(headerRect.right);
+            });
+        }
+
+        it('should keep a long prefix and suffix within the bounds of the header', async () => {
+            await createTabs(component => component.items.set([{
+                id: 1,
+                label: 'Tab 1',
+                prefix: `Pre${'f'.repeat(20)}ix`,
+                suffix: `Suf${'x'.repeat(40)}`
+            }]));
+            const header = headersOf(tabs)[0];
+            const headerRect = rectOf(header);
+
+            for (const selector of ['[igxPrefix]', '[igxTabHeaderLabel]', '[igxSuffix]']) {
+                const rect = rectOf(header.querySelector(selector));
+                expect(rect.left, selector).toBeGreaterThanOrEqual(headerRect.left);
+                expect(rect.right, selector).toBeLessThanOrEqual(headerRect.right);
+            }
+            const label = header.querySelector('[igxTabHeaderLabel]');
+            expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth);
+        });
+
         it('should place the theme specific selection indicators and borders on the content side of the headers', async () => {
             await createTabs(component => component.height.set('240px'));
             const wrapper = host.wrapperDiv.nativeElement;
