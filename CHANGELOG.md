@@ -90,6 +90,7 @@ All notable changes for each version of this project will be documented in this 
     - `Alt + Arrow Down` and `Alt + Arrow Up` no longer expand or collapse the panel when its header is disabled.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
 - `IgxGridComponent`
@@ -100,6 +101,8 @@ All notable changes for each version of this project will be documented in this 
     - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
     - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 - `IgxTreeGridComponent`
     - Setting `data` before the grid is initialized while `autoGenerate` is enabled no longer throws an error. In Ignite UI for Web Components this happened when `data` was set on `igc-tree-grid` before the element was attached to the page.
 - Ignite UI for Web Components grids
