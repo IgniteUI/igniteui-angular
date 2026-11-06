@@ -354,6 +354,25 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
         }));
+
+        it('should keep the selection and the focus when navigating with left/right/home/end and all tabs are disabled', fakeAsync(() => {
+            fixture = TestBed.createComponent(TabsDisabledTestComponent);
+            tabs = fixture.componentInstance.tabs;
+            tick(100);
+            fixture.detectChanges();
+            tabs.items.forEach(item => item.disabled = true);
+            fixture.detectChanges();
+            const header = tabs.items.get(1).headerComponent.nativeElement;
+            header.focus();
+
+            for (const event of [KEY_END_EVENT, KEY_HOME_EVENT, KEY_RIGHT_EVENT, KEY_LEFT_EVENT]) {
+                header.dispatchEvent(event);
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).withContext(event.key).toBe(1);
+                expect(document.activeElement).withContext(event.key).toBe(header);
+            }
+        }));
     });
 
     describe('IgxTabs Component with custom content in headers', () => {
