@@ -3,6 +3,13 @@
 All notable changes for each version of this project will be documented in this file.
 
 
+## 22.2.6
+
+### Bug Fixes
+
+- `IgxTabsComponent`
+    - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
+
 ## 22.2.5
 
 ### Bug Fixes
