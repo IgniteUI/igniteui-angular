@@ -54,6 +54,12 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
+    @HostBinding('class.igx-advanced-filtering-dialog')
+    public cssClass = true;
+
+    /**
+     * @hidden @internal
+     */
     public inline = true;
 
     /**

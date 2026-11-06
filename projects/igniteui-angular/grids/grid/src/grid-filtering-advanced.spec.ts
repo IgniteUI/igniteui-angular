@@ -106,6 +106,31 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
         });
 
+        it('Should apply the query builder background and border radius to the Advanced Filtering dialog.', async () => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const dialog = GridFunctions.getAdvancedFilteringComponent(fix);
+            const queryBuilder = dialog.querySelector('igx-query-builder');
+            const dialogStyles = getComputedStyle(dialog);
+
+            // The footer sits outside the query builder and shows the dialog's own background.
+            expect(dialogStyles.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+            expect(dialogStyles.backgroundColor).toBe(getComputedStyle(queryBuilder).backgroundColor);
+            expect(dialogStyles.borderTopLeftRadius).not.toBe('0px');
+        });
+
+        it('Should derive the Advanced Filtering dialog background from the grid background.', async () => {
+            grid.nativeElement.style.setProperty('--ig-grid-background', 'rgb(255, 0, 0)');
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const dialog = GridFunctions.getAdvancedFilteringComponent(fix);
+            expect(getComputedStyle(dialog).backgroundColor).toBe('rgb(255, 0, 0)');
+        });
+
         it('Should open/close Advanced Filtering dialog through API.', async () => {
             // Open dialog through API.
             grid.openAdvancedFilteringDialog();
