@@ -575,6 +575,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._hideGroupedColumns = value;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the grouping strategy of the grid.
      *
@@ -590,6 +591,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return this._groupStrategy;
     }
 
+    /* blazorCSSuppress */
     public set groupStrategy(value: IGridGroupingStrategy) {
         this._groupStrategy = value;
     }

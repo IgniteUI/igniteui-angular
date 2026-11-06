@@ -21,6 +21,7 @@ export class FilterUtil {
     }
 }
 
+/* blazorCSSuppress */
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridTypeBase): any[];
@@ -236,7 +237,7 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
     }
     private static _instance: NoopFilteringStrategy = null!;
 
-    public static instance() {
+    public static instance(): NoopFilteringStrategy {
         return this._instance || (this._instance = new NoopFilteringStrategy());
     }
 
@@ -246,6 +247,7 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
 }
 
 
+/* blazorCSSuppress */
 export class FilteringStrategy extends BaseFilteringStrategy {
     private static _instance: FilteringStrategy = null!;
 
