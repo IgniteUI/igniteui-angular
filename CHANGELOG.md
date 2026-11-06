@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 ### Bug Fixes
 
 - `IgxTabsComponent`
+    - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
     - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
 
 ## 22.2.5
@@ -16,6 +17,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxPivotGridComponent`
     - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
+- `IgxForOfDirective`
+    - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
 
 ## 22.2.4
 
