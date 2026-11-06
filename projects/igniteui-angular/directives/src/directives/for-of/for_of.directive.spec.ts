@@ -8,6 +8,7 @@ import { UIInteractions, frames, nextFrame, wait } from '../../../../test-utils/
 import { advance, useFakeClock } from '../../../../test-utils/helper-utils.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { PlatformUtil } from 'igniteui-angular/core';
 import { describe, it, expect, beforeAll, beforeEach, afterEach, vi } from 'vitest';
 
 /** Content resize throttle of igxFor (`throttleTime(40)` in for_of.directive.ts). */
@@ -1544,6 +1545,32 @@ describe('IgxForOf directive -', () => {
             await wait();
             const secondForOf = fix.componentInstance.secondForOfDir;
             expect(secondForOf.state.startIndex).toBe(0);
+        });
+    });
+
+    describe('server platform', () => {
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [HorizontalVirtualComponent],
+                providers: [{
+                    provide: PlatformUtil,
+                    useFactory: () => Object.assign(new PlatformUtil(), { isBrowser: false })
+                }]
+            }).compileComponents();
+        });
+
+        it('should render horizontally virtualized items without reading computed styles', () => {
+            // Computed styles are not available during server-side rendering
+            vi.spyOn(window, 'getComputedStyle').mockImplementation(() => {
+                throw new ReferenceError('window is not defined');
+            });
+            const fix = TestBed.createComponent(HorizontalVirtualComponent);
+            dg.generateData(300, 5, fix.componentInstance);
+            fix.detectChanges();
+
+            const rows = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER);
+            expect(rows.length).toBe(5);
+            expect(rows[1].children[1].textContent).toBe(fix.componentInstance.data[1]['1'].toString());
         });
     });
 });

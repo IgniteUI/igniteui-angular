@@ -22,6 +22,12 @@ All notable changes for each version of this project will be documented in this 
         ```html
         <igx-grid [data]="data" validationTooltipTrigger="hover"></igx-grid>
         ```
+- `IgxDragDirective`
+    - Added `cancelDrag()` method that cancels the drag in progress without dropping. The element returns to where it was before the drag, and a drop area under the dragged element receives only a `leave` event.
+    - Added `cancelOnEscape` input (default `false`). When set to `true`, pressing `Escape` while dragging cancels the drag.
+    - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
+- `IgxChipComponent`, `IgxChipsAreaComponent`
+    - For a canceled chip drag (e.g. with `chip.dragDirective.cancelDrag()`), `originalEvent.cancelled` of the `moveEnd` event is `true`.
 
 ### Themes
 
@@ -113,6 +119,9 @@ All notable changes for each version of this project will be documented in this 
     - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
     - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
     - Setting `animationDuration` from code now applies it to the vertical animations as well.
+- `IgxDragDirective`
+    - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
+    - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
 - `IgxFocusTrapDirective`, `IgxDialogComponent`
     - Tab and Shift+Tab no longer get stuck on elements that cannot receive focus. Hidden inputs, elements that are not rendered or are invisible, elements with a negative `tabindex`, and elements inside a disabled `fieldset` or an `inert` container are now skipped. The `summary` of a `details` element and `contenteditable` editing hosts are now focused.
     - When the focused element is not part of the tab order (e.g. an element with `tabindex="-1"` or a focused shadow host), Tab and Shift+Tab now move focus to the next or previous focusable element instead of the first or last one.
@@ -153,6 +162,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxForOfDirective`
     - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
+    - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - Pressing `Escape` while dragging a column header over the group-by area no longer groups by that column. A column move canceled with `Escape` or in a `columnMoving` handler also no longer prevents the next column move from being dropped.
 
 ## 22.2.6
 
