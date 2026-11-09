@@ -660,6 +660,7 @@ export interface TabsHeaderPositionItem {
     spacer?: number;
     prefix?: string;
     suffix?: string;
+    suffixIcon?: string;
 }
 
 @Component({
@@ -682,6 +683,9 @@ export interface TabsHeaderPositionItem {
                         }
                         @if (tab.suffix) {
                             <span igxSuffix>{{ tab.suffix }}</span>
+                        }
+                        @if (tab.suffixIcon) {
+                            <igx-icon igxSuffix>{{ tab.suffixIcon }}</igx-icon>
                         }
                     </igx-tab-header>
                     <igx-tab-content>
