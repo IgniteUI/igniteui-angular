@@ -9,6 +9,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxTabsComponent`
     - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
 
 ## 22.2.5
 
