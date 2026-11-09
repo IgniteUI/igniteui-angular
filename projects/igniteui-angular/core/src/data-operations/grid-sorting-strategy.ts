@@ -13,6 +13,7 @@ const TIME_TYPE = 'time';
 const DATE_TIME_TYPE = 'dateTime';
 const STRING_TYPE = 'string';
 
+/* blazorCSSuppress */
 /**
  * Represents a sorting strategy for the grid data
  * Contains a single method sort that sorts the provided data based on the given sorting expressions
@@ -28,6 +29,7 @@ export interface IGridSortingStrategy {
     sort(data: any[], expressions: ISortingExpression[], grid?: GridTypeBase): any[];
 }
 
+/* blazorCSSuppress */
 /**
  * Represents a grouping strategy for the grid data, extending the Sorting Strategy interface (contains a sorting method).
  */
