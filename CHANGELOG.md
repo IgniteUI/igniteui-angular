@@ -10,6 +10,7 @@ All notable changes for each version of this project will be documented in this 
     - Exporting a grid with summaries no longer adds an extra `GRID_LEVEL_COL` column with the nesting level of each record. Only the grid's columns are exported, as with the Excel and PDF exporters (#17908).
 - `IgxTabsComponent`
     - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
 - `IgxForOfDirective`
     - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
 
