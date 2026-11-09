@@ -1194,7 +1194,9 @@ export interface IgxRowSelectorTemplateDetails {
     index: number;
     key: any;
     selected: boolean;
+    /* blazorCSSuppress */
     select?: () => void;
+    /* blazorCSSuppress */
     deselect?: () => void;
 }
 
@@ -1216,7 +1218,9 @@ export interface IgxGroupByRowSelectorTemplateContext {
 export interface IgxHeadSelectorTemplateDetails {
     selectedCount: number;
     totalCount: number;
+    /* blazorCSSuppress */
     selectAll?: () => void;
+    /* blazorCSSuppress */
     deselectAll?: () => void;
 }
 export interface IgxHeadSelectorTemplateContext {
