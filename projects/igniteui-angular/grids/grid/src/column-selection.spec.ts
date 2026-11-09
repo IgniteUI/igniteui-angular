@@ -8,6 +8,7 @@ import { IColumnSelectionEventArgs } from 'igniteui-angular/grids/core';
 import { GridSelectionMode } from 'igniteui-angular/grids/core';
 import { IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
@@ -340,6 +341,20 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnHeaderHasSelectableClass(productNameHeader, false);
+        });
+
+        it('selected cells in a selected column keep their background when the row is hovered', async () => {
+            grid.selectRange({ rowStart: 0, rowEnd: 0, columnStart: 'ProductID', columnEnd: 'ProductID' });
+            colProductID.selected = true;
+            colProductName.selected = true;
+            fix.detectChanges();
+
+            const [cell, nextCell] = GridFunctions.getRowCells(fix, 0).map(c => c.nativeElement);
+            const background = getComputedStyle(cell).backgroundColor;
+
+            await userEvent.hover(nextCell);
+
+            expect(getComputedStyle(cell).backgroundColor).toEqual(background);
         });
     });
 
