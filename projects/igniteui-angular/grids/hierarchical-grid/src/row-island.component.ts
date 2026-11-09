@@ -16,7 +16,9 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    inject
+    inject,
+    SimpleChanges,
+    IterableDiffer
 } from '@angular/core';
 import {
     GridType,
@@ -64,6 +66,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /* blazorSuppress */
     public rowIslandAPI = inject(IgxRowIslandAPIService);
 
+    /**
+     * The row island this one is declared in. Resolved through the injector, since row islands
+     * rendered conditionally are initialized before their parent updates its children.
+     */
+    private declaringIsland = inject(IgxRowIslandComponent, { optional: true, skipSelf: true });
+
 
     /* blazorSuppress */
     /**
@@ -79,7 +87,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     @Input()
-    public key: string;
+    public key!: string;
 
     /* treatAsRef */
     /**
@@ -95,7 +103,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     public override get resourceStrings(): IGridResourceStrings {
-        return super.resourceStrings ?? this.rootGrid.resourceStrings;
+        return this._resourceStrings || !this.rootGrid ? super.resourceStrings : this.rootGrid.resourceStrings;
     }
 
     /**
@@ -117,10 +125,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public childColumns = new QueryList<IgxColumnComponent>();
 
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, descendants: false })
-    protected toolbarDirectiveTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+    protected toolbarDirectiveTemplate!: TemplateRef<IgxGridToolbarTemplateContext>;
 
     @ContentChild(IgxPaginatorDirective, { read: TemplateRef, descendants: false })
-    protected paginatorDirectiveTemplate: TemplateRef<any>;
+    protected paginatorDirectiveTemplate!: TemplateRef<any>;
 
     /* csSuppress */
     /**
@@ -153,7 +161,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     @Output()
-    public layoutChange = new EventEmitter<any>();
+    public layoutChange = new EventEmitter<SimpleChanges<IgxRowIslandComponent>>();
 
     /**
      * Event emitted when a grid is being created based on this row island.
@@ -189,15 +197,15 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public initialChanges = [];
+    public initialChanges: SimpleChanges<IgxRowIslandComponent>[] = [];
 
     /**
      * @hidden
      */
-    public rootGrid: GridType = null;
+    public rootGrid: GridType = null!;
 
     /** @hidden */
-    public readonly data: any[] | null;
+    public readonly data!: any[] | null;
 
     /** @hidden */
     public override get hiddenColumnsCount(): number {
@@ -211,7 +219,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     /** @hidden */
     public override get lastSearchInfo(): ISearchInfo {
-        return null;
+        return null!;
     }
 
     /** @hidden */
@@ -226,7 +234,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     /** @hidden */
     public override get virtualizationState(): IForOfState {
-        return null;
+        return null!;
     }
 
     /** @hidden */
@@ -263,9 +271,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public override tabindex = -1;
 
     /** @hidden @internal */
-    public override hostRole = null;
+    public override hostRole: string = null!;
 
-    protected override baseClass = null;
+    protected override baseClass: string = null!;
 
     /** @hidden @internal */
     public override get hostWidth(): any {
@@ -273,14 +281,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     protected override displayStyle = 'none';
-    protected override templateRows = null;
+    protected override templateRows: string = null!;
     //#endregion
 
-    private ri_columnListDiffer;
+    private ri_columnListDiffer: IterableDiffer<IgxColumnComponent> = null!;
     private layout_id = `igx-row-island-`;
     private isInit = false;
-    private _toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
-    private _paginatorTemplate: TemplateRef<IgxGridPaginatorTemplateContext>;
+    private _toolbarTemplate!: TemplateRef<IgxGridToolbarTemplateContext>;
+    private _paginatorTemplate!: TemplateRef<IgxGridPaginatorTemplateContext>;
 
     /**
      * Sets if all immediate children of the grids for this row island should be expanded/collapsed.
@@ -298,9 +306,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public set expandChildren(value: boolean) {
         this._defaultExpandState = value;
         this.rowIslandAPI.getChildGrids().forEach((grid) => {
+            grid.expandChildren = value;
             if (this.document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
-                grid.expandChildren = value;
                 grid.cdr.detectChanges();
             } else {
                 // Else defer the detection on changes when the grid gets into view for performance.
@@ -324,7 +332,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public get id() {
+    public get id(): string {
         const pId = this.parentId ? this.parentId.substring(this.parentId.indexOf(this.layout_id) + this.layout_id.length) + '-' : '';
         return this.layout_id + pId + this.key;
     }
@@ -332,7 +340,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public get parentId() {
+    public get parentId(): string | null {
         return this.parentIsland ? this.parentIsland.id : null;
     }
 
@@ -353,10 +361,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public override ngOnInit() {
+        // islands of a grid declared in a row island template resolve that row island too, but belong to another grid
+        if (this.declaringIsland?.gridAPI === this.gridAPI) {
+            this.parentIsland ??= this.declaringIsland;
+        }
         this.filteringService.grid = this as GridType;
         this.rootGrid = this.gridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
-        this.ri_columnListDiffer = this.differs.find([]).create(null);
+        this.ri_columnListDiffer = this.differs.find([]).create(null!);
     }
 
     /**
@@ -370,11 +382,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 this.updateChildren();
                 // update existing grids since their child ri have been changed.
                 this.rowIslandAPI.getChildGrids(false).forEach(grid => {
-                    (grid as any).onRowIslandChange(this.children);
+                    grid.onRowIslandChange();
                 });
             });
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
-        const colsArray = [].concat.apply([], nestedColumns);
+        const colsArray = ([] as IgxColumnComponent[]).concat.apply([], nestedColumns);
         const topCols = this.columnList.filter((item) => colsArray.indexOf(item) === -1);
         this._childColumns = topCols;
         this.updateColumns(this._childColumns);
@@ -405,7 +417,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         if (this.parentIsland) {
             this.parentIsland.rowIslandAPI.registerChildRowIsland(this);
         } else {
-            this.rootGrid.gridAPI.registerChildRowIsland(this);
+            this.rootGrid.gridAPI.registerChildRowIsland!(this);
         }
         this._init = false;
 
@@ -415,9 +427,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.toolbarTemplate, { $implicit: grid }, { injector: grid.toolbarOutlet.injector }));
             grid.rendered$.pipe(first(), filter(() => !!this.paginatorTemplate))
                 .subscribe(() => {
-                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe((changes: QueryList<IgxPaginatorComponent>) => {
+                    this.rootGrid.paginatorList!.changes.pipe(takeUntil(this.destroy$)).subscribe((changes: QueryList<IgxPaginatorComponent>) => {
                         changes.forEach(p => {
-                            if (p.nativeElement.offsetParent?.id === grid.id) {
+                            if (grid.footer?.nativeElement.contains(p.nativeElement)) {
                                 // Optimize update only for those grids that have related changed paginator.
                                 grid.setUpPaginator()
                             }
@@ -432,7 +444,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     /**
      * @hidden
      */
-    public ngOnChanges(changes) {
+    public override ngOnChanges(changes: SimpleChanges<IgxRowIslandComponent>) {
         this.layoutChange.emit(changes);
         if (!this.isInit) {
             this.initialChanges.push(changes);
@@ -449,13 +461,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._destroyed = true;
         this.rowIslandAPI.unset(this.id);
         if (this.parentIsland) {
-            this.getGridsForIsland(this.key).forEach(grid => {
+            // the grids rendering this row island are the ones created from its parent row island
+            this.parentIsland.rowIslandAPI.getChildGrids().forEach(grid => {
                 this.cleanGridState(grid);
-                grid.gridAPI.unsetChildRowIsland(this);
+                grid.gridAPI.unsetChildRowIsland!(this);
             });
             this.parentIsland.rowIslandAPI.unsetChildRowIsland(this);
         } else {
-            this.rootGrid.gridAPI.unsetChildRowIsland(this);
+            this.rootGrid.gridAPI.unsetChildRowIsland!(this);
             this.cleanGridState(this.rootGrid);
         }
     }
@@ -475,16 +488,16 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     public override calculateGridWidth() { }
 
-    protected _childColumns = [];
+    protected _childColumns: IgxColumnComponent[] = [];
 
     protected updateColumnList() {
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
-        const colsArray = [].concat.apply([], nestedColumns);
+        const colsArray = ([] as IgxColumnComponent[]).concat.apply([], nestedColumns);
         const topCols = this.columnList.filter((item) => {
             if (colsArray.indexOf(item) === -1) {
                 /* Reset the default width of the columns that come into this row island,
                 because the root catches them first during the detectChanges() and sets their defaultWidth. */
-                item.defaultWidth = undefined;
+                item.defaultWidth = undefined!;
                 return true;
             }
             return false;
@@ -492,7 +505,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._childColumns = topCols;
         this.updateColumns(this._childColumns);
         this.rowIslandAPI.getChildGrids().forEach((grid: GridType) => {
-            grid.createColumnsList(this._childColumns);
+            grid.createColumnsList!(this._childColumns);
             if (!this.document.body.contains(grid.nativeElement)) {
                 grid.updateOnRender = true;
             }
@@ -500,16 +513,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     protected updateChildren() {
-        if (this.children.first === this) {
-            this.children.reset(this.children.toArray().slice(1));
-        }
         this.children.forEach(child => {
             child.parentIsland = this;
         });
     }
 
-    private cleanGridState(grid) {
-        grid.childGridTemplates.forEach((tmpl) => {
+    private cleanGridState(grid: GridType) {
+        grid.childGridTemplates.forEach((tmpl: any) => {
             tmpl.owner.cleanView(tmpl.context.templateID);
         });
         grid.childGridTemplates.clear();

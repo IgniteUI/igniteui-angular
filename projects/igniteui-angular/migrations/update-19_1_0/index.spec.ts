@@ -24,76 +24,57 @@ describe(`Update to ${version}`, () => {
 
     themes.forEach(theme => {
         it('should remove the $elevations property from all component themes', async () => {
-            appTree.create(
-                testFilePath,
-                `$custom-${theme}: ${theme}($elevations: $my-elevations);`
-            );
+            appTree.create(testFilePath, `$custom-${theme}: ${theme}($elevations: $my-elevations);`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-            expect(tree.readContent(testFilePath)).toEqual(
-                `$custom-${theme}: ${theme}();`
-            );
+            expect(tree.readContent(testFilePath)).toEqual(`$custom-${theme}: ${theme}();`);
         });
     });
 
     it('should remove the $palette property from the color-classes mixin', async () => {
-            const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
+        const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
 
-            appTree.create(
-                testFilePath,
-                `@include color-classes(
+        appTree.create(testFilePath, `@include color-classes(
                     $palette: $some-palette,
                     $prop: 'color',
                     $prefix: 'bg'
-                );`
-            );
+                );`);
 
-            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+        const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-            expect(tree.readContent(testFilePath)).toEqual(
-                `@include color-classes(
+        expect(tree.readContent(testFilePath)).toEqual(`@include color-classes(
                     $prop: 'color',
                     $prefix: 'bg'
-                );`
-            );
+                );`);
     });
 
     it('should replace Query Builder deprecated property `fields` with `entities`', async () => {
-        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
-        `
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`, `
         <igx-query-builder [fields]="[{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]"></igx-query-builder>
-        `
-        );
+        `);
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(`
         <igx-query-builder [entities]="[{ name: '', fields: [{ field: 'ID', dataType: 'number' }, { field: 'Name', dataType: 'string' }]}]"></igx-query-builder>
-        `
-        );
+        `);
     });
 
     it('should remove Query Builder Header deprecated `showLegend` and `resourceStrings` properties', async () => {
-        appTree.create(`/testSrc/appPrefix/component/test.component.html`,
-        `
+        appTree.create(`/testSrc/appPrefix/component/test.component.html`, `
         <igx-query-builder-header [showLegend]="false" [resourceStrings]="resourceStrings"></igx-query-builder-header>
-        `
-        );
+        `);
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html')).toEqual(`
         <igx-query-builder-header></igx-query-builder-header>
-        `
-        );
+        `);
     });
 
     it('should remove igx_query_builder_title from resources ', async () => {
-        appTree.create(`/testSrc/appPrefix/component/test.component.ts`,
-        `
+        appTree.create(`/testSrc/appPrefix/component/test.component.ts`, `
         export class TestComponent {
             public resourceStrings = {
                 igx_query_builder_add_condition: '+ Add Condition',
@@ -103,20 +84,17 @@ describe(`Update to ${version}`, () => {
                 igx_query_builder_create_or_group: 'My create or group'
             };
         }
-        `
-        );
+        `);
 
         const tree = await schematicRunner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(
-        `
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts')).toEqual(`
         export class TestComponent {
             public resourceStrings = {
                 igx_query_builder_add_condition: '+ Add Condition',
                 igx_query_builder_add_group: '+ Add Group'
             };
         }
-        `
-        );
+        `);
     });
 });

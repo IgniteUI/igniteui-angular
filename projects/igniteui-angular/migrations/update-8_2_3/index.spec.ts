@@ -12,22 +12,17 @@ describe('Update 8.2.3', () => {
     });
 
     it('should update igx-carousel-theme prop', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.scss',
-            `$my-carousel-theme: igx-carousel-theme(
+        appTree.create('/testSrc/appPrefix/component/test.component.scss', `$my-carousel-theme: igx-carousel-theme(
                 $button-background: black,
                 $disable-button-shadow: black,
                 $button-hover-background: white
-              );`
-        );
+              );`);
         const tree = await schematicRunner.runSchematic('migration-11', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
-        .toEqual(
-            `$my-carousel-theme: igx-carousel-theme(
+            .toEqual(`$my-carousel-theme: igx-carousel-theme(
                 $button-background: black,
                 $button-shadow: black,
                 $button-hover-background: white
-              );`
-        );
+              );`);
     });
 });

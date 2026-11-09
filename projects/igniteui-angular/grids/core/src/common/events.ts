@@ -95,6 +95,7 @@ export interface IGridEditDoneEventArgs extends IBaseEventArgs {
      * Indicates if the editing consists of adding a new row
      */
     isAddRow?: boolean;
+    /* blazorSuppress */
     /**
      * Optional
      * Indicates if the new value would be valid.
@@ -278,6 +279,7 @@ export interface ISearchInfo extends IBaseSearchInfo {
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     /** `grid` represents a reference to the instance of the grid te event originated from */
     grid: GridType;
+    /* blazorCSSuppress */
     /**
      * The `exporter` is a base service.
      * The type (an abstract class base exporter) has it's own properties and methods

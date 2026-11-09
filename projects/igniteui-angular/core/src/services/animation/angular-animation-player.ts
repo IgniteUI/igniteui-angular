@@ -5,6 +5,9 @@ import { AnimationPlayer } from './animation';
 
 export class IgxAngularAnimationPlayer implements AnimationPlayer {
     private _innerPlayer: AngularAnimationPlayer;
+    private _isNoop: boolean;
+    /** Whether `animationEnd` was already emitted for the current playback. */
+    private _doneEmitted = false;
     public animationStart: EventEmitter<IBaseEventArgs> = new EventEmitter<IBaseEventArgs>();
     public animationEnd: EventEmitter<IBaseEventArgs> = new EventEmitter<IBaseEventArgs>();
 
@@ -16,16 +19,24 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
         this.internalPlayer.setPosition(value);
     }
 
-    constructor(private internalPlayer: AngularAnimationPlayer) {
+    constructor(private internalPlayer: AngularAnimationPlayer, isNoop = false) {
         this.internalPlayer.onDone(() => this.onDone());
         const innerRenderer = (this.internalPlayer as any)._renderer;
         //  We need inner player as Angular.AnimationPlayer.getPosition returns always 0.
         // To workaround this we are getting the positions from the inner player.
         //  This is logged in Angular here - https://github.com/angular/angular/issues/18891
         //  As soon as this is resolved we can remove this hack
-        const rendererEngine = innerRenderer.engine || innerRenderer.delegate.engine;
-        // A workaround because of Angular SSR is using some delegation.
-        this._innerPlayer = rendererEngine.players[rendererEngine.players.length - 1];
+        if (innerRenderer) {
+            const rendererEngine = innerRenderer.engine || innerRenderer.delegate.engine;
+            // A workaround because of Angular SSR is using some delegation.
+            this._innerPlayer = rendererEngine.players[rendererEngine.players.length - 1];
+        } else {
+            // No _renderer means a plain NoopAnimationPlayer (e.g. mocked AnimationBuilder in tests).
+            this._innerPlayer = internalPlayer;
+        }
+        // _isNoop is set by the service using ANIMATION_MODULE_TYPE so it is correct
+        // even when RendererAnimationPlayer is used (which always has _renderer).
+        this._isNoop = isNoop || !innerRenderer;
     }
 
     public init(): void {
@@ -33,8 +44,13 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     }
 
     public play(): void {
+        this._doneEmitted = false;
         this.animationStart.emit({ owner: this });
         this.internalPlayer.play();
+
+        if (this._isNoop) {
+            this.internalPlayer.finish();
+        }
     }
 
     public finish(): void {
@@ -57,6 +73,13 @@ export class IgxAngularAnimationPlayer implements AnimationPlayer {
     }
 
     private onDone(): void {
+        // A no-op player completes twice per playback: synchronously through `finish()` in `play()` and
+        // through the completion it queued itself. A `reset()` from an `animationEnd` handler re-arms the
+        // inner player's done callbacks, so the queued completion would emit again. Emit once per `play()`.
+        if (this._doneEmitted) {
+            return;
+        }
+        this._doneEmitted = true;
         this.animationEnd.emit({ owner: this });
     }
 }

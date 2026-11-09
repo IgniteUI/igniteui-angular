@@ -19,22 +19,22 @@ export class IgxThumbLabelComponent {
     public value: any;
 
     @Input()
-    public templateRef: TemplateRef<any>;
+    public templateRef!: TemplateRef<any>;
 
     @Input()
     public context: any;
 
     @Input()
-    public type: SliderHandle;
+    public type!: SliderHandle;
 
     @Input({ transform: booleanAttribute })
-    public continuous: boolean;
+    public continuous!: boolean;
 
     @Input({ transform: booleanAttribute })
-    public deactiveState: boolean;
+    public deactiveState!: boolean;
 
     @Input()
-    public thumb: IgxSliderThumbComponent;
+    public thumb!: IgxSliderThumbComponent;
 
 
     @HostBinding('class.igx-slider-thumb-label-from')
@@ -74,7 +74,7 @@ export class IgxThumbLabelComponent {
         };
     }
 
-    private _active: boolean;
+    private _active!: boolean;
 
     public get nativeElement() {
         return this._elementRef.nativeElement;

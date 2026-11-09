@@ -131,6 +131,15 @@ const record = {
 this.treegrid1.addRow(record, 1); // Adds a new child row to the row with ID=1.
 ```
 
+- When `rowEditable` is enabled, the add row UI can be spawned for an end-user to fill in. The `beginAddRowByIndex` method spawns it at the specified index of the data view, or, when its second parameter `asChild` is `true`, for a child of the row at the specified index. The `beginAddRowById` method spawns it under the row with the specified primary key, or for a child of that row.
+
+```typescript
+this.treegrid1.beginAddRowByIndex(0);           // spawns the add row UI as the first record
+this.treegrid1.beginAddRowByIndex(10);          // spawns the add row UI at index 10
+this.treegrid1.beginAddRowByIndex(10, true);    // spawns the add row UI to add a child for the row at index 10
+this.treegrid1.beginAddRowById(1, true);        // spawns the add row UI to add a child for the row with ID=1
+```
+
 - Updating an existing row or cell is done the same way as it is in the `igx-grid`.
 
 ```typescript
@@ -155,9 +164,32 @@ this.treegrid1.deleteRow(rowForDel.key);
 
 **NOTE:** The `cascadeOnDelete` property is taken into account only if our tree grid is defined with **primary and foreign keys**. If **child collection** is used instead, then child records will always be deleted when their respective parent is deleted.
 
+### Load on demand
+
+The child rows can be loaded when their parent gets expanded for the first time through the `loadChildrenOnDemand` callback. Set `hasChildrenKey` to the name of the data property that indicates whether a row has children, so that the expand indicator is shown only for those rows. While the children of a row are loading, a loading indicator is displayed in place of its expand indicator. It can be customized with an `ng-template` marked with the `igxRowLoadingIndicator` directive or through the `rowLoadingIndicatorTemplate` input.
+
+```typescript
+import { IgxRowLoadingIndicatorTemplateDirective, IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
+
+public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+    this.dataService.getData(parentID, children => done(children));
+};
+```
+
+```html
+<igx-tree-grid [data]="data" primaryKey="ID" foreignKey="ParentID"
+               [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees">
+    <igx-column field="Name" dataType="string"></igx-column>
+    <ng-template igxRowLoadingIndicator>
+        <igx-icon>loop</igx-icon>
+    </ng-template>
+</igx-tree-grid>
+```
+
 ### Known Limitations
 
 |Limitation|Description|
 |--- |--- |
 |Templating Tree Cells|When templating a tree cell, content that spans outside the boundaries of the cell will not be shown unless positioned in an overlay.|
 |Group By|Group By feature is not supported, because it is inherent to the tree grid.|
+|Multi-row layouts|Column layouts (`igx-column-layout`) are not supported. Column layouts and their child columns are ignored.|

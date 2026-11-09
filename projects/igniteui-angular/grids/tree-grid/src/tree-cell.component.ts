@@ -72,7 +72,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      * @hidden
      */
     @Input()
-    public isLoading: boolean;
+    public isLoading!: boolean;
 
     /**
      * Gets the row of the cell.

@@ -21,13 +21,12 @@ import {
     IgxColumnFormatterPipe,
     IgxFilteringService,
     IgxGridSelectionService,
-    ISelectionNode
+    IgxRowDirective
 } from 'igniteui-angular/grids/core';
-import { IgxGridRowComponent } from './grid-row.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBadgeComponent } from 'igniteui-angular/badge';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { GridColumnDataType, IGroupByRecord, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe } from 'igniteui-angular/core';
+import { GridColumnDataType, IGroupByRecord, IgxNumberFormatterPipe, IgxDateFormatterPipe, IgxCurrencyFormatterPipe, IgxPercentFormatterPipe, ISelectionNode } from 'igniteui-angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,13 +55,13 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden
      */
     @Input()
-    public hideGroupRowSelectors: boolean;
+    public hideGroupRowSelectors!: boolean;
 
     /**
      * @hidden
      */
     @Input()
-    public rowDraggable: boolean;
+    public rowDraggable!: boolean;
 
     /**
      * Sets the index of the row.
@@ -71,7 +70,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     @Input()
-    public index: number;
+    public index!: number;
 
     /**
      * Sets the id of the grid the row belongs to.
@@ -80,7 +79,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     @Input()
-    public gridID: string;
+    public gridID!: string;
 
     /**
      * The group record the component renders for.
@@ -89,7 +88,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     @Input()
-    public groupRow: IGroupByRecord;
+    public groupRow!: IGroupByRecord;
 
     /**
      * Returns a reference of the content of the group.
@@ -98,7 +97,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     @ViewChild('groupContent', { static: true })
-    public groupContent: ElementRef;
+    public groupContent!: ElementRef;
 
     /**
      * @hidden
@@ -110,13 +109,13 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden
      */
     @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
-    protected defaultGroupByExpandedTemplate: TemplateRef<any>;
+    protected defaultGroupByExpandedTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
-    protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
+    protected defaultGroupByCollapsedTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
@@ -145,7 +144,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
 
     /** @hidden @internal */
     public get currencyCode(): string {
-        return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.groupRow.column.pipeArgs.currencyCode);
+        return this.grid.i18nFormatter.getCurrencyCode(this.grid.locale, this.groupRow.column!.pipeArgs.currencyCode);
     }
 
     constructor() {
@@ -163,7 +162,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         this.grid.rowClick.emit({
-            row: this.grid.createRow(this.index),
+            row: this.grid.createRow!(this.index),
             event
         });
     }
@@ -241,22 +240,22 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public getRowID(rowData): IgxGridRowComponent {
+    public getRowID(rowData: any): IgxRowDirective {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
     /**
      * @hidden @internal
      */
-    public onGroupSelectorClick(event) {
+    public onGroupSelectorClick(event: MouseEvent) {
         if (!this.grid.isMultiRowSelectionEnabled) {
             return;
         }
         event.stopPropagation();
         if (this.areAllRowsInTheGroupSelected) {
-            this.gridSelection.deselectRows(this.groupRow.records.map(x => this.getRowID(x)));
+            this.gridSelection.deselectRows(this.groupRow.records.map(x => this.getRowID(x)), event);
         } else {
-            this.gridSelection.selectRows(this.groupRow.records.map(x => this.getRowID(x)));
+            this.gridSelection.selectRows(this.groupRow.records.map(x => this.getRowID(x)), false, event);
         }
     }
 
@@ -267,7 +266,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     public toggle() {
-        this.grid.toggleGroup(this.groupRow);
+        this.grid.toggleGroup!(this.groupRow);
     }
 
     public get iconTemplate() {
@@ -331,7 +330,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     public get groupByRowSelectorBaseAriaLabel(): string {
         const ariaLabel: string = this.areAllRowsInTheGroupSelected ?
-            this.grid.resourceStrings.igx_grid_groupByArea_deselect_message : this.grid.resourceStrings.igx_grid_groupByArea_select_message;
+            this.grid.resourceStrings.igx_grid_groupByArea_deselect_message! : this.grid.resourceStrings.igx_grid_groupByArea_select_message!;
         return ariaLabel.replace('{0}', this.groupRow.expression.fieldName).replace('{1}', this.groupRow.value);
     }
 

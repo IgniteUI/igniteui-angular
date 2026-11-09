@@ -1,5 +1,4 @@
-import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-base';
 
 /**
@@ -20,7 +19,7 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
-export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {
+export class IgxSlideComponent implements AfterContentChecked, IgxSlideComponentBase {
     private elementRef = inject(ElementRef);
 
     /**
@@ -33,7 +32,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public index: number;
+    @Input() public index!: number;
 
     /**
      * Gets/sets the target `direction` for the slide.
@@ -45,10 +44,10 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      *
      * @memberOf IgxSlideComponent
      */
-    @Input() public direction: CarouselAnimationDirection;
+    @Input() public direction: CarouselAnimationDirection = CarouselAnimationDirection.NONE;
 
     @Input()
-    public total: number;
+    public total!: number;
 
     /**
      * Returns the `tabIndex` of the slide component.
@@ -68,7 +67,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
      * @hidden
      */
     @HostBinding('attr.id')
-    public id: string;
+    public id!: string;
 
     /**
      * Returns the `role` of the slide component.
@@ -81,7 +80,7 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
 
     /** @hidden */
     @HostBinding('attr.aria-labelledby')
-    public ariaLabelledBy;
+    public ariaLabelledBy: any;
 
     /**
      * Returns the class of the slide component.
@@ -131,7 +130,6 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
     @Output() public activeChange = new EventEmitter<boolean>();
 
     private _active = false;
-    private _destroy$ = new Subject<boolean>();
 
     /**
      * Returns a reference to the carousel element in the DOM.
@@ -145,23 +143,8 @@ export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSli
         return this.elementRef.nativeElement;
     }
 
-    /**
-     * @hidden
-     */
-    public get isDestroyed(): Subject<boolean> {
-        return this._destroy$;
-    }
-
     public ngAfterContentChecked() {
         this.id = `panel-${this.index}`;
         this.ariaLabelledBy = `tab-${this.index}-${this.total}`;
-    }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this._destroy$.next(true);
-        this._destroy$.complete();
     }
 }

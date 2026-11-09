@@ -13,12 +13,13 @@ import {
     effect,
     signal,
     inject,
-    ElementRef
+    ElementRef,
+    Injector
 } from '@angular/core';
-import { ControlValueAccessor, NgControl, Validators } from '@angular/forms';
-import { fromEvent, noop, Subject, takeUntil } from 'rxjs';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { fromEvent, noop, Subject, Subscription, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
-import { isLeftToRight } from 'igniteui-angular/core';
+import { isLeftToRight, NgControlAdapter } from 'igniteui-angular/core';
 import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 /**
  * Determines the Radio Group alignment
@@ -61,6 +62,8 @@ let nextId = 0;
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
+    private control = NgControlAdapter.from(this.ngControl, inject(Injector));
+    private _statusChanges$?: Subscription;
     private cdr = inject(ChangeDetectorRef);
     private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -112,6 +115,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     public get name(): string {
         return this._name;
     }
+
     public set name(newValue: string) {
         if (this._name !== newValue) {
             this._name = newValue;
@@ -178,6 +182,11 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     }
 
     public set invalid(value: boolean) {
+        // Signal Forms writes the field's raw validity here; show it only once touched or dirty.
+        if (this.control?.backend === 'signal' && !this.control.touchedOrDirty) {
+            value = false;
+        }
+
         this._invalid = value;
         this._setRadioButtonsInvalid();
     }
@@ -338,6 +347,12 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @hidden
      * @internal
      */
+    private _onTouchedCallback: () => void = noop;
+
+    /**
+     * @hidden
+     * @internal
+     */
     private _name = `igx-radio-group-${nextId++}`;
 
     /**
@@ -363,6 +378,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private _required = false;
+    private _disabled = false;
 
     /**
      * @hidden
@@ -387,6 +403,9 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     private updateValidityOnBlur() {
+        // Mark touched first, so the Signal Forms gate in `invalid` lets the state through.
+        this._onTouchedCallback();
+
         this._radioButtons().forEach((button) => {
             button.focused = false;
 
@@ -468,11 +487,15 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
      * @internal
      */
     public registerOnTouched(fn: () => void) {
-        if (this._radioButtons) {
-            this._radioButtons().forEach((button) => {
-                button.registerOnTouched(fn);
-            });
-        }
+        // Invoked on child blur, as forms register it before the child radio buttons exist.
+        this._onTouchedCallback = fn;
+    }
+
+    /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean) {
+        this._disabled = isDisabled;
+        this._radioButtons().forEach((button) => button.groupDisabled = isDisabled);
+        this.cdr.markForCheck();
     }
 
     /**
@@ -504,22 +527,25 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         // the OnInit of the NgModel occurs after the OnInit of this class.
         this._isInitialized.set(true);
 
-        if (this.ngControl) {
-            this.ngControl.statusChanges
+        const control = this.control;
+
+        if (control) {
+            // Runs inside an effect, so subscribe once.
+            // Signal Forms also emit on touch, so re-evaluate rather than reset the state set on blur.
+            this._statusChanges$ ??= control.statusChanges
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => {
-                    this.invalid = false;
+                    this.invalid = !control.disabled && control.touchedOrDirty && control.invalid;
                 });
 
-            if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
-                this._required = this.ngControl?.control?.hasValidator(Validators.required);
+            if (control.hasValidators) {
+                this._required = control.required;
             }
 
-            this._radioButtons().forEach((button) => {
-                if (this.ngControl.disabled) {
-                    button.disabled = this.ngControl.disabled;
-                }
-            });
+            // Buttons registered after `setDisabledState` pick the state up here.
+            if (this._disabled) {
+                this._radioButtons().forEach((button) => button.groupDisabled = true);
+            }
         }
     }
 
@@ -539,8 +565,6 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
                 this._selected = button;
                 this.cdr.markForCheck();
             }
-
-            this._setRadioButtonEvents(button);
         });
     }
 
@@ -559,7 +583,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.updateValidityOnBlur());
 
-        fromEvent(button.nativeElement, 'keyup')
+        fromEvent<KeyboardEvent>(button.nativeElement, 'keyup')
             .pipe(takeUntil(this.destroy$))
             .subscribe((event: KeyboardEvent) => this.updateOnKeyUp(event));
     }
@@ -572,7 +596,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._radioButtons().forEach((button) => {
             button.checked = button.id === args.owner.id;
             if (button.checked && button.ngControl) {
-                this.invalid = button.ngControl.invalid;
+                this.invalid = button.ngControl.invalid!;
             } else if (button.checked) {
                 this.invalid = false;
             }
@@ -581,7 +605,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         this._selected = args.owner;
         this._value = args.value;
 
-        if (this._isInitialized) {
+        if (this._isInitialized()) {
             this.change.emit(args);
             this._onChangeCallback(this.value);
         }
@@ -679,7 +703,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _setRadioButtonsInvalid() {
         if (this._radioButtons) {
             this._radioButtons().forEach((button) => {
-                button.invalid = this._invalid;
+                button.groupInvalid = this._invalid;
             });
         }
     }

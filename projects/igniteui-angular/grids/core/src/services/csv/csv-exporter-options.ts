@@ -6,8 +6,8 @@ import { IgxExporterOptionsBase } from '../exporter-common/exporter-options-base
  */
 export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
 
-    private _valueDelimiter;
-    private _fileType;
+    private _valueDelimiter!: string;
+    private _fileType!: CsvFileTypes;
 
     constructor(fileName: string, fileType: CsvFileTypes) {
         super(fileName, IgxCsvExporterOptions.getExtensionFromFileType(fileType));
@@ -81,7 +81,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
         this.setFileType(value);
     }
 
-    private setFileType(value) {
+    private setFileType(value: CsvFileTypes) {
         if (value !== undefined && value !== null && value !== this._fileType) {
             this._fileType = value;
             const extension = IgxCsvExporterOptions.getExtensionFromFileType(value);
@@ -94,7 +94,7 @@ export class IgxCsvExporterOptions extends IgxExporterOptionsBase {
         }
     }
 
-    private setDelimiter(value?) {
+    private setDelimiter(value?: string) {
         if (value !== undefined && value !== '' && value !== null) {
             this._valueDelimiter = value;
         } else {

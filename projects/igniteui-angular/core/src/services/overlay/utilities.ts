@@ -10,6 +10,7 @@ import { IScrollStrategy } from './scroll';
  */
 const getIntersectionObserver = () => globalThis.window?.IntersectionObserver;
 
+/* blazorCSSuppress */
 /**
  * Mark an element as an igxOverlay outlet container.
  * Directive instance is exported as `overlay-outlet` to be assigned to templates variables:
@@ -122,10 +123,13 @@ export interface PositionSettings {
 }
 
 export interface OverlaySettings {
+    /* blazorCSSuppress */
     /** Attaching target for the component to show */
     target?: Point | HTMLElement;
+    /* blazorCSSuppress */
     /** Position strategy to use with these settings */
     positionStrategy?: IPositionStrategy;
+    /* blazorCSSuppress */
     /** Scroll strategy to use with these settings */
     scrollStrategy?: IScrollStrategy;
     /** Set if the overlay should be in modal mode */
@@ -294,7 +298,7 @@ export class Util {
         return new Point(horizontalScrollPosition, verticalScrollPosition);
     }
 
-    public static cloneInstance(object) {
+    public static cloneInstance(object: any) {
         const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
         clonedObj.settings = cloneValue(clonedObj.settings);
         return clonedObj;
@@ -367,8 +371,8 @@ export class Util {
         const viewPortRect = Util.getViewportRect(doc);
         const rootMargin = {
             top: -Math.abs(rect.top),
-            right: -Math.abs(viewPortRect.width - rect.right),
-            bottom: -Math.abs(viewPortRect.height - rect.bottom),
+            right: -Math.abs(viewPortRect.width! - rect.right),
+            bottom: -Math.abs(viewPortRect.height! - rect.bottom),
             left: -Math.abs(rect.left),
         };
         const options = {

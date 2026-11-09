@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { wait } from '../../../../test-utils/ui-interactions.spec';
@@ -8,21 +8,22 @@ import { IgxColumnComponent } from '../public_api';
 import { SampleTestData } from '../../../../test-utils/sample-test-data.spec';
 import { IgxActionStripComponent } from 'igniteui-angular/action-strip';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCETIME = 60;
 describe('igxGridPinningActions #grid ', () => {
     let fixture;
     let actionStrip: IgxActionStripComponent;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxActionStripTestingComponent,
                 IgxActionStripPinMenuComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base ', () => {
         beforeEach(() => {
@@ -82,14 +83,50 @@ describe('igxGridPinningActions #grid ', () => {
 
             const pinningActions = fixture.debugElement.query(By.directive(IgxGridPinningActionsComponent))
                 .componentInstance as IgxGridPinningActionsComponent;
-            spyOn<any>(grid, 'scrollTo');
+            vi.spyOn(grid as any, 'scrollTo').mockImplementation(() => {});
 
             pinningActions.scrollToRow(null);
             fixture.detectChanges();
 
             expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
-            expect(actionStrip.hidden).toBeFalse();
+            expect(actionStrip.hidden).toBe(false);
             expect(actionStrip.context).toBe(pinnedRow);
+        });
+
+        it('should not pin or unpin when the context is not a row', () => {
+            const pinningActions = actionStrip.actionButtons.first as IgxGridPinningActionsComponent;
+            vi.spyOn(grid, 'pinRow');
+            vi.spyOn(grid, 'unpinRow');
+
+            expect(actionStrip.context).toBeUndefined();
+            expect(pinningActions.pinned).toBeUndefined();
+            expect(pinningActions.inPinnedArea).toBeUndefined();
+            expect(pinningActions.pinnedTop).toBeUndefined();
+
+            pinningActions.pin();
+            pinningActions.unpin();
+            fixture.detectChanges();
+
+            expect(grid.pinRow).not.toHaveBeenCalled();
+            expect(grid.unpinRow).not.toHaveBeenCalled();
+            expect(grid.pinnedRows.length).toBe(0);
+        });
+
+        it('should prevent default and stop propagation of mousedown on action buttons', () => {
+            actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+
+            const pinningActionsElement: HTMLElement = fixture.nativeElement.querySelector('igx-grid-pinning-actions');
+            const pinButton: HTMLElement = pinningActionsElement.querySelector('button');
+            const parentListener = vi.fn();
+            pinningActionsElement.addEventListener('mousedown', parentListener);
+
+            const mouseDown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+            pinButton.dispatchEvent(mouseDown);
+
+            expect(mouseDown.defaultPrevented).toBe(true);
+            expect(parentListener).not.toHaveBeenCalled();
+            pinningActionsElement.removeEventListener('mousedown', parentListener);
         });
     });
 
@@ -112,6 +149,29 @@ describe('igxGridPinningActions #grid ', () => {
             // select pin
             actionStrip.menu.selectItem(pinMenuItem);
             fixture.detectChanges();
+            expect(grid.pinnedRows.length).toBe(1);
+        });
+
+        it('should scroll to the row and hide the action strip when jumping to it via menu', () => {
+            grid.pinRow('FAMIA');
+            fixture.detectChanges();
+
+            const pinnedRow = grid.pinnedRows[0];
+            actionStrip.show(pinnedRow);
+            fixture.detectChanges();
+
+            actionStrip.menu.open();
+            fixture.detectChanges();
+            expect(actionStrip.menu.items.length).toBe(2);
+            const jumpMenuItem = actionStrip.menu.items[0];
+            expect(jumpMenuItem.element.nativeElement.textContent).toContain(grid.resourceStrings.igx_grid_actions_jumpDown_label);
+
+            vi.spyOn(grid as any, 'scrollTo');
+            actionStrip.menu.selectItem(jumpMenuItem);
+            fixture.detectChanges();
+
+            expect((grid as any).scrollTo).toHaveBeenCalledWith(pinnedRow.data, 0);
+            expect(actionStrip.hidden).toBe(true);
             expect(grid.pinnedRows.length).toBe(1);
         });
     });
@@ -142,8 +202,8 @@ class IgxActionStripTestingComponent implements OnInit {
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
-    private data: any[];
-    private columns: any[];
+    public data: any[];
+    public columns: any[];
 
     public ngOnInit() {
 

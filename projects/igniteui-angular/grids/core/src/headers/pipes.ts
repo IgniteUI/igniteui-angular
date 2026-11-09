@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ColumnType, ISortingExpression } from 'igniteui-angular/core';
+import { ColumnType, GridStyleCSSProperty, ISortingExpression } from 'igniteui-angular/core';
 
 
 @Pipe({
@@ -9,7 +9,7 @@ import { ColumnType, ISortingExpression } from 'igniteui-angular/core';
 export class SortingIndexPipe implements PipeTransform {
     public transform(columnField: string, sortingExpressions: ISortingExpression[]): number {
         let sortIndex = sortingExpressions.findIndex(expression => expression.fieldName === columnField);
-        return sortIndex !== -1 ? ++sortIndex : null;
+        return sortIndex !== -1 ? ++sortIndex : null!;
     }
 }
 
@@ -19,8 +19,8 @@ export class SortingIndexPipe implements PipeTransform {
 })
 export class IgxHeaderGroupStylePipe implements PipeTransform {
 
-    public transform(styles: { [prop: string]: any }, column: ColumnType, _: number): { [prop: string]: any } {
-        const css = {};
+    public transform(styles: GridStyleCSSProperty | null, column: ColumnType, _: number): GridStyleCSSProperty {
+        const css: GridStyleCSSProperty = {};
 
         if (!styles) {
             return css;

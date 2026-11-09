@@ -47,10 +47,10 @@ handler when selection is done.
 
 A multiple selection calendar with different locale and templating for the subheader.
 ```html
-<igx-calendar locale="ja-JP" selection="multi">
+<igx-calendar #calendar locale="ja-JP" selection="multi">
         <ng-template igxCalendarSubheader let-format>
-                <span (click)="format.yearView()">{{ format.year.combined }}</span>
-                <span (click)="format.monthView()">{{ format.month.combined | titlecase }}</span>
+                <span (click)="calendar.activeView = 'decade'">{{ format.year.combined }}</span>
+                <span (click)="calendar.activeView = 'year'">{{ format.month.combined | titlecase }}</span>
         </ng-template>
 </igx-calendar>
 ```
@@ -154,7 +154,7 @@ The defaul values are listed below.
 - `formatViews: Object`
 
 Controls whether the date parts in the different calendar views should be formatted according to the provided
-`locale` and `formatOptions`.
+`locale` and `formatOptions`. Date parts that are not formatted are rendered as plain numbers; months use their `Date.getMonth()` value, from `0` (January) to `11` (December).
 
 The default values are listed below.
 ```typescript
@@ -166,6 +166,9 @@ Controls the number of month views displayed. Default is 1.
 
 - `hideOusideDays: boolean`
 Controls the visibility of the dates that do not belong to the current month.
+
+- `dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null`
+Sets a template for the content of the day cells. When not set, the template marked with the `igxCalendarDay` directive is used, if any. See [Day template](#day-template).
 
 
 ### Outputs
@@ -199,34 +202,47 @@ Just decorate a ng-template inside the calendar with `igxCalendarHeader` or `igx
 and use the context returned to customize the way the date is displayed.
 
 The template decorated with the `igxCalendarHeader` directive is rendered only when the calendar selection is set to `single`.
-The `igxCalendarSubheader` is available in all selection modes.
+The `igxCalendarSubheader` is available in all selection modes and receives the context of the current view date in the days, months and years views.
 
 Example:
 
 ```html
-<igx-calendar>
+<igx-calendar #calendar>
         <ng-template igxCalendarHeader let-parts>
-                ...
+                {{ parts.weekday.combined }} {{ parts.month.combined }} {{ parts.day.value }}
         </ng-template>
         <ng-template igxCalendarSubheader let-parts>
-        <!-- Let's change the default representation to YYYY-MM -->
-                <span class="date__el" (click)="parts.monthView()">
-                        {{ parts.month.combined }}
-                </span>
-                <span class="date__el" (click)="parts.yearView()">
-                        {{ parts.year.combined }}
-                </span>
+                @switch (calendar.activeView) {
+                        @case ('month') {
+                                <!-- Days view: show the view date as YYYY-MM and open the months view on click -->
+                                <span class="date__el" (click)="calendar.activeView = 'year'">
+                                        {{ parts.date | date: 'yyyy-MM' }}
+                                </span>
+                        }
+                        @case ('year') {
+                                <!-- Months view: show the year and open the years view on click -->
+                                <span class="date__el" (click)="calendar.activeView = 'decade'">
+                                        {{ parts.year.combined }}
+                                </span>
+                        }
+                        @case ('decade') {
+                                <!-- Years view: the context holds the view date, so the title can be built around it -->
+                                <span class="date__el">Years around {{ parts.year.value }}</span>
+                        }
+                }
         </ng-template>
 </igx-calendar>
 ```
+
+The subheader template replaces the default content of the subheader in every view, so use the calendar's
+`activeView` to render the content that fits the current view and to switch between views.
 #### Template context
 
 | Name      | Type     | Description                                                                  |
 | :-------- | :------: | :--------------------------------------------------------------------------- |
 | date      | Date     | The date object in the context of the template. See * below for details.     |
+| index     | number   | The index of the month view the subheader belongs to when `monthsViewNumber` is greater than `1`. |
 | full      | string   | The full date representation returned after applying the `formatOptions`.    |
-| monthView | Function | A function which when called puts the calendar in month view.                |
-| yearView  | Function | A function which when called puts the calendar in year view.                 |
 | era       | Object   | The era date component (if applicable) formatted to the supplied locale.     |
 | year      | Object   | The year date component (if applicable) formatted to the supplied locale.    |
 | month     | Object   | The month date component (if applicable) formatted to the supplied locale.   |
@@ -234,7 +250,7 @@ Example:
 | weekday   | Object   | The weekday date component (if applicable) formatted to the supplied locale. |
 
 \* In the `igxCalendarHeader` context this is either the current date or the current selection of the calendar.
-In the `igxCalendarSubheaderContext` this is the same as the `viewDate`
+In the `igxCalendarSubheader` context this is the same as the `viewDate` (offset by `index` months in a multi-view calendar).
 
 **NOTE:** All of the date components (year, month, etc.) are objects with the structure
 ```typescript
@@ -247,5 +263,66 @@ In the `igxCalendarSubheaderContext` this is the same as the `viewDate`
 where `value` is the locale string representation of the date component, `literal` is the locale string separator (if any),
 and `combined` is as the name suggests the combined output of the two.
 
-**NOTE 2:** Mind that both in Internet Explorer and Edge all of the date parts will be empty strings as both browsers don't
-implement the Intl API providing this functionality.
+#### Day template
+
+Decorate a `ng-template` inside the calendar with the `igxCalendarDay` directive to customize the content of the day cells,
+for example to show event indicators, availability or prices. The template can also be set through the `dayTemplate` input.
+Import `IgxCalendarDayTemplateDirective` (or `IGX_CALENDAR_DIRECTIVES`) together with the calendar, otherwise the
+`igxCalendarDay` attribute is ignored and the default day content is rendered.
+
+```typescript
+import { IgxCalendarComponent, IgxCalendarDayTemplateDirective } from 'igniteui-angular/calendar';
+
+@Component({
+    imports: [IgxCalendarComponent, IgxCalendarDayTemplateDirective],
+    ...
+})
+```
+
+```html
+<igx-calendar>
+        <ng-template igxCalendarDay let-date let-selected="selected" let-disabled="disabled">
+                <span class="day">
+                        {{ date.getDate() }}
+                        @if (hasEvents(date)) {
+                                <span class="day__dot"></span>
+                        }
+                </span>
+        </ng-template>
+</igx-calendar>
+```
+
+```scss
+.day__dot {
+        // `currentColor` follows the day cell foreground, so the dot stays visible on the selected background.
+        background: currentColor;
+}
+```
+
+The template replaces only the default day number. The day cell keeps the selection, the keyboard navigation,
+the ARIA attributes and the state styling (selected, range, current, special, disabled, etc.), so selecting a
+templated day works as before and the theme still draws its selected state. The template is not rendered for hidden days
+(see `hideOutsideDays`) and is used in every month view when `monthsViewNumber` is greater than `1`.
+The `igx-date-picker` and `igx-date-range-picker` pass a template marked with `igxCalendarDay` to their calendar.
+The directive is included in `IGX_DATE_PICKER_DIRECTIVES` and `IGX_DATE_RANGE_PICKER_DIRECTIVES`.
+
+**NOTE:** The day cell is announced through its own `aria-label`, and the text rendered by the template is announced as
+the cell description, so render readable text (e.g. "3 events") rather than symbols only. The template should not contain
+focusable or interactive elements, since a click anywhere in the cell selects the date.
+Use `currentColor` or the `selected` context property to keep the content readable on the selected background.
+
+| Name               | Type    | Description                                                                         |
+| :----------------- | :-----: | :---------------------------------------------------------------------------------- |
+| $implicit, date    | Date    | The date of the day cell.                                                           |
+| formattedDate      | string  | The default text of the day cell, formatted with `formatOptions` and `formatViews`. |
+| selected           | boolean | Whether the day is rendered as selected.                                            |
+| disabled           | boolean | Whether the day is disabled through `disabledDates`.                                |
+| special            | boolean | Whether the day is marked as special through `specialDates`.                        |
+| today              | boolean | Whether the day is the current date.                                                |
+| weekend            | boolean | Whether the day is a weekend day.                                                   |
+| currentMonth       | boolean | Whether the day belongs to the displayed month.                                     |
+| active             | boolean | Whether the day is the active (keyboard focused) day.                               |
+| firstInRange       | boolean | Whether the day is the first day of the selected or previewed range.                |
+| lastInRange        | boolean | Whether the day is the last day of the selected or previewed range.                 |
+| withinRange        | boolean | Whether the day is within the selected range. Always `false` unless `selection` is `range`. |
+| withinPreviewRange | boolean | Whether the day is within the previewed range while a range is being selected.      |

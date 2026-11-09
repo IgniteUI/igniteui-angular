@@ -49,7 +49,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
                     initialCall?: boolean,
                     target?: Point | HTMLElement): void {
         const targetElement = target;
-        const rects = super.calculateElementRectangles(contentElement, targetElement);
+        const rects = super.calculateElementRectangles(contentElement, targetElement!);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
         const selectFit: SelectFit = {
             verticalOffset: this.global_yOffset,
@@ -64,12 +64,12 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
         if (initialCall) {
             this.select.scrollContainer.scrollTop = 0;
             // Fill in the required selectFit object properties.
-            selectFit.viewPortRect = Util.getViewportRect(document);
+            selectFit.viewPortRect = Util.getViewportRect(document!);
             selectFit.itemElement = this.getInteractionItemElement();
             selectFit.itemRect = selectFit.itemElement.getBoundingClientRect();
 
             // Calculate input and selected item elements style related variables
-            selectFit.styles = this.calculateStyles(selectFit, targetElement);
+            selectFit.styles = this.calculateStyles(selectFit, targetElement!);
 
             selectFit.scrollAmount = this.calculateScrollAmount(selectFit);
             // Calculate how much to offset the overlay container.
@@ -78,7 +78,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
 
             super.updateViewPortFit(selectFit);
             // container does not fit in viewPort and is out on Top or Bottom
-            if (selectFit.fitVertical.back < 0 || selectFit.fitVertical.forward < 0) {
+            if (selectFit.fitVertical!.back < 0 || selectFit.fitVertical!.forward < 0) {
                 this.fitInViewport(contentElement, selectFit);
             }
             // Calculate scrollTop independently of the dropdown, as we cover all `igsSelect` specific positioning and
@@ -108,30 +108,30 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
      * @param selectFit selectFit to use for computation.
      */
     protected override fitInViewport(_contentElement: HTMLElement, selectFit: SelectFit) {
-        const footer = selectFit.scrollContainerRect.bottom - selectFit.contentElementRect.bottom;
-        const header = selectFit.scrollContainerRect.top - selectFit.contentElementRect.top;
-        const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;
-        const firstItemFitSize = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff - header;
+        const footer = selectFit.scrollContainerRect.bottom - selectFit.contentElementRect!.bottom!;
+        const header = selectFit.scrollContainerRect.top - selectFit.contentElementRect!.top!;
+        const lastItemFitSize = selectFit.targetRect!.bottom! + selectFit.styles!.itemTextToInputTextDiff! - footer;
+        const firstItemFitSize = selectFit.targetRect!.top! - selectFit.styles!.itemTextToInputTextDiff! - header;
         // out of viewPort on Top
-        if (selectFit.fitVertical.back < 0) {
+        if (selectFit.fitVertical!.back < 0) {
             const possibleScrollAmount = selectFit.scrollContainer.scrollHeight -
-                selectFit.scrollContainerRect.height - selectFit.scrollAmount;
-            if (possibleScrollAmount + selectFit.fitVertical.back > 0 && firstItemFitSize > selectFit.viewPortRect.top) {
-                selectFit.scrollAmount -= selectFit.fitVertical.back;
-                selectFit.verticalOffset -= selectFit.fitVertical.back;
-                this.global_yOffset = selectFit.verticalOffset;
+                selectFit.scrollContainerRect.height - selectFit.scrollAmount!;
+            if (possibleScrollAmount + selectFit.fitVertical!.back > 0 && firstItemFitSize > selectFit.viewPortRect!.top!) {
+                selectFit.scrollAmount! -= selectFit.fitVertical!.back;
+                selectFit.verticalOffset! -= selectFit.fitVertical!.back;
+                this.global_yOffset = selectFit.verticalOffset!;
             } else {
                 selectFit.verticalOffset = 0 ;
                 this.global_yOffset = 0;
             }
         // out of viewPort on Bottom
-        } else if (selectFit.fitVertical.forward < 0) {
-            if (selectFit.scrollAmount + selectFit.fitVertical.forward > 0 && lastItemFitSize < selectFit.viewPortRect.bottom) {
-                selectFit.scrollAmount += selectFit.fitVertical.forward;
-                selectFit.verticalOffset += selectFit.fitVertical.forward;
-                this.global_yOffset = selectFit.verticalOffset;
+        } else if (selectFit.fitVertical!.forward < 0) {
+            if (selectFit.scrollAmount! + selectFit.fitVertical!.forward > 0 && lastItemFitSize < selectFit.viewPortRect!.bottom!) {
+                selectFit.scrollAmount! += selectFit.fitVertical!.forward;
+                selectFit.verticalOffset! += selectFit.fitVertical!.forward;
+                this.global_yOffset = selectFit.verticalOffset!;
             } else {
-                selectFit.verticalOffset = -selectFit.contentElementRect.height + selectFit.targetRect.height;
+                selectFit.verticalOffset = -selectFit.contentElementRect!.height! + selectFit.targetRect!.height!;
                 this.global_yOffset = selectFit.verticalOffset;
             }
         }
@@ -145,9 +145,9 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
      * @param initialCall should be true if this is the initial call to the position method calling setStyles
      */
     protected setStyles(contentElement: HTMLElement, selectFit: SelectFit) {
-        super.setStyle(contentElement, selectFit.targetRect, selectFit.contentElementRect, selectFit);
-        contentElement.style.width = `${selectFit.styles.contentElementNewWidth}px`; // manage container based on paddings?
-        this.global_styles.contentElementNewWidth = selectFit.styles.contentElementNewWidth;
+        super.setStyle(contentElement, selectFit.targetRect!, selectFit.contentElementRect!, selectFit);
+        contentElement.style.width = `${selectFit.styles!.contentElementNewWidth}px`; // manage container based on paddings?
+        this.global_styles.contentElementNewWidth = selectFit.styles!.contentElementNewWidth;
     }
 
     /**
@@ -157,12 +157,12 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
         const itemElementRect = selectFit.itemRect;
         const scrollContainer = selectFit.scrollContainer;
         const scrollContainerRect = selectFit.scrollContainerRect;
-        const scrollDelta = scrollContainerRect.top - itemElementRect.top;
+        const scrollDelta = scrollContainerRect.top - itemElementRect!.top;
         let scrollPosition = scrollContainer.scrollTop - scrollDelta;
 
         const dropDownHeight = scrollContainer.clientHeight;
         scrollPosition -= dropDownHeight / 2;
-        scrollPosition += itemElementRect.height / 2;
+        scrollPosition += itemElementRect!.height / 2;
 
         return Math.round(Math.min(Math.max(0, scrollPosition), scrollContainer.scrollHeight - scrollContainerRect.height));
     }
@@ -176,14 +176,14 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
     private calculateStyles(selectFit: SelectFit, target: Point | HTMLElement): SelectStyles  {
         const styles: SelectStyles = {};
         const inputElementStyles = window.getComputedStyle(target as Element);
-        const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
+        const itemElementStyles = window.getComputedStyle(selectFit.itemElement!);
         const numericInputFontSize = parseFloat(inputElementStyles.fontSize);
         const numericInputPaddingTop = parseFloat(inputElementStyles.paddingTop);
         const numericInputPaddingBottom = parseFloat(inputElementStyles.paddingBottom);
         const numericItemFontSize = parseFloat(itemElementStyles.fontSize);
-        const inputTextToInputTop = ((selectFit.targetRect.bottom - numericInputPaddingBottom)
-            - (selectFit.targetRect.top + numericInputPaddingTop) - numericInputFontSize) / 2;
-        const itemTextToItemTop = (selectFit.itemRect.height - numericItemFontSize) / 2;
+        const inputTextToInputTop = ((selectFit.targetRect!.bottom! - numericInputPaddingBottom)
+            - (selectFit.targetRect!.top! + numericInputPaddingTop) - numericInputFontSize) / 2;
+        const itemTextToItemTop = (selectFit.itemRect!.height - numericItemFontSize) / 2;
         styles.itemTextToInputTextDiff = Math.round(itemTextToItemTop - inputTextToInputTop - numericInputPaddingTop);
 
         const numericLeftPadding = parseFloat(itemElementStyles.paddingLeft);
@@ -192,7 +192,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
         styles.itemTextPadding = numericLeftPadding;
         styles.itemTextIndent = numericTextIndent;
         // 24 is the input's toggle ddl icon width
-        styles.contentElementNewWidth = selectFit.targetRect.width + 24 + numericLeftPadding * 2;
+        styles.contentElementNewWidth = selectFit.targetRect!.width! + 24 + numericLeftPadding * 2;
 
         return styles;
     }
@@ -201,8 +201,8 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
      * Calculate how much to offset the overlay container for Y-axis.
      */
     private calculateYoffset(selectFit: SelectFit) {
-        selectFit.verticalOffset = -(selectFit.itemRect.top - selectFit.contentElementRect.top +
-            selectFit.styles.itemTextToInputTextDiff - selectFit.scrollAmount);
+        selectFit.verticalOffset = -(selectFit.itemRect!.top - selectFit.contentElementRect!.top! +
+            selectFit.styles!.itemTextToInputTextDiff! - selectFit.scrollAmount!);
         this.global_yOffset = selectFit.verticalOffset;
     }
 
@@ -210,7 +210,7 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
      * Calculate how much to offset the overlay container for X-axis.
      */
     private calculateXoffset(selectFit: SelectFit) {
-        selectFit.horizontalOffset = selectFit.styles.itemTextIndent - selectFit.styles.itemTextPadding;
+        selectFit.horizontalOffset = selectFit.styles!.itemTextIndent! - selectFit.styles!.itemTextPadding!;
         this.global_xOffset = selectFit.horizontalOffset;
     }
 }
@@ -219,8 +219,8 @@ export class IgxSelectOverlapPositionStrategy extends BaseFitPositionStrategy im
 interface SelectFit extends ConnectedFit {
     itemElement?: HTMLElement;
     scrollContainer: HTMLElement;
-    scrollContainerRect: ClientRect;
-    itemRect?: ClientRect;
+    scrollContainerRect: DOMRect;
+    itemRect?: DOMRect;
     styles?: SelectStyles;
     scrollAmount?: number;
 }

@@ -1,6 +1,9 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    /* TODO: interim override — remove once the demo app is migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "outDir": "../out-tsc/app",
     "types": ["node"],
     "allowSyntheticDefaultImports": true

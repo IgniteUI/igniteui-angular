@@ -1,7 +1,7 @@
 import { AfterContentInit, Component, Input, IterableDiffer, IterableDiffers, OnDestroy, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IBaseChipsAreaEventArgs, IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxSuffixDirective } from 'igniteui-angular/input-group';
@@ -38,7 +38,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     private _hideGroupedColumns = false;
-    private groupingDiffer: IterableDiffer<IGroupingExpression>;
+    private groupingDiffer!: IterableDiffer<IGroupingExpression>;
     private destroy$ = new Subject<any>();
 
     public ngAfterContentInit(): void {
@@ -86,7 +86,12 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
         }
     }
 
-    public handleMoveEnd() {
+    public handleMoveEnd(event?: IBaseChipsAreaEventArgs) {
+        if (this.isMoveCancelled(event)) {
+            // Restore the chips order changed while dragging.
+            this.chipExpressions = this.expressions;
+            return;
+        }
         this.expressions = this.chipExpressions;
     }
 
@@ -121,7 +126,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
         }
     }
 
-    private setColumnsVisibility(value) {
+    private setColumnsVisibility(value: boolean) {
         if (this.grid.columns.length > 0 && !this.grid.hasColumnLayouts) {
             this.expressions.forEach((expr) => {
                 const col = this.grid.getColumnByName(expr.fieldName);

@@ -50,6 +50,9 @@ public dataLoading(evt): void {
 What the combo exposes is a `virtualizationState` property that gives state of the combo - first index and the number of items that needs to be loaded.
 The service, should inform the combo for the total items that are on the server - using the `totalItemCount` property.
 
+Remote paging follows the same [request and total-count behavior as Combo](../combo/README.md#usage),
+including cancelling superseded requests and refreshing the list when only `totalItemCount` changes.
+
 ## Features
 
 ### Selection

@@ -20,7 +20,8 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
 export class IgxQueryBuilderHeaderComponent {
 
     private _destroyRef = inject(DestroyRef);
-    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _resourceStrings: IQueryBuilderResourceStrings = null!;
+    private _customResourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
@@ -39,7 +40,7 @@ export class IgxQueryBuilderHeaderComponent {
      * ```
      */
     @Input()
-    public title: string;
+    public title!: string;
 
     /**
      * Show/hide the legend.
@@ -61,19 +62,21 @@ export class IgxQueryBuilderHeaderComponent {
      */
     @Input()
     public set resourceStrings(value: IQueryBuilderResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     constructor() {
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 }

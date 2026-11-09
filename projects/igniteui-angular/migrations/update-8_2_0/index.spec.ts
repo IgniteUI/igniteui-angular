@@ -12,9 +12,7 @@ describe('Update 8.2.0', () => {
     });
 
     it('should update Excel Style Filtering template selectors', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+        appTree.create('/testSrc/appPrefix/component/custom.component.html', `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
                 <ng-template igxExcelStyleSortingTemplate><div class="esf-custom-sorting">Sorting Template</div></ng-template>
                 <ng-template igxExcelStyleHidingTemplate><div class="esf-custom-hiding">Hiding Template</div></ng-template>
                 <ng-template igxExcelStyleMovingTemplate><div class="esf-custom-moving">Moving Template</div></ng-template>
@@ -23,8 +21,7 @@ describe('Update 8.2.0', () => {
 
         const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-            `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+            .toEqual(`<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
                 <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
                 <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
                 <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
@@ -34,20 +31,15 @@ describe('Update 8.2.0', () => {
     });
 
     it('should update igxDrag input bindings', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<div igxDrag [renderGhost]="true" [ghostImageClass]="'casper'" [dragGhostHost]="host">Drag me</div>`);
+        appTree.create('/testSrc/appPrefix/component/custom.component.html', `<div igxDrag [renderGhost]="true" [ghostImageClass]="'casper'" [dragGhostHost]="host">Drag me</div>`);
         const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-            `<div igxDrag [ghost]="true" [ghostClass]="'casper'" [ghostHost]="host">Drag me</div>`);
+            .toEqual(`<div igxDrag [ghost]="true" [ghostClass]="'casper'" [ghostHost]="host">Drag me</div>`);
     });
 
     it('should update igxDrag and igxDrop outputs bindings', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/custom.component.html',
-            `<div igxDrag (onGhostCreate)="ghostCreateHandler($event)"
+        appTree.create('/testSrc/appPrefix/component/custom.component.html', `<div igxDrag (onGhostCreate)="ghostCreateHandler($event)"
                 (onGhostDestroy)="ghostDestroyHandler($event)"
                 (returnMoveEnd)="moveEndHandler($event)"
                 (dragClicked)="clickHandler($event)">
@@ -58,8 +50,7 @@ describe('Update 8.2.0', () => {
 
         const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
-            .toEqual(
-            `<div igxDrag (ghostCreate)="ghostCreateHandler($event)"
+            .toEqual(`<div igxDrag (ghostCreate)="ghostCreateHandler($event)"
                 (ghostDestroy)="ghostDestroyHandler($event)"
                 (transitioned)="moveEndHandler($event)"
                 (click)="clickHandler($event)">
@@ -70,9 +61,7 @@ describe('Update 8.2.0', () => {
     });
 
     it('should update igxDrag and igxDrop event argument interfaces', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { IgxDragDirective, IgxDropDirective, IgxDropEnterEventArgs,
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `import { IgxDragDirective, IgxDropDirective, IgxDropEnterEventArgs,
                 IgxDropLeaveEventArgs, IgxDropEventArgs } from 'igniteui-angular';
 
             export class DragDropSampleComponent {
@@ -82,10 +71,9 @@ describe('Update 8.2.0', () => {
             }`);
 
         const tree = await schematicRunner.runSchematic('migration-10', {}, appTree);
-            // V.S. 18th May 2021: No longer leave duplicate imports in post-migration file
+        // V.S. 18th May 2021: No longer leave duplicate imports in post-migration file
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
-            .toEqual(
-            `import { IgxDragDirective, IgxDropDirective, IDropBaseEventArgs,
+            .toEqual(`import { IgxDragDirective, IgxDropDirective, IDropBaseEventArgs,
                 IDropDroppedEventArgs } from 'igniteui-angular';
 
             export class DragDropSampleComponent {

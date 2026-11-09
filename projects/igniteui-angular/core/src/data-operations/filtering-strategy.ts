@@ -21,6 +21,7 @@ export class FilterUtil {
     }
 }
 
+/* blazorCSSuppress */
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
         grid?: GridTypeBase): any[];
@@ -40,7 +41,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
     // protected
     public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridTypeBase): boolean {
         if (expr.searchTree) {
-            const records = rec[expr.searchTree.entity];
+            const records = rec[expr.searchTree.entity!];
             const shouldMatchRecords = expr.conditionName === 'inQuery';
             if (!records) { // child grid is not yet created
                 return true;
@@ -48,8 +49,8 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
 
             for (let index = 0; index < records.length; index++) {
                 const record = records[index];
-                if ((shouldMatchRecords && this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity)) ||
-                    (!shouldMatchRecords && !this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity))) {
+                if ((shouldMatchRecords && this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity!)) ||
+                    (!shouldMatchRecords && !this.matchRecord(record, expr.searchTree, grid, expr.searchTree.entity!))) {
                     return true;
                 }
             }
@@ -61,6 +62,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
         if (expr.condition?.logic) {
             return expr.condition.logic(val, expr.searchVal, expr.ignoreCase);
         }
+        return undefined!;
     }
 
     // protected
@@ -86,7 +88,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
                         }
                     }
 
-                    return matchOperand;
+                    return matchOperand!;
                 }
 
                 return true;
@@ -96,8 +98,8 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
                 if (!entity) {
                     const column = grid && grid.getColumnByName(expression.fieldName);
                     dataType = column?.dataType;
-                } else if (grid.type === 'hierarchical') {
-                    const schema = grid.schema;
+                } else if (grid!.type === 'hierarchical') {
+                    const schema = grid!.schema;
                     const entityMatch = this.findEntityByName(schema, entity);
                     dataType = entityMatch?.fields.find(f => f.field === expression.fieldName)?.dataType;
                 }
@@ -139,7 +141,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy {
         for (let i = 0; i < data.length; ++i) {
             const record = data[i]
             const rawValue = resolveNestedPath(record, pathParts);
-            const formattedValue = applyFormatter ? column.formatter(rawValue, record) : rawValue;
+            const formattedValue = applyFormatter ? column.formatter!(rawValue, record) : rawValue;
             const { key, finalValue } = this.getFilterItemKeyValue(formattedValue, column);
             // Deduplicate by normalized key
             if (!seenFormattedFilterItems.has(key)) {
@@ -233,9 +235,9 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
     protected getFieldValue(rec: any, _fieldName: string) {
         return rec;
     }
-    private static _instance: NoopFilteringStrategy = null;
+    private static _instance: NoopFilteringStrategy = null!;
 
-    public static instance() {
+    public static instance(): NoopFilteringStrategy {
         return this._instance || (this._instance = new NoopFilteringStrategy());
     }
 
@@ -245,8 +247,9 @@ export class NoopFilteringStrategy extends BaseFilteringStrategy {
 }
 
 
+/* blazorCSSuppress */
 export class FilteringStrategy extends BaseFilteringStrategy {
-    private static _instance: FilteringStrategy = null;
+    private static _instance: FilteringStrategy = null!;
 
 
     public static instance() {

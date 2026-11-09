@@ -73,7 +73,7 @@ export const TooltipPositionSettings: PositionSettings = {
 
 export class TooltipPositionStrategy extends AutoPositionStrategy {
 
-    private _placement: Placement;
+    private _placement!: Placement;
 
     constructor(settings?: PositionSettings) {
         if (settings) {
@@ -112,7 +112,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
     public positionArrow(arrow: HTMLElement, arrowFit: ArrowFit): void {
         this.resetArrowPositionStyles(arrow);
 
-        const convert = (value: number) => {
+        const convert = (value: number | undefined) => {
             if (!value) {
                 return '';
             }
@@ -122,7 +122,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
         Object.assign(arrow.style, {
             top: convert(arrowFit.top),
             left: convert(arrowFit.left),
-            [arrowFit.direction]: convert(-4),
+            [arrowFit.direction!]: convert(-4),
         });
     }
 
@@ -150,21 +150,21 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
         tooltipRect: Partial<DOMRect>,
         positionProperty: 'top' | 'left'
     ): number {
-        const arrowSize = arrowRect.width > arrowRect.height
-            ? arrowRect.width
-            : arrowRect.height;
+        const arrowSize = arrowRect.width! > arrowRect.height!
+            ? arrowRect.width!
+            : arrowRect.height!;
 
         const tooltipSize = TooltipRegexes.vertical.test(this._placement)
-            ? tooltipRect.width
-            : tooltipRect.height;
+            ? tooltipRect.width!
+            : tooltipRect.height!;
 
         const direction = {
             top: 'horizontal',
             left: 'vertical',
         }[positionProperty];
 
-        const center = `${direction}Center`;
-        const end = `${direction}End`;
+        const center = `${direction}Center` as keyof typeof TooltipRegexes;
+        const end = `${direction}End` as keyof typeof TooltipRegexes;
 
         if (TooltipRegexes[center].test(this._placement)) {
             const offset = tooltipSize / 2 - arrowSize / 2;
@@ -223,7 +223,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
      *
      * @param settings Position settings for which to get the corresponding placement.
      */
-    private getPlacementByPositionSettings(settings: PositionSettings): Placement {
+    private getPlacementByPositionSettings(settings: PositionSettings): Placement | undefined {
         const { horizontalDirection, horizontalStartPoint, verticalDirection, verticalStartPoint } = settings;
 
         const mapArray = Array.from(PositionsMap.entries());
@@ -252,7 +252,7 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
             left: 'right',
         }[direction];
 
-        return opposite;
+        return opposite!;
     }
 }
 

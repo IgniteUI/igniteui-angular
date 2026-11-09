@@ -31,7 +31,7 @@
       role="gridcell"
       [igxRowDrag]="this"
       (click)="$event.stopPropagation()"
-      [ghostTemplate]="this.grid.getDragGhostCustomTemplate()"
+      [ghostTemplate]="this.grid.getDragGhostCustomTemplate()!"
       (pointerdown)="$event.preventDefault()"
     >
       <ng-container

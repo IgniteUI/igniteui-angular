@@ -16,21 +16,16 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-41';
 
     it('should remove the $header-time-period-color property from the time-picker-theme', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/test.component.scss`,
-            `$custom-time-picker: time-picker-theme(
+        appTree.create(`/testSrc/appPrefix/component/test.component.scss`, `$custom-time-picker: time-picker-theme(
                 $text-color: red,
                 $header-time-period-color: pink
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner
             .runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(
-            `$custom-time-picker: time-picker-theme(
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss')).toEqual(`$custom-time-picker: time-picker-theme(
                 $text-color: red
-            );`
-        );
+            );`);
     });
 });

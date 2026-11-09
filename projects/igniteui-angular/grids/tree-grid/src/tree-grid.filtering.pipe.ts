@@ -14,7 +14,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
         advancedFilteringExpressionsTree: IFilteringExpressionsTree,
-        _: number, __: number, pinned?): ITreeGridRecord[] {
+        _: number, __: number, pinned?: any): ITreeGridRecord[] {
         const state: IFilteringState = {
             expressionsTree,
             advancedExpressionsTree: advancedFilteringExpressionsTree,
@@ -25,7 +25,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
             state.strategy = filterStrategy;
         }
 
-        if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {
+        if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree!)) {
             this.grid.setFilteredData(null, pinned);
             return hierarchyData;
         }
@@ -51,6 +51,6 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     }
 
     private filter(data: ITreeGridRecord[], state: IFilteringState, grid?: GridType): ITreeGridRecord[] {
-        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
+        return state.strategy!.filter(data, state.expressionsTree, state.advancedExpressionsTree, grid);
     }
 }

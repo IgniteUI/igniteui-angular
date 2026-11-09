@@ -128,7 +128,30 @@
       [containerClass]="'igx-grid__td-text'"
       [metadata]="searchMetadata"
     >
-      {{ !isEmptyAddRowCell ? value : column.header || column.field }}
+      {{ !isEmptyAddRowCell
+        ? (formatter
+            ? (value | columnFormatter: formatter : rowData)
+            : column.dataType === 'number'
+                ? (value | number: column.pipeArgs.digitsInfo : grid.locale)
+                : column.dataType === 'date' ||
+                    column.dataType === 'time' ||
+                    column.dataType === 'dateTime'
+                ? (value
+                    | date
+                    : column.pipeArgs.format
+                    : column.pipeArgs.timezone
+                    : grid.locale)
+                : column.dataType === 'currency'
+                    ? (value
+                    | currency
+                        : currencyCode
+                        : column.pipeArgs.display
+                        : column.pipeArgs.digitsInfo
+                        : grid.locale)
+                    : column.dataType === 'percent'
+                    ? (value | percent: column.pipeArgs.digitsInfo : grid.locale)
+                    : value)
+      : column.header || column.field }}
     </div>
   }
 </ng-template>
@@ -179,14 +202,12 @@
         [style.width.%]="100"
         mode="dropdown"
         [locale]="grid.locale"
-        [weekStart]="column.pipeArgs.weekStart"
+        [weekStart]="column.pipeArgs.weekStart!"
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
-        [inputFormat]="
-          $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-        "
-        [displayFormat]="column.pipeArgs.format"
+        [inputFormat]="column.editorOptions?.dateTimeFormat!"
+        [displayFormat]="column.pipeArgs.format!"
       >
       </igx-date-picker>
     </ng-container>
@@ -197,10 +218,8 @@
         [style.width.%]="100"
         mode="dropdown"
         [locale]="grid.locale"
-        [inputFormat]="
-          $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-        "
-        [displayFormat]="column.pipeArgs.format"
+        [inputFormat]="column.editorOptions?.dateTimeFormat!"
+        [displayFormat]="column.pipeArgs.format!"
         [(value)]="editValue"
         [igxFocus]="true"
         [formControl]="formControl"
@@ -216,11 +235,9 @@
         [formControl]="formControl"
         igxInput
         [locale]="grid.locale"
-        [igxDateTimeEditor]="
-          $safeNavigationMigration(column.editorOptions?.dateTimeFormat)
-        "
+        [igxDateTimeEditor]="column.editorOptions?.dateTimeFormat!"
         [defaultFormatType]="column.dataType"
-        [displayFormat]="column.pipeArgs.format"
+        [displayFormat]="column.pipeArgs.format!"
         [igxFocus]="true"
       />
     </igx-input-group>
@@ -299,7 +316,7 @@
   @if (errors?.['minlength']) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_min_length_validation_error
+        grid.resourceStrings.igx_grid_min_length_validation_error!
           | igxStringReplace: '{0}' : errors.minlength.requiredLength
       }}
     </div>
@@ -307,7 +324,7 @@
   @if (errors?.['maxlength']) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_max_length_validation_error
+        grid.resourceStrings.igx_grid_max_length_validation_error!
           | igxStringReplace: '{0}' : errors.maxlength.requiredLength
       }}
     </div>
@@ -315,7 +332,7 @@
   @if (errors?.['min']) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_min_validation_error
+        grid.resourceStrings.igx_grid_min_validation_error!
           | igxStringReplace: '{0}' : errors.min.min
       }}
     </div>
@@ -323,7 +340,7 @@
   @if (errors?.['max']) {
     <div>
       {{
-        grid.resourceStrings.igx_grid_max_validation_error
+        grid.resourceStrings.igx_grid_max_validation_error!
           | igxStringReplace: '{0}' : errors.max.max
       }}
     </div>

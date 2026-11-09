@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
-import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, IColumnInfo, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { DEFAULT_OWNER, ExportHeaderType, ExportRecordType, GRID_LEVEL_COL, IColumnInfo, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
@@ -49,7 +49,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
      */
     public override exportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
-    private _stringData: string;
+    private _stringData!: string;
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
         const firstDataElement = data[0];
@@ -83,7 +83,8 @@ export class IgxCsvExporterService extends IgxBaseExporter {
         const allRecords = [...dataRecords, ...summaryRecords];
 
         const columnList = this._ownersMap.get(DEFAULT_OWNER);
-        const columns = columnList?.columns.filter(c => c.headerType === ExportHeaderType.ColumnHeader);
+        // GRID_LEVEL_COL is an internal helper column used only for Excel summary formulas
+        const columns = columnList?.columns.filter(c => c.headerType === ExportHeaderType.ColumnHeader && c.field !== GRID_LEVEL_COL);
         if (dimensionKeys) {
             const dimensionCols = dimensionKeys.map((key) => {
                 const columnInfo: IColumnInfo = {
@@ -97,7 +98,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
                 };
                 return columnInfo;
             });
-            columns.unshift(...dimensionCols);
+            columns!.unshift(...dimensionCols);
         }
 
         const csvData = new CharSeparatedValueData(allRecords, options.valueDelimiter, columns);

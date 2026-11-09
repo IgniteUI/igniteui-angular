@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, booleanAttribute, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CalendarSelection } from '../calendar';
+import { IgxCalendarDayTemplateContext } from '../calendar.directives';
 import { areSameMonth, CalendarDay, DateRangeDescriptor, isDateInRanges, isNextMonth, isPreviousMonth } from 'igniteui-angular/core';
 
 /**
@@ -15,13 +16,13 @@ export class IgxDayItemComponent {
     private elementRef = inject(ElementRef);
 
     @Input()
-    public date: CalendarDay;
+    public date!: CalendarDay;
 
     @Input()
-    public viewDate: Date;
+    public viewDate!: Date;
 
     @Input()
-    public selection: string;
+    public selection!: string;
 
     /**
      * Returns boolean indicating if the day is selected
@@ -40,20 +41,20 @@ export class IgxDayItemComponent {
     }
 
     @Input()
-    public disabledDates: DateRangeDescriptor[];
+    public disabledDates!: DateRangeDescriptor[];
 
     @Input()
-    public specialDates: DateRangeDescriptor[];
+    public specialDates!: DateRangeDescriptor[];
 
     @Input({ transform: booleanAttribute })
     public hideOutsideDays = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-days-view__date--last')
+    @HostBinding('class.igx-day-item--last')
     public isLastInRange = false;
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-days-view__date--first')
+    @HostBinding('class.igx-day-item--first')
     public isFirstInRange = false;
 
     @Input({ transform: booleanAttribute })
@@ -67,6 +68,11 @@ export class IgxDayItemComponent {
 
     @Input({ transform: booleanAttribute })
     public hideTrailingDays = false;
+
+    /** The id of the templated content, which describes the day cell for assistive technologies. */
+    @Input()
+    @HostBinding('attr.aria-describedby')
+    public contentId: string | null = null;
 
     private get hideLeading() {
         return this.hideLeadingDays && this.isPreviousMonth;
@@ -105,33 +111,35 @@ export class IgxDayItemComponent {
     }
 
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-days-view__date--active')
+    @HostBinding('class.igx-day-item--active')
     public isActive = false;
 
-    @HostBinding('class.igx-days-view__date--selected')
+    @HostBinding('class.igx-day-item--selected')
     public get isSelectedCSS(): boolean {
-    const selectable =
-        !this.isInactive || this.isWithinPreviewRange ||
-        (this.isWithinRange && this.selection === "range");
-    return !this.isDisabled && selectable && this.selected;
+        return !this.isDisabled && this.isSelectable && this.selected;
     }
 
-    @HostBinding('class.igx-days-view__date--inactive')
+    private get isSelectable(): boolean {
+        return !this.isInactive || this.isWithinPreviewRange ||
+            (this.isWithinRange && this.selection === "range");
+    }
+
+    @HostBinding('class.igx-day-item--inactive')
     public get isInactive(): boolean {
         return !this.isCurrentMonth;
     }
 
-    @HostBinding('class.igx-days-view__date--hidden')
+    @HostBinding('class.igx-day-item--hidden')
     public get isHidden(): boolean {
         return (this.hideLeading || this.hideTrailing) && this.isInactive;
     }
 
-    @HostBinding('class.igx-days-view__date--current')
+    @HostBinding('class.igx-day-item--current')
     public get isToday(): boolean {
         return !this.isInactive && this.date.equalTo(CalendarDay.today);
     }
 
-    @HostBinding('class.igx-days-view__date--weekend')
+    @HostBinding('class.igx-day-item--weekend')
     public get isWeekend(): boolean {
         return this.date.weekend;
     }
@@ -161,17 +169,17 @@ export class IgxDayItemComponent {
         this.mouseDown.emit();
     }
 
-    @HostBinding('class.igx-days-view__date--range')
+    @HostBinding('class.igx-day-item--range')
     public get isWithinRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinRange;
     }
 
-    @HostBinding('class.igx-days-view__date--range-preview')
+    @HostBinding('class.igx-day-item--range-preview')
     public get isWithinPreviewRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinPreviewRange;
     }
 
-    @HostBinding('class.igx-days-view__date--special')
+    @HostBinding('class.igx-day-item--special')
     public get isSpecial(): boolean {
         if (!this.specialDates) {
             return false;
@@ -180,15 +188,46 @@ export class IgxDayItemComponent {
         return !this.isInactive && isDateInRanges(this.date, this.specialDates);
     }
 
-    @HostBinding('class.igx-days-view__date--disabled')
+    @HostBinding('class.igx-day-item--disabled')
     public get isDisabledCSS(): boolean {
         return this.isHidden || this.isDisabled;
     }
 
-    @HostBinding('class.igx-days-view__date--single')
+    @HostBinding('class.igx-day-item--single')
     public get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
     }
 
+    /**
+     * Returns the context for the day template.
+     * The same object is updated in place on every call, and each date range is checked once.
+     *
+     * @hidden
+     * @internal
+     */
+    public getTemplateContext(formattedDate: string): IgxCalendarDayTemplateContext {
+        const context = this._templateContext;
+        const disabled = this.isDisabled;
+
+        if (context.date?.getTime() !== this.date.timestamp) {
+            context.$implicit = context.date = this.date.native;
+        }
+        context.formattedDate = formattedDate;
+        context.selected = !disabled && this.isSelectable && !!this.selected;
+        context.disabled = disabled;
+        context.special = this.isSpecial;
+        context.today = this.isToday;
+        context.weekend = this.isWeekend;
+        context.currentMonth = this.isCurrentMonth;
+        context.active = this.isActive;
+        context.firstInRange = this.isFirstInRange;
+        context.lastInRange = this.isLastInRange;
+        context.withinRange = this.isWithinRangeCSS;
+        context.withinPreviewRange = this.isWithinPreviewRange;
+
+        return context;
+    }
+
     private _selected = false;
+    private _templateContext = {} as IgxCalendarDayTemplateContext;
 }

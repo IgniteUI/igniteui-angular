@@ -55,10 +55,12 @@
     $_scope: if(is-root() or is-host(), '.ig-typography', '&');
 
     #{$_scope} {
-        @include _component-typography($type-scale, $exclude);
+        @layer ig.base {
+            @include _component-typography($type-scale, $exclude);
+        }
     }
 
     @if not(list.index($exclude, 'global')) {
-        @include theming.typography($font-family, $type-scale);
+        @include theming.typography($font-family, $type-scale, $allow-exclusion: true);
     }
 }

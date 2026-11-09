@@ -54,8 +54,8 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
                             states.delete(k);
                             break;
                         case TransactionType.UPDATE:
-                            states.get(k).type = TransactionType.DELETE;
-                            states.get(k).value = null;
+                            states.get(k)!.type = TransactionType.DELETE;
+                            states.get(k)!.value = null;
                     }
                 }
             });

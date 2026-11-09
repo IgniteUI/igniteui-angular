@@ -1,4 +1,25 @@
-import { AfterViewInit, booleanAttribute, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, forwardRef, HostBinding, HostListener, Input, OnDestroy, Output, Renderer2, TemplateRef, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+    AfterViewInit,
+    booleanAttribute,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Input,
+    OnDestroy,
+    Output,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    inject,
+    signal,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { IgxStep, IgxStepper, IgxStepperOrientation, IgxStepType, IGX_STEPPER_COMPONENT, IGX_STEP_COMPONENT, HorizontalAnimationType } from '../stepper.common';
 import { IgxStepContentDirective, IgxStepIndicatorDirective } from '../stepper.directive';
@@ -33,6 +54,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-step',
     templateUrl: 'step.component.html',
+    styleUrl: 'step.component.css',
+    encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
     ],
@@ -108,7 +131,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * ```
      */
     @Input({ transform: booleanAttribute })
-    @HostBinding('class.igx-stepper__step--completed')
+    @HostBinding('class.igx-step--completed')
     public completed = false;
 
     /**
@@ -151,7 +174,16 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public optional = false;
+    public set optional(value: boolean) {
+        this._optional = value;
+        if (this.stepper.linear) {
+            this.stepperService.calculateLinearDisabledSteps();
+        }
+    }
+
+    public get optional(): boolean {
+        return this._optional;
+    }
 
     /**
      * Get/Set the active state of the step
@@ -184,11 +216,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     @HostBinding('attr.tabindex')
     @Input()
     public set tabIndex(value: number) {
-        this._tabIndex = value;
+        this._tabIndex.set(value);
     }
 
     public get tabIndex(): number {
-        return this._tabIndex;
+        return this._tabIndex();
     }
 
     /** @hidden @internal **/
@@ -202,11 +234,17 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    @HostBinding('class.igx-stepper__step')
+    @HostBinding('class.igx-step')
     public cssClass = true;
 
     /** @hidden @internal */
-    @HostBinding('class.igx-stepper__step--disabled')
+    @HostBinding('class.igx-step--vertical')
+    public get isVertical(): boolean {
+        return this.stepper.orientation === IgxStepperOrientation.Vertical;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--disabled')
     public get generalDisabled(): boolean {
         return this.disabled || this.linearDisabled;
     }
@@ -215,10 +253,35 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     @HostBinding('class')
     public get titlePositionTop(): string {
         if (this.stepper.stepType !== IgxStepType.Full) {
-            return 'igx-stepper__step--simple';
+            return 'igx-step--simple';
         }
 
-        return `igx-stepper__step--${this.titlePosition}`;
+        return `igx-step--${this.titlePosition}`;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--current')
+    public get isActive(): boolean {
+        return this.active;
+    }
+
+    /** @hidden @internal */
+    @HostBinding('class.igx-step--invalid')
+    public get isInvalid(): boolean {
+        return !this.isValid
+            && this.stepperService.visitedSteps.has(this)
+            && !this.active
+            && this.isAccessible;
+    }
+
+    /** @hidden @internal */
+    public get stepHeaderClasses(): { [key: string]: boolean } {
+        return {
+            'igx-step-header--invalid': this.isInvalid,
+            'igx-step-header--disabled': this.generalDisabled,
+            'igx-step-header--current': this.active,
+            'igx-step-header--completed': this.completed,
+        };
     }
 
     /**
@@ -239,23 +302,23 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /** @hidden @internal */
     @ViewChild('contentTemplate', { static: true })
-    public contentTemplate: TemplateRef<any>;
+    public contentTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('customIndicator', { static: true })
-    public customIndicatorTemplate: TemplateRef<any>;
+    public customIndicatorTemplate!: TemplateRef<any>;
 
     /** @hidden @internal */
     @ViewChild('contentContainer')
-    public contentContainer: ElementRef;
+    public contentContainer!: ElementRef;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxStepIndicatorDirective))
-    public indicator: IgxStepIndicatorDirective;
+    public indicator!: IgxStepIndicatorDirective;
 
     /** @hidden @internal */
     @ContentChild(forwardRef(() => IgxStepContentDirective))
-    public content: IgxStepContentDirective;
+    public content!: IgxStepContentDirective;
 
     /**
      * Get the step index inside of the stepper.
@@ -266,7 +329,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
      * ```
      */
     public get index(): number {
-        return this._index;
+        return this._index();
     }
 
     /** @hidden @internal */
@@ -287,7 +350,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
             return this.customIndicatorTemplate;
         }
 
-        return null;
+        return null!;
     }
 
     /** @hidden @internal */
@@ -300,10 +363,11 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /** @hidden @internal */
     public get isAccessible(): boolean {
-        return !this.disabled && !this.linearDisabled;
+        return !this.generalDisabled;
     }
 
     /** @hidden @internal */
+    @HostBinding('class.igx-step--horizontal')
     public get isHorizontal(): boolean {
         return this.stepper.orientation === IgxStepperOrientation.Horizontal;
     }
@@ -320,7 +384,7 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
 
     /** @hidden @internal */
     public get titlePosition(): string {
-        return this.stepper.titlePosition ? this.stepper.titlePosition : this.stepper._defaultTitlePosition;
+        return this.stepper.titlePosition || this.stepper._defaultTitlePosition;
     }
 
     /** @hidden @internal */
@@ -348,35 +412,30 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     }
 
     /** @hidden @internal */
-    public get stepHeaderClasses(): any {
-        return {
-            'igx-stepper__step--optional': this.optional,
-            'igx-stepper__step-header--current': this.active,
-            'igx-stepper__step-header--invalid': !this.isValid
-                && this.stepperService.visitedSteps.has(this) && !this.active && this.isAccessible
-        };
-    }
-
-    /** @hidden @internal */
     public get nativeElement(): HTMLElement {
         return this.element.nativeElement;
     }
     /** @hidden @internal */
-    public previous: boolean;
-    /** @hidden @internal */
-    public _index: number;
-    private _tabIndex = -1;
+    public previous!: boolean;
+    /**
+     * @hidden @internal
+     * Signal-backed, like the tab index, so that the bindings reading it are refreshed
+     * when it is set by the stepper after they were checked, e.g. in `ngAfterContentInit`.
+     */
+    public readonly _index = signal<number>(undefined!);
+    private readonly _tabIndex = signal(-1);
     private _valid = true;
     private _focused = false;
     private _disabled = false;
+    private _optional = false;
 
     /** @hidden @internal */
     @HostListener('focus')
     public onFocus(): void {
         this._focused = true;
-        this.stepperService.focusedStep = this;
-        if (this.stepperService.focusedStep !== this.stepperService.activeStep) {
-            this.stepperService.activeStep.tabIndex = -1;
+        const activeStep = this.stepperService.activeStep;
+        if (activeStep && this !== activeStep) {
+            activeStep.tabIndex = -1;
         }
     }
 
@@ -384,7 +443,10 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     @HostListener('blur')
     public onBlur(): void {
         this._focused = false;
-        this.stepperService.activeStep.tabIndex = 0;
+        const activeStep = this.stepperService.activeStep;
+        if (activeStep) {
+            activeStep.tabIndex = 0;
+        }
     }
 
     /** @hidden @internal */
@@ -394,10 +456,8 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
             return;
         }
         const key = event.key;
-        if (this.stepper.orientation === IgxStepperOrientation.Horizontal) {
-            if (key === this.platform.KEYMAP.ARROW_UP || key === this.platform.KEYMAP.ARROW_DOWN) {
-                return;
-            }
+        if (this.isHorizontal && (key === this.platform.KEYMAP.ARROW_UP || key === this.platform.KEYMAP.ARROW_DOWN)) {
+            return;
         }
         if (!(this.platform.isNavigationKey(key) || this.platform.isActivationKey(event))) {
             return;
@@ -424,67 +484,84 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     /** @hidden @internal */
     public onPointerDown(event: MouseEvent): void {
         event.stopPropagation();
-        if (this.isHorizontal) {
+        this.activate();
+    }
+
+    /** @hidden @internal */
+    public handleNavigation(key: string): void {
+        // the horizontal arrows follow the reading direction
+        const reversed = this.isHorizontal && !isLeftToRight(this.nativeElement);
+
+        switch (key) {
+            case this.platform.KEYMAP.HOME:
+                this.accessibleSteps[0]?.nativeElement.focus();
+                break;
+            case this.platform.KEYMAP.END:
+                this.accessibleSteps.at(-1)?.nativeElement.focus();
+                break;
+            case this.platform.KEYMAP.ARROW_UP:
+                this.previousStep?.nativeElement.focus();
+                break;
+            case this.platform.KEYMAP.ARROW_DOWN:
+                this.nextStep?.nativeElement.focus();
+                break;
+            case this.platform.KEYMAP.ARROW_LEFT:
+                (reversed ? this.nextStep : this.previousStep)?.nativeElement.focus();
+                break;
+            case this.platform.KEYMAP.ARROW_RIGHT:
+                (reversed ? this.previousStep : this.nextStep)?.nativeElement.focus();
+                break;
+            case this.platform.KEYMAP.SPACE:
+            case this.platform.KEYMAP.ENTER:
+                this.activate();
+                break;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * Activates the step, playing the animations for the current orientation.
+     */
+    public activate(): void {
+        if (!this.stepperService.activeStep) {
+            // there is no active step to animate from
+            this.activateWithoutAnimation();
+        } else if (this.isHorizontal) {
             this.changeHorizontalActiveStep();
         } else {
             this.changeVerticalActiveStep();
         }
     }
 
-    /** @hidden @internal */
-    public handleNavigation(key: string): void {
-        const rtl = !isLeftToRight(this.nativeElement);
-
-        switch (key) {
-            case this.platform.KEYMAP.HOME:
-                this.stepper.steps.filter(s => s.isAccessible)[0]?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.END:
-                this.stepper.steps.filter(s => s.isAccessible).pop()?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_UP:
-                this.previousStep?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_LEFT:
-                if (rtl && this.stepper.orientation === IgxStepperOrientation.Horizontal) {
-                    this.nextStep?.nativeElement.focus();
-                } else {
-                    this.previousStep?.nativeElement.focus();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                this.nextStep?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_RIGHT:
-                if (rtl && this.stepper.orientation === IgxStepperOrientation.Horizontal) {
-                    this.previousStep?.nativeElement.focus();
-                } else {
-                    this.nextStep?.nativeElement.focus();
-                }
-                break;
-            case this.platform.KEYMAP.SPACE:
-            case this.platform.KEYMAP.ENTER:
-                if (this.isHorizontal) {
-                    this.changeHorizontalActiveStep();
-                } else {
-                    this.changeVerticalActiveStep();
-                }
-                break;
-            default:
-                return;
-        }
+    private get accessibleSteps(): IgxStepComponent[] {
+        return this.stepper.steps.filter(s => s.isAccessible);
     }
 
-    /** @hidden @internal */
-    public changeHorizontalActiveStep(): void {
-        if (this.stepper.animationType === HorizontalAnimationType.none && this.stepperService.activeStep !== this) {
-            const argsCanceled = this.stepperService.emitActivatingEvent(this);
-            if (argsCanceled) {
-                return;
-            }
+    /** The next accessible step, wrapping around to the first one */
+    private get nextStep(): IgxStepComponent | undefined {
+        const accessibleSteps = this.accessibleSteps;
+        return accessibleSteps.find(s => s.index > this.index) ?? accessibleSteps[0];
+    }
 
-            this.active = true;
-            this.stepper.activeStepChanged.emit({ owner: this.stepper, index: this.index });
+    /** The previous accessible step, wrapping around to the last one */
+    private get previousStep(): IgxStepComponent | undefined {
+        const accessibleSteps = this.accessibleSteps;
+        return accessibleSteps.findLast(s => s.index < this.index) ?? accessibleSteps.at(-1);
+    }
+
+    private activateWithoutAnimation(): void {
+        const argsCanceled = this.stepperService.emitActivatingEvent(this);
+        if (argsCanceled) {
+            return;
+        }
+
+        this.active = true;
+        this.stepper.activeStepChanged.emit({ owner: this.stepper, index: this.index });
+    }
+
+    private changeHorizontalActiveStep(): void {
+        if (this.stepper.animationType === HorizontalAnimationType.none && this.stepperService.activeStep !== this) {
+            this.activateWithoutAnimation();
             return;
         }
         this.stepperService.expand(this);
@@ -493,43 +570,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
                 this.stepperService.previousActiveStep.active = false;
             }
         }
-    }
-
-    private get nextStep(): IgxStepComponent | null {
-        const focusedStep = this.stepperService.focusedStep;
-        if (focusedStep) {
-            if (focusedStep.index === this.stepper.steps.length - 1) {
-                return this.stepper.steps.find(s => s.isAccessible);
-            }
-
-            const nextAccessible = this.stepper.steps.find((s, i) => i > focusedStep.index && s.isAccessible);
-            return nextAccessible ? nextAccessible : this.stepper.steps.find(s => s.isAccessible);
-        }
-
-        return null;
-    }
-
-    private get previousStep(): IgxStepComponent | null {
-        const focusedStep = this.stepperService.focusedStep;
-        if (focusedStep) {
-            if (focusedStep.index === 0) {
-                return this.stepper.steps.filter(s => s.isAccessible).pop();
-            }
-
-            let prevStep;
-            for (let i = focusedStep.index - 1; i >= 0; i--) {
-                const step = this.stepper.steps[i];
-                if (step.isAccessible) {
-                    prevStep = step;
-                    break;
-                }
-            }
-
-            return prevStep ? prevStep : this.stepper.steps.filter(s => s.isAccessible).pop();
-
-        }
-
-        return null;
     }
 
     private changeVerticalActiveStep(): void {

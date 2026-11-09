@@ -47,7 +47,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * ```
    */
   public position(contentElement: HTMLElement, _size: Size, _document?: Document, _initialCall?: boolean, target?: Point | HTMLElement): void {
-    const rects = this.calculateElementRectangles(contentElement, target);
+    const rects = this.calculateElementRectangles(contentElement, target!);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }
 
@@ -64,7 +64,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    *
    * @returns target and element DomRect objects
    */
-   protected calculateElementRectangles(contentElement, target: Point | HTMLElement):
+   protected calculateElementRectangles(contentElement: HTMLElement, target: Point | HTMLElement):
    { targetRect: Partial<DOMRect>; elementRect: Partial<DOMRect> } {
     return {
       targetRect: Util.getTargetRect(target),
@@ -98,10 +98,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     const { horizontalOffset, verticalOffset } = this.getElementOffsets(connectedFit);
 
     const startPoint: Point = {
-      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
-      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset
+      x: targetRect.right! + targetRect.width! * this.settings.horizontalStartPoint! + horizontalOffset,
+      y: targetRect.bottom! + targetRect.height! * this.settings.verticalStartPoint! + verticalOffset
     };
-    const wrapperRect: ClientRect = element.parentElement.getBoundingClientRect();
+    const wrapperRect: ClientRect = element.parentElement!.getBoundingClientRect();
 
     //  clean up styles - if auto position strategy is chosen we may pass here several times
     element.style.right = '';
@@ -114,7 +114,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
         element.style.right = `${Math.round(wrapperRect.right - startPoint.x)}px`;
         break;
       case HorizontalAlignment.Center:
-        element.style.left = `${Math.round(startPoint.x - wrapperRect.left - elementRect.width / 2)}px`;
+        element.style.left = `${Math.round(startPoint.x - wrapperRect.left - elementRect.width! / 2)}px`;
         break;
       case HorizontalAlignment.Right:
         element.style.left = `${Math.round(startPoint.x - wrapperRect.left)}px`;
@@ -126,7 +126,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
         element.style.bottom = `${Math.round(wrapperRect.bottom - startPoint.y)}px`;
         break;
       case VerticalAlignment.Middle:
-        element.style.top = `${Math.round(startPoint.y - wrapperRect.top - elementRect.height / 2)}px`;
+        element.style.top = `${Math.round(startPoint.y - wrapperRect.top - elementRect.height! / 2)}px`;
         break;
       case VerticalAlignment.Bottom:
         element.style.top = `${Math.round(startPoint.y - wrapperRect.top)}px`;

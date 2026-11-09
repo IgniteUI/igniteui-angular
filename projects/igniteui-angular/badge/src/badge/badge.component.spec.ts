@@ -1,11 +1,12 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ChangeDetectionStrategy, Component, Signal, Type, viewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxBadgeComponent, IgxBadgeType } from './badge.component';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('Badge', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InitBadgeComponent,
                 InitBadgeWithDefaultsComponent,
@@ -15,12 +16,10 @@ describe('Badge', () => {
                 InitBadgeWithDotComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes outlined badge of type error', () => {
-        const fixture = TestBed.createComponent(InitBadgeComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
+        const { fixture, badge } = createComponent(InitBadgeComponent);
 
         expect(badge.value).toBeTruthy();
         expect(badge.type).toBeTruthy();
@@ -35,25 +34,23 @@ describe('Badge', () => {
     });
 
     it('Initializes badge with id', () => {
-        const fixture = TestBed.createComponent(InitBadgeComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
-        const domBadge = fixture.debugElement.query(By.css('igx-badge')).nativeElement;
+        const { fixture, badge, hostElement } = createComponent(InitBadgeComponent);
 
         expect(badge.id).toContain('igx-badge-');
-        expect(domBadge.id).toContain('igx-badge-');
+        expect(hostElement.id).toContain('igx-badge-');
+
+        expect(badge.id).toContain('igx-badge-');
+        expect(hostElement.id).toContain('igx-badge-');
 
         badge.id = 'customBadge';
-        fixture.detectChanges();
+        detectChanges(fixture);
 
         expect(badge.id).toBe('customBadge');
-        expect(domBadge.id).toBe('customBadge');
+        expect(hostElement.id).toBe('customBadge');
     });
 
     it('Initializes badge defaults', () => {
-        const fixture = TestBed.createComponent(InitBadgeWithDefaultsComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
+        const { fixture, badge } = createComponent(InitBadgeWithDefaultsComponent);
 
         expect(badge.value).toMatch('');
         expect(badge.icon).toBeFalsy();
@@ -65,9 +62,7 @@ describe('Badge', () => {
     });
 
     it('Initializes badge with icon', () => {
-        const fixture = TestBed.createComponent(InitBadgeWithIconComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
+        const { fixture, badge } = createComponent(InitBadgeWithIconComponent);
 
         expect(badge.icon === 'person').toBeTruthy();
         expect(badge.type === IgxBadgeType.INFO).toBeTruthy();
@@ -78,9 +73,7 @@ describe('Badge', () => {
     });
 
     it('Initializes badge with icon ARIA', () => {
-        const fixture = TestBed.createComponent(InitBadgeWithIconARIAComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
+        const { fixture, badge } = createComponent(InitBadgeWithIconARIAComponent);
 
         const expectedDescription = `${badge.type} type badge with icon type ${badge.icon}`;
         expect(badge.roleDescription).toMatch(expectedDescription);
@@ -90,18 +83,14 @@ describe('Badge', () => {
     });
 
     it('Initializes badge with dot property', () => {
-        const fixture = TestBed.createComponent(InitBadgeWithDotComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
+        const { fixture, badge } = createComponent(InitBadgeWithDotComponent);
 
         expect(badge.dot).toBeTruthy();
         expect(fixture.debugElement.query(By.css('.igx-badge--dot'))).toBeTruthy();
     });
 
     it('Initializes success badge as dot', () => {
-        const fixture = TestBed.createComponent(InitBadgeWithDotComponent);
-        fixture.detectChanges();
-        const badge = fixture.componentInstance.badge;
+        const { fixture, badge } = createComponent(InitBadgeWithDotComponent);
 
         expect(badge.type).toBe(IgxBadgeType.SUCCESS);
         expect(badge.dot).toBeTruthy();
@@ -116,7 +105,7 @@ describe('Badge', () => {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    public badge = viewChild.required(IgxBadgeComponent);
 }
 
 @Component({
@@ -125,7 +114,7 @@ class InitBadgeComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDefaultsComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    public badge = viewChild.required(IgxBadgeComponent);
 }
 
 @Component({
@@ -134,7 +123,7 @@ class InitBadgeWithDefaultsComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    public badge = viewChild.required(IgxBadgeComponent);
 }
 
 @Component({
@@ -143,7 +132,7 @@ class InitBadgeWithIconComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithIconARIAComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    public badge = viewChild.required(IgxBadgeComponent);
 }
 
 @Component({
@@ -152,5 +141,20 @@ class InitBadgeWithIconARIAComponent {
     imports: [IgxBadgeComponent]
 })
 class InitBadgeWithDotComponent {
-    @ViewChild(IgxBadgeComponent, { static: true }) public badge: IgxBadgeComponent;
+    public badge = viewChild.required(IgxBadgeComponent);
+}
+
+function createComponent<T extends { badge: Signal<IgxBadgeComponent> }>(component: Type<T>) {
+    const fixture = TestBed.createComponent(component);
+    fixture.detectChanges();
+
+    return {
+        fixture,
+        badge: fixture.componentInstance.badge(),
+        hostElement: fixture.debugElement.query(By.directive(IgxBadgeComponent)).nativeElement
+    };
+}
+
+function detectChanges<T>(fixture: ComponentFixture<T>) {
+    fixture.changeDetectorRef.detectChanges();
 }

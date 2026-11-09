@@ -1,15 +1,34 @@
-@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
+@use 'igniteui-theming/sass/color/functions' as *;
 
-:host::ng-deep {
+:host {
+    display: grid;
+    gap: 32px;
+	padding-block: 2rem;
+
+    > .igx-grid {
+        --ig-grid-row-odd-background: var(--ig-primary-50);
+        --ig-grid-body-column-border-color-odd: var(--ig-primary-50);
+
+        igx-grid {
+            --ig-grid-row-odd-background: '';
+            --ig-grid-body-column-border-color-odd: '';
+        }
+    }
+
     .activeRow {
         --row-odd-background: #{dynamic-shade(var(--row-even-background), $offset: 3)};
     }
 }
 
-[igxButton="contained"] {
-    margin: 0.5rem;
+.hierarchical-grid-sample-header-actions {
+    display: flex;
+	flex-wrap: wrap;
+    align-items: center;
+    justify-content: start;
+    gap: 1rem;
 }
 
-h4 {
-    padding-top: 2rem;
+.hierarchical-grid-sample-header-actions:not(:first-of-type) {
+	padding-block-start: 3rem;
+	border-block-start: 1px dashed var(--ig-gray-300);
 }

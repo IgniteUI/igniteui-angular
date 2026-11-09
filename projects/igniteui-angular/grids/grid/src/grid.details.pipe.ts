@@ -19,7 +19,7 @@ export class IgxGridDetailsPipe implements PipeTransform {
     }
 
     protected addDetailRows(collection: any[], _expansionStates: Map<any, boolean>) {
-        const result = [];
+        const result: any[] = [];
         collection.forEach((v) => {
             result.push(v);
             if (!this.grid.isGroupByRecord(v) && !this.grid.isSummaryRow(v) &&

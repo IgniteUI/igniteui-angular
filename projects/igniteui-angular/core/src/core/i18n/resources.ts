@@ -37,7 +37,7 @@ function igxRegisterI18n(resourceStrings: IResourceStrings, locale: string) {
         if (stringKey.startsWith("igx_")) {
             stringKey = stringKey.replace("igx_", "");
         }
-        genericResourceStrings[stringKey] = resourceStrings[key];
+        (genericResourceStrings as any)[stringKey] = (resourceStrings as any)[key];
     }
     getI18nManager().registerI18n(genericResourceStrings, locale);
 }
@@ -50,23 +50,23 @@ export function getCurrentResourceStrings<T>(defaultEN: T, init = true, locale?:
     const newResourceStrings: T = {} as T;
 
     // Append back `igx_` prefix for compatibility with older versions.
-    const igxResourceStringKeys = Object.keys(defaultEN);
+    const igxResourceStringKeys = Object.keys(defaultEN as object);
     for (const igxKey of igxResourceStringKeys) {
         let coreKey = igxKey;
         if (coreKey.startsWith("igx_")) {
             coreKey = coreKey.replace("igx_", "");
         }
         if (resourceStringsKeys.includes(coreKey)) {
-            normalizedResourceStrings[igxKey] = resourceStrings[coreKey];
+            (normalizedResourceStrings as any)[igxKey] = (resourceStrings as any)[coreKey];
         } else {
-            normalizedResourceStrings[igxKey] = defaultEN[igxKey];
-            newResourceStrings[coreKey] = defaultEN[igxKey];
+            (normalizedResourceStrings as any)[igxKey] = (defaultEN as any)[igxKey];
+            (newResourceStrings as any)[coreKey] = (defaultEN as any)[igxKey];
         }
     }
 
     if (init) {
         // Register only new resources. We don't want to accidentally override any default set by user.
-        getI18nManager().registerI18n(newResourceStrings, getI18nManager().defaultLocale);
+        getI18nManager().registerI18n(newResourceStrings as IResourceStringsCore, getI18nManager().defaultLocale);
     }
 
     return normalizedResourceStrings;

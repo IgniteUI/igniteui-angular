@@ -27,7 +27,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      * @hidden @internal
      */
     @ViewChild('subMenu', { read: IgxDropDownComponent })
-    public subMenu: IgxDropDownComponent;
+    public subMenu!: IgxDropDownComponent;
 
     protected get filterNumber() {
         return this.esf.expressionsList.filter(e => e.expression.condition).length;
@@ -79,9 +79,9 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onTextFilterClick(eventArgs) {
+    public onTextFilterClick(eventArgs: MouseEvent | KeyboardEvent) {
         if (this.shouldOpenSubMenu) {
-            this._subMenuOverlaySettings.target = eventArgs.currentTarget;
+            this._subMenuOverlaySettings.target = eventArgs.currentTarget as HTMLElement;
 
             const gridRect = this.esf.grid.nativeElement.getBoundingClientRect();
             const dropdownRect = this.esf.mainDropdown.nativeElement.getBoundingClientRect();
@@ -91,11 +91,11 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
             x += window.pageXOffset;
             x1 += window.pageXOffset;
             if (Math.abs(x - x1) < 200) {
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Left;
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Left;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalDirection = HorizontalAlignment.Left;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalStartPoint = HorizontalAlignment.Left;
             } else {
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalDirection = HorizontalAlignment.Right;
-                this._subMenuOverlaySettings.positionStrategy.settings.horizontalStartPoint = HorizontalAlignment.Right;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalDirection = HorizontalAlignment.Right;
+                this._subMenuOverlaySettings.positionStrategy!.settings.horizontalStartPoint = HorizontalAlignment.Right;
             }
 
             this.subMenu.open(this._subMenuOverlaySettings);
@@ -115,14 +115,14 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         if (expressions.length < 1) {
             return false;
         }
-        return expressions.length === 1 ? expressions[0].expression.condition.name === condition : condition === 'custom';
+        return expressions.length === 1 ? expressions[0].expression.condition!.name === condition : condition === 'custom';
     }
 
     /**
      * @hidden @internal
      */
     public translateCondition(value: string): string {
-        return this.esf.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
+        return (this.esf.grid.resourceStrings as any)[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
     /**
@@ -180,9 +180,9 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public showCustomFilterItem(): boolean {
         const exprTree = this.esf.column.filteringExpressionsTree;
-        return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
+        return (exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
             !((exprTree.filteringOperands[0] as IFilteringExpression).condition &&
-                (exprTree.filteringOperands[0] as IFilteringExpression).condition.name === 'in');
+                (exprTree.filteringOperands[0] as IFilteringExpression).condition!.name === 'in')) as boolean;
     }
 
     /**

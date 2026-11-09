@@ -1,0 +1,25 @@
+@use 'igniteui-theming/sass/typography' as *;
+@use 'igniteui-theming/sass/bem' as *;
+@use '../../../../../core/src/core/styles/themes/scoping' as *;
+@use 'igniteui-theming/sass/themes/schemas/components/light/dialog' as *;
+
+$_theme: digest-schema($bootstrap-dialog);
+
+@include themed-block(igx-dialog, bootstrap) {
+    --min-width: #{rem(288px)};
+    --title-padding: #{rem(16px)};
+    --message-padding: #{rem(16px)};
+    --actions-padding: #{rem(16px)};
+
+    @include e(window-title) {
+        @include type-style(h5) {
+            margin: 0;
+        };
+
+        border-bottom: rem(1px) solid var-get($_theme, 'border-color');
+    }
+
+    @include e(window-actions) {
+        border-top: rem(1px) solid var-get($_theme, 'border-color');
+    }
+}

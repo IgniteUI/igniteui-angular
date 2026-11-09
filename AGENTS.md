@@ -7,16 +7,23 @@ This file defines repository-wide guidance for AI agents working in Ignite UI fo
 Ignite UI for Angular is a comprehensive UI component library built on the Angular framework.
 
 - **Language**: TypeScript
-- **Framework**: Angular 21+
-- **Test runner**: Karma + Jasmine
+- **Framework**: Angular 22+
+- **Test runner**: Vitest (browser mode with Playwright Chromium via the Angular unit-test builder; Node for schematics, migrations, and Sass style tests)
 - **Package format**: Angular Package Format with multiple entry points
 - **Build**: ng-packagr
 
 ## Repository Structure
 
 ```text
-.github/                           ← contributing docs, agent docs, templates, workflows, Copilot instructions
+.agents/                           ← agent infrastructure (ACS layout)
+  main.yaml                        ← ACS manifest: project metadata and active layers
+  README.md                        ← agent system guide
+  context/project.md               ← concise project context for ACS-aware tools
   agents/                          ← custom agent definitions and handoff workflows
+  skills/                          ← internal operational skills (build, testing, linting)
+  permissions/policy.yaml          ← agent read/write boundaries
+.github/                           ← contributing docs, templates, workflows, Copilot instructions
+  agents/                          ← Copilot pointer files that load the matching `.agents/agents/` definition
   copilot-instructions.md          ← repository coding standards and AI-specific guidance
 cypress/                           ← repository-level Cypress setup/tests
 projects/
@@ -34,7 +41,7 @@ projects/
     schematics/                    ← `ng add` / schematics
     src/                           ← shared library sources
     test-utils/                    ← shared test helpers
-    karma*.conf.js                 ← targeted Karma configs for different suites
+    vitest.config.ts               ← Vitest runner config for library browser tests
   igniteui-angular-elements/       ← Angular Elements package/project
   igniteui-angular-i18n/           ← i18n package/resources
   igniteui-angular-performance/    ← performance-focused project
@@ -87,6 +94,13 @@ css-naming-convention.md           ← CSS naming rules
 - Before introducing a breaking rename/removal without a migration plan.
 - Before creating a migration schematic — confirm the change is truly breaking.
 
+### GitHub Actions workflows
+
+- Pin every action and reusable workflow to a full commit SHA with a `# vX.Y.Z` comment.
+- Use each action's current inputs instead of copying older workflows. For example, `actions/create-github-app-token` takes `client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}`; `app-id` is deprecated since v3.1.0.
+- Deploys to Infragistics infrastructure go through a `repository_dispatch` to `IgniteUI/igniteui-actions`.
+- Validate changed workflows with `actionlint`.
+
 ## Commands
 
 | Action | Command |
@@ -100,11 +114,10 @@ css-naming-convention.md           ← CSS naming rules
 | Build schematics | `npm run build:schematics` |
 | Build i18n | `npm run build:i18n` |
 | All tests | `npm run test:lib` |
-| Non-grid tests | `npm run test:lib:others` |
-| Grid tests | `npm run test:lib:grid` |
-| Tree-grid tests | `npm run test:lib:tgrid` |
-| Hierarchical-grid tests | `npm run test:lib:hgrid` |
-| Pivot-grid tests | `npm run test:lib:pgrid` |
+| Subset of tests (one component, grid type, or spec file) | `ng test igniteui-angular --no-watch --include '<glob>'` (e.g. `'projects/igniteui-angular/grids/grid/**/*.spec.ts'`) |
+| Tests in watch mode | `npm run test:lib:watch` |
+| Extras tests | `npm run test:extras` |
+| Elements tests | `npm run test:elements` |
 | Schematics tests | `npm run test:schematics` |
 | i18n tests | `npm run test:i18n` |
 | Style tests | `npm run test:styles` |
@@ -119,13 +132,15 @@ Domain-specific knowledge for AI assistants:
 | Grids | [`skills/igniteui-angular-grids/SKILL.md`](skills/igniteui-angular-grids/SKILL.md) | Working on grid, tree-grid, hierarchical-grid, pivot-grid |
 | Theming | [`skills/igniteui-angular-theming/SKILL.md`](skills/igniteui-angular-theming/SKILL.md) | Working on styles, themes, palettes |
 | Generate From Image Design | [`skills/igniteui-angular-generate-from-image-design/SKILL.md`](skills/igniteui-angular-generate-from-image-design/SKILL.md) | Building Angular views from screenshots, mockups, or wireframes with Ignite UI components |
-| Build | [`.github/skills/igniteui-angular-build/SKILL.md`](.github/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
-| Testing | [`.github/skills/igniteui-angular-testing/SKILL.md`](.github/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the right Karma config |
-| Linting | [`.github/skills/igniteui-angular-linting/SKILL.md`](.github/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
+| Figma to App | [`skills/igniteui-angular-figma-to-app/SKILL.md`](skills/igniteui-angular-figma-to-app/SKILL.md) | Building Angular apps from Figma screens with Ignite UI components, including Indigo.Design kits, third-party kits, and plain frames |
+| Build | [`.agents/skills/igniteui-angular-build/SKILL.md`](.agents/skills/igniteui-angular-build/SKILL.md) | Building the library, producing dist output, compiling migrations/schematics |
+| Testing | [`.agents/skills/igniteui-angular-testing/SKILL.md`](.agents/skills/igniteui-angular-testing/SKILL.md) | Running test suites, choosing the smallest relevant test run |
+| Linting | [`.agents/skills/igniteui-angular-linting/SKILL.md`](.agents/skills/igniteui-angular-linting/SKILL.md) | Running ESLint and Stylelint, fixing lint errors |
+| Skill Authoring | [`.agents/skills/igniteui-angular-skill-authoring/SKILL.md`](.agents/skills/igniteui-angular-skill-authoring/SKILL.md) | Writing or updating a SKILL.md: frontmatter rules, description format, size budget |
 
 ## Custom Agents
 
-The repository provides a set of agents in `.github/agents/`. Orchestrators analyze requests, define scope, and route work to the right specialists; they do not implement code directly. Specialists handle focused implementation and follow-through tasks.
+The repository provides a set of agents in `.agents/agents/` (see [`.agents/README.md`](.agents/README.md) for the full guide). Orchestrators analyze requests, define scope, and route work to the right specialists; they do not implement code directly. Specialists handle focused implementation and follow-through tasks.
 
 | Agent | Role | File | Use it for |
 |---|---|---|---|

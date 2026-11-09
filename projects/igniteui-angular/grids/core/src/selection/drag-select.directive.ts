@@ -53,9 +53,9 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
     protected end$ = new Subject<any>();
     protected lastDirection = DragScrollDirection.NONE;
     protected _interval$: Observable<any>;
-    protected _sub: Subscription;
+    protected _sub!: Subscription;
 
-    private _activeDrag: boolean;
+    private _activeDrag!: boolean;
 
     constructor() {
         this._interval$ = interval(0, animationFrameScheduler).pipe(
@@ -95,8 +95,13 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
         }
 
         this.unsubscribe();
-        this._sub = this._interval$.subscribe(() => this.dragScroll.emit(delta));
         this.lastDirection = direction;
+
+        if (direction === DragScrollDirection.NONE) {
+            return;
+        }
+
+        this._sub = this._interval$.subscribe(() => this.dragScroll.emit(delta));
     };
 
     protected stopDragSelection = () => {

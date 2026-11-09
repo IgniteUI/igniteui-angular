@@ -72,7 +72,7 @@ export class OrgTreeComponent {
 
 - **Cascade selection**: `[rowSelection]="'multipleCascade'"` — selecting a parent selects all children; indeterminate state propagates up
 - **Cascade delete**: `[cascadeOnDelete]="true"` (default) — deleting a parent removes all descendants
-- **Load on demand**: `[loadChildrenOnDemand]="loadChildren"` — lazy-load children when a row is expanded
+- **Load on demand**: `[loadChildrenOnDemand]="loadChildren"` — lazy-load children when a row is expanded; customize the loading indicator with `<ng-template igxRowLoadingIndicator>` (import `IgxRowLoadingIndicatorTemplateDirective` from `igniteui-angular/grids/tree-grid`)
 - **Expansion depth**: `[expansionDepth]="2"` — control initial expansion level (`Infinity` by default)
 - **Add child row**: `treeGridRef().addRow(data, parentRowID)` — add a row as a child of a specific parent
 

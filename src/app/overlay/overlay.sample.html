@@ -1,112 +1,16 @@
-<div #host class="host">
-    <section class="sample-content">
-        <div class="column">
-            <p>Translate view</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 20px; flex-direction: column;">
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'up', 1)">UP 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'down', 1)">DOWN 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'left', 1)">LEFT 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'right', 1)">RIGHT 1px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'up', 10)">UP 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'down', 10)">DOWN 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'left', 10)">LEFT 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'right', 10)">RIGHT 10px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'up', 100)">UP 100px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'down', 100)">DOWN 100px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'left', 100)">LEFT 100px</button>
-                <button igxButton="contained" igxRipple (click)="moveHost(host, 'right', 100)">RIGHT 100px</button>
-            </div>
-        </div>
-        <div class="column">
-            <p>Directions</p>
-            <div class="direction-container">
-                <div id="tld" class="direction" (click)="setDirection($event)"></div>
-                <div id="tcd" class="direction" (click)="setDirection($event)"></div>
-                <div id="trd" class="direction" (click)="setDirection($event)"></div>
-            </div>
-            <div class="direction-container">
-                <div id="mld" class="direction" (click)="setDirection($event)"></div>
-                <div id="mcd" class="direction selected" (click)="setDirection($event)"></div>
-                <div id="mrd" class="direction" (click)="setDirection($event)"></div>
-            </div>
-            <div class="direction-container">
-                <div id="bld" class="direction" (click)="setDirection($event)"></div>
-                <div id="bcd" class="direction" (click)="setDirection($event)"></div>
-                <div id="brd" class="direction" (click)="setDirection($event)"></div>
-            </div>
-            <p>Starting Point</p>
-            <div class="start-point-container">
-                <div id="tlsp" class="start-point" (click)="setStartPoint($event)"></div>
-                <div id="tcsp" class="start-point" (click)="setStartPoint($event)"></div>
-                <div id="trsp" class="start-point" (click)="setStartPoint($event)"></div>
-            </div>
-            <div class="start-point-container">
-                <div id="mlsp" class="start-point" (click)="setStartPoint($event)"></div>
-                <div id="mcsp" class="start-point selected" (click)="setStartPoint($event)"></div>
-                <div id="mrsp" class="start-point" (click)="setStartPoint($event)"></div>
-            </div>
-            <div class="start-point-container">
-                <div id="blsp" class="start-point" (click)="setStartPoint($event)"></div>
-                <div id="bcsp" class="start-point" (click)="setStartPoint($event)"></div>
-                <div id="brsp" class="start-point" (click)="setStartPoint($event)"></div>
-            </div>
-        </div>
-        <div class="column">
-            <p>Strategies</p>
-            <div class="radio-group">
-                <p>Position Strategies</p>
-                @for (item of positionStrategies; track item) {
-                    <igx-radio value="{{item}}" name="ps"
-                    [(ngModel)]="positionStrategy" (change)="onChange($event)">{{item}}</igx-radio>
-                }
-            </div>
-            <div class="radio-group">
-                <p>Scroll Strategies</p>
-                @for (item of scrollStrategies; track item) {
-                    <igx-radio value="{{item}}" name="ss" [(ngModel)]="scrollStrategy"
-                    (change)="onChange($event)">{{item}}</igx-radio>
-                }
-            </div>
-        </div>
-        <div class="column">
-            <p>Settings</p>
-            <div>
-                <igx-switch class="settings" [(ngModel)]="closeOnOutsideClick" name="close"
-                    [value]="closeOnOutsideClick" (change)="onSwitchChange($event)">Close On Outside Click</igx-switch>
-            </div>
-            <div>
-                <igx-switch class="settings" [(ngModel)]="modal" name="modal" [value]="modal"
-                    (change)="onSwitchChange($event)">Modal</igx-switch>
-            </div>
-            <div>
-                <igx-switch class="settings" [(ngModel)]="useContainer" name="container" [value]="useContainer"
-                    (change)="onSwitchChange($event)">Open in container</igx-switch>
-            </div>
-            <div>
-                <igx-switch class="settings" [(ngModel)]="hasAnimation" name="animation" [value]="hasAnimation"
-                    (change)="onSwitchChange($event)">Has animation</igx-switch>
-            </div>
-            <div>
-                <igx-switch class="settings" [(ngModel)]="changeContainer" name="changeContainer" [value]="changeContainer"
-                    (change)="onSwitchChange($event)">Change the container</igx-switch>
-            </div>
-            <div>
-                <igx-input-group>
-                    <input igxInput name="dropDownItems" type="number" [(ngModel)]="itemsCount">
-                    <label igxLabel for="dropDownItems">Drop down items</label>
-                </igx-input-group>
-                <igx-input-group>
-                    <input igxInput name="dropDownWidth" type="number" [(ngModel)]="dropDownWidth">
-                    <label igxLabel for="dropDownWidth">Drop down width</label>
-                </igx-input-group>
-                <igx-input-group>
-                    <input igxInput name="animationLength" type="number" [(ngModel)]="animationLength">
-                    <label igxLabel for="animationLength">Animation length in ms</label>
-                </igx-input-group>
-            </div>
-        </div>
-        <button #button igxButton="contained" igxRipple igxDrag (click)="toggle()" [style.position]="'absolute'"
-            (dragEnd)="onDragEnd($event)" (dragStart)="onDragStart($event)">Toggle</button>
+<div #host class="overlay-sample sample-wrapper">
+    <section #stage class="overlay-sample__stage">
+        <button
+            #button
+            class="overlay-sample__toggle"
+            igxButton="contained"
+            igxRipple
+            igxDrag
+            (click)="toggle()"
+            (dragEnd)="onDragEnd($event)"
+            (dragStart)="onDragStart($event)">
+            Toggle overlay
+        </button>
         <igx-drop-down width="{{dropDownWidth}}px">
             @for (item of items; track item) {
                 <igx-drop-down-item>
@@ -123,3 +27,122 @@
         </div>
     </div>
 </div>
+
+<ng-template #customControls>
+    <fieldset class="control-card">
+        <legend>Anchor points</legend>
+        <div class="anchor-groups">
+            <div class="anchor-group">
+                <p class="anchor-group__label">Direction</p>
+                <div class="anchor-grid" role="group" aria-label="Direction">
+                    @for (v of verticalDirections; track v) {
+                        @for (h of horizontalDirections; track h) {
+                            <button
+                                type="button"
+                                class="anchor-cell"
+                                [class.selected]="verticalDirection === v && horizontalDirection === h"
+                                [attr.aria-pressed]="verticalDirection === v && horizontalDirection === h"
+                                [attr.aria-label]="v + ' ' + h"
+                                (click)="setDirection(v, h)"
+                            ></button>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="anchor-group">
+                <p class="anchor-group__label">Starting point</p>
+                <div class="anchor-grid" role="group" aria-label="Starting point">
+                    @for (v of verticalStartPoints; track v) {
+                        @for (h of horizontalStartPoints; track h) {
+                            <button
+                                type="button"
+                                class="anchor-cell"
+                                [class.selected]="verticalStartPoint === v && horizontalStartPoint === h"
+                                [attr.aria-pressed]="verticalStartPoint === v && horizontalStartPoint === h"
+                                [attr.aria-label]="v + ' ' + h"
+                                (click)="setStartPoint(v, h)"
+                            ></button>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Strategies</legend>
+        <div class="control-row">
+            <igx-select [(ngModel)]="positionStrategy" (ngModelChange)="onPositionStrategyChange($event)">
+                <label igxLabel>Position strategy</label>
+                @for (item of positionStrategies; track item) {
+                    <igx-select-item [value]="item">{{item}}</igx-select-item>
+                }
+            </igx-select>
+        </div>
+        <div class="control-row">
+            <igx-select [(ngModel)]="scrollStrategy" (ngModelChange)="onScrollStrategyChange($event)">
+                <label igxLabel>Scroll strategy</label>
+                @for (item of scrollStrategies; track item) {
+                    <igx-select-item [value]="item">{{item}}</igx-select-item>
+                }
+            </igx-select>
+        </div>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Settings</legend>
+        <div class="switch-list">
+            <igx-switch [(ngModel)]="closeOnOutsideClick" name="close"
+                [value]="closeOnOutsideClick" (change)="onSwitchChange($event)">Close on outside click</igx-switch>
+            <igx-switch [(ngModel)]="modal" name="modal" [value]="modal"
+                (change)="onSwitchChange($event)">Modal</igx-switch>
+            <igx-switch [(ngModel)]="useContainer" name="container" [value]="useContainer"
+                (change)="onSwitchChange($event)">Open in container</igx-switch>
+            <igx-switch [(ngModel)]="hasAnimation" name="animation" [value]="hasAnimation"
+                (change)="onSwitchChange($event)">Has animation</igx-switch>
+            <igx-switch [(ngModel)]="changeContainer" name="changeContainer" [value]="changeContainer"
+                (change)="onSwitchChange($event)">Change the container</igx-switch>
+        </div>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Values</legend>
+        <div class="value-grid">
+            <igx-input-group>
+                <input igxInput name="dropDownItems" type="number" [(ngModel)]="itemsCount">
+                <label igxLabel for="dropDownItems">Drop down items</label>
+            </igx-input-group>
+            <igx-input-group>
+                <input igxInput name="dropDownWidth" type="number" [(ngModel)]="dropDownWidth">
+                <label igxLabel for="dropDownWidth">Drop down width</label>
+            </igx-input-group>
+            <igx-input-group>
+                <input igxInput name="animationLength" type="number" [(ngModel)]="animationLength">
+                <label igxLabel for="animationLength">Animation length in ms</label>
+            </igx-input-group>
+        </div>
+    </fieldset>
+
+    <fieldset class="control-card">
+        <legend>Nudge host position</legend>
+        <div class="nudge">
+            <div class="nudge__pad">
+                <button type="button" class="nudge__btn nudge__btn--up" aria-label="Move up"
+                    (click)="moveHost(host, 'up', nudgeStep)">&#9650;</button>
+                <button type="button" class="nudge__btn nudge__btn--left" aria-label="Move left"
+                    (click)="moveHost(host, 'left', nudgeStep)">&#9664;</button>
+                <button type="button" class="nudge__btn nudge__btn--right" aria-label="Move right"
+                    (click)="moveHost(host, 'right', nudgeStep)">&#9654;</button>
+                <button type="button" class="nudge__btn nudge__btn--down" aria-label="Move down"
+                    (click)="moveHost(host, 'down', nudgeStep)">&#9660;</button>
+            </div>
+            <igx-buttongroup class="nudge__steps" selectionMode="singleRequired"
+                (selected)="onNudgeStepChange($event)">
+                @for (step of nudgeSteps; track step) {
+                    <button igxButton [selected]="step === nudgeStep">{{ step }}px</button>
+                }
+            </igx-buttongroup>
+        </div>
+    </fieldset>
+</ng-template>
+

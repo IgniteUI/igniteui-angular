@@ -1,7 +1,10 @@
 import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges, ElementType, ThemeType, MemberChanges } from './schema';
+import {
+    ClassChanges, BindingChanges, SelectorChanges, ThemeChanges, ImportsChanges,
+    ElementType, ThemeType, MemberChanges, ScssUseChanges
+} from './schema';
 import { UpdateChanges, InputPropertyType, BoundPropertyObject } from './UpdateChanges';
 import * as tsUtils from './tsUtils';
 import { setupTestTree } from './setup.spec';
@@ -48,7 +51,7 @@ describe('UpdateChanges', () => {
         });
     });
 
-    it('should replace/remove components', done => {
+    it('should replace/remove components', async () => {
         const selectorsJson: SelectorChanges = {
             changes: [
                 { type: 'component' as any, selector: 'igx-component', replaceWith: 'igx-replaced' },
@@ -56,26 +59,17 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'selectors.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(selectorsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(selectorsJson));
 
-        appTree.create(
-            'test.component.html',
-            '<igx-component> <content> <igx-remove></igx-remove> </igx-component> <igx-remove> <content> </igx-remove>'
-        );
-        appTree.create(
-            'test2.component.html',
-            '<igx-remove attr></igx-remove><igx-component>'
-        );
-        appTree.create(
-            'test3.component.html',
-            '<igx-remove-me-not attr></igx-remove-me-not> <igx-component> <igx-component-child></igx-component-child> </igx-component>'
-        );
+        appTree.create('test.component.html', '<igx-component> <content> <igx-remove></igx-remove> </igx-component> <igx-remove> <content> </igx-remove>');
+        appTree.create('test2.component.html', '<igx-remove attr></igx-remove><igx-component>');
+        appTree.create('test3.component.html', '<igx-remove-me-not attr></igx-remove-me-not> <igx-component> <igx-component-child></igx-component-child> </igx-component>');
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
@@ -85,13 +79,11 @@ describe('UpdateChanges', () => {
         update.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual('<igx-replaced> <content>  </igx-replaced> ');
         expect(appTree.readContent('test2.component.html')).toEqual('<igx-replaced>');
-        expect(appTree.readContent('test3.component.html')).toEqual(
-            '<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>'
-        );
-        done();
+        expect(appTree.readContent('test3.component.html')).toEqual('<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>');
+        ;
     });
 
-    it('should replace/remove directives', done => {
+    it('should replace/remove directives', async () => {
         const selectorsJson: SelectorChanges = {
             changes: [
                 { type: 'directive' as any, selector: 'igxDirective', replaceWith: 'igxReplaced' },
@@ -99,31 +91,27 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'selectors.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(selectorsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(selectorsJson));
 
-        appTree.create(
-            'test.component.html',
-            `<igx-component [igxDirective]="val" igxRemove> <content igxDirective [igxRemove]="val"> </igx-component>` +
-            `<igx-component2 [igxRemove]='val'> <content> </igx-component2>`
-        );
+        appTree.create('test.component.html', `<igx-component [igxDirective]="val" igxRemove> <content igxDirective [igxRemove]="val"> </igx-component>` +
+            `<igx-component2 [igxRemove]='val'> <content> </igx-component2>`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(update.getSelectorChanges()).toEqual(selectorsJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<igx-component [igxReplaced]="val"> <content igxReplaced> </igx-component>` +
+        expect(appTree.readContent('test.component.html')).toEqual(`<igx-component [igxReplaced]="val"> <content igxReplaced> </igx-component>` +
             `<igx-component2> <content> </igx-component2>`);
-        done();
+        ;
     });
 
-    it('should replace/remove outputs', done => {
+    it('should replace/remove outputs', async () => {
         const outputJson: BindingChanges = {
             changes: [
                 {
@@ -137,13 +125,13 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'outputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(outputJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(outputJson));
 
         const fileContent = `<one (onReplaceMe)="a"> <comp\r\ntag (onReplaceMe)="dwdw" (onOld)=""> </other> <another (onOld)="b" />`;
         appTree.create('test.component.html', fileContent);
@@ -154,28 +142,24 @@ describe('UpdateChanges', () => {
         expect(update.getOutputChanges()).toEqual(outputJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw" (onOld)=""> </other> <another />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw" (onOld)=""> </other> <another />`);
 
         // should only match the defined selector #11666
         const fileContent2 = `<comp (onReplaceMe)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another (onOld)="b" /> <another-diff (onOld)="toKeep" />`;
         appTree.overwrite('test.component.html', fileContent2);
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp (replaced)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another /> <another-diff (onOld)="toKeep" />`
-        );
+        expect(appTree.readContent('test.component.html')).toEqual(`<comp (replaced)="a"> <comp-not-same (onReplaceMe)="..NOT"> <another /> <another-diff (onOld)="toKeep" />`);
 
         outputJson.changes[0].owner = { type: 'directive' as any, selector: 'tag' };
         outputJson.changes[1].owner = { type: 'directive' as any, selector: 'tag' };
         appTree.overwrite('test.component.html', fileContent);
         const update2 = new UnitUpdateChanges(__dirname, appTree);
         update2.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw"> </other> <another (onOld)="b" />`);
-        done();
+        expect(appTree.readContent('test.component.html')).toEqual(`<one (onReplaceMe)="a"> <comp\r\ntag (replaced)="dwdw"> </other> <another (onOld)="b" />`);
+        ;
     });
 
-    it('should replace/remove inputs', done => {
+    it('should replace/remove inputs', async () => {
         const inputJson: BindingChanges = {
             changes: [
                 {
@@ -189,13 +173,13 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
 
         let fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
         appTree.create('test.component.html', fileContent);
@@ -206,16 +190,14 @@ describe('UpdateChanges', () => {
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another />`);
 
         inputJson.changes[1].remove = false;
         inputJson.changes[1].replaceWith = 'oldReplaced';
         appTree.overwrite('test.component.html', fileContent);
         const update2 = new UnitUpdateChanges(__dirname, appTree);
         update2.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another oldReplaced="b" />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw" [oldProp]=''> </other> <another oldReplaced="b" />`);
         inputJson.changes[1].remove = true;
 
         inputJson.changes[0].owner = { type: 'directive' as any, selector: 'tag' };
@@ -223,39 +205,32 @@ describe('UpdateChanges', () => {
         appTree.overwrite('test.component.html', fileContent);
         const update3 = new UnitUpdateChanges(__dirname, appTree);
         update3.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw"> </other> <another oldProp="b" />`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<one [replaceMe]="a"> <comp\r\ntag [replaced]="dwdw"> </other> <another oldProp="b" />`);
 
         inputJson.changes[1].owner = { type: 'component' as any, selector: 'another' };
         inputJson.changes[0].owner = { type: 'component' as any, selector: 'comp' };
-        const fileContent2 =
-        `<comp\r\ntag [oldProp]="g" [replaceMe]="NOT.replaceMe" ><another oldProp="g" [otherProp]="oldProp" /></comp>`;
+        const fileContent2 = `<comp\r\ntag [oldProp]="g" [replaceMe]="NOT.replaceMe" ><another oldProp="g" [otherProp]="oldProp" /></comp>`;
         appTree.overwrite('test.component.html', fileContent2);
         const update4 = new UnitUpdateChanges(__dirname, appTree);
         update4.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
+        expect(appTree.readContent('test.component.html')).toEqual(`<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
 
 
         fileContent = `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`;
         appTree.overwrite('test.component.html', fileContent);
         update4.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`
-        );
+        expect(appTree.readContent('test.component.html')).toEqual(`<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`);
 
         // should only match the defined selector #11666
         fileContent = `<comp [replaceMe]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another oldProp="b" /> <another-diff oldProp="toKeep" />`;
         appTree.overwrite('test.component.html', fileContent);
         update4.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-            `<comp [replaced]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another /> <another-diff oldProp="toKeep" />`
-        );
+        expect(appTree.readContent('test.component.html')).toEqual(`<comp [replaced]="dwdw"> <comp-not-same [replaceMe]="..NOT"> <another /> <another-diff oldProp="toKeep" />`);
 
-        done();
+        ;
     });
 
-    it('should replace class identifiers', done => {
+    it('should replace class identifiers', async () => {
         const classJson: ClassChanges = {
             changes: [
                 {
@@ -267,16 +242,15 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
+        const fileContent = `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -285,13 +259,12 @@ describe('UpdateChanges', () => {
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
+        expect(appTree.readContent('test.component.ts')).toEqual(`import { igxReplace, igxSecond } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxSecond; }`);
 
-        done();
+        ;
     });
 
-    it('should replace multiple class identifier with the same value', done => {
+    it('should replace multiple class identifier with the same value', async () => {
         const classJson: ClassChanges = {
             changes: [
                 {
@@ -303,16 +276,15 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
+        const fileContent = `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -321,13 +293,12 @@ describe('UpdateChanges', () => {
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
+        expect(appTree.readContent('test.component.ts')).toEqual(`import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
 
-        done();
+        ;
     });
 
-    it('should replace class identifiers (complex file)', done => {
+    it('should replace class identifiers (complex file)', async () => {
         const classJson: ClassChanges = {
             changes: [
                 { name: 'IgxGridComponent', replaceWith: 'IgxGridReplace' },
@@ -344,16 +315,15 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+        const fileContent = `import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridComponent } from "igniteui-angular";` +
             `import { IgxColumnComponent, IgxProvided, STRING_FILTERS} from "igniteui-angular";\r\n` +
             `import {` +
@@ -380,8 +350,7 @@ describe('UpdateChanges', () => {
             `    private getOptions(fileName: string): IgxExporterOptionsBase {` +
             `        return new IgxExcelExporterOptions(fileName);` +
             `    }` +
-            `}`
-            ;
+            `}`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -390,8 +359,7 @@ describe('UpdateChanges', () => {
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.ts')).toEqual(
-            `import { Component, Injectable, ViewChild } from "@angular/core";` +
+        expect(appTree.readContent('test.component.ts')).toEqual(`import { Component, Injectable, ViewChild } from "@angular/core";` +
             `import { IgxGridReplace } from "igniteui-angular";` +
             `import { IgxColumnReplace, IgxProvidedReplace, REPLACED_CONST} from "igniteui-angular";\r\n` +
             `import {` +
@@ -418,10 +386,9 @@ describe('UpdateChanges', () => {
             `    private getOptions(fileName: string): ReturnType {` +
             `        return new IgxNewable(fileName);` +
             `    }` +
-            `}`
-        );
+            `}`);
 
-        done();
+        ;
     });
 
     it('should correctly ignore types not from igniteui-angular', () => {
@@ -432,26 +399,25 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        const fileContent =
-            `import { Name } from ""; import { Another } from "@space/package"; export class Test { prop: Name; prop2: Another; }`;
+        const fileContent = `import { Name } from ""; import { Another } from "@space/package"; export class Test { prop: Name; prop2: Another; }`;
         appTree.create('test.component.ts', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(update.getClassChanges()).toEqual(classJson);
 
-        spyOn(tsUtils, 'getRenamePositions').and.callThrough();
+        vi.spyOn(tsUtils, 'getRenamePositions');
 
         update.applyChanges();
-        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Name', jasmine.anything());
-        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Another', jasmine.anything());
+        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Name', expect.anything());
+        expect(tsUtils.getRenamePositions).toHaveBeenCalledWith('/test.component.ts', 'Another', expect.anything());
         expect(appTree.readContent('test.component.ts')).toEqual(fileContent);
     });
 
@@ -466,16 +432,15 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(classJson));
 
-        let fileContent =
-`import { Size, Type as someThg } from "igniteui-angular";
+        let fileContent = `import { Size, Type as someThg } from "igniteui-angular";
 import { IgxService, IgxDiffService as eDiffService, Calendar as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
 export class Test {
@@ -495,8 +460,7 @@ export class Test {
         expect(update.getClassChanges()).toEqual(classJson);
 
         update.applyChanges();
-        let expectedFileContent =
-`import { IgxSize, IgxType as someThg } from "igniteui-angular";
+        let expectedFileContent = `import { IgxSize, IgxType as someThg } from "igniteui-angular";
 import { IgxService1, IgxNewDiffService as eDiffService, CalendarActual as Calendar } from 'igniteui-angular';
 import { Type } from "@angular/core";
 export class Test {
@@ -518,7 +482,7 @@ export class Test {
         expect(appTree.readContent('test.component.ts')).toEqual(expectedFileContent);
     });
 
-    it('should move property value between element tags', done => {
+    it('should move property value between element tags', async () => {
         const inputJson: BindingChanges = {
             changes: [
                 {
@@ -530,13 +494,13 @@ export class Test {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(inputJson));
 
         const fileContent = `<igx-icon fontSet='material' name='phone'></igx-icon>
 <igx-icon fontSet="material-icons" name="build"></igx-icon>
@@ -555,19 +519,17 @@ export class Test {
         expect(update.getInputChanges()).toEqual(inputJson);
 
         update.applyChanges();
-        expect(appTree.readContent('test.component.html')).toEqual(
-`<igx-icon fontSet='material'>phone</igx-icon>
+        expect(appTree.readContent('test.component.html')).toEqual(`<igx-icon fontSet='material'>phone</igx-icon>
 <igx-icon fontSet="material-icons">build</igx-icon>
 <igx-icon>accessory</igx-icon>`);
 
-        expect(appTree.readContent('test1.component.html')).toEqual(
-`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
+        expect(appTree.readContent('test1.component.html')).toEqual(`<igx-icon fontSet="material">{{'phone'}}</igx-icon>
 <igx-icon fontSet="material-icons">{{getName()}}</igx-icon>`);
 
-        done();
+        ;
     });
 
-    it('should replace/remove properties', done => {
+    it('should replace/remove properties', async () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -588,16 +550,15 @@ export class Test {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`$var: igx-theme-func(
+        const fileContent = `$var: igx-theme-func(
     $prop1: red,
     $replace-me: 3,
     $remove-me: 0px,
@@ -623,8 +584,7 @@ $var3: igx-comp-theme(
         expect(update.getThemeChanges()).toEqual(themeChangesJson);
 
         update.applyChanges();
-        expect(appTree.readContent('styles.scss')).toEqual(
-`$var: igx-theme-func(
+        expect(appTree.readContent('styles.scss')).toEqual(`$var: igx-theme-func(
     $prop1: red,
     $replaced: 3,
     $prop2: 2
@@ -639,10 +599,961 @@ $var3: igx-comp-theme(
 );`);
         expect(appTree.readContent('src/app/app.component.scss')).toEqual(`igx-comp-theme($replace-me: not, $prop3: 2);`);
         expect(appTree.readContent('test.component.scss')).toEqual(`igx-theme-func($replaced: 10px, $old-prop: 3, $prop3: 2);`);
-        done();
+        ;
     });
 
-    it('should replace imports', done => {
+    it('should keep the brackets balanced for nested theme functions', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`@include igx-mixin(igx-theme-func($remove-me: 6px));
+@include igx-mixin(igx-theme-func($prop1: red, $remove-me: 6px));
+@include igx-mixin(igx-theme-func($remove-me: 6px, $prop1: red));
+@include igx-mixin(igx-theme-func($replace-me: 6px));
+$var: igx-theme-func($content: "not a ( bracket", $remove-me: 6px);
+$var2: igx-theme-func($image: url(https://example.com/a.png), $remove-me: 6px);
+$var3: igx-theme-func(
+    $remove-me: 6px, // not a ) bracket
+    $prop1: red
+);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@include igx-mixin(igx-theme-func());
+@include igx-mixin(igx-theme-func($prop1: red));
+@include igx-mixin(igx-theme-func( $prop1: red));
+@include igx-mixin(igx-theme-func($replaced: 6px));
+$var: igx-theme-func($content: "not a ( bracket");
+$var2: igx-theme-func($image: url(https://example.com/a.png));
+$var3: igx-theme-func( // not a ) bracket
+    $prop1: red
+);`);
+    });
+
+    it('should not treat a theme function mentioned in a comment or a string as a call', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
+/* igx-theme-func($remove-me: 2px */
+$doc: "igx-theme-func($remove-me: 3px";
+$var: igx-theme-func($remove-me: 4px, $prop1: red);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`// igx-theme-func($remove-me: 1px) is gone, use the grid's own borders
+/* igx-theme-func($remove-me: 2px */
+$doc: "igx-theme-func($remove-me: 3px";
+$var: igx-theme-func( $prop1: red);`);
+    });
+
+    it('should remove a theme property that has a comment in front of it and keep the comment', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func(
+    $prop1: red, // brand color
+    $remove-me: 6px
+);
+$var2: igx-theme-func(
+    $prop1: red, // brand color
+    $remove-me: 6px,
+    $prop2: blue
+);
+$var3: igx-theme-func($prop1: red, /* legacy */ $remove-me: 6px);
+$var4: igx-theme-func($prop1: red, // legacy
+    $remove-me: 6px, $prop2: blue);
+$var5: igx-theme-func($prop1: red, // legacy
+    $remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func(
+    $prop1: red // brand color
+);
+$var2: igx-theme-func(
+    $prop1: red, // brand color
+    $prop2: blue
+);
+$var3: igx-theme-func($prop1: red /* legacy */);
+$var4: igx-theme-func($prop1: red, // legacy
+ $prop2: blue);
+$var5: igx-theme-func($prop1: red // legacy
+);`);
+    });
+
+    it('should update a theme property that has whitespace before its colon', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func($prop1 : red, $remove-me : 6px);
+$var2: igx-theme-func(
+    $prop1     : red,
+    $remove-me : 6px
+);
+$var3: igx-theme-func($replace-me  :  6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func($prop1 : red);
+$var2: igx-theme-func(
+    $prop1     : red
+);
+$var3: igx-theme-func($replaced  :  6px);`);
+    });
+
+    it('should not update a function or mixin the stylesheet declares itself', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const userCode =
+`@use "igniteui-angular/theming" as igx;
+@mixin app-igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@include app-igx-theme-func($remove-me: 2px);
+@function my_igx-theme-func($remove-me: 1px) {
+    @return $remove-me;
+}
+$var1: my_igx-theme-func($remove-me: 2px);
+`;
+        appTree.create('styles.scss', userCode + `$var2: igx.igx-theme-func($remove-me: 2px, $prop1: red);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        // a namespaced call to the library function is still migrated
+        expect(appTree.readContent('styles.scss')).toEqual(userCode + `$var2: igx.igx-theme-func( $prop1: red);`);
+    });
+
+    it('should not take a declaration in a comment or a string for one the stylesheet makes', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`// @function igx-theme-func($remove-me: 1px) {}
+$var1: igx-theme-func($prop1: red, $remove-me: 6px);
+$doc: "@mixin igx-theme-func($remove-me: 1px)";
+$var2: igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`// @function igx-theme-func($remove-me: 1px) {}
+$var1: igx-theme-func($prop1: red);
+$doc: "@mixin igx-theme-func($remove-me: 1px)";
+$var2: igx-theme-func();`);
+    });
+
+    it('should update a namespaced Ignite UI call although the stylesheet declares the same name', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        // the two are separate members under Sass's namespace rules
+        appTree.create('styles.scss',
+`@use "igniteui-angular/theming" as igx;
+@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var: igx.igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@use "igniteui-angular/theming" as igx;
+@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var: igx.igx-theme-func();`);
+    });
+
+    it('should tell a mixin the stylesheet declares from a function of the same name', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        // the mixin does not shadow the library's function, and the function does not shadow a mixin
+        appTree.create('styles.scss',
+`@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@function app-igx-theme-func($remove-me: 1px) {
+    @return $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var1: igx-theme-func($remove-me: 6px);
+$var2: app-igx-theme-func($remove-me: 6px);
+@include app-igx-theme-func($remove-me: 2px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@mixin igx-theme-func($remove-me: 1px) {
+    border-width: $remove-me;
+}
+@function app-igx-theme-func($remove-me: 1px) {
+    @return $remove-me;
+}
+@include igx-theme-func($remove-me: 2px);
+$var1: igx-theme-func();
+$var2: app-igx-theme-func($remove-me: 6px);
+@include app-igx-theme-func();`);
+    });
+
+    it('should recognize equivalent underscore and hyphen names for local Sass members', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`@mixin app_theme($remove-me: 1px) { border-width: $remove-me; }
+@mixin reverse-theme($remove-me: 1px) { border-width: $remove-me; }
+@function custom_theme($remove-me: 1px) { @return $remove-me; }
+@function reverse-function-theme($remove-me: 1px) { @return $remove-me; }
+.calls {
+    @include app-theme($remove-me: 2px);
+    @include reverse_theme($remove-me: 2px);
+    $local: custom-theme($remove-me: 2px);
+    $reverse: reverse_function_theme($remove-me: 2px);
+    $library: app-theme($remove-me: 2px);
+    @include custom-theme($remove-me: 2px);
+    @include igx.app-theme($remove-me: 2px);
+}`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@mixin app_theme($remove-me: 1px) { border-width: $remove-me; }
+@mixin reverse-theme($remove-me: 1px) { border-width: $remove-me; }
+@function custom_theme($remove-me: 1px) { @return $remove-me; }
+@function reverse-function-theme($remove-me: 1px) { @return $remove-me; }
+.calls {
+    @include app-theme($remove-me: 2px);
+    @include reverse_theme($remove-me: 2px);
+    $local: custom-theme($remove-me: 2px);
+    $reverse: reverse_function_theme($remove-me: 2px);
+    $library: app-theme();
+    @include custom-theme();
+    @include igx.app-theme();
+}`);
+    });
+
+    it('should recognize indented Sass shorthand declarations and includes within their scope', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const source =
+`= app-grid-summary-theme($remove-me: 1px)
+    border-width: $remove-me
+@mixin long_theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+.calls
+    +app-grid-summary-theme($remove-me: 2px)
+    @include app-grid-summary-theme($remove-me: 2px)
+    +long-theme($remove-me: 2px)
+    +function-theme($remove-me: 2px)
+    +igx.app-grid-summary-theme($remove-me: 2px)
+    $library: app-grid-summary-theme($remove-me: 2px)
+    $local: function-theme($remove-me: 2px)
+@media screen
+    =scoped-theme($remove-me: 1px)
+        border-width: $remove-me
+    .local
+        +scoped-theme($remove-me: 2px)
+.outside
+    +scoped-theme($remove-me: 2px)`;
+        const expected =
+`= app-grid-summary-theme($remove-me: 1px)
+    border-width: $remove-me
+@mixin long_theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+.calls
+    +app-grid-summary-theme($remove-me: 2px)
+    @include app-grid-summary-theme($remove-me: 2px)
+    +long-theme($remove-me: 2px)
+    +function-theme()
+    +igx.app-grid-summary-theme()
+    $library: app-grid-summary-theme()
+    $local: function-theme($remove-me: 2px)
+@media screen
+    =scoped-theme($remove-me: 1px)
+        border-width: $remove-me
+    .local
+        +scoped-theme($remove-me: 2px)
+.outside
+    +scoped-theme()`;
+        appTree.create('styles.sass', source);
+        appTree.create('windows.sass', source.replace(/\n/g, '\r\n'));
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(expected);
+        expect(appTree.readContent('windows.sass')).toEqual(expected.replace(/\n/g, '\r\n'));
+    });
+
+    it('should distinguish indented Sass shorthand from operators in function expressions', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.sass',
+`=app-theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+$direct: +app-theme($remove-me: 2px)
+$equal: 1px == app-theme($remove-me: 2px)
+$list: (
+    +app-theme($remove-me: 2px),
+    +function-theme($remove-me: 2px)
+)
+.calls
+    +app-theme($remove-me: 2px)
+    +function-theme($remove-me: 2px)`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(
+`=app-theme($remove-me: 1px)
+    border-width: $remove-me
+@function function-theme($remove-me: 1px)
+    @return $remove-me
+$direct: +app-theme()
+$equal: 1px == app-theme()
+$list: (
+    +app-theme(),
+    +function-theme($remove-me: 2px)
+)
+.calls
+    +app-theme($remove-me: 2px)
+    +function-theme()`);
+    });
+
+    it('should classify mixin calls through comments without changing the comments', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const source =
+`@function theme($remove-me: false) { @return $remove-me; }
+@mixin app-theme($remove-me: 1px) { border-width: $remove-me; }
+@include /* brand */ theme($remove-me: true);
+@include // brand
+    theme($remove-me: true);
+@include /* keep */ app-theme($remove-me: 2px);
+@include // keep
+    app-theme($remove-me: 2px);
+$value: theme($remove-me: true);`;
+        const expected =
+`@function theme($remove-me: false) { @return $remove-me; }
+@mixin app-theme($remove-me: 1px) { border-width: $remove-me; }
+@include /* brand */ theme();
+@include // brand
+    theme();
+@include /* keep */ app-theme($remove-me: 2px);
+@include // keep
+    app-theme($remove-me: 2px);
+$value: theme($remove-me: true);`;
+        for (const eol of ['\n', '\r\n']) {
+            const file = eol === '\n' ? 'styles.scss' : 'windows.scss';
+            appTree.create(file, source.replace(/\n/g, eol));
+        }
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(expected);
+        expect(appTree.readContent('windows.scss')).toEqual(expected.replace(/\n/g, '\r\n'));
+    });
+
+    it('should migrate immediate calls before local Sass declarations become available', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$border-width', remove: true, owner: 'grid-summary-theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$before: grid-summary-theme($border-width: 2px);
+.before { @include grid-summary-theme($border-width: 2px); }
+@function grid_summary_theme($border-width: 1px) { @return $border-width; }
+@mixin grid-summary-theme($border-width: 1px) { border-width: $border-width; }
+$after: grid-summary-theme($border-width: 2px);
+.after { @include grid-summary-theme($border-width: 2px); }
+@function grid-summary-theme($border-width: 3px) { @return $border-width; }
+@mixin grid_summary_theme($border-width: 3px) { border-width: $border-width; }
+@media screen {
+    $before: app-grid-summary-theme($border-width: 2px);
+    @function app-grid-summary-theme($border-width: 1px) { @return $border-width; }
+    $after: app-grid-summary-theme($border-width: 2px);
+}
+$outside: app-grid-summary-theme($border-width: 2px);`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$before: grid-summary-theme();
+.before { @include grid-summary-theme(); }
+@function grid_summary_theme($border-width: 1px) { @return $border-width; }
+@mixin grid-summary-theme($border-width: 1px) { border-width: $border-width; }
+$after: grid-summary-theme($border-width: 2px);
+.after { @include grid-summary-theme($border-width: 2px); }
+@function grid-summary-theme($border-width: 3px) { @return $border-width; }
+@mixin grid_summary_theme($border-width: 3px) { border-width: $border-width; }
+@media screen {
+    $before: app-grid-summary-theme();
+    @function app-grid-summary-theme($border-width: 1px) { @return $border-width; }
+    $after: app-grid-summary-theme($border-width: 2px);
+}
+$outside: app-grid-summary-theme();`);
+    });
+
+    it('should respect declaration order for immediate indented Sass calls', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$border-width', remove: true, owner: 'grid-summary-theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const source =
+`$before: grid-summary-theme($border-width: 2px)
+.before
+    +grid-summary-theme($border-width: 2px)
+@function grid_summary_theme($border-width: 1px)
+    @return $border-width
+=grid-summary-theme($border-width: 1px)
+    border-width: $border-width
+$after: grid-summary-theme($border-width: 2px)
+.after
+    @include grid-summary-theme($border-width: 2px)
+@media screen
+    $before: app-grid-summary-theme($border-width: 2px)
+    @function app-grid-summary-theme($border-width: 1px)
+        @return $border-width
+    $after: app-grid-summary-theme($border-width: 2px)
+$outside: app-grid-summary-theme($border-width: 2px)`;
+        const expected =
+`$before: grid-summary-theme()
+.before
+    +grid-summary-theme()
+@function grid_summary_theme($border-width: 1px)
+    @return $border-width
+=grid-summary-theme($border-width: 1px)
+    border-width: $border-width
+$after: grid-summary-theme($border-width: 2px)
+.after
+    @include grid-summary-theme($border-width: 2px)
+@media screen
+    $before: app-grid-summary-theme()
+    @function app-grid-summary-theme($border-width: 1px)
+        @return $border-width
+    $after: app-grid-summary-theme($border-width: 2px)
+$outside: app-grid-summary-theme()`;
+        appTree.create('styles.sass', source);
+        appTree.create('windows.sass', source.replace(/\n/g, '\r\n'));
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(expected);
+        expect(appTree.readContent('windows.sass')).toEqual(expected.replace(/\n/g, '\r\n'));
+    });
+
+    it('should preserve forward references in Sass bodies and default arguments evaluated later', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$border-width', remove: true, owner: 'grid-summary-theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const scss =
+`@function wrapper($value: grid-summary-theme($border-width: 2px)) {
+    @return grid-summary-theme($border-width: $value);
+}
+@mixin wrapper($value: grid-summary-theme($border-width: 2px)) {
+    @include grid-summary-theme($border-width: $value);
+}
+@function grid-summary-theme($border-width: 1px) { @return $border-width; }
+@mixin grid-summary-theme($border-width: 1px) { border-width: $border-width; }
+.calls { @include wrapper(); width: wrapper(); }`;
+        const sass =
+`@function wrapper($value: grid-summary-theme($border-width: 2px))
+    @return grid-summary-theme($border-width: $value)
+=wrapper($value: grid-summary-theme($border-width: 2px))
+    +grid-summary-theme($border-width: $value)
+=empty($value: grid-summary-theme($border-width: 2px))
+@function grid-summary-theme($border-width: 1px)
+    @return $border-width
+=grid-summary-theme($border-width: 1px)
+    border-width: $border-width
+.calls
+    +wrapper()
+    +empty()
+    width: wrapper()`;
+        appTree.create('styles.scss', scss);
+        appTree.create('styles.sass', sass);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(scss);
+        expect(appTree.readContent('styles.sass')).toEqual(sass);
+    });
+
+    it('should limit local theme declarations to their enclosing Sass block', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property },
+                { name: '$old', replaceWith: '$new', owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$before: theme($remove-me: 2px, $old: red);
+@media screen {
+    /* } @function theme() { */
+    $text: "}";
+    @function theme($remove-me: 1px, $old: red) { @return $old; }
+    @mixin theme($remove-me: 1px, $old: red) { color: $old; }
+    $local: theme($remove-me: 2px, $old: red);
+    .nested { @include theme($remove-me: 2px, $old: red); }
+}
+@media print {
+    $sibling: theme($remove-me: 2px, $old: red);
+    @include theme($remove-me: 2px, $old: red);
+}
+$after: theme($remove-me: 2px, $old: red);`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$before: theme( $new: red);
+@media screen {
+    /* } @function theme() { */
+    $text: "}";
+    @function theme($remove-me: 1px, $old: red) { @return $old; }
+    @mixin theme($remove-me: 1px, $old: red) { color: $old; }
+    $local: theme($remove-me: 2px, $old: red);
+    .nested { @include theme($remove-me: 2px, $old: red); }
+}
+@media print {
+    $sibling: theme( $new: red);
+    @include theme( $new: red);
+}
+$after: theme( $new: red);`);
+    });
+
+    it('should limit local theme declarations to their enclosing indented Sass block', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$remove-me', remove: true, owner: 'theme', type: ThemeType.Property }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.sass',
+`@media screen
+    /* local function */
+    @function theme($remove-me: 1px)
+        @return red
+    @mixin theme($remove-me: 1px)
+        color: red
+    $local: theme($remove-me: 2px)
+    .nested
+        @include theme($remove-me: 2px)
+@media print
+    $sibling: theme($remove-me: 2px)
+$after: theme(
+    $remove-me: 2px
+)
+@include theme($remove-me: 2px)`);
+
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.sass')).toEqual(
+`@media screen
+    /* local function */
+    @function theme($remove-me: 1px)
+        @return red
+    @mixin theme($remove-me: 1px)
+        color: red
+    $local: theme($remove-me: 2px)
+    .nested
+        @include theme($remove-me: 2px)
+@media print
+    $sibling: theme()
+$after: theme(
+)
+@include theme()`);
+    });
+
+    it('should update a call another stylesheet of the app could have declared', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        // a stylesheet of the app can forward the library's own members, and can hide or rename
+        // what it declares, so what another one holds says nothing about this call
+        appTree.create('_themes.scss', `@forward "igniteui-angular/theming";`);
+        appTree.create('_mixins.scss', `@function igx-theme-func($remove-me) {\n    @return $remove-me;\n}`);
+        appTree.create('styles.scss',
+`@use "themes" as theme;
+@use "mixins" as custom;
+$var1: theme.igx-theme-func($remove-me: 6px);
+$var2: igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`@use "themes" as theme;
+@use "mixins" as custom;
+$var1: theme.igx-theme-func();
+$var2: igx-theme-func();`);
+    });
+
+    it('should not let another stylesheet of the app block a migration', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const unrelated = `@mixin igx-theme-func($remove-me: 1px) {\n    border-width: $remove-me;\n}`;
+        appTree.create('unrelated.scss', unrelated);
+        appTree.create('styles.scss', `$var: igx-theme-func($remove-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('unrelated.scss')).toEqual(unrelated);
+        expect(appTree.readContent('styles.scss')).toEqual(`$var: igx-theme-func();`);
+    });
+
+    it('should update a theme function whose name the owner is only part of', async () => {
+        // migrations rely on this: `circular-theme` addresses `progress-circular-theme`,
+        // and `theme` covers every `*-theme` mixin
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$progress-circle-color', replaceWith: '$fill-color-default',
+                    owner: 'circular-theme',
+                    type: ThemeType.Property
+                },
+                {
+                    name: '$wc', remove: true,
+                    owner: 'theme',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: progress-circular-theme($progress-circle-color: red);
+@include theme($palette: $p, $wc: true);
+$var2: light-theme($palette: $p, $wc: true);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: progress-circular-theme($fill-color-default: red);
+@include theme($palette: $p);
+$var2: light-theme($palette: $p);`);
+    });
+
+    it('should rename a theme property behind a comment that mentions it', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func(/* $replace-me docs */ $replace-me: 6px);
+$var2: igx-theme-func(
+    $prop1: red,
+    // $replace-me: keep in sync with the brand color
+    $replace-me: 6px
+);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func(/* $replace-me docs */ $replaced: 6px);
+$var2: igx-theme-func(
+    $prop1: red,
+    // $replace-me: keep in sync with the brand color
+    $replaced: 6px
+);`);
+    });
+
+    it('should remove rather than rename a theme property the call already passes under its new name', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$replace-me', replaceWith: '$replaced',
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$var1: igx-theme-func($replaced: red, $replace-me: 6px);
+$var2: igx-theme-func($replace-me: 6px, $replaced: red);
+$var3: igx-theme-func($not-replaced: red, $replace-me: 6px);
+$var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replace-me: 6px);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$var1: igx-theme-func($replaced: red);
+$var2: igx-theme-func( $replaced: red);
+$var3: igx-theme-func($not-replaced: red, $replaced: 6px);
+$var4: igx-theme-func($prop1: igx-inner-func($replaced: red), $replaced: 6px);`);
+    });
+
+    it('should keep the line endings of the stylesheet when carrying a comment over', async () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss', `$var: igx-theme-func($prop1: red, // brand color\r\n    $remove-me: 6px, $prop2: blue);`);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('styles.scss'))
+            .toEqual(`$var: igx-theme-func($prop1: red, // brand color\r\n $prop2: blue);`);
+    });
+
+    it('should update theme properties in stylesheets outside sourceRoot', async () => {
+        appTree = setupTestTree({
+            projects: {
+                testProj: {
+                    projectType: 'application',
+                    root: '',
+                    sourceRoot: 'src',
+                    architect: { build: { options: {} } }
+                }
+            },
+            schematics: {
+                '@schematics/angular:component': {
+                    prefix: 'app'
+                }
+            }
+        });
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$remove-me', remove: true,
+                    owner: 'igx-theme-func',
+                    type: ThemeType.Property
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const call = `$var: igx-theme-func($remove-me: 1px);`;
+        const migrated = `$var: igx-theme-func();`;
+        const updated = ['src/app/app.scss', 'src/app/distribution/_summary.scss', 'styles/_theme.scss'];
+        const skipped = ['node_modules/some-lib/_lib.scss', 'dist/app/styles.scss'];
+        [...updated, ...skipped].forEach(file => appTree.create(file, call));
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        updated.forEach(file => expect(appTree.readContent(file), file).toEqual(migrated));
+        // dependencies and build output are never touched
+        skipped.forEach(file => expect(appTree.readContent(file), file).toEqual(call));
+    });
+
+    it('should replace imports', async () => {
         const importsJson: ImportsChanges = {
             changes: [
                 {
@@ -654,13 +1565,13 @@ $var3: igx-comp-theme(
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'imports.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(importsJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(importsJson));
 
         const fileContent = `
 @NgModule({
@@ -701,56 +1612,44 @@ export class AppModule { }`;
 })
 export class AppModule { }`);
 
-        done();
+        ;
     });
 
-    it('should handle changes with valueTransform functions', done => {
+    it('should handle changes with valueTransform functions', async () => {
         const inputsJson: BindingChanges = {
             changes: [{
-                name: 'someProp',
-                replaceWith: 'someOtherProp',
-                valueTransform: 'some_prop_transform',
-                owner: {
-                    selector: 'igx-component',
-                    type: ElementType.Component
-                }
-            }]
+                    name: 'someProp',
+                    replaceWith: 'someOtherProp',
+                    valueTransform: 'some_prop_transform',
+                    owner: {
+                        selector: 'igx-component',
+                        type: ElementType.Component
+                    }
+                }]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(inputsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(inputsJson));
 
         // bracketed
-        appTree.create(
-            'test.component.html',
-            '<igx-component [someProp]="true"></igx-component>'
-        );
+        appTree.create('test.component.html', '<igx-component [someProp]="true"></igx-component>');
 
         // No brackets
-        appTree.create(
-            'test2.component.html',
-            '<igx-component someProp="otherVal"></igx-component>'
-        );
+        appTree.create('test2.component.html', '<igx-component someProp="otherVal"></igx-component>');
 
         // Small quotes
-        appTree.create(
-            'test3.component.html',
-            `<igx-component someProp='otherVal'></igx-component>`
-        );
+        appTree.create('test3.component.html', `<igx-component someProp='otherVal'></igx-component>`);
 
         // Multiple occurances
-        appTree.create(
-            'test4.component.html',
-            `<igx-component [someProp]="true"><igx-component>
+        appTree.create('test4.component.html', `<igx-component [someProp]="true"><igx-component>
 <igx-component [someProp]="false" [someProp]="false" [someProp]="false" [someProp]="false"><igx-component>
 <igx-component someProp="true"><igx-component>
-<igx-component someProp="false"><igx-component>`
-        );
+<igx-component someProp="false"><igx-component>`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
@@ -758,8 +1657,9 @@ export class AppModule { }`);
         expect(update.getInputChanges()).toEqual(inputsJson);
         update.addValueTransform('some_prop_transform', (args: BoundPropertyObject): void => {
             if (args.bindingType === InputPropertyType.EVAL) {
-                    args.value = args.value === 'true' ? '\'trueValue\'' : '\'falseValue\'';
-            } else {
+                args.value = args.value === 'true' ? '\'trueValue\'' : '\'falseValue\'';
+            }
+            else {
                 args.value = args.value === 'true' ? 'trueValue' : 'falseValue';
             }
         });
@@ -769,46 +1669,40 @@ export class AppModule { }`);
         expect(appTree.readContent('test2.component.html')).toEqual(`<igx-component someOtherProp="falseValue"></igx-component>`);
         expect(appTree.readContent('test3.component.html')).toEqual(`<igx-component someOtherProp='falseValue'></igx-component>`);
         expect(appTree.readContent('test4.component.html')).toEqual(`<igx-component [someOtherProp]="'trueValue'"><igx-component>\n` +
-// eslint-disable-next-line max-len
-`<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
+            // eslint-disable-next-line max-len
+            `<igx-component [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'" [someOtherProp]="'falseValue'"><igx-component>
 <igx-component someOtherProp="trueValue"><igx-component>
 <igx-component someOtherProp="falseValue"><igx-component>`);
-        done();
+        ;
     });
 
-    it('Should be able to change binding type via transform function', done => {
+    it('Should be able to change binding type via transform function', async () => {
         const inputsJson: BindingChanges = {
             changes: [{
-                name: 'prop',
-                replaceWith: 'newProp',
-                valueTransform: 'prop_transform',
-                owner: {
-                    selector: 'igx-component',
-                    type: ElementType.Component
-                }
-            }]
+                    name: 'prop',
+                    replaceWith: 'newProp',
+                    valueTransform: 'prop_transform',
+                    owner: {
+                        selector: 'igx-component',
+                        type: ElementType.Component
+                    }
+                }]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn(fs, 'readFileSync').and.returnValue(JSON.stringify(inputsJson));
+        vi.spyOn(fs, 'readFileSync').mockReturnValue(JSON.stringify(inputsJson));
 
         // bracketed
-        appTree.create(
-            'test-bound-to-string.component.html',
-            `<igx-component [prop]="true">STRING</igx-component>
+        appTree.create('test-bound-to-string.component.html', `<igx-component [prop]="true">STRING</igx-component>
 <igx-component [prop]="false">STRING</igx-component>
-<igx-component [prop]="someOtherProperty">BOUND</igx-component>`
-        );
-        appTree.create(
-            'test-string-to-bound.component.html',
-            `<igx-component prop="changeThisToBound">BOUND</igx-component>
-<igx-component prop="leaveMeBe">STRING</igx-component>`
-        );
+<igx-component [prop]="someOtherProperty">BOUND</igx-component>`);
+        appTree.create('test-string-to-bound.component.html', `<igx-component prop="changeThisToBound">BOUND</igx-component>
+<igx-component prop="leaveMeBe">STRING</igx-component>`);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
@@ -820,7 +1714,7 @@ export class AppModule { }`);
                     case 'true':
                         args.value = 'TRUTHY-STRING-VALUE';
                         args.bindingType = InputPropertyType.STRING;
-                    break;
+                        break;
                     case 'false':
                         args.value = 'FALSY-STRING-VALUE';
                         args.bindingType = InputPropertyType.STRING;
@@ -828,7 +1722,8 @@ export class AppModule { }`);
                     default:
                         args.value += ' ? true : false';
                 }
-            } else {
+            }
+            else {
                 if (args.value === 'changeThisToBound') {
                     args.bindingType = InputPropertyType.EVAL;
                     args.value = 'true';
@@ -837,14 +1732,12 @@ export class AppModule { }`);
         });
 
         update.applyChanges();
-        expect(appTree.readContent('test-bound-to-string.component.html')).toEqual(
-`<igx-component newProp="TRUTHY-STRING-VALUE">STRING</igx-component>
+        expect(appTree.readContent('test-bound-to-string.component.html')).toEqual(`<igx-component newProp="TRUTHY-STRING-VALUE">STRING</igx-component>
 <igx-component newProp="FALSY-STRING-VALUE">STRING</igx-component>
 <igx-component [newProp]="someOtherProperty ? true : false">BOUND</igx-component>`);
-        expect(appTree.readContent('test-string-to-bound.component.html')).toEqual(
-`<igx-component [newProp]="true">BOUND</igx-component>
+        expect(appTree.readContent('test-string-to-bound.component.html')).toEqual(`<igx-component [newProp]="true">BOUND</igx-component>
 <igx-component newProp="leaveMeBe">STRING</igx-component>`);
-        done();
+        ;
     });
 
     describe('Project loading', () => {
@@ -868,7 +1761,7 @@ export class AppModule { }`);
             appTree.create(sassFile, '');
 
             // skip loading json config files
-            spyOn(fs, 'existsSync').and.returnValue(false);
+            vi.spyOn(fs, 'existsSync').mockReturnValue(false);
 
             const update = new UnitUpdateChanges(__dirname, appTree);
             expect(update.tsFiles).toContain(tsFile);
@@ -911,7 +1804,7 @@ export class AppModule { }`);
             }
 
             // skip loading json config files
-            spyOn(fs, 'existsSync').and.returnValue(false);
+            vi.spyOn(fs, 'existsSync').mockReturnValue(false);
 
             const update = new UnitUpdateChanges(__dirname, appTree);
             for (const projName of Object.keys(workspace.projects)) {
@@ -935,13 +1828,16 @@ export class AppModule { }`);
             const jsonPath = path.join(__dirname, 'changes', 'members.json');
 
             // leave callThrough on spies for other files the LS test might want to load:
-            spyOn(fs, 'existsSync').and.callThrough()
-                .withArgs(jsonPath).and.returnValue(true);
-            spyOn(fs, 'readFileSync').and.callThrough()
-                .withArgs(jsonPath, jasmine.any(String)).and.returnValue(JSON.stringify(selectorsJson));
+            const existsSync = fs.existsSync;
+            const readFileSync = fs.readFileSync;
+            vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) =>
+                filePath === jsonPath || existsSync(filePath));
+            vi.spyOn(fs, 'readFileSync').mockImplementation(((filePath: fs.PathOrFileDescriptor, options?: any) =>
+                filePath === jsonPath && typeof options === 'string'
+                    ? JSON.stringify(selectorsJson)
+                    : readFileSync(filePath, options)) as typeof fs.readFileSync);
 
-            const fileContent =
-`import { Component } from '@angular/core';
+            const fileContent = `import { Component } from '@angular/core';
 import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
@@ -955,8 +1851,7 @@ export class CustomGridComponent {
 }
 `;
             appTree.create('test.component.ts', fileContent);
-            const expectedFileContent =
-`import { Component } from '@angular/core';
+            const expectedFileContent = `import { Component } from '@angular/core';
 import { IgxGridComponent, IGridKeydownEventArgs } from 'igniteui-angular';
 @Component({
   selector: 'app-custom-grid',
@@ -975,7 +1870,7 @@ export class CustomGridComponent {
         });
     });
 
-    it('Should migrate sass variables names correctly', ()=> {
+    it('Should migrate sass variables names correctly', () => {
         const themeChangesJson: ThemeChanges = {
             changes: [
                 {
@@ -1011,16 +1906,15 @@ export class CustomGridComponent {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`$palette: $light-material-palette;
+        const fileContent = `$palette: $light-material-palette;
 $light-material-palette : $some-variable,
 $palette2: $light-material-palette-primary;
 $palette3: mat.define-light-theme($light-palette-primary, $elevation, $light-palette);
@@ -1046,8 +1940,7 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 );
 `;
         appTree.create('test.component.scss', fileContent);
-        const expectedFileContent =
-`$palette: $igx-light-material-palette;
+        const expectedFileContent = `$palette: $igx-light-material-palette;
 $igx-light-material-palette : $some-variable,
 $palette2: $light-material-palette-primary;
 $palette3: mat.define-light-theme($light-palette-primary, $igx-elevation, $igx-light-palette);
@@ -1073,10 +1966,10 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
 );
 `;
 
-    const update = new UnitUpdateChanges(__dirname, appTree);
+        const update = new UnitUpdateChanges(__dirname, appTree);
 
-    update.applyChanges();
-    expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
+        update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toEqual(expectedFileContent);
     });
 
     it('Should migrate aliased scss functions', () => {
@@ -1106,16 +1999,15 @@ $header-border-color: igx-color($dark-theme-palette, "primary", 600)
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const fileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'some/url' as my-namespace;
@@ -1129,8 +2021,7 @@ $my-other-theme: my-namespace.function1($color1: igniteui2.igx-contrast-color($p
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'some/url' as my-namespace;
@@ -1174,16 +2065,15 @@ $my-other-theme: my-namespace.function1($color1: igniteui2.contrast-color($palet
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as *;
+        const fileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 $my-palette: igx-palette($primary: red, $secondary:  blue);
@@ -1195,8 +2085,7 @@ $my-other-theme: my-namespace.function1($color1: igx-contrast-color($palette: ig
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as *;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 $my-palette: palette($primary: red, $secondary:  blue);
@@ -1233,16 +2122,15 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const fileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'some/url' as my-namespace;
@@ -1255,8 +2143,7 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as igniteui1;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as igniteui1;
 @use 'igniteui-angular/lib/core/styles/themes/index' as igniteui3;
 @use 'igniteui-angular/theme' as igniteui2;
 @use 'some/url' as my-namespace;
@@ -1294,16 +2181,15 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
         };
 
         const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
             return false;
         });
-        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(themeChangesJson));
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
 
-        const fileContent =
-`@use 'igniteui-angular/theming' as *;
+        const fileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 @include igx-theme($palette: $my-palette);
@@ -1314,8 +2200,7 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         appTree.create('test.component.scss', fileContent);
 
-        const expectedFileContent =
-`@use 'igniteui-angular/theming' as *;
+        const expectedFileContent = `@use 'igniteui-angular/theming' as *;
 @use 'some/url' as my-namespace;
 
 @include theme($palette: $my-palette);
@@ -1326,6 +2211,326 @@ $my-other-theme: my-namespace.function1($color1: contrast-color($palette: palett
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         update.applyChanges();
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should remove non-aliased scss mixin calls marked for removal', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'dialog',
+                    replaceWith: 'tokens',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'dialog-typography',
+                    remove: true,
+                    type: ThemeType.Mixin
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`.my-dialog {
+    @include dialog(dialog-theme($background: red));
+    @include dialog-typography(
+        $categories: (title: 'h5')
+    );
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`.my-dialog {
+    @include tokens(dialog-theme($background: red));
+}
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should remove aliased scss mixin calls marked for removal', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: 'checkbox',
+                    replaceWith: 'tokens',
+                    type: ThemeType.Mixin
+                },
+                {
+                    name: 'checkbox-typography',
+                    remove: true,
+                    type: ThemeType.Mixin
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as theme;
+
+@include theme.checkbox-typography($categories: (label: 'body-2'));
+@include theme.checkbox(checkbox-theme($background: red));
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use 'igniteui-angular/theming' as theme;
+
+@include theme.tokens(checkbox-theme($background: red));
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should add a theme property only to exact calls of the owner, and report what it cannot change', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                {
+                    name: '$generator', add: `'legacy'`, type: ThemeType.Property,
+                    owner: 'palette', exactOwner: true, ownerType: ThemeType.Function, parameterIndex: 10
+                },
+                { name: 'card-typography', type: ThemeType.Mixin, remove: true }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss',
+`$a: palette(red, blue, white);
+$b: color-palette(red);
+$c: palette($args...);
+@include palette($a);
+.card { @include card-typography { color: red; } }
+`);
+        appTree.create('theme.sass',
+`$a: palette(red, blue, white)
+:root
+  +palette($a)
+`);
+
+        const warn = vi.fn();
+        const context = { logger: { warn, info: () => {} } } as any;
+        new UnitUpdateChanges(__dirname, appTree, context).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(
+`$a: palette(red, blue, white, $generator: 'legacy');
+$b: color-palette(red);
+$c: palette($args...);
+@include palette($a);
+.card { @include card-typography { color: red; } }
+`);
+        expect(appTree.readContent('theme.sass')).toEqual(
+`$a: palette(red, blue, white, $generator: 'legacy')
+:root
+  +palette($a)
+`);
+        const warnings = warn.mock.calls.map(args => args[0]);
+        expect(warnings).toContain(`  - /styles.scss:3 - Add $generator: 'legacy' to the arguments this call of palette() spreads.`);
+        expect(warnings).toContain('  - /styles.scss:5 - Remove the include of the mixin card-typography, which passes a content block.');
+    });
+
+    it('should rename variables that older changes name without their $', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: 'igx-elevation', replaceWith: 'elevation', type: ThemeType.Variable },
+                { name: 'igx-elevations', replaceWith: 'elevations', type: ThemeType.Variable }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss', `$a: $igx-elevations;\n$b: map.get($igx-elevations, $igx-elevation);\n`);
+        new UnitUpdateChanges(__dirname, appTree).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(`$a: $elevations;\n$b: map.get($elevations, $elevation);\n`);
+    });
+
+    it('should remove variables marked for removal instead of renaming them', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$browser-context', remove: true, type: ThemeType.Variable },
+                { name: '$_indigo-elevation-navbar', replaceWith: '', type: ThemeType.Variable }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        appTree.create('styles.scss', `$browser-context: 16px;\n$_indigo-elevation-navbar: 2;\n.a { width: math.div(10px, $browser-context); }\n`);
+
+        const warn = vi.fn();
+        new UnitUpdateChanges(__dirname, appTree, { logger: { warn, info: () => {} } } as any).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(`.a { width: math.div(10px, $browser-context); }\n`);
+        expect(warn).toHaveBeenCalledWith('  - /styles.scss:1 - Replace this reference to the removed variable $browser-context.');
+    });
+
+    it('should report what it cannot change at its line in the migrated stylesheet', () => {
+        const themeChangesJson: ThemeChanges = {
+            changes: [
+                { name: '$generator', add: `'legacy'`, type: ThemeType.Property, owner: 'palette', exactOwner: true },
+                { name: 'card-typography', type: ThemeType.Mixin, remove: true }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'theme-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => filePath === jsonPath);
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(themeChangesJson));
+
+        // the include goes after the palette change is made, and takes three lines with it
+        appTree.create('styles.scss',
+`@include card-typography(
+    $categories: (title: 'h5')
+);
+$c: palette($args...);
+`);
+
+        const warn = vi.fn();
+        new UnitUpdateChanges(__dirname, appTree, { logger: { warn, info: () => {} } } as any).applyChanges();
+
+        expect(appTree.readContent('styles.scss')).toEqual(`$c: palette($args...);\n`);
+        expect(warn).toHaveBeenCalledWith(`  - /styles.scss:1 - Add $generator: 'legacy' to the arguments this call of palette() spreads.`);
+    });
+
+    it('should remove @use imports for deleted scss modules along with their member access', () => {
+        const scssUseChangesJson: ScssUseChanges = {
+            changes: [
+                { module: 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component', member: 'component', remove: true },
+                { module: 'igniteui-angular/lib/core/styles/components/input/input-group-component', member: 'component', remove: true }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(scssUseChangesJson));
+
+        const fileContent =
+`@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;
+@use 'igniteui-angular/lib/core/styles/components/input/input-group-component' as input;
+.layout {
+    @include checkbox.component;
+    @include input.component();
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`.layout {
+}
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
+    });
+
+    it('should leave scss content untouched when a removed module is not imported', () => {
+        const scssUseChangesJson: ScssUseChanges = {
+            changes: [
+                { module: 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component', member: 'component', remove: true }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(scssUseChangesJson));
+
+        const fileContent =
+`@use 'igniteui-angular/theming' as *;
+
+.layout {
+    @include checkbox(checkbox-theme($background: red));
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
+        expect(appTree.readContent('test.component.scss')).toEqual(fileContent);
+    });
+
+    it('should rewrite a moved scss module path in place, keeping the alias and its member access', () => {
+        const scssUseChangesJson: ScssUseChanges = {
+            changes: [
+                {
+                    module: 'igniteui-angular/lib/core/styles/components/checkbox/checkbox-component',
+                    replaceWith: 'igniteui-angular/checkbox/themes/base'
+                }
+            ]
+        };
+
+        const jsonPath = path.join(__dirname, 'changes', 'scss-use-changes.json');
+        vi.spyOn(fs, 'existsSync').mockImplementation((filePath: fs.PathLike) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        vi.spyOn(fs, 'readFileSync').mockImplementation(() => JSON.stringify(scssUseChangesJson));
+
+        const fileContent =
+`@use "igniteui-angular/lib/core/styles/components/checkbox/checkbox-component" as checkbox;
+
+.layout {
+    @include checkbox.component;
+}
+`;
+
+        appTree.create('test.component.scss', fileContent);
+
+        const expectedFileContent =
+`@use "igniteui-angular/checkbox/themes/base" as checkbox;
+
+.layout {
+    @include checkbox.component;
+}
+`;
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        update.applyChanges();
+
         expect(appTree.readContent('test.component.scss')).toBe(expectedFileContent);
     });
 });

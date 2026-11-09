@@ -1,11 +1,13 @@
 /* eslint-disable @angular-eslint/directive-selector */
 import { Directive, HostBinding } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { HeaderContentBaseDirective } from './expansion-panel.common';
 
 /** @hidden @internal */
 @Directive({
     selector: 'igx-expansion-panel-title',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxExpansionPanelTitleDirective extends HeaderContentBaseDirective {
     @HostBinding('class.igx-expansion-panel__header-title')
@@ -20,7 +22,8 @@ export class IgxExpansionPanelTitleDirective extends HeaderContentBaseDirective 
 /** @hidden @internal */
 @Directive({
     selector: 'igx-expansion-panel-description',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxExpansionPanelDescriptionDirective extends HeaderContentBaseDirective {
     @HostBinding('class.igx-expansion-panel__header-description')

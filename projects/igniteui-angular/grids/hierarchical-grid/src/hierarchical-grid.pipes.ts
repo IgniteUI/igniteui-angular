@@ -14,7 +14,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
 
     public transform(
         collection: any,
-        state = new Map<any, boolean>(),
+        state: Map<any, boolean>,
         _id: string,
         primaryKey: any,
         childKeys: string[],
@@ -31,12 +31,12 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         return result;
     }
 
-    public addHierarchy<T>(grid, data: T[], _state, primaryKey, childKeys: string[]): T[] {
-        const result = [];
+    public addHierarchy<T>(grid: GridType, data: T[], _state: Map<any, boolean>, primaryKey: any, childKeys: string[]): T[] {
+        const result: any[] = [];
 
-        data.forEach((v) => {
+        data.forEach((v: any) => {
             result.push(v);
-            const childGridsData = {};
+            const childGridsData: any = {};
             childKeys.forEach((childKey) => {
                 if (!v[childKey]) {
                     v[childKey] = [];
@@ -64,7 +64,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
     private grid = inject<GridType>(IGX_GRID_BASE);
 
 
-    public transform(collection: any[], enabled: boolean, page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
+    public transform(collection: any[], enabled: boolean, page: number, perPage: number, _id: string, _pipeTrigger: number): any[] {
         if (!enabled || this.grid.pagingMode !== 'local') {
             return collection;
         }

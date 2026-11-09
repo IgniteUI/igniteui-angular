@@ -37,25 +37,25 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     private ref = inject<ElementRef<HTMLElement>>(ElementRef);
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     /**
      * @hidden
      */
     @ViewChild('defaultESFHeaderIconTemplate', { read: TemplateRef, static: true })
-    protected defaultESFHeaderIconTemplate: TemplateRef<any>;
+    protected defaultESFHeaderIconTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultSortHeaderIconTemplate', { read: TemplateRef, static: true })
-    protected defaultSortHeaderIconTemplate;
+    protected defaultSortHeaderIconTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('sortIconContainer', { read: ElementRef })
-    protected sortIconContainer: ElementRef;
+    protected sortIconContainer!: ElementRef;
 
     @HostBinding('class.igx-grid-th--pinned')
     public get pinnedCss() {
@@ -99,7 +99,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
      */
     @Input()
     @HostBinding('attr.id')
-    public id: string;
+    public id!: string;
 
     /**
      * Returns the `aria-selected` of the header.
@@ -307,7 +307,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onPointerDownIndicator(event) {
+    public onPointerDownIndicator(event: PointerEvent) {
         // Stop propagation of pointer events to now allow column dragging using the header indicators.
         event.stopPropagation();
     }
@@ -315,7 +315,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onFilteringIconClick(event) {
+    public onFilteringIconClick(event: MouseEvent) {
         event.stopPropagation();
         this.grid.filteringService.toggleFilterDropdown(this.nativeElement, this.column);
     }
@@ -323,7 +323,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onSortingIconClick(event) {
+    public onSortingIconClick(event: MouseEvent) {
         event.stopPropagation();
         this.triggerSort();
     }
@@ -343,7 +343,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
     private triggerSort() {
         const groupingExpr = this.grid.groupingExpressions ?
             this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field) :
-            this.grid.groupArea?.expressions ? this.grid.groupArea?.expressions.find((expr) => expr.fieldName === this.column.field) : null;
+            this.grid.groupArea?.expressions ? this.grid.groupArea?.expressions.find(expr => expr.fieldName === this.column.field) : null;
         const sortDir = groupingExpr ?
             this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
             : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;

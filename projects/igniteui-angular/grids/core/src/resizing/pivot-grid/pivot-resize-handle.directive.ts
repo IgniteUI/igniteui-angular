@@ -35,7 +35,7 @@ export class IgxPivotResizeHandleDirective extends IgxResizeHandleDirective {
      * @hidden
      */
     @Input('igxPivotResizeHandleHeader')
-    public rowHeaderGroup: PivotRowHeaderGroupType;
+    public rowHeaderGroup!: PivotRowHeaderGroupType;
 
     /**
      * @hidden

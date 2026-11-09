@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, ExportHeaderType, GRID_LEVEL_COL } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, ExportHeaderType, GRID_LEVEL_COL, IColumnInfo } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { WorksheetFile } from './excel-files';
@@ -61,7 +61,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     private static async populateZipFileConfig(fileStructure: Object, folder: IExcelFolder, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {
             const folderInstance = ExcelElementsFactory.getExcelFolder(childFolder);
-            const childStructure = fileStructure[folderInstance.folderName] = {};
+            const childStructure = (fileStructure as any)[folderInstance.folderName] = {};
             await IgxExcelExporterService.populateZipFileConfig(childStructure, folderInstance, worksheetData);
         }
 
@@ -82,7 +82,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const ownersKeys = Array.from(this._ownersMap.keys());
         const firstKey = ownersKeys[0];
         const isHierarchicalGridByMap = firstKey && typeof firstKey !== 'string';
-        const filterColumns = (columns) => columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === ExportHeaderType.ColumnHeader);
+        const filterColumns = (columns: IColumnInfo[]) => columns.filter(col => col.field !== GRID_LEVEL_COL && !col.skip && col.headerType === ExportHeaderType.ColumnHeader);
 
         let rootKeys;
         let columnCount;
@@ -113,10 +113,10 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
             if (isHierarchicalGrid) {
                 columnCount = data
-                    .map(a => this._ownersMap.get(a.owner).columns.filter(c => !c.skip).length + a.level)
+                    .map(a => this._ownersMap.get(a.owner)!.columns.filter(c => !c.skip).length + a.level)
                     .sort((a, b) => b - a)[0];
 
-                rootKeys = this._ownersMap.get(firstDataElement.owner).columns.filter(c => !c.skip).map(c => c.field);
+                rootKeys = this._ownersMap.get(firstDataElement.owner)!.columns.filter(c => !c.skip).map(c => c.field);
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
                 // Check if this is actually a hierarchical grid (when data only contains summary records)
@@ -146,8 +146,8 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
 
         const worksheetData =
-            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn,
-                columnWidths, defaultOwner, this._ownersMap);
+            new WorksheetData(data, options, this._sort, columnCount!, rootKeys!, indexOfLastPinnedColumn!,
+                columnWidths!, defaultOwner!, this._ownersMap);
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
         const fileData = {};

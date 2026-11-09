@@ -1,3 +1,5 @@
+import { NgZone } from '@angular/core';
+
 /**
  * Normalized gesture event emitted by {@link IgxTouchManager}.
  *
@@ -22,7 +24,7 @@ export interface IgxGestureEvent {
     /** Current pointer position. */
     center: { x: number; y: number };
     /** The original event target. */
-    target: EventTarget;
+    target: EventTarget | null;
     /** The underlying native pointer event. */
     originalEvent: PointerEvent;
     /** Prevents the default action of the underlying native pointer event. */
@@ -41,8 +43,14 @@ export interface IgxGestureEvent {
  * @internal
  */
 export interface IgxTouchManagerCallbacks {
-    /** Fired on pointer down once the pointer type passes the configured filter, before any movement. */
-    pointerDown?: (event: IgxGestureEvent) => void;
+    /**
+     * Fired on pointer down once the pointer type passes the configured filter, before any movement.
+     *
+     * Return `false` to veto the gesture (e.g. when the touch does not start in an active zone).
+     * The manager then stops tracking immediately and best-effort releases the pointer capture, so
+     * normal page/component scrolling is not blocked by the `touchmove` listener.
+     */
+    pointerDown?: (event: IgxGestureEvent) => boolean | void;
     /** Fired on the first pointer move of a tracked gesture, once movement begins (mirrors Hammer's `panstart`). */
     panStart?: (event: IgxGestureEvent) => void;
     /** Fired on each pointer move while a gesture is tracked. */
@@ -53,7 +61,7 @@ export interface IgxTouchManagerCallbacks {
     panCancel?: (event: IgxGestureEvent) => void;
     /** Fired on pointer up when the movement stays below `tapThreshold`. Suppresses `panEnd`. */
     tap?: (event: IgxGestureEvent) => void;
-    /** Fired on pointer up for a fast, primarily horizontal gesture, before `panEnd`. */
+    /** Fired on pointer up for a fast, primarily horizontal recognized pan, before `panEnd`. */
     swipe?: (event: IgxGestureEvent) => void;
 }
 
@@ -70,8 +78,24 @@ export interface IgxTouchManagerOptions {
     setPointerCapture?: boolean;
     /** Maximum movement (in px) for a pointer up to be recognized as a tap. Defaults to `0` (disabled). */
     tapThreshold?: number;
+    /** Minimum movement (in px) before a pan starts. Defaults to `0`. */
+    panThreshold?: number;
+    /** Axis on which movement can start a pan. Defaults to `'all'`. */
+    panAxis?: 'all' | 'horizontal' | 'vertical';
     /** Minimum velocity (in px/ms) for a primarily horizontal gesture to be recognized as a swipe. Defaults to `0.3`. */
     swipeVelocityThreshold?: number;
+    /**
+     * Predicate evaluated on pointer down. When it returns `false` the gesture is not tracked at all,
+     * so no pointer capture is taken and the native scrolling of the page is not prevented.
+     * Defaults to always tracking.
+     */
+    canStart?: (event: PointerEvent) => boolean;
+    /**
+     * When provided, the listeners are attached outside of the Angular zone so that the high frequency
+     * `panMove` callback does not trigger change detection. The remaining callbacks are still invoked
+     * inside the Angular zone.
+     */
+    ngZone?: NgZone;
 }
 
 /**
@@ -79,8 +103,10 @@ export interface IgxTouchManagerOptions {
  *
  * Consolidates the pan/swipe/tap recognition logic shared across components
  * (carousel, navigation drawer, list item, time picker) on top of native
- * Pointer Events. It does not depend on `NgZone`; consumers update their own
- * state inside the provided callbacks.
+ * Pointer Events. It does not require `NgZone`; consumers update their own
+ * state inside the provided callbacks. An `NgZone` can optionally be supplied so
+ * that the listeners are attached outside of Angular and only the discrete
+ * callbacks re-enter it, keeping continuous dragging free of change detection.
  *
  * Outside of a browser environment (e.g. during server-side rendering) it is a
  * noop: no listeners are attached and no callbacks are invoked, so consumers can
@@ -112,7 +138,11 @@ export class IgxTouchManager {
     private readonly _pointerTypes: string[];
     private readonly _setPointerCapture: boolean;
     private readonly _tapThreshold: number;
+    private readonly _panThreshold: number;
+    private readonly _panAxis: 'all' | 'horizontal' | 'vertical';
     private readonly _swipeVelocityThreshold: number;
+    private readonly _canStart: ((event: PointerEvent) => boolean) | null;
+    private readonly _ngZone: NgZone | null;
 
     constructor(
         private target: EventTarget,
@@ -122,7 +152,11 @@ export class IgxTouchManager {
         this._pointerTypes = options.pointerTypes ?? ['touch', 'pen'];
         this._setPointerCapture = options.setPointerCapture ?? true;
         this._tapThreshold = options.tapThreshold ?? 0;
+        this._panThreshold = options.panThreshold ?? 0;
+        this._panAxis = options.panAxis ?? 'all';
         this._swipeVelocityThreshold = options.swipeVelocityThreshold ?? 0.3;
+        this._canStart = options.canStart ?? null;
+        this._ngZone = options.ngZone ?? null;
 
         // Behave as a noop outside of a browser (e.g. during server-side rendering),
         // mirroring the previous Hammer.js-based manager. Angular's platform-server
@@ -135,31 +169,49 @@ export class IgxTouchManager {
             return;
         }
 
-        this.target.addEventListener('pointerdown', this._onPointerDown);
-        this.target.addEventListener('pointermove', this._onPointerMove);
-        this.target.addEventListener('pointerup', this._onPointerUp);
-        this.target.addEventListener('pointercancel', this._onPointerCancel);
-        // prevents the default scrolling behavior on touch devices while a gesture is tracked
-        // necessary on edge pans detected on the body as the browsers cancel the pointer events
-        // and trigger a scroll / rubber band effect instead of the pan
-        this.target.addEventListener('touchmove', this._onTouchMove, { passive: false });
+        this._runOutsideAngular(() => {
+            this.target.addEventListener('pointerdown', this._onPointerDown);
+            this.target.addEventListener('pointermove', this._onPointerMove);
+            this.target.addEventListener('pointerup', this._onPointerUp);
+            this.target.addEventListener('pointercancel', this._onPointerCancel);
+            // prevents the default scrolling behavior on touch devices while a gesture is tracked
+            // necessary on edge pans detected on the body as the browsers cancel the pointer events
+            // and trigger a scroll / rubber band effect instead of the pan
+            this.target.addEventListener('touchmove', this._onTouchMove, { passive: false });
+        });
     }
 
     /** Detaches all listeners and stops tracking. */
     public destroy(): void {
-        if (!this._supported) {
-            return;
+        if (this._supported) {
+            this.target.removeEventListener('pointerdown', this._onPointerDown);
+            this.target.removeEventListener('pointermove', this._onPointerMove);
+            this.target.removeEventListener('pointerup', this._onPointerUp);
+            this.target.removeEventListener('pointercancel', this._onPointerCancel);
+            this.target.removeEventListener('touchmove', this._onTouchMove);
         }
-        this.target.removeEventListener('pointerdown', this._onPointerDown);
-        this.target.removeEventListener('pointermove', this._onPointerMove);
-        this.target.removeEventListener('pointerup', this._onPointerUp);
-        this.target.removeEventListener('pointercancel', this._onPointerCancel);
-        this.target.removeEventListener('touchmove', this._onTouchMove);
-        this._tracking = false;
+        this._resetTracking();
     }
 
     private _accepts(pointerType: string): boolean {
         return this._pointerTypes.includes(pointerType);
+    }
+
+    private _runOutsideAngular(fn: () => void): void {
+        if (this._ngZone) {
+            this._ngZone.runOutsideAngular(fn);
+        } else {
+            fn();
+        }
+    }
+
+    /** Invokes a discrete (low frequency) callback back inside the Angular zone, when one is provided. */
+    private _runInAngular(fn: () => void): void {
+        if (this._ngZone) {
+            this._ngZone.run(fn);
+        } else {
+            fn();
+        }
     }
 
     private _createEvent(event: PointerEvent): IgxGestureEvent {
@@ -190,8 +242,11 @@ export class IgxTouchManager {
         };
     }
 
-    private _onPointerDown = (event: PointerEvent) => {
-        if (this._tracking || !this._accepts(event.pointerType)) {
+    private _onPointerDown = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
+        if (this._tracking || !this._accepts(event.pointerType) || this._canStart?.(event) === false) {
             return;
         }
         this._startX = event.clientX;
@@ -211,58 +266,126 @@ export class IgxTouchManager {
             }
         }
 
-        this.callbacks.pointerDown?.(this._createEvent(event));
+        // Let the consumer veto the gesture (e.g. the touch did not start in an active
+        // zone). Returning `false` stops tracking immediately so the `touchmove` listener
+        // does not block normal scrolling and other gestures are not interfered with.
+        if (this.callbacks.pointerDown) {
+            const gesture = this._createEvent(event);
+            this._runInAngular(() => {
+                if (this.callbacks.pointerDown?.(gesture) === false) {
+                    this._stopTracking(event.pointerId);
+                }
+            });
+        }
     };
 
-    private _onPointerMove = (event: PointerEvent) => {
+    private _onPointerMove = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
         const gesture = this._createEvent(event);
-        // Defer `panStart` until movement actually begins, mirroring Hammer's `panstart`.
-        // A press with no movement (a tap) therefore never raises `panStart`.
         if (!this._panStarted) {
+            if (!this._canStartPan(gesture)) {
+                return;
+            }
             this._panStarted = true;
-            this.callbacks.panStart?.(gesture);
+            if (this.callbacks.panStart) {
+                this._runInAngular(() => this.callbacks.panStart?.(gesture));
+            }
         }
+        // `panMove` is intentionally invoked outside of the Angular zone (when one is provided)
+        // as it fires for every pointer move and running change detection for each of them
+        // makes continuous dragging lag behind the pointer.
         this.callbacks.panMove?.(gesture);
     };
 
-    private _onPointerUp = (event: PointerEvent) => {
+    private _onPointerUp = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (!this._tracking || event.pointerId !== this._pointerId || !this._accepts(event.pointerType)) {
             return;
         }
-        this._tracking = false;
-        this._pointerId = null;
         const gesture = this._createEvent(event);
+        const panStarted = this._panStarted;
+        this._resetTracking();
 
-        if (this.callbacks.tap && gesture.distance < this._tapThreshold) {
-            this.callbacks.tap(gesture);
-            return;
-        }
+        this._runInAngular(() => {
+            if (this.callbacks.tap && gesture.distance < this._tapThreshold) {
+                this.callbacks.tap(gesture);
+                return;
+            }
 
-        if (this.callbacks.swipe &&
-            gesture.velocity > this._swipeVelocityThreshold &&
-            Math.abs(gesture.deltaX) > Math.abs(gesture.deltaY)) {
-            this.callbacks.swipe(gesture);
-        }
+            if (panStarted && this.callbacks.swipe &&
+                gesture.velocity > this._swipeVelocityThreshold &&
+                Math.abs(gesture.deltaX) > Math.abs(gesture.deltaY)) {
+                this.callbacks.swipe(gesture);
+            }
 
-        this.callbacks.panEnd?.(gesture);
+            this.callbacks.panEnd?.(gesture);
+        });
     };
 
-    private _onPointerCancel = (event: PointerEvent) => {
+    private _onPointerCancel = (event: Event) => {
+        if (!(event instanceof PointerEvent)) {
+            return;
+        }
         if (!this._tracking || event.pointerId !== this._pointerId) {
             return;
         }
-        this._tracking = false;
-        this._pointerId = null;
-        this.callbacks.panCancel?.(this._createEvent(event));
+        const gesture = this._createEvent(event);
+        this._resetTracking();
+        if (this.callbacks.panCancel) {
+            this._runInAngular(() => this.callbacks.panCancel?.(gesture));
+        }
     };
 
-    private _onTouchMove = (event: TouchEvent) => {
-        // Prevent scrolling only while a gesture is actively tracked.
-        if (this._tracking && event.cancelable) {
+    private _onTouchMove = (event: Event) => {
+        if (!(event instanceof TouchEvent)) {
+            return;
+        }
+        // Preserve native scrolling and compatibility clicks while the contact is
+        // only a tap candidate. Suppress scrolling after a pan is recognized.
+        if (this._tracking && this._panStarted && event.cancelable) {
             event.preventDefault();
         }
+    };
+
+    private _canStartPan(event: IgxGestureEvent): boolean {
+        if (event.distance < this._panThreshold) {
+            return false;
+        }
+
+        if (this._panAxis === 'horizontal') {
+            return Math.abs(event.deltaX) > Math.abs(event.deltaY);
+        }
+
+        if (this._panAxis === 'vertical') {
+            return Math.abs(event.deltaY) > Math.abs(event.deltaX);
+        }
+
+        return true;
+    }
+
+    private _stopTracking(pointerId: number): void {
+        this._resetTracking();
+
+        if (this._setPointerCapture && typeof (this.target as Element).releasePointerCapture === 'function') {
+            try {
+                (this.target as Element).releasePointerCapture(pointerId);
+            } catch {
+                // Pointer capture is best-effort and may already have been released.
+            }
+        }
+    }
+
+    private _resetTracking(): void {
+        this._tracking = false;
+        this._panStarted = false;
+        this._pointerId = null;
+        this._startTarget = null;
     }
 }

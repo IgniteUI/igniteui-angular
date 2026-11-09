@@ -9,13 +9,13 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
-| `loop` |  boolean | Should the carousel wrap back to the first slide after it reaches the last. Defaults to `true`. |
+| `loop` |  boolean | Should the carousel wrap back to the first slide after it reaches the last. When `false`, the automatic rotation ends on the last slide, also when `pause` is `false`. Defaults to `true`. |
 | `pause` | boolean | Should the carousel stop playing on user interaction. Defaults to `true`.  |
 | `interval` | number | The amount of time in milliseconds between slides transition. |
 | `navigation` | boolean | Controls should the carousel render the left/right navigation buttons. Defaults to `true`. |
 | `indicators` | boolean | Controls should the carousel render the indicators. Defaults to `true`. |
-| `vertical` | boolean | Controls should the carousel be rendered in vertical alignment. Defaults to `false`. |
-| `gesturesSupport` | boolean | Controls should the gestures should be supported. Defaults to `true`. |
+| `vertical` | boolean | Controls should the carousel be rendered in vertical alignment. Touch swipes follow the orientation. Defaults to `false`. |
+| `gesturesSupport` | boolean | Controls whether touch gestures (swipe to change slides, tap to pause/play) are supported. Can be changed at runtime. Defaults to `true`. |
 | `maximumIndicatorsCount` | number | The number of visible indicators. Defaults to `10`. |
 | `indicatorsOrientation` | CarouselIndicatorsOrientation | Controls the orientation of the indicators. Defaults to `end`. |
 | `animationType` | CarouselAnimationType | Controls what animation should be played when slides are changing. Defaults to `slide`. |
@@ -25,11 +25,11 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `isDestroyed` | boolean | If the carousel is destroyed (`ngOnDestroy` was called) |
 | `slideChanged` | event | Emitted on slide change |
 | `slideAdded` | event | Emitted when a slide is being added to the carousel |
-| `slideRemoved`| event | Emitted whe a slide is being removed from the carousel |
-| `carouselPaused` | event | Emitted when the carousel is pausing. |
+| `slideRemoved`| event | Emitted when a slide is being removed from the carousel |
+| `carouselPaused` | event | Emitted when the carousel is pausing, including when the automatic rotation ends on the last slide of a non-looping carousel. |
 | `carouselPlaying`| event | Emitted when the carousel starts/resumes playing. |
-| `play()` | void | Emits `carouselPlaying` event and starts the transition between slides. |
-| `stop()` | void | Emits `carouselPaused` event and stops the transition between slides. |
+| `play()` | void | Emits `carouselPlaying` event and starts the transition between slides. No-op if the carousel is already playing. The carousel starts playing automatically once its slides are initialized, and again when slides change after the automatic rotation ended on the last slide. |
+| `stop()` | void | Emits `carouselPaused` event and stops the transition between slides. No-op if the carousel is not playing or `pause` is `false`. |
 | `prev()` | void | Switches to the previous slide. Emits `slideChanged` event. |
 | `next()` | void | Switches to the next slide. Emits `slideChanged` event. |
 | `add(slide: IgxSlide)` | void | Adds a slide to the carousel. Emits `slideAdded` event. |
@@ -90,7 +90,7 @@ The **IgxCarousel** supports templating indicators and navigation buttons
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `index` |  number | The index of the slide inside the carousel. |
-| `direction` |  Direction | The direction in which the slide should transition. Possibly values are `NONE`, `NEXT`, `PREV` |
+| `direction` |  Direction | The direction in which the slide should transition. Possible values are `NONE`, `NEXT`, `PREV`. Defaults to `NONE`, in which case the direction is resolved from the slide position. |
 | `active`| boolean | Whether the current slide is active, i.e. the one being currently displayed by the carousel. |
 
 # Usage

@@ -22,23 +22,18 @@ describe(`Update to ${version}`, () => {
     it('should remove the summaries related properties from the grid theme', async () => {
         const testFilePath = `/testSrc/appPrefix/component/test.component.scss`;
 
-        appTree.create(
-            testFilePath,
-            `$my-grid-theme: grid-theme(
+        appTree.create(testFilePath, `$my-grid-theme: grid-theme(
                 $header-background: orange,
                 $root-summaries-background: orange,
                 $root-summaries-text-color: black,
                 $body-summaries-background: orange,
                 $body-summaries-text-color: black,
-            );`
-        );
+            );`);
 
         const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-        expect(tree.readContent(testFilePath)).toEqual(
-            `$my-grid-theme: grid-theme(
+        expect(tree.readContent(testFilePath)).toEqual(`$my-grid-theme: grid-theme(
                 $header-background: orange,
-            );`
-        );
+            );`);
     });
 });

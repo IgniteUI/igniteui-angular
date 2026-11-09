@@ -29,54 +29,69 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         return this._data.grid.createRow(this._data.index, this._data.data);
     }
 
-    private subscription$: Subscription;
+    private subscription$!: Subscription;
     private _rowDragStarted = false;
+
+    /** @hidden @internal Row dragging handles Escape itself, so it can emit rowDragEnd and reset the grid state. */
+    public override cancelOnEscape = false;
 
     private get row(): RowType {
         return this._data;
     }
 
-    public override onPointerDown(event) {
+    public override onPointerDown(event: PointerEvent) {
         event.preventDefault();
         this._rowDragStarted = false;
         this._removeOnDestroy = false;
         super.onPointerDown(event);
     }
 
-    public override onPointerMove(event) {
+    public override onPointerMove(event: PointerEvent) {
         super.onPointerMove(event);
+        if (!this._clicked) {
+            // The drag ended or was cancelled, e.g. in a ghostCreate or dragMove handler.
+            return;
+        }
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
                 dragDirective: this,
                 dragData: this.data,
-                dragElement: this.row.nativeElement,
+                dragElement: this.row.nativeElement!,
                 cancel: false,
                 owner: this.row.grid
             };
 
             this.row.grid.rowDragStart.emit(args);
+            if (!this._clicked) {
+                // The drag was cancelled in the rowDragStart handler, which already ended the row dragging.
+                return;
+            }
             if (args.cancel) {
                 this.ghostElement.parentNode.removeChild(this.ghostElement);
                 this.ghostElement = null;
                 this._dragStarted = false;
                 this._clicked = false;
+                this._pointerDownId = null;
+                this._pointerCaptureTarget = null;
+                // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started.
+                this.unsubscribeFromEscape();
                 return;
             }
             this.row.grid.dragRowID = this.row.key;
             this.row.grid.rowDragging = true;
             this.row.grid.cdr.detectChanges();
 
-            this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
+            this.subscription$ = fromEvent<KeyboardEvent>(this.row.grid.document.defaultView!, 'keydown').subscribe((ev: KeyboardEvent) => {
                 if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
-                    this._lastDropArea = false;
+                    this._lastDropArea = false as any;
                     this.onPointerUp(event);
                 }
             });
         }
     }
 
-    public override onPointerUp(event) {
+    public override onPointerUp(event: PointerEvent) {
 
         if (!this._clicked) {
             return;
@@ -85,7 +100,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const args: IRowDragEndEventArgs = {
             dragDirective: this,
             dragData: this.data,
-            dragElement: this.row.nativeElement,
+            dragElement: this.row.nativeElement!,
             animation: false,
             owner: this.row.grid
         };
@@ -102,7 +117,31 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
-    protected override createGhost(pageX, pageY) {
+    /**
+     * @hidden
+     * Ends the row dragging without dropping, as releasing outside a drop area does.
+     */
+    protected override cancelDragInternal(originalEvent: KeyboardEvent | null): boolean {
+        const rowDragStarted = this._rowDragStarted;
+        const cancelled = super.cancelDragInternal(originalEvent);
+        if (cancelled && rowDragStarted) {
+            const args: IRowDragEndEventArgs = {
+                dragDirective: this,
+                dragData: this.data,
+                dragElement: this.row.nativeElement!,
+                animation: false,
+                owner: this.row.grid
+            };
+            this.zone.run(() => {
+                this.row.grid.rowDragEnd.emit(args);
+            });
+            // The base cancel already removed the ghost, or a dragEnd handler animates it back and its transitionend removes it.
+            this.resetRowDragging();
+        }
+        return cancelled;
+    }
+
+    protected override createGhost(pageX: number, pageY: number) {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
         this.ghostContext = {
@@ -111,6 +150,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             grid: this.row.grid
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);
+        if (!this.ghostElement) {
+            // The ghost creation or the drag was cancelled.
+            return;
+        }
 
         // check if there is an expander icon and create the ghost at the corresponding position
         if (this.isHierarchicalGrid) {
@@ -124,7 +167,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const ghost = this.ghostElement;
 
         const gridRect = this.row.grid.nativeElement.getBoundingClientRect();
-        const rowRect = this.row.nativeElement.getBoundingClientRect();
+        const rowRect = this.row.nativeElement!.getBoundingClientRect();
         ghost.style.overflow = 'hidden';
         ghost.style.width = gridRect.width + 'px';
         ghost.style.height = rowRect.height + 'px';
@@ -147,6 +190,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private endDragging() {
         this.onTransitionEnd(null);
+        this.resetRowDragging();
+    }
+
+    private resetRowDragging() {
         this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
         this.row.grid.cdr.detectChanges();

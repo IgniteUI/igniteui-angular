@@ -1015,6 +1015,7 @@ export var registerConfig = [
       "showSummaryOnCollapse",
       "selectRowOnClick",
     ],
+    provideAs: IgxRowIslandComponent,
   },
   {
     component: IgxTreeGridComponent,

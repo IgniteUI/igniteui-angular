@@ -1,4 +1,5 @@
 import { Component, Directive, HostBinding, TemplateRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { GridType } from '../common/grid.interface';
 
 @Directive({
@@ -41,7 +42,8 @@ export class IgxPdfTextDirective { }
 @Component({
     selector: 'igx-grid-toolbar-title', template: '<ng-content></ng-content>',
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxGridToolbarTitleComponent {
     /**

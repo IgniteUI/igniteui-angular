@@ -6,9 +6,9 @@ import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective } from 'igniteui
 export interface IgxSelectBase extends IgxDropDownBaseDirective {
     input: IgxInputDirective;
     readonly selectedItem: IgxDropDownItemBaseDirective;
-    open(overlaySettings?: OverlaySettings);
-    close();
-    toggle(overlaySettings?: OverlaySettings);
+    open(overlaySettings?: OverlaySettings): any;
+    close(): any;
+    toggle(overlaySettings?: OverlaySettings): any;
     calculateScrollPosition(item: IgxDropDownItemBaseDirective): number;
     getFirstItemElement(): HTMLElement;
     getEditElement(): HTMLElement; // returns input HTMLElement

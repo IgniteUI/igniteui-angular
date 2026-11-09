@@ -87,11 +87,11 @@ export class IgxChartIntegrationDirective {
     public useLegend = true;
 
     @Input()
-    public defaultLabelMemberPath: string = undefined;
+    public defaultLabelMemberPath: string = undefined!;
 
     @Input()
     public set scatterChartYAxisValueMemberPath(path: string) {
-        this._scatterChartYAxisValueMemberPath = path;
+        this._scatterChartYAxisValueMemberPath = path!;
     }
 
     public get scatterChartYAxisValueMemberPath() {
@@ -102,7 +102,7 @@ export class IgxChartIntegrationDirective {
 
     @Input()
     public set bubbleChartRadiusMemberPath(path: string) {
-        this._bubbleChartRadiusMemberPath = path;
+        this._bubbleChartRadiusMemberPath = path!;
     }
 
     public get bubbleChartRadiusMemberPath() {
@@ -114,11 +114,11 @@ export class IgxChartIntegrationDirective {
     private chartTypesAvailability = new Map<CHART_TYPE, boolean>();
     private customChartComponentOptions = new Map<CHART_TYPE, IChartComponentOptions>();
     private dataCharts = new Map<string, Type<any>>();
-    private _scatterChartYAxisValueMemberPath = undefined;
-    private _bubbleChartRadiusMemberPath = undefined;
-    private _valueMemberPaths = [];
-    private _labelMemberPaths = [];
-    private _chartData: any[];
+    private _scatterChartYAxisValueMemberPath: any = undefined;
+    private _bubbleChartRadiusMemberPath: any = undefined;
+    private _valueMemberPaths: any[] = [];
+    private _labelMemberPaths: any[] = [];
+    private _chartData!: any[];
     private _sizeScale = new IgxSizeScaleComponent();
     private _dataChartTypes = new Set<CHART_TYPE>();
     private get _labelMemberPath(): string {
@@ -187,9 +187,9 @@ export class IgxChartIntegrationDirective {
         this.dataCharts.set(CHART_TYPE.Pie, IgxPieChartComponent);
         const iterable = this.dataCharts.keys();
         for (let head = iterable.next().value; head !== undefined; head = iterable.next().value) {
-            this._dataChartTypes.add(head);
-            this.chartTypesAvailability.set(head, true);
-            this.customChartComponentOptions.set(head, {});
+            this._dataChartTypes.add(head as any);
+            this.chartTypesAvailability.set(head as any, true);
+            this.customChartComponentOptions.set(head as any, {});
         }
     }
 
@@ -198,7 +198,7 @@ export class IgxChartIntegrationDirective {
     }
 
     public getAvailableCharts() {
-        const res = [];
+        const res: any[] = [];
         this.chartTypesAvailability.forEach((isAvailable, chartType) => {
             if (isAvailable) {
                 res.push(chartType);
@@ -245,7 +245,7 @@ export class IgxChartIntegrationDirective {
             if (this.useLegend) {
                 const legendType = type === CHART_TYPE.Pie ? IgxItemLegendComponent : IgxLegendComponent;
                 const legendComponentRef: ComponentRef<any> = viewContainerRef.createComponent(legendType as any);
-                options.chartOptions['legend'] = legendComponentRef.instance;
+                options.chartOptions!['legend'] = legendComponentRef.instance;
             }
             chart = initializer.initChart(componentRef.instance, options);
         } else if (createdChart) {
@@ -255,7 +255,7 @@ export class IgxChartIntegrationDirective {
         return chart;
     }
 
-    private getInitializer(chartType: CHART_TYPE, componentClassRef): ChartInitializer {
+    private getInitializer(chartType: CHART_TYPE, componentClassRef: any): ChartInitializer {
         if (chartType.includes('Pie')) {
             return new IgxPieChartInitializer();
         } else if (chartType.includes('Stacked')) {
@@ -341,7 +341,7 @@ export class IgxChartIntegrationDirective {
         chartComponentOptions.seriesOptions = seriesOptions;
     }
 
-    private addIndexMemberPath(dataRecord, index) {
+    private addIndexMemberPath(dataRecord: any, index: any) {
         dataRecord = { ...{ [this._labelMemberPath]: index }, ...dataRecord };
         return dataRecord;
     }
@@ -372,11 +372,11 @@ export class IgxChartIntegrationDirective {
     }
 
     public setChartComponentOptions(chart: CHART_TYPE, optionsType: OPTIONS_TYPE, options: IOptions) {
-        if (!this.customChartComponentOptions.get(chart)[optionsType]) {
-            this.customChartComponentOptions.get(chart)[optionsType] = {};
+        if (!this.customChartComponentOptions.get(chart)![optionsType]) {
+            this.customChartComponentOptions.get(chart)![optionsType] = {};
         }
         Object.keys(options).forEach(property => {
-            this.customChartComponentOptions.get(chart)[optionsType][property] = options[property];
+            this.customChartComponentOptions.get(chart)![optionsType]![property] = options[property];
         });
     }
 }

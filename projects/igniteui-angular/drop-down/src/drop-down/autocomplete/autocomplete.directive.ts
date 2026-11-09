@@ -113,7 +113,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocompleteSettings')
-    public autocompleteSettings: AutocompleteOverlaySettings;
+    public autocompleteSettings!: AutocompleteOverlaySettings;
 
     /** @hidden @internal */
     @HostBinding('attr.autocomplete')
@@ -165,7 +165,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     private get settings(): OverlaySettings {
         const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
         if (!settings.target) {
-            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy!.clone();
             settings.target = this.parentElement;
             settings.positionStrategy = positionStrategyClone;
         }
@@ -202,15 +202,15 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return 'list';
     }
 
-    protected _composing: boolean;
-    protected id: string;
+    protected _composing!: boolean;
+    protected id!: string;
     protected get model() {
         return this.ngModel || this.formControl;
     }
 
     private _shouldBeOpen = false;
     private destroy$ = new Subject<void>();
-    private defaultSettings: OverlaySettings;
+    private defaultSettings!: OverlaySettings;
 
     /** @hidden  @internal */
     @HostListener('input')
@@ -250,7 +250,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    public override handleKeyDown(event) {
+    public override handleKeyDown(event: KeyboardEvent) {
         if (!this.collapsed && !this._composing) {
             switch (event.key.toLowerCase()) {
                 case 'space':

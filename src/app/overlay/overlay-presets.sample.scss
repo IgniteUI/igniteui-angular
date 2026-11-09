@@ -1,58 +1,49 @@
-// Import the IgniteUI themes library first
-@use '../../../projects/igniteui-angular/core/src/core/styles/themes' as *;
-
-$new-card-theme: card-theme(
-    $background: royalblue
-);
-
-:host ::ng-deep{
-    @include card($new-card-theme);
-}
-
-.sample-section{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    min-height: 100%;
-    width: 100%;
-}
-
-.settings{
-    background-color: #444;
-    flex: 0 0 15%;
-    align-content: center;
-    padding: .5%;
-}
-
-.igx-radio{
-    display: block;
-}
-
-.container{
-    background-color: #444;
-    flex: 0 0 60%;
-    height: 500px;
+.overlay-sample {
     position: relative;
-    overflow: hidden;
 }
 
-.container-target{
-    background-color: #444;
-    color: white;
+.overlay-sample__stage {
+    position: relative;
+    min-height: 480px;
+    border: 1px dashed var(--ig-gray-300);
+    border-radius: 8px;
+}
+
+.overlay-sample__toggle {
+    position: absolute;
+}
+
+.control-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid var(--ig-gray-300);
+    border-radius: 8px;
+}
+
+.control-card legend {
+    padding-inline: 4px;
+    font-size: .875rem;
+    font-weight: 600;
+}
+
+.control-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.container-target {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 300px;
     height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-top: 24px;
+    border-radius: 8px;
+    background-color: #444;
+    color: white;
     text-align: center;
-}
-
-.sample-dropdown{
-    display: flex;
-    justify-content: center;
-}
-
-p {
-    padding: 5% 0;
 }

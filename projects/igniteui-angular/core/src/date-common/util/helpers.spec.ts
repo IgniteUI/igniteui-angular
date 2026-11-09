@@ -1,18 +1,7 @@
 import { DateRangeType } from "../../core/dates/dateRange";
-import {
-    areSameMonth,
-    getNextActiveDate,
-    getPreviousActiveDate,
-    getClosestActiveDate,
-    isNextMonth,
-    isPreviousMonth,
-    calendarRange,
-    isDateInRanges,
-    generateMonth,
-    getYearRange,
-    formatToParts,
-} from "./helpers";
+import { areSameMonth, getNextActiveDate, getPreviousActiveDate, getClosestActiveDate, isNextMonth, isPreviousMonth, calendarRange, isDateInRanges, generateMonth, getYearRange, formatToParts, } from "./helpers";
 import { CalendarDay } from "./model";
+import { describe, it, expect } from 'vitest';
 
 describe("Calendar Helpers", () => {
     const date = new Date(2020, 0, 1);
@@ -47,19 +36,13 @@ describe("Calendar Helpers", () => {
     });
 
     it("should get the next date for a given range", () => {
-        const nextDate = getNextActiveDate(
-            CalendarDay.from(date),
-            disabledDates,
-        );
+        const nextDate = getNextActiveDate(CalendarDay.from(date), disabledDates);
 
         expect(nextDate.native).toEqual(new Date(2020, 0, 15));
     });
 
     it("should get the previous date for a given range", () => {
-        const nextDate = getPreviousActiveDate(
-            CalendarDay.from(date),
-            disabledDates,
-        );
+        const nextDate = getPreviousActiveDate(CalendarDay.from(date), disabledDates);
 
         expect(nextDate.native).toEqual(new Date(2019, 11, 31));
     });
@@ -68,19 +51,11 @@ describe("Calendar Helpers", () => {
         let target = CalendarDay.from(date);
 
         // Offset 1 day in the future
-        let nextDate = getClosestActiveDate(
-            CalendarDay.from(date),
-            1,
-            disabledDates,
-        );
+        let nextDate = getClosestActiveDate(CalendarDay.from(date), 1, disabledDates);
         expect(nextDate.native).toEqual(new Date(2020, 0, 15));
 
         // Offset 1 day in the past
-        nextDate = getClosestActiveDate(
-            CalendarDay.from(date),
-            -1,
-            disabledDates,
-        );
+        nextDate = getClosestActiveDate(CalendarDay.from(date), -1, disabledDates);
         expect(nextDate.native).toEqual(new Date(2019, 11, 31));
 
         // Set the starting point to December 25th, 2019
@@ -109,14 +84,12 @@ describe("Calendar Helpers", () => {
         expect(range.length).toBe(7);
 
         range.forEach((day) => {
-            expect(
-                isDateInRanges(day, [
-                    {
-                        type: DateRangeType.Between,
-                        dateRange: [start.native, end.native],
-                    },
-                ]),
-            ).toBe(true);
+            expect(isDateInRanges(day, [
+                {
+                    type: DateRangeType.Between,
+                    dateRange: [start.native, end.native],
+                },
+            ])).toBe(true);
         });
     });
 
@@ -128,17 +101,15 @@ describe("Calendar Helpers", () => {
         expect(range.length).toBe(42);
 
         range.forEach((day) => {
-            expect(
-                isDateInRanges(day, [
-                    {
-                        type: DateRangeType.Between,
-                        dateRange: [
-                            new Date(2019, 11, 30),
-                            new Date(2020, 1, 9),
-                        ],
-                    },
-                ]),
-            ).toBe(true);
+            expect(isDateInRanges(day, [
+                {
+                    type: DateRangeType.Between,
+                    dateRange: [
+                        new Date(2019, 11, 30),
+                        new Date(2020, 1, 9),
+                    ],
+                },
+            ])).toBe(true);
         });
     });
 
@@ -153,67 +124,46 @@ describe("Calendar Helpers", () => {
         expect(isDateInRanges(date, disabledDates)).toBe(true);
 
         // Date is after range
-        expect(
-            isDateInRanges(date, [
-                {
-                    type: DateRangeType.After,
-                    dateRange: [new Date(2020, 0, 2)],
-                },
-            ]),
-        ).toBe(false);
+        expect(isDateInRanges(date, [
+            {
+                type: DateRangeType.After,
+                dateRange: [new Date(2020, 0, 2)],
+            },
+        ])).toBe(false);
 
         // Date is before range
-        expect(
-            isDateInRanges(date, [
-                {
-                    type: DateRangeType.Before,
-                    dateRange: [new Date(2020, 0, 2)],
-                },
-            ]),
-        ).toBe(true);
+        expect(isDateInRanges(date, [
+            {
+                type: DateRangeType.Before,
+                dateRange: [new Date(2020, 0, 2)],
+            },
+        ])).toBe(true);
 
         // Date is in a specific range
-        expect(
-            isDateInRanges(date, [
-                {
-                    type: DateRangeType.Specific,
-                    dateRange: [new Date(2019, 11, 31), new Date(2020, 0, 2)],
-                },
-            ]),
-        ).toBe(false);
+        expect(isDateInRanges(date, [
+            {
+                type: DateRangeType.Specific,
+                dateRange: [new Date(2019, 11, 31), new Date(2020, 0, 2)],
+            },
+        ])).toBe(false);
 
         // Date is a weekday
-        expect(
-            isDateInRanges(date, [
-                {
-                    type: DateRangeType.Weekdays,
-                },
-            ]),
-        ).toBe(true);
+        expect(isDateInRanges(date, [
+            {
+                type: DateRangeType.Weekdays,
+            },
+        ])).toBe(true);
 
         // Date is not a weekend
-        expect(
-            isDateInRanges(date, [
-                {
-                    type: DateRangeType.Weekends,
-                },
-            ]),
-        ).toBe(false);
+        expect(isDateInRanges(date, [
+            {
+                type: DateRangeType.Weekends,
+            },
+        ])).toBe(false);
     });
 
     it("should get formatted parts by a given locale for a date", () => {
-        const {
-            date: day,
-            full,
-            day: dayObject,
-            month: monthObject,
-            year: yearObject,
-        } = formatToParts(
-            date,
-            "en",
-            { day: "numeric", month: "long", year: "numeric" },
-            ["day", "month", "year"],
-        );
+        const { date: day, full, day: dayObject, month: monthObject, year: yearObject, } = formatToParts(date, "en", { day: "numeric", month: "long", year: "numeric" }, ["day", "month", "year"]);
 
         expect(day).toEqual(date);
 

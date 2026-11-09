@@ -16,9 +16,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-30';
 
     it('Should replace IgxProcessBarTextTemplateDirective with IgxProgressBarTextTemplateDirective', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `import { Component, ViewChild } from '@angular/core';
         import { IgxProcessBarTextTemplateDirective } from 'igniteui-angular';
 
         @Component({

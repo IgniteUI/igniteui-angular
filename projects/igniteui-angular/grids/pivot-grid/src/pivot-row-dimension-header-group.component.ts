@@ -10,13 +10,13 @@ import {
     IgxHeaderGroupStylePipe,
     IgxPivotColumnResizingService,
     IgxPivotResizeHandleDirective,
-    IMultiRowLayoutNode,
     IPivotDimension,
     PivotGridType,
     PivotRowHeaderGroupType
 } from 'igniteui-angular/grids/core';
 import { IgxPivotRowDimensionHeaderComponent } from './pivot-row-dimension-header.component';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IMultiRowLayoutNode } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -50,14 +50,14 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     @Input()
-    public rowIndex: number;
+    public rowIndex!: number;
 
     /**
      * @hidden
      * @internal
      */
     @Input()
-    public colIndex: number;
+    public colIndex!: number;
 
 
     /**
@@ -65,7 +65,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
      * @internal
      */
     @Input()
-    public layout: IMultiRowLayoutNode;
+    public layout!: IMultiRowLayoutNode;
 
     /**
     * @hidden
@@ -75,7 +75,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     public parent: any;
 
     @ViewChild(IgxPivotRowDimensionHeaderComponent)
-    public override header: IgxPivotRowDimensionHeaderComponent;
+    public override header!: IgxPivotRowDimensionHeaderComponent;
 
     @HostBinding('attr.id')
     public override get headerID() {
@@ -139,13 +139,14 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
             row: this.rowIndex, column: this.visibleIndex, level: null,
             mchCache: null,
             layout: this.layout || null
-        };
+        } as any;
     }
 
 
     protected getHeaderWidthFromDimension() {
         if (this.grid.hasHorizontalLayout) {
-            return this.parent.width === -1 ? 'fit-content' : this.width;
+            // Collapsed and summary headers can span several columns.
+            return this.parent.width === -1 ? 'fit-content' : `${this.parent.width}px`;
         }
         return this.grid.rowDimensionWidth(this.parent.rootDimension);
     }
@@ -153,7 +154,7 @@ export class IgxPivotRowDimensionHeaderGroupComponent extends IgxGridHeaderGroup
     private findRootDimension(field: string): IPivotDimension {
         const rows = this.grid.rowDimensions;
         let tempRow;
-        let result = null;
+        let result: IPivotDimension = null!;
         rows.forEach(row => {
             tempRow = row;
             do {

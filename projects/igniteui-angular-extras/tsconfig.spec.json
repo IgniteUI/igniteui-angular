@@ -1,9 +1,13 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    /* TODO: interim override — remove once spec files are migrated to strict */
+    "strict": false,
+    "noImplicitOverride": true,
     "outDir": "../../out-tsc/spec",
-    "types": ["jasmine", "node"]
+    "types": ["node"]
   },
+  "files": ["../igniteui-angular/test-setup.ts"],
   "include": ["**/*.spec.ts", "**/*.d.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {

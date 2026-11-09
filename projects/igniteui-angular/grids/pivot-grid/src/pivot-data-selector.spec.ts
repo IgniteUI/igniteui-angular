@@ -1,5 +1,5 @@
 import { DebugElement } from "@angular/core";
-import { fakeAsync, TestBed, waitForAsync } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { IgxExpansionPanelHeaderComponent } from 'igniteui-angular/expansion-panel';
@@ -8,42 +8,52 @@ import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { IgxPivotGridTestBaseComponent } from "../../../test-utils/pivot-grid-samples.spec";
 import { UIInteractions, wait } from "../../../test-utils/ui-interactions.spec";
 import { IgxPivotDataSelectorComponent } from "./pivot-data-selector.component";
-import {
-    IgxGridNavigationService,
-    IPivotDimension,
-    IPivotValue,
-    PivotDimensionType,
-    PivotGridType
-} from "igniteui-angular/grids/core";
+import { IgxGridNavigationService, IPivotDimension, IPivotValue, PivotDimensionType, PivotGridType } from "igniteui-angular/grids/core";
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { ɵSize, SortingDirection } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-describe("Pivot data selector", () => {
+describe("Pivot data selector #pivotGrid", () => {
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule, IgxPivotDataSelectorComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it("should initialize standalone before a grid is set ", () => {
         const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
         fixture.detectChanges();
         expect(fixture.componentInstance).toBeDefined();
     });
+
+    it("should not throw when the provided grid is not initialized yet", () => {
+        const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
+        const selector = fixture.componentInstance;
+
+        expect(() => {
+            selector.grid = undefined as unknown as PivotGridType;
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(selector.grid).toBeUndefined();
+        expect(selector.dims).toEqual([]);
+        expect(selector.values).toEqual([]);
+    });
 });
 
-describe("Pivot data selector integration", () => {
+describe("Pivot data selector integration #pivotGrid", () => {
     let fixture;
     let grid: PivotGridType;
     let selector: IgxPivotDataSelectorComponent;
     let pivotItems: (IPivotDimension | IPivotValue)[];
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent
@@ -52,9 +62,9 @@ describe("Pivot data selector integration", () => {
                 IgxGridNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(fakeAsync(() => {
+    beforeEach(async () => {
         fixture = TestBed.createComponent(IgxPivotGridTestBaseComponent);
         fixture.detectChanges();
         grid = fixture.componentInstance.pivotGrid;
@@ -65,58 +75,73 @@ describe("Pivot data selector integration", () => {
             ...grid.pivotConfiguration.filters,
             ...grid.pivotConfiguration.values,
         ];
-    }));
+    });
+
+    it("should track the pivot configuration changes when the grid is set after it is initialized", () => {
+        // simulate a grid reference that is not resolved yet on the first binding pass
+        selector.grid = undefined as unknown as PivotGridType;
+        fixture.detectChanges();
+
+        selector.grid = grid;
+        fixture.detectChanges();
+
+        const retriggerCount = (selector as any).pipeRetrigger;
+        grid.toggleDimension(grid.pivotConfiguration.rows[0]);
+        fixture.detectChanges();
+
+        expect((selector as any).pipeRetrigger).toBeGreaterThan(retriggerCount);
+    });
 
     it("should set its size based on the passed grid instance size", () => {
-        setElementSize(grid.nativeElement, ɵSize.Small)
+        setElementSize(grid.nativeElement, ɵSize.Small);
         fixture.detectChanges();
         expect((selector as any).size).toEqual(ɵSize.Small);
     });
 
     it("should set through API expand states for panels with two way data binding", () => {
-        spyOn(selector.filtersExpandedChange, "emit");
-        spyOn(selector.columnsExpandedChange, "emit");
-        spyOn(selector.rowsExpandedChange, "emit");
-        spyOn(selector.valuesExpandedChange, "emit");
+        vi.spyOn(selector.filtersExpandedChange, "emit");
+        vi.spyOn(selector.columnsExpandedChange, "emit");
+        vi.spyOn(selector.rowsExpandedChange, "emit");
+        vi.spyOn(selector.valuesExpandedChange, "emit");
 
         const expansionPanels = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelComponent));
         expect(expansionPanels.length).toEqual(4);
-        expect(expansionPanels[0].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(false);
 
         fixture.componentInstance.filterExpandState = false;
         fixture.detectChanges();
 
         expect(expansionPanels[0].componentInstance.collapsed).toBeTruthy();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(false);
 
         fixture.componentInstance.columnExpandState = false;
         fixture.detectChanges();
 
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(false);
 
         fixture.componentInstance.rowExpandState = false;
         fixture.detectChanges();
 
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(expansionPanels[0].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(false);
 
         fixture.componentInstance.valueExpandState = false;
         fixture.detectChanges();
 
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
+        expect(expansionPanels[0].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(true);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(true);
 
         expect(selector.filtersExpandedChange.emit).not.toHaveBeenCalled();
         expect(selector.columnsExpandedChange.emit).not.toHaveBeenCalled();
@@ -124,72 +149,62 @@ describe("Pivot data selector integration", () => {
         expect(selector.valuesExpandedChange.emit).not.toHaveBeenCalled();
     });
 
-    it("should reflect expansion of panels through two way data binding", async() => {
+    it("should reflect expansion of panels through two way data binding", async () => {
         const expansionPanels = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelComponent));
         const panelHeaders = fixture.debugElement.queryAll(By.directive(IgxExpansionPanelHeaderComponent));
         expect(expansionPanels.length).toEqual(4);
 
-        expect(fixture.componentInstance.filterExpandState).toBeTrue();
-        expect(fixture.componentInstance.columnExpandState).toBeTrue();
-        expect(fixture.componentInstance.rowExpandState).toBeTrue();
-        expect(fixture.componentInstance.valueExpandState).toBeTrue();
-        expect(expansionPanels[0].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeFalse();
+        expect(fixture.componentInstance.filterExpandState).toBe(true);
+        expect(fixture.componentInstance.columnExpandState).toBe(true);
+        expect(fixture.componentInstance.rowExpandState).toBe(true);
+        expect(fixture.componentInstance.valueExpandState).toBe(true);
+        expect(expansionPanels[0].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(false);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(false);
 
         UIInteractions.simulateClickEvent(panelHeaders[0].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.filterExpandState).toBeFalse();
-        expect(expansionPanels[0].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.filterExpandState).toBe(false);
+        expect(expansionPanels[0].componentInstance.collapsed).toBe(true);
 
         UIInteractions.simulateClickEvent(panelHeaders[1].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.columnExpandState).toBeFalse();
-        expect(expansionPanels[1].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.columnExpandState).toBe(false);
+        expect(expansionPanels[1].componentInstance.collapsed).toBe(true);
 
         UIInteractions.simulateClickEvent(panelHeaders[2].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.rowExpandState).toBeFalse();
-        expect(expansionPanels[2].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.rowExpandState).toBe(false);
+        expect(expansionPanels[2].componentInstance.collapsed).toBe(true);
 
         UIInteractions.simulateClickEvent(panelHeaders[3].nativeElement);
         fixture.detectChanges();
         await wait(100);
 
-        expect(fixture.componentInstance.valueExpandState).toBeFalse();
-        expect(expansionPanels[3].componentInstance.collapsed).toBeTrue();
+        expect(fixture.componentInstance.valueExpandState).toBe(false);
+        expect(expansionPanels[3].componentInstance.collapsed).toBe(true);
     });
 
     it("should render a list of all row, column, filter, and value dimensions", () => {
-        const valueList = Array.from(
-            fixture.debugElement
-                .query(By.directive(IgxPivotDataSelectorComponent))
-                .nativeElement.querySelectorAll(
-                    ".igx-pivot-data-selector__filter > igx-list > igx-list-item"
-                ) as NodeList
-        );
+        const valueList = Array.from(fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .nativeElement.querySelectorAll(".igx-pivot-data-selector__filter > igx-list > igx-list-item") as NodeList);
 
         valueList.forEach((li, index) => {
-            expect(li.textContent).toEqual(
-                (pivotItems[index] as any).memberName ||
-                    (pivotItems[index] as any).member
-            );
+            expect(li.textContent).toEqual((pivotItems[index] as any).memberName ||
+                (pivotItems[index] as any).member);
         });
     });
 
     it("should filter the dimension list based on a search term", () => {
-        const term = (
-            Object.values(
-                fixture.componentInstance.pivotConfigHierarchy
-            )[0][0] as IPivotDimension
-        ).memberName;
+        const term = (Object.values(fixture.componentInstance.pivotConfigHierarchy)[0][0] as IPivotDimension).memberName;
 
         const inputElement = fixture.debugElement
             .query(By.directive(IgxPivotDataSelectorComponent))
@@ -199,13 +214,9 @@ describe("Pivot data selector integration", () => {
         inputElement.dispatchEvent(new Event("input"));
         fixture.detectChanges();
 
-        const valueList = Array.from(
-            fixture.debugElement
-                .query(By.directive(IgxPivotDataSelectorComponent))
-                .nativeElement.querySelectorAll(
-                    ".igx-pivot-data-selector__filter > igx-list > igx-list-item"
-                ) as NodeList
-        );
+        const valueList = Array.from(fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .nativeElement.querySelectorAll(".igx-pivot-data-selector__filter > igx-list > igx-list-item") as NodeList);
 
         valueList.forEach((li) => {
             expect(li.textContent).toContain(term);
@@ -226,10 +237,7 @@ describe("Pivot data selector integration", () => {
         const checkbox = fixture.debugElement
             .query(By.directive(IgxPivotDataSelectorComponent))
             .queryAll(By.directive(IgxCheckboxComponent))
-            .find(
-                (el: DebugElement) =>
-                    el.componentInstance.ariaLabelledBy === dimension.memberName
-            );
+            .find((el: DebugElement) => el.componentInstance.ariaLabelledBy === dimension.memberName);
 
         // Initial State
         expect(dimension.enabled).toBe(true);
@@ -241,17 +249,13 @@ describe("Pivot data selector integration", () => {
         // After clicking on the checkbox
         items = getPanelItemsByDimensionType(PivotDimensionType.Column);
         expect(dimension.enabled).toBe(false);
-        expect(items.length).toEqual(
-            grid.pivotConfiguration.columns.length - 1
-        );
+        expect(items.length).toEqual(grid.pivotConfiguration.columns.length - 1);
     });
 
     it("should sort column and row dimensions on item click", () => {
         const colDimension = grid.pivotConfiguration.columns[0];
         const rowDimension = grid.pivotConfiguration.rows[0];
-        const colSortEl = getPanelItemsByDimensionType(
-            PivotDimensionType.Column
-        )
+        const colSortEl = getPanelItemsByDimensionType(PivotDimensionType.Column)
             .find((item) => item.textContent.includes(colDimension.memberName))
             .parentNode.querySelector(".igx-pivot-data-selector__action-sort");
         const rowSortEl = getPanelItemsByDimensionType(PivotDimensionType.Row)
@@ -282,16 +286,11 @@ describe("Pivot data selector integration", () => {
 
     it("should render panel header sections for all pivot dimensions", () => {
         Object.values(PivotDimensionType).forEach((dt) => {
-            if (isNaN(Number(dt))) return;
-            const headerNode = getPanelHeaderByDimensionType(
-                dt as PivotDimensionType
-            );
-            const headerTitle = selector._panels.find(
-                (panel) => panel.type === (dt as PivotDimensionType)
-            ).name;
-            const dimensionSize = grid.getDimensionsByType(
-                dt as PivotDimensionType
-            ).length;
+            if (isNaN(Number(dt)))
+                return;
+            const headerNode = getPanelHeaderByDimensionType(dt as PivotDimensionType);
+            const headerTitle = selector._panels.find((panel) => panel.type === (dt as PivotDimensionType)).name;
+            const dimensionSize = grid.getDimensionsByType(dt as PivotDimensionType).length;
 
             expect(headerNode.textContent).toContain(headerTitle);
             expect(headerNode.textContent).toContain(dimensionSize);
@@ -300,9 +299,7 @@ describe("Pivot data selector integration", () => {
 
     it("should render panel header section for the values", () => {
         const headerNode = getPanelHeaderByDimensionType(null);
-        const headerTitle = selector._panels.find(
-            (panel) => panel.type === null
-        ).name;
+        const headerTitle = selector._panels.find((panel) => panel.type === null).name;
         const valuesSize = grid.pivotConfiguration.values?.length;
 
         expect(headerNode.textContent).toContain(headerTitle);
@@ -311,7 +308,8 @@ describe("Pivot data selector integration", () => {
 
     it("should render a section of all dimension items in a panel", () => {
         Object.values(PivotDimensionType).forEach((dt) => {
-            if (isNaN(Number(dt))) return;
+            if (isNaN(Number(dt)))
+                return;
             expectConfigToMatchPanels(dt as PivotDimensionType);
         });
     });
@@ -324,10 +322,10 @@ describe("Pivot data selector integration", () => {
         // Get all value items
         const items = getPanelItemsByDimensionType(null);
 
-        spyOn(selector, "ghostCreated");
-        spyOn(selector, "onItemDragMove");
-        spyOn(selector, "onItemDragEnd");
-        spyOn(selector, "onItemDropped");
+        vi.spyOn(selector, "ghostCreated");
+        vi.spyOn(selector, "onItemDragMove");
+        vi.spyOn(selector, "onItemDragEnd");
+        vi.spyOn(selector, "onItemDropped");
 
         // Get the drag handle of the last item in the panel
         const dragHandle = items[0].parentNode
@@ -338,7 +336,7 @@ describe("Pivot data selector integration", () => {
 
         let { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
         // Take into account that the window offset, since pointer events automatically add it.
-        handleY = handleY + window.pageYOffset
+        handleY = handleY + window.pageYOffset;
 
         UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
@@ -376,7 +374,7 @@ describe("Pivot data selector integration", () => {
 
         let { x: handleX, y: handleY } = dragHandle.getBoundingClientRect();
         // Take into account that the window offset, since pointer events automatically add it.
-        handleY = handleY + window.pageYOffset
+        handleY = handleY + window.pageYOffset;
 
         UIInteractions.simulatePointerEvent("pointerdown", dragHandle, handleX, handleY);
         fixture.detectChanges();
@@ -398,17 +396,14 @@ describe("Pivot data selector integration", () => {
     });
 
     it("should call filtering menu on column and row filter click", () => {
-        spyOn(grid.filteringService, "toggleFilterDropdown");
+        vi.spyOn(grid.filteringService, "toggleFilterDropdown");
 
-        const columnItems = getPanelItemsByDimensionType(
-            PivotDimensionType.Column
-        );
+        const columnItems = getPanelItemsByDimensionType(PivotDimensionType.Column);
         const rowItems = getPanelItemsByDimensionType(PivotDimensionType.Row);
 
-        const getFilteringIcon = (item: Node) =>
-            item.parentNode
-                .querySelector("igx-list-item")
-                .querySelector(".igx-pivot-data-selector__action-filter");
+        const getFilteringIcon = (item: Node) => item.parentNode
+            .querySelector("igx-list-item")
+            .querySelector(".igx-pivot-data-selector__action-filter");
 
         const colFilterActions = columnItems.map(getFilteringIcon);
         const rowFilterActions = rowItems.map(getFilteringIcon);
@@ -423,6 +418,186 @@ describe("Pivot data selector integration", () => {
 
         expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalled();
     });
+
+    it("should not sort dimensions in panels which are not sortable", () => {
+        const filterDimension: IPivotDimension = { memberName: 'SellerName', enabled: true };
+        grid.pivotConfiguration.filters = [filterDimension];
+        grid.pipeTrigger++;
+        fixture.detectChanges();
+
+        selector.onItemSort(new Event('click'), filterDimension, PivotDimensionType.Filter);
+        fixture.detectChanges();
+        expect(filterDimension.sortDirection).toBeUndefined();
+
+        const rowDimension = grid.pivotConfiguration.rows[0];
+        selector.onItemSort(new Event('click'), rowDimension, PivotDimensionType.Row);
+        fixture.detectChanges();
+        expect(rowDimension.sortDirection).toBe(SortingDirection.Asc);
+    });
+
+    it("should prevent the default pointer down behavior of the filtering icon", () => {
+        const event = new PointerEvent('pointerdown');
+        vi.spyOn(event, 'stopPropagation');
+        vi.spyOn(event, 'preventDefault');
+
+        selector.onFilteringIconPointerDown(event);
+
+        expect(event.stopPropagation).toHaveBeenCalled();
+        expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it("should open the filtering menu for the first dimension level which has a dimension column", () => {
+        // only the call is verified, so do not open the dropdown with a null anchor
+        vi.spyOn(grid.filteringService, "toggleFilterDropdown").mockImplementation(() => {});
+        const rowDimension = grid.pivotConfiguration.rows[0];
+        const rowDimensionColumn = grid.dimensionDataColumns.find(x => x.field === rowDimension.memberName);
+
+        // the parent level has no dimension column, so the filtering menu is for its child level
+        selector.onFilteringIconClick(new MouseEvent('click'), { memberName: 'Missing', enabled: true, childLevel: rowDimension });
+        expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalledExactlyOnceWith(null, rowDimensionColumn);
+
+        // no level has a dimension column
+        selector.onFilteringIconClick(new MouseEvent('click'), { memberName: 'Missing', enabled: true });
+        expect(grid.filteringService.toggleFilterDropdown).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not move items when the drop is not allowed", () => {
+        vi.spyOn(grid, "moveDimension");
+        selector.dropAllowed = false;
+
+        selector.onItemDropped(createDropEvent('Country', ''), PivotDimensionType.Row);
+        fixture.detectChanges();
+
+        expect(grid.moveDimension).not.toHaveBeenCalled();
+        expect(grid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['Country']);
+    });
+
+    it("should move a dimension to the end of another panel when dropped over the panel", () => {
+        vi.spyOn(grid.dimensionsChange, "emit");
+        selector.dropAllowed = true;
+
+        selector.onItemDropped(createDropEvent('Country', ''), PivotDimensionType.Filter);
+        fixture.detectChanges();
+
+        expect(grid.pivotConfiguration.columns.length).toBe(0);
+        expect(grid.pivotConfiguration.filters.map(x => x.memberName)).toEqual(['Country']);
+        expect(grid.dimensionsChange.emit).toHaveBeenCalledWith({
+            dimensions: grid.pivotConfiguration.filters,
+            dimensionCollectionType: PivotDimensionType.Filter
+        });
+        expect(getPanelItemsByDimensionType(PivotDimensionType.Filter).map(x => x.textContent)).toEqual(
+            [expect.stringContaining('Country')]);
+    });
+
+    it("should move a dimension before the item it is dropped over in another panel", () => {
+        selector.dropAllowed = true;
+
+        selector.onItemDropped(createDropEvent('Country', 'All'), PivotDimensionType.Row);
+        fixture.detectChanges();
+
+        expect(grid.pivotConfiguration.rows.map(x => x.memberName)).toEqual(['Country', 'All']);
+        expect(grid.pivotConfiguration.columns.length).toBe(0);
+        expect(getPanelItemsByDimensionType(PivotDimensionType.Row).map(x => x.textContent)).toEqual(
+            [expect.stringContaining('Country'), expect.stringContaining('All')]);
+    });
+
+    it("should reorder the dimensions in a panel based on the drag distance", () => {
+        grid.pivotConfiguration.columns = [
+            { memberName: 'Country', enabled: true },
+            { memberName: 'SellerName', enabled: true }
+        ];
+        grid.pipeTrigger++;
+        grid.setupColumns();
+        fixture.detectChanges();
+        selector.dropAllowed = true;
+
+        // dragged one item up
+        selector.onItemDragMove(createDragMoveEvent(100, 70));
+        selector.onItemDropped(createDropEvent('SellerName', 'Country'), PivotDimensionType.Column);
+        fixture.detectChanges();
+        expect(grid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['SellerName', 'Country']);
+
+        // dragged several items up, past the first item
+        selector.onItemDragMove(createDragMoveEvent(100, 0));
+        selector.onItemDropped(createDropEvent('Country', 'SellerName'), PivotDimensionType.Column);
+        fixture.detectChanges();
+        expect(grid.pivotConfiguration.columns.map(x => x.memberName)).toEqual(['Country', 'SellerName']);
+    });
+
+    it("should allow dropping only items of the same grid and an allowed panel", () => {
+        selector.onPanelEntry({ dragData: { gridID: grid.id, selectorChannels: ['Filters', 'Columns', 'Rows'] } } as any, 'Rows');
+        expect(selector.dropAllowed).toBe(true);
+
+        selector.onPanelEntry({ dragData: { gridID: grid.id, selectorChannels: ['Values'] } } as any, 'Rows');
+        expect(selector.dropAllowed).toBe(false);
+
+        selector.onPanelEntry({ dragData: { gridID: 'another-grid', selectorChannels: ['Rows'] } } as any, 'Rows');
+        expect(selector.dropAllowed).toBe(false);
+    });
+
+    it("should change the aggregation of a value through the summary drop-down", async () => {
+        const dropdown: IgxDropDownComponent = fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .query(By.directive(IgxDropDownComponent)).componentInstance;
+        const valueItems = getPanelItemsByDimensionType(null);
+        const getSummaryIcon = (index: number) => valueItems[index].parentNode
+            .querySelectorAll("igx-list-item")[index]
+            .querySelector(".igx-pivot-data-selector__action-summary") as HTMLElement;
+
+        getSummaryIcon(0).dispatchEvent(new MouseEvent('click'));
+        fixture.detectChanges();
+        await wait(50);
+
+        const unitsSold = grid.pivotConfiguration.values[0];
+        expect(dropdown.collapsed).toBe(false);
+        expect(selector.value).toBe(unitsSold);
+        expect(selector.aggregateList.map(x => x.key)).toContain('MAX');
+        expect(dropdown.items.find(x => x.selected).value.key).toBe('SUM');
+
+        // selecting the current aggregation does not change it
+        const pipeTrigger = grid.pipeTrigger;
+        selector.onAggregationChange({ newSelection: { value: unitsSold.aggregate } } as any);
+        expect(grid.pipeTrigger).toBe(pipeTrigger);
+
+        dropdown.selectItem(dropdown.items.find(x => x.value.key === 'MAX'));
+        fixture.detectChanges();
+        await wait(50);
+        fixture.detectChanges();
+
+        expect(unitsSold.aggregate.key).toBe('MAX');
+        expect(grid.pipeTrigger).toBeGreaterThan(pipeTrigger);
+        expect(grid.rowList.first.data.aggregationValues.get('Bulgaria-UnitsSold')).toBe(492);
+
+        // opening the drop-down for another value while it is open re-opens it for the new value
+        if (dropdown.collapsed) {
+            getSummaryIcon(0).dispatchEvent(new MouseEvent('click'));
+            fixture.detectChanges();
+            await wait(50);
+        }
+        expect(dropdown.collapsed).toBe(false);
+        expect(selector.value).toBe(unitsSold);
+        selector.onSummaryClick({ currentTarget: getSummaryIcon(1) } as any, grid.pivotConfiguration.values[1], dropdown);
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+
+        expect(dropdown.collapsed).toBe(false);
+        expect(selector.value).toBe(grid.pivotConfiguration.values[1]);
+
+        dropdown.close();
+        await wait(50);
+    });
+
+    const createDropEvent = (itemId: string, targetId: string) => ({
+        drag: { element: { nativeElement: { id: itemId } } },
+        owner: { element: { nativeElement: { id: targetId } } }
+    }) as any;
+
+    const createDragMoveEvent = (startY: number, nextPageY: number) => ({
+        owner: { element: { nativeElement: { getBoundingClientRect: () => ({ height: 30 }) } } },
+        startY,
+        nextPageY
+    }) as any;
 
     const expectConfigToMatchPanels = (dimensionType: PivotDimensionType) => {
         const items = getPanelItemsByDimensionType(dimensionType);
@@ -451,31 +626,19 @@ describe("Pivot data selector integration", () => {
         });
     };
 
-    const getPanelHeaderByDimensionType = (
-        dimensionType: PivotDimensionType
-    ) => {
-        const panelIndex = selector._panels.findIndex(
-            (panel) => panel.type === dimensionType
-        );
+    const getPanelHeaderByDimensionType = (dimensionType: PivotDimensionType) => {
+        const panelIndex = selector._panels.findIndex((panel) => panel.type === dimensionType);
 
         return fixture.debugElement
             .query(By.directive(IgxPivotDataSelectorComponent))
-            .nativeElement.querySelectorAll("igx-expansion-panel-header")[
-            panelIndex
-        ] as Node;
+            .nativeElement.querySelectorAll("igx-expansion-panel-header")[panelIndex] as Node;
     };
 
-    const getPanelItemsByDimensionType = (
-        dimensionType: PivotDimensionType
-    ) => {
-        const panelIndex = selector._panels.findIndex(
-            (panel) => panel.type === dimensionType
-        );
+    const getPanelItemsByDimensionType = (dimensionType: PivotDimensionType) => {
+        const panelIndex = selector._panels.findIndex((panel) => panel.type === dimensionType);
 
-        return Array.from(
-            fixture.debugElement
-                .query(By.directive(IgxPivotDataSelectorComponent))
-                .nativeElement.querySelectorAll("igx-expansion-panel-body")[panelIndex].querySelectorAll("igx-list-item") as NodeList
-        );
+        return Array.from(fixture.debugElement
+            .query(By.directive(IgxPivotDataSelectorComponent))
+            .nativeElement.querySelectorAll("igx-expansion-panel-body")[panelIndex].querySelectorAll("igx-list-item") as NodeList);
     };
 });

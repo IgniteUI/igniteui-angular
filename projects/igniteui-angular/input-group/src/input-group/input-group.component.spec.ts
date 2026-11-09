@@ -1,10 +1,15 @@
-import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, createComponent, EnvironmentInjector } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent } from './input-group.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
-import { IgxInputDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
+import { IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
+import { IgxCardComponent, IgxCardContentDirective } from 'igniteui-angular/card';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
+import { InputResourceStringsEN, changei18n, THEME_TOKEN } from 'igniteui-angular/core';
+import { config } from 'rxjs';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
@@ -12,8 +17,8 @@ const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
 
 describe('IgxInputGroup', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InputGroupComponent,
                 InputGroupBoxComponent,
@@ -22,12 +27,14 @@ describe('IgxInputGroup', () => {
                 InputGroupFileComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
-                InputGroupDisabledWithoutValueComponent
+                InputGroupDisabledWithoutValueComponent,
+                InputGroupNestedThemeScopeComponent,
+                InputGroupFormRowComponent
             ]
         }).compileComponents();
-    }));
+    });
 
-    it('Initializes an input group.', fakeAsync(() => {
+    it('Initializes an input group.', async () => {
         const fixture = TestBed.createComponent(InputGroupDisabledComponent);
         fixture.detectChanges();
 
@@ -35,13 +42,13 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         // the default type should be box
         testInputGroupType('box', igxInputGroup, inputGroupElement);
-    }));
+    });
 
-    it('Initializes an input group with type box.', fakeAsync(() => {
+    it('Initializes an input group with type box.', async () => {
         const fixture = TestBed.createComponent(InputGroupBoxComponent);
         fixture.detectChanges();
 
@@ -49,12 +56,12 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         testInputGroupType('box', igxInputGroup, inputGroupElement);
-    }));
+    });
 
-    it('Initializes an input group with type border.', fakeAsync(() => {
+    it('Initializes an input group with type border.', async () => {
         const fixture = TestBed.createComponent(InputGroupBorderComponent);
         fixture.detectChanges();
 
@@ -62,12 +69,12 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         testInputGroupType('border', igxInputGroup, inputGroupElement);
-    }));
+    });
 
-    it('Initializes an input group with type search.', fakeAsync(() => {
+    it('Initializes an input group with type search.', async () => {
         const fixture = TestBed.createComponent(InputGroupSearchComponent);
         fixture.detectChanges();
 
@@ -75,10 +82,10 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
         testInputGroupType('search', igxInputGroup, inputGroupElement);
-    }));
+    });
 
     it('Initializes upload file button with type=\'button\'.', () => {
         const fixture = TestBed.createComponent(InputGroupFileComponent);
@@ -89,14 +96,13 @@ describe('IgxInputGroup', () => {
         expect(uploadFileButton.getAttribute('type')).toEqual('button');
     });
 
-    it('Should respect type Token and be able to change input group type programmatically.', fakeAsync(() => {
+    it('Should respect type Token and be able to change input group type programmatically.', async () => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
         const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
-
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         // a Token is passed and can be obtained
@@ -126,7 +132,7 @@ describe('IgxInputGroup', () => {
         igxInputGroup.type = null;
         fixture.detectChanges();
         testInputGroupType('box', igxInputGroup, inputGroupElement);
-    }));
+    });
 
     it('disabled input should properly detect changes.', () => {
         const fixture = TestBed.createComponent(InputGroupDisabledComponent);
@@ -182,7 +188,7 @@ describe('IgxInputGroup', () => {
 
         const pointOnPrefix = UIInteractions.getPointFromElement(prefix.nativeElement);
         const pointerEvent = UIInteractions.createPointerEvent('pointerdown', pointOnPrefix);
-        const preventDefaultSpy = spyOn(pointerEvent, 'preventDefault');
+        const preventDefaultSpy = vi.spyOn(pointerEvent, 'preventDefault');
 
         Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement, configurable: true });
         const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
@@ -239,7 +245,146 @@ describe('IgxInputGroup', () => {
         inputGroupDebugElement.triggerEventHandler('click', pointerEvent);
         expect(document.activeElement).toEqual(input.nativeElement);
     });
+
+    /**
+     * Regression coverage for the `getComponentTheme` fix (was reading the dead `--theme`
+     * custom property; now reads `--ig-theme`, matching what `themes/_scoping.scss` emits).
+     * Verifies an input-group correctly reflects the CSS-scoped `--ig-theme` in effect at
+     * its own DOM position rather than the app-wide/global theme.
+     */
+    it('reflects the CSS-scoped --ig-theme at its own DOM position, not the global theme', async () => {
+        const fixture = TestBed.createComponent(InputGroupNestedThemeScopeComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.rootGroup.isTypeIndigo).toBe(false);
+        expect(fixture.componentInstance.indigoGroup.isTypeIndigo).toBe(true);
+        expect(fixture.componentInstance.materialGroup.isTypeIndigo).toBe(false);
+    });
+
+    it('should not throw on theme change when no igxInput is projected', async () => {
+        const errors: unknown[] = [];
+        const previous = config.onUnhandledError;
+        config.onUnhandledError = error => errors.push(error);
+        const token = TestBed.inject(THEME_TOKEN);
+        // Mirrors the detached instance IgxStylesRegistrar.retain() creates
+        const ref = createComponent(IgxInputGroupComponent, { environmentInjector: TestBed.inject(EnvironmentInjector) });
+
+        try {
+            token.set(token.theme === 'fluent' ? 'material' : 'fluent');
+            await new Promise(resolve => setTimeout(resolve));
+            expect(errors).toEqual([]);
+        } finally {
+            config.onUnhandledError = previous;
+            ref.destroy();
+        }
+    });
+
+    describe('Resource Strings', () => {
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const fix = TestBed.createComponent(InputGroupComponent);
+            fix.detectChanges();
+            const inputGroup = fix.componentInstance.igxInputGroup;
+
+            inputGroup.resourceStrings = { igx_input_upload_button: 'Upload' };
+            fix.detectChanges();
+
+            expect(inputGroup.resourceStrings.igx_input_upload_button).toBe('Upload');
+            expect(inputGroup.resourceStrings.igx_input_file_placeholder).toBe('No file chosen');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const fix = TestBed.createComponent(InputGroupComponent);
+            fix.detectChanges();
+            const inputGroup = fix.componentInstance.igxInputGroup;
+
+            inputGroup.resourceStrings = { igx_input_upload_button: 'Custom Browse' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_input_file_placeholder: 'Keine Datei ausgewählt' });
+                fix.detectChanges();
+
+                expect(inputGroup.resourceStrings.igx_input_upload_button).toBe('Custom Browse');
+                expect(inputGroup.resourceStrings.igx_input_file_placeholder).toBe('Keine Datei ausgewählt');
+            } finally {
+                changei18n(InputResourceStringsEN);
+            }
+        });
+    });
+
+    describe('IgxInputGroup label alignment in a stretched row (#17704)', () => {
+        const labelTops = (fix) => fix.debugElement.queryAll(By.css('igx-input-group'))
+            .map(({ nativeElement: g }) => Math.round(g.querySelector('label').getBoundingClientRect().top - g.getBoundingClientRect().top));
+
+        for (const container of ['div', 'card'] as const) {
+            it(`keeps the neighbour's label in place when a hint appears (${container} container)`, async () => {
+                const fix = TestBed.createComponent(InputGroupFormRowComponent);
+                fix.componentInstance.container = container;
+                fix.detectChanges();
+                await fix.whenStable();
+                const [userBefore] = labelTops(fix);
+
+                fix.componentInstance.showHint = true;
+                fix.detectChanges();
+                await fix.whenStable();
+                const [userAfter, emailAfter] = labelTops(fix);
+
+                expect(userAfter).toBe(userBefore);
+                expect(userAfter).toBe(emailAfter);
+            });
+        }
+    });
 });
+
+@Component({
+    template: `
+        <ng-template #fields>
+            <igx-input-group>
+                <label igxLabel>Username</label>
+                <input igxInput value="john" />
+            </igx-input-group>
+            <igx-input-group>
+                <label igxLabel>Email</label>
+                <input igxInput value="not-an-email" />
+                @if (showHint) {
+                    <igx-hint>Please enter a valid email address</igx-hint>
+                }
+            </igx-input-group>
+        </ng-template>
+        @if (container === 'div') {
+            <div class="form-row"><ng-container *ngTemplateOutlet="fields" /></div>
+        } @else {
+            <igx-card>
+                <igx-card-content class="form-row"><ng-container *ngTemplateOutlet="fields" /></igx-card-content>
+            </igx-card>
+        }`,
+    styles: `.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; width: 600px; }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective, IgxHintDirective, IgxCardComponent, IgxCardContentDirective, NgTemplateOutlet]
+})
+class InputGroupFormRowComponent {
+    public container: 'div' | 'card' = 'div';
+    public showHint = false;
+}
+
+@Component({
+    template: `<igx-input-group #rootGroup><input igxInput/></igx-input-group>
+        <div style="--ig-theme: indigo">
+            <igx-input-group #indigoGroup><input igxInput/></igx-input-group>
+            <div style="--ig-theme: material">
+                <igx-input-group #materialGroup><input igxInput/></igx-input-group>
+            </div>
+        </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
+})
+class InputGroupNestedThemeScopeComponent {
+    @ViewChild('rootGroup', { static: true }) public rootGroup: IgxInputGroupComponent;
+    @ViewChild('indigoGroup', { static: true }) public indigoGroup: IgxInputGroupComponent;
+    @ViewChild('materialGroup', { static: true }) public materialGroup: IgxInputGroupComponent;
+}
 
 @Component({
     template: `<igx-input-group #igxInputGroup [suppressInputAutofocus]="suppressInputAutofocus">
@@ -254,10 +399,14 @@ describe('IgxInputGroup', () => {
 class InputGroupComponent {
     public IGTOKEN = inject<IgxInputGroupType>(IGX_INPUT_GROUP_TYPE);
 
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
-    @ViewChild(IgxPrefixDirective, { read: ElementRef }) public prefix: ElementRef;
-    @ViewChild(IgxSuffixDirective, { read: ElementRef }) public suffix: ElementRef;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true })
+    public igxInput: IgxInputDirective;
+    @ViewChild(IgxPrefixDirective, { read: ElementRef })
+    public prefix: ElementRef;
+    @ViewChild(IgxSuffixDirective, { read: ElementRef })
+    public suffix: ElementRef;
     public suppressInputAutofocus = false;
 }
 
@@ -269,7 +418,8 @@ class InputGroupComponent {
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBoxComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -280,7 +430,8 @@ class InputGroupBoxComponent {
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupBorderComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -291,7 +442,8 @@ class InputGroupBorderComponent {
     imports: [IgxInputDirective, IgxInputGroupComponent]
 })
 class InputGroupSearchComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -301,7 +453,8 @@ class InputGroupSearchComponent {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
-class InputGroupFileComponent { }
+class InputGroupFileComponent {
+}
 
 const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupComponent, nativeElement: HTMLInputElement) => {
     let isLine = false;
@@ -343,7 +496,8 @@ const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupCom
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = false;
 
@@ -379,7 +533,8 @@ class InputGroupDisabledWithoutValueComponent {
     imports: [IgxInputGroupComponent, IgxInputDirective]
 })
 class InputGroupDisabledByDefaultComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = true;
 }

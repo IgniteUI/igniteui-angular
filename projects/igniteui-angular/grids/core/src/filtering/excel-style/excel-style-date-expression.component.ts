@@ -23,10 +23,10 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     protected i18nFormatter = inject(I18N_FORMATTER);
 
     @ViewChild('input', { read: IgxInputDirective, static: false })
-    private input: IgxInputDirective;
+    private input!: IgxInputDirective;
 
     @ViewChild('picker')
-    private picker: IgxDatePickerComponent | IgxTimePickerComponent;
+    private picker!: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @Input()
     public get searchVal(): any {

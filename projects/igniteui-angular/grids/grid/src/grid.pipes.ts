@@ -1,5 +1,5 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult, ColumnType, IMergeByResult } from 'igniteui-angular/core';
+import { IGridSortingStrategy, IGridGroupingStrategy, cloneArray, DataUtil, FilteringExpressionsTree, FilterUtil, IFilteringExpressionsTree, IFilteringStrategy, IGridMergeStrategy, IGroupByExpandState, IGroupingExpression, ISortingExpression, IGroupByResult, ColumnType, IMergeByResult, IPagingState } from 'igniteui-angular/core';
 import { GridCellMergeMode, RowPinningPosition, GridType, IGX_GRID_BASE } from 'igniteui-angular/grids/core';
 
 /**
@@ -13,7 +13,7 @@ export class IgxGridSortingPipe implements PipeTransform {
     private grid = inject<GridType>(IGX_GRID_BASE);
 
     public transform(collection: any[], sortExpressions: ISortingExpression[], groupExpressions: IGroupingExpression[], sorting: IGridSortingStrategy,
-        _id: string, _pipeTrigger: number, pinned?): any[] {
+        _id: string, _pipeTrigger: number, pinned?: boolean): any[] {
         let result: any[];
         const expressions = groupExpressions.concat(sortExpressions);
         if (!expressions.length) {
@@ -21,7 +21,7 @@ export class IgxGridSortingPipe implements PipeTransform {
         } else {
             result = DataUtil.sort(cloneArray(collection), expressions, sorting, this.grid);
         }
-        this.grid.setFilteredSortedData(result, pinned);
+        this.grid.setFilteredSortedData(result, pinned!);
 
         return result;
     }
@@ -43,8 +43,8 @@ export class IgxGridGroupingPipe implements PipeTransform {
         groupingStrategy: IGridGroupingStrategy, defaultExpanded: boolean,
         _id: string, groupsRecords: any[], _pipeTrigger: number): IGroupByResult {
 
-        const state = { expressions: [], expansion: [], defaultExpanded };
-        state.expressions = this.grid.groupingExpressions;
+        const state = { expressions: [] as IGroupingExpression[], expansion: [] as IGroupByExpandState[], defaultExpanded };
+        state.expressions = this.grid.groupingExpressions!;
         let result: IGroupByResult;
         const fullResult: IGroupByResult = { data: [], metadata: [] };
 
@@ -56,8 +56,8 @@ export class IgxGridGroupingPipe implements PipeTransform {
                 metadata: collection
             };
         } else {
-            state.expansion = this.grid.groupingExpansionState;
-            state.defaultExpanded = this.grid.groupsExpanded;
+            state.expansion = this.grid.groupingExpansionState!;
+            state.defaultExpanded = this.grid.groupsExpanded!;
             result = DataUtil.group(cloneArray(collection), state, groupingStrategy, this.grid, groupsRecords, fullResult);
         }
         this.grid.groupingFlatResult = result.data;
@@ -100,7 +100,7 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             activeRowIndexes = activeRowIndexes.map(x => x - this.grid.pinnedRecordsCount);
         }
         activeRowIndexes = Array.from(new Set(activeRowIndexes)).filter(x => !isNaN(x));
-        const rootsToUpdate = [];
+        const rootsToUpdate: any[] = [];
         activeRowIndexes.forEach(index => {
             const target = collection[index];
             if (target && target.cellMergeMeta) {
@@ -126,12 +126,12 @@ export class IgxGridUnmergeActivePipe implements PipeTransform {
             const cols = colsToMerge.filter(col => colKeys.indexOf(col.field) !== -1);
             for (const col of cols) {
                 const childData = x.cellMergeMeta.get(col.field).childRecords;
-                const childRecs = childData.map(rec => rec.recordRef);
+                const childRecs = childData.map((rec: any) => rec.recordRef);
                 if(childRecs.length === 0) {
                     // nothing to unmerge
                     continue;
                 }
-                const unmergedData = DataUtil.merge([x.recordRef, ...childRecs], [col], this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - index), this.grid);
+                const unmergedData = DataUtil.merge([x.recordRef, ...childRecs], [col], this.grid.mergeStrategy, activeRowIndexes.map(ri => ri - index) as any, this.grid);
                 for (let i = 0; i < unmergedData.length; i++) {
                     const unmergedRec = unmergedData[i];
                     const origRecord = result[index + i];
@@ -171,7 +171,7 @@ export class IgxGridPagingPipe implements PipeTransform {
         if (!enabled || this.grid.pagingMode !== 'local') {
             return collection;
         }
-        const state = {
+        const state: IPagingState = {
             index: page,
             recordsPerPage: perPage
         };
@@ -203,7 +203,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
-        advancedExpressionsTree: IFilteringExpressionsTree, _id: string, _pipeTrigger: number, _filteringPipeTrigger: number, pinned?) {
+        advancedExpressionsTree: IFilteringExpressionsTree, _id: string, _pipeTrigger: number, _filteringPipeTrigger: number, pinned?: boolean) {
         const state = {
             expressionsTree,
             strategy: filterStrategy,
@@ -215,7 +215,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
         }
 
         const result = FilterUtil.filter(cloneArray(collection), state, this.grid);
-        this.grid.setFilteredData(result, pinned);
+        this.grid.setFilteredData(result, pinned!);
         return result;
     }
 }

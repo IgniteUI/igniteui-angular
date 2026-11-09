@@ -2,38 +2,46 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as tss from 'typescript/lib/tsserverlibrary';
-import type { SchematicContext, Tree, FileVisitor } from '@angular-devkit/schematics';
+import type { SchematicContext, Tree, FileVisitor, DirEntry } from '@angular-devkit/schematics';
 import type { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 import {
     ClassChanges, BindingChanges, SelectorChange,
-    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeChange, ThemeType
+    SelectorChanges, ThemeChanges, ImportsChanges, MemberChanges, ThemeType, ScssUseChanges
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions,
     isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
-    getProjectPaths, getWorkspace, getProjects, escapeRegExp, replaceMatch,
+    getProjectPaths, getWorkspace, escapeRegExp, replaceMatch,
     getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
+import { SassStylesheet } from './sass/stylesheet';
+import { normalizeName } from './sass/scanner';
+import {
+    addArgument, applyEditsWithMap, removeIncludes, removeVariable, renameMember, renameVariable, SassChangeResult, updateArgument, updateModule
+} from './sass/changes';
+
 import { serviceContainer } from './project-service-container';
 
 const TSCONFIG_PATH = 'tsconfig.json';
+/** Dependency and build output folders never searched for stylesheets. */
+const SKIPPED_STYLE_DIRS = ['node_modules', 'dist', '.angular', '.git'];
 
 export enum InputPropertyType {
     EVAL = 'eval',
     STRING = 'string'
 }
+/** One configured Sass change, and the text a stylesheet mentions when the change can apply to it. */
+interface SassStep {
+    mention: string;
+    apply: (sheet: SassStylesheet) => SassChangeResult;
+}
 declare type TransformFunction = (args: BoundPropertyObject) => void;
 export interface BoundPropertyObject {
     value: string;
     bindingType: InputPropertyType;
-}
-
-interface AppliedChange {
-    overwrite: boolean,
-    fileContent: string
 }
 
 /* eslint-disable arrow-parens */
@@ -74,6 +82,9 @@ export class UpdateChanges {
     protected selectorChanges: SelectorChanges;
     protected themeChanges: ThemeChanges;
     protected importsChanges: ImportsChanges;
+    protected scssUseChanges: ScssUseChanges;
+    /** Sass changes that could not be made automatically, as `path:line - what to do`. */
+    protected manualSassChanges = new Set<string>();
     protected membersChanges: MemberChanges;
     protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
@@ -109,16 +120,25 @@ export class UpdateChanges {
     /** Sass (both .scss and .sass) files in the project being updated. */
     public get sassFiles(): string[] {
         if (!this._sassFiles.length) {
-            // files can be outside the app prefix, so start from sourceRoot
+            // stylesheets can sit anywhere in the workspace, not only under sourceRoot
             // also ignore schematics `styleext` as Sass can be used regardless
-            const sourceDirs = getProjects(this.workspace).map(x => x.sourceRoot).filter(x => x);
-            this.sourceDirsVisitor((fulPath, entry) => {
-                if (fulPath.endsWith('.scss') || fulPath.endsWith('.sass')) {
-                    this._sassFiles.push(entry.path);
-                }
-            }, sourceDirs);
+            this.collectSassFiles(this.host.getDir('/'), this._sassFiles);
         }
         return this._sassFiles;
+    }
+
+    /** Collects the Sass files under a folder, skipping dependency and build output folders. */
+    private collectSassFiles(dir: DirEntry, files: string[]) {
+        for (const name of dir.subfiles) {
+            if (name.endsWith('.scss') || name.endsWith('.sass')) {
+                files.push(dir.file(name).path);
+            }
+        }
+        for (const name of dir.subdirs) {
+            if (!SKIPPED_STYLE_DIRS.includes(name)) {
+                this.collectSassFiles(dir.dir(name), files);
+            }
+        }
     }
 
     private _service: ts.LanguageService;
@@ -153,6 +173,7 @@ export class UpdateChanges {
         this.inputChanges = this.loadConfig('inputs.json');
         this.themeChanges = this.loadConfig('theme-changes.json');
         this.importsChanges = this.loadConfig('imports.json');
+        this.scssUseChanges = this.loadConfig('scss-use-changes.json');
         this.membersChanges = this.loadConfig('members.json');
         // update LS server host with the schematics tree:
         this.serverHost.host = this.host;
@@ -179,11 +200,16 @@ export class UpdateChanges {
             this.updateMembers();
         }
         /** Sass files */
-        if (this.themeChanges && this.themeChanges.changes.length) {
+        const sassChanges = this.sassChanges();
+        if (sassChanges.length) {
             for (const entryPath of this.sassFiles) {
-                this.updateThemeProps(entryPath);
-                this.updateSassVariables(entryPath);
-                this.updateSassFunctionsAndMixins(entryPath);
+                this.updateStylesheet(entryPath, sassChanges);
+            }
+        }
+        if (this.manualSassChanges.size) {
+            this.context?.logger.warn('Some stylesheets need changes the migration could not make. Review the following:');
+            for (const change of this.manualSassChanges) {
+                this.context?.logger.warn(`  - ${change}`);
             }
         }
 
@@ -383,150 +409,85 @@ export class UpdateChanges {
         }
     }
 
-    protected updateThemeProps(entryPath: string) {
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-        for (const change of this.themeChanges.changes) {
-            if (change.type !== ThemeType.Property) {
-                continue;
-            }
-            if (fileContent.indexOf(change.owner) !== -1) {
-                /** owner-func:( * ); */
-                const searchPattern = String.raw`${change.owner}\([\s\S]+?\);`;
-                const matches = fileContent.match(new RegExp(searchPattern, 'g'));
-                if (!matches) {
-                    continue;
+    /**
+     * Every configured Sass change, in the order it is applied to each stylesheet: theme
+     * properties, variables, functions and mixins, then module rules. Each names the text a
+     * stylesheet has to mention for the change to apply, so that most stylesheets are skipped quickly.
+     */
+    protected sassChanges(): SassStep[] {
+        const theme = this.themeChanges?.changes ?? [];
+        const kindOf = (type: ThemeType) => type === ThemeType.Mixin ? 'mixin' : type === ThemeType.Function ? 'function' : undefined;
+        // some older changes name a variable without its `$`
+        const asVariable = (name: string) => name.startsWith('$') ? name : `$${name}`;
+
+        return [
+            ...theme.filter(change => change.type === ThemeType.Property).map(change => ({
+                mention: change.owner,
+                apply: (sheet: SassStylesheet) => {
+                    const match = change.exactOwner ? 'exact' : 'suffix';
+                    const kind = kindOf(change.ownerType);
+                    return change.add !== undefined
+                        ? addArgument(sheet, change.owner, { name: change.name, value: change.add, kind, parameterIndex: change.parameterIndex }, match)
+                        : updateArgument(sheet, change.owner, change, match, kind);
                 }
-                for (const match of matches) {
-                    if (match.indexOf(change.name) !== -1) {
-                        const name = change.name.replace('$', '\\$');
-                        const replaceWith = change.replaceWith?.replace('$', '\\$');
-                        const reg = new RegExp(String.raw`^\s*${name}:`);
-                        const existing = new RegExp(String.raw`${replaceWith}:`);
-                        const opening = `${change.owner}(`;
-                        const closing = /\s*\);$/.exec(match).pop();
-                        const body = match.substr(opening.length, match.length - opening.length - closing.length);
-
-                        let params = this.splitFunctionProps(body);
-                        params = params.reduce((arr, param) => {
-                            if (reg.test(param)) {
-                                const duplicate = !!replaceWith && arr.some(p => existing.test(p));
-
-                                if (!change.remove && !duplicate) {
-                                    arr.push(param.replace(change.name, change.replaceWith));
-                                }
-                            } else {
-                                arr.push(param);
-                            }
-                            return arr;
-                        }, []);
-
-                        fileContent = fileContent.replace(
-                            match,
-                            opening + params.join(',') + closing
-                        );
-                        overwrite = true;
-                    }
-                }
-            }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
-        }
-    }
-
-    protected isNamedArgument(fileContent: string, i: number, occurrences: number[], change: ThemeChange) {
-        const openingBrackets = [];
-        const closingBrackets = [];
-        if (fileContent[(occurrences[i] + change.name.length)] !== ':'
-            || (fileContent[(occurrences[i] + change.name.length)] === ' '
-                && fileContent[(occurrences[i] + change.name.length) + 1] === ':')) {
-            return false;
-        }
-        for (let j = occurrences[i]; j >= 0; j--) {
-            if (fileContent[j] === ')') {
-                closingBrackets.push(fileContent[j]);
-            } else if (fileContent[j] === '(') {
-                openingBrackets.push(fileContent[j]);
-            }
-        }
-
-        return openingBrackets.length !== closingBrackets.length;
-    }
-
-    protected updateSassVariables(entryPath: string) {
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-        const allowedStartCharacters = new RegExp(/(:|,)\s?/, 'g');
-        // eslint-disable-next-line no-control-regex
-        const allowedEndCharacters = new RegExp('[;),: \r\n]', 'g');
-        for (const change of this.themeChanges.changes) {
-            if (change.type !== ThemeType.Variable) {
-                continue;
-            }
-            if (!('owner' in change)) {
-                const occurrences = findMatches(fileContent, change.name);
-                for (let i = occurrences.length - 1; i >= 0; i--) {
-                    const allowedStartEnd = fileContent[occurrences[i] - 1].match(allowedStartCharacters)
-                        || fileContent[(occurrences[i] + change.name.length)].match(allowedEndCharacters);
-                    if (allowedStartEnd && !this.isNamedArgument(fileContent, i, occurrences, change as ThemeChange)) {
-                        fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                        overwrite = true;
-                    }
-                }
-            }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
-        }
-    }
-
-    protected updateSassFunctionsAndMixins(entryPath: string) {
-        const aliases = this.getAliases(entryPath);
-        let fileContent = this.host.read(entryPath).toString();
-        let overwrite = false;
-        for (const change of this.themeChanges.changes) {
-            if (change.type !== ThemeType.Function && change.type !== ThemeType.Mixin) {
-                continue;
-            }
-
-            let occurrences: number[] = [];
-            if (aliases.length > 0 && !aliases.includes('*')) {
-                aliases.forEach(a => occurrences = occurrences.concat(findMatches(fileContent, a + '.' + change.name)));
-                if (occurrences.length > 0) {
-                    ({ overwrite, fileContent } = this.tryReplaceScssFunctionWithAlias(occurrences, aliases, fileContent, change, overwrite));
-                    continue;
-                }
-            }
-
-            occurrences = findMatches(fileContent, change.name);
-            if (occurrences.length > 0) {
-                ({ overwrite, fileContent } = this.tryReplaceScssFunction(occurrences, fileContent, change, overwrite));
-            }
-        }
-        if (overwrite) {
-            this.host.overwrite(entryPath, fileContent);
-        }
-    }
-
-    protected getAliases(entryPath: string) {
-        const fileContent = this.host.read(entryPath).toString();
-        // B.P. 18/05/22 #11577 - Use RegEx to distinguish themed imports.
-        const matchers = [
-            /@use(\s+)('|")igniteui-angular\/theming\2\1as\1(\w+)/g,
-            /@use(\s+)('|")igniteui-angular\/theme\2\1as\1(\w+)/g,
-            /@use(\s+)('|")igniteui-angular\/lib\/core\/styles\/themes\/index\2\1as\1(\w+)/g
+            })),
+            ...theme.filter(change => change.type === ThemeType.Variable && !('owner' in change)).map(change => ({
+                mention: asVariable(change.name).substring(1),
+                // a variable without a replacement is gone from the library
+                apply: (sheet: SassStylesheet) => change.remove || !change.replaceWith
+                    ? removeVariable(sheet, asVariable(change.name))
+                    : renameVariable(sheet, asVariable(change.name), asVariable(change.replaceWith))
+            })),
+            ...theme.filter(change => change.type === ThemeType.Function || change.type === ThemeType.Mixin).map(change => ({
+                mention: change.name,
+                apply: (sheet: SassStylesheet) => change.remove
+                    ? removeIncludes(sheet, change.name)
+                    : renameMember(sheet, change.name, change.replaceWith)
+            })),
+            // `replaceWith` moves a module in place, keeping its namespace and references; `remove`
+            // drops it with the includes of `member` made through its namespace
+            ...(this.scssUseChanges?.changes ?? []).map(change => ({
+                mention: change.module,
+                apply: (sheet: SassStylesheet) => updateModule(sheet, change)
+            }))
         ];
+    }
 
-        const aliases = [];
-        matchers.forEach(m => {
-            const match = m.exec(fileContent);
-            if (match) {
-                aliases.push(match[3]); // access the captured alias
+    /**
+     * Applies Sass changes to a stylesheet one after another, each on the stylesheet the previous
+     * one left. What a change leaves for manual review is reported at its line in the final
+     * stylesheet, after every later change.
+     */
+    private updateStylesheet(entryPath: string, steps: SassStep[]) {
+        const original = this.host.read(entryPath).toString();
+        const indented = entryPath.endsWith('.sass');
+        const manual: { index: number; message: string }[] = [];
+        let content = original;
+        // Sass treats underscores and hyphens in names as the same character
+        let mentions = normalizeName(content);
+
+        for (const step of steps) {
+            if (!mentions.includes(normalizeName(step.mention))) {
+                continue;
             }
-        });
+            const result = step.apply(new SassStylesheet(content, indented));
+            manual.push(...result.manual);
+            if (result.edits.length) {
+                const applied = applyEditsWithMap(content, result.edits);
+                for (const change of manual) {
+                    change.index = applied.map(change.index);
+                }
+                content = applied.content;
+                mentions = normalizeName(content);
+            }
+        }
 
-        return aliases;
+        for (const { index, message } of manual) {
+            this.manualSassChanges.add(`${entryPath}:${content.substring(0, index).split('\n').length} - ${message}`);
+        }
+        if (content !== original) {
+            this.host.overwrite(entryPath, content);
+        }
     }
 
     protected updateImports(entryPath: string) {
@@ -589,33 +550,6 @@ export class UpdateChanges {
         if (changes.size) {
             this.host.overwrite(entryPath, content);
         }
-    }
-
-    // TODO: combine both functions
-    private tryReplaceScssFunctionWithAlias(occurrences: number[], aliases: string[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
-        for (const alias of aliases) {
-            const aliasLength = alias.length + 1; // + 1 because of the dot - alias.member
-            for (let i = occurrences.length - 1; i >= 0; i--) {
-                const isOpenParenthesis = fileContent[occurrences[i] + aliasLength + change.name.length] === '(';
-                if (isOpenParenthesis) {
-                    fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i] + aliasLength);
-                    overwrite = true;
-                }
-            }
-        }
-
-        return { overwrite, fileContent };
-    }
-    private tryReplaceScssFunction(occurrences: number[], fileContent: string, change: ThemeChange, overwrite: boolean): AppliedChange {
-        for (let i = occurrences.length - 1; i >= 0; i--) {
-            const isOpenParenthesis = fileContent[occurrences[i] + change.name.length] === '(';
-            if (isOpenParenthesis) {
-                fileContent = replaceMatch(fileContent, change.name, change.replaceWith, occurrences[i]);
-                overwrite = true;
-            }
-        }
-
-        return { overwrite, fileContent };
     }
 
     private patchTsConfig(): void {
@@ -726,37 +660,6 @@ export class UpdateChanges {
             const srcDir = this.host.getDir(sourcePath);
             srcDir.visit(visitor);
         }
-    }
-
-    /**
-     * Safe split by `','`, considering possible inner function calls. E.g.:
-     * ```
-     * prop: inner-func(),
-     * prop2: inner2(inner-param: 3, inner-param: inner-func(..))
-     * ```
-     */
-    private splitFunctionProps(body: string): string[] {
-        const parts = [];
-        let lastIndex = 0;
-        let level = 0;
-
-        for (let i = 0; i < body.length; i++) {
-            const char = body[i];
-            switch (char) {
-                case '(': level++; break;
-                case ')': level--; break;
-                case ',':
-                    if (!level) {
-                        parts.push(body.substring(lastIndex, i));
-                        lastIndex = i + 1;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        parts.push(body.substring(lastIndex));
-        return parts;
     }
 
     private updateTemplateFiles() {

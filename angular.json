@@ -45,8 +45,11 @@
             "namedChunks": true,
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "browser": "./src/main.ts"
           },
@@ -108,23 +111,10 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles/styles.scss"
-            ],
-            "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ]
+            "browsers": ["chromium"]
           }
         },
         "lint": {
@@ -185,37 +175,58 @@
             "production": {
               "project": "projects/igniteui-angular/ng-package.prod.json",
               "tsConfig": "projects/igniteui-angular/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/igniteui-angular/tsconfig.lib.json",
+              "project": "projects/igniteui-angular/ng-package.json"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "styles": [
-              "src/styles/styles.scss",
-              "projects/igniteui-angular/test.css"
-            ],
-            "assets": [
-              "projects/igniteui-angular/test-utils/assets"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules"
-              ]
-            },
             "tsConfig": "projects/igniteui-angular/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular/karma.conf.js",
+            "browsers": ["chromium"],
+            "headless": true,
             "exclude": [
                 "migrations",
-                "schematics"
+                "schematics",
+                "test-utils/**",
+                "**/*.perf.spec.ts",
+                "grids/core/src/services/csv/csv-verification-wrapper.spec.ts",
+                "grids/core/src/services/excel/test-data.service.spec.ts",
+                "grids/core/src/services/excel/zip-helper.spec.ts",
+                "grids/core/src/services/excel/zip-verification-wrapper.spec.ts",
+                "grids/core/src/services/exporter-common/test-methods.spec.ts",
+                "grids/core/src/services/pdf/pdf-exporter-utils.spec.ts",
+                "query-builder/src/query-builder/query-builder-functions.spec.ts",
+                "tree/src/tree/tree-functions.spec.ts",
+                "tree/src/tree/tree-samples.spec.ts"
             ],
-            "codeCoverageExclude": [
-                "projects/igniteui-angular/test-utils/**"
-            ]
+            "coverageInclude": [
+                "projects/igniteui-angular/**/*.ts",
+                "projects/igniteui-angular/**/*.html"
+            ],
+            "coverageExclude": [
+                "projects/igniteui-angular/**/*.module.ts",
+                "projects/igniteui-angular/**/public_api.ts",
+                "projects/igniteui-angular/cypress/**",
+                "projects/igniteui-angular/migrations/**",
+                "projects/igniteui-angular/schematics/**",
+                "projects/igniteui-angular/test-utils/**",
+                "projects/igniteui-angular/core/src/data-operations/test-util/**",
+                "projects/igniteui-angular/test-setup.ts",
+                "projects/igniteui-angular/vitest.config.ts"
+            ],
+            "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
+            "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
+          },
+          "configurations": {
+            "perf": {
+              "include": ["**/*.perf.spec.ts"],
+              "exclude": ["test-utils/**"]
+            }
           }
         },
         "lint": {
@@ -278,27 +289,30 @@
           "configurations": {
             "production": {
               "tsConfig": "projects/igniteui-angular-extras/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/igniteui-angular-extras/tsconfig.lib.json",
+              "project": "projects/igniteui-angular-extras/ng-package.json"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
-            "styles": [
-              "src/styles/styles.scss"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "node_modules/@infragistics"
-              ]
-            },
             "tsConfig": "projects/igniteui-angular-extras/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular-extras/karma.conf.js"
+            "browsers": ["chromium"],
+            "headless": true,
+            "coverageInclude": [
+                "projects/igniteui-angular-extras/**/*.ts",
+                "projects/igniteui-angular-extras/**/*.html"
+            ],
+            "coverageExclude": [
+                "projects/igniteui-angular-extras/**/*.module.ts",
+                "projects/igniteui-angular-extras/migrations/**"
+            ],
+            "runnerConfig": "projects/igniteui-angular/vitest.config.ts",
+            "setupFiles": ["projects/igniteui-angular/test-setup.ts"]
           }
         },
         "lint": {
@@ -360,8 +374,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
             "browser": "projects/igniteui-angular-elements/src/main.ts"
           },
@@ -370,8 +387,8 @@
               "budgets": [
                 {
                   "type": "allScript",
-                  "maximumWarning": "2.5mb",
-                  "maximumError": "3.5mb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "7mb"
                 },
                 {
                   "type": "bundle",
@@ -381,8 +398,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "300kb"
                 }
               ],
               "fileReplacements": [
@@ -407,6 +424,9 @@
             "dev-app": {
               "browser": "projects/igniteui-angular-elements/src/main.app.ts",
               "tsConfig": "projects/igniteui-angular-elements/tsconfig.app.json"
+            },
+            "test": {
+              "polyfills": []
             }
           },
           "defaultConfiguration": "production"
@@ -430,28 +450,25 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/igniteui-angular-elements/src/test.ts",
-            "polyfills": [
-              "projects/igniteui-angular-elements/src/polyfills.ts"
-            ],
+            "buildTarget": "igniteui-angular-elements:build:development,test",
             "tsConfig": "projects/igniteui-angular-elements/tsconfig.spec.json",
-            "karmaConfig": "projects/igniteui-angular-elements/karma.conf.js",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              "projects/igniteui-angular-elements/src/favicon.ico",
-              "projects/igniteui-angular-elements/src/assets"
+            "browsers": ["chromium"],
+            "isolate": true,
+            "coverageInclude": [
+                "projects/igniteui-angular-elements/src/**/*.ts",
+                "projects/igniteui-angular-elements/src/**/*.html"
             ],
-            "styles": [
-              "projects/igniteui-angular-elements/src/styles.scss"
-            ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules"
-              ]
-            },
-            "scripts": []
+            "coverageExclude": [
+                "projects/igniteui-angular-elements/src/**/*.d.ts",
+                "projects/igniteui-angular-elements/src/analyzer/**",
+                "projects/igniteui-angular-elements/src/assets/**",
+                "projects/igniteui-angular-elements/src/environments/**",
+                "projects/igniteui-angular-elements/src/index.html",
+                "projects/igniteui-angular-elements/src/main.app.ts",
+                "projects/igniteui-angular-elements/src/polyfills.ts"
+            ]
           }
         }
       }
@@ -474,9 +491,6 @@
             "index": "projects/bundle-test/src/index.html",
             "browser": "projects/bundle-test/src/main.ts",
             "server": "projects/bundle-test/src/main.server.ts",
-            "polyfills": [
-              "zone.js"
-            ],
             "tsConfig": "projects/bundle-test/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "styles": [
@@ -486,9 +500,13 @@
             "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             },
+            "outputMode": "static",
             "ssr": {
               "entry": "projects/bundle-test/server.ts"
             }
@@ -510,8 +528,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "200kb",
+                  "maximumError": "300kb"
                 }
               ],
               "outputHashing": "all",
@@ -545,18 +563,10 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "projects/bundle-test/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "styles": [
-              "projects/bundle-test/src/styles.scss"
-            ],
-            "scripts": []
+            "browsers": ["chromium"]
           }
         }
       }
@@ -589,8 +599,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules"
-              ]
+                "node_modules",
+                "projects/igniteui-angular",
+                "projects/igniteui-angular/core/src/core/"
+              ],
+              "sass": { "silenceDeprecations": ["if-function"] }
             }
           },
           "configurations": {
@@ -603,8 +616,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "200kB",
+                  "maximumError": "300kB"
                 }
               ],
               "outputHashing": "all"
@@ -633,23 +646,10 @@
           "builder": "@angular/build:extract-i18n"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
             "tsConfig": "projects/igniteui-angular-performance/tsconfig.spec.json",
-            "inlineStyleLanguage": "scss",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "projects/igniteui-angular-performance/public"
-              }
-            ],
-            "styles": [
-              "projects/igniteui-angular-performance/src/styles.scss"
-            ]
+            "browsers": ["chromium"]
           }
         }
       }

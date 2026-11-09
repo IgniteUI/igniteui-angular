@@ -93,9 +93,9 @@ export class RadioSampleComponent implements AfterContentInit {
         radioGroup.required = true;
 
         radioGroup.radios = [
-          { value: 1, label: 'Radio 1' },
-          { value: 2, label: 'Radio 2' },
-          { value: 3, label: 'Radio 3' },
+          { value: 1, label: 'Dynamic Radio 1' },
+          { value: 2, label: 'Dynamic Radio 2' },
+          { value: 3, label: 'Dynamic Radio 3' },
         ];
     }
 

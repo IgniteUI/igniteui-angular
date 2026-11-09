@@ -115,7 +115,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public singleValue = 'Arizona';
     public values2: Array<any>;
     public isDisabled = false;
-
+    public _isChecked: boolean;
     public rData: any;
     public prevRequest: any;
     public simpleComboPrevRequest: any;
@@ -262,6 +262,15 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
                 });
             });
         }
+    }
+
+    public get isChecked(): boolean {
+        return this._isChecked;
+    }
+
+    public set isChecked(value: boolean) {
+        this._isChecked = value;
+        this.igxCombo.itemHeight = value ? 46 : undefined;
     }
 
     public handleAddition(evt) {
@@ -492,12 +501,12 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSimpleComboOpened() {
-        const scroll: number =
-            this.remoteSimpleCombo.virtualScrollContainer.getScrollForIndex(
-                this.itemID - 1
-            );
-        this.remoteSimpleCombo.virtualScrollContainer.scrollPosition =
-            scroll + this.additionalScroll;
+        // additionalScroll is one row, set when the selection is the last item. Landing a
+        // row further down puts that item at the bottom of the viewport.
+        void this.remoteSimpleCombo.virtualScrollContainer.scrollToIndex(
+            this.itemID - 1 + (this.additionalScroll ? 1 : 0),
+            { block: 'start' }
+        );
         this.cdr.detectChanges();
     }
 

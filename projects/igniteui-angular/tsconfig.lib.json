@@ -6,8 +6,19 @@
     "declaration": true,
     "inlineSources": true
   },
+  "exclude": [
+    "**/*.spec.ts",
+    "test-utils",
+    "migrations",
+    "schematics",
+    "cypress"
+  ],
   "angularCompilerOptions": {
+    // The other angularCompilerOptions (strictTemplates, strictInjectionParameters,
+    // strictInputAccessModifiers, generateDeepReexports) are inherited from the root config.
+    // `extendedDiagnostics` is merged per key, so restate defaultCategory here or it is lost.
     "extendedDiagnostics": {
+      "defaultCategory": "error",
       "checks": {
         "nullishCoalescingNotNullable": "suppress",
         "optionalChainNotNullable": "suppress"

@@ -1,16 +1,18 @@
 import {
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  Output,
-  Directive,
-  ContentChild,
-  booleanAttribute,
-  ChangeDetectionStrategy
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    Directive,
+    ContentChild,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 /**
  * Action icon is a container for the action nav icon of the navbar.
@@ -23,7 +25,8 @@ export class IgxNavbarActionDirective { }
 
 @Directive({
     selector: '[igxNavbarTitle],igx-navbar-title',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxNavbarTitleDirective { }
 
@@ -48,13 +51,8 @@ let NEXT_ID = 0;
 @Component({
     selector: 'igx-navbar',
     templateUrl: 'navbar.component.html',
-    styles: [`
-        :host {
-            display: block;
-            width: 100%;
-        }
-    `
-    ],
+    styleUrl: 'navbar.component.css',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
@@ -71,12 +69,20 @@ export class IgxNavbarComponent {
     public id = `igx-navbar-${NEXT_ID++}`;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-navbar')
+    public cssClass = 'igx-navbar';
+
+
+    /**
      * Sets the icon of the navbar.
      * ```html
      * <igx-navbar [title]="currentView" actionButtonIcon="arrow_back"></igx-navbar>
      * ```
      */
-    @Input() public actionButtonIcon: string;
+    @Input() public actionButtonIcon!: string;
 
     /**
      * Sets the title of the navbar.
@@ -84,7 +90,7 @@ export class IgxNavbarComponent {
      * <igx-navbar title="Sample App" actionButtonIcon="menu">
      * ```
      */
-    @Input() public title: string;
+    @Input() public title!: string;
 
     /**
      * The event that will be thrown when the action is executed,
@@ -114,13 +120,13 @@ export class IgxNavbarComponent {
      * @hidden
      */
     @ContentChild(IgxNavbarActionDirective, { read: IgxNavbarActionDirective })
-    protected actionIconTemplate: IgxNavbarActionDirective;
+    protected actionIconTemplate!: IgxNavbarActionDirective;
 
     /**
      * @hidden
      */
     @ContentChild(IgxNavbarTitleDirective, { read: IgxNavbarTitleDirective })
-    protected titleContent: IgxNavbarTitleDirective;
+    protected titleContent!: IgxNavbarTitleDirective;
 
     private isVisible = true;
 

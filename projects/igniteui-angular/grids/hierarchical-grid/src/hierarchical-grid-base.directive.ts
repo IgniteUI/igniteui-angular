@@ -1,6 +1,8 @@
 import {
     booleanAttribute,
+    ComponentRef,
     createComponent,
+    DestroyRef,
     Directive,
     EventEmitter,
     Input,
@@ -10,14 +12,12 @@ import {
 } from '@angular/core';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxSummaryOperand } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { GridType, IGX_GRID_SERVICE_BASE } from 'igniteui-angular/grids/core';
 import { IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { takeUntil } from 'rxjs/operators';
-import { IgxGridTransaction } from 'igniteui-angular/grids/core';
-import { IgxTransactionService, IPathSegment } from 'igniteui-angular/core';
+import { IgxTransactionService, IgxSummaryOperand, IgxGridTransaction, ColumnType } from 'igniteui-angular/core';
 import { IForOfState } from 'igniteui-angular/directives';
 import { IgxGridBaseDirective } from 'igniteui-angular/grids/grid';
 
@@ -48,7 +48,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * ```
      */
     @Input()
-    public hasChildrenKey: string;
+    public hasChildrenKey!: string;
 
     /**
      * Gets/Sets whether the expand/collapse all button in the header should be rendered.
@@ -92,7 +92,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * body by default, so using outlet is also no longer needed.
      */
     public override get outlet() {
-        return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
+        return this.rootGrid ? this.rootGrid.resolveOutlet!() : this.resolveOutlet();
     }
 
     /* blazorSuppress */
@@ -115,7 +115,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     public override set batchEditing(val: boolean) {
         if (val !== this._batchEditing) {
-            delete this._transactions;
+            this._transactions = null!;
             this.switchTransactionService(val);
             this.subscribeToTransactions();
             this.batchEditingChange.emit(val);
@@ -126,17 +126,31 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * @hidden
      */
-    public parentIsland: IgxRowIslandComponent;
+    public parentIsland!: IgxRowIslandComponent;
+    /* blazorCSSuppress */
     public abstract rootGrid: GridType;
 
     /* blazorSuppress */
     public abstract expandChildren: boolean;
 
+    private readonly destroyRef = inject(DestroyRef);
+    // Columns created by createColumnsList. Standalone refs: Angular never destroys them on its own.
+    private columnRefs: ComponentRef<IgxColumnComponent>[] = [];
+
+    constructor() {
+        super();
+        // Release the created columns with the grid.
+        this.destroyRef.onDestroy(() => this.columnRefs.forEach(ref => ref.destroy()));
+    }
+
     /**
      * @hidden
      */
-    public createColumnsList(cols: Array<any>) {
-        const columns = [];
+    public createColumnsList(cols: ColumnType[]): void {
+        const columns: IgxColumnComponent[] = [];
+        // The new columns replace the previous ones; destroy those once the grid drops them.
+        const replacedRefs = this.columnRefs;
+        this.columnRefs = [];
         const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
             col.grid = this;
@@ -146,6 +160,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         });
         const result = flatten(columns);
         this.updateColumns(result);
+        replacedRefs.forEach(ref => ref.destroy());
         this.initPinning();
 
         result.forEach(col => {
@@ -153,28 +168,29 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         });
 
         const mirror = reflectComponentType(IgxColumnComponent);
-        const outputs = mirror.outputs.filter(o => o.propName !== 'columnChange');
+        const outputs = mirror!.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columns.forEach(column => {
-                if (column[output.propName]) {
-                    column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
+                if ((column as any)[output.propName]) {
+                    (column as any)[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args: any) => {
                         const rowIslandColumn = this.parentIsland.columnList.find((col) => col.field
                             ? col.field === column.field
                             : col.header === column.header);
-                        rowIslandColumn[output.propName].emit({ args, owner: this });
+                        (rowIslandColumn! as any)[output.propName].emit({ args, owner: this });
                     });
                 }
             });
         });
     }
 
-    protected _createColumn(col) {
+    protected _createColumn(col: ColumnType) {
         let ref;
         if (col instanceof IgxColumnGroupComponent) {
             ref = this._createColGroupComponent(col);
         } else {
             ref = this._createColComponent(col);
         }
+        this.columnRefs.push(ref);
         return ref;
     }
 
@@ -182,12 +198,12 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const ref = createComponent(IgxColumnGroupComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         ref.changeDetectorRef.detectChanges();
         const mirror = reflectComponentType(IgxColumnGroupComponent);
-        mirror.inputs.forEach((input) => {
+        mirror!.inputs.forEach((input) => {
             const propName = input.propName;
-            ref.instance[propName] = col[propName];
+            (ref.instance as any)[propName] = (col as any)[propName];
         });
         if (col.children.length > 0) {
-            const newChildren = [];
+            const newChildren: IgxColumnComponent[] = [];
             col.children.forEach(child => {
                 const newCol = this._createColumn(child).instance;
                 newCol.parent = ref.instance;
@@ -199,35 +215,24 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         return ref;
     }
 
-    protected _createColComponent(col) {
+    protected _createColComponent(col: ColumnType) {
         const ref = createComponent(IgxColumnComponent, { environmentInjector: this.envInjector, elementInjector: this.injector });
         const mirror = reflectComponentType(IgxColumnComponent);
-        mirror.inputs.forEach((input) => {
+        mirror!.inputs.forEach((input) => {
             const propName = input.propName;
-            if (!(col[propName] instanceof IgxSummaryOperand)) {
-                ref.instance[propName] = col[propName];
+            if (!((col as any)[propName] instanceof IgxSummaryOperand)) {
+                (ref.instance as any)[propName] = (col as any)[propName];
             } else {
-                ref.instance[propName] = col[propName].constructor;
+                (ref.instance as any)[propName] = (col as any)[propName].constructor;
             }
         });
         ref.instance.validators = col.validators;
         return ref;
     }
-
-    protected getGridsForIsland(rowIslandID: string) {
-        return this.gridAPI.getChildGridsForRowIsland(rowIslandID);
-    }
-
-    protected getChildGrid(path: Array<IPathSegment>) {
-        if (!path) {
-            return;
-        }
-        return this.gridAPI.getChildGrid(path);
-    }
 }
 
 const flatten = (arr: any[]) => {
-    let result = [];
+    let result: any[] = [];
 
     arr.forEach(el => {
         result.push(el);

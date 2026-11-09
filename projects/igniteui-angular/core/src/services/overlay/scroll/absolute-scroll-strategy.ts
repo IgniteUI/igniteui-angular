@@ -7,15 +7,15 @@ import { ScrollStrategy } from './scroll-strategy';
  */
 export class AbsoluteScrollStrategy extends ScrollStrategy {
     private _initialized = false;
-    private _document: Document;
-    private _overlayService: IgxOverlayService;
-    private _id: string;
+    private _document!: Document;
+    private _overlayService!: IgxOverlayService;
+    private _id!: string;
     private _scrollContainer: HTMLElement;
-    private _zone: NgZone;
+    private _zone!: NgZone;
 
     constructor(scrollContainer?: HTMLElement) {
         super();
-        this._scrollContainer = scrollContainer;
+        this._scrollContainer = scrollContainer!;
     }
 
     /**
@@ -85,7 +85,7 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         if (!overlayInfo) {
             return;
         }
-        if (!overlayInfo.elementRef.nativeElement.contains(e.target)) {
+        if (!overlayInfo.elementRef!.nativeElement.contains(e.target)) {
             this._overlayService.reposition(this._id);
         }
     };

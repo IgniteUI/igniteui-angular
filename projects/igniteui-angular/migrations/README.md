@@ -59,21 +59,17 @@ At consumer install time the specifier resolves naturally through their
 
 `npm run test:schematics` compiles the migrations with
 [`tsconfig.spec.json`](./tsconfig.spec.json) into `dist/igniteui-angular/...`
-and runs the compiled `*.spec.js` files through Jasmine. In this repo there is
+and runs the compiled `*.spec.js` files through Vitest in Node (see
+[`vitest.config.mjs`](./vitest.config.mjs)). In this repo there is
 no `node_modules/igniteui-angular` (the library is the workspace itself), so
 the bare `igniteui-angular/migrations/common/import-helper.cjs` specifier
 would not resolve at runtime.
 
 [`tsconfig-paths-bootstrap.js`](./tsconfig-paths-bootstrap.js) fixes that. It
-is loaded with `node --require` before Jasmine starts and installs a runtime
-path map (via the `tsconfig-paths` package) that points
-`igniteui-angular/*` at `./dist/igniteui-angular/*`.
+is loaded before the specs run and installs a runtime path map (via the
+`tsconfig-paths` package) that points `igniteui-angular/*` at
+`./dist/igniteui-angular/*`.
 
-The wiring in [`package.json`](../../../package.json) looks like:
-
-```text
-node -r ./projects/igniteui-angular/migrations/tsconfig-paths-bootstrap.js \
-     ./node_modules/jasmine/bin/jasmine.js \
-     "dist/igniteui-angular/migrations/**/*.spec.js" \
-     "dist/igniteui-angular/schematics/**/*.spec.js"
-```
+The wiring lives in the `test:schematics` script in
+[`package.json`](../../../package.json) and in
+[`vitest.config.mjs`](./vitest.config.mjs).

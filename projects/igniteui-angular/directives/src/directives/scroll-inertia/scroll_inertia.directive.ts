@@ -34,10 +34,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
 
     @Input()
-    public IgxScrollInertiaDirection: string;
+    public IgxScrollInertiaDirection!: string;
 
     @Input()
-    public IgxScrollInertiaScrollContainer: HTMLElement;
+    public IgxScrollInertiaScrollContainer!: HTMLElement;
 
     @Input()
     public wheelStep = 50;
@@ -63,26 +63,26 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     @Input()
     public inertiaDuration = 0.5;
 
-    private _touchInertiaAnimID: ReturnType<typeof requestAnimationFrame>;
-    private _startX: number;
-    private _startY: number;
-    private _touchStartX: number;
-    private _touchStartY: number;
-    private _lastTouchEnd: number;
-    private _lastTouchX: number;
-    private _lastTouchY: number;
+    private _touchInertiaAnimID!: ReturnType<typeof requestAnimationFrame>;
+    private _startX!: number;
+    private _startY!: number;
+    private _touchStartX!: number;
+    private _touchStartY!: number;
+    private _lastTouchEnd!: number;
+    private _lastTouchX!: number;
+    private _lastTouchY!: number;
     private _savedSpeedsX: number[] = [];
     private _savedSpeedsY: number[] = [];
-    private _totalMovedX: number;
-    private _offsetRecorded: boolean;
-    private _offsetDirection: number;
-    private _lastMovedX: number;
-    private _lastMovedY: number;
-    private _nextX: number;
-    private _nextY: number;
+    private _totalMovedX!: number;
+    private _offsetRecorded!: boolean;
+    private _offsetDirection!: number;
+    private _lastMovedX!: number;
+    private _lastMovedY!: number;
+    private _nextX!: number;
+    private _nextY!: number;
     private _speedsIndexX = 0;
     private _speedsIndexY = 0;
-    private parentElement: HTMLElement;
+    private parentElement!: HTMLElement;
     private _cachedFirstChild: HTMLElement | null = null;
 
     public ngOnInit(): void {
@@ -175,7 +175,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
 
-        if (evt.composedPath && this.didChildScroll(evt, scrollDeltaX, scrollDeltaY)) {
+        if (evt.composedPath !== undefined && this.didChildScroll(evt, scrollDeltaX!, scrollDeltaY!)) {
             return;
         }
 

@@ -8,14 +8,14 @@ export class ExcelStylePositionStrategy extends AutoPositionStrategy {
     }
 
     protected override fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
-        const heightOverflow = connectedFit.contentElementRect.height - connectedFit.viewPortRect.height;
+        const heightOverflow = connectedFit.contentElementRect!.height! - connectedFit.viewPortRect!.height!;
         if (heightOverflow > 0) {
             element.style.width = 'auto';
-            element.style.height = `${connectedFit.viewPortRect.height}px`;
+            element.style.height = `${connectedFit.viewPortRect!.height}px`;
         } else {
             element.style.height = `${Math.max(
-                connectedFit.viewPortRect.height - connectedFit.targetRect.bottom - 1,
-                connectedFit.contentElementRect.height)}px`;
+                connectedFit.viewPortRect!.height! - connectedFit.targetRect!.bottom! - 1,
+                connectedFit.contentElementRect!.height!)}px`;
         }
 
         super.fitInViewport(element, connectedFit);

@@ -1,0 +1,36 @@
+# Platform is forced via `docker build/run --platform linux/amd64` (see
+# scripts/docker-test/{image,container}.mjs) rather than hardcoded here, to
+# avoid BuildKit's FromPlatformFlagConstDisallowed lint warning.
+#
+# Ubuntu version MUST match `runs-on` in .github/workflows/nodejs.yml.
+# GitHub silently redefines what "ubuntu-latest" means (last moved
+# 22.04 → 24.04 in Jan 2025) — check that workflow whenever bumping this.
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# ── Base tools ───────────────────────────────────────────────────────────────
+RUN apt-get update \
+ && apt-get install -y curl gnupg ca-certificates \
+ && rm -rf /var/lib/apt/lists/*
+
+# ── Node 24 ───────────────────────────────────────────────────────────────────
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
+ && apt-get install -y nodejs \
+ && rm -rf /var/lib/apt/lists/*
+
+# ── Playwright Chromium OS dependencies ───────────────────────────────────────
+# Vitest browser mode launches Playwright's own Chromium (no system Chrome).
+# Only the OS libraries are baked into the image here (taken from the latest
+# Playwright release at build time; `just build` refreshes them). The browser
+# binary itself is downloaded inside the container by
+# `npx playwright install chromium` (see scripts/docker-test/container.mjs),
+# so it always matches the Playwright version in package-lock.json.
+RUN npx -y playwright install-deps chromium \
+ && rm -rf /var/lib/apt/lists/* /root/.npm
+
+# Keep downloaded browsers in the cached node_modules volume so they survive
+# `docker run --rm` and are reset together with node_modules.
+ENV PLAYWRIGHT_BROWSERS_PATH=/workspace/node_modules/.cache/ms-playwright
+
+WORKDIR /workspace

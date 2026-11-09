@@ -1,10 +1,10 @@
 import { parseDate } from 'igniteui-angular/core';
 import { GridColumnDataType } from 'igniteui-angular/core';
 import { DefaultSortingStrategy, SortingDirection } from 'igniteui-angular/core';
-import { IPivotGridRecord, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
+import { IPivotGridRecord, PivotGridType, PivotUtil, IPivotDimension, IPivotExpandableDimension } from 'igniteui-angular/grids/core';
 
 export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrategy {
-    protected static override _instance: DefaultPivotGridRecordSortingStrategy = null;
+    protected static override _instance: DefaultPivotGridRecordSortingStrategy = null!;
     public static override instance(): DefaultPivotGridRecordSortingStrategy {
         return this._instance || (this._instance = new this());
     }
@@ -26,8 +26,8 @@ export class DefaultPivotGridRecordSortingStrategy extends DefaultSortingStrateg
 
 
 export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
-    protected static override _instance: DefaultPivotSortingStrategy = null;
-    protected dimension;
+    protected static override _instance: DefaultPivotSortingStrategy = null!;
+    protected dimension: IPivotDimension = null!;
     public static override instance(): DefaultPivotSortingStrategy {
         return this._instance || (this._instance = new this());
     }
@@ -40,9 +40,9 @@ export class DefaultPivotSortingStrategy extends DefaultSortingStrategy {
         isTime?: boolean,
         grid?: PivotGridType) {
         const key = fieldName;
-        const allDimensions = grid.allDimensions;
+        const allDimensions = grid!.allDimensions;
         const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key);
+        this.dimension = PivotUtil.flatten(enabledDimensions).find(x => x.memberName === key) as IPivotExpandableDimension;
         return super.sort(data, key, dir, ignoreCase, this.getFieldValue, isDate, isTime);
     }
 

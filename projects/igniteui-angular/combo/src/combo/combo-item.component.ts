@@ -47,7 +47,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
 
     /** @hidden @internal */
     @Input({ transform: booleanAttribute })
-    public singleMode: boolean;
+    public singleMode!: boolean;
 
     /**
      * @hidden
@@ -110,7 +110,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
         return rect.y >= parentDiv.y;
     }
 
-    public override clicked(event): void {
+    public override clicked(event: MouseEvent): void {
         this.comboAPI.disableTransitions = false;
         if (!this.isSelectable) {
             return;

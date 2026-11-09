@@ -8,7 +8,7 @@ import { IgxGridComponent } from 'igniteui-angular/grids/grid';
         IgxGridComponent,
     ],
     templateUrl: './grid.component.html',
-    styleUrl: './grid.component.css',
+    styleUrl: './grid.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GridComponent { }

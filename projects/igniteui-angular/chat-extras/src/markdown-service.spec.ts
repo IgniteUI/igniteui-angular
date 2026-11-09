@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { IgxChatMarkdownService } from './markdown-service';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('IgxChatMarkdownService', () => {
     let service: IgxChatMarkdownService;
@@ -33,7 +34,7 @@ describe('IgxChatMarkdownService', () => {
 
     it('should apply custom link extension', async () => {
         const markdown = '[Infragistics](https://www.infragistics.com)';
-        const expectedLink = '<p><a href="https://www.infragistics.com" rel="noopener noreferrer">Infragistics</a></p>';
+        const expectedLink = '<p><a href="https://www.infragistics.com" target="_blank" rel="noopener noreferrer">Infragistics</a></p>';
 
         const result = await service.parse(markdown);
         expect(result).toContain(expectedLink);

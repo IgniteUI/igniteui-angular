@@ -1,7 +1,9 @@
-import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject, ChangeDetectionStrategy } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, ViewChildren, QueryList, DebugElement, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, UntypedFormBuilder, ReactiveFormsModule, Validators, UntypedFormControl, UntypedFormGroup, FormControl } from '@angular/forms';
+import { FormField, disabled, form as signalForm, required, validate } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
+import { map, timer } from 'rxjs';
 import { IgxInputGroupComponent } from '../input-group.component';
 import { IgxInputDirective, IgxInputState } from './input.directive';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
@@ -10,6 +12,7 @@ import { IgxIconComponent } from '../../../../icon/src/icon/icon.component';
 import { IgxLabelDirective } from '../directives-label/label.directive';
 import { IgxMaskDirective } from 'igniteui-angular/directives';
 import { IgxSuffixDirective } from '../directives-suffix/suffix.directive';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const INPUT_CSS_CLASS = 'igx-input-group__input';
 const CSS_CLASS_INPUT_GROUP_LABEL = 'igx-input-group__label';
@@ -24,9 +27,11 @@ const INPUT_GROUP_REQUIRED_CSS_CLASS = 'igx-input-group--required';
 const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
+const ASYNC_VALIDATION_DELAY = 2000;
+
 describe('IgxInput', () => {
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 InputComponent,
                 TextareaComponent,
@@ -42,10 +47,11 @@ describe('IgxInput', () => {
                 InputsWithSameNameAttributesComponent,
                 ToggleRequiredWithNgModelInputComponent,
                 InputReactiveFormComponent,
-                FileInputFormComponent
+                FileInputFormComponent,
+                AsyncValidatedInputComponent
             ]
         }).compileComponents();
-    }));
+    });
 
     it('Initializes an input.', () => {
         const fixture = TestBed.createComponent(InputComponent);
@@ -97,11 +103,10 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('should have an initial filled style when data bound.', fakeAsync(() => {
+    it('should have an initial filled style when data bound.', async () => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
-
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         const notFilledUndefined = fixture.componentInstance.igxInputGroupNotFilledUndefined.element.nativeElement;
@@ -127,7 +132,7 @@ describe('IgxInput', () => {
 
         const filledDate = fixture.componentInstance.igxInputGroupFilledDate.element.nativeElement;
         expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
-    }));
+    });
 
     it('should have a filled style. Value API.', () => {
         const fixture = TestBed.createComponent(FilledInputComponent);
@@ -207,6 +212,44 @@ describe('IgxInput', () => {
         expect(igxInput.disabled).toBe(false);
     });
 
+    it('should reset the focused state as soon as a focused input is disabled', () => {
+        const fixture = TestBed.createComponent(DataBoundDisabledInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        expect(igxInput.focused).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(true);
+
+        igxInput.disabled = true;
+
+        // reset synchronously, without waiting for the browser blur
+        expect(igxInput.focused).toBe(false);
+        expect(fixture.componentInstance.igxInputGroup.isFocused).toBe(false);
+
+        fixture.detectChanges();
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+    });
+
+    it('should report isValid based on the validity state', () => {
+        const fixture = TestBed.createComponent(InputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(igxInput.isValid).toBe(true);
+
+        igxInput.valid = IgxInputState.VALID;
+        expect(igxInput.isValid).toBe(true);
+
+        igxInput.valid = IgxInputState.INVALID;
+        expect(igxInput.isValid).toBe(false);
+    });
+
     it('should style required input correctly.', () => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
@@ -269,7 +312,7 @@ describe('IgxInput', () => {
         expect(requiredInputGroups.length).toBe(6);
     });
 
-    it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
+    it('When updating two inputs with same attribute names through ngModel, label should responds', async () => {
 
         const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
         fix.detectChanges();
@@ -282,8 +325,7 @@ describe('IgxInput', () => {
 
         fix.componentInstance.model.firstName = 'Mike';
         fix.detectChanges();
-
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         igxInputGroups = fix.debugElement.queryAll(By.css('igx-input-group'));
@@ -291,9 +333,9 @@ describe('IgxInput', () => {
             const inputGroup = element.nativeElement;
             expect(inputGroup.classList.contains('igx-input-group--filled')).toBe(true);
         });
-    }));
+    });
 
-    it('should not draw input as invalid when updated through ngModel and input is pristine and untouched', fakeAsync(() => {
+    it('should not draw input as invalid when updated through ngModel and input is pristine and untouched', async () => {
         const fix = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fix.detectChanges();
 
@@ -301,22 +343,22 @@ describe('IgxInput', () => {
 
         fix.componentInstance.user.firstName = 'Bobby';
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
 
         fix.componentInstance.user.firstName = undefined;
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
 
         fix.componentInstance.user.firstName = '';
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
-    }));
+    });
 
     it('should not draw input as invalid when value is changed via reactive form and input is pristine and untouched', () => {
         const fix = TestBed.createComponent(ReactiveFormComponent);
@@ -338,7 +380,7 @@ describe('IgxInput', () => {
         expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     });
 
-    it('should correctly update state of input without model when updated trough code', fakeAsync(() => {
+    it('should correctly update state of input without model when updated trough code', async () => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
 
@@ -360,9 +402,9 @@ describe('IgxInput', () => {
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
-    }));
+    });
 
-    it('should correctly update state of input when updated through ngModel, no user interactions', fakeAsync(() => {
+    it('should correctly update state of input when updated through ngModel, no user interactions', async () => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
 
@@ -375,8 +417,7 @@ describe('IgxInput', () => {
         fixture.componentInstance.user.firstName = 'Bobby';
 
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
@@ -384,8 +425,7 @@ describe('IgxInput', () => {
 
         igxInput.value = '';
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
@@ -393,15 +433,14 @@ describe('IgxInput', () => {
 
         igxInput.value = undefined;
         fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+        await fixture.whenStable();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
         expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
-    }));
+    });
 
-    it('should correctly update state of input when value is changed via reactive, no user interactions', fakeAsync(() => {
+    it('should correctly update state of input when value is changed via reactive, no user interactions', async () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -440,9 +479,9 @@ describe('IgxInput', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
         expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
-    }));
+    });
 
-    it('should correctly update state of input when updated through ngModel, with user interactions', fakeAsync(() => {
+    it('should correctly update state of input when updated through ngModel, with user interactions', async () => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
 
@@ -452,8 +491,7 @@ describe('IgxInput', () => {
 
         dispatchInputEvent('focus', inputElement, fixture);
         dispatchInputEvent('blur', inputElement, fixture);
-
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
@@ -463,7 +501,7 @@ describe('IgxInput', () => {
         fixture.componentInstance.user.firstName = 'Bobby';
 
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
@@ -472,7 +510,7 @@ describe('IgxInput', () => {
 
         fixture.componentInstance.user.firstName = '';
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
@@ -481,15 +519,15 @@ describe('IgxInput', () => {
 
         fixture.componentInstance.user.firstName = undefined;
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
         expect(inputElement.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('true');
-    }));
+    });
 
-    it('should correctly update state of input when value is changed via reactive, with user interactions', fakeAsync(() => {
+    it('should correctly update state of input when value is changed via reactive, with user interactions', async () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -533,9 +571,9 @@ describe('IgxInput', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
         expect(input.attributes.getNamedItem('aria-invalid').nodeValue).toEqual('false');
-    }));
+    });
 
-    it('should correctly update enabled/disabled state of igxInput when changed via reactive form', fakeAsync(() => {
+    it('should correctly update enabled/disabled state of igxInput when changed via reactive form', async () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
         const igxInput = fixture.componentInstance.strIgxInput;
@@ -550,7 +588,7 @@ describe('IgxInput', () => {
         fixture.componentInstance.form.get('str').enable();
         expect(igxInput.disabled).toBe(false);
         expect(igxInput.inputGroup.disabled).toBe(false);
-    }));
+    });
 
     it('should style input when required is toggled dynamically.', () => {
         const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
@@ -688,7 +726,7 @@ describe('IgxInput', () => {
         expect(igxInput.value).toBe('Test');
     });
 
-    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', fakeAsync(() => {
+    it('Should properly initialize when used as a reactive form control - without initial validators/toggle validators', async () => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
         // 1) check if label's --required class and its asterisk are applied
@@ -714,7 +752,7 @@ describe('IgxInput', () => {
         // in order to ensure Angular handles blur prior to our blur handler (where we check touched),
         // we have to call blur twice.
         fix.debugElement.componentInstance.markAsTouched();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
@@ -724,7 +762,7 @@ describe('IgxInput', () => {
         // 3) Check if the input group's --invalid and --required classes are removed when validator is dynamically cleared
         fix.componentInstance.removeValidators(formGroup);
         fix.detectChanges();
-        tick();
+        await fix.whenStable();
 
         const formReference = fix.componentInstance.reactiveForm.controls.fullName;
         // interaction test - expect no asterisk
@@ -740,7 +778,7 @@ describe('IgxInput', () => {
         // interact with the input and expect no changes
         input.nativeElement.dispatchEvent(new Event('focus'));
         input.nativeElement.dispatchEvent(new Event('blur'));
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
         expect(input.valid).toEqual(IgxInputState.INITIAL);
 
@@ -753,7 +791,7 @@ describe('IgxInput', () => {
         asterisk = window.getComputedStyle(dom.query(By.css('.' + CSS_CLASS_INPUT_GROUP_LABEL)).nativeElement, ':after').content;
         expect(asterisk).toBe('"*"');
         expect(input.nativeElement.attributes.getNamedItem('aria-required').nodeValue).toEqual('true');
-    }));
+    });
 
     it('should not hold old file input value in form after clearing the input', () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
@@ -777,7 +815,7 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         expect(igxInput.value).toEqual('C:\\fakepath\\filename.jpg');
-        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg')
+        expect(form.controls['fileInput'].value).toEqual('C:\\fakepath\\filename.jpg');
 
         const clearButton = igxInputGroup.element.nativeElement.querySelector('.igx-input-group__clear-icon');
         expect(clearButton).toBeDefined();
@@ -789,9 +827,10 @@ describe('IgxInput', () => {
         expect(form.controls['fileInput'].value).toEqual('');
     });
 
-    it('should not hold old file input value after clearing the input when ngModel is used', () => {
+    it('should not hold old file input value after clearing the input when ngModel is used', async () => {
         const fixture = TestBed.createComponent(FileInputFormComponent);
         fixture.detectChanges();
+        await fixture.whenStable();
 
         const igxInput = fixture.componentInstance.inputWithNgModel;
         const igxInputGroup = fixture.componentInstance.igxInputGroupNgModel;
@@ -823,7 +862,7 @@ describe('IgxInput', () => {
         expect(model.inputValue).toEqual('');
     });
 
-    it('Should update validity state when programmatically setting errors on reactive form controls', fakeAsync(() => {
+    it('Should update validity state when programmatically setting errors on reactive form controls', async () => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
 
@@ -841,7 +880,7 @@ describe('IgxInput', () => {
         // remove the validators and check the same
         fix.componentInstance.removeValidators(formGroup);
         formGroup.markAsUntouched();
-        tick();
+        await fix.whenStable();
         fix.detectChanges();
 
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
@@ -854,9 +893,9 @@ describe('IgxInput', () => {
         // no validator, but there is a set error
         expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
         expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
-    }));
+    });
 
-    it('should keep state as initial on type when there are no errors and validators on reactive form controls', fakeAsync(() => {
+    it('should keep state as initial on type when there are no errors and validators on reactive form controls', async () => {
         const fix = TestBed.createComponent(InputReactiveFormComponent);
         fix.detectChanges();
 
@@ -887,9 +926,9 @@ describe('IgxInput', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
 
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
-    }));
+    });
 
-    it('should mark the reactive form control as touched when igxInput loses focus', fakeAsync(() => {
+    it('should mark the reactive form control as touched when igxInput loses focus', async () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -904,13 +943,13 @@ describe('IgxInput', () => {
         fixture.detectChanges();
 
         input.dispatchEvent(new Event('blur'));
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(formControl.touched).toBe(true);
-    }));
+    });
 
-    it('should update validity when control is marked as touched', fakeAsync(() => {
+    it('should update validity when control is marked as touched', async () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -920,11 +959,562 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INITIAL);
 
         component.markAllAsTouched();
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
-    }));
+    });
+
+    it('should not show the invalid state while an async validator is pending', () => {
+        vi.useFakeTimers();
+        try {
+            const fixture = TestBed.createComponent(AsyncValidatedInputComponent);
+            fixture.detectChanges();
+
+            const igxInput = fixture.componentInstance.igxInput;
+            const inputElement = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+
+            dispatchInputEvent('focus', inputElement, fixture);
+            UIInteractions.setInputElementValue(inputElement, 'taken', fixture);
+            dispatchInputEvent('blur', inputElement, fixture);
+
+            expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+            expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+
+            vi.advanceTimersByTime(ASYNC_VALIDATION_DELAY);
+            fixture.detectChanges();
+
+            expect(igxInput.valid).toBe(IgxInputState.INVALID);
+            expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+});
+
+describe('IgxInput - Signal Forms', () => {
+    let fixture: ComponentFixture<SignalFormComponent>;
+    let inputGroup: HTMLElement;
+    let input: HTMLInputElement;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                SignalFormComponent,
+                CustomRuleSignalFormComponent,
+                SwitchFieldSignalFormComponent
+            ]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(SignalFormComponent);
+        fixture.detectChanges();
+        inputGroup = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+    });
+
+    it('should initialize and reflect the required rule', () => {
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+        expect(input.getAttribute('aria-required')).toBe('true');
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('should become invalid once touched with an empty value', () => {
+        input.dispatchEvent(new Event('focus'));
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(input.getAttribute('aria-invalid')).toBe('true');
+
+        fixture.componentInstance.model.set({ firstName: 'Bobby' });
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+    });
+
+    it('should follow the disabled rule', () => {
+        expect(inputGroup.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(false);
+
+        fixture.componentInstance.isDisabled.set(true);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+        expect(input.disabled).toBe(true);
+
+        fixture.componentInstance.isDisabled.set(false);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should reset the invalid state when the field is reset', () => {
+        input.dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        fixture.componentInstance.userForm.firstName().reset();
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('should reach the valid state once a custom rule is satisfied', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'ab', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should reach the valid state when the first edit satisfies a custom rule', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should reach the valid state when a value satisfies a custom rule after reset', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        nativeInput.dispatchEvent(new Event('blur'));
+
+        customFixture.componentInstance.userForm.code().reset('');
+        customFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'wxyz', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+    });
+
+    it('should restore the valid state when a refocused field stays valid while edited', () => {
+        const customFixture = TestBed.createComponent(CustomRuleSignalFormComponent);
+        customFixture.detectChanges();
+        const customInputGroup: HTMLElement = customFixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        const debugInput = customFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcd', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        nativeInput.dispatchEvent(new Event('blur'));
+        customFixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        // Only the value changes on these edits
+        nativeInput.dispatchEvent(new Event('focus'));
+        UIInteractions.setInputElementValue(nativeInput, 'abcde', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        UIInteractions.setInputElementValue(nativeInput, 'abcdef', customFixture);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+        expect(customInputGroup.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+    });
+
+    it('should update the field value from the view when the input is cleared', () => {
+        const igxInput = fixture.debugElement.query(By.directive(IgxInputDirective)).injector.get(IgxInputDirective);
+
+        UIInteractions.setInputElementValue(input, 'Bobby', fixture);
+        expect(fixture.componentInstance.model().firstName).toBe('Bobby');
+
+        // Signal Forms ignore the programmatic write, so clear() must notify them through an input event
+        const inputEventSpy = vi.fn();
+        input.addEventListener('input', inputEventSpy);
+
+        igxInput.clear();
+        fixture.detectChanges();
+
+        expect(inputEventSpy).toHaveBeenCalledTimes(1);
+        expect(input.value).toBe('');
+        expect(fixture.componentInstance.model().firstName).toBe('');
+        expect(inputGroup.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should drop aria-required once a conditional required rule turns off', () => {
+        expect(input.getAttribute('aria-required')).toBe('true');
+
+        fixture.componentInstance.isRequired.set(false);
+        fixture.detectChanges();
+
+        expect(inputGroup.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+        expect(input.getAttribute('aria-required')).toBe('false');
+    });
+
+    it('should stay initial after switching to a field without rules', () => {
+        const switchFixture = TestBed.createComponent(SwitchFieldSignalFormComponent);
+        switchFixture.detectChanges();
+        const debugInput = switchFixture.debugElement.query(By.directive(IgxInputDirective));
+        const igxInput = debugInput.injector.get(IgxInputDirective);
+        const nativeInput = debugInput.nativeElement as HTMLInputElement;
+        const component = switchFixture.componentInstance;
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        nativeInput.dispatchEvent(new Event('blur'));
+        switchFixture.detectChanges();
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        component.useNote.set(true);
+        switchFixture.detectChanges();
+
+        nativeInput.dispatchEvent(new Event('focus'));
+        component.userForm.note().markAsTouched();
+        switchFixture.detectChanges();
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    });
+});
+
+describe('IgxInput - type="file"', () => {
+    const FILE_INPUT_GROUP_CSS_CLASS = 'igx-input-group--file';
+    const FILE_INPUT_CSS_CLASS = 'igx-file-input';
+    const FILE_INPUT_FILLED_CSS_CLASS = 'igx-file-input--filled';
+    const FILE_INPUT_FOCUSED_CSS_CLASS = 'igx-file-input--focused';
+    const FILE_INPUT_DISABLED_CSS_CLASS = 'igx-file-input--disabled';
+    const INPUT_GROUP_SUFFIXED_CSS_CLASS = 'igx-input-group--suffixed';
+    const UPLOAD_BUTTON_CSS_CLASS = 'igx-input-group__upload-button';
+    const FILE_NAMES_CSS_CLASS = 'igx-input-group__file-input';
+    const CLEAR_ICON_CSS_CLASS = 'igx-input-group__clear-icon';
+
+    let fixture: ComponentFixture<FileInputComponent>;
+    let igxInput: IgxInputDirective;
+    let inputGroup: IgxInputGroupComponent;
+    let inputElement: HTMLInputElement;
+    let inputGroupElement: HTMLElement;
+
+    const createFileList = (...names: string[]): FileList => {
+        const dataTransfer = new DataTransfer();
+        names.forEach(name => dataTransfer.items.add(new File(['content'], name)));
+        return dataTransfer.files;
+    };
+
+    const selectFiles = (...names: string[]) => {
+        inputElement.files = createFileList(...names);
+        inputElement.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+    };
+
+    const query = (cssClass: string): HTMLElement => inputGroupElement.querySelector(`.${cssClass}`);
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [FileInputComponent, FileInputFormComponent]
+        }).compileComponents();
+    });
+
+    const createFixture = (setup?: (component: FileInputComponent) => void) => {
+        fixture = TestBed.createComponent(FileInputComponent);
+        setup?.(fixture.componentInstance);
+        fixture.detectChanges();
+        igxInput = fixture.componentInstance.igxInput;
+        inputGroup = fixture.componentInstance.igxInputGroup;
+        inputElement = igxInput.nativeElement;
+        inputGroupElement = inputGroup.element.nativeElement;
+    };
+
+    it('should initialize a file input with the file input group styling', () => {
+        createFixture();
+
+        expect(igxInput.type).toBe('file');
+        expect(igxInput.isInput).toBe(true);
+        expect(inputElement.classList.contains(INPUT_CSS_CLASS)).toBe(true);
+        expect(igxInput.fileNames).toBeFalsy();
+
+        expect(inputGroup.isFileType).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_GROUP_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(false);
+
+        const uploadButton = query(UPLOAD_BUTTON_CSS_CLASS) as HTMLButtonElement;
+        expect(uploadButton).not.toBeNull();
+        expect(uploadButton.disabled).toBe(false);
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    });
+
+    it('should display the placeholder resource string when no file is selected', () => {
+        createFixture();
+
+        const placeholder = inputGroup.resourceStrings.igx_input_file_placeholder;
+        const fileNamesElement = query(FILE_NAMES_CSS_CLASS);
+
+        expect(inputGroup.fileNames).toBe(placeholder);
+        expect(fileNamesElement.textContent.trim()).toBe(placeholder);
+        expect(fileNamesElement.title).toBe(placeholder);
+    });
+
+    it('should update the file names and filled state when a file is selected', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+
+        expect(igxInput.fileNames).toBe('document.pdf');
+        expect(igxInput.value).toBe('C:\\fakepath\\document.pdf');
+        expect(inputGroup.fileNames).toBe('document.pdf');
+
+        const fileNamesElement = query(FILE_NAMES_CSS_CLASS);
+        expect(fileNamesElement.textContent.trim()).toBe('document.pdf');
+        expect(fileNamesElement.title).toBe('document.pdf');
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(true);
+        expect(query(CLEAR_ICON_CSS_CLASS)).not.toBeNull();
+    });
+
+    it('should join the names of multiple selected files', () => {
+        createFixture(component => component.multiple = true);
+
+        selectFiles('first.txt', 'second.png', 'third.docx');
+
+        const expected = 'first.txt, second.png, third.docx';
+        expect(igxInput.fileNames).toBe(expected);
+        expect(query(FILE_NAMES_CSS_CLASS).textContent.trim()).toBe(expected);
+        expect(query(FILE_NAMES_CSS_CLASS).title).toBe(expected);
+    });
+
+    it('should replace the file names on subsequent selections', () => {
+        createFixture();
+
+        selectFiles('old.txt');
+        expect(igxInput.fileNames).toBe('old.txt');
+
+        selectFiles('new.txt');
+        expect(igxInput.fileNames).toBe('new.txt');
+        expect(query(FILE_NAMES_CSS_CLASS).textContent.trim()).toBe('new.txt');
+    });
+
+    it('should reset the file names when the selection is emptied', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+        expect(igxInput.fileNames).toBe('document.pdf');
+
+        selectFiles();
+
+        expect(igxInput.fileNames).toBe('');
+        expect(inputGroup.fileNames).toBe(inputGroup.resourceStrings.igx_input_file_placeholder);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(false);
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+    });
+
+    it('should not track file names on change for non-file inputs', () => {
+        createFixture();
+
+        inputElement.type = 'text';
+        inputElement.value = 'text';
+        inputElement.dispatchEvent(new Event('change'));
+        fixture.detectChanges();
+
+        expect(igxInput.fileNames).toBeFalsy();
+    });
+
+    it('should clear the selected files when the clear icon is clicked', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+
+        UIInteractions.simulateClickEvent(query(CLEAR_ICON_CSS_CLASS));
+        fixture.detectChanges();
+
+        expect(igxInput.value).toBe('');
+        expect(inputElement.files.length).toBe(0);
+        expect(igxInput.fileNames).toBe('');
+        expect(query(FILE_NAMES_CSS_CLASS).textContent.trim()).toBe(inputGroup.resourceStrings.igx_input_file_placeholder);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(false);
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+    });
+
+    it('should clear the selected files when Enter is pressed on the clear icon', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+
+        const clearIcon = query(CLEAR_ICON_CSS_CLASS);
+        expect(clearIcon.getAttribute('tabindex')).toBe('0');
+
+        UIInteractions.triggerKeyDownEvtUponElem('Enter', clearIcon);
+        fixture.detectChanges();
+
+        expect(igxInput.value).toBe('');
+        expect(igxInput.fileNames).toBe('');
+        expect(query(CLEAR_ICON_CSS_CLASS)).toBeNull();
+    });
+
+    it('should apply the focused file input style', () => {
+        createFixture();
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FOCUSED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', inputElement, fixture);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_FOCUSED_CSS_CLASS)).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_FOCUSED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should apply the disabled file input style and disable the upload button', () => {
+        createFixture(component => component.disabled = true);
+
+        expect(inputElement.disabled).toBe(true);
+        expect(inputGroupElement.classList.contains(FILE_INPUT_DISABLED_CSS_CLASS)).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_DISABLED_CSS_CLASS)).toBe(true);
+        expect((query(UPLOAD_BUTTON_CSS_CLASS) as HTMLButtonElement).disabled).toBe(true);
+
+        fixture.componentInstance.disabled = false;
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(FILE_INPUT_DISABLED_CSS_CLASS)).toBe(false);
+        expect((query(UPLOAD_BUTTON_CSS_CLASS) as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it('should not report the clear icon as a suffix when a filled file input is disabled', () => {
+        createFixture();
+
+        selectFiles('document.pdf');
+        expect(inputGroup.hasSuffixes).toBe(true);
+
+        fixture.componentInstance.disabled = true;
+        fixture.detectChanges();
+
+        expect(inputGroup.hasSuffixes).toBe(false);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_SUFFIXED_CSS_CLASS)).toBe(false);
+    });
+
+    it('should not be considered a search input group', () => {
+        createFixture();
+
+        expect(inputGroup.isTypeSearch).toBeFalsy();
+    });
+
+    it('should style a required file input and set aria-required', () => {
+        createFixture(component => component.required = true);
+
+        expect(igxInput.required).toBe(true);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+        expect(inputElement.getAttribute('aria-required')).toBe('true');
+    });
+
+    it('should become invalid when a required file input is left empty', () => {
+        createFixture(component => component.required = true);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+    });
+
+    it('should reset the invalid state of a required file input once files are selected', () => {
+        createFixture(component => component.required = true);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        selectFiles('document.pdf');
+
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('should keep the invalid state of a required file input when the selection is empty', () => {
+        createFixture(component => component.required = true);
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        selectFiles();
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+    });
+
+    it('should not change the validity state of a non-required file input on selection', () => {
+        createFixture();
+
+        igxInput.valid = IgxInputState.INVALID;
+        selectFiles('document.pdf');
+
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    });
+
+    it('should reset the file names when the reactive form control value is cleared', () => {
+        const formFixture = TestBed.createComponent(FileInputFormComponent);
+        formFixture.detectChanges();
+
+        const formInput = formFixture.componentInstance.input;
+        const control = formFixture.componentInstance.formWithFileInput.controls['fileInput'];
+        const nativeInput = formInput.nativeElement;
+
+        nativeInput.files = createFileList('document.pdf');
+        nativeInput.dispatchEvent(new Event('input'));
+        nativeInput.dispatchEvent(new Event('change'));
+        formFixture.detectChanges();
+
+        expect(formInput.fileNames).toBe('document.pdf');
+        expect(control.value).toBe('C:\\fakepath\\document.pdf');
+
+        control.setValue('');
+        formFixture.detectChanges();
+
+        expect(formInput.value).toBe('');
+        expect(formInput.fileNames).toBe('');
+        expect(formFixture.componentInstance.igxInputGroup.fileNames)
+            .toBe(formFixture.componentInstance.igxInputGroup.resourceStrings.igx_input_file_placeholder);
+    });
+
+    it('should reset the file names when the reactive form is reset', () => {
+        const formFixture = TestBed.createComponent(FileInputFormComponent);
+        formFixture.detectChanges();
+
+        const formInput = formFixture.componentInstance.input;
+        const form = formFixture.componentInstance.formWithFileInput;
+        const nativeInput = formInput.nativeElement;
+
+        nativeInput.files = createFileList('document.pdf');
+        nativeInput.dispatchEvent(new Event('input'));
+        nativeInput.dispatchEvent(new Event('change'));
+        formFixture.detectChanges();
+
+        expect(formInput.fileNames).toBe('document.pdf');
+
+        form.reset();
+        formFixture.detectChanges();
+
+        expect(formInput.value).toBe('');
+        expect(formInput.fileNames).toBe('');
+    });
 });
 
 @Component({
@@ -943,8 +1533,10 @@ describe('IgxInput', () => {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class InputsWithSameNameAttributesComponent {
-    @ViewChildren('igxInputGroup') public igxInputGroup: QueryList<DebugElement>;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChildren('igxInputGroup')
+    public igxInputGroup: QueryList<DebugElement>;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 
     public model = {
         firstName: null
@@ -963,8 +1555,10 @@ class InputsWithSameNameAttributesComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class InputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -991,7 +1585,8 @@ class TextareaComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class InputWithPlaceholderComponent {
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1005,8 +1600,10 @@ class InputWithPlaceholderComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class FilledInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1020,8 +1617,10 @@ class FilledInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DisabledInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1035,8 +1634,10 @@ class DisabledInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class RequiredInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 }
 
 @Component({
@@ -1048,8 +1649,10 @@ class RequiredInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class RequiredTwoWayDataBoundInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 
     public user = {
         firstName: ''
@@ -1102,15 +1705,23 @@ class RequiredTwoWayDataBoundInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormsModule]
 })
 class InitiallyFilledInputComponent {
-    @ViewChild('igxInputGroupNotFilledUndefined', { static: true }) public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledNull', { static: true }) public igxInputGroupNotFilledNull: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledEmpty', { static: true }) public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledUndefined', { static: true })
+    public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledNull', { static: true })
+    public igxInputGroupNotFilledNull: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledEmpty', { static: true })
+    public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
 
-    @ViewChild('igxInputGroupFilledString', { static: true }) public igxInputGroupFilledString: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledNumber', { static: true }) public igxInputGroupFilledNumber: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolFalse', { static: true }) public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolTrue', { static: true }) public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledDate', { static: true }) public igxInputGroupFilledDate: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledString', { static: true })
+    public igxInputGroupFilledString: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledNumber', { static: true })
+    public igxInputGroupFilledNumber: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolFalse', { static: true })
+    public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolTrue', { static: true })
+    public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledDate', { static: true })
+    public igxInputGroupFilledDate: IgxInputGroupComponent;
 
     public notFilledUndefined = undefined;
     public notFilledNull = null;
@@ -1135,8 +1746,10 @@ class InitiallyFilledInputComponent {
     imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 class DataBoundDisabledInputComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
 
     public disabled = false;
 }
@@ -1202,7 +1815,8 @@ class DataBoundDisabledInputWithoutValueComponent extends DataBoundDisabledInput
 class ReactiveFormComponent {
     private fb = inject(UntypedFormBuilder);
 
-    @ViewChild('strinput', { static: true, read: IgxInputDirective }) public strIgxInput: IgxInputDirective;
+    @ViewChild('strinput', { static: true, read: IgxInputDirective })
+    public strIgxInput: IgxInputDirective;
 
     public form = this.fb.group({
         str: ['', Validators.required],
@@ -1280,8 +1894,10 @@ class ToggleRequiredWithNgModelInputComponent {
 })
 
 class InputReactiveFormComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('inputReactive', { read: IgxInputDirective }) public input: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('inputReactive', { read: IgxInputDirective })
+    public input: IgxInputDirective;
     public reactiveForm: UntypedFormGroup;
 
     public validationType = {
@@ -1347,10 +1963,14 @@ class InputReactiveFormComponent {
 })
 
 class FileInputFormComponent {
-    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('fileInput', { read: IgxInputDirective }) public input: IgxInputDirective;
-    @ViewChild('igxInputGroupNgModel', { static: true }) public igxInputGroupNgModel: IgxInputGroupComponent;
-    @ViewChild('inputNgModel', { read: IgxInputDirective }) public inputWithNgModel: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true })
+    public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('fileInput', { read: IgxInputDirective })
+    public input: IgxInputDirective;
+    @ViewChild('igxInputGroupNgModel', { static: true })
+    public igxInputGroupNgModel: IgxInputGroupComponent;
+    @ViewChild('inputNgModel', { read: IgxInputDirective })
+    public inputWithNgModel: IgxInputDirective;
     public formWithFileInput: UntypedFormGroup;
     public model = {
         inputValue: null
@@ -1363,6 +1983,26 @@ class FileInputFormComponent {
             fileInput: new UntypedFormControl('')
         });
     }
+
+    public onSubmit() { }
+}
+
+@Component({
+    template: `
+    <igx-input-group #igxInputGroup>
+        <label igxLabel for="file">File</label>
+        <input igxInput #igxInput id="file" name="file" type="file"
+            [multiple]="multiple" [required]="required" [disabled]="disabled" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
+})
+class FileInputComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
+    public multiple = false;
+    public required = false;
+    public disabled = false;
 }
 
 const testRequiredValidation = (inputElement, fixture) => {
@@ -1398,3 +2038,76 @@ const dispatchInputEvent = (eventName, inputNativeElement, fixture) => {
     inputNativeElement.dispatchEvent(new Event(eventName));
     fixture.detectChanges();
 };
+
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="firstName">First Name</label>
+        <input igxInput id="firstName" type="text" [formField]="userForm.firstName" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
+})
+class SignalFormComponent {
+    public model = signal({ firstName: '' });
+    public isDisabled = signal(false);
+    public isRequired = signal(true);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.firstName, { when: () => this.isRequired() });
+        disabled(path.firstName, { when: () => this.isDisabled() });
+    });
+}
+
+const MIN_CODE_LENGTH = 3;
+
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="code">Code</label>
+        <input igxInput id="code" type="text" [formField]="userForm.code" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
+})
+class CustomRuleSignalFormComponent {
+    public model = signal({ code: '' });
+    public userForm = signalForm(this.model, (path) => {
+        validate(path.code, ({ value }) => value().length < MIN_CODE_LENGTH ? { kind: 'short' } : undefined);
+    });
+}
+
+// Binds through a conditional so the `formField` directive is reused instead of recreated.
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="entry">Entry</label>
+        <input igxInput id="entry" type="text" [formField]="useNote() ? userForm.note : userForm.name" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, FormField]
+})
+class SwitchFieldSignalFormComponent {
+    public model = signal({ name: '', note: '' });
+    public useNote = signal(false);
+    public userForm = signalForm(this.model, (path) => {
+        required(path.name);
+    });
+}
+
+@Component({
+    template: `
+    <igx-input-group>
+        <label igxLabel for="username">Username</label>
+        <input igxInput id="username" type="text" [formControl]="control" />
+    </igx-input-group>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective, ReactiveFormsModule]
+})
+class AsyncValidatedInputComponent {
+    @ViewChild(IgxInputDirective, { static: true })
+    public igxInput: IgxInputDirective;
+
+    public control = new FormControl('', {
+        asyncValidators: [() => timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })))]
+    });
+}

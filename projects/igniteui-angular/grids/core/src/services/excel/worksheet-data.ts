@@ -5,15 +5,15 @@ import { WorksheetDataDictionary } from './worksheet-data-dictionary';
 
 /** @hidden */
 export class WorksheetData {
-    private _rowCount: number;
-    private _dataDictionary: WorksheetDataDictionary;
-    private _isSpecialData: boolean;
-    private _hasMultiColumnHeader: boolean;
-    private _hasMultiRowHeader: boolean;
-    private _isHierarchical: boolean;
-    private _hasSummaries: boolean;
-    private _isPivotGrid: boolean;
-    private _isTreeGrid: boolean;
+    private _rowCount!: number;
+    private _dataDictionary!: WorksheetDataDictionary;
+    private _isSpecialData!: boolean;
+    private _hasMultiColumnHeader!: boolean;
+    private _hasMultiRowHeader!: boolean;
+    private _isHierarchical!: boolean;
+    private _hasSummaries!: boolean;
+    private _isPivotGrid!: boolean;
+    private _isTreeGrid!: boolean;
 
     constructor(private _data: IExportRecord[],
                 public options: IgxExcelExporterOptions,
@@ -37,7 +37,7 @@ export class WorksheetData {
 
     public get isEmpty(): boolean {
         return !this.rowCount
-            || this.rowCount === this.owner.maxLevel + 1
+            || this.rowCount === this.owner.maxLevel! + 1
             || !this.columnCount
             || this.owner.columns.every(c => c.skip);
     }
@@ -83,7 +83,7 @@ export class WorksheetData {
     }
 
     public get multiColumnHeaderRows(): number {
-        return !this.options.ignoreMultiColumnHeaders ? Array.from(this.owners.values()).map(c => c.maxLevel).reduce((a,b) => a + b) : 0;
+        return !this.options.ignoreMultiColumnHeaders ? Array.from(this.owners.values()).map(c => c.maxLevel!).reduce((a,b) => a + b) : 0;
     }
 
     private initializeData() {
@@ -112,7 +112,7 @@ export class WorksheetData {
 
         if (!this._data || this._data.length === 0) {
             if (!this._isHierarchical) {
-                this._rowCount = this.owner.maxLevel + 1;
+                this._rowCount = this.owner.maxLevel! + 1;
             }
 
             return;

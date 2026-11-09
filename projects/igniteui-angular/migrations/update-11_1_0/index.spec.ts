@@ -13,37 +13,25 @@ describe('Update to 11.1.0', () => {
     });
 
     it('should update fontSet to family', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/icon.component.html`,
-            '<igx-icon fontSet="material">settings</igx-icon>'
-        );
+        appTree.create(`/testSrc/appPrefix/component/icon.component.html`, '<igx-icon fontSet="material">settings</igx-icon>');
 
         const tree = await runner
             .runSchematic('migration-19', {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/icon.component.html')
-        ).toEqual('<igx-icon family="material">settings</igx-icon>');
+        expect(tree.readContent('/testSrc/appPrefix/component/icon.component.html')).toEqual('<igx-icon family="material">settings</igx-icon>');
     });
 
     it('should update isActive to active', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/icon.component.html`,
-            '<igx-icon [isActive]="false">settings</igx-icon>'
-        );
+        appTree.create(`/testSrc/appPrefix/component/icon.component.html`, '<igx-icon [isActive]="false">settings</igx-icon>');
 
         const tree = await runner
             .runSchematic('migration-19', {}, appTree);
 
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/icon.component.html')
-        ).toEqual('<igx-icon [active]="false">settings</igx-icon>');
+        expect(tree.readContent('/testSrc/appPrefix/component/icon.component.html')).toEqual('<igx-icon [active]="false">settings</igx-icon>');
     });
 
     it('should migrate updated getter names', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/icon-test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/icon-test.component.ts', `import { Component, ViewChild } from '@angular/core';
 import { IgxIconModule, IgxIconComponent } from 'igniteui-angular';
 
 @Component({
@@ -96,17 +84,11 @@ export class IconTestComponent {
 });
 `;
 
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/icon-test.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/icon-test.component.ts')).toEqual(expectedContent);
     });
 
     it('should migrate updated members names', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/icon-test.component.ts',
-            `import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/icon-test.component.ts', `import { Component } from '@angular/core';
 import { IgxIconService } from 'igniteui-angular';
 
 @Component({
@@ -153,17 +135,11 @@ export class IconTestComponent {
 });
 `;
 
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/icon-test.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/icon-test.component.ts')).toEqual(expectedContent);
     });
 
     it('should replace on-prefixed outputs in chip and chips-area', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/chips.component.html`,
-            `<igx-chips-area #chipsAreaTo class="chipAreaTo"
+        appTree.create(`/testSrc/appPrefix/component/chips.component.html`, `<igx-chips-area #chipsAreaTo class="chipAreaTo"
                 (onReorder)="chipsOrderChangedTo($event)"
                 (onSelection)="chipsSelectionChanged($event)"
                 (onMoveStart)="chipsMoveStart($event)"
@@ -182,8 +158,7 @@ export class IconTestComponent {
                     <igx-avatar igxPrefix class="chip-area-avatar"></igx-avatar>
                     <span>{{chip.text}}</span>
                 </igx-chip>
-            </igx-chips-area>`
-        );
+            </igx-chips-area>`);
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
         expect(tree.readContent('/testSrc/appPrefix/component/chips.component.html'))
@@ -210,100 +185,63 @@ export class IconTestComponent {
     });
 
     it('should replace IgxTabsComponent event name onTabItemSelected with tabItemSelected', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/tabs.component.html`,
-            `<igx-tabs (onTabItemSelected)="tabSelected()"></igx-tabs>`
-        );
+        appTree.create(`/testSrc/appPrefix/component/tabs.component.html`, `<igx-tabs (onTabItemSelected)="tabSelected()"></igx-tabs>`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/tabs.component.html')
-        ).toEqual(`<igx-tabs (tabItemSelected)="tabSelected()"></igx-tabs>`);
+        expect(tree.readContent('/testSrc/appPrefix/component/tabs.component.html')).toEqual(`<igx-tabs (tabItemSelected)="tabSelected()"></igx-tabs>`);
     });
 
     it('should replace IgxTabsComponent event name onTabItemDeselected with tabItemDeselected', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/tabs.component.html`,
-            `<igx-tabs (onTabItemDeselected)="tabDeselected()"></igx-tabs>`
-        );
+        appTree.create(`/testSrc/appPrefix/component/tabs.component.html`, `<igx-tabs (onTabItemDeselected)="tabDeselected()"></igx-tabs>`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/tabs.component.html')
-        ).toEqual(`<igx-tabs (tabItemDeselected)="tabDeselected()"></igx-tabs>`);
+        expect(tree.readContent('/testSrc/appPrefix/component/tabs.component.html')).toEqual(`<igx-tabs (tabItemDeselected)="tabDeselected()"></igx-tabs>`);
     });
 
     it('should replace IgxListComponent event name onLeftPan with leftPan', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/list.component.html`,
-            `<igx-list [allowLeftPanning]="true" (onLeftPan)="leftPanPerformed($event)">`
-        );
+        appTree.create(`/testSrc/appPrefix/component/list.component.html`, `<igx-list [allowLeftPanning]="true" (onLeftPan)="leftPanPerformed($event)">`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/list.component.html')
-        ).toEqual(`<igx-list [allowLeftPanning]="true" (leftPan)="leftPanPerformed($event)">`);
+        expect(tree.readContent('/testSrc/appPrefix/component/list.component.html')).toEqual(`<igx-list [allowLeftPanning]="true" (leftPan)="leftPanPerformed($event)">`);
     });
 
     it('should replace IgxListComponent event name onRightPan with rightPan', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/list.component.html`,
-            `<igx-list [allowRightPanning]="true" (onRightPan)="rightPanPerformed($event)">`
-        );
+        appTree.create(`/testSrc/appPrefix/component/list.component.html`, `<igx-list [allowRightPanning]="true" (onRightPan)="rightPanPerformed($event)">`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/list.component.html')
-        ).toEqual(`<igx-list [allowRightPanning]="true" (rightPan)="rightPanPerformed($event)">`);
+        expect(tree.readContent('/testSrc/appPrefix/component/list.component.html')).toEqual(`<igx-list [allowRightPanning]="true" (rightPan)="rightPanPerformed($event)">`);
     });
 
     it('should replace IgxListComponent event name onPanStateChange with panStateChange', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/list.component.html`,
-            `<igx-list (onPanStateChange)="panStateChange($event)"></igx-list>`
-        );
+        appTree.create(`/testSrc/appPrefix/component/list.component.html`, `<igx-list (onPanStateChange)="panStateChange($event)"></igx-list>`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/list.component.html')
-        ).toEqual(`<igx-list (panStateChange)="panStateChange($event)"></igx-list>`);
+        expect(tree.readContent('/testSrc/appPrefix/component/list.component.html')).toEqual(`<igx-list (panStateChange)="panStateChange($event)"></igx-list>`);
     });
 
     it('should replace IgxListComponent event name OnItemClicked with itemClicked', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/list.component.html`,
-            `<igx-list (onItemClicked)="onItemClicked($event)"></igx-list>`
-        );
+        appTree.create(`/testSrc/appPrefix/component/list.component.html`, `<igx-list (onItemClicked)="onItemClicked($event)"></igx-list>`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/list.component.html')
-        ).toEqual(`<igx-list (itemClicked)="onItemClicked($event)"></igx-list>`);
+        expect(tree.readContent('/testSrc/appPrefix/component/list.component.html')).toEqual(`<igx-list (itemClicked)="onItemClicked($event)"></igx-list>`);
     });
 
     it('should replace IgxNavbarComponent event name onAction with action', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/navbar.component.html`,
-            `<igx-navbar (onAction)="actionExc($event)" title="Sample App" actionButtonIcon="menu"></igx-navbar>`
-        );
+        appTree.create(`/testSrc/appPrefix/component/navbar.component.html`, `<igx-navbar (onAction)="actionExc($event)" title="Sample App" actionButtonIcon="menu"></igx-navbar>`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/navbar.component.html')
-        ).toEqual(`<igx-navbar (action)="actionExc($event)" title="Sample App" actionButtonIcon="menu"></igx-navbar>`);
+        expect(tree.readContent('/testSrc/appPrefix/component/navbar.component.html')).toEqual(`<igx-navbar (action)="actionExc($event)" title="Sample App" actionButtonIcon="menu"></igx-navbar>`);
     });
 
     it('should update Excel exporter onExportEnded event name to exportEnded', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/excel-export.component.ts',
-`import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/excel-export.component.ts', `import { Component } from '@angular/core';
 import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
@@ -327,8 +265,7 @@ export class ExcelExportComponent {
         const tree = await runner
             .runSchematic('migration-19', {}, appTree);
 
-        const expectedContent =
-`import { Component } from '@angular/core';
+        const expectedContent = `import { Component } from '@angular/core';
 import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
@@ -349,17 +286,11 @@ export class ExcelExportComponent {
 });
 `;
 
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/excel-export.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/excel-export.component.ts')).toEqual(expectedContent);
     });
 
     it('should update CSV exporter onExportEnded event name to exportEnded', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/csv-export.component.ts',
-`import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/csv-export.component.ts', `import { Component } from '@angular/core';
 import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
@@ -383,8 +314,7 @@ export class CsvExportComponent {
         const tree = await runner
             .runSchematic('migration-19', {}, appTree);
 
-        const expectedContent =
-`import { Component } from '@angular/core';
+        const expectedContent = `import { Component } from '@angular/core';
 import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
@@ -404,90 +334,64 @@ export class CsvExportComponent {
     providers: [IgxCsvExporterService]
 });
 `;
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/csv-export.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/csv-export.component.ts')).toEqual(expectedContent);
     });
 
     it('should replace onSelect and onUnselect with selected and deselected in igx-buttongroup', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/buttongroup.component.html`,
-            `<igx-buttongroup
+        appTree.create(`/testSrc/appPrefix/component/buttongroup.component.html`, `<igx-buttongroup
                 (onSelect)="someHandler($event)"
                 (onUnselect)="someHandler($event)"
             >
-            </igx-buttongroup>`
-        );
+            </igx-buttongroup>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/buttongroup.component.html')).toEqual(
-            `<igx-buttongroup
+        expect(tree.readContent('/testSrc/appPrefix/component/buttongroup.component.html')).toEqual(`<igx-buttongroup
                 (selected)="someHandler($event)"
                 (deselected)="someHandler($event)"
             >
-            </igx-buttongroup>`
-        );
+            </igx-buttongroup>`);
     });
 
     it('should replace onAction with clicked in igx-snackbar', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/snackbar.component.html`,
-            `<igx-snackbar (onAction)="someHandler($event)"></igx-snackbar>`
-        );
+        appTree.create(`/testSrc/appPrefix/component/snackbar.component.html`, `<igx-snackbar (onAction)="someHandler($event)"></igx-snackbar>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/snackbar.component.html')).toEqual(
-            `<igx-snackbar (clicked)="someHandler($event)"></igx-snackbar>`
-        );
+        expect(tree.readContent('/testSrc/appPrefix/component/snackbar.component.html')).toEqual(`<igx-snackbar (clicked)="someHandler($event)"></igx-snackbar>`);
     });
 
     it('should replace onShowing, onShown, onHiding, onHidden with showing, shown, hiding, hidden in igx-toast', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/toast.component.html`,
-            `<igx-toast
+        appTree.create(`/testSrc/appPrefix/component/toast.component.html`, `<igx-toast
                 (onShowing)="someHandler($event)"
                 (onShown)="someHandler($event)"
                 (onHiding)="someHandler($event)"
                 (onHidden)="someHandler($event)"
             >
-            </igx-toast>`
-        );
+            </igx-toast>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/toast.component.html')).toEqual(
-            `<igx-toast
+        expect(tree.readContent('/testSrc/appPrefix/component/toast.component.html')).toEqual(`<igx-toast
                 (showing)="someHandler($event)"
                 (shown)="someHandler($event)"
                 (hiding)="someHandler($event)"
                 (hidden)="someHandler($event)"
             >
-            </igx-toast>`
-        );
+            </igx-toast>`);
     });
 
-    it('should replace IgxTooltipTargetDirective event names onTooltipShow and onTooltipHide with tooltipShow and tooltipHide',
-        async () => {
-            appTree.create(
-            `/testSrc/appPrefix/component/tooltip.component.html`,
-    `<button [igxTooltipTarget]="tooltipRef" (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
+    it('should replace IgxTooltipTargetDirective event names onTooltipShow and onTooltipHide with tooltipShow and tooltipHide', async () => {
+        appTree.create(`/testSrc/appPrefix/component/tooltip.component.html`, `<button [igxTooltipTarget]="tooltipRef" (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)">
         Hover me
     </button>
     <div igxTooltip #tooltipRef="tooltip">
         Hello, I am a tooltip!
-    </div>`
-        );
+    </div>`);
 
         const tree = await runner
             .runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/tooltip.component.html')
-        ).toEqual(
-    `<button [igxTooltipTarget]="tooltipRef" (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)">
+        expect(tree.readContent('/testSrc/appPrefix/component/tooltip.component.html')).toEqual(`<button [igxTooltipTarget]="tooltipRef" (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)">
         Hover me
     </button>
     <div igxTooltip #tooltipRef="tooltip">
@@ -496,108 +400,81 @@ export class CsvExportComponent {
     });
 
     it('should replace outputs with selected in igx-calendar', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/calendar.component.html`,
-`<igx-calendar
+        appTree.create(`/testSrc/appPrefix/component/calendar.component.html`, `<igx-calendar
     (onSelection)="someHandler($event)"
     (onViewChanging)="someHandler($event)"
     (onDateSelection)="someHandler($event)"
     (onYearSelection)="someHandler($event)"
     (onMonthSelection)="someHandler($event)"
-></igx-calendar>`
-        );
+></igx-calendar>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/calendar.component.html')).toEqual(
-`<igx-calendar
+        expect(tree.readContent('/testSrc/appPrefix/component/calendar.component.html')).toEqual(`<igx-calendar
     (selected)="someHandler($event)"
     (viewChanging)="someHandler($event)"
     (dateSelection)="someHandler($event)"
     (yearSelection)="someHandler($event)"
     (monthSelection)="someHandler($event)"
-></igx-calendar>`
-        );
+></igx-calendar>`);
     });
 
     it('should replace onSelection and onYearSelection with selected in igx-years-view', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/yearsview.component.html`,
-`<igx-years-view
+        appTree.create(`/testSrc/appPrefix/component/yearsview.component.html`, `<igx-years-view
     (onSelection)="changeYear($event)"
     (onYearSelection)="changeYear($event)"
-></igx-years-view>`
-        );
+></igx-years-view>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/yearsview.component.html')).toEqual(
-`<igx-years-view
+        expect(tree.readContent('/testSrc/appPrefix/component/yearsview.component.html')).toEqual(`<igx-years-view
     (selected)="changeYear($event)"
     (yearSelection)="changeYear($event)"
-></igx-years-view>`
-        );
+></igx-years-view>`);
     });
 
     it('should replace onDateSelection and onViewChanging with selected in igx-days-view', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/daysview.component.html`,
-`<igx-days-view
+        appTree.create(`/testSrc/appPrefix/component/daysview.component.html`, `<igx-days-view
     (onDateSelection)="someHandler($event)"
     (onViewChanging)="someHandler($event)"
-></igx-days-view>`
-        );
+></igx-days-view>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/daysview.component.html')).toEqual(
-`<igx-days-view
+        expect(tree.readContent('/testSrc/appPrefix/component/daysview.component.html')).toEqual(`<igx-days-view
     (dateSelection)="someHandler($event)"
     (viewChanging)="someHandler($event)"
-></igx-days-view>`
-        );
+></igx-days-view>`);
     });
 
     it('should replace onSelection and onMonthSelection with selected in igx-months-view', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/monthsview.component.html`,
-`<igx-months-view
+        appTree.create(`/testSrc/appPrefix/component/monthsview.component.html`, `<igx-months-view
     (onSelection)="someHandler($event)"
     (onMonthSelection)="someHandler($event)"
-></igx-months-view>`
-        );
+></igx-months-view>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/monthsview.component.html')).toEqual(
-`<igx-months-view
+        expect(tree.readContent('/testSrc/appPrefix/component/monthsview.component.html')).toEqual(`<igx-months-view
     (selected)="someHandler($event)"
     (monthSelection)="someHandler($event)"
-></igx-months-view>`
-        );
+></igx-months-view>`);
     });
 
     it('should replace onSelection and onMonthSelection with selected in igx-month-picker', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/monthpicker.component.html`,
-`<igx-month-picker
+        appTree.create(`/testSrc/appPrefix/component/monthpicker.component.html`, `<igx-month-picker
     (onSelection)="someHandler($event)"
-></igx-month-picker>`
-        );
+></igx-month-picker>`);
 
         const tree = await runner.runSchematic(migrationName, { shouldInvokeLS: false }, appTree);
 
-        expect(tree.readContent('/testSrc/appPrefix/component/monthpicker.component.html')).toEqual(
-`<igx-month-picker
+        expect(tree.readContent('/testSrc/appPrefix/component/monthpicker.component.html')).toEqual(`<igx-month-picker
     (selected)="someHandler($event)"
-></igx-month-picker>`
-        );
+></igx-month-picker>`);
     });
 
     it('should update Excel exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/excel-export.component.ts',
-`import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/excel-export.component.ts', `import { Component } from '@angular/core';
 import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
@@ -622,8 +499,7 @@ export class ExcelExportComponent {
         const tree = await runner
             .runSchematic('migration-19', {}, appTree);
 
-        const expectedContent =
-`import { Component } from '@angular/core';
+        const expectedContent = `import { Component } from '@angular/core';
 import { IgxExcelExporterService } from "igniteui-angular";
 
 @Component({
@@ -645,17 +521,11 @@ export class ExcelExportComponent {
 });
 `;
 
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/excel-export.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/excel-export.component.ts')).toEqual(expectedContent);
     });
 
     it('should update CSV exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/csv-export.component.ts',
-`import { Component } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/csv-export.component.ts', `import { Component } from '@angular/core';
 import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
@@ -680,8 +550,7 @@ export class CsvExportComponent {
         const tree = await runner
             .runSchematic('migration-19', {}, appTree);
 
-        const expectedContent =
-`import { Component } from '@angular/core';
+        const expectedContent = `import { Component } from '@angular/core';
 import { IgxCsvExporterService } from "igniteui-angular";
 
 @Component({
@@ -702,10 +571,6 @@ export class CsvExportComponent {
     providers: [IgxCsvExporterService]
 });
 `;
-        expect(
-            tree.readContent(
-                '/testSrc/appPrefix/component/csv-export.component.ts'
-            )
-        ).toEqual(expectedContent);
+        expect(tree.readContent('/testSrc/appPrefix/component/csv-export.component.ts')).toEqual(expectedContent);
     });
 });

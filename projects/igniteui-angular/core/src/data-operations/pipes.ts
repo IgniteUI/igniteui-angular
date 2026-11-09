@@ -10,7 +10,7 @@ export class IgxDateFormatterPipe implements PipeTransform {
     private locale_ID = inject(LOCALE_ID);
 
     public transform(value: Date | string | number | null | undefined, format?: string, timezone?: string, locale?: string) {
-        return this.i18nFormatter.formatDate(value, format, locale ?? this.locale_ID, timezone);
+        return this.i18nFormatter.formatDate(value, format!, locale ?? this.locale_ID, timezone);
     }
 }
 
@@ -22,7 +22,7 @@ export class IgxNumberFormatterPipe implements PipeTransform {
     private i18nFormatter = inject(I18N_FORMATTER);
 
     public transform(value: number | string | null | undefined, digitsInfo?: string, locale?: string) {
-        return this.i18nFormatter.formatNumber(value, locale, digitsInfo);
+        return this.i18nFormatter.formatNumber(value, locale!, digitsInfo);
     }
 }
 
@@ -34,7 +34,7 @@ export class IgxPercentFormatterPipe implements PipeTransform {
     private i18nFormatter = inject(I18N_FORMATTER);
 
     public transform(value: number | string | null | undefined, digitsInfo?: string, locale?: string) {
-        return this.i18nFormatter.formatPercent(value, locale, digitsInfo);
+        return this.i18nFormatter.formatPercent(value, locale!, digitsInfo);
     }
 }
 

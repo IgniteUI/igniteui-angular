@@ -18,7 +18,7 @@
       role="gridcell"
       [igxRowDrag]="this"
       (click)="$event.stopPropagation()"
-      [ghostTemplate]="this.grid.getDragGhostCustomTemplate()"
+      [ghostTemplate]="this.grid.getDragGhostCustomTemplate()!"
     >
       <ng-container
         *ngTemplateOutlet="
@@ -206,6 +206,7 @@
       col.dataType === 'percent' ||
       col.dataType === 'currency'
     "
+    [class.igx-grid__td--bool]="col.dataType === 'boolean'"
     [ngClass]="
       col.cellClasses
         | igxCellStyleClasses
@@ -287,6 +288,7 @@
         col.dataType === 'currency') &&
       col.visibleIndex !== 0
     "
+    [class.igx-grid__td--bool]="col.dataType === 'boolean'"
     [ngClass]="
       col.cellClasses
         | igxCellStyleClasses
@@ -305,7 +307,7 @@
           : viewIndex
           : grid.pipeTrigger
     "
-    [level]="treeRow.level"
+    [level]="treeRow.level!"
     [expanded]="expanded"
     [showIndicator]="showIndicator"
     [editMode]="

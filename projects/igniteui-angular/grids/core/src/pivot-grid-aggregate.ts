@@ -1,5 +1,5 @@
 import { IPivotAggregator } from './pivot-grid.interface';
-import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxTimeSummaryOperand } from './summaries/grid-summary';
+import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxTimeSummaryOperand } from 'igniteui-angular/core';
 
 
 export class IgxPivotAggregate {

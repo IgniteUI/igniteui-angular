@@ -1,0 +1,17 @@
+{
+  "$schema": "../../common/schema/theme-changes.schema.json",
+  "changes": [
+    {
+      "name": "$border-width",
+      "remove": true,
+      "owner": "grid-summary-theme",
+      "type": "property"
+    },
+    {
+      "name": "$pinned-border-width",
+      "remove": true,
+      "owner": "grid-summary-theme",
+      "type": "property"
+    }
+  ]
+}

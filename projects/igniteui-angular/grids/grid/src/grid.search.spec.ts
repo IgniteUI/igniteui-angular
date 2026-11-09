@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './public_api';
 import { BasicGridSearchComponent } from '../../../test-utils/grid-base-components.spec';
@@ -12,16 +12,19 @@ import { IgxTextHighlightDirective } from 'igniteui-angular/directives';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { firstValueFrom } from 'rxjs';
 import { DefaultSortingStrategy, GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('IgxGrid - search API #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const HIGHLIGHT_CSS_CLASS = '.igx-highlight';
     const HIGHLIGHT_ACTIVE_CSS_CLASS = '.igx-highlight__active';
     let fix: ComponentFixture<any>;
-    let component; let grid: IgxGridComponent; let fixNativeElement;
+    let component;
+    let grid: IgxGridComponent;
+    let fixNativeElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 BasicGridSearchComponent,
@@ -30,7 +33,7 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ]
         }).compileComponents();
-    }))
+    });
 
     describe('BasicGrid - ', () => {
         beforeEach(() => {
@@ -232,9 +235,9 @@ describe('IgxGrid - search API #grid', () => {
             fix.detectChanges();
         });
 
-        it('Should update exact match highlights when clearing filter.', fakeAsync(() => {
+        it('Should update exact match highlights when clearing filter.', async () => {
             grid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
-            tick(16);
+            await wait(16);
             fix.detectChanges();
 
             grid.findNext('Software Developer', false, true);
@@ -244,13 +247,13 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBeNull();
 
             grid.clearFilter('JobTitle');
-            tick(16);
+            await wait(16);
             fix.detectChanges();
             activeHighlight = getActiveHighlight();
             highlights = getHighlights();
             expect(highlights.length).toBe(1);
             verifyActiveHighlight(0);
-        }));
+        });
 
         it('Should update the active highlight when sorting', () => {
             const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
@@ -280,37 +283,53 @@ describe('IgxGrid - search API #grid', () => {
             expect(activeHighlight).toBe(highlights[0]);
         });
 
-        xit('Should scroll properly when using paging', () => {
+        it('Should scroll properly when using paging', async () => {
             fix.componentInstance.paging = true;
+            fix.detectChanges();
             grid.height = '240px';
+            // Apply the height before changing the page size; both request a grid refresh in the same cycle
+            // and the later request without repaint would otherwise replace the pending repaint.
+            fix.detectChanges();
             grid.paginator.perPage = 7;
             fix.detectChanges();
+            await fix.whenStable();
+            fix.detectChanges();
 
+            // 'assoc' matches the records with ID 7 (page 0, index 6) and ID 9 (page 1, index 1).
+            // With a 240px height the 7th row of the first page is outside the viewport initially.
             const searchString = 'assoc';
-            grid.findNext(searchString);
-            fix.detectChanges();
+            const tbody: HTMLElement = grid.tbody.nativeElement;
+            const verifyActiveMatch = async (step: string, page: number, rowIndex: number, rowID: number) => {
+                await vi.waitFor(() => {
+                    fix.detectChanges();
+                    expect(grid.paginator.page).toBe(page);
+                    const cell = grid.gridAPI.get_cell_by_index(rowIndex, 'JobTitle');
+                    expect(cell, `${step}: row ${rowIndex} on page ${page} should be rendered`).toBeDefined();
+                    expect(cell.row.data.ID).toBe(rowID);
+                    const activeHighlight = getActiveHighlight();
+                    expect(activeHighlight).not.toBeNull();
+                    expect(cell.nativeElement.contains(activeHighlight)).toBe(true);
+                    // the matched cell is scrolled into the visible part of the grid body
+                    const cellRect = cell.nativeElement.getBoundingClientRect();
+                    const bodyRect = tbody.getBoundingClientRect();
+                    expect(cellRect.top, `${step}: cell top`).toBeGreaterThanOrEqual(bodyRect.top - 1);
+                    expect(cellRect.bottom, `${step}: cell bottom`).toBeLessThanOrEqual(bodyRect.bottom + 1);
+                }, { timeout: 2000, interval: 16 });
+                // only one match is present on each page
+                expect(getHighlights().length).toBe(1);
+            };
 
-            expect(grid.paginator.page).toBe(0);
-            let activeHighlight = getActiveHighlight();
-            let highlights = getHighlights();
-            expect(activeHighlight).not.toBeNull();
-            expect(highlights.length).toBe(1);
+            expect(grid.gridAPI.get_cell_by_index(6, 'JobTitle')?.nativeElement.getBoundingClientRect().top ?? Infinity)
+                .toBeGreaterThan(tbody.getBoundingClientRect().bottom);
 
             grid.findNext(searchString);
-            fix.detectChanges();
-            expect(grid.paginator.page).toBe(1);
-            activeHighlight = getActiveHighlight();
-            highlights = getHighlights();
-            expect(activeHighlight).not.toBeNull();
-            expect(highlights.length).toBe(1);
+            await verifyActiveMatch('findNext #1', 0, 6, 7);
+
+            grid.findNext(searchString);
+            await verifyActiveMatch('findNext #2', 1, 1, 9);
 
             grid.findPrev(searchString);
-            fix.detectChanges();
-            expect(grid.paginator.page).toBe(0);
-            activeHighlight = getActiveHighlight();
-            highlights = getHighlights();
-            expect(activeHighlight).not.toBeNull();
-            expect(highlights.length).toBe(1);
+            await verifyActiveMatch('findPrev', 0, 6, 7);
         });
 
         it('Hidden columns shouldn\'t be part of the search', () => {
@@ -940,16 +959,16 @@ describe('IgxGrid - search API #grid', () => {
             expect(highlight !== null).toBeTruthy();
 
             grid.groupBy([{
-                fieldName: 'JobTitle',
-                dir: SortingDirection.Asc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }, {
-                fieldName: 'Company',
-                dir: SortingDirection.Desc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            }]);
+                    fieldName: 'JobTitle',
+                    dir: SortingDirection.Asc,
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }, {
+                    fieldName: 'Company',
+                    dir: SortingDirection.Desc,
+                    ignoreCase: true,
+                    strategy: DefaultSortingStrategy.instance()
+                }]);
             fix.detectChanges();
             cell = grid.gridAPI.get_cell_by_index(4, 'JobTitle');
             highlight = cell.nativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);

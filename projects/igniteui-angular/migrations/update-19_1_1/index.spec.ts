@@ -21,16 +21,11 @@ describe(`Update to ${version}`, () => {
 
     themes.forEach(theme => {
         it('should rename the progress circle color property of the circular progress', async () => {
-            appTree.create(
-                testFilePath,
-                `$custom-${theme}: ${theme}($progress-circle-color: red);`
-            );
+            appTree.create(testFilePath, `$custom-${theme}: ${theme}($progress-circle-color: red);`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
-            expect(tree.readContent(testFilePath)).toEqual(
-                `$custom-${theme}: ${theme}($fill-color-default: red);`
-            );
+            expect(tree.readContent(testFilePath)).toEqual(`$custom-${theme}: ${theme}($fill-color-default: red);`);
         });
     });
 });

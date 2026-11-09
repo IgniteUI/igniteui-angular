@@ -40,7 +40,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      * DOM tree position instead and use `positioning` property as needed.
      */
     @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
+    public outlet!: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
 
     /**
      * Controls whether positioning is relative to the viewport or to the nearest positioned container.
@@ -78,12 +78,12 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     /**
      * @hidden
      */
-    public timeoutId: number;
+    public timeoutId!: number;
 
     /**
      * @hidden
      */
-    protected strategy: IPositionStrategy;
+    protected strategy!: IPositionStrategy;
 
     /**
      * @hidden

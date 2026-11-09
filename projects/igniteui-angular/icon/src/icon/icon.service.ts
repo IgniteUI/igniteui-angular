@@ -8,6 +8,19 @@ import { IconFamily, IconMeta, FamilyMeta } from "./types";
 import type { IconType, IconReference } from './types';
 import { IndigoIcons } from "./icons.indigo";
 
+/** Whether `<title>` and `<desc>` are kept in or stripped from a parsed SVG. */
+type SvgMeta = "keep" | "strip";
+
+/** Source texts of the built-in SVGs. */
+const BUILT_IN_SVGS = new Set(Array.from(IndigoIcons.values(), ({ value }) => value));
+
+/**
+ * Built-in icon markup by source text, shared by every service instance (one per
+ * injector, e.g. per TestBed) so each built-in is parsed once instead of per instance.
+ * Holds strings, not nodes, so consumers never share DOM. Custom icons stay out to keep it bounded.
+ */
+const builtInMarkup = new Map<string, string>();
+
 /**
  * Event emitted when a SVG icon is loaded through
  * a HTTP request.
@@ -63,7 +76,7 @@ export class IgxIconService {
     private _families = new Map<string, FamilyMeta>();
     private _cachedIcons = new Map<string, Map<string, SafeHtml>>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
-    private _domParser: DOMParser;
+    private _domParser!: DOMParser;
 
     constructor() {
 
@@ -74,7 +87,7 @@ export class IgxIconService {
             this.setRefsByTheme(theme);
         });
 
-        this._destroyRef.onDestroy(() => themeChange?.unsubscribe());
+        this._destroyRef!.onDestroy(() => themeChange?.unsubscribe());
 
         if (this._platformUtil?.isBrowser) {
             this._domParser = new DOMParser();
@@ -134,7 +147,7 @@ export class IgxIconService {
 
     /** @hidden @internal */
     private familyType(alias: string): IconType {
-        return this._families.get(alias)?.type;
+        return this._families.get(alias)?.type!;
     }
 
     /** @hidden @internal */
@@ -265,7 +278,7 @@ export class IgxIconService {
         stripMeta = false,
     ) {
         if (name && url) {
-            const safeUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
+            const safeUrl = this._sanitizer!.bypassSecurityTrustResourceUrl(url);
 
             if (!safeUrl) {
                 throw new Error(
@@ -273,7 +286,7 @@ export class IgxIconService {
                 );
             }
 
-            const sanitizedUrl = this._sanitizer.sanitize(
+            const sanitizedUrl = this._sanitizer!.sanitize(
                 SecurityContext.RESOURCE_URL,
                 safeUrl,
             );
@@ -357,7 +370,7 @@ export class IgxIconService {
      * @hidden
      */
     private fetchSvg(url: string): Observable<string> {
-        const req = this._httpClient.get(url, { responseType: "text" });
+        const req = this._httpClient!.get(url, { responseType: "text" });
         return req;
     }
 
@@ -371,37 +384,65 @@ export class IgxIconService {
         stripMeta: boolean,
     ) {
         if (this._platformUtil?.isBrowser && name && value) {
-            const doc = this._domParser.parseFromString(value, "image/svg+xml");
-            const svg = doc.querySelector("svg") as SVGElement;
-
             if (!this._cachedIcons.has(family)) {
                 this._cachedIcons.set(family, new Map<string, SafeHtml>());
             }
 
-            if (svg) {
-                svg.setAttribute("fit", "");
-                svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+            const markup = svgMarkup(this._domParser, value, stripMeta ? "strip" : "keep");
 
-                if (stripMeta) {
-                    const title = svg.querySelector("title");
-                    const desc = svg.querySelector("desc");
+            if (markup) {
+                const safeSvg = this._sanitizer!.bypassSecurityTrustHtml(markup);
 
-                    if (title) {
-                        svg.removeChild(title);
-                    }
-
-                    if (desc) {
-                        svg.removeChild(desc);
-                    }
-                }
-
-                const safeSvg = this._sanitizer.bypassSecurityTrustHtml(
-                    svg.outerHTML,
-                );
-
-                this._cachedIcons.get(family).set(name, safeSvg);
+                this._cachedIcons.get(family)!.set(name, safeSvg);
                 this._iconLoaded.next({ name, value, family });
             }
         }
     }
+}
+
+/** Returns the icon markup of an SVG source, parsing each built-in once per page. */
+function svgMarkup(parser: DOMParser, value: string, meta: SvgMeta): string | undefined {
+    // Built-ins are registered with stripped meta; anything else is parsed every time.
+    const shared = meta === "strip" && BUILT_IN_SVGS.has(value);
+    const cached = shared ? builtInMarkup.get(value) : undefined;
+
+    if (cached) {
+        return cached;
+    }
+
+    const markup = parseSvg(parser, value, meta);
+
+    if (shared && markup) {
+        builtInMarkup.set(value, markup);
+    }
+
+    return markup;
+}
+
+/** Parses an SVG source into icon markup; undefined when it has no `<svg>`. */
+function parseSvg(parser: DOMParser, value: string, meta: SvgMeta): string | undefined {
+    const doc = parser.parseFromString(value, "image/svg+xml");
+    const svg = doc.querySelector("svg") as SVGElement;
+
+    if (!svg) {
+        return undefined;
+    }
+
+    svg.setAttribute("fit", "");
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+
+    if (meta === "strip") {
+        const title = svg.querySelector("title");
+        const desc = svg.querySelector("desc");
+
+        if (title) {
+            svg.removeChild(title);
+        }
+
+        if (desc) {
+            svg.removeChild(desc);
+        }
+    }
+
+    return svg.outerHTML;
 }
