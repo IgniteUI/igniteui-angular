@@ -203,7 +203,7 @@
         > [igxsuffix],
         > igx-suffix {
             flex-shrink: 0;
-            max-width: 30%;
+            max-width: max(30%, rem(48px));
         }
 
         @if $bootstrap-theme {
