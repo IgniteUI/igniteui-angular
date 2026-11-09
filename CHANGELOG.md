@@ -28,6 +28,8 @@ All notable changes for each version of this project will be documented in this 
     - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
 - `IgxChipComponent`, `IgxChipsAreaComponent`
     - For a canceled chip drag (e.g. with `chip.dragDirective.cancelDrag()`), `originalEvent.cancelled` of the `moveEnd` event is `true`.
+- `IgxQueryBuilderComponent`
+    - Pressing `Escape` while dragging a condition with the mouse now cancels the drag. The condition stays where it was and is not dropped when the mouse button is released.
 
 ### Themes
 
@@ -127,6 +129,8 @@ All notable changes for each version of this project will be documented in this 
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`
     - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
+- `IgxQueryBuilderComponent`
+    - When the drag indicator of a condition is focused while another condition is dragged with the mouse, `Arrow Up` and `Arrow Down` now move that condition once the mouse drag ends without a drop. Previously the condition could not be moved with the keyboard until the drag indicator was focused again.
 - `IgxSplitterComponent`
     - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
     - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
