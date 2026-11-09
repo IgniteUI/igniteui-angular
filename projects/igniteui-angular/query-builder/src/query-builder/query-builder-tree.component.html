@@ -198,9 +198,14 @@
             [hideBaseOnDrag]="false"
             [animateOnRelease]="false"
             (moveStart)="
-              dragService.onMoveStart(dragRef, expressionItem, false)
+              dragService.onMoveStart(
+                dragRef,
+                expressionItem,
+                false,
+                expressionChip
+              )
             "
-            (moveEnd)="dragService.onMoveEnd()"
+            (moveEnd)="dragService.onMoveEnd($event)"
             (dragEnter)="dragService.onChipEnter(dragRef, expressionItem)"
             (dragOver)="dragService.onChipOver(dragRef)"
             (dragLeave)="dragService.onChipLeave()"
