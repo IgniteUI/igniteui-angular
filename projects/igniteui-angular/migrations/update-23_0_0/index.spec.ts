@@ -64,6 +64,20 @@ describe(`Update to ${version}`, () => {
 <igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: ('search' | translate), igx_combo_addCustomValues_placeholder: ('search' | translate) }"></igx-combo>`);
         });
 
+        it('should keep the combo `searchPlaceholder` entities escaped in the resource strings binding', async () => {
+            appTree.create(templatePath,
+                `<igx-combo [data]="items" searchPlaceholder="Search &quot;items&quot; &amp; more"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="a &amp;&amp; b"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="a && b"></igx-combo>`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(
+                `<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Search &quot;items&quot; &amp; more', igx_combo_addCustomValues_placeholder: 'Search &quot;items&quot; &amp; more' }"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: a &amp;&amp; b, igx_combo_addCustomValues_placeholder: a &amp;&amp; b }"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: a && b, igx_combo_addCustomValues_placeholder: a && b }"></igx-combo>`);
+        });
+
         it('should leave the combo `searchPlaceholder` when the combo already binds resource strings', async () => {
             const content = `<igx-combo [data]="items" searchPlaceholder="Search..." [resourceStrings]="strings"></igx-combo>`;
             appTree.create(templatePath, content);
@@ -85,6 +99,16 @@ describe(`Update to ${version}`, () => {
                 `<igx-avatar initials="AB" [style.color]="'blue'" [style.background]="'#ff0'"></igx-avatar>
 <igx-avatar initials="CD" [style.color]="textColor" [style.background]="background"></igx-avatar>
 <igx-avatar initials="EF" [style.color]='"red"' [style.background]='"#000"'></igx-avatar>`);
+        });
+
+        it('should keep interpolated avatar `color` and `bgColor` evaluated', async () => {
+            appTree.create(templatePath,
+                `<igx-avatar initials="AB" color="{{ textColor }}" bgColor="#{{ hex }}"></igx-avatar>`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(
+                `<igx-avatar initials="AB" [style.color]="textColor" style.background="#{{ hex }}"></igx-avatar>`);
         });
 
         it('should replace the carousel `top` and `bottom` indicators orientation', async () => {
@@ -135,6 +159,52 @@ describe(`Update to ${version}`, () => {
     </ng-template>
     <ng-template igxCell let-cell="cell">{{ cell.rowID }}</ng-template>
 </igx-grid>`);
+        });
+
+        it('should replace `rowID` only where it is read from the row selector context', async () => {
+            appTree.create(templatePath,
+                `<igx-grid [data]="data">
+    <ng-template igxRowSelector let-rowContext>
+        {{ format(rowContext.rowID, 'rowContext.rowID') }}
+        <ng-template #inner let-rowContext>{{ rowContext.rowID }}</ng-template>
+    </ng-template>
+</igx-grid>`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(
+                `<igx-grid [data]="data">
+    <ng-template igxRowSelector let-rowContext>
+        {{ format(rowContext.key, 'rowContext.rowID') }}
+        <ng-template #inner let-rowContext>{{ rowContext.rowID }}</ng-template>
+    </ng-template>
+</igx-grid>`);
+        });
+
+        it('should replace removed members read from grid event arguments and template references', async () => {
+            appTree.create(templatePath,
+                `<igx-grid #grid [data]="data" (rowAdded)="save($event.data, $event.primaryKey)" (rowEditDone)="log($event.rowID)"
+    (rowToggle)="toggle($event.rowID)" (rowPinning)="pin($event?.rowID)">
+    <igx-paginator #pager></igx-paginator>
+</igx-grid>
+<igx-tree-grid (rowDelete)="remove($event.data)"></igx-tree-grid>
+<button [disabled]="pager.isFirstPageDisabled || pager.isLastPageDisabled" (click)="grid.shouldGenerate = true; other($event.data)"></button>
+@for (pager of pagers; track pager) {
+    <span>{{ pager.isFirstPageDisabled }}</span>
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(
+                `<igx-grid #grid [data]="data" (rowAdded)="save($event.rowData, $event.rowKey)" (rowEditDone)="log($event.rowKey)"
+    (rowToggle)="toggle($event.rowKey)" (rowPinning)="pin($event?.rowKey)">
+    <igx-paginator #pager></igx-paginator>
+</igx-grid>
+<igx-tree-grid (rowDelete)="remove($event.rowData)"></igx-tree-grid>
+<button [disabled]="pager.isFirstPage || pager.isLastPage" (click)="grid.autoGenerate = true; other($event.data)"></button>
+@for (pager of pagers; track pager) {
+    <span>{{ pager.isFirstPageDisabled }}</span>
+}`);
         });
     });
 
@@ -485,6 +555,81 @@ export class TestComponent {
             expect(content).toContain(`return [ExpressionsTreeUtil.find(this.grid.filteringExpressionsTree, 'ID'), index, names];`);
         });
 
+        it('should leave `find` calls whose receiver is in an optional chain', async () => {
+            const content = `import { Component } from '@angular/core';
+import { IgxGridComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public grid?: IgxGridComponent;
+
+    public getFilter() {
+        return this.grid?.filteringExpressionsTree.find('ID');
+    }
+}`;
+            appTree.create(tsPath, content);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(tsPath)).toEqual(content);
+        });
+
+        it('should replace removed properties in object literals of the removed member types', async () => {
+            appTree.create(tsPath,
+                `import { Component } from '@angular/core';
+import { IPathSegment } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public getPaths(id: string, rowID: string): IPathSegment[] {
+        const both: IPathSegment = { rowID: id, rowKey: id, rowIslandKey: 'orders' };
+        const last: IPathSegment = { rowKey: id, rowIslandKey: 'orders', rowID: id };
+        const untyped = { rowID: id };
+        return [both, last, { rowID: id, rowIslandKey: 'orders' }, { rowID, rowIslandKey: 'items' }];
+    }
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            const content = tree.readContent(tsPath);
+            expect(content).toContain(`const both: IPathSegment = { rowKey: id, rowIslandKey: 'orders' };`);
+            expect(content).toContain(`const last: IPathSegment = { rowKey: id, rowIslandKey: 'orders' };`);
+            expect(content).toContain(`const untyped = { rowID: id };`);
+            expect(content).toContain(`return [both, last, { rowKey: id, rowIslandKey: 'orders' }, { rowKey: rowID, rowIslandKey: 'items' }];`);
+        });
+
+        it('should replace removed members of library types reached through a local base class', async () => {
+            appTree.create('/testSrc/appPrefix/component/base.component.ts',
+                `import { IgxPaginatorComponent } from 'igniteui-angular';
+
+export abstract class BaseComponent {
+    public paginator: IgxPaginatorComponent;
+}`);
+            appTree.create(tsPath,
+                `import { Component } from '@angular/core';
+import { BaseComponent } from './base.component';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent extends BaseComponent {
+    public isFirst() {
+        return this.paginator.isFirstPageDisabled;
+    }
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(tsPath)).toContain(`return this.paginator.isFirstPage;`);
+        });
+
         it('should add an ExpressionsTreeUtil import when there is no named import to extend', async () => {
             appTree.create(tsPath,
                 `import { Component } from '@angular/core';
@@ -742,6 +887,63 @@ $my-light-palette-copy: $light-material-palette;`);
     content: "#{$light-material-palette}";
 }
 @include theme($light-material-palette);`);
+        });
+
+        it('should not migrate palette names in URLs and in strings inside interpolations', async () => {
+            const content = `@use 'igniteui-angular/theming' as *;
+
+.icon {
+    background: url("assets/$light-palette.svg");
+}
+.label::before {
+    content: "#{'$light-palette'}";
+}`;
+            appTree.create(scssPath, content);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(scssPath)).toEqual(content);
+        });
+
+        it('should keep the comments around the arguments of the removed global theme mixins', async () => {
+            appTree.create(scssPath,
+                `@use 'igniteui-angular/theming' as *;
+
+.dark {
+    @include dark-theme(
+        $palette: $my-palette,
+        // Exclude the grid
+        $exclude: (igx-grid)
+    );
+}
+.indigo {
+    @include indigo-light-theme(
+        // The app palette
+        $my-palette // brand colors
+    );
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(scssPath)).toEqual(
+                `@use 'igniteui-angular/theming' as *;
+
+.dark {
+    @include theme(
+        $palette: $my-palette,
+        $schema: $dark-material-schema,
+        // Exclude the grid
+        $exclude: (igx-grid)
+    );
+}
+.indigo {
+    @include theme(
+        // The app palette
+        $palette: $my-palette, // brand colors
+        $schema: $light-indigo-schema,
+        $elevations: $indigo-elevations
+    );
+}`);
         });
 
         it('should not replace palette variables declared by the application', async () => {

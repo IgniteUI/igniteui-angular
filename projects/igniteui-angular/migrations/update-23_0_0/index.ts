@@ -8,15 +8,20 @@ import * as tss from 'typescript/lib/tsserverlibrary';
 import { BoundPropertyObject, InputPropertyType, UpdateChanges } from '../common/UpdateChanges';
 import { findElementNodes, getAttribute, hasAttribute } from '../common/util';
 import { IG_LICENSED_PACKAGE_NAME, IG_PACKAGE_NAME, isIgniteuiImport } from '../common/tsUtils';
+import {
+    argumentName, leadingCommentsEnd, lineEnding, maskComments, maskNonCode, splitArguments
+} from '../common/sass/scanner';
+import { SassStylesheet } from '../common/sass/stylesheet';
 // use bare specifier to escape the schematics encapsulation for the dynamic import:
 import { nativeImport } from 'igniteui-angular/migrations/common/import-helper.cjs';
 import type { Element, HtmlParser } from '@angular/compiler' with { "resolution-mode": "import" };
+import type * as AngularCompiler from '@angular/compiler' with { "resolution-mode": "import" };
 
 const version = '23.0.0';
 
 export default (): Rule => async (host: Tree, context: SchematicContext) => {
     context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
-    const { HtmlParser } = await nativeImport('@angular/compiler');
+    const compiler = await nativeImport('@angular/compiler');
 
     const update = new UpdateChanges(__dirname, host, context);
 
@@ -28,7 +33,16 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     // IgxAvatarComponent: `color` and `bgColor` set the host `style.color` and `style.background`
     update.addValueTransform('avatar_color_to_style', (args: BoundPropertyObject): void => {
-        if (args.bindingType === InputPropertyType.STRING) {
+        if (args.bindingType !== InputPropertyType.STRING) {
+            return;
+        }
+        // `color="{{ textColor }}"` -> `[style.color]="textColor"`
+        const interpolation = args.value.match(/^\s*\{\{([\s\S]*?)\}\}\s*$/);
+        if (interpolation && !interpolation[1].includes('{{')) {
+            args.bindingType = InputPropertyType.EVAL;
+            args.value = interpolation[1].trim();
+        } else if (!args.value.includes('{{')) {
+            // text around an interpolation, as in `bgColor="#{{ hex }}"`, keeps it a style interpolation
             args.bindingType = InputPropertyType.EVAL;
             // the string literal uses the other quote, so it doesn't end the attribute value
             const stringQuote = args.quote === '\'' ? '"' : '\'';
@@ -58,10 +72,9 @@ export default (): Rule => async (host: Tree, context: SchematicContext) => {
 
     update.applyChanges();
 
-    const parser = new HtmlParser();
     migrateTypeScript(host, context, update);
-    migrateRowSelectorTemplates(host, update, parser);
-    migrateComboSearchPlaceholder(host, context, update, parser);
+    migrateTemplateExpressions(host, context, update, compiler);
+    migrateComboSearchPlaceholder(host, context, update, new compiler.HtmlParser());
     migrateSass(host, context, update);
 };
 
@@ -160,6 +173,15 @@ const REMOVED_MEMBERS: RemovedMember[] = [
 
 const INDICATORS_ORIENTATION = { top: 'start', bottom: 'end' };
 
+/**
+ * Removed members whose names are distinct enough to look for in files that don't import Ignite UI,
+ * as such a file can still reach the library types through local code, such as a base class.
+ */
+const DISTINCT_MEMBERS = [
+    'rowID', 'primaryKey', 'isFirstPageDisabled', 'isLastPageDisabled', 'shouldGenerate', 'filterGlobal', 'registerFamilyAlias',
+    'searchPlaceholder'
+];
+
 /** Returns the language service of the project containing the file, loading its current content from the tree. */
 const getLanguageService = (update: UpdateChanges, entryPath: string): tss.LanguageService | undefined => {
     const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
@@ -185,7 +207,9 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 
     for (const entryPath of update.tsFiles) {
         const content = host.read(entryPath).toString();
-        if (!content.includes(IG_PACKAGE_NAME) || !memberNames.some(m => content.includes(m))) {
+        // the type checker tells the library members apart, this only skips the files that can't use any
+        const candidates = content.includes(IG_PACKAGE_NAME) ? memberNames : DISTINCT_MEMBERS;
+        if (!candidates.some(m => content.includes(m))) {
             continue;
         }
 
@@ -198,6 +222,8 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 
         const checker = program.getTypeChecker();
         const changes: TextChange[] = [];
+        /** Removed ranges, whose content is dropped together with any change in it */
+        const removals: TextChange[] = [];
         /** The name `ExpressionsTreeUtil` is available under in the file, once its import is ensured */
         let util: string;
         const isLibrary = (declaration: tss.Declaration) => {
@@ -231,6 +257,9 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
         };
         const receiverMatches = (node: tss.Expression, names: string[]) =>
             typeMatches(checker.getTypeAtLocation(node), names) || valueMatches(node, names);
+        /** Whether the type comes from the licensed package, for a file that reaches it through local code only */
+        const isLicensed = (type: tss.Type) => !!type.getSymbol()?.declarations?.some(d =>
+            isLibrary(d) && tss.server.toNormalizedPath(d.getSourceFile().fileName).includes(IG_LICENSED_PACKAGE_NAME));
         const warn = (node: tss.Node, message: string) => {
             const { line } = sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile));
             context.logger.warn(`${entryPath}:${line + 1}: ${message}`);
@@ -247,6 +276,8 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
                 migrateBindingElement(node, node.parent);
             } else if (tss.isBinaryExpression(node) && node.operatorToken.kind === tss.SyntaxKind.EqualsToken) {
                 migrateIndicatorsOrientationAssignment(node);
+            } else if (tss.isObjectLiteralExpression(node)) {
+                migrateObjectLiteral(node);
             }
             tss.forEachChild(node, visit);
         };
@@ -283,6 +314,41 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
                 // keep the local name, as the code after the destructuring still refers to it
                 changes.push({ start: property.getStart(sourceFile), end: property.getStart(sourceFile), text: `${removed.replaceWith}: ` });
             }
+        };
+
+        // `const path: IPathSegment = { rowID: id }`, which no longer type checks against the type
+        const migrateObjectLiteral = (node: tss.ObjectLiteralExpression) => {
+            const type = checker.getContextualType(node);
+            if (!type) {
+                return;
+            }
+            const properties = node.properties;
+            const names = properties.map(p => (tss.isPropertyAssignment(p) || tss.isShorthandPropertyAssignment(p))
+                && (tss.isIdentifier(p.name) || tss.isStringLiteral(p.name)) ? p.name.text : undefined);
+            properties.forEach((property, index) => {
+                const name = names[index];
+                const removed = name && REMOVED_MEMBERS.find(m => m.member === name && typeMatches(type, m.definedIn));
+                if (!removed) {
+                    return;
+                }
+                if (!removed.replaceWith) {
+                    warn(property, removed.warning);
+                } else if (names.includes(removed.replaceWith)) {
+                    // the literal sets the replacement already, so the removed property goes, with the comma separating it
+                    const [start, end] = index < properties.length - 1
+                        ? [property.getStart(sourceFile), properties[index + 1].getStart(sourceFile)]
+                        : index > 0
+                            ? [properties[index - 1].getEnd(), property.getEnd()]
+                            : [property.getStart(sourceFile), property.getEnd()];
+                    removals.push({ start, end, text: '' });
+                } else if (tss.isShorthandPropertyAssignment(property)) {
+                    // `{ rowID }` -> `{ rowKey: rowID }`, keeping the variable it reads
+                    const start = property.name.getStart(sourceFile);
+                    changes.push({ start, end: start, text: `${removed.replaceWith}: ` });
+                } else {
+                    changes.push({ start: property.name.getStart(sourceFile), end: property.name.getEnd(), text: removed.replaceWith });
+                }
+            });
         };
 
         // `carousel.indicatorsOrientation = 'bottom'`
@@ -350,12 +416,13 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
             // FilteringExpressionsTree.find(fieldName) -> ExpressionsTreeUtil.find(tree, fieldName)
             if ((name === 'find' || name === 'findIndex') && node.arguments.length === 1
                 && receiverMatches(receiver, ['FilteringExpressionsTree', 'IFilteringExpressionsTree'])) {
-                if (callee.questionDotToken || node.questionDotToken) {
+                // `tree?.find(...)` and `grid?.filteringExpressionsTree.find(...)` short-circuit, which a function call wouldn't
+                if (tss.isOptionalChain(node)) {
                     warn(node, `FilteringExpressionsTree \`${name}\` was removed. Use \`ExpressionsTreeUtil.${name}(tree, fieldName)\` instead.`);
                     return;
                 }
                 // the file can have several calls, so its imports are only checked and updated once
-                util ??= ensureExpressionsTreeUtilImport(sourceFile, changes);
+                util ??= ensureExpressionsTreeUtilImport(sourceFile, changes, isLicensed(checker.getTypeAtLocation(receiver)));
                 // `tree.find(` -> `ExpressionsTreeUtil.find(tree, `, leaving the receiver and the argument in place
                 const receiverStart = receiver.getStart(sourceFile);
                 changes.push({ start: receiverStart, end: receiverStart, text: `${util}.${name}(` });
@@ -365,8 +432,10 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 
         visit(sourceFile);
 
-        if (changes.length) {
-            host.overwrite(entryPath, applyTextChanges(content, changes));
+        // an insertion where a removal ends is outside of it, as it applies after the removed text
+        const kept = changes.filter(c => !removals.some(r => r.start <= c.start && c.end <= r.end && c.start < r.end));
+        if (kept.length || removals.length) {
+            host.overwrite(entryPath, applyTextChanges(content, [...kept, ...removals]));
         }
     }
 };
@@ -374,8 +443,9 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 /**
  * Returns the identifier `ExpressionsTreeUtil` is available under in the file,
  * adding it to an existing Ignite UI import, or a new one, when it isn't imported yet.
+ * `licensed` tells the package a file without Ignite UI imports gets the tree from.
  */
-const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: TextChange[]): string => {
+const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: TextChange[], licensed: boolean): string => {
     const name = 'ExpressionsTreeUtil';
     const igImports = sourceFile.statements
         .filter(tss.isImportDeclaration)
@@ -434,10 +504,12 @@ const ensureExpressionsTreeUtilImport = (sourceFile: tss.SourceFile, changes: Te
         return local;
     }
 
-    const licensed = igImports.some(i => (i.moduleSpecifier as tss.StringLiteral).text.startsWith(IG_LICENSED_PACKAGE_NAME));
+    const fromLicensed = igImports.length
+        ? igImports.some(i => (i.moduleSpecifier as tss.StringLiteral).text.startsWith(IG_LICENSED_PACKAGE_NAME))
+        : licensed;
     const lastImport = igImports[igImports.length - 1];
     const position = lastImport ? lastImport.getEnd() : 0;
-    const statement = `import { ${specifier} } from '${licensed ? IG_LICENSED_PACKAGE_NAME : IG_PACKAGE_NAME}/core';`;
+    const statement = `import { ${specifier} } from '${fromLicensed ? IG_LICENSED_PACKAGE_NAME : IG_PACKAGE_NAME}/core';`;
     changes.push({ start: position, end: position, text: lastImport ? `\n${statement}` : `${statement}\n` });
     return local;
 };
@@ -481,33 +553,179 @@ const getTopLevelNames = (sourceFile: tss.SourceFile): Set<string> => {
 
 //#region Templates
 
-/** Replaces `rowID` with `key` on the context of `igxRowSelector` templates */
-const migrateRowSelectorTemplates = (host: Tree, update: UpdateChanges, parser: HtmlParser) => {
+/** The components a template reference variable (`#ref`) on these elements holds, by the type defining their removed members */
+const ELEMENT_TYPES: Record<string, string> = {
+    'igx-grid': 'IgxGridComponent',
+    'igx-tree-grid': 'IgxTreeGridComponent',
+    'igx-hierarchical-grid': 'IgxHierarchicalGridComponent',
+    'igx-row-island': 'IgxRowIslandComponent',
+    'igx-pivot-grid': 'IgxPivotGridComponent',
+    'igx-paginator': 'IgxPaginatorComponent',
+    'igx-combo': 'IgxComboComponent',
+    'igx-avatar': 'IgxAvatarComponent',
+    'igx-query-builder': 'IgxQueryBuilderComponent',
+    'igx-query-builder-header': 'IgxQueryBuilderHeaderComponent',
+    'igx-slide': 'IgxSlideComponent'
+};
+
+const GRID_ELEMENTS = ['igx-grid', 'igx-tree-grid', 'igx-hierarchical-grid', 'igx-row-island', 'igx-pivot-grid'];
+
+const GRID_EDIT_EVENT_ARGS = ['IGridEditEventArgs', 'IGridEditDoneEventArgs'];
+const GRID_EDIT_DONE_EVENT_ARGS = ['IGridEditDoneEventArgs'];
+const ROW_DATA_CANCELABLE_EVENT_ARGS = ['IRowDataCancelableEventArgs', 'IRowDataEventArgs'];
+
+/** The `$event` types of the grid outputs with removed members, together with the types they extend */
+const GRID_OUTPUT_TYPES: Record<string, string[]> = {
+    rowAdd: ROW_DATA_CANCELABLE_EVENT_ARGS,
+    rowDelete: ROW_DATA_CANCELABLE_EVENT_ARGS,
+    rowAdded: ['IRowDataEventArgs'],
+    rowDeleted: ['IRowDataEventArgs'],
+    cellEditEnter: GRID_EDIT_EVENT_ARGS,
+    cellEdit: GRID_EDIT_EVENT_ARGS,
+    rowEditEnter: GRID_EDIT_EVENT_ARGS,
+    rowEdit: GRID_EDIT_EVENT_ARGS,
+    cellEditDone: GRID_EDIT_DONE_EVENT_ARGS,
+    cellEditExit: GRID_EDIT_DONE_EVENT_ARGS,
+    rowEditDone: GRID_EDIT_DONE_EVENT_ARGS,
+    rowEditExit: GRID_EDIT_DONE_EVENT_ARGS,
+    rowToggle: ['IRowToggleEventArgs'],
+    rowPinning: ['IPinRowEventArgs'],
+    rowPinned: ['IPinRowEventArgs']
+};
+
+/** Removed members distinct enough to report where a template reads them from something it can't type, such as a component property */
+const UNTYPED_TEMPLATE_MEMBERS = ['isFirstPageDisabled', 'isLastPageDisabled', 'shouldGenerate', 'filterGlobal'];
+
+/**
+ * Replaces the removed members template expressions read from what the template itself types: the
+ * `igxRowSelector` context, the `$event` of grid outputs and template references to Ignite UI components.
+ * The expressions are parsed, so strings and other variables of the same name are left alone. Other reads
+ * of removed members distinct to the library, such as from component properties, are reported instead.
+ */
+const migrateTemplateExpressions = (host: Tree, context: SchematicContext, update: UpdateChanges, compiler: typeof AngularCompiler) => {
+    const { ImplicitReceiver, PropertyRead, RecursiveAstVisitor, TmplAstRecursiveVisitor, parseTemplate, tmplAstVisitAll } = compiler;
+    /** The types each name of a scope holds, null for a name the template doesn't type */
+    type Scope = Map<string, string[] | null>;
+
     for (const templatePath of update.templateFiles) {
         const content = host.read(templatePath).toString();
-        if (!content.includes('igxRowSelector') || !content.includes('rowID')) {
+        if (!REMOVED_MEMBERS.some(m => content.includes(m.member))) {
             continue;
         }
 
+        const { nodes } = parseTemplate(content, templatePath, { preserveWhitespaces: true });
         const changes: TextChange[] = [];
-        const templates = findElementNodes(parser.parse(content, templatePath).rootNodes, 'ng-template')
-            .filter(node => hasAttribute(node as Element, ['igxRowSelector', '[igxRowSelector]']));
-        for (const template of templates as Element[]) {
-            const contextNames = template.attrs
-                .filter(a => a.name.startsWith('let-') && (!a.value || a.value === '$implicit'))
-                .map(a => a.name.substring('let-'.length));
-            const start = template.startSourceSpan.end.offset;
-            const end = template.endSourceSpan?.start.offset ?? start;
-            const body = content.substring(start, end);
-            for (const contextName of contextNames) {
-                const regex = new RegExp(String.raw`(\b${contextName}\??\.)rowID\b`, 'g');
-                let match: RegExpExecArray;
-                while ((match = regex.exec(body))) {
-                    const position = start + match.index + match[1].length;
-                    changes.push({ start: position, end: position + 'rowID'.length, text: 'key' });
+        const warn = (offset: number, message: string) => {
+            const line = content.substring(0, offset).split('\n').length;
+            context.logger.warn(`${templatePath}:${line}: ${message}`);
+        };
+
+        // references are available in the whole template, also before the element declaring them
+        const references: Scope = new Map();
+        class ReferenceCollector extends TmplAstRecursiveVisitor {
+            public override visitElement(element: AngularCompiler.TmplAstElement) {
+                for (const reference of element.references) {
+                    // a reference with a value, such as `#toggle="igxToggle"`, holds a directive rather than the component
+                    const type = !reference.value && ELEMENT_TYPES[element.name];
+                    references.set(reference.name, type ? [type] : null);
                 }
+                super.visitElement(element);
             }
         }
+        tmplAstVisitAll(new ReferenceCollector(), nodes);
+
+        const scopes: Scope[] = [references, new Map()];
+        /** The elements whose bindings are visited, innermost last */
+        const owners: string[] = [];
+        const resolve = (name: string) => [...scopes].reverse().find(scope => scope.has(name))?.get(name) ?? null;
+        const declare = (names: string[], type: (name: string) => string[] | null = () => null): Scope =>
+            new Map(names.map(name => [name, type(name)]));
+
+        const migrateRead = (ast: AngularCompiler.PropertyRead | AngularCompiler.SafePropertyRead) => {
+            const receiver = ast.receiver;
+            const types = receiver instanceof PropertyRead && receiver.receiver instanceof ImplicitReceiver ? resolve(receiver.name) : null;
+            const removed = types && REMOVED_MEMBERS.find(m => m.member === ast.name && m.definedIn.some(t => types.includes(t)));
+            if (removed?.replaceWith) {
+                changes.push({ start: ast.nameSpan.start, end: ast.nameSpan.end, text: removed.replaceWith });
+            } else if (removed) {
+                warn(ast.nameSpan.start, removed.warning);
+            } else if (!types && UNTYPED_TEMPLATE_MEMBERS.includes(ast.name)) {
+                const member = REMOVED_MEMBERS.find(m => m.member === ast.name);
+                warn(ast.nameSpan.start, member.warning ??
+                    `\`${ast.name}\` was removed from ${member.definedIn[0]}. Replace it with \`${member.replaceWith}\` where it is read from one.`);
+            }
+        };
+
+        class ExpressionVisitor extends RecursiveAstVisitor {
+            public override visitPropertyRead(ast: AngularCompiler.PropertyRead, visitContext: any) {
+                migrateRead(ast);
+                return super.visitPropertyRead(ast, visitContext);
+            }
+            public override visitSafePropertyRead(ast: AngularCompiler.SafePropertyRead, visitContext: any) {
+                migrateRead(ast);
+                return super.visitSafePropertyRead(ast, visitContext);
+            }
+        }
+        const expressions = new ExpressionVisitor();
+
+        class TemplateVisitor extends TmplAstRecursiveVisitor {
+            public override visitElement(element: AngularCompiler.TmplAstElement) {
+                owners.push(element.name);
+                super.visitElement(element);
+                owners.pop();
+            }
+            public override visitTemplate(template: AngularCompiler.TmplAstTemplate) {
+                // the bindings of the template read the scope around it, its content also the variables it declares
+                owners.push(template.tagName);
+                tmplAstVisitAll(this, [...template.templateAttrs, ...template.inputs, ...template.outputs]);
+                owners.pop();
+                const rowSelector = [...template.attributes, ...template.inputs].some(a => a.name === 'igxRowSelector');
+                const contextVariables = template.variables.filter(v => !v.value || v.value === '$implicit').map(v => v.name);
+                scopes.push(declare(template.variables.map(v => v.name),
+                    name => rowSelector && contextVariables.includes(name) ? ['IgxRowSelectorTemplateDetails'] : null));
+                tmplAstVisitAll(this, template.children);
+                scopes.pop();
+            }
+            public override visitBoundText(text: AngularCompiler.TmplAstBoundText) {
+                text.value.visit(expressions);
+            }
+            public override visitBoundAttribute(attribute: AngularCompiler.TmplAstBoundAttribute) {
+                attribute.value.visit(expressions);
+            }
+            public override visitBoundEvent(event: AngularCompiler.TmplAstBoundEvent) {
+                const owner = owners[owners.length - 1];
+                scopes.push(declare(['$event'], () => GRID_ELEMENTS.includes(owner) ? GRID_OUTPUT_TYPES[event.name] ?? null : null));
+                event.handler.visit(expressions);
+                scopes.pop();
+            }
+            public override visitForLoopBlock(block: AngularCompiler.TmplAstForLoopBlock) {
+                block.expression.visit(expressions);
+                scopes.push(declare([block.item, ...block.contextVariables].map(v => v.name)));
+                block.trackBy?.visit(expressions);
+                tmplAstVisitAll(this, block.children);
+                scopes.pop();
+                block.empty?.visit(this);
+            }
+            public override visitIfBlockBranch(branch: AngularCompiler.TmplAstIfBlockBranch) {
+                branch.expression?.visit(expressions);
+                scopes.push(declare(branch.expressionAlias ? [branch.expressionAlias.name] : []));
+                tmplAstVisitAll(this, branch.children);
+                scopes.pop();
+            }
+            public override visitSwitchBlock(block: AngularCompiler.TmplAstSwitchBlock) {
+                block.expression.visit(expressions);
+                super.visitSwitchBlock(block);
+            }
+            public override visitSwitchBlockCase(block: AngularCompiler.TmplAstSwitchBlockCase) {
+                block.expression?.visit(expressions);
+                super.visitSwitchBlockCase(block);
+            }
+            public override visitLetDeclaration(declaration: AngularCompiler.TmplAstLetDeclaration) {
+                declaration.value.visit(expressions);
+                scopes[scopes.length - 1].set(declaration.name, null);
+            }
+        }
+        tmplAstVisitAll(new TemplateVisitor(), nodes);
 
         if (changes.length) {
             host.overwrite(templatePath, applyTextChanges(content, changes));
@@ -541,14 +759,18 @@ const migrateComboSearchPlaceholder = (host: Tree, context: SchematicContext, up
                 continue;
             }
 
-            const valueStart = placeholder.valueSpan?.start.offset;
-            const quote = valueStart !== undefined && content[valueStart - 1] === '\'' ? '\'' : '"';
+            const valueSpan = placeholder.valueSpan;
+            const quote = valueSpan && content[valueSpan.start.offset - 1] === '\'' ? '\'' : '"';
             let expression: string;
             if (placeholder.name.startsWith('[')) {
-                expression = value.includes('|') ? `(${value.trim()})` : value.trim();
+                // the parser decodes the entities of the value, so a bound expression is moved as it is written
+                const source = valueSpan ? content.substring(valueSpan.start.offset, valueSpan.end.offset).trim() : value.trim();
+                expression = value.includes('|') ? `(${source})` : source;
             } else {
                 const stringQuote = quote === '"' ? '\'' : '"';
-                expression = `${stringQuote}${value.replace(/\\/g, '\\\\').replace(new RegExp(stringQuote, 'g'), `\\${stringQuote}`)}${stringQuote}`;
+                const literal = `${stringQuote}${value.replace(/\\/g, '\\\\').replace(new RegExp(stringQuote, 'g'), `\\${stringQuote}`)}${stringQuote}`;
+                // encode the decoded text again, so that a quote in it doesn't end the attribute
+                expression = literal.replace(/&/g, '&amp;').replace(new RegExp(quote, 'g'), quote === '"' ? '&quot;' : '&#39;');
             }
             const strings = COMBO_PLACEHOLDER_STRINGS.map(s => `${s}: ${expression}`).join(', ');
             changes.push({
@@ -609,124 +831,85 @@ const getThemingNamespaces = (content: string) => {
     return { namespaces, global };
 };
 
+/** An argument of a removed theme wrapper, with the comments around it. */
+interface ThemeArgument {
+    /** Comments on the lines before the argument */
+    leading?: string;
+    /** The argument, by name */
+    code: string;
+    /** A comment after the argument, on its line */
+    trailing?: string;
+}
+
+/** A comment starting on the line an argument list part starts on, after the comma ending the previous argument. */
+const SAME_LINE_COMMENT = /^[ \t]*(\/\/[^\r\n]*|\/\*[\s\S]*?\*\/)/;
+
 /**
- * Returns the content with its comments, and the text of its strings when `strings` is set, replaced by spaces,
- * so that offsets match the content and only code is matched. Interpolations (`#{...}`) in strings are kept, as they are code.
+ * Returns the arguments of a removed theme wrapper call, passing the positional ones by name,
+ * or null when the call spreads its arguments, which can't be named.
  */
-const maskSass = (content: string, strings = true): string => {
-    const result = content.split('');
-    const blank = (from: number, to: number) => {
-        for (let i = from; i < to; i++) {
-            if (result[i] !== '\n') {
-                result[i] = ' ';
-            }
+const themeArguments = (body: string): ThemeArgument[] | null => {
+    const args: ThemeArgument[] = [];
+    for (let [index, part] of splitArguments(body).entries()) {
+        const previous = args[args.length - 1];
+        const sameLine = previous && SAME_LINE_COMMENT.exec(part);
+        if (sameLine) {
+            // `$palette: $p, // comment` describes the argument before the comma
+            previous.trailing = [previous.trailing, sameLine[1]].filter(Boolean).join(' ');
+            part = part.substring(sameLine[0].length);
         }
-    };
-    let i = 0;
-    while (i < content.length) {
-        const char = content[i];
-        if (char === '/' && content[i + 1] === '/') {
-            const end = content.indexOf('\n', i);
-            blank(i, end === -1 ? content.length : end);
-            i = end === -1 ? content.length : end;
-        } else if (char === '/' && content[i + 1] === '*') {
-            const end = content.indexOf('*/', i + 2);
-            blank(i, end === -1 ? content.length : end + 2);
-            i = end === -1 ? content.length : end + 2;
-        } else if (/^url\(/i.test(content.substring(i, i + 4)) && !/[\w-]/.test(content[i - 1] ?? '')) {
-            // an unquoted url can contain `//`, which doesn't start a comment there
-            const end = content.indexOf(')', i);
-            i = end === -1 ? content.length : end + 1;
-        } else if (char === '"' || char === '\'') {
-            let j = i + 1;
-            while (j < content.length && content[j] !== char && content[j] !== '\n') {
-                if (content[j] === '\\') {
-                    if (strings) {
-                        blank(j, j + 2);
-                    }
-                    j += 2;
-                } else if (content[j] === '#' && content[j + 1] === '{') {
-                    const end = content.indexOf('}', j);
-                    j = end === -1 ? content.length : end + 1;
-                } else {
-                    if (strings) {
-                        blank(j, j + 1);
-                    }
-                    j++;
-                }
+        const codeStart = leadingCommentsEnd(part);
+        const rest = part.substring(codeStart);
+        // comments are masked by whitespace, so the code ends before any comment closing the argument
+        const codeEnd = maskComments(rest).trimEnd().length;
+        const code = rest.substring(0, codeEnd);
+        const leading = part.substring(0, codeStart).trim();
+        const trailing = rest.substring(codeEnd).trim();
+        if (!code) {
+            // a trailing comma leaves an empty last part, whose comments go with the argument before it
+            if (previous && (leading || trailing)) {
+                previous.trailing = [previous.trailing, leading, trailing].filter(Boolean).join(' ');
             }
-            i = j + 1;
-        } else {
-            i++;
-        }
-    }
-    return result.join('');
-};
-
-/** Returns the index of the parenthesis closing the one at `start`, skipping strings and nested parentheses. */
-const findClosingParenthesis = (content: string, start: number): number => {
-    let depth = 0;
-    let quote: string = null;
-    for (let i = start; i < content.length; i++) {
-        const char = content[i];
-        if (quote) {
-            if (char === quote && content[i - 1] !== '\\') {
-                quote = null;
-            }
-        } else if (char === '"' || char === '\'') {
-            quote = char;
-        } else if (char === '(') {
-            depth++;
-        } else if (char === ')' && --depth === 0) {
-            return i;
-        }
-    }
-    return -1;
-};
-
-/** Splits a Sass argument list on its top-level commas. */
-const splitArguments = (args: string): string[] => {
-    const result: string[] = [];
-    let depth = 0;
-    let quote: string = null;
-    let current = '';
-    for (let i = 0; i < args.length; i++) {
-        const char = args[i];
-        if (quote) {
-            if (char === quote && args[i - 1] !== '\\') {
-                quote = null;
-            }
-        } else if (char === '"' || char === '\'') {
-            quote = char;
-        } else if (char === '(' || char === '[') {
-            depth++;
-        } else if (char === ')' || char === ']') {
-            depth--;
-        } else if (char === ',' && depth === 0) {
-            result.push(current);
-            current = '';
             continue;
         }
-        current += char;
+        if (code.endsWith('...')) {
+            return null;
+        }
+        args.push({ leading, code: argumentName(code) ? code : `${THEME_WRAPPER_PARAMS[index]}: ${code}`, trailing });
     }
-    if (current.trim()) {
-        result.push(current);
-    }
-    return result;
+    return args;
 };
 
-const escapeName = (name: string) => name.replace(/[-]/g, '[-_]');
+/**
+ * Formats the arguments of the `theme` mixin replacing a wrapper call with the `body` arguments:
+ * one per line in the indentation of the call, when it has them on their own lines, or on a single line.
+ */
+const formatThemeArguments = (body: string, args: ThemeArgument[], eol: string): string => {
+    const lineComment = args.some(a => a.leading || a.trailing?.includes('//'));
+    if (!/^\s*\n/.test(body) && !lineComment) {
+        return args.map(a => [a.leading, a.code].filter(Boolean).join(' ') + (a.trailing ? ` ${a.trailing}` : '')).join(', ');
+    }
 
-/** Whether the file declares its own mixin or variable with the name, shadowing the library one. */
-const declaresLocally = (content: string, kind: 'mixin' | 'variable', name: string) => kind === 'mixin'
-    ? new RegExp(String.raw`(@mixin\s+|^\s*=)${escapeName(name)}\b`, 'm').test(content)
-    : new RegExp(String.raw`^\s*\$${escapeName(name)}\s*:`, 'm').test(content);
+    const indent = /\n([ \t]*)\S/.exec(body)?.[1] ?? '';
+    // a line comment after the last argument would hide the closing bracket on its line
+    const closing = /\r?\n[ \t]*$/.exec(body)?.[0] ?? (args[args.length - 1].trailing?.includes('//') ? eol : '');
+    const lines = args.map((arg, i) => {
+        const leading = arg.leading ? `${indent}${arg.leading.replace(/\r?\n[ \t]*/g, eol + indent)}${eol}` : '';
+        const comma = i < args.length - 1 ? ',' : '';
+        return `${leading}${indent}${arg.code}${comma}${arg.trailing ? ` ${arg.trailing}` : ''}`;
+    });
+    return `${eol}${lines.join(eol)}${closing}`;
+};
+
+/** Whether the file declares its own variable with the name, shadowing the library one. */
+const declaresVariable = (code: string, name: string) =>
+    new RegExp(String.raw`^\s*\$${name.replace(/[-]/g, '[-_]')}\s*:`, 'm').test(code);
 
 const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChanges) => {
     let migratedWrappers = false;
     for (const entryPath of update.sassFiles) {
         const original = host.read(entryPath).toString();
-        const { namespaces, global } = getThemingNamespaces(maskSass(original, false));
+        const { namespaces, global } = getThemingNamespaces(maskComments(original));
         if (!global && !namespaces.size) {
             continue;
         }
@@ -734,66 +917,50 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
         if (global) {
             prefixes.push('');
         }
-
-        let content = original;
-        // matched instead of the content, so that comments and strings aren't migrated, with the same offsets
-        let code = maskSass(content);
-        const changes: TextChange[] = [];
+        const eol = lineEnding(original);
+        const lineOf = (offset: number) => original.substring(0, offset).split('\n').length;
 
         // @include light-theme($palette, ...) -> @include theme($palette: $palette, $schema: $light-material-schema, ...)
-        // indented Sass can also include a mixin with `+light-theme(...)` at the start of a line
-        const wrappers = Object.keys(THEME_WRAPPERS).sort((a, b) => b.length - a.length).join('|');
-        const include = entryPath.endsWith('.sass') ? String.raw`(?:@include\s+|^[ \t]*\+[ \t]*)` : String.raw`@include\s+`;
-        const includeRegex = new RegExp(String.raw`${include}(?:([\w-]+)\.)?(${wrappers})\s*\(`, 'gm');
-        let match: RegExpExecArray;
-        while ((match = includeRegex.exec(code))) {
-            const [, namespace, wrapper] = match;
-            const prefix = namespace ? `${namespace}.` : '';
-            if (!prefixes.includes(prefix) || !namespace && declaresLocally(code, 'mixin', wrapper)) {
-                continue;
-            }
-            const open = match.index + match[0].length - 1;
-            const close = findClosingParenthesis(code, open);
-            if (close === -1) {
-                continue;
-            }
-            const args = splitArguments(content.substring(open + 1, close));
-            if (args.some(a => a.trim().endsWith('...'))) {
-                context.logger.warn(`${entryPath}: replace the removed \`${wrapper}\` mixin with the \`theme\` mixin manually.`);
-                continue;
-            }
+        // the stylesheet finds `@include` and the indented `+` includes, leaving those of mixins it declares itself
+        const sheet = new SassStylesheet(original, entryPath.endsWith('.sass'));
+        const changes: TextChange[] = [];
+        for (const [wrapper, { schema, elevations }] of Object.entries(THEME_WRAPPERS)) {
+            for (const include of sheet.findIncludes(wrapper, 'exact')) {
+                const prefix = include.namespace ? `${include.namespace}.` : '';
+                if (!prefixes.includes(prefix) || include.bodyStart === undefined) {
+                    continue;
+                }
+                const body = original.substring(include.bodyStart, include.bodyEnd);
+                const args = themeArguments(body);
+                if (!args) {
+                    context.logger.warn(`${entryPath}:${lineOf(include.start)}: ` +
+                        `replace the removed \`${wrapper}\` mixin with the \`theme\` mixin manually.`);
+                    continue;
+                }
 
-            const named = args.map((arg, i) => {
-                const text = arg.trim();
-                return /^\$[\w-]+\s*:/.test(text) ? text : `${THEME_WRAPPER_PARAMS[i]}: ${text}`;
-            });
-            const { schema, elevations } = THEME_WRAPPERS[wrapper];
-            const paletteIndex = named.findIndex(a => /^\$palette\s*:/.test(a));
-            named.splice(paletteIndex + 1, 0, `$schema: ${prefix}$${schema}`);
-            if (elevations) {
-                named.push(`$elevations: ${prefix}$${elevations}`);
+                const paletteIndex = args.findIndex(a => argumentName(a.code) === '$palette');
+                args.splice(paletteIndex + 1, 0, { code: `$schema: ${prefix}$${schema}` });
+                if (elevations) {
+                    args.push({ code: `$elevations: ${prefix}$${elevations}` });
+                }
+                changes.push({
+                    start: include.nameStart,
+                    end: include.bodyEnd + 1,
+                    text: `theme(${formatThemeArguments(body, args, eol)})`
+                });
+                migratedWrappers = true;
             }
-
-            const multiline = args.length > 0 && args[0].includes('\n');
-            const indent = multiline ? args[0].match(/\n([ \t]*)/)[1] : '';
-            const closingIndent = multiline ? (content.substring(open + 1, close).match(/\n([ \t]*)$/)?.[1] ?? '') : '';
-            const argList = multiline
-                ? `\n${named.map(a => `${indent}${a}`).join(',\n')}\n${closingIndent}`
-                : named.join(', ');
-            const nameStart = match.index + match[0].lastIndexOf(wrapper);
-            changes.push({ start: nameStart, end: close + 1, text: `theme(${argList})` });
-            migratedWrappers = true;
         }
-        if (changes.length) {
-            content = applyTextChanges(content, changes);
-            code = maskSass(content);
-        }
+        const content = applyTextChanges(original, changes);
 
         // $light-palette -> $light-material-palette
+        // strings, comments and URLs are masked, while interpolations, which are code, are kept
+        const code = maskNonCode(content, true);
         const paletteChanges: TextChange[] = [];
         for (const [palette, replacement] of Object.entries(PALETTES)) {
-            const local = declaresLocally(code, 'variable', palette);
+            const local = declaresVariable(code, palette);
             const paletteRegex = new RegExp(String.raw`(^|[^\w$.-]|([\w-]+)\.)\$${palette}(?![\w-])`, 'g');
+            let match: RegExpExecArray;
             while ((match = paletteRegex.exec(code))) {
                 const [text, before, namespace] = match;
                 const library = namespace ? namespaces.has(namespace) : global && !local;
@@ -803,10 +970,10 @@ const migrateSass = (host: Tree, context: SchematicContext, update: UpdateChange
                 }
             }
         }
-        content = applyTextChanges(content, paletteChanges);
+        const migrated = applyTextChanges(content, paletteChanges);
 
-        if (content !== original) {
-            host.overwrite(entryPath, content);
+        if (migrated !== original) {
+            host.overwrite(entryPath, migrated);
         }
     }
 
