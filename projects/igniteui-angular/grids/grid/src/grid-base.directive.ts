@@ -101,11 +101,32 @@ import {
     IgxGridTransaction,
     GridSelectionRange,
     runAfterRenderOnce,
-    GridStyleCSSProperty
+    GridStyleCSSProperty,
+    I18N_FORMATTER,
+    IgxStylesRegistrar
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile, throttle, take, switchMap } from 'rxjs/operators';
+import {
+    Subject,
+    pipe,
+    fromEvent,
+    animationFrameScheduler,
+    merge,
+    BehaviorSubject,
+    timer
+} from 'rxjs';
+import {
+    takeUntil,
+    first,
+    filter,
+    throttleTime,
+    map,
+    shareReplay,
+    takeWhile,
+    throttle,
+    take,
+    switchMap
+} from 'rxjs/operators';
 import {
     IgxToggleDirective,
     IForOfDataChangeEventArgs,
@@ -118,9 +139,125 @@ import {
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
-import { CellType, CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
+import { IgxBadgeComponent } from 'igniteui-angular/badge';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
+import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
+import { IgxCircularProgressBarComponent } from 'igniteui-angular/progressbar';
+import {
+    CellType,
+    CharSeparatedValueData,
+    DropPosition,
+    FilterMode,
+    getUUID,
+    GridCellMergeMode,
+    GridKeydownTargetType,
+    GridPagingMode,
+    GridSelectionMode,
+    GridServiceType,
+    GridSummaryPosition,
+    GridType,
+    GridValidationTooltipTrigger,
+    GridValidationTrigger,
+    IActiveNode,
+    IActiveNodeChangeEventArgs,
+    ICellPosition,
+    IClipboardOptions,
+    IColumnMovingEndEventArgs,
+    IColumnMovingEventArgs,
+    IColumnMovingStartEventArgs,
+    IColumnResizeEventArgs,
+    IColumnSelectionEventArgs,
+    IColumnVisibilityChangedEventArgs,
+    IColumnVisibilityChangingEventArgs,
+    IFilteringEventArgs,
+    IGridCellEventArgs,
+    IGridClipboardEvent,
+    IGridContextMenuEventArgs,
+    IGridEditDoneEventArgs,
+    IGridEditEventArgs,
+    IGridFormGroupCreatedEventArgs,
+    IGridKeydownEventArgs,
+    IGridRowEventArgs,
+    IGridScrollEventArgs,
+    IGridToolbarExportEventArgs,
+    IGridValidationStatusEventArgs,
+    IGX_GRID_SERVICE_BASE,
+    IgxAdvancedFilteringDialogComponent,
+    IgxCell,
+    IgxColumnComponent,
+    IgxColumnGroupComponent,
+    IgxColumnResizingService,
+    IgxDragIndicatorIconDirective,
+    IgxEditRow,
+    IgxExcelStyleHeaderIconDirective,
+    IgxExcelStyleLoadingValuesTemplateDirective,
+    IgxFilteringService,
+    IgxGridBodyDirective,
+    IgxGridCellComponent,
+    IgxGridColumnResizerComponent,
+    IgxGridEmptyTemplateContext,
+    IgxGridEmptyTemplateDirective,
+    IgxGridExcelStyleFilteringComponent,
+    IgxGridFilteringCellComponent,
+    IgxGridFilteringRowComponent,
+    IgxGridHeaderComponent,
+    IgxGridHeaderGroupComponent,
+    IgxGridHeaderRowComponent,
+    IgxGridHeaderTemplateContext,
+    IgxGridLoadingTemplateDirective,
+    IgxGridNavigationService,
+    IgxGridPinningActionsComponent,
+    IgxGridRowDragGhostContext,
+    IgxGridRowEditActionsTemplateContext,
+    IgxGridRowEditTemplateContext,
+    IgxGridRowEditTextTemplateContext,
+    IgxGridRowTemplateContext,
+    IgxGridSelectionService,
+    IgxGridSummaryService,
+    IgxGridTemplateContext,
+    IgxGridToolbarComponent,
+    IgxGridValidationService,
+    IgxHeaderCollapsedIndicatorDirective,
+    IgxHeaderExpandedIndicatorDirective,
+    IgxHeadSelectorDirective,
+    IgxHeadSelectorTemplateContext,
+    IgxRowAddTextDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxRowDirective,
+    IgxRowDragGhostDirective,
+    IgxRowEditActionsDirective,
+    IgxRowEditTabStopDirective,
+    IgxRowEditTemplateDirective,
+    IgxRowEditTextDirective,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowSelectorDirective,
+    IgxRowSelectorTemplateContext,
+    IgxSortAscendingHeaderIconDirective,
+    IgxSortDescendingHeaderIconDirective,
+    IgxSortHeaderIconDirective,
+    IgxSummaryRowComponent,
+    IgxToolbarToken,
+    IPinColumnCancellableEventArgs,
+    IPinColumnEventArgs,
+    IPinningConfig,
+    IPinRowEventArgs,
+    IRowDataCancelableEventArgs,
+    IRowDataEventArgs,
+    IRowDragEndEventArgs,
+    IRowDragStartEventArgs,
+    IRowSelectionEventArgs,
+    IRowToggleEventArgs,
+    ISearchInfo,
+    ISizeInfo,
+    ISortingEventArgs,
+    RowEditPositionStrategy,
+    RowPinningPosition,
+    RowType,
+    WatchChanges
+} from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
-import { I18N_FORMATTER, IgxStylesRegistrar } from 'igniteui-angular/core';
 import { GRID_BASE_CSS } from './grid-base.styles';
 
 /**
@@ -316,6 +453,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._columns.some(x => x.width === 'fit-content');
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the data clone strategy of the grid when in edit mode.
      *
@@ -329,6 +467,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._dataCloneStrategy;
     }
 
+    /* blazorCSSuppress */
     public set dataCloneStrategy(strategy: IDataCloneStrategy) {
         if (strategy) {
             this._dataCloneStrategy = strategy;
@@ -399,6 +538,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Output()
     public gridScroll = new EventEmitter<IGridScrollEventArgs>();
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets a conditional class selector to the grid's row element.
@@ -418,6 +558,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     @Input()
     public rowClasses: any;
 
+    /* blazorOnlyScript */
     /* treatAsRef */
     /**
      * Sets conditional style properties on the grid row element.
@@ -2046,6 +2187,24 @@ export abstract class IgxGridBaseDirective implements GridType,
     public validationTrigger: GridValidationTrigger = 'change';
 
     /**
+     * Gets/Sets when the validation error tooltip of an invalid cell is displayed.
+     *
+     * @remarks
+     * - `active` (default) - the tooltip is shown when an invalid cell becomes active and on error icon hover.
+     * - `hover` - the tooltip is shown only while hovering the error icon.
+     *
+     * The option affects only the tooltip's visibility. The invalid state, the error icon and
+     * the invalid styles are not affected, nor is the moment validation runs (see `validationTrigger`).
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid validationTooltipTrigger='hover'></igx-grid>
+     * ```
+     */
+    @Input()
+    public validationTooltipTrigger: GridValidationTooltipTrigger = 'active';
+
+    /**
      * @hidden
      * @internal
      */
@@ -2402,6 +2561,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.notifyChanges();
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the filtering strategy of the grid.
      *
@@ -2415,10 +2575,12 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._filterStrategy;
     }
 
+    /* blazorCSSuppress */
     public set filterStrategy(classRef: IFilteringStrategy) {
         this._filterStrategy = classRef;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the sorting strategy of the grid.
      *
@@ -2432,6 +2594,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this._sortingStrategy;
     }
 
+    /* blazorCSSuppress */
     public set sortStrategy(value: IGridSortingStrategy) {
         this._sortingStrategy = value;
     }
@@ -3433,7 +3596,12 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     constructor() {
-        inject(IgxStylesRegistrar).register(GRID_STYLES_ID, GRID_BASE_CSS);
+        const styles = inject(IgxStylesRegistrar);
+        styles.register(GRID_STYLES_ID, GRID_BASE_CSS);
+        styles.retain(
+            IgxBadgeComponent, IgxChipComponent, IgxCheckboxComponent,
+            IgxInputGroupComponent, IgxDatePickerComponent, IgxCircularProgressBarComponent
+        );
         this.initLocale();
         this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this._transactions.cloneStrategy = this.dataCloneStrategy;
@@ -3554,7 +3722,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      *
      * @param rowIndex Index of the record in the `filteredSortedData` collection.
      */
-    public isRecordPinnedByIndex(rowIndex: number) {
+    public isRecordPinnedByIndex(rowIndex: number): boolean {
         return this.hasPinnedRecords && (this.isRowPinningToTop && rowIndex < this._filteredSortedPinnedData.length) ||
             (!this.isRowPinningToTop && rowIndex >= this._filteredSortedUnpinnedData.length);
     }
@@ -4404,7 +4572,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden
      * @internal
      */
-    public getDefaultExpandState(_rec: any) {
+    public getDefaultExpandState(_rec: any): boolean {
         return this._defaultExpandState;
     }
 
@@ -4420,6 +4588,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.elementRef.nativeElement;
     }
 
+    /* blazorCSSuppress */
     /**
      * Gets/Sets the outlet used to attach the grid's overlays to.
      *
@@ -4434,6 +4603,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         return this.resolveOutlet();
     }
 
+    /* blazorCSSuppress */
     public set outlet(val: IgxOverlayOutletDirective) {
         this._userOutletDirective = val;
     }
@@ -5637,7 +5807,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * ```
      * @param takeHidden If we should take into account the hidden columns in the pinned area.
      */
-    public getPinnedStartWidth(takeHidden = false) {
+    public getPinnedStartWidth(takeHidden = false): number {
         const fc = takeHidden ? this._pinnedStartColumns : this.pinnedStartColumns;
         let sum = 0;
         for (const col of fc) {
@@ -5660,7 +5830,7 @@ export abstract class IgxGridBaseDirective implements GridType,
  * ```
  * @param takeHidden If we should take into account the hidden columns in the pinned area.
  */
-    public getPinnedEndWidth(takeHidden = false) {
+    public getPinnedEndWidth(takeHidden = false): number {
         const fc = takeHidden ? this._pinnedEndColumns : this.pinnedEndColumns;
         let sum = 0;
         for (const col of fc) {
@@ -5896,7 +6066,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedData(formatters = false, headers = false) {
+    public getSelectedData(formatters = false, headers = false): any[] {
         const source = this.filteredSortedData;
         return this.extractDataFromSelection(source!, formatters, headers);
     }
@@ -6004,7 +6174,7 @@ export abstract class IgxGridBaseDirective implements GridType,
      * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
-    public getSelectedColumnsData(formatters = false, headers = false) {
+    public getSelectedColumnsData(formatters = false, headers = false): any[] {
         const source = this.filteredSortedData ? this.filteredSortedData : this.data;
         return this.extractDataFromColumnsSelection(source!, formatters, headers);
     }
@@ -6102,7 +6272,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.addRowSnackbar.open();
     }
 
-    /* blazorCsSuppress */
+    /* csSuppress */
     /**
      * Navigates to a position in the grid based on provided `rowindex` and `visibleColumnIndex`.
      *
@@ -6149,7 +6319,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorCsSuppress */
+    /* csSuppress */
     /**
      * Returns `ICellPosition` which defines the next cell,
      * according to the current position, that match specific criteria.
@@ -6185,7 +6355,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         }
     }
 
-    /* blazorCsSuppress */
+    /* csSuppress */
     /**
      * Returns `ICellPosition` which defines the previous cell,
      * according to the current position, that match specific criteria.

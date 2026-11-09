@@ -8,6 +8,7 @@ export * from './directives/divider/divider.component';
 export * from './directives/drag-drop/public_api';
 export * from './directives/filter/filter.directive';
 export * from './directives/focus/focus.directive';
+export * from './directives/focus-ring/focus-ring.directive';
 export * from './directives/focus-trap/focus-trap.directive';
 export {
     IForOfDataChangeEventArgs,

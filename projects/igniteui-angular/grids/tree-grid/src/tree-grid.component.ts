@@ -331,6 +331,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public records: Map<any, ITreeGridRecord> = new Map<any, ITreeGridRecord>();
 
+    /* blazorCSSuppress */
     /**
      * Returns an array of processed (filtered and sorted) root `ITreeGridRecord`s.
      * ```typescript
@@ -388,7 +389,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (!this._init) {
             this.validation.updateAll(this._data);
         }
-        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data)) {
+        if (this.autoGenerate && this._data.length > 0 && this.shouldRecreateColumns(oldData, this._data) && this.gridAPI.grid) {
             this.setupColumns();
         }
         this.checkPrimaryKeyField();

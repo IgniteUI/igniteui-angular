@@ -1421,7 +1421,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
      * @hidden @internal
      */
-    public override isRecordPinnedByIndex(_rowIndex: number) {
+    public override isRecordPinnedByIndex(_rowIndex: number): boolean {
         return false;
     }
 
@@ -1655,7 +1655,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     /**
     * @hidden @internal
     */
-    public override getPinnedStartWidth(takeHidden = false) {
+    public override getPinnedStartWidth(takeHidden = false): number {
         return super.getPinnedStartWidth(takeHidden);
     }
 
@@ -1666,7 +1666,7 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
         return this.calcHeight;
     }
 
-    public getColumnGroupExpandState(col: IgxColumnComponent) {
+    public getColumnGroupExpandState(col: IgxColumnComponent): boolean {
         const state = this.columnGroupStates.get(col.field);
         // columns are expanded by default?
         return state !== undefined && state !== null ? state : false;
@@ -2325,7 +2325,8 @@ export class IgxPivotGridComponent extends IgxGridBaseDirective implements OnIni
     protected autoSizeDimensionsInView() {
         if (!this.hasDimensionsToAutosize) return;
         for (const dim of this.visibleRowDimensions) {
-            if (dim.width === 'auto') {
+            // Skip sized dimensions, their merged headers span several columns.
+            if (dim.width === 'auto' && !dim.autoWidth) {
                 const contentWidths = [];
                 const relatedDims = PivotUtil.flatten([dim]).map((x: IPivotDimension) => x.memberName);
                 const contentCollection = this.getContentCollection(dim);

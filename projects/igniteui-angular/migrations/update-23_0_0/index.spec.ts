@@ -8,7 +8,7 @@ const version = '23.0.0';
 describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
-    const migrationName = 'migration-63';
+    const migrationName = 'migration-64';
     const templatePath = '/testSrc/appPrefix/component/test.component.html';
     const tsPath = '/testSrc/appPrefix/component/test.component.ts';
     const scssPath = '/testSrc/appPrefix/component/test.component.scss';

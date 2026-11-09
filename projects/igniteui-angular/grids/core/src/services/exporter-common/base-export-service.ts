@@ -172,6 +172,7 @@ export const GRID_LEVEL_COL = 'GRID_LEVEL_COL';
 const DEFAULT_COLUMN_WIDTH = 8.43;
 const GRID_CHILD = 'grid-child-';
 
+/* blazorCSSuppress */
 export abstract class IgxBaseExporter {
 
     public exportEnded = new EventEmitter<IBaseEventArgs>();
