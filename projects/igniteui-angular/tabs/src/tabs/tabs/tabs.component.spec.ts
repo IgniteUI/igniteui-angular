@@ -1470,6 +1470,15 @@ describe('IgxTabs', () => {
                 expect(range.getClientRects().length).toBe(1);
             });
         }
+
+        it('should keep the size of an icon suffix next to a short header label', async () => {
+            headers[2].querySelector('[igxTabHeaderLabel]').textContent = 'A';
+            fixture.detectChanges();
+            await wait(200);
+
+            const icon = headers[2].querySelector('[igxSuffix]').getBoundingClientRect();
+            expect(icon.width).toBeCloseTo(icon.height, 0);
+        });
     });
 
     it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
