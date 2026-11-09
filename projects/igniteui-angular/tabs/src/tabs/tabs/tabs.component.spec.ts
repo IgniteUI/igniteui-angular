@@ -2385,6 +2385,13 @@ describe('IgxTabs', () => {
             expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth);
         });
 
+        it('should keep the size of an icon suffix next to a short header label', async () => {
+            await createTabs(component => component.items.set([{ id: 1, label: 'A', suffixIcon: 'close' }]));
+            const icon = rectOf(headersOf(tabs)[0].querySelector('[igxSuffix]'));
+
+            expectNear(icon.width, icon.height);
+        });
+
         it('should place the theme specific selection indicators and borders on the content side of the headers', async () => {
             await createTabs(component => component.height.set('240px'));
             const wrapper = host.wrapperDiv.nativeElement;
