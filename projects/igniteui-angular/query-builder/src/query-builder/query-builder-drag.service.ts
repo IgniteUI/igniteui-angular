@@ -2,7 +2,8 @@ import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { ElementRef, Injectable } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
-import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IBaseChipEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
+import { IDragBaseEventArgs } from 'igniteui-angular/directives';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
 const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
@@ -65,9 +66,10 @@ export class IgxQueryBuilderDragService {
      * @param sourceDragElement The HTML element of the chip that's been dragged
      * @param sourceExpressionItem The expressionItem of the chip that's been dragged
      * @param isKeyboardDrag If it's a mouse drag or keyboard reorder
+     * @param sourceChip The chip that's been mouse dragged
      *
     */
-    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean): void {
+    public onMoveStart(sourceDragElement: HTMLElement, sourceExpressionItem: ExpressionItem, isKeyboardDrag: boolean, sourceChip?: IgxChipComponent): void {
         this.resetDragAndDrop(true);
         this._queryBuilderTreeComponent._expressionTreeCopy = this._queryBuilderTreeComponent._expressionTree;
         this.isKeyboardDrag = isKeyboardDrag;
@@ -77,19 +79,26 @@ export class IgxQueryBuilderDragService {
         this.listenToKeyboard();
 
         if (!this.isKeyboardDrag) {
+            //Let the chip's igxDrag cancel the mouse drag on Escape, it's set before the drag subscribes to Escape
+            if (sourceChip) {
+                sourceChip.dragDirective.cancelOnEscape = true;
+            }
             this._sourceElement.style.display = 'none';
             this.setDragGhostZIndex();
         }
     }
 
-    /** When dragged chip is let go outside a proper drop zone */
-    public onMoveEnd(): void {
+    /** When dragged chip is let go outside a proper drop zone, or its drag is cancelled
+     * @param event The chip's moveEnd event args
+    */
+    public onMoveEnd(event?: IBaseChipEventArgs): void {
         if (!this._sourceElement || !this._sourceExpressionItem) {
             return;
         }
 
-        if (this.dropGhostExpression) {
-            //If there is a ghost chip presented to the user, execute drop
+        //If there is a ghost chip presented to the user and the drag isn't cancelled (e.g. with Escape), execute drop
+        const drop = !!this.dropGhostExpression && !(event?.originalEvent as IDragBaseEventArgs)?.cancelled;
+        if (drop) {
             this.onChipDropped();
         } else {
             this.resetDragAndDrop(true);
@@ -97,6 +106,10 @@ export class IgxQueryBuilderDragService {
 
         this._ghostChipMousemoveSubscription$?.unsubscribe();
         this._keyboardSubscription$?.unsubscribe();
+
+        if (!drop) {
+            this.startKeyboardDragOnFocusedIndicator();
+        }
     }
 
     /** When mouse drag enters a chip's area
@@ -276,6 +289,19 @@ export class IgxQueryBuilderDragService {
         }
     }
 
+    /** Starts a keyboard drag for the chip whose drag indicator is focused, since focusing it while mouse dragging is ignored */
+    private startKeyboardDragOnFocusedIndicator() {
+        const focusedElement = document.activeElement;
+        if (!focusedElement?.classList.contains(QueryBuilderSelectors.DRAG_INDICATOR)) {
+            return;
+        }
+
+        const chip = this._queryBuilderTreeComponent.expressionsChips.find(c => c.nativeElement.contains(focusedElement));
+        if (chip) {
+            this.onChipDragIndicatorFocus(chip.nativeElement.parentElement!, chip.data);
+        }
+    }
+
     /** Checks if the dragged ghost is horizontally on the same line with the drop ghost*/
     private dragGhostIsOnDropGhostRow() {
         const dragGhostBounds = this.getDragGhostElement.getBoundingClientRect();
@@ -400,16 +426,15 @@ export class IgxQueryBuilderDragService {
             }))
             .pipe(filter(event => !event.repeat))
             .subscribe(e => {
-                if (e.key === 'Escape') {
-                    //TODO cancel mouse drag once it's implemented in igx-chip draggable
+                if (this.isMouseDragInProgress) {
+                    //A mouse-dragged chip follows the pointer only, it's dropped on release or cancelled with Escape by the chip's igxDrag
+                    return;
+                } else if (e.key === 'Escape') {
                     this.resetDragAndDrop(false);
                     //Regain focus on the drag icon after keyboard drag cancel
                     if (this.isKeyboardDrag) {
                         (this._sourceElement.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild as HTMLElement).focus();
                     }
-                } else if (this.isMouseDragInProgress) {
-                    //A mouse-dragged chip follows the pointer only and is dropped on release
-                    return;
                 } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
                     this.arrowDrag(e.key);
                 } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Space') {
