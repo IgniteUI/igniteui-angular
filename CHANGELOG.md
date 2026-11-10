@@ -28,6 +28,8 @@ All notable changes for each version of this project will be documented in this 
     - `IDragBaseEventArgs` has a new `cancelled` property, which is `true` for the `dragEnd` and `transitioned` events of a canceled drag. If your app moves or reorders items in a `dragEnd` or `transitioned` handler, check `cancelled` there and restore the original state instead. Call `transitionToOrigin()` in the `dragEnd` handler to animate the element back.
 - `IgxChipComponent`, `IgxChipsAreaComponent`
     - For a canceled chip drag (e.g. with `chip.dragDirective.cancelDrag()`), `originalEvent.cancelled` of the `moveEnd` event is `true`.
+- `IgxQueryBuilderComponent`
+    - Pressing `Escape` while dragging a condition with the mouse now cancels the drag. The condition stays where it was and is not dropped when the mouse button is released.
 
 ### Themes
 
@@ -38,6 +40,7 @@ All notable changes for each version of this project will be documented in this 
     - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
 - **Behavioral Change** - `tokens($theme, $mode: 'scoped')` included inside a selector no longer declares the component tokens on that selector itself, unless it is the component. The tokens go on the component inside the selector and, through `:where()`, on the selector when it also matches the component, so `.my-avatar` on an `igx-avatar` element is still themed with the same specificity. Previously the selector always received the tokens, and generic tokens such as `--background` were inherited by every element below it.
     - To override a component's tokens for a whole section of a page, use the default global mode instead: `.promo { @include tokens(tooltip-theme($background: red)); }` only declares `--ig-tooltip-*` tokens, which no other component reads.
+    - Section tokens don't reach the components rendered inside a Grid, Query Builder, Excel Filtering, Column Actions, Paginator or Grid Toolbar. These derive the tokens of their inner components (checkboxes, chips, buttons, inputs, tooltips, etc.) from their own theme and declare them on their host. Each inner component follows one or more of the parent's `$background`, `$foreground` and `$accent-color`, so `grid-theme($accent-color: red)` recolors the grid's checkboxes, badges and buttons, but not its tooltips, which follow `$foreground`. To change one inner component, target it: `.promo .igx-tooltip { @include tokens(tooltip-theme($background: red)); }`.
 - Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
     - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
     - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
@@ -127,6 +130,8 @@ All notable changes for each version of this project will be documented in this 
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`
     - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
+- `IgxQueryBuilderComponent`
+    - When the drag indicator of a condition is focused while another condition is dragged with the mouse, `Arrow Up` and `Arrow Down` now move that condition once the mouse drag ends without a drop. Previously the condition could not be moved with the keyboard until the drag indicator was focused again.
 - `IgxSplitterComponent`
     - Percentage `minSize` and `maxSize` values of the panes are now honored while resizing, as is a `maxSize` of `0`. Previously percentages were treated as pixels and a `maxSize` of `0` was ignored.
     - Dragging a splitter bar now resizes the panes to the current pointer position. Previously the panes lagged one pointer move behind.
@@ -162,6 +167,13 @@ All notable changes for each version of this project will be documented in this 
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the drop-down, is now prevented.
+
+## 22.2.6
+
+### Bug Fixes
+
+- `IgxTabsComponent`
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
 
 ## 22.2.5
 

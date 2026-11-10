@@ -438,6 +438,11 @@
                     background: var-get($theme, 'row-selected-hover-background');
                 }
 
+                .igx-grid__td--selected.igx-grid__td--column-selected {
+                    color: var-get($theme, 'cell-selected-within-text-color');
+                    background: var-get($theme, 'cell-selected-within-background');
+                }
+
                 .igx-grid__td:not(.igx-grid__td--pinned-last) {
                     border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
                 }
