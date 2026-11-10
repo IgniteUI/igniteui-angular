@@ -70,9 +70,26 @@ describe('IgxGrid - implicit form submission #grid', () => {
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const input = fixture.debugElement.query(By.css(FILTER_UI_ROW)).query(By.directive(IgxInputDirective));
-        expect(input.nativeElement.form).toBe(form);
-        expect(pressEnter(input.nativeElement).defaultPrevented).toBe(true);
+        const input: HTMLInputElement = fixture.debugElement.query(By.css(FILTER_UI_ROW)).query(By.directive(IgxInputDirective)).nativeElement;
+        expect(input.form).toBe(form);
+        expect(pressEnter(input).defaultPrevented).toBe(true);
+
+        await userEvent.click(input);
+        for (const key of 'Chai') {
+            await userEvent.keyboard(key);
+            await fixture.whenStable();
+            await new Promise(resolve => requestAnimationFrame(resolve));
+            fixture.detectChanges();
+        }
+        expect(input.value).toBe('Chai');
+
+        await userEvent.keyboard('{Enter}');
+        await fixture.whenStable();
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        fixture.detectChanges();
+
+        expect(grid.filteredData?.map(r => r.ProductName)).toEqual(['Chai']);
+        expect(fixture.componentInstance.submits).toBe(0);
     });
 
     it('should prevent implicit submission on Enter in a cell editor', () => {
