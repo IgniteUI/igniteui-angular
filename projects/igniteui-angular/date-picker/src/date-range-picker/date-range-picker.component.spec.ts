@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef, signal, provideZonelessChangeDetection } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ChangeDetectorRef, ElementRef, signal, provideZonelessChangeDetection, viewChild } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2272,6 +2272,42 @@ describe('IgxDateRangePicker', () => {
         });
     });
 
+    describe('Destroy', () => {
+        let fixture: ComponentFixture<DateRangeConditionalComponent>;
+
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeConditionalComponent]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(DateRangeConditionalComponent);
+            fixture.detectChanges();
+            await fixture.whenStable();
+        });
+
+        [PickerInteractionMode.DropDown, PickerInteractionMode.Dialog].forEach(mode => {
+            it(`should not warn about a wrong overlay id when destroyed while open in ${mode} mode - issue #17938`, async () => {
+                fixture.componentInstance.mode.set(mode);
+                fixture.detectChanges();
+                const warnSpy = spyOn(console, 'warn');
+
+                fixture.componentInstance.dateRange()!.open();
+                await fixture.whenStable();
+                expect(fixture.componentInstance.dateRange()!.collapsed).toBe(false);
+                expect(document.querySelector('igx-calendar-container')).not.toBeNull();
+
+                fixture.componentInstance.showPicker.set(false);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(fixture.componentInstance.dateRange()).toBeUndefined();
+                expect(document.querySelector('igx-calendar-container')).toBeNull();
+                expect(warnSpy).not.toHaveBeenCalledWith('igxOverlay.detach was called with wrong id: ', jasmine.anything());
+            });
+        });
+    });
+
     describe('Zoneless', () => {
         beforeEach(async () => {
             TestBed.resetTestingModule();
@@ -2474,6 +2510,19 @@ export class DateRangeTestComponent implements OnInit {
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
     public override disabled = false;
+}
+
+@Component({
+    template: `
+    @if (showPicker()) {
+        <igx-date-range-picker [mode]="mode()"></igx-date-range-picker>
+    }`,
+    imports: [IgxDateRangePickerComponent]
+})
+export class DateRangeConditionalComponent {
+    public dateRange = viewChild(IgxDateRangePickerComponent);
+    public showPicker = signal(true);
+    public mode = signal<PickerInteractionMode>(PickerInteractionMode.DropDown);
 }
 
 @Component({
