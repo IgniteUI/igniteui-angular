@@ -103,7 +103,8 @@ import {
     runAfterRenderOnce,
     GridStyleCSSProperty,
     I18N_FORMATTER,
-    IgxStylesRegistrar
+    IgxStylesRegistrar,
+    preventImplicitSubmission
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import {
@@ -258,7 +259,6 @@ import {
     WatchChanges
 } from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
-import { preventImplicitSubmission } from 'igniteui-angular/core';
 import { GRID_BASE_CSS } from './grid-base.styles';
 
 /**
