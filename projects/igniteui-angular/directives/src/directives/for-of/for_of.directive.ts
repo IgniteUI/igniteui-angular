@@ -395,6 +395,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * @hidden
      */
     protected get isRTL() {
+        if (!this.platformUtil.isBrowser) {
+            return false;
+        }
         const dir = window.getComputedStyle(this.dc.instance._viewContainer.element.nativeElement).getPropertyValue('direction');
         return dir === 'rtl';
     }

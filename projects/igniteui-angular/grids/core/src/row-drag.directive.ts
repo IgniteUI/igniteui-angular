@@ -32,6 +32,9 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private subscription$!: Subscription;
     private _rowDragStarted = false;
 
+    /** @hidden @internal Row dragging handles Escape itself, so it can emit rowDragEnd and reset the grid state. */
+    public override cancelOnEscape = false;
+
     private get row(): RowType {
         return this._data;
     }
@@ -45,6 +48,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     public override onPointerMove(event: PointerEvent) {
         super.onPointerMove(event);
+        if (!this._clicked) {
+            // The drag ended or was cancelled, e.g. in a ghostCreate or dragMove handler.
+            return;
+        }
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
@@ -56,11 +63,19 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             };
 
             this.row.grid.rowDragStart.emit(args);
+            if (!this._clicked) {
+                // The drag was cancelled in the rowDragStart handler, which already ended the row dragging.
+                return;
+            }
             if (args.cancel) {
                 this.ghostElement.parentNode.removeChild(this.ghostElement);
                 this.ghostElement = null;
                 this._dragStarted = false;
                 this._clicked = false;
+                this._pointerDownId = null;
+                this._pointerCaptureTarget = null;
+                // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started.
+                this.unsubscribeFromEscape();
                 return;
             }
             this.row.grid.dragRowID = this.row.key;
@@ -102,6 +117,30 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
+    /**
+     * @hidden
+     * Ends the row dragging without dropping, as releasing outside a drop area does.
+     */
+    protected override cancelDragInternal(originalEvent: KeyboardEvent | null): boolean {
+        const rowDragStarted = this._rowDragStarted;
+        const cancelled = super.cancelDragInternal(originalEvent);
+        if (cancelled && rowDragStarted) {
+            const args: IRowDragEndEventArgs = {
+                dragDirective: this,
+                dragData: this.data,
+                dragElement: this.row.nativeElement!,
+                animation: false,
+                owner: this.row.grid
+            };
+            this.zone.run(() => {
+                this.row.grid.rowDragEnd.emit(args);
+            });
+            // The base cancel already removed the ghost, or a dragEnd handler animates it back and its transitionend removes it.
+            this.resetRowDragging();
+        }
+        return cancelled;
+    }
+
     protected override createGhost(pageX: number, pageY: number) {
         this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.cdr.detectChanges();
@@ -111,6 +150,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             grid: this.row.grid
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);
+        if (!this.ghostElement) {
+            // The ghost creation or the drag was cancelled.
+            return;
+        }
 
         // check if there is an expander icon and create the ghost at the corresponding position
         if (this.isHierarchicalGrid) {
@@ -147,6 +190,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     private endDragging() {
         this.onTransitionEnd(null);
+        this.resetRowDragging();
+    }
+
+    private resetRowDragging() {
         this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
         this.row.grid.cdr.detectChanges();
