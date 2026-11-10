@@ -136,7 +136,7 @@
     "igniteui-grid-lite": "~0.12.0-beta.0",
     "igniteui-i18n-resources": "^2.0.0-rc.3",
     "igniteui-sassdoc-theme": "^3.0.0",
-    "igniteui-theming": "^30.1.0",
+    "igniteui-theming": "^30.2.0",
     "igniteui-webcomponents": "^7.5.0-beta.0",
     "lit-html": "^3.2.1",
     "ng-packagr": "^22.0.0",
