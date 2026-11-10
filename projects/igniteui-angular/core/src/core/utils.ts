@@ -489,12 +489,8 @@ const ACTIVATABLE_INPUT_TYPES = new Set(['button', 'submit', 'reset', 'image', '
  * @internal
  *
  * Cancels the implicit submission of the surrounding form, which the browser performs as the default action
- * of an Enter keydown in an `<input>` (https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#implicit-submission).
- * Browsers carry it out on the following `keypress`, which targets the focused element at that time, so handle both events
- * where a widget (e.g. a picker selecting a date on Enter) may move the focus to a form input during the keydown.
- * Only inputs which have a form owner and no activation behavior of their own are affected,
- * so the native Enter behavior of any other element is preserved.
- * The target is resolved through the composed path, as `event.target` is retargeted to the host for elements in a shadow root.
+ * of an Enter keydown in an `<input>`.
+ * Only inputs which have a form owner and no activation behavior of their own are affected.
  */
 export function preventImplicitSubmission(event: KeyboardEvent): void {
     const target = event.composedPath()[0];
