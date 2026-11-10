@@ -50,9 +50,20 @@ describe("Pivot data selector #pivotGrid", () => {
         fixture.detectChanges();
 
         const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement as HTMLInputElement;
-        const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
-        input.dispatchEvent(event);
-        expect(event.defaultPrevented).toBe(true);
+        const pressEnter = () => {
+            const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+            input.dispatchEvent(event);
+            return event.defaultPrevented;
+        };
+
+        expect(pressEnter()).toBe(false);
+
+        const form = document.createElement('form');
+        fixture.nativeElement.parentElement.appendChild(form);
+        form.appendChild(fixture.nativeElement);
+        expect(input.form).toBe(form);
+        expect(pressEnter()).toBe(true);
+        form.remove();
     });
 });
 

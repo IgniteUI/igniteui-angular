@@ -120,7 +120,7 @@ import { IgxPaginatorToken, type IgxPaginatorComponent } from 'igniteui-angular/
 import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { CellType, CharSeparatedValueData, DropPosition, FilterMode, getUUID, GridCellMergeMode, GridKeydownTargetType, GridPagingMode, GridSelectionMode, GridServiceType, GridSummaryPosition, GridType, GridValidationTrigger, IActiveNode, IActiveNodeChangeEventArgs, ICellPosition, IClipboardOptions, IColumnMovingEndEventArgs, IColumnMovingEventArgs, IColumnMovingStartEventArgs, IColumnResizeEventArgs, IColumnSelectionEventArgs, IColumnVisibilityChangedEventArgs, IColumnVisibilityChangingEventArgs, IFilteringEventArgs, IGridCellEventArgs, IGridClipboardEvent, IGridContextMenuEventArgs, IGridEditDoneEventArgs, IGridEditEventArgs, IGridFormGroupCreatedEventArgs, IGridKeydownEventArgs, IGridRowEventArgs, IGridScrollEventArgs, IGridToolbarExportEventArgs, IGridValidationStatusEventArgs, IGX_GRID_SERVICE_BASE, IgxAdvancedFilteringDialogComponent, IgxCell, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnResizingService, IgxDragIndicatorIconDirective, IgxEditRow, IgxExcelStyleHeaderIconDirective, IgxExcelStyleLoadingValuesTemplateDirective, IgxFilteringService, IgxGridBodyDirective, IgxGridCellComponent, IgxGridColumnResizerComponent, IgxGridEmptyTemplateContext, IgxGridEmptyTemplateDirective, IgxGridExcelStyleFilteringComponent, IgxGridFilteringCellComponent, IgxGridFilteringRowComponent, IgxGridHeaderComponent, IgxGridHeaderGroupComponent, IgxGridHeaderRowComponent, IgxGridHeaderTemplateContext, IgxGridLoadingTemplateDirective, IgxGridNavigationService, IgxGridPinningActionsComponent, IgxGridRowDragGhostContext, IgxGridRowEditActionsTemplateContext, IgxGridRowEditTemplateContext, IgxGridRowEditTextTemplateContext, IgxGridRowTemplateContext, IgxGridSelectionService, IgxGridSummaryService, IgxGridTemplateContext, IgxGridToolbarComponent, IgxGridValidationService, IgxHeaderCollapsedIndicatorDirective, IgxHeaderExpandedIndicatorDirective, IgxHeadSelectorDirective, IgxHeadSelectorTemplateContext, IgxRowAddTextDirective, IgxRowCollapsedIndicatorDirective, IgxRowDirective, IgxRowDragGhostDirective, IgxRowEditActionsDirective, IgxRowEditTabStopDirective, IgxRowEditTemplateDirective, IgxRowEditTextDirective, IgxRowExpandedIndicatorDirective, IgxRowSelectorDirective, IgxRowSelectorTemplateContext, IgxSortAscendingHeaderIconDirective, IgxSortDescendingHeaderIconDirective, IgxSortHeaderIconDirective, IgxSummaryRowComponent, IgxToolbarToken, IPinColumnCancellableEventArgs, IPinColumnEventArgs, IPinningConfig, IPinRowEventArgs, IRowDataCancelableEventArgs, IRowDataEventArgs, IRowDragEndEventArgs, IRowDragStartEventArgs, IRowSelectionEventArgs, IRowToggleEventArgs, ISearchInfo, ISizeInfo, ISortingEventArgs, RowEditPositionStrategy, RowPinningPosition, RowType, WatchChanges } from 'igniteui-angular/grids/core';
 import { getCurrentI18n, getNumberFormatter, IResourceChangeEventArgs,  } from 'igniteui-i18n-core';
-import { I18N_FORMATTER, IgxStylesRegistrar } from 'igniteui-angular/core';
+import { I18N_FORMATTER, IgxStylesRegistrar, preventImplicitSubmission } from 'igniteui-angular/core';
 import { GRID_BASE_CSS } from './grid-base.styles';
 
 /**
@@ -3659,17 +3659,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
-        fromEvent<KeyboardEvent>(this.nativeElement, 'keydown', { capture: true }).pipe(destructor).subscribe((event) => {
-            const target = event.composedPath()[0];
-            if (!(target instanceof Element)) {
-                return;
-            }
-            if (event.key === this.platform.KEYMAP.ENTER && !event.isComposing && !(target instanceof HTMLTextAreaElement) &&
-                !(target instanceof HTMLElement && target.isContentEditable) &&
-                !target.closest('button, a[href], input[type=button], input[type=submit], input[type=reset], input[type=image]')) {
-                event.preventDefault();
-            }
-        });
+        // Capture phase, since internal handlers (filtering row, editors, dialogs) stop the propagation of key events.
+        // The keypress is also handled, as a picker selecting on Enter may move the focus to its input before it.
+        merge(
+            fromEvent<KeyboardEvent>(this.nativeElement, 'keydown', { capture: true }),
+            fromEvent<KeyboardEvent>(this.nativeElement, 'keypress', { capture: true })
+        ).pipe(destructor).subscribe(preventImplicitSubmission);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
             const activeNode = this.navigation.activeNode;
             if (!this.crudService.cell && !!activeNode &&

@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    Component, Input, ViewChild, OnDestroy, HostBinding
+    Component, Input, ViewChild, OnDestroy, HostBinding, HostListener
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -22,7 +22,8 @@ import {
     QueryBuilderResourceStringsEN,
     recreateTree,
     getCurrentResourceStrings,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    preventImplicitSubmission
 } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
@@ -60,6 +61,15 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @HostBinding('class.igx-query-builder')
     public cssClass = 'igx-query-builder';
+
+    /**
+     * @hidden @internal
+     */
+    @HostListener('keydown', ['$event'])
+    @HostListener('keypress', ['$event'])
+    public onKeyDown(event: KeyboardEvent): void {
+        preventImplicitSubmission(event);
+    }
 
     /**
      * @hidden @internal

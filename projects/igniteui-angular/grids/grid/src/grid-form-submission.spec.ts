@@ -6,17 +6,20 @@ import { IgxGridComponent } from './grid.component';
 import { FilterMode, IgxAdvancedFilteringDialogComponent, IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnHidingDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular/grids/core';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
+import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
+import { firstValueFrom } from 'rxjs';
+import { userEvent } from 'vitest/browser';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const UNTYPED_BUTTONS = 'button:not([type]), button[type=submit]';
 
 const DATA = [
-    { ProductID: 1, ProductName: 'Chai', InStock: true },
-    { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false },
-    { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true }
+    { ProductID: 1, ProductName: 'Chai', InStock: true, Released: new Date(2024, 0, 10) },
+    { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, Released: new Date(2024, 1, 11) },
+    { ProductID: 3, ProductName: 'Chef Antons Cajun Seasoning', InStock: true, Released: new Date(2024, 2, 12) }
 ];
 
 const pressEnter = (target: Element): KeyboardEvent => {
@@ -150,6 +153,36 @@ describe('IgxGrid - implicit form submission #grid', () => {
         await fixture.whenStable();
     });
 
+    it('should not submit the form on Enter in a filtering row date picker calendar, which moves the focus to its input', async () => {
+        GridFunctions.clickFilterCellChipUI(fixture, 'Released');
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        const filteringRow = fixture.debugElement.query(By.css(FILTER_UI_ROW));
+        const datePicker = filteringRow.query(By.directive(IgxDatePickerComponent)).componentInstance as IgxDatePickerComponent;
+        const opened = firstValueFrom(datePicker.opened);
+        (datePicker.getEditElement() as HTMLElement).click();
+        fixture.detectChanges();
+        await opened;
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(document.activeElement!.closest('igx-calendar')).not.toBeNull();
+
+        await userEvent.keyboard('{Enter}');
+        await fixture.whenStable();
+        fixture.detectChanges();
+
+        expect(datePicker.collapsed).toBe(true);
+        expect((document.activeElement as HTMLInputElement).form).toBe(form);
+        expect(fixture.componentInstance.submits).toBe(0);
+    });
+
+    it('should submit the form on Enter in an input outside the grid', async () => {
+        await userEvent.click(fixture.nativeElement.querySelector('#outerInput'));
+        await userEvent.keyboard('{Enter}');
+        expect(fixture.componentInstance.submits).toBe(1);
+    });
+
     it('should not prevent the native Enter activation of buttons inside the grid', () => {
         const hidingButton: HTMLButtonElement = fixture.nativeElement.querySelector('igx-grid-toolbar-hiding button');
         expect(pressEnter(hidingButton).defaultPrevented).toBe(false);
@@ -162,6 +195,15 @@ describe('IgxGrid - implicit form submission #grid', () => {
         expect(pressEnter(shadowRoot.querySelector('button span')!).defaultPrevented).toBe(false);
         expect(pressEnter(shadowRoot.querySelector('textarea')!).defaultPrevented).toBe(false);
         expect(pressEnter(shadowRoot.querySelector('a')!).defaultPrevented).toBe(false);
+    });
+
+    it('should not prevent the native Enter behavior of other elements inside the grid', () => {
+        const cell: HTMLElement = fixture.nativeElement.querySelector(SHADOW_CONTROLS_TAG).parentElement;
+        expect(cell.querySelector<HTMLInputElement>('input[type=file]')!.form).toBe(form);
+
+        expect(pressEnter(cell.querySelector('summary')!).defaultPrevented).toBe(false);
+        expect(pressEnter(cell.querySelector('input[type=file]')!).defaultPrevented).toBe(false);
+        expect(pressEnter(cell.querySelector('input[type=color]')!).defaultPrevented).toBe(false);
     });
 
     it('should not affect implicit submission from inputs outside the grid', () => {
@@ -205,7 +247,7 @@ describe('IgxGrid - implicit form submission from grid components outside of the
 
 @Component({
     template: `
-    <form (submit)="$event.preventDefault()">
+    <form (submit)="$event.preventDefault(); submits = submits + 1">
         <input id="outerInput" name="outerInput" type="text" />
         <igx-grid #grid [data]="data" [allowFiltering]="true" [primaryKey]="'ProductID'" height="500px">
             <igx-grid-toolbar>
@@ -218,8 +260,12 @@ describe('IgxGrid - implicit form submission from grid components outside of the
             <igx-column field="InStock" [dataType]="'boolean'">
                 <ng-template igxCell>
                     <igx-test-shadow-controls></igx-test-shadow-controls>
+                    <details><summary>Details</summary>Content</details>
+                    <input type="file" />
+                    <input type="color" />
                 </ng-template>
             </igx-column>
+            <igx-column field="Released" [dataType]="'date'" [editable]="true"></igx-column>
         </igx-grid>
         <button id="submit" type="submit">Submit</button>
     </form>`,
@@ -239,6 +285,7 @@ class GridInFormComponent {
     public grid!: IgxGridComponent;
 
     public data = DATA;
+    public submits = 0;
 }
 
 @Component({

@@ -141,8 +141,6 @@ export class IgxAdvancedFilteringDialogComponent implements OnDestroy {
         const key = eventArgs.key;
         if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
-        } else if (key === this.platform.KEYMAP.ENTER && !eventArgs.isComposing && eventArgs.target instanceof HTMLInputElement) {
-            eventArgs.preventDefault();
         }
     }
 

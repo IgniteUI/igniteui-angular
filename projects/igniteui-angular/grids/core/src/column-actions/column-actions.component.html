@@ -14,7 +14,7 @@
         [(ngModel)]="filterCriteria"
         [placeholder]="filterColumnsPrompt"
         autocomplete="off"
-        (keydown.enter)="!$event.isComposing && $event.preventDefault()"
+        (keydown)="preventImplicitSubmission($event)"
       />
     </igx-input-group>
   }
