@@ -172,6 +172,13 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the drop-down, is now prevented.
 
+## 22.2.6
+
+### Bug Fixes
+
+- `IgxTabsComponent`
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
+
 ## 22.2.5
 
 ### Bug Fixes
