@@ -294,7 +294,7 @@
         @include scrollbar(
             scrollbar-theme(
                 $schema: $schema,
-                $sb-track-bg-color: var(--_grid-background, var(--content-background), $scrollbar-bg-color),
+                $sb-track-bg-color: var(--_grid-background, var(--content-background, $scrollbar-bg-color)),
                 $sb-thumb-bg-color: var(--_scrollbar-thumb-color, $scrollbar-thumb-color),
                 $sb-track-border-color: var(--_scrollbar-track-border-color, $scrollbar-track-border-color),
             )

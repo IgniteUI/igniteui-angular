@@ -3,6 +3,7 @@
 @use '../base' as *;
 @use '../components' as *;
 @use '../themes/scoping' as scoping;
+@use '../themes/schemas';
 
 @include describe('Register Component') {
     $components: () !default;
@@ -151,3 +152,27 @@
     }
 }
 /* stylelint-enable max-nesting-depth */
+
+@include describe('Scrollbar') {
+    $sb-theme: scrollbar-theme($schema: schemas.$light-material-schema);
+
+    @include it('should declare the tokens and properties on the parent selector and the scope when nested') {
+        @include assert() {
+            @include output() {
+                .host {
+                    @include scrollbar($sb-theme);
+                }
+            }
+
+            @include expect() {
+                .host,
+                .host .ig-scrollbar {
+                    @include scoping.css-vars-from-theme($sb-theme);
+
+                    scrollbar-width: var(--sb-width, auto);
+                    scrollbar-color: var-get($sb-theme, 'sb-thumb-bg-color') var-get($sb-theme, 'sb-track-bg-color');
+                }
+            }
+        }
+    }
+}

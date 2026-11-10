@@ -330,9 +330,14 @@
         }
 
         // Scroll start section - border shown only while column selection is enabled
-        // Uses the same border color as the cbx-selection cell it lines up with
+        // Uses the same border as the row action cells it lines up with
         @include e(scroll-start, $m: column-selection) {
-            border-inline-end: var-get($theme, 'row-border-width') solid $grid-header-border-color;
+            border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
+        }
+
+        // Under the group-by indentation, which has the pinned border
+        @include e(scroll-start, $mods: (column-selection, grouped)) {
+            border-inline-end: $grid-pinned-border;
         }
 
         // Scroll start section - a pinned column always takes precedence with a thicker border
@@ -407,6 +412,9 @@
             grid-row: 7;
         }
 
+        // Row indentation followed by a pinned start column
+        $indentation-before-pinned: '.igx-grid__row-indentation:has(+ .igx-grid__td--pinned, + .igx-grid__mrl-block)';
+
         // Base row element
         @include e(tr) {
             position: relative;
@@ -430,7 +438,17 @@
                     background: var-get($theme, 'row-selected-hover-background');
                 }
 
+                .igx-grid__td--selected.igx-grid__td--column-selected {
+                    color: var-get($theme, 'cell-selected-within-text-color');
+                    background: var-get($theme, 'cell-selected-within-background');
+                }
+
                 .igx-grid__td:not(.igx-grid__td--pinned-last) {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
+                }
+
+                // Kept separate, an unsupported :has() would drop the whole selector list
+                #{$indentation-before-pinned}::after {
                     border-inline-end-color: var-get($theme, 'body-column-hover-border-color');
                 }
             }
@@ -449,12 +467,21 @@
             color: var-get($theme, 'row-odd-text-color');
 
             .igx-grid__tr-action {
-                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
             }
 
             .igx-grid__td:not(.igx-grid__td--pinned-last) {
                 // The border is part of the body cells but the color of the border
                 // depends on the row background since we want it to be invisible unless a user change it
+                border-inline-end: $grid-body-column-border-odd;
+            }
+
+            // Pinned border when no pinned start column follows, odd border otherwise
+            .igx-grid__row-indentation::after {
+                border-inline-end: $grid-pinned-border;
+            }
+
+            #{$indentation-before-pinned}::after {
                 border-inline-end: $grid-body-column-border-odd;
             }
         }
@@ -470,8 +497,17 @@
                 border-inline-end: $grid-body-column-border-even;
             }
 
+            // Pinned border when no pinned start column follows, even border otherwise
+            .igx-grid__row-indentation::after {
+                border-inline-end: $grid-pinned-border;
+            }
+
+            #{$indentation-before-pinned}::after {
+                border-inline-end: $grid-body-column-border-even;
+            }
+
             .igx-grid__tr-action {
-                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
             }
         }
 
@@ -491,6 +527,10 @@
                 border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
             }
 
+            #{$indentation-before-pinned}::after {
+                border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+            }
+
             .igx-grid__tree-grouping-indicator {
                 color: var-get($theme, 'row-selected-text-color');
 
@@ -506,6 +546,21 @@
                 .igx-grid__td:not(.igx-grid__td--pinned-last) {
                     border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
                 }
+
+                #{$indentation-before-pinned}::after {
+                    border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
+                }
+            }
+        }
+
+        // Column-selected cells use the selected border color in every row state
+        @include e(tr) {
+            .igx-grid__td--column-selected:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-selected-border-color');
+            }
+
+            &:hover .igx-grid__td--column-selected:not(.igx-grid__td--pinned-last) {
+                border-inline-end-color: var-get($theme, 'body-column-hover-selected-border-color');
             }
         }
 
@@ -1002,7 +1057,7 @@
         // Action row (for row actions like edit, delete buttons)
         @include e(tr-action) {
             &:last-of-type {
-                border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+                border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
                 min-height: var(--cell-height);
             }
         }
@@ -1045,13 +1100,20 @@
             justify-content: center;
             align-items: center;
             padding-inline: pad-inline(rem(12px), rem(16px), rem(24px));
-            border-inline-end: $grid-header-border;
+            // Room for the end border, the same whatever border is drawn in it
+            padding-inline-end: calc(#{pad-inline(rem(12px), rem(16px), rem(24px))} + #{var-get($theme, 'pinned-border-width')});
             background: inherit;
             z-index: $z-grid-base;
 
-            // (!) the background-clip: padding-box; makes sure the background never go under the border,
-            // this is very important especially of the borders have slide alpha
-            background-clip: padding-box !important;
+            // The end border is drawn here, so its width and style never change the indentation width
+            &::after {
+                content: '';
+                position: absolute;
+                inset-block: 0;
+                inset-inline-end: 0;
+                border-inline-end: $grid-header-border;
+                pointer-events: none;
+            }
         }
 
         // Hierarchical grid expander (expand/collapse child grids)
@@ -1095,7 +1157,7 @@
             cursor: default;
             pointer-events: none;
             padding-inline: pad-inline(var(--_hierarchical-indent-small), var(--_hierarchical-indent-medium), var(--_hierarchical-indent-large));
-	        border-inline-end: var-get($theme, 'row-border-width') var-get($theme, 'row-border-style') $grid-action-border-color;
+	        border-inline-end: var-get($theme, 'header-border-width') var-get($theme, 'header-border-style') $grid-action-border-color;
         }
 
         // Hierarchical expander in header
@@ -1160,20 +1222,43 @@
         // Header indentation for tree/grouping
         @include e(header-indentation) {
             position: relative;
-            padding-inline-end: sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg);
-            border-inline-end: $grid-header-border;
+            // Room for the end border, the same whatever border is drawn in it
+            padding-inline-end: calc(#{sizable($cell-padding-sm, $cell-padding-md, $cell-padding-lg)} + #{var-get($theme, 'pinned-border-width')});
             background: var-get($theme, 'header-background');
             z-index: $z-grid-selection;
             height: 100%;
+
+            // The end border is drawn here, so its width and style never change the indentation width
+            &::after {
+                content: '';
+                position: absolute;
+                inset-block: 0;
+                inset-inline-end: 0;
+                border-inline-end: $grid-header-border;
+                pointer-events: none;
+            }
 
             igx-icon {
                 --component-size: 3;
             }
         }
 
+        // Pinned border when no pinned start column follows, header border otherwise
+        @include e(header-indentation, $not: no-border) {
+            &::after {
+                border-inline-end: $grid-pinned-border;
+            }
+
+            &:has(+ .igx-grid-th--pinned)::after {
+                border-inline-end: $grid-header-border;
+            }
+        }
+
         // Header indentation without border
         @include e(header-indentation, $m: no-border) {
-            border-inline-end: rem(1px) solid transparent;
+            &::after {
+                border-inline-end-color: transparent;
+            }
         }
 
         // Checkbox padding
@@ -1772,6 +1857,16 @@
             // this is very important especially of the borders have slide alpha
             background-clip: padding-box !important;
 
+            // Pinned borders, the generic pinned modifiers lose to this selector
+            &.igx-grid-th--pinned-last {
+                border-inline-end: $grid-pinned-border;
+            }
+
+            &.igx-grid-th--pinned-first {
+                border-inline-start: $grid-pinned-border;
+                border-inline-end: none;
+            }
+
             // A chip that is alone in the cell (a single filter, the last visible chip next to
             // the +N indicator, the empty and the complex-filter chips) shrinks down to its
             // icons and ellipsizes its label. Several chips keep their natural width so that
@@ -1926,6 +2021,17 @@
             z-index: $z-grid-base;
         }
 
+        // Under the group-by indentation: pinned border when no pinned start column follows
+        @include e(summaries-patch, $m: grouped) {
+            border-inline-end: $grid-pinned-border;
+
+            &:has(+ .igx-grid-summary--pinned) {
+                border-inline-end: var-get($theme, 'header-border-width')
+                var(--ig-grid-summary-border-style, solid)
+                var(--ig-grid-summary-border-color, $grid-action-border-color);
+            }
+        }
+
         // ============================================================================
         // Outlet Elements
         // ============================================================================
@@ -2048,29 +2154,14 @@
             gap: 0.5rem;
         }
 
-        .igx-grid__tr {
-            &:hover {
-                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-                    border-inline-end-color: var-get($theme, 'cell-selected-background');
-                }
-            }
-        }
-
-        .igx-grid__tr--selected {
-            &:hover {
-                .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-                    border-inline-end-color: var-get($theme, 'cell-selected-within-background');
-                }
-            }
-        }
-
-        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-            border-inline-end-color: var-get($theme, 'cell-selected-within-background');
-        }
-
-
-        .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
-            border-inline-end-color: var-get($theme, 'cell-selected-background');
+        // No border between adjacent selected cells: the cell background runs under a transparent border,
+        // so it matches the cell in every state (selected row or column, hover)
+        .igx-grid__td--selected:has(+ .igx-grid__td--selected),
+        .igx-grid__tr:hover .igx-grid__td--selected:has(+ .igx-grid__td--selected),
+        .igx-grid__tr--selected .igx-grid__td--selected:has(+ .igx-grid__td--selected),
+        .igx-grid__tr--selected:hover .igx-grid__td--selected:has(+ .igx-grid__td--selected) {
+            border-inline-end-color: transparent;
+            background-clip: border-box !important;
         }
     }
 
@@ -2845,6 +2936,16 @@
     .igx-grid__mrl-block.igx-grid__tbody-pivot-dimension .igx-grid-th {
         border-block-end: 0;
     }
+
+	// MRL cell borders keep the row border color in every row state
+	.igx-grid__tr--mrl .igx-grid__td,
+	.igx-grid__tr--mrl .igx-grid__row-indentation {
+		--body-column-border-color-odd: #{var-get($theme, 'row-border-color')};
+		--body-column-border-color-even: #{var-get($theme, 'row-border-color')};
+		--body-column-hover-border-color: #{var-get($theme, 'row-border-color')};
+		--body-column-selected-border-color: #{var-get($theme, 'row-border-color')};
+		--body-column-hover-selected-border-color: #{var-get($theme, 'row-border-color')};
+	}
 
 	.igx-grid__tr--odd.igx-grid__tr--mrl {
 		.igx-grid__td {

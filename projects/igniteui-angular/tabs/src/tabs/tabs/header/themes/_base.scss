@@ -15,6 +15,8 @@ $indigo-theme: $variant == 'indigo';
 $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
 @include layer(base) {
+    $header-max-width: rem(360px);
+
     @include b(igx-tab-header) {
         --ig-ripple-color: var(--tab-ripple-color);
 
@@ -22,8 +24,8 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
         justify-content: center;
         align-items: center;
         min-width: rem(90px);
-        max-width: rem(360px);
-        word-wrap: break-word;
+        max-width: $header-max-width;
+        overflow-wrap: anywhere;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
         flex-shrink: 0;
@@ -39,6 +41,14 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
 
         igx-icon {
             color: var-get($theme, 'item-icon-color');
+        }
+
+        > [igxprefix],
+        > igx-prefix,
+        > [igxsuffix],
+        > igx-suffix {
+            flex-shrink: 0;
+            max-width: max(30%, rem(48px));
         }
 
         &::-moz-focus-inner {
@@ -67,6 +77,11 @@ $theme-variant: map.get($theme, '_meta', 'theme-variant');
             flex-basis: 0;
             flex-grow: 1;
             max-width: 100%;
+
+            .igx-tabs-header--vertical & {
+                flex-basis: auto;
+                max-width: $header-max-width;
+            }
         }
 
         @include m(selected) {
