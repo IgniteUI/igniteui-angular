@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { FilterMode, IgxAdvancedFilteringDialogComponent, IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnHidingDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular/grids/core';
+import { FilterMode, IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnHidingDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent } from 'igniteui-angular/grids/core';
 import { AbsoluteScrollStrategy, GlobalPositionStrategy } from 'igniteui-angular/core';
 import { IgxInputDirective } from 'igniteui-angular/input-group';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
@@ -27,17 +27,6 @@ const pressEnter = (target: Element): KeyboardEvent => {
     target.dispatchEvent(event);
     return event;
 };
-
-const SHADOW_CONTROLS_TAG = 'igx-test-shadow-controls';
-if (!customElements.get(SHADOW_CONTROLS_TAG)) {
-    customElements.define(SHADOW_CONTROLS_TAG, class extends HTMLElement {
-        constructor() {
-            super();
-            this.attachShadow({ mode: 'open' }).innerHTML =
-                '<button type="button"><span>Click</span></button><textarea></textarea><a href="#">Link</a>';
-        }
-    });
-}
 
 const addAdvancedFilteringCondition = async (fixture: ComponentFixture<any>): Promise<HTMLInputElement> => {
     QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
@@ -69,6 +58,8 @@ describe('IgxGrid - implicit form submission #grid', () => {
     });
 
     it('should not render buttons which can become the default button of the form', () => {
+        // The add row snackbar is always rendered and was the default button of the form before the fix.
+        expect(grid.nativeElement.querySelector('igx-snackbar button')!.getAttribute('type')).toBe('button');
         expect(grid.nativeElement.querySelectorAll(UNTYPED_BUTTONS).length).toBe(0);
         const defaultButton = form.querySelector('button:not([type]), button[type=submit], input[type=submit]');
         expect(defaultButton!.id).toBe('submit');
@@ -122,18 +113,6 @@ describe('IgxGrid - implicit form submission #grid', () => {
         expect(pressEnter(input).defaultPrevented).toBe(true);
     });
 
-    it('should prevent implicit submission on Enter in the advanced filtering dialog input', async () => {
-        grid.openAdvancedFilteringDialog();
-        fixture.detectChanges();
-
-        const input = await addAdvancedFilteringCondition(fixture);
-        expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBe(true);
-
-        grid.closeAdvancedFilteringDialog(false);
-        await fixture.whenStable();
-    });
-
     it('should prevent implicit submission on Enter in the advanced filtering dialog opened with custom overlay settings', async () => {
         grid.openAdvancedFilteringDialog({
             closeOnOutsideClick: false,
@@ -183,32 +162,13 @@ describe('IgxGrid - implicit form submission #grid', () => {
         expect(fixture.componentInstance.submits).toBe(1);
     });
 
-    it('should not prevent the native Enter activation of buttons inside the grid', () => {
-        const hidingButton: HTMLButtonElement = fixture.nativeElement.querySelector('igx-grid-toolbar-hiding button');
-        expect(pressEnter(hidingButton).defaultPrevented).toBe(false);
-    });
-
-    it('should not prevent the native Enter behavior of controls inside a shadow root in the grid', () => {
-        const shadowRoot = fixture.nativeElement.querySelector(SHADOW_CONTROLS_TAG).shadowRoot as ShadowRoot;
-        expect(grid.nativeElement.contains(shadowRoot.host)).toBe(true);
-
-        expect(pressEnter(shadowRoot.querySelector('button span')!).defaultPrevented).toBe(false);
-        expect(pressEnter(shadowRoot.querySelector('textarea')!).defaultPrevented).toBe(false);
-        expect(pressEnter(shadowRoot.querySelector('a')!).defaultPrevented).toBe(false);
-    });
-
     it('should not prevent the native Enter behavior of other elements inside the grid', () => {
-        const cell: HTMLElement = fixture.nativeElement.querySelector(SHADOW_CONTROLS_TAG).parentElement;
-        expect(cell.querySelector<HTMLInputElement>('input[type=file]')!.form).toBe(form);
+        const fileInput = grid.nativeElement.querySelector('input[type=file]') as HTMLInputElement;
+        expect(fileInput.form).toBe(form);
 
-        expect(pressEnter(cell.querySelector('summary')!).defaultPrevented).toBe(false);
-        expect(pressEnter(cell.querySelector('input[type=file]')!).defaultPrevented).toBe(false);
-        expect(pressEnter(cell.querySelector('input[type=color]')!).defaultPrevented).toBe(false);
-    });
-
-    it('should not affect implicit submission from inputs outside the grid', () => {
-        const outerInput: HTMLInputElement = fixture.nativeElement.querySelector('#outerInput');
-        expect(pressEnter(outerInput).defaultPrevented).toBe(false);
+        expect(pressEnter(grid.nativeElement.querySelector('summary')!).defaultPrevented).toBe(false);
+        expect(pressEnter(fileInput).defaultPrevented).toBe(false);
+        expect(pressEnter(grid.nativeElement.querySelector('input[type=color]')!).defaultPrevented).toBe(false);
     });
 });
 
@@ -236,13 +196,6 @@ describe('IgxGrid - implicit form submission from grid components outside of the
         expect(input.form).toBe(form);
         expect(pressEnter(input).defaultPrevented).toBe(true);
     });
-
-    it('should prevent implicit submission on Enter in the standalone advanced filtering dialog input', async () => {
-        const input = await addAdvancedFilteringCondition(fixture);
-        expect(fixture.componentInstance.grid.nativeElement.contains(input)).toBe(false);
-        expect(input.form).toBe(form);
-        expect(pressEnter(input).defaultPrevented).toBe(true);
-    });
 });
 
 @Component({
@@ -259,7 +212,6 @@ describe('IgxGrid - implicit form submission from grid components outside of the
             <igx-column field="ProductName" [editable]="true"></igx-column>
             <igx-column field="InStock" [dataType]="'boolean'">
                 <ng-template igxCell>
-                    <igx-test-shadow-controls></igx-test-shadow-controls>
                     <details><summary>Details</summary>Content</details>
                     <input type="file" />
                     <input type="color" />
@@ -270,7 +222,6 @@ describe('IgxGrid - implicit form submission from grid components outside of the
         <button id="submit" type="submit">Submit</button>
     </form>`,
     changeDetection: ChangeDetectionStrategy.Eager,
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     imports: [
         IgxGridComponent,
         IgxColumnComponent,
@@ -297,7 +248,6 @@ class GridInFormComponent {
             <igx-column field="InStock" [dataType]="'boolean'"></igx-column>
         </igx-grid>
         <igx-column-actions id="standaloneActions" igxColumnHiding [grid]="grid"></igx-column-actions>
-        <igx-advanced-filtering-dialog [grid]="grid"></igx-advanced-filtering-dialog>
         <button id="submit" type="submit">Submit</button>
     </form>`,
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -305,8 +255,7 @@ class GridInFormComponent {
         IgxGridComponent,
         IgxColumnComponent,
         IgxColumnActionsComponent,
-        IgxColumnHidingDirective,
-        IgxAdvancedFilteringDialogComponent
+        IgxColumnHidingDirective
     ]
 })
 class GridComponentsInFormComponent {

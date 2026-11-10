@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    Component, Input, ViewChild, OnDestroy, HostBinding, HostListener
+    Component, Input, ViewChild, OnDestroy, HostBinding
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -51,25 +51,21 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
     styleUrls: ['./query-builder.component.css'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxQueryBuilderTreeComponent]
+    imports: [IgxQueryBuilderTreeComponent],
+    host: {
+        '(keydown)': 'preventImplicitSubmission($event)'
+    }
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     protected iconService = inject(IgxIconService);
+
+    protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
     /**
      * @hidden @internal
      */
     @HostBinding('class.igx-query-builder')
     public cssClass = 'igx-query-builder';
-
-    /**
-     * @hidden @internal
-     */
-    @HostListener('keydown', ['$event'])
-    @HostListener('keypress', ['$event'])
-    public onKeyDown(event: KeyboardEvent): void {
-        preventImplicitSubmission(event);
-    }
 
     /**
      * @hidden @internal

@@ -77,9 +77,6 @@ export class IgxPivotDataSelectorComponent implements OnDestroy {
     private pivotConfigChangeSub?: Subscription;
     protected pipeRetrigger = 0;
 
-    /**
-     * @hidden @internal
-     */
     protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
 

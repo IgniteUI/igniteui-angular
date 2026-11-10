@@ -45,9 +45,6 @@ let NEXT_ID = 0;
 export class IgxColumnActionsComponent implements DoCheck {
     private differs = inject(IterableDiffers);
 
-    /**
-     * @hidden @internal
-     */
     protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
 

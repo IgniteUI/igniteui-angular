@@ -4452,7 +4452,6 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
         <button type="submit">Submit</button>
      </form>
     `,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxQueryBuilderComponent
