@@ -6,14 +6,16 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip.
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxCsvExporterService`
     - Exporting a grid with summaries no longer adds an extra `GRID_LEVEL_COL` column with the nesting level of each record. Only the grid's columns are exported, as with the Excel and PDF exporters (#17908).
 - `IgxTabsComponent`
     - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
 - `IgxForOfDirective`
     - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
-- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
-    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 
@@ -25,7 +27,6 @@ All notable changes for each version of this project will be documented in this 
     - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
-    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip.
 
 ## 21.2.22
 
