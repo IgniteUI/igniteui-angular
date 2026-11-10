@@ -53,6 +53,17 @@ Custom formats for the input field.
 ```
 If the `inputFormat` is not set, it will default to the format used by the browser. The `displayFormat` accepts all supported formats by Angular's `DatePipe`.
 
+While editing, the day and month always have two digits (e.g. `09/05/2026`), whereas the default `displayFormat` may omit leading zeros (e.g. `9/5/2026`). To show the same value in both states, set a padded format such as `MM/dd/yyyy` to both `inputFormat` and `displayFormat`.
+
+To use a custom toggle icon, project it in an `igx-picker-toggle`. Unlike other `igx-prefix`/`igx-suffix` content, clicking it does not focus the input:
+```html
+<igx-date-picker>
+    <igx-picker-toggle igxSuffix>
+        <igx-icon>alarm</igx-icon>
+    </igx-picker-toggle>
+</igx-date-picker>
+```
+
 
 DatePicker with cancel and today buttons
 ```html

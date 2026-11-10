@@ -7,7 +7,6 @@ import {
     ContentChildren,
     EventEmitter,
     HostBinding,
-    HostListener,
     Injector,
     Input,
     OnChanges,
@@ -35,6 +34,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import {
     CalendarSelection,
     IgxCalendarComponent,
+    IgxCalendarDayTemplateContext,
+    IgxCalendarDayTemplateDirective,
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarHeaderTitleTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
@@ -65,7 +66,11 @@ import {
     NgControlAdapter,
     PickerCalendarOrientation,
     THEME_TOKEN,
-    ThemeToken
+    ThemeToken,
+    IgxKeyBindingsService,
+    altKey,
+    arrowDown,
+    arrowUp
 } from 'igniteui-angular/core';
 import { IgxCalendarContainerComponent } from '../date-picker/calendar-container/calendar-container.component';
 import { PickerBaseDirective } from '../date-picker/picker-base.directive';
@@ -122,7 +127,8 @@ const SingleInputDatesConcatenationString = ' - ';
     encapsulation: ViewEncapsulation.None,
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangePickerComponent, multi: true },
-        { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
+        { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true },
+        IgxKeyBindingsService
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
@@ -143,6 +149,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _injector = inject(Injector);
     private _cdr = inject(ChangeDetectorRef);
     private _overlayService = inject<IgxOverlayService>(IgxOverlayService);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * The number of displayed month views.
@@ -485,6 +492,14 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     @ContentChild(IgxCalendarSubheaderTemplateDirective)
     private subheaderTemplate!: IgxCalendarSubheaderTemplateDirective;
 
+    @ContentChild(IgxCalendarDayTemplateDirective, { read: TemplateRef })
+    protected set dayTemplate(value: TemplateRef<IgxCalendarDayTemplateContext> | undefined) {
+        this._dayTemplate = value ?? null;
+        if (this._calendar) this._calendar.dayTemplate = this._dayTemplate;
+    }
+
+    private _dayTemplate: TemplateRef<IgxCalendarDayTemplateContext> | null = null;
+
     /** @hidden @internal */
     public get dateSeparator(): string {
         if (this._dateSeparator === null) {
@@ -671,24 +686,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     constructor() {
         super();
         this.initLocale();
-    }
 
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    /** @hidden @internal */
-    public onKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey) {
-                    this.open();
-                }
-                break;
-        }
+        // The keys come from the inner inputs, so none are skipped. `open` checks disabled and readOnly.
+        this._keyBindings
+            .configure({ skip: [] })
+            .set([altKey, arrowDown], () => this.open())
+            .set([altKey, arrowUp], () => this.close());
     }
 
     /**
@@ -1352,6 +1355,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         this._calendar.headerTitleTemplate = this.headerTitleTemplate;
         this._calendar.headerTemplate = this.headerTemplate;
         this._calendar.subheaderTemplate = this.subheaderTemplate;
+        this._calendar.dayTemplate = this._dayTemplate;
         this._calendar.headerOrientation = this.headerOrientation;
         this._calendar.orientation = this.orientation;
         this._calendar.specialDates = this.specialDates;

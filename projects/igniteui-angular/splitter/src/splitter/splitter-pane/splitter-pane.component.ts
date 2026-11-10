@@ -1,4 +1,5 @@
 import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import type { IgxSplitterComponent } from '../splitter.component';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -149,17 +150,18 @@ export class IgxSplitterPaneComponent {
     public maxHeight = '100%';
 
     /** @hidden @internal */
-    public get owner() {
+    public get owner(): IgxSplitterComponent | undefined {
         return this._owner;
     }
-    public set owner(value) {
+    public set owner(value: IgxSplitterComponent | undefined) {
         this._owner = value;
         this.refreshFlex();
     }
 
     /**
-     * Gets/Sets the size of the current pane.
-     *  * @example
+     * Gets/Sets the size of the current pane. Nullish values fall back to `'auto'`.
+     *
+     * @example
      * ```html
      * <igx-splitter>
      *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
@@ -167,25 +169,25 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public get size() {
+    public get size(): string {
         return this._size;
     }
 
-    public set size(value) {
-        this._size = value;
+    public set size(value: string | null | undefined) {
+        this._size = value || 'auto';
         this.refreshFlex();
     }
 
     /** @hidden @internal */
     public get isPercentageSize() {
-        return this.size === 'auto' || this.size.indexOf('%') !== -1;
+        return this.size === 'auto' || this.size.includes('%');
     }
 
     /** @hidden @internal */
-    public get dragSize() {
+    public get dragSize(): string | null {
         return this._dragSize;
     }
-    public set dragSize(val) {
+    public set dragSize(val: string | null) {
         this._dragSize = val;
         this.refreshFlex();
     }
@@ -233,9 +235,9 @@ export class IgxSplitterPaneComponent {
     }
 
     private _size = 'auto';
-    private _dragSize: any;
+    private _dragSize: string | null = null;
     private _collapsed = false;
-    private _owner: any;
+    private _owner?: IgxSplitterComponent;
 
     /**
      * Toggles the collapsed state of the pane.
@@ -264,7 +266,7 @@ export class IgxSplitterPaneComponent {
 
     /** @hidden @internal */
     private _getSiblings(): IgxSplitterPaneComponent[] {
-        const panes: IgxSplitterPaneComponent[] = this.owner.panes.toArray();
+        const panes = this.owner!.panes.toArray();
         const index = panes.indexOf(this);
         const siblings: IgxSplitterPaneComponent[] = [];
         if (index !== 0) {

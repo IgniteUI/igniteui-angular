@@ -12,11 +12,11 @@ import {
     TemplateRef,
     ViewChildren
 } from '@angular/core';
-import { IChipsAreaReorderEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
+import { IBaseChipsAreaEventArgs, IChipsAreaReorderEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
 import { FlatGridType, GridType } from '../common/grid.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IGroupingExpression, PlatformUtil, SortingDirection } from 'igniteui-angular/core';
-import { IgxDragCustomEventDetails } from 'igniteui-angular/directives';
+import { IDragBaseEventArgs, IgxDragCustomEventDetails } from 'igniteui-angular/directives';
 
 /**
  * An internal component representing a base group-by drop area.
@@ -162,9 +162,14 @@ export abstract class IgxGroupByAreaDirective {
     protected expressionsChanged() {
     }
 
+    /** Whether the chip move ended because the drag was cancelled (e.g. with Escape). */
+    protected isMoveCancelled(event?: IBaseChipsAreaEventArgs): boolean {
+        return !!(event?.originalEvent as IDragBaseEventArgs)?.cancelled;
+    }
+
     public abstract handleReorder(event: IChipsAreaReorderEventArgs): void;
 
-    public abstract handleMoveEnd(): void;
+    public abstract handleMoveEnd(event?: IBaseChipsAreaEventArgs): void;
 
     public abstract groupBy(expression: IGroupingExpression): void;
 

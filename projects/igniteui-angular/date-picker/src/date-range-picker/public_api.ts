@@ -2,7 +2,7 @@ import { IgxPickerClearComponent, IgxPickerToggleComponent } from 'igniteui-angu
 import { IgxDateRangeEndComponent, IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './date-range-picker-inputs.common';
 import { IgxDateRangePickerComponent } from './date-range-picker.component';
 import { IgxHintDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
-import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective } from 'igniteui-angular/calendar';
+import { IgxCalendarHeaderTemplateDirective, IgxCalendarHeaderTitleTemplateDirective, IgxCalendarSubheaderTemplateDirective, IgxCalendarDayTemplateDirective } from 'igniteui-angular/calendar';
 
 export * from './date-range-picker-inputs.common';
 export * from './date-range-picker.component';
@@ -21,5 +21,6 @@ export const IGX_DATE_RANGE_PICKER_DIRECTIVES = [
     IgxHintDirective,
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective,
-    IgxCalendarHeaderTitleTemplateDirective
+    IgxCalendarHeaderTitleTemplateDirective,
+    IgxCalendarDayTemplateDirective
 ] as const;

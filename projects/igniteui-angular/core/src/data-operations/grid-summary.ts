@@ -188,7 +188,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxDateSummaryOperand
      */
-    public static latest(data: any[]) {
+    public static latest(data: any[]): any {
         return data.length && data.filter(clear).length ?
             first(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())) : undefined;
     }
@@ -201,7 +201,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxDateSummaryOperand
      */
-    public static earliest(data: any[]) {
+    public static earliest(data: any[]): any {
         return data.length && data.filter(clear).length ?
             last(data.filter(clear).sort((a, b) => new Date(b).valueOf() - new Date(a).valueOf())) : undefined;
     }
@@ -265,7 +265,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxTimeSummaryOperand
      */
-    public static latestTime(data: any[]) {
+    public static latestTime(data: any[]): any {
         return data.length && data.filter(clear).length ?
             first(data.filter(clear).map(v => new Date(v)).sort((a, b) =>
                 new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
@@ -281,7 +281,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxTimeSummaryOperand
      */
-    public static earliestTime(data: any[]) {
+    public static earliestTime(data: any[]): any {
         return data.length && data.filter(clear).length ?
             last(data.filter(clear).map(v => new Date(v)).sort((a, b) => new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
             new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;

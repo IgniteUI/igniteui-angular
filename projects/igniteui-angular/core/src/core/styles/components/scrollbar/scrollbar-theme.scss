@@ -5,22 +5,23 @@
 /// `scrollbar-color`/`scrollbar-width` substitute their `var()`s on the declaring element and
 /// inherit the resolved value, so every scope that overrides the tokens must include this mixin.
 /// @access private
-/// @see {mixin} tokens
+/// @requires {mixin} css-vars-from-theme
 /// @param {Map} $theme - The theme used to style the component.
 /// @param {String} $scope [null] - The selector the tokens and styles are scoped to.
 @mixin scrollbar($theme, $scope: null) {
     $_scope: if(sass($scope): $scope; else: '.ig-scrollbar');
 
-    @include tokens($theme, $mode: 'scoped', $scope: $_scope);
-
+    // When nested, the parent selector gets the tokens too, so the whole subtree inherits them.
     // `&` is only valid when nested; at root it leaks out and invalidates the selector list.
     @if is-root() {
         #{$_scope} {
+            @include css-vars-from-theme($theme);
             @include _scrollbar-properties($theme);
         }
     } @else {
         &,
         #{$_scope} {
+            @include css-vars-from-theme($theme);
             @include _scrollbar-properties($theme);
         }
     }
