@@ -271,7 +271,9 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
                 this.contentCollapsed.emit({ event: evt!, owner: this });
                 this.collapsed = true;
                 this.collapsedChange.emit(true);
-                this.cdr.markForCheck();
+                // Render synchronously so the body is removed before the close player is reset;
+                // otherwise (zoneless) the body is painted at full height for a frame.
+                this.cdr.detectChanges();
             }
         );
     }
