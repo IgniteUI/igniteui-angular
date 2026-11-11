@@ -2809,8 +2809,10 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(contacts.name).toBe('contacts');
             expect(toFieldTypes(contacts)).toEqual([
                 { field: 'Email', dataType: 'string' },
-                { field: 'Phone', dataType: 'number' }
+                { field: 'Phone', dataType: 'number' },
+                { field: 'Fax', dataType: 'string' }
             ]);
+            expect(contacts.fields[0].header).toBe('E-mail');
             expect(contacts.childEntities).toBeUndefined();
         });
 
@@ -2870,6 +2872,104 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 { field: 'Total', dataType: 'currency' }
             ]);
             expect(orders.fields[1].header).toBe('Order Total');
+        });
+
+        it('should update the fields of the generated schema when the columns of the grid change', async () => {
+            const schema = hierarchicalGrid.schema;
+            expect(toFieldTypes(schema[0])).toEqual([
+                { field: 'ID', dataType: 'number' },
+                { field: 'ReleaseDate', dataType: 'date' }
+            ]);
+
+            fixture.componentInstance.showDiscontinued = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(hierarchicalGrid.schema).toBe(schema);
+            expect(toFieldTypes(schema[0])).toEqual([
+                { field: 'ID', dataType: 'number' },
+                { field: 'ReleaseDate', dataType: 'date' },
+                { field: 'Discontinued', dataType: 'boolean' }
+            ]);
+
+            fixture.componentInstance.showDiscontinued = false;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(toFieldTypes(schema[0])).toEqual([
+                { field: 'ID', dataType: 'number' },
+                { field: 'ReleaseDate', dataType: 'date' }
+            ]);
+        });
+
+        it('should update the fields of row islands with declared columns when their columns change', async () => {
+            const schema = hierarchicalGrid.schema;
+            const contacts = schema[0].childEntities[1];
+            expect(toFieldTypes(contacts)).toEqual([
+                { field: 'Email', dataType: 'string' },
+                { field: 'Phone', dataType: 'number' },
+                { field: 'Fax', dataType: 'string' }
+            ]);
+
+            fixture.componentInstance.showAddress = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(hierarchicalGrid.schema).toBe(schema);
+            expect(schema[0].childEntities[1]).toBe(contacts);
+            expect(toFieldTypes(contacts)).toEqual([
+                { field: 'Email', dataType: 'string' },
+                { field: 'Phone', dataType: 'number' },
+                { field: 'Fax', dataType: 'string' },
+                { field: 'Address', dataType: 'string' }
+            ]);
+
+            fixture.componentInstance.showAddress = false;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(toFieldTypes(contacts)).toEqual([
+                { field: 'Email', dataType: 'string' },
+                { field: 'Phone', dataType: 'number' },
+                { field: 'Fax', dataType: 'string' }
+            ]);
+        });
+
+        it('should not modify a schema set by the user when the columns of a row island change', async () => {
+            const contactsFields: FieldType[] = [{ field: 'Email', dataType: 'string' }];
+            const schema: EntityType[] = [{
+                name: 'Products',
+                fields: [{ field: 'ID', dataType: 'number' }],
+                childEntities: [{ name: 'contacts', fields: contactsFields }]
+            }];
+            hierarchicalGrid.schema = schema;
+
+            fixture.componentInstance.showAddress = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(schema[0].childEntities[0].fields).toBe(contactsFields);
+            expect(contactsFields).toEqual([{ field: 'Email', dataType: 'string' }]);
+        });
+
+        it('should apply an expression tree that uses a non-filterable column of a row island with declared columns', () => {
+            const tree = {
+                operator: 0, entity: 'root', returnFields: ['ID'],
+                filteringOperands: [{
+                    fieldName: 'ID', conditionName: 'inQuery', ignoreCase: false,
+                    searchTree: {
+                        operator: 0, entity: 'contacts', returnFields: ['Email'],
+                        filteringOperands: [{ fieldName: 'Fax', conditionName: 'contains', ignoreCase: true, searchVal: '45' }]
+                    }
+                }]
+            };
+
+            expect(() => {
+                hierarchicalGrid.advancedFilteringExpressionsTree = JSON.parse(JSON.stringify(tree));
+                fixture.detectChanges();
+            }).not.toThrow();
+            const [operand] = hierarchicalGrid.advancedFilteringExpressionsTree.filteringOperands as any[];
+            expect(operand.searchTree.filteringOperands[0].condition.name).toBe('contains');
         });
 
         it('should use a schema set by the user instead of generating one', () => {
@@ -3663,14 +3763,21 @@ export class IgxHierarchicalGridRowIslandTemplatesComponent extends IgxHierarchi
         <igx-column field="ID" dataType="number"></igx-column>
         <igx-column field="Name" dataType="string" [filterable]="false"></igx-column>
         <igx-column field="ReleaseDate" dataType="date"></igx-column>
+        @if (showDiscontinued) {
+            <igx-column field="Discontinued" dataType="boolean"></igx-column>
+        }
         <igx-row-island [key]="'orders'" [autoGenerate]="true">
             <igx-row-island [key]="'items'" [autoGenerate]="true"></igx-row-island>
         </igx-row-island>
         <igx-row-island [key]="'contacts'" [autoGenerate]="false">
             <igx-column-group header="Contact">
-                <igx-column field="Email" dataType="string"></igx-column>
+                <igx-column field="Email" dataType="string" header="E-mail"></igx-column>
             </igx-column-group>
             <igx-column field="Phone" dataType="number"></igx-column>
+            <igx-column field="Fax" dataType="string" [filterable]="false"></igx-column>
+            @if (showAddress) {
+                <igx-column field="Address" dataType="string"></igx-column>
+            }
         </igx-row-island>
     </igx-hierarchical-grid>`,
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -3680,11 +3787,14 @@ export class IgxHierarchicalGridSchemaComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     public hgrid: IgxHierarchicalGridComponent;
 
+    public showDiscontinued = false;
+    public showAddress = false;
+
     public data: any[] = [
         {
             ID: 1, Name: 'Product A', ReleaseDate: new Date(2020, 1, 1),
             orders: [{ OrderID: 10, Total: 25.5, Shipped: true, items: [{ ItemID: 100, Name: 'Item' }] }],
-            contacts: [{ Email: 'contact@example.com', Phone: 123 }]
+            contacts: [{ Email: 'contact@example.com', Phone: 123, Fax: '456', Address: 'Address' }]
         }
     ];
 }

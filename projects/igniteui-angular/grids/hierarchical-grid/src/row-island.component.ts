@@ -34,6 +34,7 @@ import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.direc
 import { IGridResourceStrings } from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
+import type { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IGridCreatedEventArgs } from './events';
 import { IgxPaginatorComponent, IgxPaginatorDirective } from 'igniteui-angular/paginator';
 import { IForOfState } from 'igniteui-angular/directives';
@@ -510,6 +511,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 grid.updateOnRender = true;
             }
         });
+        (this.rootGrid as unknown as IgxHierarchicalGridComponent)?.updateRowIslandSchemaFields(this);
     }
 
     protected updateChildren() {

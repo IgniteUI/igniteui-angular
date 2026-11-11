@@ -1285,6 +1285,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     protected override onColumnsChanged() {
         Promise.resolve().then(() => {
             this.updateColumnList();
+            if (!this.parent) {
+                this.updateGeneratedSchemaFields();
+            }
         });
     }
 
@@ -1343,7 +1346,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     private getFilterableFields(columns: IgxColumnComponent[]): FieldType[] {
-        return columns.filter((column) => !column.columnGroup && column.filterable).map(f => ({
+        return this.toFieldTypes(columns.filter((column) => !column.columnGroup && column.filterable));
+    }
+
+    private toFieldTypes(columns: IgxColumnComponent[]): FieldType[] {
+        return columns.map(f => ({
             field: f.field,
             dataType: f.dataType,
             header: f.header,
@@ -1362,25 +1369,51 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     private updateGeneratedSchemaFields() {
         const root = this.rootGrid as IgxHierarchicalGridComponent;
-        if (root._schemaSetByUser || !root._hGridSchema?.length) {
+        root.setGeneratedSchemaFields(this.parentIsland, this.getFilterableFields(this.columns));
+    }
+
+    /**
+     * Updates the fields of the generated schema entity that corresponds to a row island with declared columns,
+     * so that columns added, removed or changed after the schema was created are reflected
+     * in the advanced filtering dialog. A schema set by the user is not modified.
+     *
+     * @hidden @internal
+     */
+    public updateRowIslandSchemaFields(rowIsland: IgxRowIslandComponent) {
+        if (!rowIsland.autoGenerate) {
+            this.setGeneratedSchemaFields(rowIsland, this.getRowIslandFields(rowIsland));
+        }
+    }
+
+    /** Sets the fields of the generated schema entity of a row island, or of the root entity when no row island is passed. */
+    private setGeneratedSchemaFields(rowIsland: IgxRowIslandComponent | null | undefined, fields: FieldType[]) {
+        if (this._schemaSetByUser || !this._hGridSchema?.length) {
             return;
         }
 
         const path: string[] = [];
-        let island = this.parentIsland;
+        let island = rowIsland;
         while (island) {
             path.unshift(island.key);
             island = island.parentIsland;
         }
 
-        let entity: EntityType | undefined = root._hGridSchema[0];
+        let entity: EntityType | undefined = this._hGridSchema[0];
         for (const key of path) {
             entity = entity?.childEntities?.find(e => e.name === key);
         }
 
         if (entity) {
-            entity.fields = this.getFilterableFields(this.columns);
+            entity.fields = fields;
         }
+    }
+
+    /**
+     * Resolves the fields of a row island with declared columns, including the ones in column groups.
+     * Columns that are not filterable are kept, so that expression trees that already use them can still be recreated.
+     */
+    private getRowIslandFields(rowIsland: IgxRowIslandComponent): FieldType[] {
+        return this.toFieldTypes(flatten(rowIsland.childColumns.toArray()).filter(col => col.field));
     }
 
     private generateChildEntity(rowIsland: IgxRowIslandComponent, firstRowData: any): EntityType {
@@ -1391,8 +1424,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const childGrid = rowIsland.autoGenerate &&
             rowIsland.rowIslandAPI.getChildGrids().find(grid => grid.columns.length > 0);
         if (!rowIsland.autoGenerate) {
-            fields = flatten(rowIsland.childColumns.toArray()).filter(col => col.field)
-                .map(f => ({ field: f.field, dataType: f.dataType })) as FieldType[];
+            fields = this.getRowIslandFields(rowIsland);
         } else if (childGrid) {
             fields = this.getFilterableFields(childGrid.columns);
         } else if (firstRowData) {
