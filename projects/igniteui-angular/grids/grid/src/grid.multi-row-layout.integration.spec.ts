@@ -1184,6 +1184,51 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css(`.${GRID_MRL_BLOCK}`));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
+
+        it('should autosize column layout children to their content', async () => {
+            const fields = ['ID', 'Country', 'Phone'];
+            fixture.componentInstance.colGroups = [{
+                group: 'group1',
+                columns: fields.map((field, index) => ({ field, rowStart: 1, colStart: index + 1, width: '250px', resizable: true }))
+            }];
+            fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
+
+            const autosizeColumns = (mode: 'autosize' | 'autosizeByHeader' | 'dblclick'): string[] => {
+                fields.forEach(field => {
+                    if (mode === 'dblclick') {
+                        const header = GridFunctions.getColumnHeader(field, fixture);
+                        UIInteractions.simulateMouseEvent('dblclick', GridFunctions.getHeaderResizeArea(header).nativeElement, 0, 0);
+                    } else {
+                        grid.getColumnByName(field).autosize(mode === 'autosizeByHeader');
+                    }
+                    fixture.detectChanges();
+                });
+                return fields.map(field => grid.getColumnByName(field).width);
+            };
+
+            for (const mode of ['autosize', 'autosizeByHeader', 'dblclick'] as const) {
+                fields.forEach(field => {
+                    grid.getColumnByName(field).width = '250px';
+                });
+                fixture.detectChanges();
+
+                const widths = autosizeColumns(mode);
+                widths.forEach(width => expect(parseFloat(width)).withContext(mode).toBeLessThan(250));
+                expect(autosizeColumns(mode)).withContext(mode).toEqual(widths);
+                fields.forEach(field => {
+                    const title: HTMLElement = GridFunctions.getColumnHeader(field, fixture).nativeElement.querySelector('.igx-grid-th__title');
+                    expect(title.scrollWidth - title.clientWidth).withContext(`${mode}, ${field} title truncated`).toBeLessThanOrEqual(1);
+                });
+
+                fields.forEach(field => {
+                    grid.getColumnByName(field).width = '60px';
+                });
+                fixture.detectChanges();
+                expect(autosizeColumns(mode)).withContext(`${mode}, from 60px`).toEqual(widths);
+            }
+        });
     });
 
     describe('Selection ', () => {

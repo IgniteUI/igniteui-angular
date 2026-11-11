@@ -109,11 +109,15 @@ export class IgxGridNavigationService {
             this.grid.selectionService.keyboardStateOnKeydown(this.activeNode as ISelectionNode, shift, shift && key === 'tab');
         }
         const position = this.getNextPosition(this.activeNode.row, this.activeNode.column!, key, shift, ctrl, event);
+        // Keys without a target position (e.g. row-add keys without alt) need no further handling.
+        if (!position) {
+            return;
+        }
         const shouldNotifyVirtualizedKeyboardSelection =
-            this.shouldNotifyVirtualizedKeyboardSelection(key, position!.rowIndex, position!.colIndex);
+            this.shouldNotifyVirtualizedKeyboardSelection(key, position.rowIndex, position.colIndex);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            this.navigateInBody(position!.rowIndex, position!.colIndex, (obj) => {
+            this.navigateInBody(position.rowIndex, position.colIndex, (obj) => {
                 obj.target.activate(event);
                 if (shouldNotifyVirtualizedKeyboardSelection) {
                     this.grid.notifyChanges();

@@ -1,4 +1,4 @@
-import { Component, DebugElement, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, DebugElement, OnInit, ViewChild, ChangeDetectionStrategy, TemplateRef } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -8,10 +8,10 @@ import { GridTemplateStrings, ColumnDefinitions } from '../../../test-utils/temp
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
-import { IColumnResizeEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
+import { FilterMode, IColumnResizeEventArgs, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridToolbarComponent, IgxGridToolbarTitleComponent } from 'igniteui-angular/grids/core';
 import { setElementSize } from '../../../test-utils/helper-utils.spec';
 import { IgxColumnResizerDirective } from 'igniteui-angular/grids/core';
-import { ɵSize } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand, ɵSize } from 'igniteui-angular/core';
 import { IgxAvatarComponent } from 'igniteui-angular/avatar';
 import { Calendar } from 'igniteui-angular/calendar';
 
@@ -30,7 +30,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 NullColumnsComponent,
                 MinWidthColumnsComponent,
                 ColGridComponent,
-                ColPercentageGridComponent
+                ColPercentageGridComponent,
+                AutosizeFilteringGridComponent
             ]
         }).compileComponents();
     }));
@@ -459,6 +460,286 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         });
     });
 
+    describe('Autosize with filtering tests: ', () => {
+        type AutosizeMode = 'autosize' | 'autosizeByHeader' | 'dblclick';
+        type AutosizeFixture = ComponentFixture<AutosizeFilteringGridComponent>;
+
+        interface AutosizeGridOptions {
+            allowFiltering?: boolean;
+            autosizeHeader?: boolean;
+            filterMode?: FilterMode;
+            zoom?: string;
+        }
+
+        const AUTOSIZE_MODES: AutosizeMode[] = ['autosize', 'autosizeByHeader', 'dblclick'];
+        const AUTOSIZED_FIELDS = ['ID', 'Name', 'LastName'];
+        const INITIAL_WIDTH = 250;
+        const NARROW_WIDTH = '120px';
+        // snaps the 1px header border to 0.8px, like 125% display scaling
+        const FRACTIONAL_ZOOM = '1.25';
+        const FILTERING_CELL = 'igx-grid-filtering-cell';
+        // the width of the custom filtering cell template content
+        const CUSTOM_FILTER_WIDTH = 180;
+
+        const createAutosizeGrid = (options: AutosizeGridOptions = {}): AutosizeFixture => {
+            const fix = TestBed.createComponent(AutosizeFilteringGridComponent);
+            if (options.zoom) {
+                fix.nativeElement.style.zoom = options.zoom;
+            }
+            fix.componentInstance.allowFiltering = options.allowFiltering ?? true;
+            fix.componentInstance.autosizeHeader = options.autosizeHeader ?? true;
+            fix.componentInstance.filterMode = options.filterMode ?? FilterMode.quickFilter;
+            fix.detectChanges();
+            tick(16);
+            fix.detectChanges();
+            return fix;
+        };
+
+        const getWidths = (fix: AutosizeFixture): string[] =>
+            AUTOSIZED_FIELDS.map(field => fix.componentInstance.grid.getColumnByName(field).width);
+
+        const setWidths = (fix: AutosizeFixture, width: string) => {
+            AUTOSIZED_FIELDS.forEach(field => {
+                fix.componentInstance.grid.getColumnByName(field).width = width;
+            });
+            fix.detectChanges();
+        };
+
+        const autosizeColumns = (fix: AutosizeFixture, mode: AutosizeMode, fields = AUTOSIZED_FIELDS): string[] => {
+            fields.forEach(field => {
+                if (mode === 'dblclick') {
+                    const header = GridFunctions.getColumnHeader(field, fix);
+                    UIInteractions.simulateMouseEvent('dblclick', GridFunctions.getHeaderResizeArea(header).nativeElement, 0, 0);
+                    tick(200);
+                } else {
+                    fix.componentInstance.grid.getColumnByName(field).autosize(mode === 'autosizeByHeader');
+                }
+                fix.detectChanges();
+            });
+            return fields.map(field => fix.componentInstance.grid.getColumnByName(field).width);
+        };
+
+        const autosizeRepeatedly = (fix: AutosizeFixture, mode: AutosizeMode, times = 3): string[][] =>
+            Array.from({ length: times }, () => autosizeColumns(fix, mode));
+
+        const getFilteringCell = (fix: AutosizeFixture, field: string): HTMLElement =>
+            GridFunctions.getColumnHeader(field, fix).parent.query(By.css(FILTERING_CELL)).nativeElement;
+
+        // the chips area shrinks with the cell, so overflowing chips reach the cell padding before the cell overflows
+        const overflowsContentBox = (cell: HTMLElement) =>
+            [cell, cell.querySelector<HTMLElement>('igx-chips-area')].some(element => !!element && element.scrollWidth - element.clientWidth > 1);
+
+        /**
+         * Compares autosizing the grid with and without quick filtering. Each grid is measured before the next one
+         * is created, as creating a fixture detaches the previous one.
+         */
+        const verifyAutosizeWithFilteringCells = (mode: AutosizeMode, autosizeHeader = true, zoom = ''): string[] => {
+            const context = `${mode}, autosizeHeader: ${autosizeHeader}, zoom: ${zoom || 1}`;
+            const headersMeasured = autosizeHeader || mode === 'autosizeByHeader';
+
+            const referenceFix = createAutosizeGrid({ allowFiltering: false, autosizeHeader, zoom });
+            const [reference, ...nextReference] = autosizeRepeatedly(referenceFix, mode);
+            reference.forEach(width =>
+                expect(parseFloat(width)).withContext(`${context}, without filtering`).toBeLessThan(INITIAL_WIDTH));
+            nextReference.forEach((next, i) =>
+                expect(next).withContext(`${context}, without filtering, call ${i + 2}`).toEqual(reference));
+            if (headersMeasured) {
+                // autosizing from the narrow width has to widen the Name column
+                expect(parseFloat(reference[AUTOSIZED_FIELDS.indexOf('Name')])).withContext(context)
+                    .toBeGreaterThan(parseFloat(NARROW_WIDTH));
+            }
+            setWidths(referenceFix, NARROW_WIDTH);
+            expect(autosizeColumns(referenceFix, mode)).withContext(`${context}, without filtering, from ${NARROW_WIDTH}`)
+                .toEqual(reference);
+
+            const fix = createAutosizeGrid({ autosizeHeader, zoom });
+            expect(getWidths(fix)).withContext(context).toEqual(AUTOSIZED_FIELDS.map(() => `${INITIAL_WIDTH}px`));
+            const [widths, ...nextWidths] = autosizeRepeatedly(fix, mode);
+            nextWidths.forEach((next, i) =>
+                expect(next).withContext(`${context}, with filtering, call ${i + 2}`).toEqual(widths));
+            AUTOSIZED_FIELDS.forEach((field, i) => {
+                const fieldContext = `${context}, with filtering, ${field}`;
+                const columnWidth = fix.componentInstance.grid.getColumnByName(field).width;
+                const filteringCell = getFilteringCell(fix, field);
+                expect(parseFloat(widths[i])).withContext(fieldContext).toBeLessThan(INITIAL_WIDTH);
+                if (headersMeasured) {
+                    expect(parseFloat(widths[i])).withContext(fieldContext).toBeGreaterThanOrEqual(parseFloat(reference[i]));
+                    expect(overflowsContentBox(filteringCell)).withContext(`${fieldContext}, filtering cell overflows`).toBeFalse();
+                } else {
+                    expect(widths[i]).withContext(fieldContext).toBe(reference[i]);
+                }
+                expect(GridFunctions.getColumnHeader(field, fix).nativeElement.style.width)
+                    .withContext(`${fieldContext}, header width`).toBe(columnWidth);
+                expect(filteringCell.style.width).withContext(`${fieldContext}, filtering cell width`).toBe(columnWidth);
+            });
+
+            setWidths(fix, NARROW_WIDTH);
+            expect(autosizeColumns(fix, mode)).withContext(`${context}, with filtering, from ${NARROW_WIDTH}`).toEqual(widths);
+            return widths;
+        };
+
+        it('should autosize columns to their content on autosize() when filtering is enabled.', fakeAsync(() => {
+            verifyAutosizeWithFilteringCells('autosize');
+        }));
+
+        it('should autosize columns to their headers on autosize(true) when filtering is enabled.', fakeAsync(() => {
+            verifyAutosizeWithFilteringCells('autosizeByHeader');
+        }));
+
+        it('should autosize columns to their content on resize handle double-click when filtering is enabled.', fakeAsync(() => {
+            verifyAutosizeWithFilteringCells('dblclick');
+        }));
+
+        it('should not grow autosized columns on repeated calls with fractional CSS zoom when filtering is enabled.', fakeAsync(() => {
+            AUTOSIZE_MODES.forEach(mode => verifyAutosizeWithFilteringCells(mode, true, FRACTIONAL_ZOOM));
+        }));
+
+        it('should autosize columns to their headers on autosize(true) when autosizeHeader is false and filtering is enabled.', fakeAsync(() => {
+            ['', FRACTIONAL_ZOOM].forEach(zoom => {
+                // autosizing by header does not depend on autosizeHeader
+                const expected = verifyAutosizeWithFilteringCells('autosizeByHeader', true, zoom);
+                expect(verifyAutosizeWithFilteringCells('autosizeByHeader', false, zoom)).withContext(`zoom: ${zoom || 1}`)
+                    .toEqual(expected);
+            });
+        }));
+
+        it('should keep autosizing columns by their cells when autosizeHeader is false and filtering is enabled.', fakeAsync(() => {
+            ['', FRACTIONAL_ZOOM].forEach(zoom => {
+                verifyAutosizeWithFilteringCells('autosize', false, zoom);
+                verifyAutosizeWithFilteringCells('dblclick', false, zoom);
+            });
+        }));
+
+        it('should fit the chip of a single filtering condition when autosizing columns.', fakeAsync(() => {
+            const fix = createAutosizeGrid();
+            const grid = fix.componentInstance.grid;
+            grid.filter('LastName', 'Williams', IgxStringFilteringOperand.instance().condition('contains'));
+            fix.detectChanges();
+            const column = grid.getColumnByName('LastName');
+            const filteringCell = getFilteringCell(fix, 'LastName');
+
+            AUTOSIZE_MODES.forEach(mode => {
+                const widths = [`${INITIAL_WIDTH}px`, '60px'].map(startWidth => {
+                    const context = `${mode}, from ${startWidth}`;
+                    column.width = startWidth;
+                    fix.detectChanges();
+                    const [width] = autosizeColumns(fix, mode, ['LastName']);
+                    expect(autosizeColumns(fix, mode, ['LastName'])).withContext(`${context}, call 2`).toEqual([width]);
+                    expect(GridFunctions.getFilterChipsForColumn('LastName', fix).length).withContext(context).toBe(1);
+                    expect(overflowsContentBox(filteringCell)).withContext(`${context}, filtering cell overflows`).toBeFalse();
+                    return width;
+                });
+                expect(widths[1]).withContext(mode).toBe(widths[0]);
+            });
+        }));
+
+        it('should not widen columns for the collapsible chips of several filtering conditions.', fakeAsync(() => {
+            const fix = createAutosizeGrid();
+            const grid = fix.componentInstance.grid;
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or, 'LastName');
+            ['a', 'o'].forEach(searchVal => tree.filteringOperands.push({
+                fieldName: 'LastName',
+                searchVal,
+                conditionName: 'contains',
+                condition: IgxStringFilteringOperand.instance().condition('contains')
+            }));
+            grid.filter('LastName', null, tree);
+            fix.detectChanges();
+            const column = grid.getColumnByName('LastName');
+
+            AUTOSIZE_MODES.forEach(mode => {
+                const widths = ['400px', '60px'].map(startWidth => {
+                    const context = `${mode}, from ${startWidth}`;
+                    column.width = startWidth;
+                    fix.detectChanges();
+                    const [width] = autosizeColumns(fix, mode, ['LastName']);
+                    expect(autosizeColumns(fix, mode, ['LastName'])).withContext(`${context}, call 2`).toEqual([width]);
+                    // the chips that do not fit collapse into the "more" indicator
+                    expect(GridFunctions.getFilterChipsForColumn('LastName', fix).length).withContext(context).toBeLessThan(2);
+                    return width;
+                });
+                expect(widths[1]).withContext(mode).toBe(widths[0]);
+            });
+        }));
+
+        it('should not size columns by a custom filtering cell template.', fakeAsync(() => {
+            const fix = createAutosizeGrid();
+            const column = fix.componentInstance.grid.getColumnByName('ID');
+            column.filterCellTemplate = fix.componentInstance.filterCellTemplate;
+            fix.detectChanges();
+            expect(getFilteringCell(fix, 'ID').querySelector('.custom-filter')).not.toBeNull();
+
+            AUTOSIZE_MODES.forEach(mode => {
+                const widths = [`${INITIAL_WIDTH}px`, '60px'].map(startWidth => {
+                    column.width = startWidth;
+                    fix.detectChanges();
+                    const [width] = autosizeColumns(fix, mode, ['ID']);
+                    expect(autosizeColumns(fix, mode, ['ID'])).withContext(`${mode}, from ${startWidth}, call 2`).toEqual([width]);
+                    return width;
+                });
+                expect(parseFloat(widths[0])).withContext(mode).toBeLessThan(CUSTOM_FILTER_WIDTH);
+                expect(widths[1]).withContext(mode).toBe(widths[0]);
+            });
+        }));
+
+        it('should fit the filtering chip when its cell has a larger padding than the data cells.', fakeAsync(() => {
+            const fix = createAutosizeGrid();
+            fix.componentInstance.data = [...fix.componentInstance.data, { ID: 8, Name: 'Ann', LastName: 'Montgomery-Smith', Region: 'AD' }];
+            fix.detectChanges();
+            const filteringCell = getFilteringCell(fix, 'LastName');
+            // e.g. a custom theme
+            filteringCell.style.paddingInline = '80px';
+
+            const [headerWidth] = autosizeColumns(fix, 'autosizeByHeader', ['LastName']);
+            expect(autosizeColumns(fix, 'autosize', ['LastName'])).toEqual([headerWidth]);
+            expect(overflowsContentBox(filteringCell)).toBeFalse();
+        }));
+
+        it('should respect minWidth and maxWidth when autosizing columns with filtering enabled.', fakeAsync(() => {
+            const fix = createAutosizeGrid();
+            const [idColumn, nameColumn, lastNameColumn] = AUTOSIZED_FIELDS.map(field => fix.componentInstance.grid.getColumnByName(field));
+            idColumn.minWidth = '150px';
+            nameColumn.maxWidth = '100px';
+            lastNameColumn.maxWidth = '200px';
+            fix.detectChanges();
+
+            AUTOSIZE_MODES.forEach(mode => {
+                setWidths(fix, `${INITIAL_WIDTH}px`);
+                autosizeColumns(fix, mode);
+
+                expect(idColumn.width).withContext(mode).toBe('150px');
+                expect(nameColumn.width).withContext(mode).toBe('100px');
+                expect(parseFloat(lastNameColumn.width)).withContext(mode).toBeLessThan(200);
+            });
+        }));
+
+        it('should include the header icons when autosizing columns by their headers.', fakeAsync(() => {
+            // excel-style filtering icon
+            const lastNameIndex = AUTOSIZED_FIELDS.indexOf('LastName');
+            const withoutFilterIcon = autosizeColumns(createAutosizeGrid({ allowFiltering: false }), 'autosizeByHeader')[lastNameIndex];
+            const withFilterIcon = autosizeColumns(
+                createAutosizeGrid({ filterMode: FilterMode.excelStyleFilter }), 'autosizeByHeader')[lastNameIndex];
+            expect(parseFloat(withFilterIcon)).toBeGreaterThan(parseFloat(withoutFilterIcon));
+
+            // sorting indicator
+            const fix = createAutosizeGrid({ allowFiltering: false });
+            const column = fix.componentInstance.grid.getColumnByName('Name');
+            expect(column.sortable).toBeTrue();
+            column.autosize(true);
+            fix.detectChanges();
+            const sortableWidth = parseFloat(column.width);
+
+            column.sortable = false;
+            column.width = `${INITIAL_WIDTH}px`;
+            fix.detectChanges();
+            column.autosize(true);
+            fix.detectChanges();
+
+            expect(sortableWidth).toBeLessThan(INITIAL_WIDTH);
+            expect(parseFloat(column.width)).toBeLessThan(sortableWidth);
+        }));
+    });
+
     describe('Percentage tests: ', () => {
         let fixture: ComponentFixture<any>;
         let grid: IgxGridComponent;
@@ -585,24 +866,39 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
             const col = grid.columnList.get(0);
             expect(col.width).toBe('25%');
+            const expectedWidth = Math.max(parseFloat(col.getLargestCellWidth()), col.minWidthPx) / grid.calcWidth * 100 + '%';
+
             col.autosize();
             fixture.detectChanges();
-            const calcPercent = (col.getHeaderCellWidths().width + col.getHeaderCellWidths().padding) / grid.calcWidth * 100;
-            expect(grid.columnList.get(0).width).toBe(calcPercent + '%');
+            expect(col.width).toBe(expectedWidth);
+
+            col.width = '50%';
+            fixture.detectChanges();
+            col.autosize();
+            fixture.detectChanges();
+            expect(col.width).toBe(expectedWidth);
         }));
 
         it('should autosize column with % width on double click.', fakeAsync(() => {
             grid.height = null;
             fixture.detectChanges();
-            expect(grid.columnList.get(0).width).toBe('25%');
+            const col = grid.columnList.get(0);
+            expect(col.width).toBe('25%');
+            const expectedWidth = Math.max(parseFloat(col.getLargestCellWidth()), col.minWidthPx) / grid.calcWidth * 100 + '%';
             const headers = GridFunctions.getColumnHeaders(fixture);
             const headerResArea = headers[0].parent.children[2].nativeElement;
+
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            const col = grid.columnList.get(0);
-            const calcPercent = (col.getHeaderCellWidths().width + col.getHeaderCellWidths().padding) / grid.calcWidth * 100;
-            expect(col.width).toBe(calcPercent + '%');
+            expect(col.width).toBe(expectedWidth);
+
+            col.width = '50%';
+            fixture.detectChanges();
+            UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
+            tick(200);
+            fixture.detectChanges();
+            expect(col.width).toBe(expectedWidth);
         }));
     });
 
@@ -1157,4 +1453,23 @@ export class ColAutosizeGridComponent implements OnInit {
     public ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
     }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="800px" height="600px" [allowFiltering]="allowFiltering" [filterMode]="filterMode"`, ``,
+        `<igx-column field="ID" header="ID" dataType="number" width="250px" [resizable]="true" [autosizeHeader]="autosizeHeader"></igx-column>
+        <igx-column field="Name" header="Full name" width="250px" [sortable]="true" [resizable]="true" [autosizeHeader]="autosizeHeader"></igx-column>
+        <igx-column field="LastName" width="250px" [resizable]="true" [autosizeHeader]="autosizeHeader"></igx-column>`) +
+        `<ng-template #filterCellTemplate><span class="custom-filter" style="flex: none; width: 180px"></span></ng-template>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class AutosizeFilteringGridComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild('filterCellTemplate', { read: TemplateRef, static: true }) public filterCellTemplate: TemplateRef<any>;
+
+    public data = SampleTestData.personIDNameRegionData();
+    public allowFiltering = true;
+    public autosizeHeader = true;
+    public filterMode: FilterMode = FilterMode.quickFilter;
 }

@@ -118,7 +118,7 @@ Unmeasured items then take the average measured size, so the scrollbar tracks re
 
 | Output | Payload | Description |
 |---|---|---|
-| `stateChange` | `VirtualScrollState` | Emitted when the virtual window changes. It reports the range the viewport wants, over-scan included; with `dataWindow` bound that range can reach past the loaded page, so it is not always the set of rows in the DOM. Consecutive renders that produce an identical window are not re-emitted. |
+| `stateChange` | `VirtualScrollState` | Emitted when the virtual window changes. It reports the range the viewport wants, over-scan included; with `dataWindow` bound that range can reach past the loaded page, so it is not always the set of rows in the DOM. Consecutive renders that produce an identical window are not re-emitted. Once the host has been laid out, it is not emitted while the host is detached from the document, for example inside a closed drop-down; on re-attach the current window is emitted if it differs from the last one reported. |
 | `dataRequest` | `VirtualScrollDataRequest` | Emitted when the rendered window comes within a few items of the end of `data`. Use this to implement infinite / remote scrolling. |
 
 ---

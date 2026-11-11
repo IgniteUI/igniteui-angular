@@ -145,7 +145,12 @@ export class IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--invalid')
     @Input({ transform: booleanAttribute })
-    public override invalid = false;
+    public override get invalid(): boolean {
+        return super.invalid;
+    }
+    public override set invalid(value: boolean) {
+        super.invalid = value;
+    }
 
     /**
      * Sets/gets whether the checkbox is readonly.

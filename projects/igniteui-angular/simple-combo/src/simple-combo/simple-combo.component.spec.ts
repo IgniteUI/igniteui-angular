@@ -3001,6 +3001,80 @@ describe('IgxSimpleCombo', () => {
             combo = fixture.componentInstance.instance;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
         });
+        it('should preserve the loaded remote page without requests when closing and reopening', async () => {
+            const settle = async () => {
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                await fixture.whenStable();
+                fixture.detectChanges();
+            };
+            combo.open();
+            await settle();
+            const preload = spyOn(combo.dataPreLoad, 'emit').and.callThrough();
+            await combo.virtualScrollContainer.scrollToIndex(40);
+            await settle();
+            expect(preload).toHaveBeenCalled();
+            expect(combo.data[0].id).toBe(40);
+
+            const state = { ...combo.virtualizationState };
+            const page = combo.data;
+            preload.calls.reset();
+
+            for (let cycle = 0; cycle < 3; cycle++) {
+                combo.close();
+                await new Promise(requestAnimationFrame);
+                await new Promise(requestAnimationFrame);
+                await settle();
+                expect(preload).not.toHaveBeenCalled();
+                expect(combo.virtualizationState).toEqual(state);
+
+                combo.open();
+                await settle();
+                expect(preload).not.toHaveBeenCalled();
+                expect(combo.data).toBe(page);
+                const rows = fixture.debugElement.queryAll(By.css('igx-combo-item'));
+                expect(rows.length).toBeGreaterThan(0);
+                expect(rows[0].nativeElement.textContent.trim()).toBe('Product 40');
+            }
+
+            await combo.virtualScrollContainer.scrollToIndex(80);
+            await settle();
+            expect(preload).toHaveBeenCalledTimes(1);
+            expect(combo.data[0].id).toBe(80);
+        });
+
+        it('should load the first page when the toggle button reopens a list closed by other means', async () => {
+            const settle = async () => {
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                await fixture.whenStable();
+                fixture.detectChanges();
+            };
+            combo.open();
+            await settle();
+            await combo.virtualScrollContainer.scrollToIndex(40);
+            await settle();
+            expect(combo.data[0].id).toBe(40);
+
+            // Closed without the toggle button, as Escape or an outside click does.
+            combo.close();
+            await new Promise(requestAnimationFrame);
+            await new Promise(requestAnimationFrame);
+            await settle();
+
+            // With an empty input, onClick reopens the list at the top.
+            fixture.debugElement.query(By.css(`.${CSS_CLASS_TOGGLEBUTTON}`)).nativeElement.click();
+            await new Promise(requestAnimationFrame);
+            await new Promise(requestAnimationFrame);
+            await settle();
+
+            expect(combo.collapsed).toBeFalse();
+            expect(combo.data[0].id).toBe(0);
+            const rows = fixture.debugElement.queryAll(By.css('igx-combo-item'));
+            expect(rows.length).toBeGreaterThan(0);
+            expect(rows[0].nativeElement.textContent.trim()).toBe('Product 0');
+        });
+
         it('should prevent registration of remote entries when selectionChanging is cancelled', () => {
             spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.cancel = true);
             combo.open();

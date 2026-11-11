@@ -64,7 +64,19 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
     public readonly!: boolean;
     public indeterminate!: boolean;
     public focused!: boolean;
-    public invalid!: boolean;
+
+    public get invalid(): boolean {
+        return this._invalid;
+    }
+
+    public set invalid(value: boolean) {
+        // Signal Forms writes the field's raw validity here; show it only once touched or dirty.
+        if (this.control?.backend === 'signal' && !this.control.touchedOrDirty) {
+            value = false;
+        }
+
+        this._invalid = value;
+    }
 
     @Input({ transform: booleanAttribute })
     public get checked() {
@@ -296,6 +308,12 @@ export abstract class CheckboxBaseDirective implements AfterViewInit {
      * @internal
      */
     protected _checked = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected _invalid = false;
 
     /**
      * @hidden

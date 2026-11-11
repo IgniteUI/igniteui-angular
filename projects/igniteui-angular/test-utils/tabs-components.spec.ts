@@ -1,4 +1,4 @@
-import { Component, QueryList, ViewChild, ViewChildren, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, QueryList, signal, ViewChild, ViewChildren } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxTabContentComponent, IgxTabHeaderComponent, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective, IgxTabItemComponent, IgxTabsComponent } from 'igniteui-angular/tabs';
@@ -599,4 +599,37 @@ export class TabsRtlComponent {
         { name: 'tab8', selected: false },
         { name: 'tab9', selected: false },
     ];
+}
+
+@Component({
+    template: `
+        <igx-tabs [selectedIndex]="startIndex()" disableAnimation>
+            @for (tab of collection(); track tab.id) {
+                <igx-tab-item>
+                    <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-content></igx-tab-content>
+                </igx-tab-item>
+            }
+        </igx-tabs>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxTabsComponent, IgxTabItemComponent, IgxTabHeaderComponent, IgxTabContentComponent, IgxTabHeaderLabelDirective]
+})
+export class ZonelessTabsCollectionComponent {
+    @ViewChild(IgxTabsComponent, { static: true }) public tabsComponent: IgxTabsComponent;
+    public startIndex = signal(-1);
+    protected collection = signal([
+        { id: 1, name: 'Tab 1' },
+        { id: 2, name: 'Tab 2' },
+        { id: 3, name: 'Tab 3' },
+        { id: 4, name: 'Tab 4' }
+    ]);
+
+    public shrinkToFirstTab(): void {
+        this.collection.update(items => items.slice(0, 1));
+    }
+
+    public removeSelectedTab(): void {
+        this.collection.update(items => items.slice(1));
+    }
 }
