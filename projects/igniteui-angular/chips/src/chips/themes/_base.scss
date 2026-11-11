@@ -495,7 +495,7 @@ $_theme: digest-schema($material-chip);
             position: absolute;
             box-shadow: var-get($_theme, 'ghost-elevation');
             overflow: hidden;
-            color: var-get($_theme, 'focus-text-color');
+            color: var-get($_theme, 'ghost-text-color');
             // The ghost is cloned into <body>, where an unlayered host/reset rule
             // (e.g. `body > * { height: 100% }`) outranks these layered styles and
             // stretches it. `!important` keeps the ghost at its intended row height
