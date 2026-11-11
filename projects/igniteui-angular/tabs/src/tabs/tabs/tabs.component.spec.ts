@@ -448,6 +448,25 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
         });
+
+        it('should keep the selection and the focus when navigating with left/right/home/end and all tabs are disabled', async () => {
+            fixture = TestBed.createComponent(TabsDisabledTestComponent);
+            tabs = fixture.componentInstance.tabs;
+            await wait();
+            fixture.detectChanges();
+            tabs.items.forEach(item => item.disabled = true);
+            fixture.detectChanges();
+            const header = tabs.items.get(1).headerComponent.nativeElement;
+            header.focus();
+
+            for (const event of [KEY_END_EVENT, KEY_HOME_EVENT, KEY_RIGHT_EVENT, KEY_LEFT_EVENT]) {
+                header.dispatchEvent(event);
+                await wait();
+                fixture.detectChanges();
+                expect(tabs.selectedIndex, event.key).toBe(1);
+                expect(document.activeElement, event.key).toBe(header);
+            }
+        });
     });
 
     describe('IgxTabs Component with custom content in headers', () => {
@@ -2383,6 +2402,13 @@ describe('IgxTabs', () => {
             }
             const label = header.querySelector('[igxTabHeaderLabel]');
             expect(label.scrollWidth).toBeLessThanOrEqual(label.clientWidth);
+        });
+
+        it('should keep the size of an icon suffix next to a short header label', async () => {
+            await createTabs(component => component.items.set([{ id: 1, label: 'A', suffixIcon: 'close' }]));
+            const icon = rectOf(headersOf(tabs)[0].querySelector('[igxSuffix]'));
+
+            expectNear(icon.width, icon.height);
         });
 
         it('should place the theme specific selection indicators and borders on the content side of the headers', async () => {

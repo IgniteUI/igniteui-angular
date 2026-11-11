@@ -40,6 +40,7 @@ All notable changes for each version of this project will be documented in this 
     - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
 - **Behavioral Change** - `tokens($theme, $mode: 'scoped')` included inside a selector no longer declares the component tokens on that selector itself, unless it is the component. The tokens go on the component inside the selector and, through `:where()`, on the selector when it also matches the component, so `.my-avatar` on an `igx-avatar` element is still themed with the same specificity. Previously the selector always received the tokens, and generic tokens such as `--background` were inherited by every element below it.
     - To override a component's tokens for a whole section of a page, use the default global mode instead: `.promo { @include tokens(tooltip-theme($background: red)); }` only declares `--ig-tooltip-*` tokens, which no other component reads.
+    - Section tokens don't reach the components rendered inside a Grid, Query Builder, Excel Filtering, Column Actions, Paginator or Grid Toolbar. These derive the tokens of their inner components (checkboxes, chips, buttons, inputs, tooltips, etc.) from their own theme and declare them on their host. Each inner component follows one or more of the parent's `$background`, `$foreground` and `$accent-color`, so `grid-theme($accent-color: red)` recolors the grid's checkboxes, badges and buttons, but not its tooltips, which follow `$foreground`. To change one inner component, target it: `.promo .igx-tooltip { @include tokens(tooltip-theme($background: red)); }`.
 - Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
     - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
     - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
@@ -167,6 +168,13 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the drop-down, is now prevented.
 
+## 22.2.6
+
+### Bug Fixes
+
+- `IgxTabsComponent`
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
+
 ## 22.2.5
 
 ### Bug Fixes
@@ -220,14 +228,6 @@ All notable changes for each version of this project will be documented in this 
     - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.
 - `IgxOverlayService`
     - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
-
-## 23.0.0
-
-### New Features
-
-- `IgxTabs`
-    - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
-    - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
 
 ## 22.2.1
 
