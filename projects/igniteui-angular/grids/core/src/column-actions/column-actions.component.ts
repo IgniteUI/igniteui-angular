@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
-import { ColumnType } from 'igniteui-angular/core';
+import { ColumnType, preventImplicitSubmission } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 /**
@@ -23,6 +23,8 @@ let NEXT_ID = 0;
 })
 export class IgxColumnActionsComponent implements DoCheck {
     private differs = inject(IterableDiffers);
+
+    protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
 
     /**

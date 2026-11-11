@@ -257,7 +257,7 @@
 
                 @if (expressionItem.focused || expressionItem.hovered) {
                     <div igxDragIgnore class="igx-filter-tree__expression-actions">
-                        <button #addExpressionButton igxDragIgnore igxIconButton="outlined" [igxDropDownItemNavigation]="addOptionsDropDown"
+                        <button #addExpressionButton type="button" igxDragIgnore igxIconButton="outlined" [igxDropDownItemNavigation]="addOptionsDropDown"
                         aria-labelledby="add-expression" (keydown)="invokeClick($event)"
                             (click)="clickExpressionAdd(addExpressionButton, expressionChip)"
                             (blur)="addExpressionBlur()">
@@ -496,7 +496,7 @@
                     (over)="dragService.onGroupRootOver(groupRef, expressionItem)"
                     (leave)="dragService.onChipLeave()"
                 >
-                    <button #changeGroupButton
+                    <button #changeGroupButton type="button"
                             [ngClass]="{
                                 'igx-filter-tree__button--and': getOperator(expressionItem) === 0,
                                 'igx-filter-tree__button--or': getOperator(expressionItem) === 1

@@ -479,6 +479,25 @@ export const NAVIGATION_KEYS = new Set([
     ' '
 ]);
 
+/** Input types on which Enter has its own activation behavior instead of submitting the form. */
+const ACTIVATABLE_INPUT_TYPES = new Set(['button', 'submit', 'reset', 'image', 'file', 'color']);
+
+/**
+ * @hidden
+ * @internal
+ *
+ * Cancels the implicit submission of the surrounding form, which the browser performs as the default action
+ * of an Enter keydown in an `<input>`.
+ * Only inputs which have a form owner and no activation behavior of their own are affected.
+ */
+export function preventImplicitSubmission(event: KeyboardEvent): void {
+    const target = event.composedPath()[0];
+    if (event.key === 'Enter' && !event.isComposing && target instanceof HTMLInputElement &&
+        target.form && !ACTIVATABLE_INPUT_TYPES.has(target.type)) {
+        event.preventDefault();
+    }
+}
+
 /**
  * @hidden
  * @internal

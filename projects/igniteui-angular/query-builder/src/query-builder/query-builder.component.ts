@@ -11,7 +11,8 @@ import {
     QueryBuilderResourceStringsEN,
     recreateTree,
     getCurrentResourceStrings,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    preventImplicitSubmission
 } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
@@ -36,10 +37,15 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    imports: [IgxQueryBuilderTreeComponent]
+    imports: [IgxQueryBuilderTreeComponent],
+    host: {
+        '(keydown)': 'preventImplicitSubmission($event)'
+    }
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     protected iconService = inject(IgxIconService);
+
+    protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
     /**
      * @hidden @internal

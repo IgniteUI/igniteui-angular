@@ -12,7 +12,7 @@ import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansio
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDragHandleDirective, IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, preventImplicitSubmission, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
 
 interface IDataSelectorPanel {
@@ -56,6 +56,8 @@ interface IDataSelectorPanel {
 export class IgxPivotDataSelectorComponent {
     private renderer = inject(Renderer2);
     private cdr = inject(ChangeDetectorRef);
+
+    protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
 
     /**
