@@ -102,10 +102,19 @@ $easing-curves: (
     }
 
     %indicator {
-        width: calc(var(--_progress-whole) * 1%);
+        width: calc(var(--_progress-whole, 0) * 1%);
         position: absolute;
         height: 100%;
-        transition: width var(--_transition-duration) linear;
+
+        // The width follows the registered --_progress-whole number: value changes
+        // transition it and @starting-style makes the first render transition from 0
+        // as well. Nothing animates width itself, so no property has both a keyframe
+        // animation and a transition (see the circular bar, igniteui-angular#17649).
+        transition: --_progress-whole var(--_transition-duration) linear;
+
+        @starting-style {
+            --_progress-whole: 0;
+        }
     }
 
     %display-linear--indeterminate:dir(rtl) {
@@ -122,7 +131,6 @@ $easing-curves: (
 
     %display-linear:not(%display-linear--indeterminate) {
         %indicator {
-            animation: igx-initial-width var(--_transition-duration) linear;
             background-color: var-get($theme, 'fill-color-default')
         }
     }
@@ -225,7 +233,6 @@ $easing-curves: (
 
     %value {
         color: var-get($theme, 'text-color');
-        animation: initial-counter var(--_transition-duration) ease-in-out;
         counter-reset:
             progress-integer var(--_progress-integer, 0)
             progress-fraction var(--_progress-fraction, 0);
@@ -383,17 +390,6 @@ $easing-curves: (
         100% {
             transform: translateX(-310%);
             transform-origin: left;
-        }
-    }
-
-    // Initial animations
-    @keyframes igx-initial-width {
-        from {
-            width: 0;
-        }
-
-        to {
-            width: calc(var(--_progress-whole, 0) * 1%);
         }
     }
 }

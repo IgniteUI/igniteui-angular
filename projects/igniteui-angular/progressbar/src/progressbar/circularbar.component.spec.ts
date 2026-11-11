@@ -1,6 +1,19 @@
+import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { hasClass } from "../../../test-utils/helper-utils.spec";
+import { wait } from '../../../test-utils/ui-interactions.spec';
+
+const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+// The theme sets the bar's CSS variables on the `igx-circular-bar` element, which a root test fixture (a `div`) does not match.
+@Component({
+    template: `<igx-circular-bar [value]="value" [animationDuration]="600"></igx-circular-bar>`,
+    imports: [IgxCircularProgressBarComponent]
+})
+class CircularBarInitialValueComponent {
+    public value = 100;
+}
 
 describe('IgxCircularProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
@@ -136,5 +149,40 @@ describe('IgxCircularProgressBarComponent', () => {
 
         expect(circularBar.getAttribute('aria-valuenow')).toBe('50');
         expect(circularBar.getAttribute('aria-valuemax')).toBe('200');
+    });
+
+    it('should go straight to a value set while the initial animation is still running', async () => {
+        // A separate fixture, so the bar is first rendered with the value already set and animates it in.
+        const initialFixture = TestBed.createComponent(CircularBarInitialValueComponent);
+        const host = initialFixture.componentInstance;
+        initialFixture.detectChanges();
+
+        const stroke = initialFixture.nativeElement.querySelector('.igx-circular-bar__outer') as SVGElement;
+        // the rendered fill, as a percentage of the circumference
+        const rendered = () => {
+            const style = getComputedStyle(stroke);
+            return (1 - parseFloat(style.strokeDashoffset) / parseFloat(style.strokeDasharray)) * 100;
+        };
+
+        await wait(200);
+        host.value = 10;
+        initialFixture.detectChanges();
+
+        // The stroke is part way between 0 and 100 and now heads for 10 from there,
+        // instead of continuing towards 100 first (#17649).
+        const atChange = rendered();
+        expect(atChange).toBeGreaterThan(10);
+        expect(atChange).toBeLessThan(100);
+        expect(stroke.getAnimations().length).toBe(1);
+
+        let previous = atChange;
+        while (stroke.getAnimations().length) {
+            await nextFrame();
+            const current = rendered();
+            expect(current).toBeLessThanOrEqual(previous + 0.1);
+            expect(current).toBeGreaterThanOrEqual(9.9);
+            previous = current;
+        }
+        expect(rendered()).toBeCloseTo(10, 0);
     });
 });

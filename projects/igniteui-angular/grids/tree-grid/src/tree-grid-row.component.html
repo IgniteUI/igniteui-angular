@@ -86,6 +86,7 @@
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
         [class.igx-grid__td--number]="col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency'"
+        [class.igx-grid__td--bool]="col.dataType === 'boolean'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
@@ -121,6 +122,7 @@
         [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--edited]="key | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
         [class.igx-grid__td--number]="(col.dataType === 'number' || col.dataType === 'percent' || col.dataType === 'currency') && col.visibleIndex !== 0"
+        [class.igx-grid__td--bool]="col.dataType === 'boolean'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [ngStyle]="col.cellStyles | igxCellStyles:data[col.field]:data:col.field:viewIndex:grid.pipeTrigger"
         [level]="treeRow.level"
@@ -148,4 +150,3 @@
         #treeCell>
     </igx-tree-grid-cell>
 </ng-template>
-

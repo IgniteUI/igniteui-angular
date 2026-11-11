@@ -1,7 +1,8 @@
-import { QueryList } from '@angular/core';
+import { provideZonelessChangeDetection, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
+import { IgxTabHeaderComponent } from './tab-header.component';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -9,11 +10,11 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
-    AddingSelectedTabComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
+    AddingSelectedTabComponent, BasicTabsComponent, TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent,
     TabsRoutingGuardTestComponent, TabsRoutingTestComponent, TabsRtlComponent, TabsTabsOnlyModeTest1Component,
     TabsTest2Component, TabsTestBug4420Component, TabsTestComponent, TabsTestCustomStylesComponent,
     TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent, TabsWithPrefixSuffixTestComponent,
-    TemplatedTabsTestComponent
+    TemplatedTabsTestComponent, ZonelessTabsCollectionComponent
 } from '../../../../test-utils/tabs-components.spec';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
@@ -346,6 +347,25 @@ describe('IgxTabs', () => {
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
+        }));
+
+        it('should keep the selection and the focus when navigating with left/right/home/end and all tabs are disabled', fakeAsync(() => {
+            fixture = TestBed.createComponent(TabsDisabledTestComponent);
+            tabs = fixture.componentInstance.tabs;
+            tick(100);
+            fixture.detectChanges();
+            tabs.items.forEach(item => item.disabled = true);
+            fixture.detectChanges();
+            const header = tabs.items.get(1).headerComponent.nativeElement;
+            header.focus();
+
+            for (const event of [KEY_END_EVENT, KEY_HOME_EVENT, KEY_RIGHT_EVENT, KEY_LEFT_EVENT]) {
+                header.dispatchEvent(event);
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).withContext(event.key).toBe(1);
+                expect(document.activeElement).withContext(event.key).toBe(header);
+            }
         }));
     });
 
@@ -1391,6 +1411,74 @@ describe('IgxTabs', () => {
             expect(leftScrollButton.clientWidth).toBeFalsy();
             expect(rightScrollButton.clientWidth).toBeFalsy();
         });
+
+        for (const alignment of [IgxTabsAlignment.start, IgxTabsAlignment.justify]) {
+            it(`should truncate a long header label within the bounds of the header (${alignment})`, async () => {
+                tabs.tabAlignment = alignment;
+                const label = headers[1].querySelector('[igxTabHeaderLabel]');
+                label.textContent = `Long header ${'Supercalifragilisticexpialidocious'.repeat(4)} text`;
+                fixture.detectChanges();
+                await wait(200);
+
+                const headerRect = headers[1].getBoundingClientRect();
+                const labelRect = label.getBoundingClientRect();
+                const lineHeight = headers[2].querySelector('[igxTabHeaderLabel]').getBoundingClientRect().height;
+
+                expect(headerRect.width).toBeLessThanOrEqual(360);
+                expect(labelRect.left).toBeGreaterThanOrEqual(headerRect.left);
+                expect(labelRect.right).toBeLessThanOrEqual(headerRect.right);
+                expect(labelRect.height).toBeLessThanOrEqual(lineHeight * 2 + 1);
+                expect(label.scrollHeight).toBeGreaterThan(label.clientHeight);
+            });
+        }
+
+        it('should not wrap the prefix next to a long header label', async () => {
+            const prefix = headers[1].querySelector('[igxPrefix]');
+            headers[1].querySelector('[igxTabHeaderLabel]').textContent =
+                'A long tab header label that does not fit on a single line of the header';
+            fixture.detectChanges();
+            await wait(200);
+
+            const range = document.createRange();
+            range.selectNodeContents(prefix);
+            expect(range.getClientRects().length).toBe(1);
+        });
+
+        for (const slot of ['prefix', 'suffix'] as const) {
+            it(`should keep a long ${slot} within the bounds of the header`, async () => {
+                const label = headers[1].querySelector('[igxTabHeaderLabel]');
+                let element = headers[1].querySelector('[igxPrefix]');
+                if (slot === 'suffix') {
+                    // The second header has no suffix in the test component
+                    element.textContent = '';
+                    element = document.createElement('span');
+                    element.setAttribute('igxSuffix', '');
+                    headers[1].appendChild(element);
+                }
+                element.textContent = `Long${'x'.repeat(80)}${slot}`;
+                fixture.detectChanges();
+                await wait(200);
+
+                const headerRect = headers[1].getBoundingClientRect();
+                for (const el of [element, label]) {
+                    const rect = el.getBoundingClientRect();
+                    expect(rect.left).toBeGreaterThanOrEqual(headerRect.left);
+                    expect(rect.right).toBeLessThanOrEqual(headerRect.right);
+                }
+                const range = document.createRange();
+                range.selectNodeContents(label);
+                expect(range.getClientRects().length).toBe(1);
+            });
+        }
+
+        it('should keep the size of an icon suffix next to a short header label', async () => {
+            headers[2].querySelector('[igxTabHeaderLabel]').textContent = 'A';
+            fixture.detectChanges();
+            await wait(200);
+
+            const icon = headers[2].querySelector('[igxSuffix]').getBoundingClientRect();
+            expect(icon.width).toBeCloseTo(icon.height, 0);
+        });
     });
 
     it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
@@ -1467,6 +1555,89 @@ describe('IgxTabs', () => {
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(7);
         }));
+    });
+});
+
+describe('IgxTabs zoneless change detection', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                NoopAnimationsModule,
+                BasicTabsComponent,
+                ZonelessTabsCollectionComponent
+            ],
+            providers: [provideZonelessChangeDetection()]
+        });
+    });
+
+    it('should render the initially selected tab panel without zone.js', async () => {
+        const fixture = TestBed.createComponent(BasicTabsComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs: IgxTabsComponent = fixture.componentInstance.tabs;
+        const firstHeader = fixture.debugElement.query(By.directive(IgxTabHeaderComponent)).nativeElement;
+
+        expect(tabs.selectedIndex).toBe(0);
+        expect(tabs.selectedItem.selected).toBeTrue();
+        expect(firstHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
+    });
+
+    it('should render a tab selected from code without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        tabs.selectedIndex = 2;
+        await fixture.whenStable();
+
+        const headers = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent));
+
+        expect(headers[0].nativeElement.classList.contains('igx-tabs__header-item--selected')).toBeFalse();
+        expect(headers[2].nativeElement.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
+    });
+
+    it('should keep the same selected index when the tab collection changes but the index is still valid, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(0);
+
+        // Removing the selected tab leaves the previous index (0) valid but no item selected.
+        fixture.componentInstance.removeSelectedTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(3);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
+    });
+
+    it('should select the last tab when the previous selected index is out of range, without zone.js', async () => {
+        const fixture = TestBed.createComponent(ZonelessTabsCollectionComponent);
+        fixture.componentInstance.startIndex.set(3);
+        fixture.detectChanges();
+        await Promise.resolve();
+        await fixture.whenStable();
+
+        const tabs = fixture.componentInstance.tabsComponent;
+        expect(tabs.selectedIndex).toBe(3);
+
+        fixture.componentInstance.shrinkToFirstTab();
+        await fixture.whenStable();
+
+        const selectedHeader = fixture.debugElement.queryAll(By.directive(IgxTabHeaderComponent))[0].nativeElement;
+
+        expect(tabs.items.length).toBe(1);
+        expect(tabs.selectedIndex).toBe(0);
+        expect(selectedHeader.classList.contains('igx-tabs__header-item--selected')).toBeTrue();
     });
 });
 
