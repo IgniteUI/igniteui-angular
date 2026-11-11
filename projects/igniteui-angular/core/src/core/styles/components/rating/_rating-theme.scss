@@ -17,9 +17,12 @@
             color: var-get($theme, 'value-label');
         }
 
-        igc-rating[disabled]::part(label),
-        igc-rating[disabled]::part(value-label) {
+        igc-rating[disabled]::part(label) {
             color: var-get($theme, 'disabled-label-color');
+        }
+
+        igc-rating[disabled]::part(value-label) {
+            color: var-get($theme, 'disabled-value-label');
         }
 
         igc-rating[disabled] {
