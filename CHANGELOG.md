@@ -7,10 +7,17 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
 - `IgxPivotGridComponent`
     - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
 - `IgxTabsComponent`
     - Header content with a word longer than the header now wraps within the header instead of overflowing and being clipped on both sides. Header labels are truncated with an ellipsis after the second line.
+    - When all tabs are disabled, pressing the arrow keys or Home on a tab header no longer freezes the page, and pressing End no longer selects the first tab.
+- `IgxForOfDirective`
+    - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
+- `IgxFocusRingDirective`
+    - `IgxFocusRingDirective` is now exported from `igniteui-angular/directives`. Because `IgxButtonDirective` and `IgxIconButtonDirective` use it as a host directive, templates that use them no longer fail to compile with error NG3004 when the compiler cannot import it from the entry point.
 
 ## 22.2.5
 
@@ -18,8 +25,6 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxPivotGridComponent`
     - In the horizontal row layout, collapsed and summary row headers now fill all the columns they span (#17222).
-- `IgxForOfDirective`
-    - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
 
 ## 22.2.4
 
@@ -27,7 +32,6 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Excel-style filtering now preselects custom conditions in the filter dialog when no filter value has been entered yet.
-    - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - Cells in an uncommitted new row now apply column formatting after leaving the cell editor, while empty cells retain their column-header placeholders.
 - `IgxPivotGridComponent`
