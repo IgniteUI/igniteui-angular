@@ -38,6 +38,7 @@ import {
 import {
     areEqualArrays,
     columnFieldPath,
+    getResizeObserver,
     resizeObservable,
     Transaction,
     TransactionType,
@@ -3297,6 +3298,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
     protected _defaultExpandState = false;
     protected _headerFeaturesWidth = NaN;
+    private _headerFeaturesObserver: ResizeObserver | null = null;
+    private _observedHeaderFeatures: HTMLElement[] = [];
     protected _init = true;
     protected _firstAutoResize = true;
     protected _autoSizeColumnsNotify = new Subject<void>();
@@ -4449,6 +4452,7 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.transactionChange$.next();
         this.transactionChange$.complete();
         this._destroyed = true;
+        this._headerFeaturesObserver?.disconnect();
 
         this.textHighlightService.destroyGroup(this.id);
 
@@ -4726,8 +4730,31 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
             const expanderWidth = expander?.nativeElement?.getBoundingClientRect ? expander.nativeElement.getBoundingClientRect().width : 0;
             this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
+            this.observeHeaderFeatures([this.headerSelectorContainer, this.headerDragContainer, this.headerGroupContainer, expander]);
         }
         return this._headerFeaturesWidth;
+    }
+
+    private observeHeaderFeatures(refs: (ElementRef<HTMLElement> | undefined)[]) {
+        const elements = refs.map(ref => ref?.nativeElement).filter(el => el instanceof HTMLElement);
+        const ResizeObserverCtor = getResizeObserver();
+        if (!ResizeObserverCtor || this._destroyed ||
+            (elements.length === this._observedHeaderFeatures.length && elements.every((el, i) => el === this._observedHeaderFeatures[i]))) {
+            return;
+        }
+        this._observedHeaderFeatures = elements;
+        this._headerFeaturesObserver?.disconnect();
+        this._headerFeaturesObserver ??= this.zone.runOutsideAngular(() => new ResizeObserverCtor(() => {
+            const width = this._headerFeaturesWidth;
+            if (Number.isNaN(width) || this._destroyed) {
+                return;
+            }
+            this._headerFeaturesWidth = NaN;
+            if (this.featureColumnsWidth() !== width) {
+                this.resizeNotify.next();
+            }
+        }));
+        elements.forEach(el => this._headerFeaturesObserver!.observe(el, { box: 'border-box' }));
     }
 
     /**

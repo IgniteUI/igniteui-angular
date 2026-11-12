@@ -1945,6 +1945,26 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.summariesMargin).toBe(grid.featureColumnsWidth());
         });
 
+        it('Summaries integration: should align the summary row when the header border width changes', async () => {
+            fix.componentInstance.height = null;
+            grid.getColumnByName('ProductID').hasSummary = true;
+            fix.detectChanges();
+            await wait(50);
+            fix.detectChanges();
+
+            const initialWidth = grid.featureColumnsWidth();
+            grid.nativeElement.style.setProperty('--ig-grid-header-border-width', '10px');
+            const newWidth = grid.headerSelectorContainer.nativeElement.getBoundingClientRect().width;
+            expect(newWidth).toBeGreaterThan(initialWidth);
+
+            await wait(100);
+            fix.detectChanges();
+
+            expect(grid.featureColumnsWidth()).toBe(newWidth);
+            const summaryPatch = fix.nativeElement.querySelector('.igx-grid__summaries-patch') as HTMLElement;
+            expect(summaryPatch.getBoundingClientRect().width).toBe(newWidth);
+        });
+
         it('Filtering: Should properly check the header checkbox state when filtering, #2469', () => {
             vi.spyOn(grid.rowSelectionChanging, 'emit');
 
