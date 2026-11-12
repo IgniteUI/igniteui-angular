@@ -17,11 +17,12 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { IgxHGridRemoteOnDemandComponent, IgxHierarchicalGridMissingChildDataComponent } from '../../hierarchical-grid/src/hierarchical-grid.spec';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
-import { IFilteringEventArgs, IgxGridNavigationService, IgxGridToolbarAdvancedFilteringComponent } from 'igniteui-angular/grids/core';
+import { IFilteringEventArgs, IgxColumnComponent, IgxGridNavigationService, IgxGridToolbarAdvancedFilteringComponent } from 'igniteui-angular/grids/core';
 import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IgxHierarchicalGridComponent } from 'igniteui-angular/grids/hierarchical-grid';
+import { Component, signal, viewChild } from '@angular/core';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
     beforeEach(waitForAsync(() => {
@@ -37,7 +38,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringWithToolbarComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridExportComponent,
-                IgxHGridRemoteOnDemandComponent
+                IgxHGridRemoteOnDemandComponent,
+                IgxGridAdvancedFilteringConditionalComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -73,6 +75,24 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             // Verify Advanced Filtering button in toolbar is visible.
             advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
+        }));
+
+        it('Should not warn about a wrong overlay id when the grid is destroyed while the dialog is opened - issue #17962', fakeAsync(() => {
+            const conditionalFix = TestBed.createComponent(IgxGridAdvancedFilteringConditionalComponent);
+            conditionalFix.detectChanges();
+
+            conditionalFix.componentInstance.grid().openAdvancedFilteringDialog();
+            conditionalFix.detectChanges();
+            tick(200);
+            expect(document.querySelector('.igx-advanced-filter')).not.toBeNull();
+
+            conditionalFix.componentInstance.showGrid.set(false);
+            conditionalFix.detectChanges();
+            tick(200);
+
+            expect(conditionalFix.componentInstance.grid()).toBeUndefined();
+            expect(document.querySelector('.igx-advanced-filter')).toBeNull();
+            expect(console.warn).not.toHaveBeenCalledWith('igxOverlay.detach was called with wrong id: ', jasmine.anything());
         }));
 
         it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
@@ -1920,3 +1940,18 @@ const verifyElementIsInExpressionsContainerView = (fix, element: HTMLElement) =>
     expect(elementRect.left >= exprContainerRect.left).toBe(true, 'left is not in view');
     expect(elementRect.right <= exprContainerRect.right).toBe(true, 'right is not in view');
 };
+
+@Component({
+    template: `
+    @if (showGrid()) {
+        <igx-grid [data]="data" height="500px">
+            <igx-column field="ProductName" dataType="string"></igx-column>
+        </igx-grid>
+    }`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+class IgxGridAdvancedFilteringConditionalComponent {
+    public grid = viewChild(IgxGridComponent);
+    public showGrid = signal(true);
+    public data = SampleTestData.excelFilteringData();
+}
