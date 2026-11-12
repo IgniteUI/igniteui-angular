@@ -73,6 +73,7 @@ export class IgxCalendarContainerComponent {
         return this.mode === PickerInteractionMode.Dialog;
     }
 
+    public isDisabled = () => false;
     public usePredefinedRanges = false;
     public customRanges: CustomDateRange[] = [];
     public resourceStrings!: IDateRangePickerResourceStrings;
