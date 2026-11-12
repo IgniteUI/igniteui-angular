@@ -27,6 +27,7 @@ describe('IgxQueryBuilder', () => {
         NoopAnimationsModule,
         IgxQueryBuilderComponent,
         IgxQueryBuilderSampleTestComponent,
+        IgxQueryBuilderInFormSampleTestComponent,
         IgxQueryBuilderCustomTemplateSampleTestComponent,
         IgxComboComponent
       ]
@@ -1099,6 +1100,37 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
       expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
         .toBeNull('actions container is visible');
+    }));
+
+    it('Should render the add expression and group buttons with type="button" to prevent form submission.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+
+      const addButton = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]).querySelector('button');
+      const groupButton = fix.nativeElement.querySelector('button.igx-filter-tree__button--and, button.igx-filter-tree__button--or');
+      expect(addButton.getAttribute('type')).toBe('button');
+      expect(groupButton.getAttribute('type')).toBe('button');
+    }));
+
+    it('Should prevent the implicit submission of a surrounding form on Enter in the value input.', fakeAsync(() => {
+      const formFix = TestBed.createComponent(IgxQueryBuilderInFormSampleTestComponent);
+      formFix.detectChanges();
+      formFix.componentInstance.queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      formFix.detectChanges();
+
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(formFix, [0]);
+      tick(50);
+      formFix.detectChanges();
+
+      const input = QueryBuilderFunctions.getQueryBuilderValueInput(formFix).querySelector('input');
+      expect(input.form).toBe(formFix.nativeElement.querySelector('form'));
+      const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true, composed: true });
+      input.dispatchEvent(event);
+      expect(event.defaultPrevented).toBeTrue();
     }));
 
     it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
@@ -3305,6 +3337,24 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
   public ngOnInit(): void {
     this.entities = SampleEntities.map(a => ({ ...a }));
   }
+}
+
+@Component({
+  template: `
+     <form (submit)="$event.preventDefault()">
+        <igx-query-builder #queryBuilder [entities]="this.entities">
+        </igx-query-builder>
+        <button type="submit">Submit</button>
+     </form>
+    `,
+  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [
+    IgxQueryBuilderComponent
+  ]
+})
+export class IgxQueryBuilderInFormSampleTestComponent {
+  @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+  public entities: Array<any> = SampleEntities.map(a => ({ ...a }));
 }
 
 @Component({

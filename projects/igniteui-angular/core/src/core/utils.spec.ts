@@ -1,6 +1,6 @@
 import { SampleTestData } from 'igniteui-angular/test-utils/sample-test-data.spec';
 import { cloneValue, cloneValueCached, cloneHierarchicalArray, compareMaps, getComponentCssSizeVar,
-    intoChunks, isDate, isLeftToRight, isObject, showMessage, uniqueDates } from './utils';
+    intoChunks, isDate, isLeftToRight, isObject, preventImplicitSubmission, showMessage, uniqueDates } from './utils';
 
 describe('Utils', () => {
     const complexObject = {
@@ -417,6 +417,60 @@ describe('Utils', () => {
 
             variable = new Set();
             expect(isDate(variable)).toBeFalsy();
+        });
+    });
+
+    describe('Utils - preventImplicitSubmission() unit tests', () => {
+        let host: HTMLDivElement;
+
+        const dispatchKeydown = (target: Element, init: KeyboardEventInit = {}): boolean => {
+            const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true, composed: true, ...init });
+            target.dispatchEvent(event);
+            return event.defaultPrevented;
+        };
+
+        beforeEach(() => {
+            host = document.createElement('div');
+            host.addEventListener('keydown', preventImplicitSubmission);
+            document.body.appendChild(host);
+        });
+
+        afterEach(() => {
+            host.remove();
+        });
+
+        it('should prevent Enter only on a form-owned input which would submit the form', () => {
+            host.innerHTML = '<form><input type="text" /><input type="file" /></form><input id="noForm" type="text" />';
+            const [textInput, fileInput] = Array.from(host.querySelectorAll('form input'));
+
+            expect(dispatchKeydown(textInput)).toBeTrue();
+            expect(dispatchKeydown(fileInput)).toBeFalse();
+            expect(dispatchKeydown(host.querySelector('#noForm'))).toBeFalse();
+        });
+
+        it('should not prevent other keys than Enter', () => {
+            host.innerHTML = '<form><input type="text" /></form>';
+            const input = host.querySelector('input');
+
+            expect(dispatchKeydown(input, { key: 'a' })).toBeFalse();
+            expect(dispatchKeydown(input, { key: ' ' })).toBeFalse();
+        });
+
+        it('should not prevent Enter while an IME composition is in progress', () => {
+            host.innerHTML = '<form><input type="text" /></form>';
+
+            expect(dispatchKeydown(host.querySelector('input'), { isComposing: true })).toBeFalse();
+        });
+
+        it('should resolve the target of the event through its composed path', () => {
+            const shadowHost = document.createElement('div');
+            host.appendChild(shadowHost);
+            const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+            shadowRoot.innerHTML = '<form><input type="text" /></form>';
+            const input = shadowRoot.querySelector('input');
+
+            expect(input.form).toBe(shadowRoot.querySelector('form'));
+            expect(dispatchKeydown(input)).toBeTrue();
         });
     });
 });

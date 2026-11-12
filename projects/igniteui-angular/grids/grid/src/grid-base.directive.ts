@@ -101,7 +101,8 @@ import {
     IgxGridTransaction,
     GridSelectionRange,
     runAfterRenderOnce,
-    GridStyleCSSProperty
+    GridStyleCSSProperty,
+    preventImplicitSubmission
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, animationFrameScheduler, merge, BehaviorSubject, timer } from 'rxjs';
@@ -3697,6 +3698,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        // Capture phase, since internal handlers (filtering row, editors, dialogs) stop the propagation of key events.
+        // The keypress is also handled, as a picker selecting on Enter may move the focus to its input before it.
+        merge(
+            fromEvent<KeyboardEvent>(this.nativeElement, 'keydown', { capture: true }),
+            fromEvent<KeyboardEvent>(this.nativeElement, 'keypress', { capture: true })
+        ).pipe(destructor).subscribe(preventImplicitSubmission);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
             const activeNode = this.navigation.activeNode;
             if (!this.crudService.cell && !!activeNode &&
