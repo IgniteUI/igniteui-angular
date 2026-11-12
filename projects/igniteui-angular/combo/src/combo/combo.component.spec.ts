@@ -993,6 +993,23 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             });
+            it('should prevent interaction with the open dropdown while disabled', async () => {
+                combo.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                const panel = document.querySelector<HTMLElement>('.igx-overlay__content .igx-combo')!;
+
+                expect(panel.inert).toBeFalsy();
+
+                combo.setDisabledState(true);
+                fixture.detectChanges();
+                expect(panel.inert).toBeTruthy();
+
+                combo.setDisabledState(false);
+                fixture.detectChanges();
+                expect(panel.inert).toBeFalsy();
+            });
+
             it('should initialize the combo component properly', () => {
                 const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
                 expect(fixture.componentInstance).toBeDefined();
