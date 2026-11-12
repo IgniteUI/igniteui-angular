@@ -1264,7 +1264,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.createColumnsList(this.parentIsland.childColumns.toArray());
         } else {
             super.setupColumns();
-            if (this.autoGenerate) {
+            if (this.autoGenerate && this.columns.length > 0) {
                 this.updateGeneratedSchemaFields();
             }
         }
@@ -1369,7 +1369,35 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     private updateGeneratedSchemaFields() {
         const root = this.rootGrid as IgxHierarchicalGridComponent;
-        root.setGeneratedSchemaFields(this.parentIsland, this.getFilterableFields(this.columns));
+        const fields = this.parentIsland ? this.getChildGridFields(this.columns) : this.getFilterableFields(this.columns);
+        const entity = root.setGeneratedSchemaFields(this.parentIsland, fields);
+        const firstRecord = this.data?.[0];
+        if (entity && this.parentIsland && firstRecord) {
+            // nested row islands that have no fields yet (e.g. their parent data is loaded on demand)
+            // are resolved from the first record of this grid, as they are when the schema is generated
+            root.fillEmptySchemaFields(entity, root.generateChildEntity(this.parentIsland, firstRecord));
+        }
+    }
+
+    /** Sets the fields of the entities that have none from the matching entities of another entity tree. */
+    private fillEmptySchemaFields(target: EntityType, source: EntityType) {
+        if (!target.fields?.length) {
+            target.fields = source.fields;
+        }
+        source.childEntities?.forEach(sourceChild => {
+            const targetChild = target.childEntities?.find(e => e.name === sourceChild.name);
+            if (targetChild) {
+                this.fillEmptySchemaFields(targetChild, sourceChild);
+            }
+        });
+    }
+
+    /**
+     * Resolves the fields of an auto-generated row island from the columns of one of its child grids.
+     * Columns that are not filterable are kept, so that expression trees that already use them can still be recreated.
+     */
+    private getChildGridFields(columns: IgxColumnComponent[]): FieldType[] {
+        return this.toFieldTypes(columns.filter((column) => !column.columnGroup && column.field));
     }
 
     /**
@@ -1385,10 +1413,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
     }
 
-    /** Sets the fields of the generated schema entity of a row island, or of the root entity when no row island is passed. */
-    private setGeneratedSchemaFields(rowIsland: IgxRowIslandComponent | null | undefined, fields: FieldType[]) {
+    /**
+     * Sets the fields of the generated schema entity of a row island, or of the root entity when no row island is passed.
+     * Returns the updated entity, if any.
+     */
+    private setGeneratedSchemaFields(rowIsland: IgxRowIslandComponent | null | undefined, fields: FieldType[]): EntityType | undefined {
         if (this._schemaSetByUser || !this._hGridSchema?.length) {
-            return;
+            return undefined;
         }
 
         const path: string[] = [];
@@ -1406,6 +1437,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (entity) {
             entity.fields = fields;
         }
+        return entity;
     }
 
     /**
@@ -1420,25 +1452,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const entityName = rowIsland.key;
         let fields: any[] = [];
         let childEntities;
-        // a child grid that is already created has its columns auto-generated from the actual child data
+        // a child grid that is already created has its columns auto-generated from the actual child data,
+        // with the header, data type and formatting options set in columnInit
         const childGrid = rowIsland.autoGenerate &&
             rowIsland.rowIslandAPI.getChildGrids().find(grid => grid.columns.length > 0);
+        const childGridFields = childGrid ? this.getChildGridFields(childGrid.columns) : [];
         if (!rowIsland.autoGenerate) {
             fields = this.getRowIslandFields(rowIsland);
-        } else if (childGrid) {
-            fields = this.getFilterableFields(childGrid.columns);
         } else if (firstRowData) {
             const rowIslandFields = Object.keys(firstRowData).map(key => {
                 if (firstRowData[key] instanceof Array) {
                     return null;
                 }
 
-                return {
+                return childGridFields.find(f => f.field === key) ?? {
                     field: key,
                     dataType: this.resolveDataTypes(firstRowData[key])
-                }
+                };
             });
             fields = rowIslandFields.filter(f => f !== null) as FieldType[];
+        } else {
+            fields = childGridFields;
         }
 
         // the child entities are generated from the row islands even if there is no child data yet (e.g. load on demand)

@@ -2773,6 +2773,16 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         let fixture: ComponentFixture<IgxHierarchicalGridSchemaComponent>;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
         const toFieldTypes = (entity: EntityType) => entity.fields.map(f => ({ field: f.field, dataType: f.dataType }));
+        const ordersSubQueryTree = (field: string, conditionName: string, searchVal: any) => ({
+            operator: 0, entity: 'root', returnFields: ['ID'],
+            filteringOperands: [{
+                fieldName: 'ID', conditionName: 'inQuery', ignoreCase: false,
+                searchTree: {
+                    operator: 0, entity: 'orders', returnFields: ['OrderID'],
+                    filteringOperands: [{ fieldName: field, conditionName, ignoreCase: true, searchVal }]
+                }
+            }]
+        });
 
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridSchemaComponent);
@@ -2849,6 +2859,33 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 { field: 'OrderID', dataType: 'number' },
                 { field: 'Total', dataType: 'number' },
                 { field: 'Shipped', dataType: 'boolean' }
+            ]);
+        });
+
+        it('should resolve the empty fields of nested row islands from the data of a child grid that generates columns', async () => {
+            fixture.componentInstance.data = [
+                { ID: 1, Name: 'Product A', ReleaseDate: new Date(), orders: [], contacts: [] },
+                {
+                    ID: 2, Name: 'Product B', ReleaseDate: new Date(), contacts: [],
+                    orders: [{ OrderID: 20, Total: 10, items: [{ ItemID: 200, Name: 'Item' }] }]
+                }
+            ];
+            fixture.detectChanges();
+            const [orders] = hierarchicalGrid.schema[0].childEntities;
+            const [items] = orders.childEntities;
+            expect(orders.fields).toEqual([]);
+            expect(items.fields).toEqual([]);
+
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[1]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const childGrids = hierarchicalGrid.gridAPI.getChildGrids(true) as IgxHierarchicalGridComponent[];
+            expect(childGrids.map(grid => grid.parentIsland.key)).not.toContain('items');
+            expect(orders.childEntities[0]).toBe(items);
+            expect(toFieldTypes(items)).toEqual([
+                { field: 'ItemID', dataType: 'number' },
+                { field: 'Name', dataType: 'string' }
             ]);
         });
 
@@ -2970,6 +3007,71 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             }).not.toThrow();
             const [operand] = hierarchicalGrid.advancedFilteringExpressionsTree.filteringOperands as any[];
             expect(operand.searchTree.filteringOperands[0].condition.name).toBe('contains');
+        });
+
+        it('should keep the fields of an auto-generated row island when a row without child data is expanded', async () => {
+            fixture.componentInstance.data = [
+                { ID: 1, Name: 'Product A', ReleaseDate: new Date(), orders: [{ OrderID: 10, Total: 5, Shipped: true }], contacts: [] },
+                { ID: 2, Name: 'Product B', ReleaseDate: new Date(), orders: [], contacts: [] }
+            ];
+            fixture.detectChanges();
+            const [orders] = hierarchicalGrid.schema[0].childEntities;
+            expect(toFieldTypes(orders)).toEqual([
+                { field: 'OrderID', dataType: 'number' },
+                { field: 'Total', dataType: 'number' },
+                { field: 'Shipped', dataType: 'boolean' }
+            ]);
+
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[1]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(hierarchicalGrid.gridAPI.getChildGrids()[0].columns.length).toBe(0);
+
+            expect(toFieldTypes(orders)).toEqual([
+                { field: 'OrderID', dataType: 'number' },
+                { field: 'Total', dataType: 'number' },
+                { field: 'Shipped', dataType: 'boolean' }
+            ]);
+            expect(() => {
+                hierarchicalGrid.advancedFilteringExpressionsTree = JSON.parse(JSON.stringify(ordersSubQueryTree('Total', 'greaterThan', 1)));
+                fixture.detectChanges();
+            }).not.toThrow();
+        });
+
+        it('should keep the non-filterable columns of an auto-generated row island in its fields', async () => {
+            fixture.componentInstance.nonFilterableOrdersColumns = ['Shipped'];
+            const [orders] = hierarchicalGrid.schema[0].childEntities;
+            expect(toFieldTypes(orders).map(f => f.field)).toEqual(['OrderID', 'Total', 'Shipped']);
+
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[0]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            expect(childGrid.columns.map(c => c.filterable)).toEqual([true, true, false]);
+
+            expect(toFieldTypes(orders).map(f => f.field)).toEqual(['OrderID', 'Total', 'Shipped']);
+            expect(() => {
+                hierarchicalGrid.advancedFilteringExpressionsTree = JSON.parse(JSON.stringify(ordersSubQueryTree('Shipped', 'true', null)));
+                fixture.detectChanges();
+            }).not.toThrow();
+        });
+
+        it('should resolve the fields of an auto-generated row island from the new child records after the data is replaced', async () => {
+            hierarchicalGrid.expandRow(fixture.componentInstance.data[0]);
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(hierarchicalGrid.gridAPI.getChildGrids()[0].columns.map(c => c.field)).toEqual(['OrderID', 'Total', 'Shipped']);
+
+            fixture.componentInstance.data = [{ ID: 5, Name: 'Product C', ReleaseDate: new Date(), orders: [{ Code: 'a', Qty: 1 }], contacts: [] }];
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const [orders] = hierarchicalGrid.schema[0].childEntities;
+            expect(toFieldTypes(orders)).toEqual([
+                { field: 'Code', dataType: 'string' },
+                { field: 'Qty', dataType: 'number' }
+            ]);
         });
 
         it('should use a schema set by the user instead of generating one', () => {
@@ -3766,7 +3868,7 @@ export class IgxHierarchicalGridRowIslandTemplatesComponent extends IgxHierarchi
         @if (showDiscontinued) {
             <igx-column field="Discontinued" dataType="boolean"></igx-column>
         }
-        <igx-row-island [key]="'orders'" [autoGenerate]="true">
+        <igx-row-island [key]="'orders'" [autoGenerate]="true" (columnInit)="ordersColumnInit($event)">
             <igx-row-island [key]="'items'" [autoGenerate]="true"></igx-row-island>
         </igx-row-island>
         <igx-row-island [key]="'contacts'" [autoGenerate]="false">
@@ -3789,6 +3891,7 @@ export class IgxHierarchicalGridSchemaComponent {
 
     public showDiscontinued = false;
     public showAddress = false;
+    public nonFilterableOrdersColumns: string[] = [];
 
     public data: any[] = [
         {
@@ -3797,6 +3900,12 @@ export class IgxHierarchicalGridSchemaComponent {
             contacts: [{ Email: 'contact@example.com', Phone: 123, Fax: '456', Address: 'Address' }]
         }
     ];
+
+    public ordersColumnInit(column: IgxColumnComponent) {
+        if (this.nonFilterableOrdersColumns.includes(column.field)) {
+            column.filterable = false;
+        }
+    }
 }
 
 @Component({

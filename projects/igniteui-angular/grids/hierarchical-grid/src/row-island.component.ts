@@ -511,7 +511,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 grid.updateOnRender = true;
             }
         });
-        (this.rootGrid as unknown as IgxHierarchicalGridComponent)?.updateRowIslandSchemaFields(this);
+        (this.rootGrid as IgxHierarchicalGridComponent)?.updateRowIslandSchemaFields(this);
     }
 
     protected updateChildren() {
