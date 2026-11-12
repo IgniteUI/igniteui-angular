@@ -44,6 +44,27 @@ describe("Pivot data selector #pivotGrid", () => {
         expect(selector.dims).toEqual([]);
         expect(selector.values).toEqual([]);
     });
+
+    it("should prevent implicit form submission on Enter in its search input", () => {
+        const fixture = TestBed.createComponent(IgxPivotDataSelectorComponent);
+        fixture.detectChanges();
+
+        const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement as HTMLInputElement;
+        const pressEnter = () => {
+            const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+            input.dispatchEvent(event);
+            return event.defaultPrevented;
+        };
+
+        expect(pressEnter()).toBe(false);
+
+        const form = document.createElement('form');
+        fixture.nativeElement.parentElement.appendChild(form);
+        form.appendChild(fixture.nativeElement);
+        expect(input.form).toBe(form);
+        expect(pressEnter()).toBe(true);
+        form.remove();
+    });
 });
 
 describe("Pivot data selector integration #pivotGrid", () => {
