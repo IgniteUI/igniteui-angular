@@ -1990,6 +1990,28 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.valueChange.emit).not.toHaveBeenCalled();
             });
 
+            it('should discard a pending time when the open dialog is disabled', async () => {
+                timePicker.mode = 'dialog';
+                fixture.detectChanges();
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                const initialValue = timePicker.value;
+                const change = vi.spyOn(timePicker.valueChange, 'emit');
+                timePicker.nextHour(1);
+
+                timePicker.setDisabledState(true);
+                fixture.detectChanges();
+                const panel = fixture.debugElement.query(By.css('.igx-time-picker__body'));
+                expect(panel.nativeElement.inert).toBe(true);
+
+                timePicker.okButtonClick();
+                timePicker.close();
+                await fixture.whenStable();
+                expect(timePicker.value).toEqual(initialValue);
+                expect(change).not.toHaveBeenCalled();
+            });
+
             it('should close the dropdown when cleared while open', async () => {
                 timePicker.open();
                 await fixture.whenStable();
