@@ -97,6 +97,7 @@ All notable changes for each version of this project will be documented in this 
     - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
 - `IgxExpansionPanelComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up` no longer expand or collapse the panel when its header is disabled.
+    - When the collapse animation ends, the body is no longer shown at full height for a frame before it is removed, e.g. in zoneless applications.
 - `IgxFilterDirective`, `IgxFilterPipe`
     - When filtering by multiple keys, an item matched by any of the keys is no longer hidden when the last key does not match, and `metConditionFn` / `overdueConditionFn` are called once per item instead of once per key.
     - Items whose `key` property has a falsy value, such as `0` or `false`, are now matched by that value instead of the item's text content.
@@ -157,6 +158,7 @@ All notable changes for each version of this project will be documented in this 
     - `next`, `prev` and focusing a step no longer throw when there is no active step, e.g. when all steps are initially disabled. In that case `activeStepChanging` is emitted with `oldIndex` set to `-1`.
     - `reset` keeps the active step visited, so its invalid state is displayed after moving to another step.
     - Setting `animationDuration` from code now applies it to the vertical animations as well.
+    - When the animation of the previously active step ends, its content is no longer shown for a frame before it is removed, e.g. in zoneless applications. Previously it was shown at full height in vertical orientation, and in its original place behind the active step's content in horizontal orientation.
 - `IgxTabsComponent`
     - With `manual` activation, a tab header focused with the keyboard is scrolled into view.
     - The selected tab header is scrolled into view when hidden tabs become visible, for example in a dialog or a drop-down.
@@ -172,6 +174,8 @@ All notable changes for each version of this project will be documented in this 
     - The dialog header no longer throws a missing locale data error for a `locale` without registered Angular locale data when `provideIgniteIntl()` is used.
     - The `aria-valuemin` and `aria-valuemax` of the selected seconds item no longer depend on the milliseconds of the value.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the drop-down, is now prevented.
+- `IgxTreeComponent`
+    - When the collapse animation of a node ends, its child nodes are no longer shown at full height for a frame before they are removed, e.g. in zoneless applications.
 
 ## 22.2.6
 
