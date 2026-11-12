@@ -67,7 +67,7 @@
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
     (opened)="handleOpened()" (closed)="handleClosed()" [singleMode]="true">
         <!-- The igx-combo class is needed here in order to scope the css variables -->
-        <div class="igx-combo">
+        <div class="igx-combo" [inert]="disabled">
             <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
 
             <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
