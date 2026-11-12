@@ -68,6 +68,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxSelectComponent`
+    - An open dropdown no longer accepts interaction while the select is disabled.
 - **Forms**
     - `IgxSnackbarComponent` - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), it became the default button of the form, so pressing Enter in any input of the form clicked it, which triggered the snackbar action and submitted the form.
     - `IgxQueryBuilderComponent` - The add expression and the group (AND/OR) buttons now render with `type="button"`. Previously, clicking them inside a `form` submitted it. Pressing Enter in the query builder inputs also no longer submits a surrounding `form`.
