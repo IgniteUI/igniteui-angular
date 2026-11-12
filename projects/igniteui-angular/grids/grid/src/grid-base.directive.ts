@@ -4736,7 +4736,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     private observeHeaderFeatures(refs: (ElementRef<HTMLElement> | undefined)[]) {
-        const elements = refs.map(ref => ref?.nativeElement).filter(el => el instanceof HTMLElement);
+        const elements = refs.map(ref => ref?.nativeElement).filter((el): el is HTMLElement => !!el);
         const ResizeObserverCtor = getResizeObserver();
         if (!ResizeObserverCtor || this._destroyed ||
             (elements.length === this._observedHeaderFeatures.length && elements.every((el, i) => el === this._observedHeaderFeatures[i]))) {
