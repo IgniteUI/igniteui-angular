@@ -578,10 +578,6 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
             const oldSelectionArray = args.oldSelection ? [args.oldSelection] : [];
             this.comboInput.value = this._displayValue = this.searchValue = this.createDisplayText(oldSelectionArray, []);
-
-            if (this.isRemote) {
-                this.registerRemoteEntries(newValueAsArray, false);
-            }
         }
     }
 
@@ -637,7 +633,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             const searchValue = this.searchValue || this.comboInput.value;
             const remoteValue = Object.keys(this._remoteSelection).map(e => (this._remoteSelection as any)[e])[0] || '';
             if (searchValue !== remoteValue) {
-                this.clear();
+                this.clearSelection(true);
             }
             return;
         }
@@ -645,20 +641,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         const filtered = this.filteredData!.find(this.findMatch);
         // selecting null in primitive data returns undefined as the search text is '', but the item is null
         if (filtered === undefined && this.selectedItem !== null || !super.selection.length) {
-            this.clear();
-        }
-    }
-
-    private getElementVal(element: any): string {
-        const elementVal = this.displayKey ? element[this.displayKey] : element;
-        return String(elementVal);
-    }
-
-    private clear(): void {
-        this.clearSelection(true);
-        const oldSelection = this.selection;
-        if (this.selection !== oldSelection) {
-            this.comboInput.value = this._displayValue = this.searchValue = '';
+            this.clearSelection(true);
         }
     }
 
