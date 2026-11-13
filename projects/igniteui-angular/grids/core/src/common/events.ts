@@ -32,6 +32,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 export interface IGridRowEventArgs extends IBaseEventArgs {
     /** Represents the grid row that triggered the event. */
     row: RowType;
+    /* blazorCSSuppress */
     /**
      * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
@@ -526,7 +527,7 @@ export interface IFilteringEventArgs extends IBaseEventArgs, CancelableEventArgs
 /** The event arguments after a column's visibility is changed. */
 export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
     /** Represents the column the event originated from */
-    column: any;
+    column: ColumnType;
     /**
      * The new hidden state that the column will have, if operation is successful.
      * Will be `true` when hiding and `false` when showing.

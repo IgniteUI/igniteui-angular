@@ -308,6 +308,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public processedExpandedFlatData!: any[] | null;
 
+    /* blazorCSSuppress */
     /**
      * Returns an array of the root level `ITreeGridRecord`s.
      * ```typescript
