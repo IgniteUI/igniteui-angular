@@ -171,11 +171,18 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
             return Math.round(offset);
         }
         if (TooltipRegexes[end].test(this._placement)) {
-            const endOffset = TooltipRegexes.vertical.test(this._placement) ? 8 : 4;
-            const offset = tooltipSize - (endOffset + arrowSize);
+            const offset = tooltipSize - (this.getArrowEdgeOffset() + arrowSize);
             return Math.round(offset);
         }
         return 0;
+    }
+
+    /**
+     * Gets the distance of a `start` or `end` aligned arrow from the tooltip edge.
+     * A `start` aligned arrow gets no position style and rests at this distance.
+     */
+    private getArrowEdgeOffset(): number {
+        return TooltipRegexes.vertical.test(this._placement) ? 8 : 4;
     }
 
     /**
@@ -203,8 +210,26 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
         const direction = this.getOppositeDirection(tooltipDirection) as 'top' | 'right' | 'bottom' | 'left';
         const arrowRect = arrow.getBoundingClientRect();
         const tooltipRect = tooltip.getBoundingClientRect();
-        const top = this.getArrowPositionStyles(arrowRect, tooltipRect, 'top');
-        const left = this.getArrowPositionStyles(arrowRect, tooltipRect, 'left');
+
+        // Position the arrow with the layout sizes. A transform, such as the scale of the open animation
+        // when a resize or a scroll repositions the tooltip, changes the rectangles but not these sizes.
+        const arrowSize = { width: arrow.offsetWidth, height: arrow.offsetHeight };
+        const tooltipSize = { width: (tooltip as HTMLElement).offsetWidth, height: (tooltip as HTMLElement).offsetHeight };
+        let top = this.getArrowPositionStyles(arrowSize, tooltipSize, 'top');
+        let left = this.getArrowPositionStyles(arrowSize, tooltipSize, 'left');
+
+        // When the tooltip cannot flip, `fitInViewport` pushes it into the viewport with a translate.
+        // Move the arrow back by the same amount, so it keeps pointing at the target.
+        const push = this.getViewportPush(tooltip.parentElement as HTMLElement | null);
+        const startOffset = this._placement.endsWith('-start') ? this.getArrowEdgeOffset() : 0;
+
+        if (TooltipRegexes.vertical.test(this._placement)) {
+            if (push.x) {
+                left = this.keepArrowInTooltip(left + startOffset - push.x, arrowSize, tooltipSize, tooltip, 'left');
+            }
+        } else if (push.y) {
+            top = this.keepArrowInTooltip(top + startOffset - push.y, arrowSize, tooltipSize, tooltip, 'top');
+        }
 
         const arrowFit: ArrowFit = {
             direction,
@@ -215,6 +240,42 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
         };
 
         this.positionArrow(arrow, arrowFit);
+    }
+
+    /**
+     * Gets the translation with which `fitInViewport` pushed the content element into the viewport.
+     *
+     * @param element the content element that holds the tooltip.
+     */
+    private getViewportPush(element: HTMLElement | null): { x: number; y: number } {
+        const transform = element?.style.transform ?? '';
+        const read = (axis: 'X' | 'Y') =>
+            Number(new RegExp(`translate${axis}\\((-?[\\d.]+)px\\)`).exec(transform)?.[1] ?? 0);
+
+        return { x: read('X'), y: read('Y') };
+    }
+
+    /**
+     * Keeps the arrow offset inside the tooltip, clear of its rounded corners.
+     *
+     * @param offset the offset of the arrow from the tooltip start.
+     * @param arrowRect size of the arrow element.
+     * @param tooltipRect size of the tooltip element.
+     * @param tooltip tooltip element.
+     * @param positionProperty for which position property the offset is.
+     */
+    private keepArrowInTooltip(
+        offset: number,
+        arrowRect: Partial<DOMRect>,
+        tooltipRect: Partial<DOMRect>,
+        tooltip: Element,
+        positionProperty: 'top' | 'left'
+    ): number {
+        const arrowSize = Math.max(arrowRect.width!, arrowRect.height!);
+        const tooltipSize = positionProperty === 'left' ? tooltipRect.width! : tooltipRect.height!;
+        const radius = parseFloat(tooltip.ownerDocument.defaultView?.getComputedStyle(tooltip).borderTopLeftRadius ?? '') || 0;
+
+        return Math.round(Math.min(Math.max(offset, radius), tooltipSize - arrowSize - radius));
     }
 
     /**
