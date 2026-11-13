@@ -832,6 +832,23 @@ describe('IgxDatePicker', () => {
                 vi.useRealTimers();
             });
 
+            it('should prevent interaction with an open calendar while disabled', async () => {
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                const calendar = document.querySelector<HTMLElement>('igx-calendar')!;
+
+                expect(calendar.inert).toBeFalsy();
+
+                datePicker.setDisabledState(true);
+                detectChanges();
+                expect(calendar.inert).toBeTruthy();
+
+                datePicker.setDisabledState(false);
+                detectChanges();
+                expect(calendar.inert).toBeFalsy();
+            });
+
             it('should activate today\'s date when reopening the calendar', async () => {
                 datePicker.clear();
                 datePicker.open();

@@ -957,6 +957,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
+        componentInstance.isDisabled = () => this.disabled;
         this._calendar = componentInstance.calendar;
         this._calendar.hasHeader = !this.isDropdown && !this.hideHeader;
         this._calendar.formatOptions = this.pickerCalendarFormat;
