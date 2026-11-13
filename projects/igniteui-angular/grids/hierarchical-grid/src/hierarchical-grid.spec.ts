@@ -15,7 +15,7 @@ import { IgxExcelStyleSortingComponent } from 'igniteui-angular/grids/core';
 import { IgxExcelStyleSearchComponent } from 'igniteui-angular/grids/core';
 import { IgxCellHeaderTemplateDirective } from 'igniteui-angular/grids/core';
 import { advance, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
-import { ColumnType, EntityType, FieldType, IgxOverlayOutletDirective, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
+import { ColumnType, EntityType, FieldType, GridColumnDataType, IgxOverlayOutletDirective, IgxStringFilteringOperand, ɵSize, getComponentSize } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxDialogComponent } from 'igniteui-angular/dialog';
 import { IGridCreatedEventArgs } from './events';
@@ -3074,6 +3074,89 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             ]);
         });
 
+        describe('child records with empty values', () => {
+            const expandRow = async (index: number) => {
+                hierarchicalGrid.expandRow(fixture.componentInstance.data[index]);
+                fixture.detectChanges();
+                await fixture.whenStable();
+            };
+
+            beforeEach(() => {
+                fixture.componentInstance.data = [
+                    { ID: 1, Name: 'Product A', ReleaseDate: new Date(), orders: [{ OrderID: 10, Total: 25 }], contacts: [] },
+                    {
+                        ID: 2, Name: 'Product B', ReleaseDate: new Date(), contacts: [],
+                        orders: [{ OrderID: 20, Total: null }, { OrderID: 21, Total: 40 }]
+                    }
+                ];
+                fixture.detectChanges();
+            });
+
+            it('should keep the data type of a field when a child grid with an empty value in its first record is created', async () => {
+                const [orders] = hierarchicalGrid.schema[0].childEntities;
+                hierarchicalGrid.advancedFilteringExpressionsTree = JSON.parse(JSON.stringify(ordersSubQueryTree('Total', 'greaterThan', 20)));
+                fixture.detectChanges();
+
+                await expandRow(1);
+                expect(hierarchicalGrid.gridAPI.getChildGrids()[0].getColumnByName('Total').dataType).toBe('string');
+
+                expect(toFieldTypes(orders)).toEqual([
+                    { field: 'OrderID', dataType: 'number' },
+                    { field: 'Total', dataType: 'number' }
+                ]);
+                expect(() => {
+                    hierarchicalGrid.advancedFilteringExpressionsTree =
+                        JSON.parse(JSON.stringify(ordersSubQueryTree('Total', 'greaterThan', 20)));
+                    fixture.detectChanges();
+                }).not.toThrow();
+            });
+
+            it('should generate the data type of a field from the first record when a child grid has an empty value for it', async () => {
+                await expandRow(1);
+
+                const [orders] = hierarchicalGrid.schema[0].childEntities;
+                expect(toFieldTypes(orders)).toEqual([
+                    { field: 'OrderID', dataType: 'number' },
+                    { field: 'Total', dataType: 'number' }
+                ]);
+            });
+
+            it('should replace a data type resolved from an empty value when a child grid has a value for the field', async () => {
+                fixture.componentInstance.data = [...fixture.componentInstance.data].reverse();
+                fixture.detectChanges();
+                const [orders] = hierarchicalGrid.schema[0].childEntities;
+                expect(toFieldTypes(orders)[1]).toEqual({ field: 'Total', dataType: 'string' });
+
+                await expandRow(1);
+
+                expect(toFieldTypes(orders)[1]).toEqual({ field: 'Total', dataType: 'number' });
+            });
+
+            it('should keep the fields that a created child grid has no columns for and add its new ones', async () => {
+                fixture.componentInstance.data[1].orders = [{ OrderID: 20, Note: 'a' }];
+                fixture.componentInstance.data = [...fixture.componentInstance.data];
+                fixture.detectChanges();
+                const [orders] = hierarchicalGrid.schema[0].childEntities;
+
+                await expandRow(1);
+
+                expect(toFieldTypes(orders)).toEqual([
+                    { field: 'OrderID', dataType: 'number' },
+                    { field: 'Total', dataType: 'number' },
+                    { field: 'Note', dataType: 'string' }
+                ]);
+            });
+
+            it('should use the data type set in columnInit for a field with an empty value', async () => {
+                fixture.componentInstance.ordersColumnTypes = { Total: 'currency' };
+                const [orders] = hierarchicalGrid.schema[0].childEntities;
+
+                await expandRow(1);
+
+                expect(toFieldTypes(orders)[1]).toEqual({ field: 'Total', dataType: 'currency' });
+            });
+        });
+
         it('should use a schema set by the user instead of generating one', () => {
             const schema: EntityType[] = [{ name: 'Products', fields: [{ field: 'ID', dataType: 'number' }] }];
 
@@ -3892,6 +3975,7 @@ export class IgxHierarchicalGridSchemaComponent {
     public showDiscontinued = false;
     public showAddress = false;
     public nonFilterableOrdersColumns: string[] = [];
+    public ordersColumnTypes: Record<string, GridColumnDataType> = {};
 
     public data: any[] = [
         {
@@ -3902,6 +3986,9 @@ export class IgxHierarchicalGridSchemaComponent {
     ];
 
     public ordersColumnInit(column: IgxColumnComponent) {
+        if (this.ordersColumnTypes[column.field]) {
+            column.dataType = this.ordersColumnTypes[column.field];
+        }
         if (this.nonFilterableOrdersColumns.includes(column.field)) {
             column.filterable = false;
         }
