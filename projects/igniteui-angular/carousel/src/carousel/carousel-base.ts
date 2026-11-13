@@ -177,14 +177,17 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
 
         this.leaveAnimationPlayer = this.animationService.buildAnimation(animation, this.getPreviousElement());
         this.leaveAnimationPlayer.animationEnd.subscribe(() => {
+            this.animationPosition = 0;
+            this.newDuration = 0;
+            this.leaveAnimationDone.emit();
+            // Render the left item's state synchronously, so that e.g. its content is removed before destroying
+            // the player clears the animation styles; otherwise it is painted in place for a frame.
+            this.cdr.detectChanges();
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.destroy();
                 this.leaveAnimationPlayer = null!;
             }
-            this.animationPosition = 0;
-            this.newDuration = 0;
-            this.leaveAnimationDone.emit();
         });
         this.leaveAnimationPlayer.play();
     }

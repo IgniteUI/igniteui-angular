@@ -564,6 +564,36 @@ describe('IgxTree #treeView', () => {
                 pending('Test not implemented');
             });
 
+            it('Should remove the node children before the collapse animation player is reset', fakeAsync(() => {
+                const node = tree.rootNodes[0];
+                node.expanded = true;
+                fix.detectChanges();
+                const getChildrenGroup = () => node.nativeElement.querySelector(':scope > .igx-tree-node__group');
+                expect(getChildrenGroup()).not.toBeNull();
+
+                // capture whether the children are still rendered at the moment the collapse player resets the
+                // element styles; if they are, they are painted at full height for a frame
+                let childrenRenderedOnReset: boolean | undefined;
+                const animationService = (node as any).animationService;
+                const buildAnimation = animationService.buildAnimation.bind(animationService);
+                spyOn(animationService, 'buildAnimation').and.callFake((...args: any[]) => {
+                    const player = buildAnimation(...args);
+                    const reset = player.reset.bind(player);
+                    spyOn(player, 'reset').and.callFake(() => {
+                        childrenRenderedOnReset = !!getChildrenGroup();
+                        reset();
+                    });
+                    return player;
+                });
+
+                node.collapse();
+                tick(1000);
+
+                expect(node.expanded).toBe(false);
+                expect(childrenRenderedOnReset).toBe(false);
+                expect(getChildrenGroup()).toBeNull();
+            }));
+
             it('Should do nothing when calling expand()/collapse() on expanded/collapsed node', fakeAsync(() => {
                 const expandingSpy = spyOn(tree.nodeExpanding, 'emit').and.callThrough();
                 const collapsingSpy = spyOn(tree.nodeCollapsing, 'emit').and.callThrough();
