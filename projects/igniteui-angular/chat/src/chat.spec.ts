@@ -1,7 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { IgxChatComponent, IgxChatMessageContextDirective, type IgxChatTemplates } from './chat.component';
-import { Component, signal, TemplateRef, ViewRef, viewChild, ChangeDetectionStrategy } from '@angular/core';
-import type { IgcChatComponent, IgcChatMessage, IgcChatMessageAttachment, IgcTextareaComponent } from 'igniteui-webcomponents';
+import {
+    IgxChatAttachmentContextDirective,
+    IgxChatComponent,
+    IgxChatInputContextDirective,
+    IgxChatMessageContextDirective,
+    type IgxChatOptions,
+    type IgxChatTemplates
+} from './chat.component';
+import { Component, signal, TemplateRef, ViewRef, viewChild, type OutputEmitterRef } from '@angular/core';
+import type {
+    IgcChatComponent,
+    IgcChatMessage,
+    IgcChatMessageAttachment,
+    IgcChatMessageReaction,
+    IgcTextareaComponent
+} from 'igniteui-webcomponents';
 import { describe, it, expect, beforeEach, vi, type Mock, type MockInstance } from 'vitest';
 
 describe('Chat wrapper', () => {
@@ -58,6 +71,191 @@ describe('Chat wrapper', () => {
 
         const textarea = getChatInput(chatElement);
         expect(textarea.value).toEqual(chatComponent.draftMessage().text);
+    });
+
+    it('passes options to the web component', async () => {
+        const options: IgxChatOptions = { headerText: 'Support', inputPlaceholder: 'Ask anything' };
+        fixture.componentRef.setInput('options', options);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(chatElement.options).toEqual({ ...options, renderers: {} });
+        await vi.waitFor(() => {
+            expect(getChatHeaderTitle(chatElement).textContent.trim()).toEqual('Support');
+            expect(getChatInput(chatElement).placeholder).toEqual('Ask anything');
+        });
+    });
+
+    it('updates the web component when options change', async () => {
+        fixture.componentRef.setInput('options', { headerText: 'First' });
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        fixture.componentRef.setInput('options', { headerText: 'Second' });
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        await vi.waitFor(() => expect(getChatHeaderTitle(chatElement).textContent.trim()).toEqual('Second'));
+    });
+});
+
+describe('Chat outputs', () => {
+    type ChatOutputName = {
+        [K in keyof IgxChatComponent]: IgxChatComponent[K] extends OutputEmitterRef<any> ? K : never
+    }[keyof IgxChatComponent];
+
+    const message: IgcChatMessage = { id: '1', sender: 'user', text: 'Hello' };
+    const attachment: IgcChatMessageAttachment = { id: 'a1', name: 'file.pdf' };
+    const reaction: IgcChatMessageReaction = { message, reaction: 'like' };
+
+    const cases: { event: string; output: ChatOutputName; detail: unknown; expected: unknown }[] = [
+        { event: 'igcMessageCreated', output: 'messageCreated', detail: message, expected: message },
+        { event: 'igcMessageReact', output: 'messageReact', detail: reaction, expected: reaction },
+        { event: 'igcAttachmentClick', output: 'attachmentClick', detail: attachment, expected: attachment },
+        { event: 'igcTypingChange', output: 'typingChange', detail: true, expected: true },
+        { event: 'igcInputChange', output: 'inputChange', detail: 'draft text', expected: 'draft text' },
+        // Void outputs must not leak the event detail
+        { event: 'igcAttachmentDrag', output: 'attachmentDrag', detail: 'ignored', expected: undefined },
+        { event: 'igcAttachmentDrop', output: 'attachmentDrop', detail: 'ignored', expected: undefined },
+        { event: 'igcInputFocus', output: 'inputFocus', detail: 'ignored', expected: undefined },
+        { event: 'igcInputBlur', output: 'inputBlur', detail: 'ignored', expected: undefined },
+    ];
+
+    let fixture: ComponentFixture<IgxChatComponent>;
+    let chatElement: IgcChatComponent;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [IgxChatComponent]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(IgxChatComponent);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        chatElement = getChatElement(fixture);
+    });
+
+    it.each(cases)('emits $output when the web component fires $event', ({ event, output, detail, expected }) => {
+        const spy = vi.fn();
+        (fixture.componentInstance[output] as OutputEmitterRef<unknown>).subscribe(spy);
+
+        chatElement.dispatchEvent(new CustomEvent(event, { detail }));
+
+        expect(spy).toHaveBeenCalledTimes(1);
+        expect(spy).toHaveBeenCalledWith(expected);
+    });
+});
+
+describe('Chat rendering with every template context', () => {
+    let fixture: ComponentFixture<ChatAllContextsBed>;
+    let chatElement: IgcChatComponent;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [ChatAllContextsBed]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(ChatAllContextsBed);
+        // The web component creates the template views during its own async render, after
+        // any manual change detection pass, so let the application tick check them as in an app
+        fixture.autoDetectChanges();
+        await fixture.whenStable();
+
+        chatElement = getChatElement(fixture);
+    });
+
+    it('renders the attachment template with the attachment as context', async () => {
+        await vi.waitFor(() => {
+            const attachments = getMessageAttachments(getChatMessages(chatElement)[0]);
+            expect(attachments.querySelector('.custom-attachment').textContent.trim()).toEqual('report.pdf');
+        });
+    });
+
+    it('renders the input template with the input value and attachments as context', async () => {
+        await vi.waitFor(() =>
+            expect(getChatInputRoot(chatElement).querySelector('.custom-input').textContent.trim()).toEqual('Draft text|1'));
+    });
+
+    it('renders the send button template with the chat instance as context', async () => {
+        await vi.waitFor(() =>
+            expect(getChatInputRoot(chatElement).querySelector('.custom-send').textContent.trim()).toEqual('IGC-CHAT'));
+    });
+
+    it('emits attachmentClick when the user clicks an attachment header', async () => {
+        const header = await vi.waitFor(() => {
+            const element = getMessageAttachments(getChatMessages(chatElement)[0]).querySelector<HTMLElement>('[role="button"]');
+            expect(element).toBeTruthy();
+            return element;
+        });
+
+        header.click();
+
+        expect(fixture.componentInstance.clickedAttachment).toEqual(fixture.componentInstance.messages[0].attachments[0]);
+    });
+
+    it('keeps the template renderers when the options change', async () => {
+        fixture.componentInstance.options.set({ headerText: 'Updated' });
+        await fixture.whenStable();
+
+        const renderers = chatElement.options?.renderers ?? {};
+        expect(Object.keys(renderers).sort()).toEqual(['attachmentHeader', 'input', 'sendButton']);
+        await vi.waitFor(() => {
+            expect(getChatHeaderTitle(chatElement).textContent.trim()).toEqual('Updated');
+            expect(getChatInputRoot(chatElement).querySelector('.custom-send')).toBeTruthy();
+        });
+    });
+
+    it('destroys the rendered template views when the host is destroyed', async () => {
+        await vi.waitFor(() => expect(getChatInputRoot(chatElement).querySelector('.custom-send')).toBeTruthy());
+
+        const views = getTemplateViews(fixture);
+        expect(views.length).toBeGreaterThan(0);
+
+        fixture.destroy();
+
+        expect(views.every(view => view.destroyed)).toBe(true);
+    });
+
+    it('renders a replacement template and destroys the views of the old one', async () => {
+        await vi.waitFor(() => expect(getChatInputRoot(chatElement).querySelector('.custom-send')).toBeTruthy());
+        const oldViews = getTemplateViews(fixture, fixture.componentInstance.sendButtonTemplate());
+        expect(oldViews.length).toBeGreaterThan(0);
+
+        fixture.componentInstance.useAltSendButton.set(true);
+        await fixture.whenStable();
+
+        expect(oldViews.every(view => view.destroyed)).toBe(true);
+        await vi.waitFor(() => {
+            const inputRoot = getChatInputRoot(chatElement);
+            expect(inputRoot.querySelector('.alt-send').textContent.trim()).toEqual('Send');
+            expect(inputRoot.querySelector('.custom-send')).toBeNull();
+        });
+    });
+});
+
+describe('Chat content projection', () => {
+    it('projects content into the web component slots', async () => {
+        await TestBed.configureTestingModule({
+            imports: [ChatProjectionBed]
+        }).compileComponents();
+
+        const fixture = TestBed.createComponent(ChatProjectionBed);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const chatElement = getChatElement(fixture);
+        const projected = chatElement.querySelector('.custom-title');
+        expect(projected).toBeTruthy();
+        await vi.waitFor(() => expect(getChatHeaderTitle(chatElement).assignedElements()).toContain(projected));
+    });
+});
+
+describe('Chat template context directives', () => {
+    it('only narrow types and always accept the context at runtime', () => {
+        expect(IgxChatMessageContextDirective.ngTemplateContextGuard(new IgxChatMessageContextDirective(), {})).toBe(true);
+        expect(IgxChatAttachmentContextDirective.ngTemplateContextGuard(new IgxChatAttachmentContextDirective(), {})).toBe(true);
+        expect(IgxChatInputContextDirective.ngTemplateContextGuard(new IgxChatInputContextDirective(), {})).toBe(true);
     });
 });
 
@@ -342,7 +540,6 @@ describe('Chat view lifecycle (_setTemplates)', () => {
             <h3>Your message: {{ message.text }}</h3>
         </ng-template>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChatComponent, IgxChatMessageContextDirective]
 })
 class ChatTemplatesBed {
@@ -361,7 +558,6 @@ class ChatTemplatesBed {
             <h3>Your message: {{ message.text }}</h3>
         </ng-template>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChatComponent, IgxChatMessageContextDirective]
 })
 class ChatDynamicTemplatesBed {
@@ -380,6 +576,61 @@ class ChatDynamicTemplatesBed {
     }
 }
 
+@Component({
+    template: `
+        <igx-chat
+            [messages]="messages"
+            [draftMessage]="draftMessage"
+            [options]="options()"
+            [templates]="{
+                attachmentHeader: attachmentTemplate(),
+                input: inputTemplate(),
+                sendButton: useAltSendButton() ? altSendButtonTemplate() : sendButtonTemplate()
+            }"
+            (attachmentClick)="clickedAttachment = $event"
+        />
+        <ng-template igxChatAttachmentContext #attachment let-attachment>
+            <span class="custom-attachment">{{ attachment.name }}</span>
+        </ng-template>
+        <ng-template igxChatInputContext #input let-value let-attachments="attachments">
+            <span class="custom-input">{{ value }}|{{ attachments.length }}</span>
+        </ng-template>
+        <ng-template #sendButton let-context>
+            <span class="custom-send">{{ context.instance.tagName }}</span>
+        </ng-template>
+        <ng-template #altSendButton>
+            <span class="alt-send">Send</span>
+        </ng-template>
+    `,
+    imports: [IgxChatComponent, IgxChatAttachmentContextDirective, IgxChatInputContextDirective]
+})
+class ChatAllContextsBed {
+    public messages: IgcChatMessage[] = [{
+        id: '1',
+        sender: 'user',
+        text: 'See the attached report',
+        attachments: [{ id: 'a1', name: 'report.pdf' }]
+    }];
+    public draftMessage = { text: 'Draft text', attachments: [{ id: 'd1', name: 'draft.png' }] };
+    public options = signal<IgxChatOptions>({});
+    public clickedAttachment?: IgcChatMessageAttachment;
+    public attachmentTemplate = viewChild.required<TemplateRef<any>>('attachment');
+    public inputTemplate = viewChild.required<TemplateRef<any>>('input');
+    public sendButtonTemplate = viewChild.required<TemplateRef<any>>('sendButton');
+    public altSendButtonTemplate = viewChild.required<TemplateRef<any>>('altSendButton');
+    public useAltSendButton = signal(false);
+}
+
+@Component({
+    template: `
+        <igx-chat>
+            <span slot="title" class="custom-title">Projected title</span>
+        </igx-chat>
+    `,
+    imports: [IgxChatComponent]
+})
+class ChatProjectionBed { }
+
 function getChatElement<T>(fixture: ComponentFixture<T>): IgcChatComponent {
     const nativeElement = fixture.nativeElement as HTMLElement;
     return nativeElement.querySelector('igc-chat');
@@ -395,4 +646,24 @@ function getChatMessages(chat: IgcChatComponent): HTMLElement[] {
 
 function getChatMessageDOM(message: HTMLElement) {
     return message.shadowRoot;
+}
+
+function getChatHeaderTitle(chat: IgcChatComponent): HTMLSlotElement {
+    return chat.renderRoot.querySelector('slot[name="title"]');
+}
+
+function getChatInputRoot(chat: IgcChatComponent): ShadowRoot {
+    return chat.renderRoot.querySelector('igc-chat-input').shadowRoot;
+}
+
+/** Collects the embedded views the wrapper created, optionally only those of one template. */
+function getTemplateViews(fixture: ComponentFixture<unknown>, template?: TemplateRef<unknown>): ViewRef[] {
+    const chat = fixture.debugElement.query(debugElement => debugElement.name === 'igx-chat').componentInstance as IgxChatComponent;
+    const viewRefs = (chat as any)._templateViewRefs as Map<TemplateRef<unknown>, Set<ViewRef>>;
+    const sets = template ? [viewRefs.get(template) ?? new Set<ViewRef>()] : Array.from(viewRefs.values());
+    return sets.flatMap(set => Array.from(set));
+}
+
+function getMessageAttachments(message: HTMLElement): ShadowRoot {
+    return getChatMessageDOM(message).querySelector('igc-message-attachments').shadowRoot;
 }
