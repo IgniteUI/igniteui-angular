@@ -49,10 +49,7 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
     /** @hidden */
     protected vertical = false;
 
-    private _animationOwnerDestroyed = false;
-
     public ngOnDestroy(): void {
-        this._animationOwnerDestroyed = true;
         if (this.enterAnimationPlayer) {
             this.enterAnimationPlayer.destroy();
             this.enterAnimationPlayer = null!;
@@ -183,11 +180,9 @@ export abstract class IgxCarouselComponentBase implements OnDestroy {
             this.animationPosition = 0;
             this.newDuration = 0;
             this.leaveAnimationDone.emit();
-            if (!this._animationOwnerDestroyed) {
-                // Render the left item's state synchronously, so that e.g. its content is removed before destroying
-                // the player clears the animation styles; otherwise it is painted in place for a frame.
-                this.cdr.detectChanges();
-            }
+            // Render the left item's state synchronously, so that e.g. its content is removed before destroying
+            // the player clears the animation styles; otherwise it is painted in place for a frame.
+            this.cdr.detectChanges();
             // TODO: animation may never end. Find better way to clean up the player
             if (this.leaveAnimationPlayer) {
                 this.leaveAnimationPlayer.destroy();

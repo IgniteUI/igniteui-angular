@@ -70,7 +70,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
      * created outside of a view, e.g. as a provider.
      */
     private readonly _toggleAnimationCdr = inject(ChangeDetectorRef, { optional: true });
-    private _toggleAnimationDestroyed = false;
 
     private closeInterrupted = false;
     private openInterrupted = false;
@@ -92,7 +91,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
 
     /** @hidden @internal */
     public ngOnDestroy() {
-        this._toggleAnimationDestroyed = true;
         this.destroy$.next();
         this.destroy$.complete();
     }
@@ -159,7 +157,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         if (!(type === ANIMATION_TYPE.OPEN ? this.openInterrupted : this.closeInterrupted)) {
             targetEmitter.emit();
         }
-        if (type === ANIMATION_TYPE.CLOSE && !this._toggleAnimationDestroyed) {
+        if (type === ANIMATION_TYPE.CLOSE) {
             // Render the collapsed state synchronously, so that the content is removed before resetting the player
             // clears the animation styles; otherwise (e.g. zoneless) it is painted at full height for a frame.
             this._toggleAnimationCdr?.detectChanges();
