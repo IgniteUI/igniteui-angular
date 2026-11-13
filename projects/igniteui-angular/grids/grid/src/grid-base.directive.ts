@@ -4452,10 +4452,12 @@ export abstract class IgxGridBaseDirective implements GridType,
 
         this.textHighlightService.destroyGroup(this.id);
 
-        if (this._advancedFilteringOverlayId) {
+        // The overlay service detaches the dialog on its own when Angular destroys it, which happens
+        // before this hook because the dialog is created in the grid's view container.
+        if (this._advancedFilteringOverlayId && this.overlayService.getOverlayById(this._advancedFilteringOverlayId)) {
             this.overlayService.detach(this._advancedFilteringOverlayId);
-            this._advancedFilteringOverlayId = '';
         }
+        this._advancedFilteringOverlayId = '';
 
         this.overlayIDs.forEach(overlayID => {
             const overlay = this.overlayService.getOverlayById(overlayID);

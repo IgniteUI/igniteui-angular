@@ -14,7 +14,7 @@ import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrat
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGridCreatedEventArgs, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject, signal, viewChild } from '@angular/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -32,7 +32,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringWithToolbarComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridExportComponent,
-                IgxHGridRemoteOnDemandComponent
+                IgxHGridRemoteOnDemandComponent,
+                IgxGridAdvancedFilteringConditionalComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -80,6 +81,26 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await nextFrame();
 
             expect(document.querySelector('.igx-advanced-filter')).toBeNull();
+        });
+
+        it('Should not warn about a wrong overlay id when the grid is destroyed while the dialog is opened - issue #17962', async () => {
+            const conditionalFix = TestBed.createComponent(IgxGridAdvancedFilteringConditionalComponent);
+            conditionalFix.detectChanges();
+            await conditionalFix.whenStable();
+            const warnSpy = vi.spyOn(console, 'warn');
+
+            conditionalFix.componentInstance.grid()!.openAdvancedFilteringDialog();
+            conditionalFix.detectChanges();
+            await conditionalFix.whenStable();
+            expect(document.querySelector('.igx-advanced-filter')).not.toBeNull();
+
+            conditionalFix.componentInstance.showGrid.set(false);
+            conditionalFix.detectChanges();
+            await conditionalFix.whenStable();
+
+            expect(conditionalFix.componentInstance.grid()).toBeUndefined();
+            expect(document.querySelector('.igx-advanced-filter')).toBeNull();
+            expect(warnSpy).not.toHaveBeenCalledWith('igxOverlay.detach was called with wrong id: ', expect.anything());
         });
 
         it('Should correctly initialize the Advanced Filtering dialog.', async () => {
@@ -2056,4 +2077,19 @@ class IgxHierarchicalGridMissingChildDataComponent {
         { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
         { root1: 3, root2: 3, level1data: [] }
     ];
+}
+
+@Component({
+    template: `
+    @if (showGrid()) {
+        <igx-grid [data]="data" height="500px">
+            <igx-column field="ProductName" dataType="string"></igx-column>
+        </igx-grid>
+    }`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+class IgxGridAdvancedFilteringConditionalComponent {
+    public grid = viewChild(IgxGridComponent);
+    public showGrid = signal(true);
+    public data = SampleTestData.excelFilteringData();
 }
