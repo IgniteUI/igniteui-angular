@@ -127,6 +127,7 @@ All notable changes for each version of this project will be documented in this 
     - Setting `data` before the grid is initialized while `autoGenerate` is enabled no longer throws an error. In Ignite UI for Web Components this happened when `data` was set on `igc-tree-grid` before the element was attached to the page.
 - `IgxPivotGridComponent`
     - Autosizing a column now fits its content, instead of keeping its current width.
+    - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
 - Ignite UI for Web Components grids
     - Writable properties that are not inputs, such as `selected` of `igc-column` and `totalPages` of `igc-paginator`, are now applied when set on the element. Previously the value was ignored and an `NG0303` error was logged.
     - The deprecated `getFilterFactory` method is now available on `igc-grid`, as intended for backwards compatibility.
