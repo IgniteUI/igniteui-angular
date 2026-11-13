@@ -51,7 +51,7 @@
                 </button>
             }
             @if (okButtonLabel) {
-                <button type="button" igxButton="flat" (click)="okButtonClick()">
+                <button type="button" igxButton="flat" [disabled]="disabled" (click)="okButtonClick()">
                     {{okButtonLabel}}
                 </button>
             }
@@ -73,7 +73,7 @@
                 </h2>
             </div>
         }
-        <div class="igx-time-picker__body">
+        <div class="igx-time-picker__body" [inert]="disabled">
             @if (showHoursList) {
                 <div #hourList [igxItemList]="'hourList'">
                     @for (hour of selectedDate | timeItemPipe:'hour':minDropdownValue:maxDropdownValue:appliedFormat:spinLoop; track hour+$index) {
