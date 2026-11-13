@@ -717,6 +717,80 @@ describe('Rendering Tests', () => {
             expect((stepper as any).stepperService.visitedSteps).toContain(stepper.steps[firstAccessibleStepIdx]);
         }));
 
+        it('should remove the step content before the vertical collapse animation player is reset', fakeAsync(() => {
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            stepper.steps[0].active = true;
+            fix.detectChanges();
+            tick(1000);
+            const previousActiveStep = stepper.steps[0];
+            const getContent = () => previousActiveStep.nativeElement.querySelector('[igxStepContent]');
+            expect(getContent()).not.toBeNull();
+
+            // capture whether the content is still rendered at the moment the collapse player resets the
+            // container styles; if it is, the content is painted at full height for a frame
+            let contentRenderedOnReset: boolean | undefined;
+            const animationService = (previousActiveStep as any).animationService;
+            const buildAnimation = animationService.buildAnimation.bind(animationService);
+            spyOn(animationService, 'buildAnimation').and.callFake((...args: any[]) => {
+                const player = buildAnimation(...args);
+                if (args[1] === previousActiveStep.contentContainer.nativeElement) {
+                    const reset = player.reset.bind(player);
+                    spyOn(player, 'reset').and.callFake(() => {
+                        contentRenderedOnReset = !!getContent();
+                        reset();
+                    });
+                }
+                return player;
+            });
+            const activeChangeSpy = spyOn(previousActiveStep.activeChange, 'emit').and.callThrough();
+
+            stepper.next();
+            fix.detectChanges();
+            tick(1000);
+
+            expect(activeChangeSpy).toHaveBeenCalledWith(false);
+            expect(contentRenderedOnReset).toBe(false);
+            expect(getContent()).toBeNull();
+        }));
+
+        it('should remove the step content before the horizontal leave animation player is destroyed', fakeAsync(() => {
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            stepper.steps[0].active = true;
+            fix.detectChanges();
+            tick(1000);
+            const previousActiveStep = stepper.steps[0];
+            // in horizontal orientation the content is rendered in the stepper body, not in the step element
+            const contentContainer: HTMLElement = previousActiveStep.contentContainer.nativeElement;
+            const getContent = () => contentContainer.querySelector('[igxStepContent]');
+            expect(getContent()).not.toBeNull();
+
+            // capture whether the content is still rendered at the moment the leave player is destroyed, which
+            // clears its styles; if it is, the content is painted in place behind the active step for a frame
+            let contentRenderedOnDestroy: boolean | undefined;
+            const animationService = (stepper as any).animationService;
+            const buildAnimation = animationService.buildAnimation.bind(animationService);
+            spyOn(animationService, 'buildAnimation').and.callFake((...args: any[]) => {
+                const player = buildAnimation(...args);
+                if (args[1] === contentContainer) {
+                    const destroy = player.destroy.bind(player);
+                    spyOn(player, 'destroy').and.callFake(() => {
+                        contentRenderedOnDestroy ??= !!getContent();
+                        destroy();
+                    });
+                }
+                return player;
+            });
+            const activeChangeSpy = spyOn(previousActiveStep.activeChange, 'emit').and.callThrough();
+
+            stepper.next();
+            fix.detectChanges();
+            tick(1000);
+
+            expect(activeChangeSpy).toHaveBeenCalledWith(false);
+            expect(contentRenderedOnDestroy).toBe(false);
+            expect(getContent()).toBeNull();
+        }));
+
         it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', fakeAsync(() => {
             stepper.orientation = IgxStepperOrientation.Horizontal;
             stepper.horizontalAnimationType = 'fade';

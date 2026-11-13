@@ -1081,6 +1081,40 @@ describe('igxExpansionPanel', () => {
             expect(panelElement.lastElementChild.getAttribute('aria-labelledby')).toEqual(title.id);
             expect(panelElement.lastElementChild.getAttribute('aria-label')).toEqual(`${panel.id}-region`);
         }));
+
+        it('Should remove the body before the close animation player is reset', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            const panelElement: HTMLElement = panel.nativeElement;
+
+            panel.expand();
+            tick(1000);
+            fixture.detectChanges();
+            expect(panelElement.querySelector('igx-expansion-panel-body')).not.toBeNull();
+
+            // capture whether the body is still rendered at the moment the close player resets the
+            // element styles; if it is, the body is painted at full height for a frame
+            let bodyRenderedOnReset: boolean | undefined;
+            const animationService = (panel as any).animationService;
+            const buildAnimation = animationService.buildAnimation.bind(animationService);
+            spyOn(animationService, 'buildAnimation').and.callFake((...args: any[]) => {
+                const player = buildAnimation(...args);
+                const reset = player.reset.bind(player);
+                spyOn(player, 'reset').and.callFake(() => {
+                    bodyRenderedOnReset = !!panelElement.querySelector('igx-expansion-panel-body');
+                    reset();
+                });
+                return player;
+            });
+
+            panel.collapse();
+            tick(1000);
+
+            expect(panel.collapsed).toBeTruthy();
+            expect(bodyRenderedOnReset).toBe(false);
+            expect(panelElement.querySelector('igx-expansion-panel-body')).toBeNull();
+        }));
     });
 
     describe('Rendering tests: ', () => {

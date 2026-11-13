@@ -14,6 +14,12 @@ All notable changes for each version of this project will be documented in this 
     - Pressing Enter in the grid UI, such as the filtering row, cell and row editors, the toolbar column hiding and pinning, Excel-style filtering and advanced filtering, as well as selecting a date in their date pickers with Enter, no longer submits a surrounding `form`.
 - `IgxAdvancedFilteringDialogComponent`, `IgxColumnActionsComponent`, `IgxPivotDataSelectorComponent`
     - Pressing Enter in their inputs no longer submits a surrounding `form` when they are rendered outside of the grid, e.g. used standalone, or the advanced filtering dialog opened with custom overlay settings.
+- `IgxExpansionPanelComponent`
+    - When the collapse animation ends, the body is no longer shown at full height for a frame before it is removed, e.g. in zoneless applications.
+- `IgxStepperComponent`
+    - When the animation of the previously active step ends, its content is no longer shown for a frame before it is removed, e.g. in zoneless applications. Previously it was shown at full height in vertical orientation, and in its original place behind the active step's content in horizontal orientation.
+- `IgxTreeComponent`
+    - When the collapse animation of a node ends, its child nodes are no longer shown at full height for a frame before they are removed, e.g. in zoneless applications.
 
 ## 21.2.25
 
