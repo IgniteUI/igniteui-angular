@@ -1851,6 +1851,49 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dropdownValues).toEqual(expectedValues);
         });
 
+        it('Should have proper fields in UI when auto-generated child data is loaded on demand without a schema.', async () => {
+            const fixture = TestBed.createComponent(IgxHGridAutoGenerateOnDemandComponent);
+            const hierarchicalGrid = fixture.componentInstance.hGrid;
+            hierarchicalGrid.allowAdvancedFiltering = true;
+            fixture.detectChanges();
+
+            // There is no child data yet, but the child entities are generated from the row islands.
+            const [childEntity] = hierarchicalGrid.schema[0].childEntities;
+            expect(childEntity.name).toBe('childData');
+            expect(childEntity.fields).toEqual([]);
+            expect(childEntity.childEntities.map(e => e.name)).toEqual(['childData2']);
+
+            // Load the child data on demand.
+            hierarchicalGrid.expandRow('0');
+            fixture.detectChanges();
+            await fixture.componentInstance.childDataLoaded;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            hierarchicalGrid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Click the initial 'Add Condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            // Populate edit inputs.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fixture, 1).querySelector('input');
+            expect(entityInputGroup.value).toBe('childData');
+
+            // Verify return fields
+            const queryBuilderElement: HTMLElement = fixture.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
+            QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fixture, 1);
+            fixture.detectChanges();
+            const dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 0).map((x: any) => x.innerText);
+            expect(dropdownValues).toEqual(['ID', 'ProductName', 'Price']);
+        });
+
         it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', async () => {
             hgrid.closeAdvancedFilteringDialog(false);
             await fix.whenStable();
@@ -2026,6 +2069,37 @@ class IgxHGridRemoteOnDemandComponent {
             event.grid.data = this.generateRowIslandData(5);
             event.grid.cdr.detectChanges();
         });
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hGrid [data]="data" [primaryKey]="'ID'" [autoGenerate]="true" [height]="'600px'">
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" (gridCreated)="gridCreated($event)">
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true"></igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
+})
+class IgxHGridAutoGenerateOnDemandComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public data = [
+        { ID: '0', ProductName: 'Product: A0' },
+        { ID: '1', ProductName: 'Product: A1' }
+    ];
+
+    /** Resolved when the on demand child data is assigned to the created child grid. */
+    public childDataLoaded: Promise<void>;
+
+    public gridCreated(event: IGridCreatedEventArgs) {
+        this.childDataLoaded = new Promise(resolve => setTimeout(() => {
+            event.grid.data = [{ ID: 10, ProductName: 'Child: A0', Price: 5 }];
+            event.grid.cdr.detectChanges();
+            resolve();
+        }));
     }
 }
 

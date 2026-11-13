@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 
 - **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
+- `IgxHierarchicalGridComponent`
+    - **Deprecation** - The `schema` input has been deprecated and will be removed in a future version. Define the columns and the row islands of the grid instead, the advanced filtering schema is generated from them. A `schema` that is set is still used as before.
 
 ### New Functionality
 
@@ -125,6 +127,11 @@ All notable changes for each version of this project will be documented in this 
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied and no column is pinned at the start, the group-by indentation and the summary area below it use the pinned border.
     - Multi-row layout cell borders stay visible when the row is hovered or selected.
+- `IgxHierarchicalGridComponent`
+    - The advanced filtering dialog now lists the nested row islands of a row island whose child data is not available yet, e.g. when it is loaded on demand. Previously they were left out when the first record had no child data.
+    - The fields of an auto-generated row island in the advanced filtering dialog are updated when its child grids generate their columns, e.g. when the child data is loaded on demand, and take the column `header`, `dataType` and formatting options set in `columnInit`. The fields of its nested row islands that are still empty are resolved from the loaded child data. The child grids of a row island share its fields, so a child grid adds the fields it has columns for and does not change the type of a field that has no value in its first record. Previously they were resolved only from the first record and were empty when it had no child data.
+    - The fields of a row island with declared columns in the advanced filtering dialog now take the column `header`, `filters`, `editorOptions` and formatting options, as the fields of the root grid do. Previously only the `field` and the `dataType` were used.
+    - The fields in the advanced filtering dialog are updated when the columns of the root grid or of a row island are added, removed or changed after the dialog was first opened, e.g. when they are rendered conditionally or loaded later.
 - `IgxTreeGridComponent`
     - Setting `data` before the grid is initialized while `autoGenerate` is enabled no longer throws an error. In Ignite UI for Web Components this happened when `data` was set on `igc-tree-grid` before the element was attached to the page.
 - `IgxPivotGridComponent`
