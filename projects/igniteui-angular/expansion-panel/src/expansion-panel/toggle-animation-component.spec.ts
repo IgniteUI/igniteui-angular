@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { noop } from 'rxjs';
+import { noop, Subject } from 'rxjs';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ElementRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef } from '@angular/core';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }
@@ -84,5 +84,68 @@ describe('Toggle animation component', () => {
 
             expect(mockCb).toHaveBeenCalledTimes(2);
         });
+    });
+});
+
+describe('Toggle animation component change detection', () => {
+    let animationEnd: Subject<void>;
+    let mockPlayer: any;
+    let mockCdr: { detectChanges: ReturnType<typeof vi.fn> };
+
+    beforeEach(() => {
+        animationEnd = new Subject<void>();
+        mockPlayer = {
+            animationEnd,
+            position: 0,
+            init: vi.fn(),
+            play: vi.fn(),
+            hasStarted: vi.fn(() => false),
+            reset: vi.fn(),
+            destroy: vi.fn()
+        };
+        mockCdr = { detectChanges: vi.fn() };
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: IgxAngularAnimationService, useValue: { buildAnimation: () => mockPlayer } },
+                { provide: ChangeDetectorRef, useValue: mockCdr },
+                MockTogglePlayer
+            ]
+        });
+    });
+
+    it('Should render the owner after the close callback and before the close player is reset', () => {
+        const player = TestBed.inject(MockTogglePlayer);
+        const onDone = vi.fn();
+        const doneSpy = vi.spyOn(player.closeAnimationDone, 'emit');
+
+        player.playCloseAnimation({ nativeElement: {} } as ElementRef, onDone);
+        expect(mockCdr.detectChanges).not.toHaveBeenCalled();
+        animationEnd.next();
+
+        expect(mockCdr.detectChanges).toHaveBeenCalledTimes(1);
+        const detectChangesOrder = mockCdr.detectChanges.mock.invocationCallOrder[0];
+        expect(onDone.mock.invocationCallOrder[0]).toBeLessThan(detectChangesOrder);
+        expect(doneSpy.mock.invocationCallOrder[0]).toBeLessThan(detectChangesOrder);
+        expect(detectChangesOrder).toBeLessThan(mockPlayer.reset.mock.invocationCallOrder[0]);
+    });
+
+    it('Should not render the owner when the open animation is done', () => {
+        const player = TestBed.inject(MockTogglePlayer);
+
+        player.playOpenAnimation({ nativeElement: {} } as ElementRef);
+        animationEnd.next();
+
+        expect(mockPlayer.reset).toHaveBeenCalled();
+        expect(mockCdr.detectChanges).not.toHaveBeenCalled();
+    });
+
+    it('Should not render the owner when the close animation is done after it is destroyed', () => {
+        const player = TestBed.inject(MockTogglePlayer);
+
+        player.playCloseAnimation({ nativeElement: {} } as ElementRef);
+        player.ngOnDestroy();
+        animationEnd.next();
+
+        expect(mockCdr.detectChanges).not.toHaveBeenCalled();
     });
 });
