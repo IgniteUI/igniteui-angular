@@ -220,6 +220,7 @@ export interface RowType {
      */
     children?: RowType[];
     /* blazorAlternateName: RowParent */
+    /* blazorCSSuppress */
     /**
      * Optional
      * Contains the parent row of the current row, if it has one.

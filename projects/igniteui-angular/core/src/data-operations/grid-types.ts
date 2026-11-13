@@ -416,6 +416,7 @@ export interface ITreeGridRecord {
     data: any;
     children?: ITreeGridRecord[];
     /* blazorAlternateName: RecordParent */
+    /* blazorCSSuppress */
     parent?: ITreeGridRecord;
     level?: number;
     isFilteredOutParent?: boolean;
