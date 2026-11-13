@@ -12,7 +12,7 @@ import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IForOfState } from '../../../directives/src/directives/for-of/for_of.directive';
 import { IgxInputState } from '../../../input-group/src/public_api';
-import { IGX_INPUT_GROUP_TYPE, IgxLabelDirective } from '../../../input-group/src/public_api';
+import { IGX_INPUT_GROUP_TYPE, IgxLabelDirective, IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
 import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
@@ -407,6 +407,140 @@ describe('igxCombo', () => {
             combo.ngOnDestroy();
             expect(mockComboService.clear).toHaveBeenCalled();
             expect(mockSelection.delete).toHaveBeenCalled();
+        });
+        it('should ignore empty values when setting the id', () => {
+            combo.id = 'custom-combo-id';
+            expect(combo.id).toEqual('custom-combo-id');
+
+            combo.id = '';
+            expect(combo.id).toEqual('custom-combo-id');
+            combo.id = null;
+            expect(combo.id).toEqual('custom-combo-id');
+        });
+        it('should properly get/set the input group type', () => {
+            expect(combo.type).toEqual('box');
+
+            combo.type = 'line';
+            expect(combo.type).toEqual('line');
+
+            combo.type = null;
+            expect(combo.type).toEqual('box');
+        });
+        it('should not change the selection when setSelectedItem is called with an undefined itemID', () => {
+            const selectSpy = vi.spyOn(combo, 'select');
+            const deselectSpy = vi.spyOn(combo, 'deselect');
+
+            combo.setSelectedItem(undefined);
+            combo.setSelectedItem(undefined, false);
+
+            expect(selectSpy).not.toHaveBeenCalled();
+            expect(deselectSpy).not.toHaveBeenCalled();
+        });
+        it('should select or deselect a single item with setSelectedItem', () => {
+            const selectSpy = vi.spyOn(combo, 'select').mockImplementation(() => { });
+            const deselectSpy = vi.spyOn(combo, 'deselect').mockImplementation(() => { });
+            const event = new Event('click');
+
+            combo.setSelectedItem('Item1', true, event);
+            expect(selectSpy).toHaveBeenCalledWith(['Item1'], false, event);
+
+            combo.setSelectedItem('Item1', false, event);
+            expect(deselectSpy).toHaveBeenCalledWith(['Item1'], event);
+        });
+        it('should expose itself as the implicit template context', () => {
+            expect(combo.context).toEqual({ $implicit: combo });
+        });
+
+        describe('IgxComboAPIService: ', () => {
+            let service: IgxComboAPIService;
+            let comboMock: any;
+
+            beforeEach(() => {
+                service = new IgxComboAPIService();
+                comboMock = {
+                    id: 'combo-id',
+                    isRemote: true,
+                    valueKey: undefined,
+                    addItemToCollection: vi.fn(),
+                    isItemSelected: vi.fn(),
+                    select: vi.fn(),
+                    deselect: vi.fn()
+                };
+                service.register(comboMock);
+            });
+
+            it('should proxy the registered combo state', () => {
+                expect(service.comboID).toEqual('combo-id');
+                expect(service.isRemote).toBe(true);
+                expect(service.item_focusable).toBe(false);
+                expect(service.valueKey).toBeNull();
+
+                comboMock.valueKey = 'field';
+                expect(service.valueKey).toEqual('field');
+            });
+
+            it('should add a custom item only while a combo is registered', () => {
+                service.add_custom_item();
+                expect(comboMock.addItemToCollection).toHaveBeenCalledTimes(1);
+
+                service.clear();
+                expect(() => service.add_custom_item()).not.toThrow();
+                expect(comboMock.addItemToCollection).toHaveBeenCalledTimes(1);
+            });
+
+            it('should toggle the selection state of an item', () => {
+                const event = new Event('click');
+                comboMock.isItemSelected.mockReturnValue(false);
+                service.set_selected_item('Item1', event);
+                expect(comboMock.select).toHaveBeenCalledWith(['Item1'], false, event);
+
+                comboMock.isItemSelected.mockReturnValue(true);
+                service.set_selected_item('Item1', event);
+                expect(comboMock.deselect).toHaveBeenCalledWith(['Item1'], event);
+
+                expect(service.is_item_selected('Item1')).toBe(true);
+            });
+
+            it('should not change the selection for an undefined itemID', () => {
+                service.set_selected_item(undefined);
+                expect(comboMock.select).not.toHaveBeenCalled();
+                expect(comboMock.deselect).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('Combo filtering helpers: ', () => {
+            it('should return an empty collection when filtering a missing collection', () => {
+                const pipe = new IgxComboFilteringPipe();
+                expect(pipe.transform(null, 'Item', null, {})).toEqual([]);
+                expect(pipe.transform(undefined, 'Item', null, {})).toEqual([]);
+            });
+
+            it('should return the collection unchanged when filtering is disabled', () => {
+                const pipe = new IgxComboFilteringPipe();
+                expect(pipe.transform(data, 'Item1', null, {}, undefined, true)).toBe(data);
+            });
+
+            it('should fall back to the displayKey as filteringKey', () => {
+                const pipe = new IgxComboFilteringPipe();
+                const options: IComboFilteringOptions = { caseSensitive: false };
+                expect(pipe.transform(complexData, 'par', 'city', options)).toEqual([{ country: 'France', city: 'Paris' }]);
+                expect(options.filteringKey).toEqual('city');
+            });
+
+            it('should ignore diacritics when filtering primitive data', () => {
+                const accented = ['Résumé', 'resume', 'Café', 'cafe'];
+                expect(comboIgnoreDiacriticsFilter(accented, 'resume', { caseSensitive: false }))
+                    .toEqual(['Résumé', 'resume']);
+                expect(comboIgnoreDiacriticsFilter(accented, '', { caseSensitive: false })).toBe(accented);
+            });
+
+            it('should respect case sensitivity when ignoring diacritics', () => {
+                const accented = [{ name: 'Résumé' }, { name: 'resume' }, { name: 'RESUME' }];
+                expect(comboIgnoreDiacriticsFilter(accented, 'Resume', { caseSensitive: true, filteringKey: 'name' }))
+                    .toEqual([{ name: 'Résumé' }]);
+                expect(comboIgnoreDiacriticsFilter(accented, 'Resume', { caseSensitive: false, filteringKey: 'name' }))
+                    .toEqual(accented);
+            });
         });
 
         describe('Combo selection API unit tests: ', () => {
@@ -982,6 +1116,7 @@ describe('igxCombo', () => {
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent,
+                    IgxComboWithPrefixComponent,
                 ]
             }).compileComponents();
         });
@@ -992,6 +1127,18 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            });
+            it('should pass projected prefixes to the input group', () => {
+                expect(combo.inputGroup.hasPrefixes).toBe(false);
+
+                const prefixFixture = TestBed.createComponent(IgxComboWithPrefixComponent);
+                prefixFixture.detectChanges();
+                const prefixedCombo = prefixFixture.componentInstance.combo;
+
+                expect(prefixedCombo.inputGroup.hasPrefixes).toBe(true);
+                const inputGroupElement = prefixFixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`)).nativeElement;
+                expect(inputGroupElement.classList).toContain('igx-input-group--prefixed');
+                expect(inputGroupElement.querySelector('.combo-prefix').textContent).toEqual('$');
             });
             it('should initialize the combo component properly', () => {
                 const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
@@ -1469,6 +1616,26 @@ describe('igxCombo', () => {
                 fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
                 fixture.detectChanges();
                 combo = fixture.componentInstance.instance;
+            });
+            it('should move an out-of-range viewport into range when totalItemCount shrinks', () => {
+                expect(combo.isRemote).toBe(true);
+                combo.toggle();
+                fixture.detectChanges();
+                combo.virtualizationState = { startIndex: 20, chunkSize: 10 };
+                const scrollSpy = vi.spyOn(combo.virtualScrollContainer, 'scrollToIndex');
+
+                combo.totalItemCount = 100;
+                expect(combo.virtualizationState.startIndex).toEqual(20);
+                expect(scrollSpy).not.toHaveBeenCalled();
+
+                combo.totalItemCount = 25;
+                expect(combo.totalItemCount).toEqual(25);
+                expect(combo.virtualizationState).toEqual({ startIndex: 15, chunkSize: 10 });
+                expect(scrollSpy).toHaveBeenCalledWith(15);
+
+                combo.totalItemCount = 5;
+                expect(combo.virtualizationState).toEqual({ startIndex: 0, chunkSize: 10 });
+                expect(scrollSpy).toHaveBeenLastCalledWith(0);
             });
             it('should bind combo data to remote service data', async () => {
                 let productIndex = 0;
@@ -2655,6 +2822,153 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
                     expect(combo.collapsed).toBeTruthy();
                 });
+                it('should add the custom item with Enter and ignore Space when the add item button is focused', async () => {
+                    combo.allowCustomValues = true;
+                    combo.toggle();
+                    await wait();
+                    fixture.detectChanges();
+
+                    combo.searchValue = 'My New State';
+                    combo.handleInputChange();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const addItem = fixture.debugElement.query(By.directive(IgxComboAddItemComponent));
+                    expect(addItem).not.toBeNull();
+                    const addItemComponent: IgxComboAddItemComponent = addItem.componentInstance;
+                    dropdown.focusedItem = addItemComponent;
+                    fixture.detectChanges();
+
+                    const dataLength = combo.data.length;
+                    const addSpy = vi.spyOn(combo, 'addItemToCollection');
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+
+                    UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                    fixture.detectChanges();
+                    expect(addSpy).not.toHaveBeenCalled();
+                    expect(combo.selection.length).toEqual(0);
+                    expect(combo.collapsed).toBeFalsy();
+
+                    UIInteractions.triggerEventHandlerKeyDown('Enter', dropdownContent);
+                    fixture.detectChanges();
+                    expect(addSpy).toHaveBeenCalledTimes(1);
+                    expect(combo.data.length).toEqual(dataLength + 1);
+                    expect(combo.data[combo.data.length - 1].field).toEqual('My New State');
+                });
+                it('should move focus from the last item to the add item button with ArrowDown', async () => {
+                    combo.allowCustomValues = true;
+                    combo.toggle();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+                    // matches a single item, so the list is a group header and 'Ohio'
+                    UIInteractions.triggerInputEvent(searchInput, 'Ohi');
+                    await wait();
+                    fixture.detectChanges();
+                    expect(combo.isAddButtonVisible()).toBe(true);
+
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+                    expect(dropdown.focusedItem.itemID).toEqual('Ohio');
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+                    expect(dropdown.focusedItem instanceof IgxComboAddItemComponent).toBe(true);
+                });
+                it('should not change the selection when selectItem is called without an item', () => {
+                    const selectSpy = vi.spyOn(combo, 'select');
+                    dropdown.selectItem(null);
+                    dropdown.selectItem(undefined);
+                    expect(selectSpy).not.toHaveBeenCalled();
+                    expect(combo.selection.length).toEqual(0);
+                });
+                it('should toggle the selection of the focused item with Space', async () => {
+                    combo.toggle();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    // the first rendered item is a group header
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+                    const focusedItem = dropdown.focusedItem;
+                    expect(focusedItem.isHeader).toBeFalsy();
+
+                    UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                    fixture.detectChanges();
+                    expect(combo.selection).toEqual([combo.data.find(e => e.field === focusedItem.itemID)]);
+                    expect(dropdown.activeDescendant).toEqual(focusedItem.id);
+
+                    UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
+                    fixture.detectChanges();
+                    expect(combo.selection.length).toEqual(0);
+                });
+                it('should expose the combo id and ignore selection changes on header items', async () => {
+                    combo.toggle();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const items: IgxComboItemComponent[] = fixture.debugElement
+                        .queryAll(By.directive(IgxComboItemComponent))
+                        .map(item => item.componentInstance);
+                    const header = items.find(item => item.isHeader);
+                    const regular = items.find(item => !item.isHeader && !(item instanceof IgxComboAddItemComponent));
+                    expect(header).toBeDefined();
+                    expect(regular).toBeDefined();
+
+                    expect(regular.comboID).toEqual(combo.id);
+
+                    header.selected = true;
+                    expect(header.selected).toBe(false);
+                    fixture.detectChanges();
+                    expect(header.selected).toBe(false);
+                    expect(combo.selection.length).toEqual(0);
+
+                    // the selected state of a regular item follows the combo selection
+                    combo.select([regular.itemID]);
+                    fixture.detectChanges();
+                    expect(regular.selected).toBe(true);
+
+                    // a local write is overridden by the selection state on the next check
+                    regular.selected = false;
+                    expect(regular.selected).toBe(false);
+                    fixture.detectChanges();
+                    expect(regular.selected).toBe(true);
+
+                    combo.deselect([regular.itemID]);
+                    fixture.detectChanges();
+                    expect(regular.selected).toBe(false);
+                });
+                it('should not report the add item button as selected', async () => {
+                    combo.allowCustomValues = true;
+                    combo.toggle();
+                    await wait();
+                    combo.searchValue = 'Not existing';
+                    combo.handleInputChange();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const addItem: IgxComboAddItemComponent = fixture.debugElement
+                        .query(By.directive(IgxComboAddItemComponent)).componentInstance;
+                    addItem.selected = true;
+                    expect(addItem.selected).toBe(false);
+                });
+                it('should focus the combo input and toggle the dropdown when there is no search input', () => {
+                    combo.disableFiltering = true;
+                    combo.allowCustomValues = false;
+                    fixture.detectChanges();
+                    expect(combo.displaySearchInput).toBe(false);
+                    const toggleSpy = vi.spyOn(combo, 'toggle');
+
+                    combo.focusSearchInput();
+                    fixture.detectChanges();
+
+                    expect(document.activeElement).toEqual(combo.comboInput.nativeElement);
+                    expect(toggleSpy).toHaveBeenCalledTimes(1);
+                    expect(combo.collapsed).toBe(false);
+                });
             });
             describe('primitive data dropdown: ', () => {
                 it('should properly navigate with HOME/END keys when no virtScroll is necessary', async () => {
@@ -2809,6 +3123,38 @@ describe('igxCombo', () => {
                 expect(combo.collapsed).toBeFalsy();
                 selectedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_SELECTED}`));
                 expect(selectedItem.nativeElement.textContent).toEqual(selectedItemText);
+            });
+            it('should scroll to the start index when virtualizationState is set', () => {
+                combo.toggle();
+                fixture.detectChanges();
+                const scrollSpy = vi.spyOn(combo.virtualScrollContainer, 'scrollToIndex');
+                const state = { startIndex: 5, chunkSize: 6 };
+
+                combo.virtualizationState = state;
+
+                expect(combo.virtualizationState).toEqual(state);
+                expect(combo.virtualizationState).not.toBe(state);
+                expect(scrollSpy).toHaveBeenCalledWith(5);
+
+                combo.virtualizationState = { chunkSize: 6 } as IForOfState;
+                expect(scrollSpy).toHaveBeenLastCalledWith(0);
+            });
+            it('should restore the virtualization state when searchInputUpdate is canceled', () => {
+                combo.toggle();
+                fixture.detectChanges();
+                combo.virtualizationState = { startIndex: 10, chunkSize: 6 };
+                let reportedState: IForOfState;
+                combo.searchInputUpdate.subscribe((args: IComboSearchInputEventArgs) => {
+                    reportedState = { ...combo.virtualizationState };
+                    args.cancel = true;
+                });
+
+                combo.handleInputChange('Mich');
+
+                // the list start is reported while the event is handled and put back after it is canceled
+                expect(reportedState).toEqual({ startIndex: 0, chunkSize: 6 });
+                expect(combo.virtualizationState).toEqual({ startIndex: 10, chunkSize: 6 });
+                expect(combo.filterValue).toBeNull();
             });
         });
         describe('Selection tests: ', () => {
@@ -3295,6 +3641,14 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.combo;
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
+            });
+            it('should exclude group headers from the filtered data and handle empty values', () => {
+                const regular = { field: 'Ohio', region: 'East North Central' };
+                combo.filteredData = [{ isHeader: true, field: 'East North Central', region: 'East North Central' }, regular];
+                expect(combo.filteredData).toEqual([regular]);
+
+                combo.filteredData = null;
+                expect(combo.filteredData).toEqual([]);
             });
             it('should group items correctly', async () => {
                 combo.toggle();
@@ -4779,6 +5133,25 @@ describe('igxCombo', () => {
                 changei18n(ComboResourceStringsEN);
             }
         });
+
+        it('should update all resource strings when global i18n changes and no custom strings are set', () => {
+            combo = fix.componentInstance.combo;
+
+            try {
+                changei18n({
+                    igx_combo_empty_message: 'Leer',
+                    igx_combo_filter_search_placeholder: 'Suchbegriff eingeben',
+                    igx_combo_clearItems_placeholder: 'Auswahl löschen'
+                });
+                fix.detectChanges();
+
+                expect(combo.resourceStrings.igx_combo_empty_message).toBe('Leer');
+                expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Suchbegriff eingeben');
+                expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Auswahl löschen');
+            } finally {
+                changei18n(ComboResourceStringsEN);
+            }
+        });
     });
 });
 
@@ -5256,6 +5629,22 @@ class IgxComboInContainerTestComponent {
         'Palermo',
         'Palma de Mallorca'
     ];
+}
+
+@Component({
+    template: `
+    <igx-combo #combo [data]="items">
+        <igx-prefix class="combo-prefix">$</igx-prefix>
+    </igx-combo>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxComboComponent, IgxPrefixDirective]
+})
+class IgxComboWithPrefixComponent {
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+
+    public items = ['One', 'Two', 'Three'];
 }
 
 @Component({
