@@ -90,8 +90,10 @@ All notable changes for each version of this project will be documented in this 
     - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, is now prevented.
+    - Destroying the picker while its calendar is open no longer logs `igxOverlay.detach was called with wrong id` in the console. In the grid, this happened whenever a date cell edit ended while the calendar was open.
 - `IgxDateRangePickerComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, no longer scroll the page. Previously their default browser action was not prevented.
+    - Destroying the picker while its calendar is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
 - `IgxDragDirective`
     - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
     - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
