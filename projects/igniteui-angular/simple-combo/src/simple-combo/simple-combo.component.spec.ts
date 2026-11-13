@@ -1374,6 +1374,34 @@ describe('IgxSimpleCombo', () => {
             expect(combo.selection).not.toBeDefined();
         });
 
+        it('should keep the search text on Escape and clear icon click when clearing a key missing from the data is canceled', () => {
+            // A key missing from the data resolves to a new object on every `selection` read
+            combo.select('Missing');
+            fixture.detectChanges();
+            expect(combo.value).toEqual('Missing');
+            expect(combo.selection).not.toBe(combo.selection);
+
+            combo.selectionChanging.subscribe((args: ISimpleComboSelectionChangingEventArgs) => args.cancel = true);
+            combo.filterValue = combo.searchValue = 'Mis';
+
+            combo.handleKeyDown(UIInteractions.getKeyboardEvent('keydown', 'Escape'));
+            fixture.detectChanges();
+
+            // the canceled change restores the display text of the kept selection
+            expect(combo.value).toEqual('Missing');
+            expect(combo.comboInput.value).toEqual('Missing');
+            expect(combo.searchValue).toEqual('Missing');
+            expect(combo.filterValue).toEqual('Mis');
+
+            combo.handleClear(UIInteractions.getMouseEvent('click'));
+            fixture.detectChanges();
+
+            expect(combo.value).toEqual('Missing');
+            expect(combo.comboInput.value).toEqual('Missing');
+            expect(combo.searchValue).toEqual('Missing');
+            expect(combo.filterValue).toEqual('Mis');
+        });
+
         it('should stop Escape keydown event propagation when the dropdown is open', async () => {
             const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true });
             vi.spyOn(escapeEvent, 'stopPropagation');
@@ -3322,6 +3350,55 @@ describe('IgxSimpleCombo', () => {
             expect(combo.collapsed).toBe(true);
             expect(combo.selection).toBeUndefined();
             expect(combo.comboInput.value).toEqual('');
+        });
+        it('should restore the remote display text on Tab when clearing the selection is canceled', () => {
+            combo.select(3);
+            fixture.detectChanges();
+            expect(combo.comboInput.value).toEqual('Product 3');
+
+            const changingSpy = vi.spyOn(combo.selectionChanging, 'emit')
+                .mockImplementation((args: ISimpleComboSelectionChangingEventArgs) => args.cancel = true);
+            input.triggerEventHandler('focus', {});
+            // typing over a selection also emits (canceled) selectionChanging
+            UIInteractions.simulateTyping('xyz', input);
+            fixture.detectChanges();
+            expect(combo.value).toEqual(3);
+            changingSpy.mockClear();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(changingSpy).toHaveBeenCalledTimes(1);
+            expect(combo.value).toEqual(3);
+            expect(combo.comboInput.value).toEqual('Product 3');
+            expect(combo.displayValue).toEqual('Product 3');
+            expect((combo as any)._remoteSelection).toEqual({ 3: 'Product 3' });
+
+            // the restored text matches the selection, so the next blur does not clear again
+            combo.onBlur();
+            fixture.detectChanges();
+            expect(changingSpy).toHaveBeenCalledTimes(1);
+            expect(combo.comboInput.value).toEqual('Product 3');
+        });
+        it('should restore the remote display text on Tab when the canceled selection is out of the loaded data', async () => {
+            combo.select(3);
+            fixture.detectChanges();
+            combo.toggle();
+            await combo.virtualScrollContainer.scrollToIndex(40);
+            fixture.detectChanges();
+            expect(combo.data.some(item => item.id === 3)).toBe(false);
+
+            vi.spyOn(combo.selectionChanging, 'emit')
+                .mockImplementation((args: ISimpleComboSelectionChangingEventArgs) => args.cancel = true);
+            input.triggerEventHandler('focus', {});
+            UIInteractions.simulateTyping('xyz', input);
+            fixture.detectChanges();
+
+            UIInteractions.triggerEventHandlerKeyDown('Tab', input);
+            fixture.detectChanges();
+
+            expect(combo.value).toEqual(3);
+            expect(combo.comboInput.value).toEqual('Product 3');
         });
 
         it('should display correct value after the value has been changed from the form and then by the user', async () => {

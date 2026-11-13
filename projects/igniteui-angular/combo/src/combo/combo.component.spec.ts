@@ -1617,6 +1617,26 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 combo = fixture.componentInstance.instance;
             });
+            it('should move an out-of-range viewport into range when totalItemCount shrinks', () => {
+                expect(combo.isRemote).toBe(true);
+                combo.toggle();
+                fixture.detectChanges();
+                combo.virtualizationState = { startIndex: 20, chunkSize: 10 };
+                const scrollSpy = vi.spyOn(combo.virtualScrollContainer, 'scrollToIndex');
+
+                combo.totalItemCount = 100;
+                expect(combo.virtualizationState.startIndex).toEqual(20);
+                expect(scrollSpy).not.toHaveBeenCalled();
+
+                combo.totalItemCount = 25;
+                expect(combo.totalItemCount).toEqual(25);
+                expect(combo.virtualizationState).toEqual({ startIndex: 15, chunkSize: 10 });
+                expect(scrollSpy).toHaveBeenCalledWith(15);
+
+                combo.totalItemCount = 5;
+                expect(combo.virtualizationState).toEqual({ startIndex: 0, chunkSize: 10 });
+                expect(scrollSpy).toHaveBeenLastCalledWith(0);
+            });
             it('should bind combo data to remote service data', async () => {
                 let productIndex = 0;
 
@@ -2902,10 +2922,23 @@ describe('igxCombo', () => {
 
                     header.selected = true;
                     expect(header.selected).toBe(false);
+                    fixture.detectChanges();
+                    expect(header.selected).toBe(false);
+                    expect(combo.selection.length).toEqual(0);
 
-                    regular.selected = true;
+                    // the selected state of a regular item follows the combo selection
+                    combo.select([regular.itemID]);
+                    fixture.detectChanges();
                     expect(regular.selected).toBe(true);
+
+                    // a local write is overridden by the selection state on the next check
                     regular.selected = false;
+                    expect(regular.selected).toBe(false);
+                    fixture.detectChanges();
+                    expect(regular.selected).toBe(true);
+
+                    combo.deselect([regular.itemID]);
+                    fixture.detectChanges();
                     expect(regular.selected).toBe(false);
                 });
                 it('should not report the add item button as selected', async () => {
@@ -3104,25 +3137,6 @@ describe('igxCombo', () => {
                 expect(scrollSpy).toHaveBeenCalledWith(5);
 
                 combo.virtualizationState = { chunkSize: 6 } as IForOfState;
-                expect(scrollSpy).toHaveBeenLastCalledWith(0);
-            });
-            it('should move an out-of-range viewport into range when totalItemCount shrinks', () => {
-                combo.toggle();
-                fixture.detectChanges();
-                combo.virtualizationState = { startIndex: 20, chunkSize: 10 };
-                const scrollSpy = vi.spyOn(combo.virtualScrollContainer, 'scrollToIndex');
-
-                combo.totalItemCount = 100;
-                expect(combo.virtualizationState.startIndex).toEqual(20);
-                expect(scrollSpy).not.toHaveBeenCalled();
-
-                combo.totalItemCount = 25;
-                expect(combo.totalItemCount).toEqual(25);
-                expect(combo.virtualizationState).toEqual({ startIndex: 15, chunkSize: 10 });
-                expect(scrollSpy).toHaveBeenCalledWith(15);
-
-                combo.totalItemCount = 5;
-                expect(combo.virtualizationState).toEqual({ startIndex: 0, chunkSize: 10 });
                 expect(scrollSpy).toHaveBeenLastCalledWith(0);
             });
             it('should restore the virtualization state when searchInputUpdate is canceled', () => {
@@ -5124,11 +5138,16 @@ describe('igxCombo', () => {
             combo = fix.componentInstance.combo;
 
             try {
-                changei18n({ igx_combo_empty_message: 'Leer' });
+                changei18n({
+                    igx_combo_empty_message: 'Leer',
+                    igx_combo_filter_search_placeholder: 'Suchbegriff eingeben',
+                    igx_combo_clearItems_placeholder: 'Auswahl löschen'
+                });
                 fix.detectChanges();
 
                 expect(combo.resourceStrings.igx_combo_empty_message).toBe('Leer');
-                expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+                expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Suchbegriff eingeben');
+                expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Auswahl löschen');
             } finally {
                 changei18n(ComboResourceStringsEN);
             }

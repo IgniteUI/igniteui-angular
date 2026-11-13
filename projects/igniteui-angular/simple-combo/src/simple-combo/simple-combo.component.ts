@@ -145,6 +145,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         this._searchValue = val;
     }
 
+    /** The display text of the registered remote selection. */
+    private get remoteDisplayText(): string {
+        return Object.values(this._remoteSelection)[0] as string || '';
+    }
+
     private get selectedItem(): any {
         return this.selectionService.get(this.selectionKey).values().next().value;
     }
@@ -394,9 +399,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         if (event.key === this.platformUtil.KEYMAP.ESCAPE) {
             event.stopPropagation();
             if (this.collapsed) {
-                const oldSelection = this.selection;
+                // Compare the raw selected key: `selection` creates a new object on
+                // every read for a key that is missing from the current data.
+                const oldSelectedItem = this.selectedItem;
                 this.clearSelection(true);
-                if (this.selection !== oldSelection) {
+                if (this.selectedItem !== oldSelectedItem) {
                     this.comboInput.value = this.filterValue = this.searchValue = '';
                 }
                 this.dropdown.focusedItem = null;
@@ -458,7 +465,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
             return;
         }
 
-        const oldSelection = this.selection;
+        const oldSelectedItem = this.selectedItem;
         this.clearSelection(true);
 
         if (!this.collapsed) {
@@ -466,7 +473,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
         }
         event.stopPropagation();
 
-        if (this.selection !== oldSelection) {
+        if (this.selectedItem !== oldSelectedItem) {
             this.comboInput.value = this.filterValue = this.searchValue = '';
         }
 
@@ -529,6 +536,9 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     protected setSelection(newSelection: any): void {
         const newValueAsArray = newSelection ? Array.from(newSelection) as IgxComboItemComponent[] : [];
         const oldValueAsArray = Array.from(this.selectionService.get(this.selectionKey) || []);
+        // Creating the display text below registers the new remote entries, so keep
+        // the current ones to restore them if the change is canceled.
+        const oldRemoteSelection = { ...this._remoteSelection };
         const newItems = this.convertKeysToItems(newValueAsArray);
         const oldItems = this.convertKeysToItems(oldValueAsArray);
         const displayText = this.createDisplayText(this.convertKeysToItems(newValueAsArray), oldValueAsArray);
@@ -571,13 +581,13 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
                 this.selectionChanged.emit(changedArgs);
             }
             this._updateInput = true;
-        } else if (this.isRemote) {
-            this.registerRemoteEntries(newValueAsArray, false);
         } else {
-            args.displayText = this.createDisplayText(oldItems, []);
-
-            const oldSelectionArray = args.oldSelection ? [args.oldSelection] : [];
-            this.comboInput.value = this._displayValue = this.searchValue = this.createDisplayText(oldSelectionArray, []);
+            if (this.isRemote) {
+                this._remoteSelection = oldRemoteSelection;
+            }
+            this.comboInput.value = this._displayValue = this.searchValue = this.isRemote
+                ? this.remoteDisplayText
+                : this.createDisplayText(oldItems, []);
         }
     }
 
@@ -604,7 +614,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
 
         this.registerRemoteEntries(oldSelection, false);
         this.registerRemoteEntries(newSelection);
-        return Object.keys(this._remoteSelection).map(e => (this._remoteSelection as any)[e])[0] || '';
+        return this.remoteDisplayText;
     }
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
@@ -631,8 +641,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     private clearOnBlur(): void {
         if (this.isRemote) {
             const searchValue = this.searchValue || this.comboInput.value;
-            const remoteValue = Object.keys(this._remoteSelection).map(e => (this._remoteSelection as any)[e])[0] || '';
-            if (searchValue !== remoteValue) {
+            if (searchValue !== this.remoteDisplayText) {
                 this.clearSelection(true);
             }
             return;
