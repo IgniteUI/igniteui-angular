@@ -3358,6 +3358,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate!: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
+    private _repaintAfterRender = false;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage: string = null!;
     private _emptyFilteredGridMessage: string = null!;
@@ -6946,6 +6947,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected resetNotifyChanges() {
         this._cdrRequestRepaint = false;
         this._cdrRequests = false;
+        this._repaintAfterRender = false;
     }
 
     /** @hidden @internal */
@@ -7229,6 +7231,11 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
+                if (this._cdrRequestRepaint) {
+                    // repaint again after the deferred repaints; the flag survives a plain notifyChanges() in between
+                    this._repaintAfterRender = true;
+                    Promise.resolve().then(() => this._repaintAfterRender && this.notifyChanges(true));
+                }
             });
         });
         this.resetCaches(recalcFeatureWidth);
@@ -7886,6 +7893,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             width = currentWidth + 'px';
             this.resetCaches();
+        }
+        if (this._hostWidth === width) {
+            return;
         }
         this._hostWidth = width;
         this.cdr.markForCheck();
