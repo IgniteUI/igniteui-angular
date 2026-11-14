@@ -43,6 +43,7 @@ import {
 import { ControlsFunction } from '../../../test-utils/controls-functions.spec';
 import { advance, setElementSize, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import {
+    ExpressionsTreeUtil,
     DefaultSortingStrategy,
     FilteringExpressionsTree,
     FilteringLogic,
@@ -1601,7 +1602,7 @@ const gridResized = async (fix: ComponentFixture<any>) => {
 const emitFilteringDoneOnResetClick = async (fix, grid, filterVal: any, columnName: string, condition) => {
     await filterGrid(fix, grid, columnName, filterVal, condition);
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     await verifyEmitFilteringDone(grid, filteringExpressions, 1);
 
     GridFunctions.clickFilterCellChip(fix, columnName);
@@ -1631,7 +1632,7 @@ const emitFilteringDoneOnInputClear = async (fix, grid, filterVal, columnName, c
 const verifyRemoveChipFromHeader = async (fix, grid, filterVal, columnName, condition, _rowListLength, cellIndex) => {
     await filterGrid(fix, grid, columnName, filterVal, condition);
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     await verifyEmitFilteringDone(grid, filteringExpressions, 1);
 
     const filteringCells = GridFunctions.getFilteringCells(fix);
@@ -1660,7 +1661,7 @@ const closeChipFromFilteringUIRow = async (fix, grid, columnName, index) => {
     await fix.whenStable();
     fix.detectChanges();
 
-    const filteringExpressions = grid.filteringExpressionsTree.find(columnName) as FilteringExpressionsTree;
+    const filteringExpressions = ExpressionsTreeUtil.find(grid.filteringExpressionsTree, columnName) as FilteringExpressionsTree;
     await verifyEmitFilteringDone(grid, filteringExpressions, 1);
 };
 

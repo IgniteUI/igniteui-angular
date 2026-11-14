@@ -12,7 +12,6 @@ export * from './directives/focus-ring/focus-ring.directive';
 export * from './directives/focus-trap/focus-trap.directive';
 export {
     IForOfDataChangeEventArgs,
-    IForOfDataChangingEventArgs,
     IForOfState,
     IgxForOfContext,
     IgxForOfDirective,

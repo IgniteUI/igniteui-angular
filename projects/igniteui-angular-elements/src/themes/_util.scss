@@ -103,13 +103,14 @@ $elements-selector-prefix: 'igc';
 /// @requires $light-material-schema
 /// @requires {function} is-component
 /// @requires {function} is-used
-@mixin elements-theme($palette, $schema, $exclude) {
+@mixin elements-theme($palette, $schema, $exclude, $elevations: igx.$material-elevations) {
     @include theme.configure-variable-prefix($elements-var-prefix);
 
     @include igx.theme-internal(
         $palette: $palette,
         $exclude: $exclude,
         $schema: $schema,
+        $elevations: $elevations,
         $theme-handler: meta.get-function('update-element')
     );
 }

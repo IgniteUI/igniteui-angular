@@ -126,19 +126,19 @@ export class ActionStripSampleComponent implements OnInit {
     }
 
     public rowAdd(event: IRowDataCancelableEventArgs) {
-        console.log("RowAdd is: " + event.primaryKey);
+        console.log("RowAdd is: " + event.rowKey);
     }
 
     public rowAdded(event: IRowDataEventArgs) {
-        console.log("RowAdded is: " + event.primaryKey);
+        console.log("RowAdded is: " + event.rowKey);
     }
 
     public rowDelete(event: IRowDataCancelableEventArgs) {
-        console.log("Row Delete is: " + event.primaryKey);
+        console.log("Row Delete is: " + event.rowKey);
     }
 
     public rowDeleted(event: IRowDataEventArgs) {
-        console.log("Row deleted is: " + event.primaryKey);
+        console.log("Row deleted is: " + event.rowKey);
     }
 
     public ngOnInit(): void {

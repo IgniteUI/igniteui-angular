@@ -314,25 +314,6 @@ export class IgxPaginatorComponent implements IgxPaginatorToken {
         return this.page === 0;
     }
 
-
-    /**
-     * Returns if the first pager buttons should be disabled
-     * @hidden
-     * @deprecated in version 18.1.0. Use the `isFirstPage` property instead.
-     */
-    public get isFirstPageDisabled(): boolean {
-        return this.isFirstPage;
-    }
-
-    /**
-     * Returns if the last pager buttons should be disabled
-     * @hidden
-     * @deprecated in version 18.1.0. Use the `isLastPage` property instead.
-     */
-    public get isLastPageDisabled(): boolean {
-        return this.isLastPage;
-    }
-
     public get nativeElement() {
         return this.elementRef.nativeElement;
     }

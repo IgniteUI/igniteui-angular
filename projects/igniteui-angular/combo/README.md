@@ -347,7 +347,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `itemsWidth `         | defines drop down width                           | string                      |
 | `itemHeight `         | defines drop down item height                     | number                      |
 | `placeholder `        | defines the "empty value" text                    | string                      |
-| `searchPlaceholder `  | defines the placeholder text for search input     | string                      |
+| `resourceStrings`     | localization strings for the combo, e.g. `igx_combo_filter_search_placeholder` (search input placeholder) and `igx_combo_addCustomValues_placeholder` (search input placeholder when `disableFiltering` is `true` and `allowCustomValues` is `true`) | IComboResourceStrings |
 | `collapsed`           | gets drop down state                              | boolean                     |
 | `disabled`            | defines whether the control is active or not      | boolean                     |
 | `disableClear`        | defines whether the clear button is rendered      | boolean                     |

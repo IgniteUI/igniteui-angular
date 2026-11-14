@@ -16,7 +16,6 @@ import {
 import { Subject } from 'rxjs';
 import {
     EntityType,
-    FieldType,
     IExpressionTree,
     IQueryBuilderResourceStrings,
     QueryBuilderResourceStringsEN,
@@ -127,37 +126,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     }
 
     /**
-     * Gets the list of fields for the QueryBuilder.
-     *
-     * @deprecated since version 19.1.0. Use the `entities` property instead.
-     * @hidden
-     */
-    public get fields(): FieldType[] {
-        return this._fields;
-    }
-
-    /**
-     * Sets the list of fields for the QueryBuilder.
-     * Automatically wraps them into a single entity to maintain backward compatibility.
-     *
-     * @param fields - The array of fields to set.
-     * @deprecated since version 19.1.0. Use the `entities` property instead.
-     * @hidden
-     */
-    @Input()
-    public set fields(fields: FieldType[]) {
-        if (fields) {
-            this._fields = fields;
-            this.entities = [
-                {
-                    name: null!,
-                    fields: fields
-                }
-            ];
-        }
-    }
-
-    /**
     * Returns the expression tree.
     */
     public get expressionTree(): IExpressionTree {
@@ -265,7 +233,6 @@ export class IgxQueryBuilderComponent implements OnDestroy {
     private _customResourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree!: IExpressionTree;
-    private _fields!: FieldType[];
     private _entities!: EntityType[];
     private _shouldEmitTreeChange = true;
     private _searchValueTemplate!: TemplateRef<IgxQueryBuilderSearchValueContext>;

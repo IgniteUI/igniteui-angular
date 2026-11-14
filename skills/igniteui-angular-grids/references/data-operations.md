@@ -278,13 +278,25 @@ this.gridRef().cdr.detectChanges();
 
 ### Global Filtering & Cross-Column Logic
 
-> **DEPRECATED (v19.0+):** `filterGlobal()` is deprecated. Use `filteringExpressionsTree` to build a tree that applies conditions across all columns instead.
+There is no grid method that applies one condition to every column (`filterGlobal()` was removed in v23.0). Build a `filteringExpressionsTree` with one per-column branch instead:
 
 ```typescript
-// Filter all filterable columns at once with a search term
-// ⚠️ Deprecated since v19.0 — prefer filteringExpressionsTree
-this.gridRef().filterGlobal('search term', IgxStringFilteringOperand.instance().condition('contains'), true);
+// Filter all string columns at once with a search term (OR between columns)
+const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+for (const column of this.gridRef().columns.filter(c => c.filterable && c.dataType === 'string')) {
+  const columnTree = new FilteringExpressionsTree(FilteringLogic.Or, column.field);
+  columnTree.filteringOperands.push({
+    fieldName: column.field,
+    condition: IgxStringFilteringOperand.instance().condition('contains'),
+    searchVal: 'search term',
+    ignoreCase: true
+  });
+  tree.filteringOperands.push(columnTree);
+}
+this.gridRef().filteringExpressionsTree = tree;
 ```
+
+To read the filtering state of a single column, use `ExpressionsTreeUtil.find(tree, fieldName)` / `ExpressionsTreeUtil.findIndex(tree, fieldName)` from `igniteui-angular/core` (the `find()` / `findIndex()` instance methods on `FilteringExpressionsTree` were removed in v23.0).
 
 Control the AND/OR logic between **different column** filters:
 
