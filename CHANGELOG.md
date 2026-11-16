@@ -9,8 +9,6 @@ All notable changes for each version of this project will be documented in this 
 - **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
 - `IgxHierarchicalGridComponent`
     - **Deprecation** - The `schema` input has been deprecated and will be removed in a future version. Define the columns and the row islands of the grid instead, the advanced filtering schema is generated from them. A `schema` that is set is still used as before.
-- `ContainerPositionStrategy`
-    - **Deprecation** - The `dispose` method has been deprecated and will be removed in a future version. The strategy has nothing to dispose.
 
 ### New Functionality
 
