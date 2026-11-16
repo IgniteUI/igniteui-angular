@@ -115,6 +115,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEv
 }
 
 export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEditEventArgs {
+    /* blazorCSSuppress */
     /**
      * @deprecated
      */
@@ -127,6 +128,7 @@ export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEdi
      * @deprecated
      */
     oldValue: any;
+    /* blazorCSSuppress */
     /**
      * @deprecated
      */
@@ -136,6 +138,13 @@ export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEdi
      */
     isAddRow?: boolean;
     owner: GridType;
+    // rowAdd and rowDelete never set the column; the edit events have their own
+    /* blazorCSSuppress */
+    /**
+     * Optional
+     * Represents the column information of the edited cell
+     */
+    column?: ColumnType;
 }
 
 /**
