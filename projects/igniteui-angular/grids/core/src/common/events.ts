@@ -387,6 +387,7 @@ export interface ICellPosition {
 
 /** Emitted when a dragging operation is finished (when the row is dropped) */
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
+    /* blazorCSSuppress */
     /** Represents the drag directive or information associated with the drag operation */
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
@@ -403,6 +404,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
  * The event is cancelable
  */
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    /* blazorCSSuppress */
     /** Represents the drag directive or information associated with the drag operation */
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
