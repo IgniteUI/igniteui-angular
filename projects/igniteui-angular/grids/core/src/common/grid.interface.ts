@@ -61,6 +61,7 @@ export interface CellType {
     /* blazorCSSuppress */
     /** Represents the row that the cell belongs to */
     row: RowType;
+    /* blazorCSSuppress */
     /** Represents the grid instance containing the cell */
     grid: GridType;
     /** Optional; An object identifying the cell. It contains rowID, columnID, and rowIndex of the cell. */
@@ -244,6 +245,7 @@ export interface RowType {
      * Indicates whether the row is currently focused.
      */
     focused?: boolean;
+    /* blazorCSSuppress */
     /** Represent the grid instance, the row belongs to */
     grid: GridType;
     /* blazorSuppress */
@@ -1141,6 +1143,7 @@ export interface IgxGroupByRowTemplateContext {
 }
 
 export interface IgxGridTemplateContext {
+    /* blazorCSSuppress */
     $implicit: GridType
 }
 
@@ -1151,6 +1154,7 @@ export interface IgxGridRowTemplateContext {
 export interface IgxGridRowDragGhostContext {
     $implicit: any, // this is the row data
     data: any, // this is also the row data for some reason.
+    /* blazorCSSuppress */
     grid: GridType
 }
 
