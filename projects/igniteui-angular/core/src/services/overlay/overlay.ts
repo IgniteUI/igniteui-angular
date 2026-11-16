@@ -447,7 +447,7 @@ export class IgxOverlayService implements OnDestroy {
         const closeAnimation = info.settings.positionStrategy.settings.closeAnimation;
         // Show the overlay using Popover API BEFORE positioning
         // This ensures the element is in the top layer when position calculations happen
-        if (info.wrapperElement?.isConnected && typeof info.wrapperElement.showPopover === 'function') {
+        if (info.wrapperElement?.isConnected && info.wrapperElement.popover && typeof info.wrapperElement.showPopover === 'function') {
             try {
                 info.wrapperElement.showPopover();
             } catch (_) {
@@ -709,6 +709,7 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Creates an absolutely-positioned container div around the wrapper for ContainerPositionStrategy.
+     * The wrapper stays out of the top layer, so that whatever clips or scrolls the container does the same to it.
      */
     private insertWrapperInContainer(info: OverlayInfo) {
         const parent = info.settings.outlet?.nativeElement ||
@@ -721,6 +722,7 @@ export class IgxOverlayService implements OnDestroy {
         container.style.position = 'absolute';
         container.style.inset = '0';
         container.style.pointerEvents = 'none';
+        info.wrapperElement.removeAttribute('popover');
         container.appendChild(info.wrapperElement);
         parent.appendChild(container);
     }

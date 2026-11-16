@@ -12,8 +12,11 @@ All notable changes for each version of this project will be documented in this 
     - The add expression and the group (AND/OR) buttons now render with `type="button"`. Previously, clicking them inside a `form` submitted it. Pressing Enter in the query builder inputs also no longer submits a surrounding `form`.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - Pressing Enter in the grid UI, such as the filtering row, cell and row editors, the toolbar column hiding and pinning, Excel-style filtering and advanced filtering, as well as selecting a date in their date pickers with Enter, no longer submits a surrounding `form`.
+    - The loading indicator is no longer shown outside a scrollable parent that clips the grid, for example below a hierarchical grid when a child grid that is partly scrolled out of view is loading. It also moves with the grid now while the parent is scrolled (#17986).
 - `IgxAdvancedFilteringDialogComponent`, `IgxColumnActionsComponent`, `IgxPivotDataSelectorComponent`
     - Pressing Enter in their inputs no longer submits a surrounding `form` when they are rendered outside of the grid, e.g. used standalone, or the advanced filtering dialog opened with custom overlay settings.
+- `IgxOverlayService`
+    - Overlays shown with `ContainerPositionStrategy`, such as `IgxSnackbarComponent` with `positioning="container"`, are now rendered inside their container instead of in the top layer, so the container clips them and they scroll with it (#17986).
 
 ## 21.2.25
 
