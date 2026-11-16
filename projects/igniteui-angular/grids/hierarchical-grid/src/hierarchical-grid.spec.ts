@@ -1408,6 +1408,32 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(parseInt(window.getComputedStyle(rowIslandBody.nativeElement).height, 10)).toBe(255);
         });
 
+        it('should not show the loading indicator of a child grid outside of the parent grid, #17986', async () => {
+            const hierarchicalGrid = fixture.componentInstance.instance;
+            hierarchicalGrid.height = '200px';
+
+            fixture.componentInstance.databind();
+            fixture.detectChanges();
+
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            UIInteractions.simulateClickAndSelectEvent(row.expander);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0];
+            childGrid.isLoading = true;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            // The indicator is in the middle of the child grid body, below the visible part of the parent grid
+            const indicator = childGrid.nativeElement.querySelector('igx-circular-bar') as HTMLElement;
+            const indicatorRect = indicator.getBoundingClientRect();
+            expect(indicatorRect.top).toBeGreaterThan(hierarchicalGrid.nativeElement.getBoundingClientRect().bottom);
+
+            const elementAtIndicator = document.elementFromPoint(indicatorRect.left + indicatorRect.width / 2, indicatorRect.top + indicatorRect.height / 2);
+            expect(indicator.closest('.igx-overlay__wrapper--modal').contains(elementAtIndicator)).toBe(false);
+        });
+
         it('should render disabled collapse all icon for child grid even when it has no data but with child row island', () => {
             const hierarchicalGrid = fixture.componentInstance.instance;
 
