@@ -2152,6 +2152,21 @@ describe('Carousel Browser Animations Tests:', () => {
         expect(carousel.enterAnimationDone.emit).toHaveBeenCalledTimes(2);
         expect(carousel.get(1).nativeElement.classList).not.toContain(HelperTestFunctions.PREVIOUS_SLIDE_CLASS);
     });
+
+    it('should not render synchronously when the leave animation ends', async () => {
+        // a synchronous render checks the carousel before the app view, e.g. with a stale slides list
+        const detectChangesSpy = vi.spyOn(carousel['cdr'], 'detectChanges');
+        vi.spyOn(carousel.leaveAnimationDone, 'emit');
+
+        carousel.next();
+        const leavePlayer = carousel['leaveAnimationPlayer'];
+        vi.spyOn(leavePlayer, 'destroy');
+        await vi.waitFor(() => expect(carousel.leaveAnimationDone.emit).toHaveBeenCalledTimes(1));
+
+        expect(detectChangesSpy).not.toHaveBeenCalled();
+        expect(leavePlayer.destroy).toHaveBeenCalled();
+        expect(carousel['leaveAnimationPlayer']).toBeNull();
+    });
 });
 
 

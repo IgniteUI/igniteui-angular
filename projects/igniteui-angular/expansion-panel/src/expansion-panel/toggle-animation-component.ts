@@ -1,5 +1,5 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
-import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, inject, OnDestroy } from '@angular/core';
+import { ANIMATION_MODULE_TYPE, ChangeDetectorRef, Directive, ElementRef, EventEmitter, inject, OnDestroy } from '@angular/core';
 import { noop, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -70,6 +70,9 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
      * created outside of a view, e.g. as a provider.
      */
     private readonly _toggleAnimationCdr = inject(ChangeDetectorRef, { optional: true });
+
+    /** Noop animations end before the next paint, so the owner is not rendered synchronously when they are done. */
+    private readonly _noopAnimations = inject(ANIMATION_MODULE_TYPE, { optional: true }) === 'NoopAnimations';
 
     private closeInterrupted = false;
     private openInterrupted = false;
@@ -157,9 +160,11 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         if (!(type === ANIMATION_TYPE.OPEN ? this.openInterrupted : this.closeInterrupted)) {
             targetEmitter.emit();
         }
-        if (type === ANIMATION_TYPE.CLOSE) {
+        if (type === ANIMATION_TYPE.CLOSE && this.closeAnimationPlayer && !this._noopAnimations) {
             // Render the collapsed state synchronously, so that the content is removed before resetting the player
             // clears the animation styles; otherwise (e.g. zoneless) it is painted at full height for a frame.
+            // Only after a real animation: a disabled or noop one ends during the triggering event, before the
+            // next paint, and rendering here would remove e.g. a clicked submit button before its form is submitted.
             this._toggleAnimationCdr?.detectChanges();
         }
         this.cleanUpPlayer(type);

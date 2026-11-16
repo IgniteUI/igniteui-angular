@@ -668,6 +668,8 @@ describe('IgxTree #treeView', () => {
                     });
                     return player;
                 });
+                // handle the animation as a real one, which can be painted before it ends
+                (node as any)._noopAnimations = false;
 
                 node.collapse();
                 await vi.waitFor(() => expect(node.expanded).toBe(false));

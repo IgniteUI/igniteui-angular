@@ -2,6 +2,7 @@ import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
+    ANIMATION_MODULE_TYPE,
     Component,
     ContentChild,
     ContentChildren,
@@ -92,6 +93,8 @@ import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 export class IgxStepperComponent extends IgxCarouselComponentBase implements IgxStepper, OnInit, AfterContentInit, OnDestroy {
     private stepperService = inject(IgxStepperService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
+    /** Noop animations end before the next paint, so the stepper is not rendered synchronously when they are done. */
+    private readonly _noopAnimations = inject(ANIMATION_MODULE_TYPE, { optional: true }) === 'NoopAnimations';
 
 
     /**
@@ -355,6 +358,12 @@ export class IgxStepperComponent extends IgxCarouselComponentBase implements Igx
             } else {
                 Array.from(this.stepperService.collapsingSteps).slice(0, this.stepperService.collapsingSteps.size - 1)
                     .forEach(step => this.stepperService.collapse(step));
+            }
+            // Render synchronously, so that the previous step's content is removed before destroying the leave player
+            // clears its styles; otherwise it is painted in place for a frame. Only after a real animation: a noop one
+            // ends during the triggering event, and rendering here would remove e.g. a clicked submit button.
+            if (!this._noopAnimations) {
+                this.cdr.detectChanges();
             }
         });
     }

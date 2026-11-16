@@ -1168,6 +1168,8 @@ describe('Rendering Tests', () => {
                 }
                 return player;
             });
+            // handle the animation as a real one, which can be painted before it ends
+            (previousActiveStep as any)._noopAnimations = false;
             const activeChangeSpy = vi.spyOn(previousActiveStep.activeChange, 'emit');
 
             stepper.next();
@@ -1205,6 +1207,8 @@ describe('Rendering Tests', () => {
                 }
                 return player;
             });
+            // handle the animation as a real one, which can be painted before it ends
+            (stepper as any)._noopAnimations = false;
             const activeChangeSpy = vi.spyOn(previousActiveStep.activeChange, 'emit');
 
             stepper.next();
@@ -1214,6 +1218,37 @@ describe('Rendering Tests', () => {
             expect(contentRenderedOnDestroy).toBe(false);
             expect(getContent()).toBeNull();
         });
+
+        const noAnimationCases = [
+            { orientation: IgxStepperOrientation.Vertical, animationType: 'grow' },
+            { orientation: IgxStepperOrientation.Vertical, animationType: 'none' },
+            { orientation: IgxStepperOrientation.Horizontal, animationType: 'slide' }
+        ] as const;
+        for (const { orientation, animationType } of noAnimationCases) {
+            it(`should not remove the step content during the event that calls next() (${orientation}, ${animationType})`, async () => {
+                // e.g. a Next button inside a form in the step content must stay rendered until its click is
+                // dispatched, otherwise the form is not submitted
+                stepper.orientation = orientation;
+                if (orientation === IgxStepperOrientation.Vertical) {
+                    stepper.verticalAnimationType = animationType as VerticalAnimationType;
+                } else {
+                    stepper.horizontalAnimationType = animationType as HorizontalAnimationType;
+                }
+                stepper.steps[0].active = true;
+                fix.detectChanges();
+                await fix.whenStable();
+                const content: HTMLElement = stepper.steps[0].contentContainer.nativeElement.querySelector('[igxStepContent]');
+                expect(content).not.toBeNull();
+
+                // the noop or disabled animations end synchronously or in a microtask, still before the default
+                // action of the event, e.g. a form submit
+                stepper.next();
+                await Promise.resolve();
+                await Promise.resolve();
+
+                expect(content.isConnected).toBe(true);
+            });
+        }
 
         it('should properly collapse the previously active step in horizontal orientation and animation type \'fade\'', async () => {
             stepper.orientation = IgxStepperOrientation.Horizontal;

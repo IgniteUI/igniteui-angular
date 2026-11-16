@@ -5,7 +5,7 @@ import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ChangeDetectorRef, ElementRef } from '@angular/core';
+import { ANIMATION_MODULE_TYPE, ChangeDetectorRef, ElementRef } from '@angular/core';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }
@@ -136,6 +136,30 @@ describe('Toggle animation component change detection', () => {
         animationEnd.next();
 
         expect(mockPlayer.reset).toHaveBeenCalled();
+        expect(mockCdr.detectChanges).not.toHaveBeenCalled();
+    });
+
+    it('Should not render the owner when a noop close animation is done', () => {
+        TestBed.overrideProvider(ANIMATION_MODULE_TYPE, { useValue: 'NoopAnimations' });
+        const player = TestBed.inject(MockTogglePlayer);
+        const onDone = vi.fn();
+
+        player.playCloseAnimation({ nativeElement: {} } as ElementRef, onDone);
+        animationEnd.next();
+
+        expect(onDone).toHaveBeenCalledTimes(1);
+        expect(mockPlayer.reset).toHaveBeenCalled();
+        expect(mockCdr.detectChanges).not.toHaveBeenCalled();
+    });
+
+    it('Should not render the owner when the close animation is disabled', () => {
+        const player = TestBed.inject(MockTogglePlayer);
+        player.animationSettings = null;
+        const onDone = vi.fn();
+
+        player.playCloseAnimation({ nativeElement: {} } as ElementRef, onDone);
+
+        expect(onDone).toHaveBeenCalledTimes(1);
         expect(mockCdr.detectChanges).not.toHaveBeenCalled();
     });
 

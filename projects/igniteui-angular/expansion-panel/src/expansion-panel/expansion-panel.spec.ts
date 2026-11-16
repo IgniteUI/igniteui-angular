@@ -1180,6 +1180,8 @@ describe('igxExpansionPanel', () => {
                 });
                 return player;
             });
+            // handle the animation as a real one, which can be painted before it ends
+            (panel as any)._noopAnimations = false;
 
             panel.collapse();
             await fixture.whenStable();
