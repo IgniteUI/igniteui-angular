@@ -46,6 +46,7 @@ All notable changes for each version of this project will be documented in this 
 - Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
     - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
     - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
+- Fixed components losing styles when a theme they depend on is excluded through `$exclude`. For example, excluding `igx-label` no longer leaves the label of a textarea input group stuck to its top border. Such themes are now kept when a component you still include needs them, with a warning that tells you which one. `igx-simple-combo` and `igx-accordion` can also be excluded now.
 - The grid, grid toolbar, paginator, column actions, Excel-style filtering and query builder themes no longer pick up `--background`, `--foreground` or `--accent-color` declared on an ancestor or on `:root`, for example by the application's own CSS. Their themes now declare these tokens on the component, without a value unless one is passed to the theme function.
 
 ### Behavioral Changes
