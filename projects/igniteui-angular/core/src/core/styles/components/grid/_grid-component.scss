@@ -15,14 +15,30 @@
         @include register-component(
             $name: string.slice($this, 2, -1),
             $deps: (
+                igx-badge,
+                igx-button,
+                igx-button-group,
                 igx-checkbox,
                 igx-chip,
+                igx-circular-bar,
+                igx-date-picker,
+                igx-drop-down,
                 igx-grid-summary,
+                igx-highlight,
                 igx-icon-button,
                 igx-input-group,
                 igx-grid-toolbar,
+                igx-list,
+                igx-overlay,
                 igx-paginator,
-                igx-watermark,
+                igx-query-builder,
+                igx-ripple,
+                igx-select,
+                igx-snackbar,
+                igx-time-picker,
+                igx-tooltip,
+                igx-tree,
+                igc-trial-watermark
             )
         );
 

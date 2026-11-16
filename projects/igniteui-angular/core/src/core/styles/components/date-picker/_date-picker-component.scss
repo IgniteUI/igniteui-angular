@@ -9,7 +9,12 @@
         @include register-component(
             $name: string.slice($this, 2, -1),
             $deps: (
-                igx-calendar
+                igx-button,
+                igx-calendar,
+                igx-divider,
+                igx-input-group,
+                igx-overlay,
+                igx-ripple
             )
         );
 
