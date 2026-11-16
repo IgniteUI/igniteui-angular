@@ -803,10 +803,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
-        if (this._overlayId) {
+        // The overlay service detaches the calendar container on its own when Angular destroys it,
+        // which happens before this hook when the picker is destroyed with its calendar open.
+        if (this._overlayId && this._overlayService.getOverlayById(this._overlayId)) {
             this._overlayService.detach(this._overlayId);
-            this._overlayId = '';
         }
+        this._overlayId = '';
     }
 
     /** @hidden @internal */
