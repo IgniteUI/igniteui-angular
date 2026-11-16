@@ -1413,7 +1413,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(indicatorRect.top).toBeGreaterThan(hierarchicalGrid.nativeElement.getBoundingClientRect().bottom);
 
             const elementAtIndicator = document.elementFromPoint(indicatorRect.left + indicatorRect.width / 2, indicatorRect.top + indicatorRect.height / 2);
-            expect(indicator.closest('.igx-overlay__wrapper--modal').contains(elementAtIndicator)).toBe(false);
+            expect(indicator.closest('.igx-overlay__wrapper--flex-container').contains(elementAtIndicator)).toBe(false);
         });
 
         it('should render disabled collapse all icon for child grid even when it has no data but with child row island', () => {

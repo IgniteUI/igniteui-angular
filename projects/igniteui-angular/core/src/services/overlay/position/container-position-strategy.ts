@@ -20,7 +20,7 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
     }
 
     /**
-     * @deprecated in version 22.3.0. The strategy has nothing to dispose.
+     * Kept for backward compatibility. The strategy has nothing to dispose.
      */
     public dispose(): void { }
 }

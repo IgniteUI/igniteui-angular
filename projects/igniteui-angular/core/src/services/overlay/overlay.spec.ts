@@ -3506,6 +3506,44 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         });
 
+        it('Should show the component in the container when ContainerPositionStrategy is passed to show.', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const containerElement = fixture.componentInstance.divElement.nativeElement;
+            containerElement.style.width = '800px';
+            containerElement.style.height = '600px';
+            containerElement.style.position = 'fixed';
+            containerElement.style.top = '100px';
+            containerElement.style.left = '200px';
+            containerElement.style.overflow = 'hidden';
+
+            const overlayContent = document.createElement('div');
+            overlayContent.textContent = 'Test Content';
+            containerElement.appendChild(overlayContent);
+
+            fixture.detectChanges();
+            const overlay = fixture.componentInstance.overlay;
+            const id = overlay.attach(new ElementRef(overlayContent));
+            overlay.show(id, { positionStrategy: new ContainerPositionStrategy({ openAnimation: null, closeAnimation: null }) });
+            await fixture.whenStable();
+
+            const wrapperElement = overlay.getOverlayById(id).wrapperElement;
+            expect(wrapperElement.hasAttribute('popover')).toBe(false);
+
+            const componentRect = overlayContent.getBoundingClientRect();
+            const containerRect = containerElement.getBoundingClientRect();
+            expect(Math.abs((componentRect.left + componentRect.width / 2) - (containerRect.left + containerRect.width / 2))).toBeLessThan(1);
+            expect(Math.abs((componentRect.top + componentRect.height / 2) - (containerRect.top + containerRect.height / 2))).toBeLessThan(1);
+
+            // Another strategy puts the component back in the top layer
+            overlay.hide(id);
+            overlay.show(id, { positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null }) });
+            await fixture.whenStable();
+            expect(wrapperElement.getAttribute('popover')).toBe('manual');
+
+            overlay.detachAll();
+        });
+
         it('Should reposition overlay when container is resized with ContainerPositionStrategy.', async() => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
 
@@ -3609,7 +3647,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.detachAll();
         });
 
-        it('Should dispose the position strategy when overlay is detached.', async () => {
+        it('Should dispose IntersectionObserver when overlay is detached.', async () => {
             const fixture = TestBed.createComponent(EmptyPageComponent);
 
             const containerElement = fixture.componentInstance.divElement.nativeElement;
