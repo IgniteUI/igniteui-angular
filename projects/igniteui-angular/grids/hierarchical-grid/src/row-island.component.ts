@@ -24,6 +24,7 @@ import {
     DropPosition,
     GridType,
     ICellPosition,
+    IColumnVisibilityChangedEventArgs,
     IgxColumnComponent,
     IgxFilteringService,
     IgxGridPaginatorTemplateContext,
@@ -37,6 +38,8 @@ import {
     ColumnPinningPosition,
     ColumnType,
     GridSelectionRange,
+    IFilteringExpressionsTree,
+    IFilteringOperation,
     IGridResourceStrings,
     ISortingExpression,
     ISummaryExpression,
@@ -549,6 +552,37 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public override getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
         callback: (column: ColumnType) => boolean = null!): ICellPosition {
         return super.getPreviousCell(currRowIndex, curVisibleColIndex, callback);
+    }
+
+    /** @hidden */
+    public override toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+        super.toggleColumnVisibility(args);
+    }
+
+    /** @hidden */
+    public override getColumnByName(name: string): IgxColumnComponent {
+        return super.getColumnByName(name);
+    }
+
+    /** @hidden */
+    public override filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase?: boolean) {
+        super.filter(name, value, conditionOrExpressionTree, ignoreCase);
+    }
+
+    /** @hidden */
+    public override filterGlobal(value: any, condition: IFilteringOperation, ignoreCase?: boolean) {
+        super.filterGlobal(value, condition, ignoreCase);
+    }
+
+    /** @hidden */
+    public override clearFilter(name?: string) {
+        super.clearFilter(name);
+    }
+
+    /** @hidden */
+    public override clearSort(name?: string) {
+        super.clearSort(name);
     }
     //#endregion
 
