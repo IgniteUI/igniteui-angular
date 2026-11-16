@@ -86,8 +86,10 @@ export interface CellType {
     visibleColumnIndex?: number;
     /** A method definition to update the value of the cell. */
     update: (value: any) => void;
+    /* blazorCSSuppress */
     /** A method definition to start or end the edit mode of the cell. It takes a boolean value as an argument*/
     setEditMode?(value: boolean): void;
+    /* blazorCSSuppress */
     /**
      * Optional;
      * A method definition to calculate the size of the cell to fit the content
