@@ -395,6 +395,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
     /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
+    /* blazorCSSuppress */
     /** `animation` returns whether the event is animated */
     animation: boolean;
 }
