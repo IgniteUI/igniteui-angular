@@ -6,7 +6,16 @@
         $this: bem--selector-to-string(&);
         @include register-component(
             $name: string.slice($this, 2, -1),
-            $deps: ()
+            $deps: (
+                igx-checkbox,
+                igx-chip,
+                igx-drop-down,
+                igx-expansion-panel,
+                igx-icon,
+                igx-input-group,
+                igx-list,
+                igx-overlay
+            )
         );
 
         @extend %selector-base !optional;

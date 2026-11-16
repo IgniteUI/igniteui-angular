@@ -12,7 +12,8 @@
             $name: string.slice($this, 2, -1),
             $deps: (
                 igx-checkbox,
-                igx-icon,
+                igx-circular-bar,
+                igx-icon
             )
         );
     }
