@@ -147,11 +147,13 @@ export interface FieldType {
      */
     pipeArgs?: IFieldPipeArgs;
 
+    /* blazorCSSuppress */
     /**
      * Default time format for Date/Time fields.
      */
     defaultTimeFormat?: string;
 
+    /* blazorCSSuppress */
     /**
      * Default date/time format for Date/Time fields.
      */
