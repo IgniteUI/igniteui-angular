@@ -1776,7 +1776,9 @@ describe('IgxDatePicker', () => {
             it(`should not warn about a wrong overlay id when destroyed while open in ${mode} mode - issue #17938`, async () => {
                 fixture.componentInstance.mode.set(mode);
                 fixture.detectChanges();
-                const warnSpy = spyOn(console, 'warn');
+                // Reuse the global console.warn spy from test-utils/helper-utils.spec.ts when it is loaded,
+                // as spying on it again fails in suites that do not allow respying.
+                const warnSpy = jasmine.isSpy(console.warn) ? console.warn as jasmine.Spy : spyOn(console, 'warn');
 
                 fixture.componentInstance.datePicker()!.open();
                 await fixture.whenStable();
