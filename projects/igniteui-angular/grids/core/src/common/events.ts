@@ -512,6 +512,7 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
      * The expression contains information like file name, whether the letter case should be taken into account, etc.
      */
     sortingExpressions?: ISortingExpression | Array<ISortingExpression>;
+    /* blazorCSSuppress */
     /**
      * Optional
      * Represents the grouping expressions applied to the grid.
