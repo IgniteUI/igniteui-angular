@@ -141,6 +141,7 @@ export interface IPivotDimension {
     dataType?: GridColumnDataType;
     /** The width of the dimension cells to be rendered.Can be pixel, % or "auto". */
     width?: string;
+    /* blazorCSSuppress */
     /** Level of the dimension. */
     level?: number;
     /** @hidden @internal */
