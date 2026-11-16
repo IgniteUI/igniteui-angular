@@ -240,6 +240,7 @@ export interface RowType {
      */
     treeRow?: ITreeGridRecord;
     addRowUI?: boolean;
+    /* blazorCSSuppress */
     /**
      * Optional
      * Indicates whether the row is currently focused.
