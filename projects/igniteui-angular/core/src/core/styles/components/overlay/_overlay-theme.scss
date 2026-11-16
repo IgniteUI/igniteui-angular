@@ -51,6 +51,7 @@
     %overlay-wrapper--flex-container {
         display: flex;
         position: absolute;
+        z-index: 10005;
     }
 
     %overlay-content {
