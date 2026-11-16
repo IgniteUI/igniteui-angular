@@ -5,7 +5,7 @@ A walk through of how to get started can be found [here](https://www.infragistic
 
 ## Key Features
 
-- **Popover API Integration**: Uses the HTML Popover API for improved z-index management and automatic top-layer placement. Overlays shown with the container position strategy are rendered inside their container instead, so that it clips them and they scroll with it
+- **Popover API Integration**: Uses the HTML Popover API for improved z-index management and automatic top-layer placement
 - **Flexible Positioning**: Multiple position strategies (global, connected, auto, elastic, container)
 - **Scroll Strategies**: Handle scroll behavior with NoOp, Block, Close, and Absolute strategies
 - **Modal Support**: Optional modal backdrop with configurable close-on-outside-click behavior
