@@ -52,6 +52,7 @@ export class IgxQueryBuilderHeaderComponent {
      * @deprecated in version 19.1.0.
      */
     @Input()
+    /* blazorCSSuppress */
     public showLegend = true;
 
     /**
