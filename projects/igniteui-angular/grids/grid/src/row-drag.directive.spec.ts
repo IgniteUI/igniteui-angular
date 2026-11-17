@@ -396,6 +396,8 @@ describe('Row Drag Tests', () => {
                     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
                     // The removed ghost is not kept as the pointer capture target.
                     expect((rowDragDirective as any)._pointerCaptureTarget).toBeNull();
+                    // The transitions of the element, disabled when the drag started, are enabled again.
+                    expect(rowDragDirective.element.nativeElement.style.transitionDuration).toBe('');
 
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     rowDragDirective.onPointerUp(pointerUpEvent);
