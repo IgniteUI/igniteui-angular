@@ -2,13 +2,7 @@
 
 # Current Milestone
 
-## Milestone 46, version 22.3 (Due Nov, 2026)
-
-1. Mask input undo-redo
-2. Native CSS anchor positioning for `IgxOverlayService` [#17765](https://github.com/IgniteUI/igniteui-angular/issues/17765)
-3. Drag & Drop - allow cancelling an in-progress drag [#17735](https://github.com/IgniteUI/igniteui-angular/issues/17735)
-4. Disabled items in `IgxCombo` and `IgxSimpleCombo`
-5. Templating support for `IgxCalendar` days
+## Milestone 47, version 22.4 (Due Jan 12, 2027)
 
 ## Going down the road
 
@@ -19,6 +13,12 @@
 5. Optimizing `IgxGrid` search for big data sets
 
 # Previous Milestone
+
+## Milestone 46, version 22.3 (Released Nov 17, 2026)
+1. **[DONE]** Drag & Drop - allow cancelling an in-progress drag [#17735](https://github.com/IgniteUI/igniteui-angular/issues/17735)
+2. **[DONE]** Templating support for `IgxCalendar` days [#17822](https://github.com/IgniteUI/igniteui-angular/issues/17822)
+3. **[DONE]** Vertical tabs - new `headerPosition` input for `IgxTabsComponent` [#1982](https://github.com/IgniteUI/igniteui-angular/issues/1982)
+4. **[DONE]** Ignite UI Theming 30.0.0 - new contrast-based `fitted` palette generator and surface roles
 
 ## Milestone 45, version 22.2 (Released Sep 30, 2026)
 1. **[DONE]** Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
