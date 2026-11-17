@@ -658,35 +658,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     /**
      * @hidden
      * @internal
-     * @deprecated in version 22.3.0. Not used by the chip. The select icon is rendered only while the chip is selected,
-     * with the `igx-chip__select` class.
-     */
-    public selectClass(condition: boolean): any {
-        const SELECT_CLASS = 'igx-chip__select';
-
-        return {
-            [SELECT_CLASS]: condition,
-            [`${SELECT_CLASS}--hidden`]: !condition
-        };
-    }
-
-    /**
-     * @hidden
-     * @deprecated in version 22.3.0. Not used by the chip. `selectedChanged` is emitted when the selection is applied.
-     */
-    public onSelectTransitionDone(event: any) {
-        if (event.target.tagName) {
-            // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
-            this.selectedChanged.emit({
-                owner: this,
-                originalEvent: event
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
      */
     public onChipKeyDown(event: KeyboardEvent) {
         const keyDownArgs: IChipKeyDownEventArgs = {

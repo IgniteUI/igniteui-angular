@@ -61,7 +61,7 @@ All notable changes for each version of this project will be documented in this 
     - Selecting and deselecting a chip now animates the change of its text, background, border and shadow colors, as the checkbox and the switch do. The hover and focus colors change with the same transition.
     - The select icon now animates out when the chip is deselected, as it already animated in when the chip was selected. It stays in the DOM, with the `igx-chip__select--leaving` class, until its animation ends. Tests that check for the icon's removal right after deselection keep working, as `TestBed` disables these animations by default.
     - The color transitions are enabled after the chip is first rendered, when the `igx-chip--animated` class is added to it, so a chip does not animate to its initial state.
-    - **Deprecation** - The `selectClass` and `onSelectTransitionDone` methods have been deprecated and will be removed in a future version. The chip does not use them.
+    - **Breaking Change** - The `selectClass` and `onSelectTransitionDone` methods have been removed. They were leftovers of the previous select icon animation and were not used by the chip. `selectClass` was marked as internal, and `selectedChanged` is still emitted when the selection changes.
 - `IgxDragDirective`
     - The transitions of the dragged element are disabled only while it is dragged. Previously the directive set `transition-duration: 0s` on the element when it was initialized, which disabled its own transitions, such as a color change on hover, at all times.
 - `IgxSplitterComponent`
