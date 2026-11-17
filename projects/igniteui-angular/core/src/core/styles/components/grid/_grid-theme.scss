@@ -2348,12 +2348,6 @@
         }
     }
 
-    %igx-grid--loading {
-        .igx-banner {
-            pointer-events: none;
-        }
-    }
-
     %igx-grid__addrow-snackbar {
         position: absolute;
         z-index: 5;

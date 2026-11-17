@@ -231,7 +231,7 @@
 </ng-template>
 
 @if (rowEditable) {
-    <div igxToggle #rowEditingOverlay>
+    <div igxToggle #rowEditingOverlay [style.pointer-events]="isLoading ? 'none' : null">
         <div [className]="bannerClass">
             <ng-container
                 *ngTemplateOutlet="resolveRowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">
