@@ -79,7 +79,7 @@ Example status workflows:
 ## Accessibility (a11y)
 Accessibility is an integral part of any UI component. We as a team are committed to deliver fully-accessible UI components. Every developer should take into account the following standards and should implement and test for compliance with them:  
  * Section 508 compliance.  
- * WCAG (preferably AAA compliance, AA compliance where AAA is unachivable because of the type of UI component)  
+ * [WCAG 2.2](https://www.w3.org/TR/WCAG22/) Level AA compliance (mandatory).  
  * WAI-ARIA  
  * Full keyboard navigation  
 
