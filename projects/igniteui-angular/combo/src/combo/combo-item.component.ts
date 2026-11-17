@@ -9,7 +9,7 @@ import {
 import { IgxComboAPIService } from './combo.api';
 import { rem } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
-import { IgxDropDownItemComponent, Navigate } from 'igniteui-angular/drop-down';
+import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 
 /** @hidden */
 @Component({
@@ -97,18 +97,6 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     }
 
     private _disableTransitions = false;
-
-    /**
-     * @hidden
-     */
-    public isVisible(direction: Navigate): boolean {
-        const rect = this.element.nativeElement.getBoundingClientRect();
-        const parentDiv = this.element.nativeElement.parentElement.parentElement.getBoundingClientRect();
-        if (direction === Navigate.Down) {
-            return rect.y + rect.height <= parentDiv.y + parentDiv.height;
-        }
-        return rect.y >= parentDiv.y;
-    }
 
     public override clicked(event: MouseEvent): void {
         this.comboAPI.disableTransitions = false;
