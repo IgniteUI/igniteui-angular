@@ -46,6 +46,7 @@ All notable changes for each version of this project will be documented in this 
 - Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
     - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
     - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
+- Fixed components losing styles when a theme they depend on is excluded through `$exclude`. For example, excluding `igx-label` no longer leaves the label of a textarea input group stuck to its top border. Such themes are now kept when a component you still include needs them, with a warning that tells you which one. `igx-simple-combo` and `igx-accordion` can also be excluded now.
 - The grid, grid toolbar, paginator, column actions, Excel-style filtering and query builder themes no longer pick up `--background`, `--foreground` or `--accent-color` declared on an ancestor or on `:root`, for example by the application's own CSS. Their themes now declare these tokens on the component, without a value unless one is passed to the theme function.
 
 ### Behavioral Changes
@@ -125,6 +126,7 @@ All notable changes for each version of this project will be documented in this 
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
+    - Destroying the grid while its advanced filtering dialog is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied and no column is pinned at the start, the group-by indentation and the summary area below it use the pinned border.
