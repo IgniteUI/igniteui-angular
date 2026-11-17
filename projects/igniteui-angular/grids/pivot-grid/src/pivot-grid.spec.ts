@@ -4584,6 +4584,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it("should scroll to the row dimension cells outside of the view.", async () => {
+                fixture.autoDetectChanges();
                 pivotGrid.data = Array.from({ length: 30 }, (_, i) => ({
                     ProductCategory: 'Clothing', UnitPrice: 10, SellerName: `Seller ${i}`,
                     Country: 'Bulgaria', City: `City ${i}`, Date: '01/01/2012', UnitsSold: i
@@ -4622,6 +4623,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it("should jump to the first and last row dimension cells outside of the view.", async () => {
+                fixture.autoDetectChanges();
                 pivotGrid.data = Array.from({ length: 30 }, (_, i) => ({
                     ProductCategory: 'Clothing', UnitPrice: 10, SellerName: `Seller ${i}`,
                     Country: 'Bulgaria', City: `City ${i}`, Date: '01/01/2012', UnitsSold: i
