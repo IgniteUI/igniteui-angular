@@ -2100,6 +2100,10 @@
 
         @include m(loading) {
             --ig-overlay-background-color: transparent;
+
+            .igx-banner {
+                pointer-events: none;
+            }
         }
 
         .igx-banner {
