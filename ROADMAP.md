@@ -4,6 +4,10 @@
 
 ## Milestone 47, version 22.4 (Due Jan 12, 2027)
 
+1. Mask input undo-redo
+2. Native CSS anchor positioning for `IgxOverlayService` [#17765](https://github.com/IgniteUI/igniteui-angular/issues/17765)
+3. Disabled items in `IgxCombo` and `IgxSimpleCombo`
+
 ## Going down the road
 
 1. Transition the whole library to signals [RFC live](https://github.com/IgniteUI/igniteui-angular/discussions/17796)
