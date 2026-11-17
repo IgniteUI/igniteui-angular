@@ -1189,7 +1189,7 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('role').nodeValue).toEqual('grid');
             expect(grid.attributes.getNamedItem('id').nodeValue).toEqual(fixture.componentInstance.grid1.id);
             expect(grid.attributes.getNamedItem('tabindex').nodeValue).toEqual('0');
-            expect(grid.childElementCount).toEqual(6);
+            expect(grid.childElementCount).toEqual(7);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelImageComponent> = TestBed.createComponent(IgxExpansionPanelImageComponent);
