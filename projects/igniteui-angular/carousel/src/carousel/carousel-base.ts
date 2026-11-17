@@ -21,7 +21,8 @@ export interface IgxSlideComponentBase {
 /** @hidden */
 @Directive()
 export abstract class IgxCarouselComponentBase implements OnDestroy {
-    private animationService = inject<AnimationService>(IgxAngularAnimationService);
+    /** @hidden */
+    protected animationService = inject<AnimationService>(IgxAngularAnimationService);
     protected cdr = inject(ChangeDetectorRef);
 
     /** @hidden */

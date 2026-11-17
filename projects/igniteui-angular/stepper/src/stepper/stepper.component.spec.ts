@@ -1169,7 +1169,7 @@ describe('Rendering Tests', () => {
                 return player;
             });
             // handle the animation as a real one, which can be painted before it ends
-            (previousActiveStep as any)._noopAnimations = false;
+            vi.spyOn(animationService, 'isNoop', 'get').mockReturnValue(false);
             const activeChangeSpy = vi.spyOn(previousActiveStep.activeChange, 'emit');
 
             stepper.next();
@@ -1208,7 +1208,7 @@ describe('Rendering Tests', () => {
                 return player;
             });
             // handle the animation as a real one, which can be painted before it ends
-            (stepper as any)._noopAnimations = false;
+            vi.spyOn(animationService, 'isNoop', 'get').mockReturnValue(false);
             const activeChangeSpy = vi.spyOn(previousActiveStep.activeChange, 'emit');
 
             stepper.next();

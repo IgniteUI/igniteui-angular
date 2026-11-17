@@ -4,6 +4,10 @@ import { IBaseEventArgs } from '../../core/utils';
 
 export interface AnimationService {
     /**
+     * Whether the animations are noop, e.g. with `provideNoopAnimations()`, so they end without being painted
+     */
+    readonly isNoop?: boolean;
+    /**
      * Creates an `AnimationPlayer` instance
      * @param animation A set of options describing the animation
      * @param element The DOM element on which animation will be applied

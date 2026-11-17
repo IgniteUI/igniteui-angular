@@ -5,7 +5,7 @@ import { IgxAngularAnimationService } from 'igniteui-angular/core';
 import { ANIMATION_TYPE, ToggleAnimationPlayer } from './toggle-animation-component';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { ANIMATION_MODULE_TYPE, ChangeDetectorRef, ElementRef } from '@angular/core';
+import { ChangeDetectorRef, ElementRef } from '@angular/core';
 
 class MockTogglePlayer extends ToggleAnimationPlayer {
 }
@@ -140,7 +140,7 @@ describe('Toggle animation component change detection', () => {
     });
 
     it('Should not render the owner when a noop close animation is done', () => {
-        TestBed.overrideProvider(ANIMATION_MODULE_TYPE, { useValue: 'NoopAnimations' });
+        TestBed.overrideProvider(IgxAngularAnimationService, { useValue: { buildAnimation: () => mockPlayer, isNoop: true } });
         const player = TestBed.inject(MockTogglePlayer);
         const onDone = vi.fn();
 

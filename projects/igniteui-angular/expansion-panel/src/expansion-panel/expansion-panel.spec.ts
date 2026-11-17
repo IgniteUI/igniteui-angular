@@ -1181,7 +1181,7 @@ describe('igxExpansionPanel', () => {
                 return player;
             });
             // handle the animation as a real one, which can be painted before it ends
-            (panel as any)._noopAnimations = false;
+            vi.spyOn(animationService, 'isNoop', 'get').mockReturnValue(false);
 
             panel.collapse();
             await fixture.whenStable();
