@@ -423,6 +423,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const doneButton = GridFunctions.getRowEditingDoneButton(fix);
             const doneButtonRect = doneButton.getBoundingClientRect();
             const elementAtDoneButton = document.elementFromPoint(doneButtonRect.left + doneButtonRect.width / 2, doneButtonRect.top + doneButtonRect.height / 2);
+            expect(elementAtDoneButton).not.toBeNull();
             expect(doneButton.contains(elementAtDoneButton)).toBe(false);
         });
 
