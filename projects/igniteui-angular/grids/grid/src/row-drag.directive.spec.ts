@@ -390,14 +390,16 @@ describe('Row Drag Tests', () => {
 
                     vi.spyOn(grid.rowDragStart, 'emit');
                     vi.spyOn(grid.rowDragEnd, 'emit');
+                    // Set by the application before the drag.
+                    rowDragDirective.element.nativeElement.style.transitionDuration = '0.5s';
 
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
                     // The removed ghost is not kept as the pointer capture target.
                     expect((rowDragDirective as any)._pointerCaptureTarget).toBeNull();
-                    // The transitions of the element, disabled when the drag started, are enabled again.
-                    expect(rowDragDirective.element.nativeElement.style.transitionDuration).toBe('');
+                    // The transitions of the element, disabled when the drag started, are restored.
+                    expect(rowDragDirective.element.nativeElement.style.transitionDuration).toBe('0.5s');
 
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     rowDragDirective.onPointerUp(pointerUpEvent);

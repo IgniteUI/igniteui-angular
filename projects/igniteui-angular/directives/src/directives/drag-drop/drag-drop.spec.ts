@@ -1413,6 +1413,32 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.style.transitionDuration).toBe('');
     });
 
+    it('should restore the inline transition duration of the base element after dragging.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+        // Set by the application before the drag.
+        firstElement.style.transitionDuration = '0.5s';
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await nextFrame();
+        expect(firstElement.style.transitionDuration).toBe('0s');
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+
+        expect(transitionedSpy).toHaveBeenCalledTimes(1);
+        expect(firstElement.style.transitionDuration).toBe('0.5s');
+    });
+
     it('should ignore transitionend events of non-positional properties and of child elements.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;

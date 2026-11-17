@@ -647,6 +647,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _lastX = 0;
     protected _lastY = 0;
     protected _dragStarted = false;
+    /** The inline transition duration of the base element before dragging disabled its transitions. */
+    protected _baseTransitionDuration: string | null = null;
 
     /** Drag ghost related properties */
     protected _defaultOffsetX: any;
@@ -1135,6 +1137,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     // Moving the base, or hiding it (e.g. with `visibility: hidden`) when it is replaced by a ghost,
                     // must not wait for its own transitions. Disable them only while dragging, so the transitions of
                     // the element (e.g. a color change on hover) keep working otherwise. Restored in onTransitionEnd.
+                    // Keep the value from before an earlier drag, if that one has not been restored yet.
+                    this._baseTransitionDuration ??= this.element.nativeElement.style.transitionDuration;
                     this.element.nativeElement.style.transitionDuration = '0s';
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
@@ -1357,8 +1361,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.element.nativeElement.style.transitionTimingFunction = '';
             this.element.nativeElement.style.transitionDelay = '';
         }
-        // Re-enable the transitions of the base element, which were disabled while dragging.
-        this.element.nativeElement.style.transitionDuration = '';
+        this.restoreBaseTransitionDuration();
         this.animInProgress = false;
         this._dragStarted = false;
         const cancelled = this._dragCancelled;
@@ -1737,6 +1740,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /** The inline position of an element that a transition animates, used to detect when nothing will move. */
     protected getTransitionPosition(elem: HTMLElement) {
         return `${elem.style.transform}|${elem.style.left}|${elem.style.top}`;
+    }
+
+    /**
+     * Re-enables the transitions of the base element, which were disabled while dragging,
+     * restoring the inline transition duration it had before the drag.
+     */
+    protected restoreBaseTransitionDuration() {
+        this.element.nativeElement.style.transitionDuration = this._baseTransitionDuration ?? '';
+        this._baseTransitionDuration = null;
     }
 
     /**

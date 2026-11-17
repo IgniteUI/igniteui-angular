@@ -77,7 +77,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started
                 // and enable again the transitions of the element, which were disabled when the drag started.
                 this.unsubscribeFromEscape();
-                this.element.nativeElement.style.transitionDuration = '';
+                this.restoreBaseTransitionDuration();
                 return;
             }
             this.row.grid.dragRowID = this.row.key;
