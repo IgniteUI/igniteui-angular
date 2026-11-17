@@ -478,6 +478,10 @@
             @extend %igx-grid__loading-outlet !optional;
         }
 
+        @include m(loading) {
+            @extend %igx-grid--loading !optional;
+        }
+
         @include e(addrow-snackbar) {
             @extend %igx-grid__addrow-snackbar !optional;
         }
