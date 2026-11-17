@@ -505,10 +505,6 @@ $_theme: digest-schema($material-chip);
         @include e(select, $m: 'leaving') {
             max-width: 0;
             opacity: 0;
-
-            .igx-chip__start:has(> .igx-chip__select:not(.igx-chip__select--leaving)) & {
-                display: none;
-            }
             transition:
                 max-width .12s $ease-in-out-quad .06s,
                 margin-inline-end .12s $ease-in-out-quad .06s,

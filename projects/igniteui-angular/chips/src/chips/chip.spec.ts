@@ -576,7 +576,8 @@ describe('IgxChip selection animations', () => {
         chip.selected = true;
         fix.detectChanges();
 
-        await vi.waitFor(() => expect(leavingIcon.isConnected).toBe(false));
+        // The leaving icon is removed right away, so the chip never shows two icons.
+        expect(leavingIcon.isConnected).toBe(false);
         expect(getSelectIcons().length).toBe(1);
         expect(getSelectIcons()[0].classList.contains('igx-chip__select--leaving')).toBe(false);
     });
