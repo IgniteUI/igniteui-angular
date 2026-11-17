@@ -9,7 +9,9 @@
         @include register-component(
             $name: string.slice($this, 2, -1),
             $deps: (
-                igx-icon
+                igx-button,
+                igx-icon,
+                igx-label
             )
         );
 

@@ -10,7 +10,7 @@
         @include register-component(
             $name: string.slice($this, 2, -1),
             $deps: (
-                igx-watermark
+                igc-trial-watermark
             )
         );
     }
