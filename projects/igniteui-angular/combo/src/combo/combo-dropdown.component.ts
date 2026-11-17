@@ -36,12 +36,6 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         return this.virtualization!.scrollElement;
     }
 
-    protected get lastVisibleIndex(): number {
-        return this.combo.totalItemCount ?
-            Math.floor(this.combo.itemsMaxHeight / this.combo.itemHeight) :
-            this.items.length - 1;
-    }
-
     protected get sortedChildren(): IgxDropDownItemBaseDirective[] {
         if (this.children !== undefined) {
             return this.children.toArray()
