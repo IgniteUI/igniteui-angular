@@ -1382,6 +1382,37 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.animInProgress).toBe(false);
     });
 
+    it('should disable the transitions of the base element only while dragging.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+
+        // The element's own transitions (e.g. on hover) are not overridden outside of a drag.
+        expect(firstElement.style.transitionDuration).toBe('');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+        expect(firstElement.style.transitionDuration).toBe('');
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await nextFrame();
+
+        // Hiding the base for the ghost must not wait for its transitions.
+        expect(firstDrag.ghostElement).toBeTruthy();
+        expect(firstElement.style.transitionDuration).toBe('0s');
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+
+        expect(transitionedSpy).toHaveBeenCalledTimes(1);
+        expect(firstElement.style.transitionDuration).toBe('');
+    });
+
     it('should ignore transitionend events of non-positional properties and of child elements.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
@@ -1427,8 +1458,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.ghostElement).toBe(ghost);
         expect(firstDrag.animInProgress).toBe(true);
 
-        await wait(500);
-        expect(transitionedSpy).toHaveBeenCalledTimes(1);
+        await vi.waitFor(() => expect(transitionedSpy).toHaveBeenCalledTimes(1));
         expect(firstDrag.ghostElement).toBeNull();
         expect(firstDrag.animInProgress).toBe(false);
     });

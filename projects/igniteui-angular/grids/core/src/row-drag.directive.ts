@@ -200,7 +200,11 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this._unsubscribe();
     }
 
-    private transitionEndEvent = () => {
+    private transitionEndEvent = (event: TransitionEvent) => {
+        if (!this.isPositionTransitionEnd(event)) {
+            // E.g. a color transition of a chip in a cloned cell, which must not end the return animation early.
+            return;
+        }
         if (this.ghostElement) {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }

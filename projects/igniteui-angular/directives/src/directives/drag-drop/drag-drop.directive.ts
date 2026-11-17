@@ -809,9 +809,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
             this.element.nativeElement.addEventListener('transitionend', this.onTransitionEnd);
         });
-
-        // Set transition duration to 0s. This also helps with setting `visibility: hidden` to the base to not lag.
-        this.element.nativeElement.style.transitionDuration = '0.0s';
     }
 
     /**
@@ -1135,6 +1132,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 if (!dragStartArgs.cancel) {
                     this._dragStarted = true;
                     this.subscribeToEscape();
+                    // Moving the base, or hiding it (e.g. with `visibility: hidden`) when it is replaced by a ghost,
+                    // must not wait for its own transitions. Disable them only while dragging, so the transitions of
+                    // the element (e.g. a color change on hover) keep working otherwise. Restored in onTransitionEnd.
+                    this.element.nativeElement.style.transitionDuration = '0s';
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
                         // When creating it will take into account any offset set by the user by default.
@@ -1327,10 +1328,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      */
     public onTransitionEnd(event: TransitionEvent | PointerEvent | TouchEvent | MouseEvent | null) {
-        if (event?.type === 'transitionend' && (event.target !== event.currentTarget ||
-            !POSITION_TRANSITION_PROPERTIES.includes((event as TransitionEvent).propertyName))) {
-            // Only the position transitions started by the directive end the movement. Ignore the ones of other
-            // properties (e.g. a color change on hover) and the ones bubbling up from descendants.
+        if (event?.type === 'transitionend' && !this.isPositionTransitionEnd(event as TransitionEvent)) {
             return;
         }
 
@@ -1354,11 +1352,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
             this.clearGhost();
         } else if (!this.ghost) {
+            // Clear the transition of the base animation, if any.
             this.element.nativeElement.style.transitionProperty = '';
-            this.element.nativeElement.style.transitionDuration = '0.0s';
             this.element.nativeElement.style.transitionTimingFunction = '';
             this.element.nativeElement.style.transitionDelay = '';
         }
+        // Re-enable the transitions of the base element, which were disabled while dragging.
+        this.element.nativeElement.style.transitionDuration = '';
         this.animInProgress = false;
         this._dragStarted = false;
         const cancelled = this._dragCancelled;
@@ -1737,6 +1737,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /** The inline position of an element that a transition animates, used to detect when nothing will move. */
     protected getTransitionPosition(elem: HTMLElement) {
         return `${elem.style.transform}|${elem.style.left}|${elem.style.top}`;
+    }
+
+    /**
+     * Whether a `transitionend` event ends a position transition of the element it is listened on, which is
+     * what the directive animates. The ones of other properties (e.g. a color change on hover) and the ones
+     * bubbling up from descendants must not end the movement.
+     */
+    protected isPositionTransitionEnd(event: TransitionEvent) {
+        return event.target === event.currentTarget && POSITION_TRANSITION_PROPERTIES.includes(event.propertyName);
     }
 
     /**

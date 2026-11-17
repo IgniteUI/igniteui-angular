@@ -60,6 +60,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxChipComponent`
     - Selecting and deselecting a chip now animates the change of its text, background, border and shadow colors, as the checkbox and the switch do. The hover and focus colors change with the same transition.
     - The select icon now animates out when the chip is deselected, as it already animated in when the chip was selected. It stays in the DOM, with the `igx-chip__select--leaving` class, until its animation ends. Tests that check for the icon's removal right after deselection keep working, as `TestBed` disables these animations by default.
+    - The color transitions are enabled after the chip is first rendered, when the `igx-chip--animated` class is added to it, so a chip does not animate to its initial state.
+    - **Deprecation** - The `selectClass` and `onSelectTransitionDone` methods have been deprecated and will be removed in a future version. The chip does not use them.
+- `IgxDragDirective`
+    - The transitions of the dragged element are disabled only while it is dragged. Previously the directive set `transition-duration: 0s` on the element when it was initialized, which disabled its own transitions, such as a color change on hover, at all times.
 - `IgxSplitterComponent`
     - Arrow keys combined with `Shift`, `Alt` or `Meta`, and `Ctrl` + arrow keys combined with another modifier, no longer resize or collapse the panes. The splitter bar ignores them, and the browser default runs. Previously the splitter bar ignored the extra modifiers and handled these keys as the plain arrow keys or `Ctrl` + arrow keys.
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
@@ -129,6 +133,7 @@ All notable changes for each version of this project will be documented in this 
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
     - Destroying the grid while its advanced filtering dialog is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
+    - A row released outside a drop area animates back to its place until the end. Previously a transition in its drag ghost, such as a color change of a chip in a cell, ended the animation early.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied and no column is pinned at the start, the group-by indentation and the summary area below it use the pinned border.
@@ -146,6 +151,8 @@ All notable changes for each version of this project will be documented in this 
     - Writable properties that are not inputs, such as `selected` of `igc-column` and `totalPages` of `igc-paginator`, are now applied when set on the element. Previously the value was ignored and an `NG0303` error was logged.
     - The deprecated `getFilterFactory` method is now available on `igc-grid`, as intended for backwards compatibility.
     - Icon changes broadcast from other pages now update only the icons or icon references that match the message's action type.
+- `IgxNavigationDrawerComponent`
+    - `opened` and `closed` are emitted when the drawer finishes opening or closing. Previously a transition of the drawer content that ended first, such as a color change of an item on hover, emitted them early.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`
