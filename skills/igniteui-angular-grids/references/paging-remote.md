@@ -289,7 +289,7 @@ export class OrderService {
 ### Key Points for Remote Data
 
 1. **Set `[totalItemCount]`** — the grid needs the total record count for correct virtual scrollbar sizing
-2. **Use `[isLoading]`** — shows a loading indicator while data is being fetched
+2. **Use `[isLoading]`** — shows a loading indicator while data is being fetched. In SSR or prerendered applications, also set it during the server render — see [`sizing.md` § SSR](./sizing.md#server-side-rendering-ssr-and-prerendering)
 3. **Apply `NoopSortingStrategy` and `NoopFilteringStrategy`** — prevents the grid from performing client-side sorting/filtering, so the server results are displayed as-is
 4. **Listen to `(dataPreLoad)`** — fires when the user scrolls and the grid needs more rows; provides `startIndex` and `chunkSize` (first `chunkSize` will be 0 — use a fallback)
 5. **Listen to `(sortingDone)` and `(filteringExpressionsTreeChange)`** — reset to the beginning and re-fetch with new parameters; `filteringExpressionsTreeChange` is the grid-level output that reflects the complete filter state (unlike the column-level `filteringDone`)

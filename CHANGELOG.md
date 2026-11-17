@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 
 - **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
+- `IgxHierarchicalGridComponent`
+    - **Deprecation** - The `schema` input has been deprecated and will be removed in a future version. Define the columns and the row islands of the grid instead, the advanced filtering schema is generated from them. A `schema` that is set is still used as before.
 
 ### New Functionality
 
@@ -40,9 +42,11 @@ All notable changes for each version of this project will be documented in this 
     - The numbered surface shades, such as `--ig-surface-500`, are deprecated and will be removed in a future release. Palettes still emit them under both generators, and in a `fitted` palette `--ig-surface-500` points to `--ig-surface-base`.
 - **Behavioral Change** - `tokens($theme, $mode: 'scoped')` included inside a selector no longer declares the component tokens on that selector itself, unless it is the component. The tokens go on the component inside the selector and, through `:where()`, on the selector when it also matches the component, so `.my-avatar` on an `igx-avatar` element is still themed with the same specificity. Previously the selector always received the tokens, and generic tokens such as `--background` were inherited by every element below it.
     - To override a component's tokens for a whole section of a page, use the default global mode instead: `.promo { @include tokens(tooltip-theme($background: red)); }` only declares `--ig-tooltip-*` tokens, which no other component reads.
+    - Section tokens don't reach the components rendered inside a Grid, Query Builder, Excel Filtering, Column Actions, Paginator or Grid Toolbar. These derive the tokens of their inner components (checkboxes, chips, buttons, inputs, tooltips, etc.) from their own theme and declare them on their host. Each inner component follows one or more of the parent's `$background`, `$foreground` and `$accent-color`, so `grid-theme($accent-color: red)` recolors the grid's checkboxes, badges and buttons, but not its tooltips, which follow `$foreground`. To change one inner component, target it: `.promo .igx-tooltip { @include tokens(tooltip-theme($background: red)); }`.
 - Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
     - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
     - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
+- Fixed components losing styles when a theme they depend on is excluded through `$exclude`. For example, excluding `igx-label` no longer leaves the label of a textarea input group stuck to its top border. Such themes are now kept when a component you still include needs them, with a warning that tells you which one. `igx-simple-combo` and `igx-accordion` can also be excluded now.
 - The grid, grid toolbar, paginator, column actions, Excel-style filtering and query builder themes no longer pick up `--background`, `--foreground` or `--accent-color` declared on an ancestor or on `:root`, for example by the application's own CSS. Their themes now declare these tokens on the component, without a value unless one is passed to the theme function.
 
 ### Behavioral Changes
@@ -67,6 +71,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Forms**
+    - `IgxSnackbarComponent` - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), it became the default button of the form, so pressing Enter in any input of the form clicked it, which triggered the snackbar action and submitted the form.
+    - `IgxQueryBuilderComponent` - The add expression and the group (AND/OR) buttons now render with `type="button"`. Previously, clicking them inside a `form` submitted it. Pressing Enter in the query builder inputs also no longer submits a surrounding `form`.
+    - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent` - Pressing Enter in the grid UI, such as the filtering row, cell and row editors, the toolbar column hiding and pinning, Excel-style filtering and advanced filtering, as well as selecting a date in their date pickers with Enter, no longer submits a surrounding `form`.
+    - `IgxAdvancedFilteringDialogComponent`, `IgxColumnActionsComponent`, `IgxPivotDataSelectorComponent` - Pressing Enter in their inputs no longer submits a surrounding `form` when they are rendered outside of the grid, e.g. used standalone, or the advanced filtering dialog opened with custom overlay settings.
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxCarouselComponent`
@@ -84,8 +93,10 @@ All notable changes for each version of this project will be documented in this 
     - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, is now prevented.
+    - Destroying the picker while its calendar is open no longer logs `igxOverlay.detach was called with wrong id` in the console. In the grid, this happened whenever a date cell edit ended while the calendar was open.
 - `IgxDateRangePickerComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, no longer scroll the page. Previously their default browser action was not prevented.
+    - Destroying the picker while its calendar is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
 - `IgxDragDirective`
     - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
     - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
@@ -113,11 +124,17 @@ All notable changes for each version of this project will be documented in this 
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
+    - Destroying the grid while its advanced filtering dialog is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
     - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied and no column is pinned at the start, the group-by indentation and the summary area below it use the pinned border.
     - Multi-row layout cell borders stay visible when the row is hovered or selected.
+- `IgxHierarchicalGridComponent`
+    - The advanced filtering dialog now lists the nested row islands of a row island whose child data is not available yet, e.g. when it is loaded on demand. Previously they were left out when the first record had no child data.
+    - The fields of an auto-generated row island in the advanced filtering dialog are updated when its child grids generate their columns, e.g. when the child data is loaded on demand, and take the column `header`, `dataType` and formatting options set in `columnInit`. The fields of its nested row islands that are still empty are resolved from the loaded child data. The child grids of a row island share its fields, so a child grid adds the fields it has columns for and does not change the type of a field that has no value in its first record. Previously they were resolved only from the first record and were empty when it had no child data.
+    - The fields of a row island with declared columns in the advanced filtering dialog now take the column `header`, `filters`, `editorOptions` and formatting options, as the fields of the root grid do. Previously only the `field` and the `dataType` were used.
+    - The fields in the advanced filtering dialog are updated when the columns of the root grid or of a row island are added, removed or changed after the dialog was first opened, e.g. when they are rendered conditionally or loaded later.
 - `IgxTreeGridComponent`
     - Setting `data` before the grid is initialized while `autoGenerate` is enabled no longer throws an error. In Ignite UI for Web Components this happened when `data` was set on `igc-tree-grid` before the element was attached to the page.
 - `IgxPivotGridComponent`
@@ -228,14 +245,6 @@ All notable changes for each version of this project will be documented in this 
     - Child grids scrolled out of view now resolve their row island paginator, so `IgxGridStateDirective` restores their paging state and their paginator events are handled.
 - `IgxOverlayService`
     - Destroying a view while an overlay component attached through a `ViewContainerRef` is open (e.g. an open date picker calendar or grid filtering dialog) no longer leaves the parent components undestroyed.
-
-## 23.0.0
-
-### New Features
-
-- `IgxTabs`
-    - Added the `$header-background` parameter to the tabs theme. It paints the whole tabs header, behind the tab items, and follows `$item-background` unless set. Thus a translucent `$item-background` composites over the header color instead of stacking on a copy of itself, and the header can be made transparent on its own. Both the header and the items are painted in all themes now; before, the header was painted in the Material and Bootstrap themes only.
-    - The header keeps its height when there are no tabs, 48px in the Material and Bootstrap themes, 44px in Fluent and 40px in Indigo, as in Web Components. Before, it collapsed and lost its styles, since they were attached to the tab item component.
 
 ## 22.2.1
 

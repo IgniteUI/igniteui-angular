@@ -30,8 +30,20 @@ $dark-palette: palette($primary: #90CAF9, $secondary: #FFB74D, $surface: #121212
 
 ## Scoping a Theme to a Container
 
+A scoped `theme()` call can use a different palette, a different design system, or both. Call `core()` once globally. When the scoped theme uses a different design system, also include `typography()` with that design system's typeface and type scale inside the scope.
+
 ```scss
+@use 'igniteui-angular/theming' as *;
+
+$admin-palette: palette($primary: #7C4DFF, $secondary: #FF9800, $surface: #FFFFFF);
+
+@include core();
+@include typography($font-family: $material-typeface, $type-scale: $material-type-scale);
+@include theme($palette: $default-palette, $schema: $light-material-schema);
+
+// Indigo inside a Material app
 .admin-panel {
+  @include typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
   @include theme($palette: $admin-palette, $schema: $light-indigo-schema);
 }
 ```

@@ -43,18 +43,18 @@ $theme: digest-schema($light-combo);
         @include e(case-icon) {
             cursor: pointer;
 
-            color: color($color: 'gray', $variant: 600);
+            color: var-get($theme, 'case-icon-color');
             background: transparent;
 
             .igx-icon--inactive {
-                --ig-icon-disabled-color: #{color($color: 'gray', $variant: 600)};
+                --ig-icon-disabled-color: #{var-get($theme, 'case-icon-color')};
 
                 opacity: 1;
             }
         }
 
         @include e(case-icon, $m: 'active') {
-            color: color($color: 'primary')
+            color: var-get($theme, 'case-icon-color-active');
         }
 
         @include e(content) {

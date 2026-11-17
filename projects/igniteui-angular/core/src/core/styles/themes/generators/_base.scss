@@ -110,8 +110,7 @@
 
     @if $theme {
         #{$scope} {
-            --ig-theme: #{$theme};
-            --ig-theme-variant: #{$variant};
+            @include theme-markers($theme, $variant);
         }
     }
 

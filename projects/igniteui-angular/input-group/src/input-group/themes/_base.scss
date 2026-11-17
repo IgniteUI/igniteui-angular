@@ -466,6 +466,10 @@ $transition-timing: .25s $out-cubic;
                 color: var(--clear-button-foreground);
                 background: var(--clear-button-background);
             }
+
+            @include e(label) {
+                color: var-get($theme, 'filled-secondary-color');
+            }
         }
 
         @include m(focused) {

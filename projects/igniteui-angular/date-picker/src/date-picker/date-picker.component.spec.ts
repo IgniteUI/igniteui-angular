@@ -1089,7 +1089,8 @@ describe('IgxDatePicker', () => {
                     this.closed.emit(mockOverlayEventArgs);
                 }),
                 detach: vi.fn(),
-                attach: vi.fn().mockReturnValue(mockOverlayId)
+                attach: vi.fn().mockReturnValue(mockOverlayId),
+                getOverlayById: vi.fn().mockReturnValue({ id: mockOverlayId })
             } as any;
 
             mockDateEditor = {
@@ -1750,6 +1751,40 @@ describe('IgxDatePicker', () => {
         });
     });
 
+    describe('Destroy', () => {
+        let fixture: ComponentFixture<IgxDatePickerConditionalComponent>;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxDatePickerConditionalComponent]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerConditionalComponent);
+            fixture.detectChanges();
+            await fixture.whenStable();
+        });
+
+        it.each([PickerInteractionMode.DropDown, PickerInteractionMode.Dialog])(
+            'should not warn about a wrong overlay id when destroyed while open in %s mode - issue #17938', async (mode) => {
+                fixture.componentInstance.mode.set(mode);
+                fixture.detectChanges();
+                const warnSpy = vi.spyOn(console, 'warn');
+
+                fixture.componentInstance.datePicker()!.open();
+                await fixture.whenStable();
+                expect(fixture.componentInstance.datePicker()!.collapsed).toBe(false);
+                expect(document.querySelector('igx-calendar-container')).not.toBeNull();
+
+                fixture.componentInstance.showPicker.set(false);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(fixture.componentInstance.datePicker()).toBeUndefined();
+                expect(document.querySelector('igx-calendar-container')).toBeNull();
+                expect(warnSpy).not.toHaveBeenCalledWith('igxOverlay.detach was called with wrong id: ', expect.anything());
+            });
+    });
+
     describe('Zoneless', () => {
         let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
         let datePicker: IgxDatePickerComponent;
@@ -1855,6 +1890,19 @@ export class IgxDatePickerTestComponent {
     public date = new Date(2021, 24, 2, 11, 45, 0);
     public minValue: string | Date;
     public maxValue: string | Date;
+}
+
+@Component({
+    template: `
+    @if (showPicker()) {
+        <igx-date-picker [mode]="mode()"></igx-date-picker>
+    }`,
+    imports: [IgxDatePickerComponent]
+})
+export class IgxDatePickerConditionalComponent {
+    public datePicker = viewChild(IgxDatePickerComponent);
+    public showPicker = signal(true);
+    public mode = signal<PickerInteractionMode>(PickerInteractionMode.DropDown);
 }
 
 @Component({
