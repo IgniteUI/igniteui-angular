@@ -23,7 +23,7 @@ import { IBaseEventArgs, ɵSize } from 'igniteui-angular/core';
 import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
 export const IgxChipTypeVariant = {
@@ -89,7 +89,7 @@ let CHIP_ID = 0;
     styleUrl: 'chip.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
+    imports: [IgxDropDirective, IgxDragDirective, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
     public cdr = inject(ChangeDetectorRef);
@@ -645,19 +645,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     @HostListener('keydown', ['$event'])
     public keyEvent(event: KeyboardEvent) {
         this.onChipKeyDown(event);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public selectClass(condition: boolean): any {
-        const SELECT_CLASS = 'igx-chip__select';
-
-        return {
-            [SELECT_CLASS]: condition,
-            [`${SELECT_CLASS}--hidden`]: !condition
-        };
     }
 
     public onSelectTransitionDone(event: any) {

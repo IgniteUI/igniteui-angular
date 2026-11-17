@@ -37,6 +37,7 @@ $_theme: digest-schema($material-chip);
         min-width: max-content;
         touch-action: none;
         outline: none;
+        animation: enable-transitions 0s .1s forwards;
 
         // The focus and hover are build that way since the host is the focusable element
         &:focus {
@@ -82,6 +83,18 @@ $_theme: digest-schema($material-chip);
             overflow: hidden;
             cursor: pointer;
             filter: opacity(1);
+
+            // The ghost is a clone of the item and is animated by the igxDrag directive with inline transitions.
+            &:not(.igx-chip__ghost) {
+                transition-property: color, background-color, border-color, box-shadow;
+                // The igxDrag directive on the item sets an inline `transition-duration: 0s`, which
+                // would otherwise disable the state transitions. The item itself is never moved by
+                // the directive, as it always drags a ghost, and only colors are transitioned here.
+                transition-duration: .2s !important;
+                transition-timing-function: $ease-in-out-quad;
+                // Skips the transitions on initial render, until `enable-transitions` runs on the host.
+                transition-delay: var(--_transition-delay);
+            }
 
             igx-avatar {
                 --dimension: #{sizable(rem(14px), rem(18px), rem(24px))};
@@ -473,6 +486,19 @@ $_theme: digest-schema($material-chip);
             @starting-style {
                 max-width: 0;
                 opacity: 0;
+            }
+        }
+
+        // Set by `animate.leave` while the select icon is removed on deselection.
+        // It reverses the showing: the icon fades out first, then its space collapses.
+        @include e(select, $m: 'leaving') {
+            max-width: 0;
+            opacity: 0;
+            transition: max-width .12s $ease-in-out-quad .06s, opacity .12s $ease-in-out-quad;
+
+            // When the chip is selected again before the icon has left, show only the new icon.
+            &:has(~ .igx-chip__select:not(.igx-chip__select--leaving)) {
+                display: none;
             }
         }
 

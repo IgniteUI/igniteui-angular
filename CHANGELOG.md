@@ -54,6 +54,9 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
     - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+- `IgxChipComponent`
+    - Selecting and deselecting a chip now animates the change of its text, background, border and shadow colors, as the checkbox and the switch do. The hover and focus colors change with the same transition.
+    - The select icon now animates out when the chip is deselected, as it already animated in when the chip was selected. It stays in the DOM, with the `igx-chip__select--leaving` class, until its animation ends. Tests that check for the icon's removal right after deselection keep working, as `TestBed` disables these animations by default.
 - `IgxSplitterComponent`
     - Arrow keys combined with `Shift`, `Alt` or `Meta`, and `Ctrl` + arrow keys combined with another modifier, no longer resize or collapse the panes. The splitter bar ignores them, and the browser default runs. Previously the splitter bar ignored the extra modifiers and handled these keys as the plain arrow keys or `Ctrl` + arrow keys.
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
@@ -95,6 +98,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDragDirective`
     - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
     - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
+    - Only the end of the position transition that the directive started (`left`, `top` or `transform` of the dragged element itself) ends a drag or its return animation. Previously any `transitionend` event on the element, including a color transition on hover or one that bubbled up from a descendant, removed the ghost and emitted `transitioned` early.
 - `IgxExpansionPanelComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up` no longer expand or collapse the panel when its header is disabled.
 - `IgxFilterDirective`, `IgxFilterPipe`

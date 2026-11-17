@@ -9,8 +9,8 @@ import { IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { ChipResourceStringsEN, changei18n, getComponentSize } from 'igniteui-angular/core';
 import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
-import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { UIInteractions, nextFrame, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
 @Component({
@@ -388,6 +388,19 @@ describe('IgxChip', () => {
             expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false);
         });
 
+        it('should transition the chip colors when the selection changes', () => {
+            const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
+            const chipItem: HTMLElement = secondChipComp.chipArea.nativeElement;
+            const styles = getComputedStyle(chipItem);
+            const properties = styles.transitionProperty.split(',').map(p => p.trim());
+            const durations = styles.transitionDuration.split(',').map(d => parseFloat(d));
+
+            expect(properties).toEqual(expect.arrayContaining(['color', 'background-color', 'border-color', 'box-shadow']));
+            // The igxDrag directive sets an inline 0s transition duration on the item, which must not disable it.
+            expect(chipItem.style.transitionDuration).toBe('0s');
+            expect(durations.every(d => d > 0)).toBe(true);
+        });
+
         it('should not fire selectedChanging event when selectable is false', () => {
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[0];
 
@@ -485,6 +498,98 @@ describe('IgxChip', () => {
                 changei18n(ChipResourceStringsEN);
             }
         });
+    });
+});
+
+describe('IgxChip selection animations', () => {
+    let fix: ComponentFixture<TestChipComponent>;
+    let chip: IgxChipComponent;
+    let themeStyles: HTMLStyleElement;
+
+    const getSelectIcons = () => Array.from(chip.nativeElement.querySelectorAll<HTMLElement>('.igx-chip__select'));
+    const runningTransitions = (el: HTMLElement) => el.getAnimations()
+        .filter((a): a is CSSTransition => a instanceof CSSTransition)
+        .map(a => a.transitionProperty);
+
+    beforeEach(async () => {
+        // The core theme registers the delay property and the keyframes that enable the transitions after render.
+        themeStyles = document.createElement('style');
+        themeStyles.textContent = `
+            @property --_transition-delay { syntax: '<time>'; initial-value: -1s; inherits: true; }
+            @keyframes enable-transitions { to { --_transition-delay: 0s; } }
+        `;
+        document.head.appendChild(themeStyles);
+
+        await TestBed.configureTestingModule({
+            imports: [TestChipComponent],
+            animationsEnabled: true
+        }).compileComponents();
+
+        fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+        chip = fix.componentInstance.chips.toArray()[1];
+        chip.nativeElement.style.setProperty('--background', 'rgb(255, 0, 0)');
+        chip.nativeElement.style.setProperty('--selected-background', 'rgb(0, 0, 255)');
+
+        // Let the transitions get enabled after the initial render.
+        await wait(150);
+    });
+
+    afterEach(() => {
+        themeStyles.remove();
+    });
+
+    it('should animate the chip colors and the select icon when the selection changes', async () => {
+        const chipItem: HTMLElement = chip.chipArea.nativeElement;
+
+        chip.selected = true;
+        fix.detectChanges();
+
+        expect(runningTransitions(chipItem)).toContain('background-color');
+        expect(getSelectIcons().length).toBe(1);
+        expect(runningTransitions(getSelectIcons()[0])).toEqual(expect.arrayContaining(['max-width', 'opacity']));
+
+        await wait(250);
+        expect(runningTransitions(chipItem)).toEqual([]);
+        expect(getComputedStyle(chipItem).backgroundColor).toBe('rgb(0, 0, 255)');
+
+        chip.selected = false;
+        fix.detectChanges();
+        await nextFrame();
+
+        // The icon stays until it animates out.
+        const leavingIcon = getSelectIcons()[0];
+        expect(leavingIcon).toBeTruthy();
+        expect(leavingIcon.classList.contains('igx-chip__select--leaving')).toBe(true);
+        expect(runningTransitions(leavingIcon)).toEqual(expect.arrayContaining(['max-width', 'opacity']));
+        expect(runningTransitions(chipItem)).toContain('background-color');
+
+        await wait(300);
+        expect(getSelectIcons().length).toBe(0);
+        expect(getComputedStyle(chipItem).backgroundColor).toBe('rgb(255, 0, 0)');
+    });
+
+    it('should show only the new select icon when the chip is selected again while the icon animates out', async () => {
+        chip.selected = true;
+        fix.detectChanges();
+        await wait(250);
+
+        chip.selected = false;
+        fix.detectChanges();
+        await nextFrame();
+        const leavingIcon = getSelectIcons()[0];
+        expect(leavingIcon.classList.contains('igx-chip__select--leaving')).toBe(true);
+
+        chip.selected = true;
+        fix.detectChanges();
+
+        const visibleIcons = getSelectIcons().filter(icon => getComputedStyle(icon).display !== 'none');
+        expect(visibleIcons.length).toBe(1);
+        expect(visibleIcons[0]).not.toBe(leavingIcon);
+
+        await wait(300);
+        expect(getSelectIcons().length).toBe(1);
+        expect(leavingIcon.isConnected).toBe(false);
     });
 });
 

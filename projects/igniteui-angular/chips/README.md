@@ -26,6 +26,8 @@ An event `onSelection` is fired when the selection state of the `igxChip` change
 
 Also by default an icon is shown indicating that the chip is being selected. It is fully customizable and can be done through the `selectIcon` input. It accepts values of type `TemplateRef` and overrides the default icon while retaining the same functionality.
 
+Changing the selection animates the chip colors, and the select icon animates in when the chip is selected and out when it is deselected.
+
 Example of customizing the select icon:
 
 ```html

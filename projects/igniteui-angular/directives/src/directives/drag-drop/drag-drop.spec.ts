@@ -1382,6 +1382,57 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.animInProgress).toBe(false);
     });
 
+    it('should ignore transitionend events of non-positional properties and of child elements.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+        firstDrag.dragEnd.pipe(first()).subscribe(() => firstDrag.transitionToOrigin({ duration: 0.3 }));
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await nextFrame();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await nextFrame();
+
+        const ghost = firstDrag.ghostElement;
+        expect(ghost).toBeTruthy();
+
+        // E.g. a background-color transition of the base when its hover state changes while dragging.
+        firstElement.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+        ghost.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+        // A positional transition of a descendant bubbling up to the ghost.
+        const ghostChild = document.createElement('span');
+        ghost.appendChild(ghostChild);
+        ghostChild.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'left', bubbles: true }));
+
+        expect(transitionedSpy).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).toBe(ghost);
+
+        UIInteractions.simulatePointerEvent('pointerup', ghost, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(50);
+        expect(firstDrag.animInProgress).toBe(true);
+
+        ghost.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'color', bubbles: true }));
+
+        expect(transitionedSpy).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).toBe(ghost);
+        expect(firstDrag.animInProgress).toBe(true);
+
+        await wait(500);
+        expect(transitionedSpy).toHaveBeenCalledTimes(1);
+        expect(firstDrag.ghostElement).toBeNull();
+        expect(firstDrag.animInProgress).toBe(false);
+    });
+
     it('should not cancel the drag on Escape by default.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;

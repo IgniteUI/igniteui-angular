@@ -26,6 +26,9 @@ import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
+/** The properties the directive transitions when animating the base or ghost element. */
+const POSITION_TRANSITION_PROPERTIES = ['left', 'top', 'transform'];
+
 enum DragScrollDirection {
     UP,
     DOWN,
@@ -1324,6 +1327,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      */
     public onTransitionEnd(event: TransitionEvent | PointerEvent | TouchEvent | MouseEvent | null) {
+        if (event?.type === 'transitionend' && (event.target !== event.currentTarget ||
+            !POSITION_TRANSITION_PROPERTIES.includes((event as TransitionEvent).propertyName))) {
+            // Only the position transitions started by the directive end the movement. Ignore the ones of other
+            // properties (e.g. a color change on hover) and the ones bubbling up from descendants.
+            return;
+        }
+
         if ((!this._dragStarted && !this.animInProgress) || this._clicked) {
             // Return if no dragging started and there is no animation in progress.
             return;
@@ -1738,7 +1748,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             return false;
         }
         return elem.getAnimations().some(anim => anim instanceof CSSTransition &&
-            ['left', 'top', 'transform'].includes(anim.transitionProperty));
+            POSITION_TRANSITION_PROPERTIES.includes(anim.transitionProperty));
     }
 
     protected getTransformX(elem: any) {
