@@ -25,6 +25,12 @@ const SLIDER_TICK_LABELS_HIDDEN_CLASS = 'igx-ticks__label--hidden';
 const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
 const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
+const pressKey = (target: Element, key: string, init?: KeyboardEventInit) => {
+    const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init });
+    target.dispatchEvent(event);
+    return event;
+};
+
 describe('IgxSlider', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -570,6 +576,48 @@ describe('IgxSlider', () => {
             expect(slider.value.lower).toBe(50);
             expect(slider.value.upper).toBe(60);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector(THUMB_TO_CLASS));
+        });
+
+        it('should prevent the default action of the left and right arrow keys', () => {
+            slider.value = { lower: 50, upper: 60 };
+            fixture.detectChanges();
+
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            toThumb.focus();
+
+            expect(pressKey(toThumb, 'ArrowRight').defaultPrevented).toBe(true);
+            expect(pressKey(toThumb, 'ArrowLeft').defaultPrevented).toBe(true);
+        });
+
+        it('should keep moving a thumb while an arrow key is held', () => {
+            slider.value = { lower: 50, upper: 60 };
+            fixture.detectChanges();
+
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            toThumb.focus();
+            pressKey(toThumb, 'ArrowRight');
+            pressKey(toThumb, 'ArrowRight', { repeat: true });
+            pressKey(toThumb, 'ArrowRight', { repeat: true });
+            fixture.detectChanges();
+
+            expect(slider.value.upper).toBe(63);
+        });
+
+        it('should not move a thumb with an arrow key combined with a modifier', () => {
+            slider.value = { lower: 50, upper: 60 };
+            fixture.detectChanges();
+
+            const toThumb = fixture.nativeElement.querySelector(THUMB_TO_CLASS);
+            toThumb.focus();
+
+            for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const) {
+                for (const key of ['ArrowLeft', 'ArrowRight']) {
+                    const event = pressKey(toThumb, key, { [modifier]: true });
+                    fixture.detectChanges();
+                    expect(event.defaultPrevented, `${modifier} + ${key}`).toBe(false);
+                    expect(slider.value.upper, `${modifier} + ${key}`).toBe(60);
+                }
+            }
         });
 
         it('should increment lower value when lower thumb is focused if right arrow is pressed and slider is RANGE', () => {

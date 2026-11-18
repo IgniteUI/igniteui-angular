@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
-import { PlatformUtil } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, altKey, shiftKey, tabKey } from 'igniteui-angular/core';
 
 const NATIVELY_FOCUSABLE = [
     'a[href]',
@@ -15,13 +15,11 @@ const TABBABLE_CANDIDATES = `${NATIVELY_FOCUSABLE}, [contenteditable], [tabindex
 
 @Directive({
     selector: '[igxFocusTrap]',
-    host: {
-        '(keydown)': 'onKeydown($event)'
-    }
+    providers: [IgxKeyBindingsService]
 })
 export class IgxFocusTrapDirective {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected platformUtil = inject(PlatformUtil);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /** @hidden */
     public get element(): HTMLElement {
@@ -39,16 +37,21 @@ export class IgxFocusTrapDirective {
     @Input({ alias: 'igxFocusTrap', transform: booleanAttribute })
     public focusTrap = true;
 
-    /** @hidden */
-    protected onKeydown(event: KeyboardEvent): void {
-        if (!this.focusTrap || event.key !== this.platformUtil.KEYMAP.TAB) {
-            return;
-        }
+    constructor() {
+        const moveFocus = (event: KeyboardEvent) => this.moveFocus(event.shiftKey);
 
+        this._keyBindings
+            .configure({ skip: () => !this.focusTrap, bindingDefaults: { repeat: true } })
+            .set(tabKey, moveFocus)
+            .set([shiftKey, tabKey], moveFocus)
+            .set([altKey, tabKey], moveFocus)
+            .set([altKey, shiftKey, tabKey], moveFocus);
+    }
+
+    private moveFocus(backwards: boolean): void {
         const elements = this.getTabbableElements();
-        const next = elements.length ? this.getNextElement(elements, event.shiftKey) : this.element;
+        const next = elements.length ? this.getNextElement(elements, backwards) : this.element;
         next.focus();
-        event.preventDefault();
     }
 
     private getTabbableElements(): HTMLElement[] {
