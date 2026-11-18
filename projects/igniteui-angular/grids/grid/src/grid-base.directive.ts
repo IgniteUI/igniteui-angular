@@ -280,7 +280,6 @@ interface IMatchInfoCache {
 let FAKE_ROW_ID = -1;
 const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
-const SCROLLING_TBODY_CLASS = 'igx-grid__tbody-content--scrolling';
 
 const GRID_STYLES_ID = Symbol('igx-grid-base');
 
@@ -3106,11 +3105,6 @@ export abstract class IgxGridBaseDirective implements GridType,
      * @hidden @internal
      */
     public disableTransitions = false;
-
-    /** Whether the grid body has the scrolling class and its removal is scheduled. */
-    private _scrollTransitionsDisabled = false;
-    /** Whether the grid scrolled after the scheduled removal of the scrolling class was armed. */
-    private _scrolledSinceTransitionsCheck = false;
 
     /**
      * Represents the last search information.
@@ -7900,7 +7894,6 @@ export abstract class IgxGridBaseDirective implements GridType,
     }
 
     protected verticalScrollHandler(event: Event) {
-        this.disableTransitionsWhileScrolling();
         this.verticalScrollContainer.onScroll(event);
         this.disableTransitions = true;
         const callback = () => {
@@ -7951,53 +7944,7 @@ export abstract class IgxGridBaseDirective implements GridType,
             );
     }
 
-    /**
-     * Disables the transitions in the grid body while it scrolls, so that the content of the rows that are
-     * reused for other records, e.g. a chip or a checkbox in a cell template, does not animate from the state
-     * of the previous record. The transitions are enabled again once the rows are rendered after the last scroll.
-     */
-    protected disableTransitionsWhileScrolling() {
-        const tbody = this.tbody?.nativeElement as HTMLElement;
-        if (!tbody || !this.platform.isBrowser) {
-            return;
-        }
-
-        this._scrolledSinceTransitionsCheck = true;
-        // A single removal is scheduled for all the scroll events of a gesture.
-        if (this._scrollTransitionsDisabled) {
-            return;
-        }
-        this._scrollTransitionsDisabled = true;
-        tbody.classList.add(SCROLLING_TBODY_CLASS);
-        this.enableTransitionsAfterScroll(tbody);
-    }
-
-    /**
-     * Removes the scrolling class from the grid body once the rows are rendered and their styles applied,
-     * or waits again if the grid scrolled in the meantime.
-     */
-    private enableTransitionsAfterScroll(tbody: HTMLElement) {
-        this._scrolledSinceTransitionsCheck = false;
-        runAfterRenderOnce(this.injector, () => {
-            this.zone.runOutsideAngular(() => {
-                // Wait for the frame that applies the styles of the rendered rows.
-                requestAnimationFrame(() => requestAnimationFrame(() => {
-                    if (this._destroyed) {
-                        return;
-                    }
-                    if (this._scrolledSinceTransitionsCheck) {
-                        this.enableTransitionsAfterScroll(tbody);
-                        return;
-                    }
-                    this._scrollTransitionsDisabled = false;
-                    tbody.classList.remove(SCROLLING_TBODY_CLASS);
-                }));
-            });
-        });
-    }
-
     protected horizontalScrollHandler(event: Event) {
-        this.disableTransitionsWhileScrolling();
         const scrollLeft = (event.target as HTMLElement).scrollLeft;
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));

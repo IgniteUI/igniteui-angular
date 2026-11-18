@@ -130,6 +130,20 @@ $_theme: digest-schema($material-chip);
             }
         }
 
+        // A chip in a virtualized container that scrolls is reused for other records,
+        // so it shows the state of the new record right away.
+        @include e(item) {
+            @include virtualized-scrolling() {
+                transition: none !important;
+            }
+        }
+
+        @include e(select) {
+            @include virtualized-scrolling() {
+                transition: none !important;
+            }
+        }
+
         @include e(start) {
             @extend %chip-part;
             --_gap: #{sizable(rem(3px), rem(6px), rem(8px))};

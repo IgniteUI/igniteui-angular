@@ -13,6 +13,8 @@ import {
 import { IgxVirtualItemDirective } from './virtual-scroll-item.directive';
 import { IgxVirtualScrollComponent } from './virtual-scroll.component';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
 /** The viewport size every engine call and host below uses. */
 const VIEWPORT = 300;
@@ -893,6 +895,24 @@ class TestRowsHostComponent {
     public readonly vs = viewChild.required(IgxVirtualScrollComponent);
     public readonly rows = viewChildren(TestRowComponent);
     public items = signal(generateItems(100));
+}
+
+@Component({
+    template: `
+        <igx-virtual-scroll [data]="items()" [estimatedItemSize]="50" style="height: 300px">
+            <ng-template igxVirtualItem let-item>
+                <div style="height: 50px">
+                    <igx-chip [selected]="item.id % 2 === 0" [variant]="item.id % 2 === 0 ? 'success' : 'danger'">Chip</igx-chip>
+                    <igx-checkbox [checked]="item.id % 2 === 0"></igx-checkbox>
+                </div>
+            </ng-template>
+        </igx-virtual-scroll>
+    `,
+    imports: [IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxChipComponent, IgxCheckboxComponent],
+})
+class TestTransitionsHostComponent {
+    public readonly vs = viewChild.required(IgxVirtualScrollComponent);
+    public items = signal(Array.from({ length: 200 }, (_, id) => ({ id })));
 }
 
 function vsElement(fixture: ComponentFixture<unknown>): HTMLElement {
@@ -2346,5 +2366,65 @@ describe('IgxVirtualScrollComponent', () => {
 
             expect(vsContent(rtlFixture).style.transform).toBe(ltrTransform);
         });
+    });
+});
+
+describe('IgxVirtualScrollComponent - transitions of the items', () => {
+    const SCROLLING_CLASS = 'igx-virtual-scroll--scrolling';
+    let fixture: ComponentFixture<TestTransitionsHostComponent>;
+    let scroll: IgxVirtualScrollComponent<{ id: number }>;
+
+    const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+    const runningTransitions = (selector: string) => Array.from(vsElement(fixture).querySelectorAll<HTMLElement>(selector))
+        .flatMap((el) => el.getAnimations({ subtree: true }))
+        .filter((animation) => animation instanceof CSSTransition && animation.playState === 'running');
+    const firstChipSelected = () => vsElement(fixture).querySelector('igx-chip')!.getAttribute('aria-selected');
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestTransitionsHostComponent],
+            // The select icon of a deselected chip is removed with `animate.leave`.
+            animationsEnabled: true,
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(TestTransitionsHostComponent);
+        fixture.autoDetectChanges();
+        await fixture.whenStable();
+        scroll = fixture.componentInstance.vs() as IgxVirtualScrollComponent<{ id: number }>;
+        await settle(fixture, scroll);
+        // The chips and checkboxes enable their transitions shortly after their initial render.
+        await delay(200);
+    });
+
+    it('should not animate the items reused for other records while it scrolls', async () => {
+        expect(firstChipSelected()).toBe('true');
+
+        // Jump by more than the viewport and an odd number of items, so that the items
+        // are reused for records with the opposite state.
+        await scrollTo(fixture, scroll, 50 * 101);
+
+        expect(firstChipSelected()).toBe('false');
+        expect(vsElement(fixture).classList.contains(SCROLLING_CLASS)).toBe(true);
+        expect(runningTransitions('igx-chip')).toEqual([]);
+        expect(runningTransitions('igx-checkbox')).toEqual([]);
+
+        // The select icons of the deselected chips are removed right away.
+        await delay(50);
+        const selectedChips = vsElement(fixture).querySelectorAll('igx-chip[aria-selected="true"]').length;
+        expect(vsElement(fixture).querySelectorAll('.igx-chip__select').length).toBe(selectedChips);
+
+        // The transitions are enabled again once the scrolling ends.
+        await vi.waitFor(() => expect(vsElement(fixture).classList.contains(SCROLLING_CLASS)).toBe(false));
+    });
+
+    it('should animate the items when their records change without a scroll', async () => {
+        expect(firstChipSelected()).toBe('true');
+
+        fixture.componentInstance.items.update((items) => items.map(({ id }) => ({ id: id + 1 })));
+        fixture.detectChanges();
+
+        expect(firstChipSelected()).toBe('false');
+        expect(runningTransitions('igx-chip').length).toBeGreaterThan(0);
+        expect(runningTransitions('igx-checkbox').length).toBeGreaterThan(0);
     });
 });
