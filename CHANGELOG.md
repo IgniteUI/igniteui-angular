@@ -2,6 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.1
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The loading indicator is no longer shown outside a scrollable parent that clips the grid, for example below a hierarchical grid when a child grid that is partly scrolled out of view is loading. It also moves with the grid now while the parent is scrolled (#17986).
+- `IgxOverlayService`
+    - Overlays shown with `ContainerPositionStrategy`, such as `IgxSnackbarComponent` with `positioning="container"`, are now rendered inside their container instead of in the top layer, so the container clips them and they scroll with it (#17986).
+
 ## 22.3.0
 
 ### General
@@ -120,7 +129,6 @@ All notable changes for each version of this project will be documented in this 
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
     - Filtering, grouping, editing and toggling `isLoading` no longer add and remove the stylesheets of the badge, chip, checkbox, input group, date picker and circular progress bar components, which forced a restyle of the whole page each time. The grid now keeps these stylesheets for the application's lifetime. As a result, the first grid in an application uses up one auto-generated `id` of the badge, chip, checkbox, date picker and circular progress bar (including `igx-circular-gradient-N`), so instances created after it get an `id` one higher than before. Later grids do not shift the ids further.
     - Pressing `Escape` while dragging a column header over the group-by area no longer groups by that column. A column move canceled with `Escape` or in a `columnMoving` handler also no longer prevents the next column move from being dropped.
-    - The loading indicator is no longer shown outside a scrollable parent that clips the grid, for example below a hierarchical grid when a child grid that is partly scrolled out of view is loading. It also moves with the grid now while the parent is scrolled (#17986).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
@@ -147,7 +155,6 @@ All notable changes for each version of this project will be documented in this 
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`
     - Detaching an overlay with a dynamically created component, such as the date picker calendar, no longer leaves the component visible in its original place until Angular removes it.
-    - Overlays shown with `ContainerPositionStrategy`, such as `IgxSnackbarComponent` with `positioning="container"`, are now rendered inside their container instead of in the top layer, so the container clips them and they scroll with it (#17986).
 - `IgxQueryBuilderComponent`
     - When the drag indicator of a condition is focused while another condition is dragged with the mouse, `Arrow Up` and `Arrow Down` now move that condition once the mouse drag ends without a drop. Previously the condition could not be moved with the keyboard until the drag indicator was focused again.
 - `IgxSplitterComponent`
