@@ -114,6 +114,14 @@ Here is a link to the most recent Angular style guide https://angular.dev/style-
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
 
+### DOM Events
+
+- Do NOT use `event.target` to identify the element the event originated from: a listener outside a shadow root sees the shadow host instead. Resolve that element with `event.composedPath()[0]` and an `instanceof` guard (`Element`, or a narrower type such as `HTMLInputElement`), especially before `preventDefault()` or `stopPropagation()`. `composedPath()[0]` equals `event.target` when no shadow boundary is crossed, so do NOT add an `event.composed ? ... : event.target` fallback.
+- To find an ancestor in the listener's own DOM tree, call `closest()` on `event.target` after an `instanceof Element` guard. `closest()` and `contains()` check DOM containment and cannot cross shadow boundaries. To check whether the event passed through an element that may be in another tree (for example from a `document` listener), check its propagation path instead: `event.composedPath().includes(element)`, or `event.composedPath().some(node => node instanceof Element && node.matches(selector))` for a selector.
+- Resolve elements synchronously in the handler: after dispatch, `composedPath()` returns an empty array and `event.target` can be `null`. Pass the element, not the event, to throttled, debounced, or asynchronous code.
+- Prefer handlers on the element itself over container listeners that cancel native behavior. When a container listener must cancel a default action, cancel it only for the elements that need it (an allowlist), as `preventImplicitSubmission` in `projects/igniteui-angular/core/src/core/utils.ts` does. An exclusion list still cancels every native action it does not list, such as toggling a `<summary>`.
+- In specs, cover the shadow DOM case: host the native element in an open shadow root inside the element that has the listener, and dispatch the event on the native element with `bubbles: true, cancelable: true, composed: true` (event constructors default all three to `false`). In tests that verify cancellation, assert `defaultPrevented`; when the expected result is `false`, also dispatch on an element in the same shadow root that the handler must cancel, to prove the listener received the event. See the `preventImplicitSubmission()` tests in `projects/igniteui-angular/core/src/core/utils.spec.ts` for the setup.
+
 ## Copilot Skills
 
 Domain-specific skills for AI-assisted development are located in the [`skills/`](../skills/) directory. Each sub-folder contains a `SKILL.md` file that teaches agents how to work with a particular area of the library:

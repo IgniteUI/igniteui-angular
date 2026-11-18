@@ -19,6 +19,7 @@ Quick-reference card for the core test commands for the main igniteui-angular li
 - **Karma + Jasmine** for all library unit tests.
 - Karma configs live in `projects/igniteui-angular/karma*.conf.js`.
 - Coverage reports are written to `coverage/`.
+- Specs for handlers that inspect the event target must cover the shadow DOM case; follow the recipe in [DOM Events](../../copilot-instructions.md#dom-events).
 
 ## Choosing the Right Command
 
