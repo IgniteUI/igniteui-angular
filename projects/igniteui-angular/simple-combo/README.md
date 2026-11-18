@@ -151,6 +151,8 @@ You can disable the combo using the following code:
 <igx-simple-combo [disabled]="true"></igx-simple-combo>
 ```
 
+Disabling the combo while its dropdown is open also closes the dropdown and keeps the value, even if text that matches no item was typed in the input. A disabled combo does not open, including through the `open` and `toggle` methods.
+
 <div class="divider--half"></div>
 
 ### Disable Clear

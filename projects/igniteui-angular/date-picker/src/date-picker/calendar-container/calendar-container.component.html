@@ -27,6 +27,7 @@
                     type="button"
                     igxButton="flat"
                     igxRipple
+                    [disabled]="isDisabled()"
                     (click)="todaySelection.emit({ owner: this })"
                 >
                     {{ todayButtonLabel }}
@@ -36,9 +37,10 @@
     }
 </ng-template>
 
-<igx-calendar></igx-calendar>
+<igx-calendar [inert]="isDisabled()"></igx-calendar>
  @if( usePredefinedRanges || (customRanges?.length || 0) > 0 ){
         <igx-predefined-ranges-area
+            [inert]="isDisabled()"
             [usePredefinedRanges]="usePredefinedRanges"
             [customRanges]="customRanges"
             [resourceStrings]="resourceStrings"

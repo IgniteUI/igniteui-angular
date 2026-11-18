@@ -76,6 +76,8 @@ You can disable select using the following code:
 ```html
 <igx-select [disabled]="true"></igx-select>
 ```
+
+Disabling the select while its dropdown is open also closes the dropdown.
 <div class="divider--half"></div>
 
 

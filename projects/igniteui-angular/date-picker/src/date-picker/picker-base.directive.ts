@@ -133,7 +133,7 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     public overlaySettings!: OverlaySettings;
 
     /**
-     * Enables or disables the picker.
+     * Enables or disables the picker. Disabling the picker while its dropdown or dialog is open also closes it.
      *
      * @example
      * ```html
@@ -141,7 +141,18 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    public set disabled(value: boolean) {
+        const disabling = value && !this._disabled;
+        this._disabled = value;
+        // A closing handler that disables the picker must not close it again
+        if (disabling && !this._emittingClosing && !this.collapsed) {
+            this.close();
+        }
+    }
 
     /**
      * @example
@@ -302,6 +313,9 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     protected _inputFormat!: string;
     protected _displayFormat!: string;
     protected _collapsed = true;
+    protected _disabled = false;
+    /** @hidden @internal Whether the `closing` event is being emitted. */
+    protected _emittingClosing = false;
     protected _type!: IgxInputGroupType;
     protected _minValue!: Date | string;
     protected _maxValue!: Date | string;
@@ -405,6 +419,21 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
     }
 
     protected updateResources() { }
+
+    /**
+     * Emits `closing`. Disabling the picker in a closing handler does not close it again,
+     * as the picker is already closing, or stays open when the handler cancels the closing.
+     *
+     * @hidden @internal
+     */
+    protected emitClosing(args: IBaseCancelableBrowserEventArgs): void {
+        this._emittingClosing = true;
+        try {
+            this.closing.emit(args);
+        } finally {
+            this._emittingClosing = false;
+        }
+    }
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;

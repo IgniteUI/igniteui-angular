@@ -494,7 +494,7 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     /** @hidden @internal */
     public override handleClosing(e: IBaseCancelableBrowserEventArgs): void {
         const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
-        this.closing.emit(args);
+        this.emitClosing(args);
         e.cancel = args.cancel;
         if (e.cancel) {
             return;
@@ -639,6 +639,12 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     }
 
     private clearOnBlur(): void {
+        // A disabled combo keeps its value, so the typed text is replaced by the text of the value
+        if (this.disabled) {
+            this.writeValue(this.value);
+            this.comboInput.value = this._displayValue;
+            return;
+        }
         if (this.isRemote) {
             const searchValue = this.searchValue || this.comboInput.value;
             if (searchValue !== this.remoteDisplayText) {

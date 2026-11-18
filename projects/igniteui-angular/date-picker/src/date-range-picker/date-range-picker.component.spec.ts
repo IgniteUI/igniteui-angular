@@ -520,6 +520,61 @@ describe('IgxDateRangePicker', () => {
                     expect(singleInputElement.nativeElement.placeholder).toEqual(placeholder);
                 });
 
+                it('should close the open calendar when disabled', async () => {
+                    dateRange.open();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+
+                    dateRange.disabled = true;
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+                });
+
+                it('should close once when disabled in a closing handler', async () => {
+                    let closingCount = 0;
+                    let closedCount = 0;
+                    dateRange.closing.subscribe(() => {
+                        closingCount++;
+                        dateRange.disabled = true;
+                    });
+                    dateRange.closed.subscribe(() => closedCount++);
+                    dateRange.open();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+
+                    dateRange.close();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(closingCount).toEqual(1);
+                    expect(closedCount).toEqual(1);
+                });
+
+                it('should make the open calendar and predefined ranges inert while disabled', async () => {
+                    dateRange.usePredefinedRanges = true;
+                    detectChanges();
+                    // Keep the calendar open, as an app that cancels closing does
+                    dateRange.closing.subscribe((args) => {
+                        args.cancel = true;
+                    });
+                    dateRange.open();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    const calendarElement = document.querySelector<HTMLElement>('igx-calendar');
+                    const predefinedArea = document.querySelector<HTMLElement>('igx-predefined-ranges-area');
+                    expect(calendarElement.inert).toBe(false);
+                    expect(predefinedArea.inert).toBe(false);
+
+                    dateRange.disabled = true;
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(calendarElement.inert).toBe(true);
+                    expect(predefinedArea.inert).toBe(true);
+                });
+
                 it('should support different display and input formats', () => {
                     dateRange.inputFormat = 'dd/MM/yy'; // should not be registered
                     dateRange.displayFormat = 'longDate';
@@ -3022,4 +3077,46 @@ export class DateRangeAsyncValidatedComponent {
     private pending() {
         return timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })));
     }
+}
+
+describe('IgxDateRangePicker - bound disabled input', () => {
+    it('should close the open calendar once when the bound disabled input changes', async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxDateRangePickerBoundDisabledComponent]
+        }).compileComponents();
+        const fixture = TestBed.createComponent(IgxDateRangePickerBoundDisabledComponent);
+        fixture.detectChanges();
+        const component = fixture.componentInstance.component;
+        let closingCount = 0;
+        let closedCount = 0;
+        component.closing.subscribe(() => closingCount++);
+        component.closed.subscribe(() => closedCount++);
+
+        component.open();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.collapsed).toBe(false);
+
+        // The input is set while the host view is checked
+        fixture.componentInstance.disabled.set(true);
+        expect(() => fixture.detectChanges()).not.toThrow();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.disabled).toBe(true);
+        expect(component.collapsed).toBe(true);
+        expect(closingCount).toEqual(1);
+        expect(closedCount).toEqual(1);
+    });
+});
+
+@Component({
+    template: `<igx-date-range-picker [disabled]="disabled()"></igx-date-range-picker>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxDateRangePickerComponent]
+})
+class IgxDateRangePickerBoundDisabledComponent {
+    @ViewChild(IgxDateRangePickerComponent, { static: true })
+    public component: IgxDateRangePickerComponent;
+
+    public disabled = signal(false);
 }

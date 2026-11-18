@@ -857,6 +857,56 @@ describe('IgxDatePicker', () => {
                 expect(wrapper.contains(document.activeElement), 'focus should move to calendar for KB nav').toBe(true);
             });
 
+            it('should close the open calendar when disabled', async () => {
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+
+                datePicker.disabled = true;
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeTruthy();
+            });
+
+            it('should close once when disabled in a closing handler', async () => {
+                let closingCount = 0;
+                let closedCount = 0;
+                datePicker.closing.subscribe(() => {
+                    closingCount++;
+                    datePicker.disabled = true;
+                });
+                datePicker.closed.subscribe(() => closedCount++);
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                datePicker.close();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeTruthy();
+                expect(closingCount).toEqual(1);
+                expect(closedCount).toEqual(1);
+            });
+
+            it('should make the open calendar inert while disabled', async () => {
+                // Keep the calendar open, as an app that cancels closing does
+                datePicker.closing.subscribe((args) => {
+                    args.cancel = true;
+                });
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                const calendar: HTMLElement = fixture.debugElement.query(By.css('igx-calendar')).nativeElement;
+                expect(calendar.inert).toBe(false);
+
+                datePicker.disabled = true;
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+                expect(calendar.inert).toBe(true);
+            });
+
             it('should focus today\'s date when an invalid date is selected', async () => {
                 datePicker.clear();
                 expect(datePicker.value).toEqual(null);
@@ -2062,4 +2112,46 @@ class IgxDatePickerSignalFormComponent {
         required(path.date);
         disabled(path.date, { when: () => this.isDisabled() });
     });
+}
+
+describe('IgxDatePicker - bound disabled input', () => {
+    it('should close the open calendar once when the bound disabled input changes', async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxDatePickerBoundDisabledComponent]
+        }).compileComponents();
+        const fixture = TestBed.createComponent(IgxDatePickerBoundDisabledComponent);
+        fixture.detectChanges();
+        const component = fixture.componentInstance.component;
+        let closingCount = 0;
+        let closedCount = 0;
+        component.closing.subscribe(() => closingCount++);
+        component.closed.subscribe(() => closedCount++);
+
+        component.open();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.collapsed).toBe(false);
+
+        // The input is set while the host view is checked
+        fixture.componentInstance.disabled.set(true);
+        expect(() => fixture.detectChanges()).not.toThrow();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.disabled).toBe(true);
+        expect(component.collapsed).toBe(true);
+        expect(closingCount).toEqual(1);
+        expect(closedCount).toEqual(1);
+    });
+});
+
+@Component({
+    template: `<igx-date-picker [disabled]="disabled()"></igx-date-picker>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxDatePickerComponent]
+})
+class IgxDatePickerBoundDisabledComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true })
+    public component: IgxDatePickerComponent;
+
+    public disabled = signal(false);
 }

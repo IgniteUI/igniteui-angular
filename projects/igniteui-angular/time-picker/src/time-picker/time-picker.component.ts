@@ -233,7 +233,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     public override get collapsed(): boolean {
-        return this.toggleRef?.collapsed;
+        return this.toggleRef?.collapsed ?? true;
     }
 
     /**
@@ -856,13 +856,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public cancelButtonClick(): void {
-        this.setSelectedValue(this._dateValue);
-        this.dateTimeEditor.value = this.parseToDate(this.value);
+        this.discardSelectedValue();
         this.close();
     }
 
     /** @hidden @internal */
     public okButtonClick(): void {
+        if (this.disabled) {
+            return;
+        }
         this.updateValue(this._selectedDate);
         this.close();
     }
@@ -1209,6 +1211,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.dateTimeEditor.value = date;
     }
 
+    /** Discards the time picked in the open dropdown or dialog and restores the committed value. */
+    private discardSelectedValue(): void {
+        this.setSelectedValue(this._dateValue);
+        this.dateTimeEditor.value = this.parseToDate(this.value);
+    }
+
     private subscribeToDateEditorEvents(): void {
         this.dateTimeEditor.valueChange.pipe(
             // internal date editor directive is only used w/ Date object values:
@@ -1248,13 +1256,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
             this.toggleRef.closing.pipe(takeUntil(this._destroy$)).subscribe((e) => {
                 const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
-                this.closing.emit(args);
+                this.emitClosing(args);
                 e.cancel = args.cancel;
                 if (args.cancel) {
                     return;
                 }
-                const value = this.parseToDate(this.value);
-                if ((this.dateTimeEditor.value as Date)?.getTime() !== value?.getTime()) {
+                if (this.disabled) {
+                    // A disabled picker does not commit the picked time, as Cancel does
+                    this.discardSelectedValue();
+                } else if ((this.dateTimeEditor.value as Date)?.getTime() !== this.parseToDate(this.value)?.getTime()) {
                     this.updateValue(this._selectedDate);
                 }
                 // Do not focus the input if clicking outside in dropdown mode

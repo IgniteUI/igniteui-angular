@@ -980,6 +980,7 @@ describe('igxCombo', () => {
             });
             it('should not clear value when combo is disabled', () => {
                 const dropdown = {
+                    collapsed: true,
                     selectItem: vi.fn().mockName("IgxComboDropDownComponent.selectItem")
                 };
                 const spyObj = {
@@ -2382,6 +2383,72 @@ describe('igxCombo', () => {
                     combo = fixture.componentInstance.combo;
                     dropdown = combo.dropdown;
                     input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
+                });
+                it('should close the open dropdown when disabled', async () => {
+                    combo.open();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    combo.disabled = true;
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                });
+                it('should close once when disabled in a closing handler', async () => {
+                    let closingCount = 0;
+                    let closedCount = 0;
+                    combo.closing.subscribe(() => {
+                        closingCount++;
+                        combo.disabled = true;
+                    });
+                    combo.closed.subscribe(() => closedCount++);
+                    combo.open();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+
+                    combo.close();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                    expect(closingCount).toEqual(1);
+                    expect(closedCount).toEqual(1);
+                });
+                it('should not open while disabled', async () => {
+                    combo.disabled = true;
+                    fixture.detectChanges();
+
+                    combo.open();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+
+                    combo.toggle();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeTruthy();
+                });
+                it('should not accept clicks in the open dropdown while disabled', async () => {
+                    // Keep the dropdown open, as an app that cancels closing does
+                    combo.closing.subscribe((args) => {
+                        args.cancel = true;
+                    });
+                    combo.open();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    vi.spyOn(combo.selectionChanging, 'emit');
+
+                    combo.disabled = true;
+                    fixture.detectChanges();
+                    expect(combo.collapsed).toBeFalsy();
+
+                    // A real click, which the browser does not dispatch to an inert element
+                    const item = fixture.debugElement.query(By.css(`.${CSS_CLASS_DROPDOWNLISTITEM}`));
+                    await userEvent.click(item.nativeElement, { force: true });
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                    expect(combo.selection.length).toEqual(0);
+                    expect(combo.selectionChanging.emit).not.toHaveBeenCalled();
                 });
                 it('should properly call dropdown navigatePrev method', async () => {
                     expect(dropdown.focusedItem).toBeFalsy();
@@ -5802,4 +5869,47 @@ class IgxComboSignalFormComponent {
         required(path.towns);
         disabled(path.towns, { when: () => this.isDisabled() });
     });
+}
+
+describe('IgxCombo - bound disabled input', () => {
+    it('should close the open dropdown once when the bound disabled input changes', async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxComboBoundDisabledComponent]
+        }).compileComponents();
+        const fixture = TestBed.createComponent(IgxComboBoundDisabledComponent);
+        fixture.detectChanges();
+        const component = fixture.componentInstance.component;
+        let closingCount = 0;
+        let closedCount = 0;
+        component.closing.subscribe(() => closingCount++);
+        component.closed.subscribe(() => closedCount++);
+
+        component.open();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.collapsed).toBe(false);
+
+        // The input is set while the host view is checked
+        fixture.componentInstance.disabled.set(true);
+        expect(() => fixture.detectChanges()).not.toThrow();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.disabled).toBe(true);
+        expect(component.collapsed).toBe(true);
+        expect(closingCount).toEqual(1);
+        expect(closedCount).toEqual(1);
+    });
+});
+
+@Component({
+    template: `<igx-combo [disabled]="disabled()" [data]="items"></igx-combo>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxComboComponent]
+})
+class IgxComboBoundDisabledComponent {
+    @ViewChild(IgxComboComponent, { static: true })
+    public component: IgxComboComponent;
+
+    public disabled = signal(false);
+    public items = ['One', 'Two', 'Three'];
 }

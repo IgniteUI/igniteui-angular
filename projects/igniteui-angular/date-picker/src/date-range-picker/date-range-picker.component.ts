@@ -968,7 +968,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     private handleClosing(e: IBaseCancelableBrowserEventArgs): void {
         const args = { owner: this, cancel: e?.cancel, event: e?.event };
-        this.closing.emit(args);
+        this.emitClosing(args);
         e.cancel = args.cancel;
         if (args.cancel) {
             return;
@@ -1375,6 +1375,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             componentInstance.cancelButtonType = 'outlined';
         }
         componentInstance.pickerActions = this.pickerActions;
+        componentInstance.isDisabled = () => this.disabled;
         componentInstance.usePredefinedRanges = this.usePredefinedRanges;
         componentInstance.customRanges = this.customRanges;
         componentInstance.resourceStrings = this.resourceStrings;

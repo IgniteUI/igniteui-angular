@@ -6,6 +6,7 @@ import { FormField, disabled, form as signalForm, required } from '@angular/form
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { describe, it, expect, beforeEach, afterAll, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 import { IGX_DROPDOWN_BASE, IgxDropDownComponent, IgxDropDownItemComponent, ISelectionEventArgs } from '../../../drop-down/src/drop-down/public_api';
 import { IgxHintDirective, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
@@ -247,6 +248,61 @@ describe('igxSelect', () => {
             inputGroup.nativeElement.click();
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
+        });
+
+        it('should close the open dropdown when disabled', async () => {
+            select.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            select.disabled = true;
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        });
+
+        it('should close once when disabled in a closing handler', async () => {
+            let closingCount = 0;
+            let closedCount = 0;
+            select.closing.subscribe(() => {
+                closingCount++;
+                select.disabled = true;
+            });
+            select.closed.subscribe(() => closedCount++);
+            select.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            select.close();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+            expect(closingCount).toEqual(1);
+            expect(closedCount).toEqual(1);
+        });
+
+        it('should not accept clicks in the open dropdown while disabled', async () => {
+            // Keep the dropdown open, as an app that cancels closing does
+            select.closing.subscribe((args) => {
+                args.cancel = true;
+            });
+            select.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            const value = select.value;
+            vi.spyOn(select.selectionChanging, 'emit');
+
+            select.disabled = true;
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            // A real click, which the browser does not dispatch to an inert element
+            await userEvent.click(selectList.children[2].nativeElement, { force: true });
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.value).toEqual(value);
+            expect(select.selectionChanging.emit).not.toHaveBeenCalled();
         });
 
         it('should close dropdown on item click', async () => {
@@ -880,6 +936,44 @@ describe('igxSelect', () => {
             await fixture.whenStable();
             fix.detectChanges();
             expect(selectComp.collapsed).toBeTruthy();
+        });
+
+        it('should close the open dropdown when the form is disabled', async () => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
+            const selectComp = fix.componentInstance.select;
+
+            selectComp.open();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(selectComp.collapsed).toBeFalsy();
+
+            formGroup.disable();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(selectComp.collapsed).toBeTruthy();
+        });
+
+        it('should close once when the form is disabled in a closing handler', async () => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            fix.detectChanges();
+            const formGroup: UntypedFormGroup = fix.componentInstance.reactiveForm;
+            const selectComp = fix.componentInstance.select;
+            let closingCount = 0;
+            selectComp.closing.subscribe(() => {
+                closingCount++;
+                formGroup.disable();
+            });
+
+            selectComp.open();
+            await fix.whenStable();
+            fix.detectChanges();
+            selectComp.close();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(selectComp.collapsed).toBeTruthy();
+            expect(closingCount).toEqual(1);
         });
 
         it('should set validity to initial when the form is reset', async () => {
@@ -3500,4 +3594,52 @@ class IgxSelectSignalFormComponent {
         required(path.option, { when: () => this.isRequired() });
         disabled(path.option, { when: () => this.isDisabled() });
     });
+}
+
+describe('IgxSelect - bound disabled input', () => {
+    it('should close the open dropdown once when the bound disabled input changes', async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxSelectBoundDisabledComponent]
+        }).compileComponents();
+        const fixture = TestBed.createComponent(IgxSelectBoundDisabledComponent);
+        fixture.detectChanges();
+        const component = fixture.componentInstance.component;
+        let closingCount = 0;
+        let closedCount = 0;
+        component.closing.subscribe(() => closingCount++);
+        component.closed.subscribe(() => closedCount++);
+
+        component.open();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.collapsed).toBe(false);
+
+        // The input is set while the host view is checked
+        fixture.componentInstance.disabled.set(true);
+        expect(() => fixture.detectChanges()).not.toThrow();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.disabled).toBe(true);
+        expect(component.collapsed).toBe(true);
+        expect(closingCount).toEqual(1);
+        expect(closedCount).toEqual(1);
+    });
+});
+
+@Component({
+    template: `
+    <igx-select [disabled]="disabled()">
+        @for (item of items; track item) {
+            <igx-select-item [value]="item">{{ item }}</igx-select-item>
+        }
+    </igx-select>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxSelectComponent, IgxSelectItemComponent]
+})
+class IgxSelectBoundDisabledComponent {
+    @ViewChild(IgxSelectComponent, { static: true })
+    public component: IgxSelectComponent;
+
+    public disabled = signal(false);
+    public items = ['One', 'Two', 'Three'];
 }

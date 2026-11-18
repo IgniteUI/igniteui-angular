@@ -84,6 +84,8 @@ export class IgxCalendarContainerComponent {
     public todayButtonLabel!: string;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public pickerActions!: IgxPickerActionsDirective;
+    /** @hidden @internal Returns whether the picker that opened the container is disabled. */
+    public isDisabled: () => boolean = () => false;
 
     constructor() {
         // Stop the event before it reaches IgxDatePickerComponent/IgxDateRangePickerComponent,

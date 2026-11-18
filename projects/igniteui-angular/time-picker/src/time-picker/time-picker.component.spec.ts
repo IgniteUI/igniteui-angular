@@ -1965,6 +1965,90 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.valueChange.emit).toHaveBeenCalledExactlyOnceWith('11:15:00.000');
             });
 
+            it('should close and discard the pending time when disabled while open', async () => {
+                timePicker.value = '10:15:00';
+                fixture.detectChanges();
+                vi.spyOn(timePicker.valueChange, 'emit');
+
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                hourColumn.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaX: 0, deltaY: 100 }));
+                fixture.detectChanges();
+                timePicker.disabled = true;
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                expect(timePicker.collapsed).toBe(true);
+                expect(timePicker.value).toEqual('10:15:00');
+                expect(timePicker.valueChange.emit).not.toHaveBeenCalled();
+            });
+
+            it('should close once and discard the pending time when disabled in a closing handler', async () => {
+                timePicker.value = '10:15:00';
+                fixture.detectChanges();
+                let closingCount = 0;
+                let closedCount = 0;
+                timePicker.closing.subscribe(() => {
+                    closingCount++;
+                    timePicker.disabled = true;
+                });
+                timePicker.closed.subscribe(() => closedCount++);
+                vi.spyOn(timePicker.valueChange, 'emit');
+
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                hourColumn.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaX: 0, deltaY: 100 }));
+                fixture.detectChanges();
+
+                timePicker.close();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(timePicker.collapsed).toBe(true);
+                expect(closingCount).toEqual(1);
+                expect(closedCount).toEqual(1);
+                expect(timePicker.value).toEqual('10:15:00');
+                expect(timePicker.valueChange.emit).not.toHaveBeenCalled();
+            });
+
+            it('should not commit the pending time with OK while disabled', async () => {
+                timePicker.value = '10:15:00';
+                fixture.detectChanges();
+                vi.spyOn(timePicker.valueChange, 'emit');
+                // Keep the picker open, as an app that cancels closing does
+                timePicker.closing.subscribe((args) => {
+                    args.cancel = true;
+                });
+
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                hourColumn.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaX: 0, deltaY: 100 }));
+                fixture.detectChanges();
+                timePicker.disabled = true;
+                fixture.detectChanges();
+                expect(timePicker.collapsed).toBe(false);
+                const body: HTMLElement = fixture.debugElement.query(By.css('.igx-time-picker__body')).nativeElement;
+                expect(body.inert).toBe(true);
+
+                timePicker.okButtonClick();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(timePicker.value).toEqual('10:15:00');
+                expect(timePicker.valueChange.emit).not.toHaveBeenCalled();
+            });
+
+            it('should be created disabled with the disabled attribute', () => {
+                const disabledFixture = TestBed.createComponent(IgxTimePickerDisabledComponent);
+                disabledFixture.detectChanges();
+
+                expect(disabledFixture.componentInstance.timePicker.disabled).toBe(true);
+                expect(disabledFixture.componentInstance.timePicker.collapsed).toBe(true);
+            });
+
             it('should not open or clear when disabled or readonly', async () => {
                 vi.spyOn(timePicker.valueChange, 'emit');
 
@@ -3229,4 +3313,56 @@ export class IgxTimePickerAsyncValidatedComponent {
     public control = new UntypedFormControl(null, {
         asyncValidators: [() => timer(ASYNC_VALIDATION_DELAY).pipe(map(() => ({ taken: true })))]
     });
+}
+
+@Component({
+    template: `<igx-time-picker disabled></igx-time-picker>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxTimePickerComponent]
+})
+export class IgxTimePickerDisabledComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true })
+    public timePicker: IgxTimePickerComponent;
+}
+
+describe('IgxTimePicker - bound disabled input', () => {
+    it('should close the open dropdown once when the bound disabled input changes', async () => {
+        await TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule, IgxTimePickerBoundDisabledComponent]
+        }).compileComponents();
+        const fixture = TestBed.createComponent(IgxTimePickerBoundDisabledComponent);
+        fixture.detectChanges();
+        const component = fixture.componentInstance.component;
+        let closingCount = 0;
+        let closedCount = 0;
+        component.closing.subscribe(() => closingCount++);
+        component.closed.subscribe(() => closedCount++);
+
+        component.open();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.collapsed).toBe(false);
+
+        // The input is set while the host view is checked
+        fixture.componentInstance.disabled.set(true);
+        expect(() => fixture.detectChanges()).not.toThrow();
+        await fixture.whenStable();
+        fixture.detectChanges();
+        expect(component.disabled).toBe(true);
+        expect(component.collapsed).toBe(true);
+        expect(closingCount).toEqual(1);
+        expect(closedCount).toEqual(1);
+    });
+});
+
+@Component({
+    template: `<igx-time-picker [disabled]="disabled()"></igx-time-picker>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxTimePickerComponent]
+})
+class IgxTimePickerBoundDisabledComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true })
+    public component: IgxTimePickerComponent;
+
+    public disabled = signal(false);
 }

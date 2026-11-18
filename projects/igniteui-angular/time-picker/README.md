@@ -79,7 +79,7 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `cancelButtonLabel` | string | Renders cancel button with custom content, which closes the dropdown/dialog and reverts picker's value to the value at the moment of opening. By default `cancelButtonLabel` is set to 'Cancel'. |
 | `value` | `Date | string` | Value of the time picker. |
 |`resourceStrings`| ITimePickerResourceStrings | Resource strings of the time-picker. |
-| `disabled` | boolean | Disable the time picker. |
+| `disabled` | boolean | Disable the time picker. Disabling the picker while its dropdown or dialog is open also closes it and discards the time picked in it, as Cancel does. |
 | `itemsDelta`| object | Sets the delta for hour, minute and second items. By default `itemsDelta` is set to {hour:1, minute:1, second:1} |
 | `minValue` | `Date | string` | The minimum value required for the picker to remain valid. |
 | `maxValue` | `Date | string` | The maximum value required for the editor to remain valid. |

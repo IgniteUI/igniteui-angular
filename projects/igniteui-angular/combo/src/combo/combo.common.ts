@@ -450,12 +450,24 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * Disables the combo. The default is `false`.
+     * Disabling the combo while its dropdown is open also closes the dropdown.
      * ```html
      * <igx-combo [disabled]="'true'">
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    public set disabled(value: boolean) {
+        const disabling = value && !this._disabled;
+        this._disabled = value;
+        // A closing handler that disables the combo must not close it again
+        if (disabling && !this._emittingClosing && this.dropdown && !this.collapsed) {
+            this.close();
+        }
+    }
 
     /**
      * Disables the clear button. The default is `false`.
@@ -1031,6 +1043,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * @hidden @internal
      */
     protected readonly selectionKey: string = this._id;
+    /** @hidden @internal Whether the `closing` event is being emitted. */
+    protected _emittingClosing = false;
+    private _disabled = false;
     private _disableFiltering = false;
     private _type: IgxInputGroupType | null = null;
     private _dataType = '';
@@ -1164,7 +1179,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     /**
-     * A method that opens/closes the combo.
+     * A method that opens/closes the combo. A disabled combo is not opened.
      *
      * ```html
      * <button type="button" (click)="combo.toggle()">Toggle Combo</button>
@@ -1172,6 +1187,11 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public toggle(): void {
+        if (this.disabled) {
+            // A disabled combo is never opened, so toggling it can only close it
+            this.close();
+            return;
+        }
         if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
@@ -1184,7 +1204,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     }
 
     /**
-     * A method that opens the combo.
+     * A method that opens the combo. A disabled combo is not opened.
      *
      * ```html
      * <button type="button" (click)="combo.open()">Open Combo</button>
@@ -1192,6 +1212,9 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     public open(): void {
+        if (this.disabled) {
+            return;
+        }
         if (this.collapsed && this._displayValue.length !== 0) {
             this.filterValue = '';
             this.cdr.detectChanges();
@@ -1342,7 +1365,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public handleClosing(e: IBaseCancelableBrowserEventArgs) {
         const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
-        this.closing.emit(args);
+        this.emitClosing(args);
         e.cancel = args.cancel;
         if (e.cancel) {
             return;
@@ -1360,6 +1383,21 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /** @hidden @internal */
     public handleClosed() {
         this.closed.emit({ owner: this });
+    }
+
+    /**
+     * Emits `closing`. Disabling the combo in a closing handler does not close it again,
+     * as the combo is already closing, or stays open when the handler cancels the closing.
+     *
+     * @hidden @internal
+     */
+    protected emitClosing(args: IBaseCancelableBrowserEventArgs): void {
+        this._emittingClosing = true;
+        try {
+            this.closing.emit(args);
+        } finally {
+            this._emittingClosing = false;
+        }
     }
 
     /** @hidden @internal */

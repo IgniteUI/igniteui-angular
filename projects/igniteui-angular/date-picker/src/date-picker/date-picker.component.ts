@@ -915,7 +915,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayEventArgs | OverlayCancelableEventArgs) => {
             const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: (e as OverlayCancelableEventArgs).cancel };
-            this.closing.emit(args);
+            this.emitClosing(args);
             (e as OverlayCancelableEventArgs).cancel = args.cancel;
             if (args.cancel) {
                 return;
@@ -989,6 +989,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.pickerActions;
+        componentInstance.isDisabled = () => this.disabled;
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());

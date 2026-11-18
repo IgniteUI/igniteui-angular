@@ -137,12 +137,24 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @Input() public placeholder!: string;
 
     /**
-     * Disables the component.
+     * Disables the component. Disabling the select while its dropdown is open also closes the dropdown.
      * ```html
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
      */
-    @Input({ transform: booleanAttribute }) public disabled = false;
+    @Input({ transform: booleanAttribute })
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    public set disabled(value: boolean) {
+        const disabling = value && !this._disabled;
+        this._disabled = value;
+        // A closing handler that disables the select must not close it again
+        if (disabling && !this._emittingClosing && this.toggleDirective && !this.collapsed) {
+            this.close();
+        }
+    }
 
     /**
      * Sets custom overlay settings for the select component.
@@ -283,6 +295,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private _overlayDefaults!: OverlaySettings;
     private _value: any;
     private _type: IgxInputGroupType | null = null;
+    private _disabled = false;
+    private _emittingClosing = false;
 
     /**
      * Gets/Sets the component value.
@@ -480,7 +494,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public handleClosing(e: ToggleViewCancelableEventArgs) {
         const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
-        this.closing.emit(args);
+        // Disabling the select in a closing handler does not close it again
+        this._emittingClosing = true;
+        try {
+            this.closing.emit(args);
+        } finally {
+            this._emittingClosing = false;
+        }
         e.cancel = args.cancel;
     }
 
