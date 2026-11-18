@@ -401,6 +401,25 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(editRowTop - bannerBottom).toBeLessThan(2);
         });
 
+        it('Should not allow clicking the banner buttons while the grid is loading', fakeAsync(() => {
+            grid.width = '700px';
+            fix.detectChanges();
+
+            cell.editMode = true;
+            fix.detectChanges();
+
+            grid.isLoading = true;
+            fix.detectChanges();
+            tick(16);
+            fix.detectChanges();
+
+            const doneButton = GridFunctions.getRowEditingDoneButton(fix);
+            const doneButtonRect = doneButton.getBoundingClientRect();
+            const elementAtDoneButton = document.elementFromPoint(doneButtonRect.left + doneButtonRect.width / 2, doneButtonRect.top + doneButtonRect.height / 2);
+            expect(elementAtDoneButton).not.toBeNull();
+            expect(doneButton.contains(elementAtDoneButton)).toBe(false);
+        }));
+
         it(`Should preserve updated value inside the cell when it enters edit mode again`, () => {
             cell.editMode = true;
             cell.update('IG');

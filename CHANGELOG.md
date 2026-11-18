@@ -2,6 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.27
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The loading indicator is no longer shown outside a scrollable parent that clips the grid, for example below a hierarchical grid when a child grid that is partly scrolled out of view is loading. It also moves with the grid now while the parent is scrolled (#17986).
+- `IgxOverlayService`
+    - Overlays shown with `ContainerPositionStrategy`, such as `IgxSnackbarComponent` with `positioning="container"`, are now rendered inside their container instead of in the top layer, so the container clips them and they scroll with it (#17986).
+
 ## 21.2.26
 
 ### Bug Fixes
