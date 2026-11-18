@@ -26,8 +26,11 @@ import {
     IgxGridRow,
     IgxGroupByRow,
     IgxSummaryRow,
-    GridSelectionMode
+    GridSelectionMode,
+    IgxCellTemplateDirective
 } from 'igniteui-angular/grids/core';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IForOfState } from 'igniteui-angular/directives';
 import { GridTemplateStrings } from '../../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -1098,6 +1101,63 @@ describe('IgxGrid Component Tests #grid', () => {
                 // Without the trailing edge the settle is dropped and the last row is never brought into view.
                 expect((virtDir.state.startIndex ?? 0) + (virtDir.state.chunkSize ?? 0)).toBeGreaterThanOrEqual(lastIndex + 1);
                 expect(grid.gridAPI.get_row_by_index(lastIndex)).toBeDefined();
+            });
+        });
+
+        describe('transitions of the cell content', () => {
+            const SCROLLING_CLASS = 'igx-grid__tbody-content--scrolling';
+            let fix: ComponentFixture<IgxGridCellTemplateTransitionsComponent>;
+            let grid: IgxGridComponent;
+
+            const runningTransitions = (selector: string) => Array.from(grid.tbody.nativeElement.querySelectorAll(selector) as NodeListOf<HTMLElement>)
+                .flatMap(el => el.getAnimations({ subtree: true }))
+                .filter(animation => animation instanceof CSSTransition && animation.playState === 'running');
+            const firstChipSelected = () => grid.tbody.nativeElement.querySelector('igx-chip').getAttribute('aria-selected');
+
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
+                    imports: [NoopAnimationsModule, IgxGridCellTemplateTransitionsComponent]
+                }).compileComponents();
+
+                fix = TestBed.createComponent(IgxGridCellTemplateTransitionsComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+                // The chips and checkboxes enable their transitions shortly after their initial render.
+                await wait(200);
+            });
+
+            it('should not animate the cell content of the rows reused for other records while the grid scrolls', async () => {
+                expect(firstChipSelected()).toBe('true');
+
+                // Scroll by an odd number of rows, so that every reused row gets the opposite state.
+                grid.verticalScrollContainer.getScroll().scrollTop = grid.renderedRowHeight * 3;
+                await nextFrame();
+                fix.detectChanges();
+
+                expect(grid.verticalScrollContainer.state.startIndex).toBe(3);
+                expect(firstChipSelected()).toBe('false');
+                expect(runningTransitions('igx-chip')).toEqual([]);
+                expect(runningTransitions('igx-checkbox')).toEqual([]);
+
+                // Nothing animates also after the next frames are rendered.
+                await wait(50);
+                expect(runningTransitions('igx-chip')).toEqual([]);
+                expect(runningTransitions('igx-checkbox')).toEqual([]);
+
+                // The transitions are enabled again once the scrolling ends.
+                await vi.waitFor(() => expect(grid.tbody.nativeElement.classList.contains(SCROLLING_CLASS)).toBe(false));
+            });
+
+            it('should animate the cell content when the visible records change on sorting', async () => {
+                expect(firstChipSelected()).toBe('true');
+
+                // The records 0, 1, 2... become 199, 198, 197..., so that every visible row gets the opposite state.
+                grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+                fix.detectChanges();
+
+                expect(firstChipSelected()).toBe('false');
+                expect(runningTransitions('igx-chip').length).toBeGreaterThan(0);
+                expect(runningTransitions('igx-checkbox').length).toBeGreaterThan(0);
             });
         });
     });
@@ -4464,4 +4524,26 @@ class IgxGridScrollThrottleComponent {
         }
         return record;
     });
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" primaryKey="ID" height="500px" width="600px" [rowHeight]="50">
+        <igx-column field="ID" [sortable]="true" dataType="number"></igx-column>
+        <igx-column field="Chip">
+            <ng-template igxCell let-cell="cell">
+                <igx-chip [selected]="cell.row.data.ID % 2 === 0" [variant]="cell.row.data.ID % 2 === 0 ? 'success' : 'danger'">Chip</igx-chip>
+            </ng-template>
+        </igx-column>
+        <igx-column field="Checkbox">
+            <ng-template igxCell let-cell="cell">
+                <igx-checkbox [checked]="cell.row.data.ID % 2 === 0"></igx-checkbox>
+            </ng-template>
+        </igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxChipComponent, IgxCheckboxComponent]
+})
+class IgxGridCellTemplateTransitionsComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public data = Array.from({ length: 200 }, (_row, rowIndex) => ({ ID: rowIndex }));
 }

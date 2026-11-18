@@ -272,6 +272,14 @@
             }
         }
 
+        // Set by the grid while it scrolls. The rows reused for other records show their state
+        // right away, e.g. a chip or a checkbox in a cell does not animate from the previous record.
+        @include e(tbody-content, $m: scrolling) {
+            * {
+                transition: none !important;
+            }
+        }
+
         // Table body message (empty state)
         @include e(tbody-message) {
             display: flex;
