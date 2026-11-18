@@ -2057,10 +2057,11 @@
         // Add row snackbar
         @include e(addrow-snackbar) {
             position: absolute;
+            grid-row: 4 / 5;
             bottom: rem(16px);
             inset-inline-start: 50%;
             transform: translateX(-50%);
-            z-index: $z-grid-loading;
+            z-index: $z-grid-overlay;
         }
 
         // ============================================================================
@@ -2100,6 +2101,10 @@
 
         @include m(loading) {
             --ig-overlay-background-color: transparent;
+
+            .igx-banner {
+                pointer-events: none;
+            }
         }
 
         .igx-banner {
