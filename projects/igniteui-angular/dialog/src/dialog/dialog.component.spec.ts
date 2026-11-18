@@ -86,27 +86,27 @@ describe('Dialog', () => {
         const buttons = fixture.debugElement.queryAll(By.css('button'));
         const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement);
         detectChanges();
         expect(document.activeElement).toEqual(buttons[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement);
         detectChanges();
         expect(document.activeElement).toEqual(buttons[1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement);
         detectChanges();
         expect(document.activeElement).toEqual(buttons[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement, true, false, true);
         detectChanges();
         expect(document.activeElement).toEqual(buttons[1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement, true, false, true);
         detectChanges();
         expect(document.activeElement).toEqual(buttons[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement, true, false, true);
         detectChanges();
         expect(document.activeElement).toEqual(buttons[1].nativeElement);
     });
@@ -120,15 +120,15 @@ describe('Dialog', () => {
 
         const toggle = fixture.debugElement.query(By.directive(IgxToggleDirective));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement);
         detectChanges();
         expect(document.activeElement).toEqual(toggle.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle, false, true);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement, true, false, true);
         detectChanges();
         expect(document.activeElement).toEqual(toggle.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', toggle);
+        UIInteractions.triggerKeyDownEvtUponElem('Tab', toggle.nativeElement);
         detectChanges();
         expect(document.activeElement).toEqual(toggle.nativeElement);
     });

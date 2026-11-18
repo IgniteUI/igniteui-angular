@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Behavioral Changes
 
+- `IgxDialogComponent`
+    - `Tab` combined with `Ctrl` or `Meta` no longer moves the focus inside the focus trap. The browser default runs. Previously the focus trap ignored these modifiers and handled the keys as `Tab` or `Shift` + `Tab`. Browsers and operating systems usually use these combinations themselves, so they rarely reach the page. `Option` + `Tab`, which Safari uses to move the focus to links, is still trapped.
 - `IgxTabsComponent`
     - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the tab headers or select a tab. The tab header ignores them, and the browser default runs. Previously the tab header ignored the modifiers and handled these keys as the plain keys.
 

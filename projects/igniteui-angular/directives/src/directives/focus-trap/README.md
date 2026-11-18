@@ -2,6 +2,8 @@
 
 The **IgxFocusTrap** directive provides functionality to trap the focus within an element. The focus should not leave the element when the user keeps tabbing through the focusable elements. Typically, when the focus leaves the last element, it should move to the first element. And vice versa, when SHIFT + TAB is pressed, when the focus leaves the first element, the last element should be focused. In case the element does not contain any focusable elements, the focus will be trapped on the element itself.
 
+`Option` + `Tab` and `Option` + `Shift` + `Tab`, which Safari uses to move the focus to links and other items, are trapped the same way. `Tab` combined with `Ctrl` or `Meta` is not handled.
+
 The focus moves through the elements in DOM order, starting from the currently focused element, even if that element is not part of the tab order itself (e.g. an element with `tabindex="-1"` that was focused programmatically).
 
 An element is considered focusable when it is part of the sequential tab order, which excludes:
