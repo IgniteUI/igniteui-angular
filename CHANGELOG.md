@@ -2,6 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.1
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+
 ## 22.3.0
 
 ### General
@@ -122,7 +131,6 @@ All notable changes for each version of this project will be documented in this 
     - Pressing `Escape` while dragging a column header over the group-by area no longer groups by that column. A column move canceled with `Escape` or in a `columnMoving` handler also no longer prevents the next column move from being dropped.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
-    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
     - Destroying the grid while its advanced filtering dialog is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
@@ -135,7 +143,6 @@ All notable changes for each version of this project will be documented in this 
     - The fields of an auto-generated row island in the advanced filtering dialog are updated when its child grids generate their columns, e.g. when the child data is loaded on demand, and take the column `header`, `dataType` and formatting options set in `columnInit`. The fields of its nested row islands that are still empty are resolved from the loaded child data. The child grids of a row island share its fields, so a child grid adds the fields it has columns for and does not change the type of a field that has no value in its first record. Previously they were resolved only from the first record and were empty when it had no child data.
     - The fields of a row island with declared columns in the advanced filtering dialog now take the column `header`, `filters`, `editorOptions` and formatting options, as the fields of the root grid do. Previously only the `field` and the `dataType` were used.
     - The fields in the advanced filtering dialog are updated when the columns of the root grid or of a row island are added, removed or changed after the dialog was first opened, e.g. when they are rendered conditionally or loaded later.
-    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 - `IgxTreeGridComponent`
     - Setting `data` before the grid is initialized while `autoGenerate` is enabled no longer throws an error. In Ignite UI for Web Components this happened when `data` was set on `igc-tree-grid` before the element was attached to the page.
 - `IgxPivotGridComponent`
