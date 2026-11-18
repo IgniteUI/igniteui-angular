@@ -1148,6 +1148,26 @@ describe('IgxGrid Component Tests #grid', () => {
                 await vi.waitFor(() => expect(grid.tbody.nativeElement.classList.contains(SCROLLING_CLASS)).toBe(false));
             });
 
+            it('should disable the transitions once for all the scroll events of a scroll gesture', async () => {
+                const classList: DOMTokenList = grid.tbody.nativeElement.classList;
+                const addSpy = vi.spyOn(classList, 'add');
+                const removeSpy = vi.spyOn(classList, 'remove');
+                const scroll = grid.verticalScrollContainer.getScroll();
+
+                for (let i = 1; i <= 5; i++) {
+                    scroll.scrollTop = grid.renderedRowHeight * i;
+                    await nextFrame();
+                    fix.detectChanges();
+                    // The transitions stay disabled while the grid keeps scrolling.
+                    expect(classList.contains(SCROLLING_CLASS)).toBe(true);
+                }
+
+                await vi.waitFor(() => expect(classList.contains(SCROLLING_CLASS)).toBe(false));
+                await wait(50);
+                expect(addSpy.mock.calls.filter(([cls]) => cls === SCROLLING_CLASS).length).toBe(1);
+                expect(removeSpy.mock.calls.filter(([cls]) => cls === SCROLLING_CLASS).length).toBe(1);
+            });
+
             it('should animate the cell content when the visible records change on sorting', async () => {
                 expect(firstChipSelected()).toBe('true');
 

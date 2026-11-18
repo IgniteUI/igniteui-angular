@@ -3107,7 +3107,10 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public disableTransitions = false;
 
-    private _scrollTransitionsId = 0;
+    /** Whether the grid body has the scrolling class and its removal is scheduled. */
+    private _scrollTransitionsDisabled = false;
+    /** Whether the grid scrolled after the scheduled removal of the scrolling class was armed. */
+    private _scrolledSinceTransitionsCheck = false;
 
     /**
      * Represents the last search information.
@@ -7959,15 +7962,35 @@ export abstract class IgxGridBaseDirective implements GridType,
             return;
         }
 
-        const id = ++this._scrollTransitionsId;
+        this._scrolledSinceTransitionsCheck = true;
+        // A single removal is scheduled for all the scroll events of a gesture.
+        if (this._scrollTransitionsDisabled) {
+            return;
+        }
+        this._scrollTransitionsDisabled = true;
         tbody.classList.add(SCROLLING_TBODY_CLASS);
+        this.enableTransitionsAfterScroll(tbody);
+    }
+
+    /**
+     * Removes the scrolling class from the grid body once the rows are rendered and their styles applied,
+     * or waits again if the grid scrolled in the meantime.
+     */
+    private enableTransitionsAfterScroll(tbody: HTMLElement) {
+        this._scrolledSinceTransitionsCheck = false;
         runAfterRenderOnce(this.injector, () => {
             this.zone.runOutsideAngular(() => {
                 // Wait for the frame that applies the styles of the rendered rows.
                 requestAnimationFrame(() => requestAnimationFrame(() => {
-                    if (id === this._scrollTransitionsId) {
-                        tbody.classList.remove(SCROLLING_TBODY_CLASS);
+                    if (this._destroyed) {
+                        return;
                     }
+                    if (this._scrolledSinceTransitionsCheck) {
+                        this.enableTransitionsAfterScroll(tbody);
+                        return;
+                    }
+                    this._scrollTransitionsDisabled = false;
+                    tbody.classList.remove(SCROLLING_TBODY_CLASS);
                 }));
             });
         });

@@ -274,8 +274,14 @@
 
         // Set by the grid while it scrolls. The rows reused for other records show their state
         // right away, e.g. a chip or a checkbox in a cell does not animate from the previous record.
+        // Only the parts that transition on a state change are listed (the checkbox ones are those
+        // of `igx-checkbox--plain`), so that the rule and the class toggle do not restyle every element.
         @include e(tbody-content, $m: scrolling) {
-            * {
+            .igx-chip__item,
+            .igx-chip__select,
+            .igx-checkbox__composite,
+            .igx-checkbox__composite::after,
+            .igx-checkbox__composite-mark {
                 transition: none !important;
             }
         }
