@@ -3,7 +3,7 @@ import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { isLeftToRight } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, arrowLeft, arrowRight, isLeftToRight } from 'igniteui-angular/core';
 
 /**
  * @hidden
@@ -12,10 +12,12 @@ import { isLeftToRight } from 'igniteui-angular/core';
     selector: 'igx-thumb',
     templateUrl: 'thumb-slider.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass]
+    imports: [NgClass],
+    providers: [IgxKeyBindingsService]
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private _elementRef = inject(ElementRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     @Input()
     public value: any;
@@ -180,6 +182,14 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private _isPressed = false;
     private _destroy$ = new Subject<boolean>();
 
+    constructor() {
+        // A held arrow keeps moving the thumb.
+        this._keyBindings
+            .configure({ skip: () => this.disabled, bindingDefaults: { repeat: true } })
+            .set(arrowLeft, () => this.moveByStep(-1))
+            .set(arrowRight, () => this.moveByStep(1));
+    }
+
     private get thumbPositionX() {
         const thumbBounderies = this.nativeElement.getBoundingClientRect();
         const thumbCenter = (thumbBounderies.right - thumbBounderies.left) / 2;
@@ -201,27 +211,6 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
-    }
-
-    @HostListener('keydown', ['$event'])
-    public onKeyDown(event: KeyboardEvent) {
-        if (this.disabled) {
-            return;
-        }
-
-        let increment = 0;
-        const isRTL = !isLeftToRight(this._elementRef.nativeElement);
-        const stepWithDir = (rtl: boolean) => rtl ? this.step * -1 : this.step;
-        if (event.key.endsWith('Left')) {
-            increment = stepWithDir(!isRTL);
-        } else if (event.key.endsWith('Right')) {
-            increment = stepWithDir(isRTL);
-        } else {
-            return;
-        }
-
-        this.thumbChange.emit();
-        this.thumbValueChange.emit(increment);
     }
 
     @HostListener('blur')
@@ -269,6 +258,13 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
      */
     public hideThumbIndicators() {
         this.toggleThumbIndicators(false);
+    }
+
+    /** Moves the thumb one step for the right (`1`) or left (`-1`) arrow key. In right-to-left the value changes the other way. */
+    private moveByStep(direction: 1 | -1): void {
+        const step = isLeftToRight(this.nativeElement) ? this.step : -this.step;
+        this.thumbChange.emit();
+        this.thumbValueChange.emit(step * direction);
     }
 
     private updateThumbValue(mouseX: number) {
