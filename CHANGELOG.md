@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.1
+
+### Bug Fixes
+
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
+
 ## 22.3.0
 
 ### General
