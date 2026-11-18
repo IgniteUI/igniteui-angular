@@ -22,12 +22,7 @@ import { RoutingTestGuard } from '../../../../test-utils/routing-test-guard.spec
 import { RoutingView1Component, RoutingView2Component, RoutingView3Component, RoutingView4Component, RoutingView5Component } from '../../../../test-utils/routing-view-components.spec';
 import { describe, it, expect, beforeEach, afterEach, onTestFinished, vi } from 'vitest';
 
-const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
-const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
-const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
-const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true });
-const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
-const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
+const keydownEvent = (key: string) => new KeyboardEvent('keydown', { key, bubbles: true });
 
 const rectOf = (element: Element) => element.getBoundingClientRect();
 const isDisplayed = (element: HTMLElement) => getComputedStyle(element).display !== 'none';
@@ -324,27 +319,27 @@ describe('IgxTabs', () => {
             const headers = tabs.items.map(item => item.headerComponent.nativeElement);
 
             headers[0].focus();
-            headers[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headers[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            headers[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headers[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            headers[2].dispatchEvent(KEY_RIGHT_EVENT);
+            headers[2].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(0);
 
-            headers[0].dispatchEvent(KEY_LEFT_EVENT);
+            headers[0].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            headers[2].dispatchEvent(KEY_LEFT_EVENT);
+            headers[2].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
@@ -356,12 +351,12 @@ describe('IgxTabs', () => {
             const headers = tabs.items.map(item => item.headerComponent.nativeElement);
 
             headers[0].focus();
-            headers[0].dispatchEvent(KEY_END_EVENT);
+            headers[0].dispatchEvent(keydownEvent('End'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            headers[2].dispatchEvent(KEY_HOME_EVENT);
+            headers[2].dispatchEvent(keydownEvent('Home'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(0);
@@ -418,32 +413,32 @@ describe('IgxTabs', () => {
             const headerElements = tabs.items.map(item => item.headerComponent.nativeElement);
 
             headerElements[1].click();
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            headerElements[3].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[3].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            headerElements[1].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            headerElements[3].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[3].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            headerElements[1].dispatchEvent(KEY_END_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('End'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            headerElements[3].dispatchEvent(KEY_HOME_EVENT);
+            headerElements[3].dispatchEvent(keydownEvent('Home'));
             await wait();
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
@@ -459,12 +454,12 @@ describe('IgxTabs', () => {
             const header = tabs.items.get(1).headerComponent.nativeElement;
             header.focus();
 
-            for (const event of [KEY_END_EVENT, KEY_HOME_EVENT, KEY_RIGHT_EVENT, KEY_LEFT_EVENT]) {
-                header.dispatchEvent(event);
+            for (const key of ['End', 'Home', 'ArrowRight', 'ArrowLeft']) {
+                header.dispatchEvent(keydownEvent(key));
                 await wait();
                 fixture.detectChanges();
-                expect(tabs.selectedIndex, event.key).toBe(1);
-                expect(document.activeElement, event.key).toBe(header);
+                expect(tabs.selectedIndex, key).toBe(1);
+                expect(document.activeElement, key).toBe(header);
             }
         });
     });
@@ -741,31 +736,31 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[1]);
 
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[2]);
 
-            headerElements[2].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[0]);
 
-            headerElements[0].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[2]);
 
-            headerElements[2].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
@@ -782,13 +777,13 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            headerElements[0].dispatchEvent(KEY_END_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('End'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[2]);
 
-            headerElements[2].dispatchEvent(KEY_HOME_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent('Home'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
@@ -805,25 +800,25 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            headerElements[0].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[2]);
 
-            headerElements[2].dispatchEvent(KEY_ENTER_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent('Enter'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
             expect(document.activeElement).toBe(headerElements[2]);
 
-            headerElements[2].dispatchEvent(KEY_HOME_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent('Home'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
             expect(document.activeElement).toBe(headerElements[0]);
 
-            headerElements[0].dispatchEvent(KEY_SPACE_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent(' '));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
@@ -841,17 +836,17 @@ describe('IgxTabs', () => {
             await wait();
             fixture.detectChanges();
 
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(document.activeElement).toBe(headerElements[3]);
 
-            headerElements[3].dispatchEvent(KEY_HOME_EVENT);
+            headerElements[3].dispatchEvent(keydownEvent('Home'));
             await wait();
             fixture.detectChanges();
             expect(document.activeElement).toBe(headerElements[1]);
 
-            headerElements[1].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(document.activeElement).toBe(headerElements[3]);
@@ -894,12 +889,12 @@ describe('IgxTabs', () => {
         it('should set auto activation mode by default and change selectedIndex on arrow keys', async () => {
             expect(tabsComp.activation).toBe('auto');
 
-            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(1);
 
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
@@ -908,25 +903,25 @@ describe('IgxTabs', () => {
         it('should update focus and selectedIndex correctly in auto mode when navigating with arrow keys', async () => {
             expect(tabsComp.selectedIndex).toBe(-1);
 
-            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(1);
             expect(document.activeElement).toBe(headerElements[1]);
 
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
             expect(document.activeElement).toBe(headerElements[2]);
 
-            headerElements[2].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(1);
             expect(document.activeElement).toBe(headerElements[1]);
 
-            headerElements[1].dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
@@ -942,13 +937,13 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[1]);
 
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
@@ -964,21 +959,21 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
             expect(document.activeElement).toBe(headerElements[1]);
 
-            headerElements[1].dispatchEvent(KEY_ENTER_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('Enter'));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(1);
 
-            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fixture.detectChanges();
-            headerElements[2].dispatchEvent(KEY_SPACE_EVENT);
+            headerElements[2].dispatchEvent(keydownEvent(' '));
             await wait();
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
@@ -1115,7 +1110,7 @@ describe('IgxTabs', () => {
                 await wait();
 
                 headers[0].focus();
-                headers[0].dispatchEvent(KEY_RIGHT_EVENT);
+                headers[0].dispatchEvent(keydownEvent('ArrowRight'));
                 await wait();
                 fixture.detectChanges();
                 expect(tabs.selectedIndex).toBe(1);
@@ -1133,7 +1128,7 @@ describe('IgxTabs', () => {
                     newItem: tabItems[1]
                 });
 
-                headers[1].dispatchEvent(KEY_LEFT_EVENT);
+                headers[1].dispatchEvent(keydownEvent('ArrowLeft'));
                 await wait();
                 fixture.detectChanges();
                 expect(tabs.selectedIndex).toBe(0);
@@ -1156,7 +1151,7 @@ describe('IgxTabs', () => {
                 await wait();
 
                 headers[0].focus();
-                headers[0].dispatchEvent(KEY_END_EVENT);
+                headers[0].dispatchEvent(keydownEvent('End'));
                 await wait();
                 fixture.detectChanges();
                 expect(tabs.selectedIndex).toBe(2);
@@ -1174,7 +1169,7 @@ describe('IgxTabs', () => {
                 });
                 expect(indexChangeSpy).toHaveBeenCalledWith(2);
 
-                headers[2].dispatchEvent(KEY_HOME_EVENT);
+                headers[2].dispatchEvent(keydownEvent('Home'));
                 await wait();
                 fixture.detectChanges();
                 expect(tabs.selectedIndex).toBe(0);
@@ -1226,7 +1221,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).not.toHaveBeenCalled();
                 expect(itemChangeSpy).not.toHaveBeenCalled();
 
-                headers[1].dispatchEvent(KEY_ENTER_EVENT);
+                headers[1].dispatchEvent(keydownEvent('Enter'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1252,7 +1247,7 @@ describe('IgxTabs', () => {
                 await wait();
                 headers[0].focus();
 
-                headers[0].dispatchEvent(KEY_LEFT_EVENT);
+                headers[0].dispatchEvent(keydownEvent('ArrowLeft'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1260,7 +1255,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).not.toHaveBeenCalled();
                 expect(itemChangeSpy).not.toHaveBeenCalled();
 
-                headers[2].dispatchEvent(KEY_ENTER_EVENT);
+                headers[2].dispatchEvent(keydownEvent('Enter'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1281,7 +1276,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).toHaveBeenCalledTimes(1);
                 expect(itemChangeSpy).toHaveBeenCalledTimes(1);
 
-                headers[2].dispatchEvent(KEY_RIGHT_EVENT);
+                headers[2].dispatchEvent(keydownEvent('ArrowRight'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1289,7 +1284,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).toHaveBeenCalledTimes(1);
                 expect(itemChangeSpy).toHaveBeenCalledTimes(1);
 
-                headers[0].dispatchEvent(KEY_SPACE_EVENT);
+                headers[0].dispatchEvent(keydownEvent(' '));
                 await wait();
                 fixture.detectChanges();
 
@@ -1319,7 +1314,7 @@ describe('IgxTabs', () => {
                 await wait();
                 headers[0].focus();
 
-                headers[0].dispatchEvent(KEY_END_EVENT);
+                headers[0].dispatchEvent(keydownEvent('End'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1327,7 +1322,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).not.toHaveBeenCalled();
                 expect(itemChangeSpy).not.toHaveBeenCalled();
 
-                headers[2].dispatchEvent(KEY_ENTER_EVENT);
+                headers[2].dispatchEvent(keydownEvent('Enter'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1348,7 +1343,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).toHaveBeenCalledTimes(1);
                 expect(itemChangeSpy).toHaveBeenCalledTimes(1);
 
-                headers[2].dispatchEvent(KEY_HOME_EVENT);
+                headers[2].dispatchEvent(keydownEvent('Home'));
                 await wait();
                 fixture.detectChanges();
 
@@ -1356,7 +1351,7 @@ describe('IgxTabs', () => {
                 expect(indexChangeSpy).toHaveBeenCalledTimes(1);
                 expect(itemChangeSpy).toHaveBeenCalledTimes(1);
 
-                headers[0].dispatchEvent(KEY_SPACE_EVENT);
+                headers[0].dispatchEvent(keydownEvent(' '));
                 await wait();
                 fixture.detectChanges();
 
@@ -1690,27 +1685,27 @@ describe('IgxTabs', () => {
             headers = tabs.items.map(item => item.headerComponent.nativeElement);
 
             headers[0].focus();
-            headers[0].dispatchEvent(KEY_LEFT_EVENT);
+            headers[0].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            headers[1].dispatchEvent(KEY_LEFT_EVENT);
+            headers[1].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            headers[2].dispatchEvent(KEY_LEFT_EVENT);
+            headers[2].dispatchEvent(keydownEvent('ArrowLeft'));
             await wait();
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            headers[0].dispatchEvent(KEY_RIGHT_EVENT);
+            headers[0].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(8);
 
-            headers[8].dispatchEvent(KEY_RIGHT_EVENT);
+            headers[8].dispatchEvent(keydownEvent('ArrowRight'));
             await wait();
             fix.detectChanges();
             expect(tabs.selectedIndex).toBe(7);
@@ -1737,8 +1732,8 @@ describe('IgxTabs', () => {
             await settle();
         };
 
-        const keyDown = (element: Element, key: string) => {
-            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+        const keyDown = (element: Element, key: string, init?: KeyboardEventInit) => {
+            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, ...init });
             element.dispatchEvent(event);
             fixture.detectChanges();
             return event;
@@ -1883,6 +1878,34 @@ describe('IgxTabs', () => {
                 expect(event.defaultPrevented, key).toBe(false);
                 expect(tabs.selectedIndex, key).toBe(0);
                 expect(document.activeElement, key).toBe(headers[0]);
+            }
+        });
+
+        it('should keep moving while an arrow key is held', async () => {
+            await createTabs();
+            const headers = headersOf(tabs);
+            headers[0].focus();
+
+            keyDown(headers[0], 'ArrowRight');
+            keyDown(document.activeElement, 'ArrowRight', { repeat: true });
+            keyDown(document.activeElement, 'ArrowRight', { repeat: true });
+
+            expect(tabs.selectedIndex).toBe(3);
+            expect(document.activeElement).toBe(headers[3]);
+        });
+
+        it('should ignore the navigation and activation keys pressed with a modifier', async () => {
+            await createTabs(component => component.activation.set('manual'));
+            const headers = headersOf(tabs);
+            headers[1].focus();
+
+            for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const) {
+                for (const key of ['ArrowRight', 'ArrowLeft', 'Home', 'End', 'Enter', ' ']) {
+                    const event = keyDown(headers[1], key, { [modifier]: true });
+                    expect(event.defaultPrevented, `${modifier} + ${key}`).toBe(false);
+                    expect(document.activeElement, `${modifier} + ${key}`).toBe(headers[1]);
+                    expect(tabs.selectedIndex, `${modifier} + ${key}`).toBe(0);
+                }
             }
         });
 

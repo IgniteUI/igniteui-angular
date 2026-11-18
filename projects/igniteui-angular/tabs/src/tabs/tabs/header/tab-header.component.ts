@@ -2,7 +2,6 @@ import {
     AfterViewInit,
     Component,
     HostBinding,
-    HostListener,
     NgZone,
     OnDestroy,
     inject,
@@ -13,20 +12,32 @@ import { IgxTabHeaderDirective } from '../../tab-header.directive';
 import { IgxTabItemDirective } from '../../tab-item.directive';
 import { IgxTabHeaderBase } from '../../tabs.base';
 import { IgxTabsComponent } from './../tabs.component';
-import { getResizeObserver, isLeftToRight, modulo } from 'igniteui-angular/core';
+import {
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    endKey,
+    getResizeObserver,
+    homeKey,
+    isLeftToRight,
+    modulo
+} from 'igniteui-angular/core';
 
 @Component({
     selector: 'igx-tab-header',
     templateUrl: 'tab-header.component.html',
     styleUrl: 'tab-header.component.css',
     encapsulation: ViewEncapsulation.None,
-    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }],
+    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }, IgxKeyBindingsService],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
     protected override tabs = inject(IgxTabsComponent);
     private ngZone = inject(NgZone);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /** @hidden @internal */
     @HostBinding('class.igx-tab-header--selected')
@@ -52,55 +63,17 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
 
     private _resizeObserver!: ResizeObserver;
 
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public keyDown(event: KeyboardEvent) {
-        const itemsArray = this.tabs.items.toArray();
-        const index = itemsArray.indexOf(this.tab);
-        let newIndex: number;
-        const { ARROW_UP, ARROW_DOWN, ARROW_LEFT, ARROW_RIGHT } = this.platform.KEYMAP;
-        const vertical = this.tabs.verticalHeaders();
-        const rtl = !isLeftToRight(this.nativeElement);
-        const nextKey = vertical ? ARROW_DOWN : rtl ? ARROW_LEFT : ARROW_RIGHT;
-        const prevKey = vertical ? ARROW_UP : rtl ? ARROW_RIGHT : ARROW_LEFT;
-
-        switch (event.key) {
-            case nextKey:
-            case prevKey:
-                if (vertical) {
-                    event.preventDefault();
-                }
-                newIndex = this.getEnabledItemIndex(itemsArray, index, event.key === nextKey ? 1 : -1);
-                break;
-            case this.platform.KEYMAP.HOME:
-                event.preventDefault();
-                newIndex = this.getEnabledItemIndex(itemsArray, -1, 1);
-                break;
-            case this.platform.KEYMAP.END:
-                event.preventDefault();
-                newIndex = this.getEnabledItemIndex(itemsArray, itemsArray.length, -1);
-                break;
-            case this.platform.KEYMAP.ENTER:
-            case this.platform.KEYMAP.SPACE:
-                event.preventDefault();
-                if (this.tabs.activation === 'manual') {
-                    this.nativeElement.click();
-                }
-                return;
-            default:
-                return;
-        }
-
-        if (newIndex < 0) {
-            return;
-        }
-
-        const header = itemsArray[newIndex].headerComponent.nativeElement;
-        header.focus({ preventScroll: true });
-        if (this.tabs.activation === 'auto') {
-            this.tabs.selectedIndex = newIndex;
-        }
-        this.tabs.scrollToHeader(header);
+    constructor() {
+        super();
+        this._keyBindings
+            .configure({ bindingDefaults: { repeat: true } })
+            .set(arrowLeft, (event) => this.onArrowKey(event), { preventDefault: false })
+            .set(arrowRight, (event) => this.onArrowKey(event), { preventDefault: false })
+            .set(arrowUp, (event) => this.onArrowKey(event), { preventDefault: false })
+            .set(arrowDown, (event) => this.onArrowKey(event), { preventDefault: false })
+            .set(homeKey, () => this.focusItem((items) => this.getEnabledItemIndex(items, -1, 1)))
+            .set(endKey, () => this.focusItem((items) => this.getEnabledItemIndex(items, items.length, -1)))
+            .setActivateHandler(() => this.onActivationKey());
     }
 
     /** @hidden @internal */
@@ -120,6 +93,45 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver?.disconnect();
         });
+    }
+
+    private onArrowKey(event: KeyboardEvent): void {
+        const vertical = this.tabs.verticalHeaders();
+        const rtl = !isLeftToRight(this.nativeElement);
+        const nextKey = vertical ? arrowDown : rtl ? arrowLeft : arrowRight;
+        const prevKey = vertical ? arrowUp : rtl ? arrowRight : arrowLeft;
+
+        if (event.key !== nextKey && event.key !== prevKey) {
+            return;
+        }
+        if (vertical) {
+            event.preventDefault();
+        }
+
+        const step = event.key === nextKey ? 1 : -1;
+        this.focusItem((items) => this.getEnabledItemIndex(items, items.indexOf(this.tab), step));
+    }
+
+    private onActivationKey(): void {
+        if (this.tabs.activation === 'manual') {
+            this.nativeElement.click();
+        }
+    }
+
+    /** Focuses the header at the index that `getIndex` returns and selects it in auto activation. */
+    private focusItem(getIndex: (items: IgxTabItemDirective[]) => number): void {
+        const items = this.tabs.items.toArray();
+        const index = getIndex(items);
+        if (index < 0) {
+            return;
+        }
+
+        const header = items[index].headerComponent.nativeElement;
+        header.focus({ preventScroll: true });
+        if (this.tabs.activation === 'auto') {
+            this.tabs.selectedIndex = index;
+        }
+        this.tabs.scrollToHeader(header);
     }
 
     private getEnabledItemIndex(itemsArray: IgxTabItemDirective[], start: number, step: 1 | -1): number {
