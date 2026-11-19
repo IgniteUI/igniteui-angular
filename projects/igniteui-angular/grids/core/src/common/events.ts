@@ -9,6 +9,7 @@ import { IgxExporterOptionsBase } from '../services/exporter-common/exporter-opt
 export interface IGridClipboardEvent {
     /** `data` can be of any type and refers to the data that is being copied/stored to the clipboard */
     data: any[];
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether an external event has intercepted the copying
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -303,6 +304,7 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
      * (whether they should be ignored) as well as method for generating a file name
      */
     options: IgxExporterOptionsBase;
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -326,6 +328,7 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
      * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -345,6 +348,7 @@ export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
      * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     target: ColumnType;
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -364,6 +368,7 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
     /* blazorCSSuppress */
     /** Represents the original event, that occurred. */
     event: Event;
+    /* blazorCSSuppress */
     /**
      * The event is cancelable
      * `cancel` returns whether the event has been intercepted and stopped
@@ -434,6 +439,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
      * Represents the original event, that has triggered the expansion/collapse
      */
     event?: Event;
+    /* blazorCSSuppress */
     /**
      * The event is cancelable
      * `cancel` returns whether the event has been intercepted and stopped
