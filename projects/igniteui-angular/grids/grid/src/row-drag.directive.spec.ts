@@ -390,12 +390,16 @@ describe('Row Drag Tests', () => {
 
                     vi.spyOn(grid.rowDragStart, 'emit');
                     vi.spyOn(grid.rowDragEnd, 'emit');
+                    // Set by the application before the drag.
+                    rowDragDirective.element.nativeElement.style.transitionDuration = '0.5s';
 
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
                     // The removed ghost is not kept as the pointer capture target.
                     expect((rowDragDirective as any)._pointerCaptureTarget).toBeNull();
+                    // The transitions of the element, disabled when the drag started, are restored.
+                    expect(rowDragDirective.element.nativeElement.style.transitionDuration).toBe('0.5s');
 
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     rowDragDirective.onPointerUp(pointerUpEvent);
@@ -470,6 +474,44 @@ describe('Row Drag Tests', () => {
                     expect(rowDragDirective.animInProgress).toBe(false);
                     expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+
+                it('should not end the return animation of the ghost on transitions of other properties or of its content.', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(nonDroppableAreaElement);
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.3 });
+                    });
+                    const transitionedSpy = vi.spyOn(rowDragDirective.transitioned, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    const ghost = rowDragDirective.ghostElement;
+                    expect(ghost).toBeTruthy();
+
+                    // Released outside a drop area, so the ghost animates back.
+                    rowDragDirective.onPointerUp(UIInteractions.createPointerEvent('pointerup', dropPoint));
+                    fixture.detectChanges();
+                    await wait(50);
+                    expect(rowDragDirective.animInProgress).toBe(true);
+
+                    // E.g. a color transition of a chip in a cell of the ghost, or of the ghost itself.
+                    const ghostCell = ghost.querySelector('igx-grid-cell') as HTMLElement;
+                    ghostCell.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'left', bubbles: true }));
+                    ghost.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+
+                    expect(rowDragDirective.ghostElement).toBe(ghost);
+                    expect(rowDragDirective.animInProgress).toBe(true);
+                    expect(transitionedSpy).not.toHaveBeenCalled();
+
+                    await vi.waitFor(() => expect(transitionedSpy).toHaveBeenCalledTimes(1));
+                    fixture.detectChanges();
+                    expect(rowDragDirective.ghostElement).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
                 });
 
                 it('should not start row dragging when cancelDrag() is called in a rowDragStart handler.', () => {
