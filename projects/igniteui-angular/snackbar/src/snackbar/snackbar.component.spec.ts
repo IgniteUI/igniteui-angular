@@ -79,6 +79,26 @@ describe('IgxSnackbar', () => {
         snackbar.close();
     }));
 
+    it('should clear the previous auto hide timer and restart it when reopened', async () => {
+        useFakeClock();
+        const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout');
+        const displayTime = 1000;
+        snackbar.displayTime = displayTime;
+        snackbar.open();
+        const firstTimeoutId = snackbar.timeoutId;
+
+        await advance(fixture, 600);
+        snackbar.open();
+        expect(clearTimeoutSpy).toHaveBeenCalledWith(firstTimeoutId);
+        expect(snackbar.timeoutId).not.toBe(firstTimeoutId);
+
+        await advance(fixture, 600);
+        expect(snackbar.isVisible).toBeTruthy();
+
+        await advance(fixture, displayTime - 600 + 100);
+        expect(snackbar.isVisible).toBeFalsy();
+    });
+
     it('should trigger on action', fakeAsync(() => {
         snackbar.actionText = 'undo';
         snackbar.displayTime = 100;
