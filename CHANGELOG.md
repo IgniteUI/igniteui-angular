@@ -4,6 +4,13 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.1
 
+### Behavioral Changes
+
+- `IgxListComponent`, `IgxListItemComponent`
+    - When items bind `[selected]`, the list is now an accessible listbox: the list has `role="listbox"`, items have `role="option"` with `aria-selected`, and the list and its items can be focused with Tab. Arrow Up/Down and Home/End move between items, and Enter/Space click the focused item, so `itemClicked` fires. Lists without `[selected]` are unchanged.
+    - In this type of list, headers act as group names: each item gets the text of the header above it as its `aria-description`, so screen readers announce the group with every item. An item that has its own `aria-description` in the template keeps it. The headers themselves are hidden from screen readers.
+    - Recommended: give this type of list an `aria-label`, so it is announced when the list is focused. Set `aria-multiselectable="true"` when more than one item can be selected, and avoid focusable controls inside the items. If an item needs a selection control, such as a checkbox, make it `inert` so it does not interfere with the keyboard navigation and selection, and bind it to the item's selected state.
+
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
