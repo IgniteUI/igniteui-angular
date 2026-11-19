@@ -25,6 +25,7 @@ Every test suite runs on **Vitest**: browser mode for component tests, Node for 
 - The main library runner config is `projects/igniteui-angular/vitest.config.ts`; it injects the compiled theme CSS, aliases `fflate`, and sets `restoreMocks` and the viewport. Extras reuses it.
 - Specs import `describe`, `it`, `expect`, `vi`, etc. explicitly from `'vitest'`.
 - Tests must not depend on zone.js: no `fakeAsync`, `tick`, or `waitForAsync`. Use `async`/`await` with `fixture.whenStable()`, the `wait()` helper, or `vi.useFakeTimers()`.
+- Specs for handlers that inspect the event target must cover the shadow DOM case; follow the recipe in [DOM Events](../../../AGENTS.md#dom-events).
 - **Node tests:** schematics/migrations specs (`projects/igniteui-angular/{migrations,schematics}/**/*.spec.ts`) and the sass-true style tests (`projects/igniteui-angular/core/src/core/styles/spec/`) also run on Vitest, in Node instead of a browser.
 - Coverage reports are written to `coverage/`.
 
