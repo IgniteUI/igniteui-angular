@@ -40,6 +40,9 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      */
     private _gestures: IgxTouchManager | null = null;
 
+    /** The `aria-description` set on the item in the template, which is kept instead of the group name. */
+    private readonly _ownDescription = this.elementRef.nativeElement.getAttribute('aria-description');
+
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
      * ```typescript
@@ -258,6 +261,8 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     /**
      * Gets/Sets the `role` attribute of the `list item`.
+     * Defaults to `separator` for headers, and for items to `option` when the items of the list bind `selected`
+     * and to `listitem` otherwise.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -267,7 +272,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role ? this._role : this.isHeader ? 'separator' : 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator' : this.list.selectable ? 'option' : 'listitem';
     }
 
     public set role(val: string) {
@@ -301,6 +306,24 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     public set selected(value: boolean) {
         this._selected = value;
+        this.list.selectionItems.add(this);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * In a list whose items bind `selected`, the options are tab stops that expose their selected state
+     * and are described by the header of their group, unless they have their own `aria-description`.
+     * The headers are hidden from assistive technology. Called by the list after rendering.
+     */
+    public updateAttributes(selectable: boolean, header: IgxListItemComponent | null) {
+        const option = selectable && !this.isHeader;
+        this.list.syncAttribute(this.element, 'tabindex', option ? '0' : null);
+        this.list.syncAttribute(this.element, 'aria-selected', option ? String(this.selected) : null);
+        this.list.syncAttribute(this.element, 'aria-hidden', selectable && this.isHeader ? 'true' : null);
+        if (!this._ownDescription) {
+            this.list.syncAttribute(this.element, 'aria-description', (option && header?.element.textContent.trim()) || null);
+        }
     }
 
     /**
@@ -371,6 +394,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      */
     public ngOnDestroy() {
         this._gestures?.destroy();
+        this.list.selectionItems.delete(this);
     }
 
     /**
