@@ -1531,7 +1531,6 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith({
                 index: 1,
-                rowID: '1',
                 key: '1',
                 selected: false,
                 select: expect.anything(),

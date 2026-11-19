@@ -2298,7 +2298,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pagingMode = 'remote';
                 pivotGrid.hideRowSelectors = true;
-                pivotGrid.shouldGenerate = true;
                 pivotGrid.rowDraggable = true;
                 pivotGrid.allowAdvancedFiltering = true;
                 pivotGrid.filterMode = FilterMode.excelStyleFilter;
@@ -2318,7 +2317,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(pivotGrid.pagingMode).toBe('local');
                 expect(pivotGrid.hideRowSelectors).toBe(false);
-                expect(pivotGrid.shouldGenerate).toBe(false);
                 expect(pivotGrid.rowDraggable).toBe(false);
                 expect(pivotGrid.allowAdvancedFiltering).toBe(false);
                 expect(pivotGrid.filterMode).toBe(FilterMode.quickFilter);

@@ -17,7 +17,11 @@ import { CarouselAnimationDirection, IgxSlideComponentBase } from './carousel-ba
     selector: 'igx-slide',
     templateUrl: 'slide.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    host: {
+        // The active slide (tabpanel) is part of the tab sequence after the indicators (tablist).
+        '[attr.tabindex]': 'active ? 0 : null'
+    }
 })
 export class IgxSlideComponent implements AfterContentChecked, IgxSlideComponentBase {
     private elementRef = inject(ElementRef);
@@ -48,20 +52,6 @@ export class IgxSlideComponent implements AfterContentChecked, IgxSlideComponent
 
     @Input()
     public total!: number;
-
-    /**
-     * Returns the `tabIndex` of the slide component.
-     * ```typescript
-     * let tabIndex =  this.carousel.tabIndex;
-     * ```
-     *
-     * @memberof IgxSlideComponent
-     * @deprecated in version 19.2.0.
-     */
-    @HostBinding('attr.tabindex')
-    public get tabIndex() {
-        return this.active ? 0 : null;
-    }
 
     /**
      * @hidden

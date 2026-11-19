@@ -3,7 +3,7 @@
 
     <igx-combo #combo class="combo" [itemsMaxHeight]="250" (selectionChanging)="handleChange($event)"
         [data]="dimensions" [displayKey]="'memberName'" [(ngModel)]="selected"
-        placeholder="Dimension(s)" searchPlaceholder="Search...">
+        placeholder="Dimension(s)" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Search...' }">
     </igx-combo>
 
     <button (click)="exportButtonHandler()">Export To Excel</button><br />

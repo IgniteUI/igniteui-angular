@@ -5,7 +5,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 # Usage
 ```html
-<igx-avatar shape="rounded" icon="person" bgColor="#0375be" data-init="SS">
+<igx-avatar shape="rounded" icon="person" [style.background]="'#0375be'" data-init="SS">
 </igx-avatar>
 ```
 
@@ -16,18 +16,18 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `src` |  string | Set the image source of the avatar. |
 | `initials` | string | Set the initials of the avatar. |
 | `icon` | string | Set the icon of the avatar. Currently all icons from the material icon set are supported. Not applicable for initials and image avatars. |
-| `bgColor` | string | Set the background color of initials or icon avatars. |
-| `color` | string | Set the color of initials or icon avatars. (optional) |
 | `shape` | boolean | Set the shape of the avatar to rounded. The default shape is square. |
 | `size` | string | Set the size of the avatar to either small, medium, or large. |
 
 *You can also set all igx-avatar properties programmatically.
 
+> **Note:** The `color` and `bgColor` inputs were removed in 23.0.0. Use `[style.color]` and `[style.background]` bindings (or the avatar theme) instead.
+
 # Examples
 
 Using `igx-avatar` tag to include it into your app.
 ```html
-<igx-avatar icon="person" bgColor="#0375be" data-init="SS">
+<igx-avatar icon="person" [style.background]="'#0375be'" data-init="SS">
 </igx-avatar>
 ```
 

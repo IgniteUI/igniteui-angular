@@ -1843,14 +1843,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     public parent: ColumnType | null = null;
 
     /* blazorSuppress */
-    /**
-     * Sets/gets the children columns.
-     * ```typescript
-     * let columnChildren = this.column.children;
-     * ```
-     *
-     * @deprecated in version 18.1.0. Use the `childColumns` property instead.
-     */
+    /** @hidden @internal */
     public children!: QueryList<IgxColumnComponent>;
     /**
      * @hidden

@@ -81,8 +81,9 @@ items: Array<Object> = [
     * `filteringOperands` - an array of **IFilteringExpressionsTree** or **IFilteringExpression** objects which has the same filtering logic. If applied to a grid each object describes the filtering state of a grid's column. If applied to a column each object describes one filtering expression or a branch with filtering expressions with complex filtering logic.
     * `operator` - object of type **FilteringLogic**. Defines the filtering logic for all objects in `filteringOperands` property.
     * `fieldName` - (optional). Should not be set on a grid's level. It should be set for each **FilteringExpressionsTree** in the grid's `filterOperands`. That's how the filtering state for each column is defined.
-    * `find(fieldName: string)` - Returns the filtering state for a given column. Return type could be **IFilteringExpressionsTree** or **IFilteringExpression**.
-    * `findIndex(fieldName: string)` - Returns the index of the filtering state for a given column.
+* **ExpressionsTreeUtil** - utility class for querying an **IFilteringExpressionsTree**. Its static methods are:
+    * `find(tree: IFilteringExpressionsTree, fieldName: string)` - Returns the filtering state for a given column. Return type could be **IFilteringExpressionsTree** or **IFilteringExpression**.
+    * `findIndex(tree: IFilteringExpressionsTree, fieldName: string)` - Returns the index of the filtering state for a given column.
 * **SortingStrategy** - class which implements **ISortingStrategy** interface. It specifies sorting algorithm.
 * **FilteringStrategy** - class which implements **IFilteringStrategy** interface. It specifies filtering algorithm.
 * **FilteringLogic** - class which describes the filtering logic between the different filtering expressions. Its values are **FilteringLogic.And**, **FilteringLogic.Or**.

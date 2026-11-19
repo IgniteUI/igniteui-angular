@@ -56,7 +56,7 @@
           [(ngModel)]="selectedReturnFields"
           [overlaySettings]="returnFieldSelectOverlaySettings"
           [placeholder]="this.resourceStrings.igx_query_builder_select_return_fields!"
-          [searchPlaceholder]="this.resourceStrings.igx_query_builder_search!"
+          [resourceStrings]="this.returnFieldsComboResourceStrings!"
           [style.display]="isInEditMode() ? 'block' : 'none'"
           (selectionChanging)="onReturnFieldSelectChanging($event)"
           (opening)="exitEditAddMode()"

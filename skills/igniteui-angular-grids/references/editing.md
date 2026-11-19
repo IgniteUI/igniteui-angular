@@ -107,13 +107,13 @@ export class CarsGridComponent {
 
   onRowAdded(event: IRowDataEventArgs) {
     // Persist the newly added row; optionally replace local data with server response
-    this.carService.createCar(event.data).subscribe(created => {
-      this.cars.update(cars => cars.map(c => c === event.data ? created : c));
+    this.carService.createCar(event.rowData).subscribe(created => {
+      this.cars.update(cars => cars.map(c => c === event.rowData ? created : c));
     });
   }
 
   onRowDeleted(event: IRowDataEventArgs) {
-    this.carService.deleteCar(event.data.id).subscribe();
+    this.carService.deleteCar(event.rowData.id).subscribe();
   }
 
   addCar() {
@@ -297,7 +297,7 @@ quantityValidators = [Validators.required, Validators.min(0), Validators.max(999
 onCellEditDone(event: IGridEditDoneEventArgs) {
   // React to edits — e.g., recalculate totals
   if (event.column.field === 'quantity' || event.column.field === 'unitPrice') {
-    this.recalculateRowTotal(event.rowID);
+    this.recalculateRowTotal(event.rowKey);
   }
 }
 ```

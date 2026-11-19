@@ -1,6 +1,5 @@
 import { FilteringLogic, IFilteringExpression } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
-import { ExpressionsTreeUtil } from './expressions-tree-util';
 
 /* mustCoerceToInt */
 export enum FilteringExpressionsTreeType {
@@ -26,18 +25,6 @@ export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpr
     /* alternateName: treeType */
     /* mustCoerceToInt */
     type?: FilteringExpressionsTreeType;
-
-    /* blazorSuppress */
-    /**
-     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
-     */
-    find?: (fieldName: string) => IFilteringExpressionsTree | IFilteringExpression;
-
-    /* blazorSuppress */
-    /**
-     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
-     */
-    findIndex?: (fieldName: string) => number;
 }
 
 /* marshalByValue */
@@ -147,33 +134,5 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     public static empty(expressionTree: IFilteringExpressionsTree): boolean {
         return !expressionTree || !expressionTree.filteringOperands || !expressionTree.filteringOperands.length;
-    }
-
-    /* blazorSuppress */
-    /**
-     * Returns the filtering expression for a column with the provided fieldName.
-     * ```typescript
-     * let filteringExpression = gridExpressionTree.find('Column Field');
-     * ```
-     *
-     * @memberof FilteringExpressionsTree
-     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.find` instead.
-     */
-    public find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression {
-        return ExpressionsTreeUtil.find(this, fieldName);
-    }
-
-    /* blazorSuppress */
-    /**
-     * Returns the index of the filtering expression for a column with the provided fieldName.
-     * ```typescript
-     * let filteringExpressionIndex = gridExpressionTree.findIndex('Column Field');
-     * ```
-     *
-     * @memberof FilteringExpressionsTree
-     * @deprecated in version 18.2.0. Use `ExpressionsTreeUtil.findIndex` instead.
-     */
-    public findIndex(fieldName: string): number {
-        return ExpressionsTreeUtil.findIndex(this, fieldName);
     }
 }

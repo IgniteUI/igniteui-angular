@@ -138,35 +138,6 @@ export class IgxAvatarComponent implements OnInit {
     }
 
     /**
-     * Sets the color of the avatar's initials or icon.
-     *
-     * @example
-     * ```html
-     * <igx-avatar color="blue"></igx-avatar>
-     * ```
-     * @deprecated in version 17.2.0.
-     */
-
-    @HostBinding('style.color')
-    @Input()
-    public color!: string;
-
-    /**
-     * Sets the background color of the avatar.
-     *
-     * @example
-     * ```html
-     * <igx-avatar bgColor="yellow"></igx-avatar>
-     * ```
-     * @igxFriendlyName Background color
-     * @deprecated in version 17.2.0.
-     */
-
-    @HostBinding('style.background')
-    @Input()
-    public bgColor!: string;
-
-    /**
      * Sets initials to the avatar.
      *
      * @example
