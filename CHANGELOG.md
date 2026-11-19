@@ -2,6 +2,15 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.27
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+
 ## 21.2.26
 
 ### Bug Fixes
