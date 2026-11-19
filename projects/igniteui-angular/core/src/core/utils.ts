@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, InjectionToken, PLATFORM_ID, inject, afterNextRender, type AfterRenderRef, type Injector } from '@angular/core';
+import { Injectable, InjectionToken, PLATFORM_ID, inject, afterNextRender, type AfterRenderRef, type Injector, type NgZone } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { isDevMode } from '@angular/core';
@@ -32,6 +32,63 @@ export function runAfterRenderOnce(injector: Injector, callback: () => void, pha
     const spec: AfterNextRenderSpec = {};
     spec[phase as keyof AfterNextRenderSpec] = callback;
     return afterNextRender(spec, { injector });
+}
+
+/**
+ * How long a virtualized container keeps its scrolling class after the last scroll. It is longer than
+ * the throttle of the grid scroll (up to 60ms) and the frames that render the items for the last scroll,
+ * so that the class is kept for a whole scroll gesture.
+ *
+ * @hidden @internal
+ */
+export const SCROLLING_CLASS_DELAY = 150;
+
+/**
+ * Keeps a class on the element of a virtualized container while it scrolls.
+ *
+ * The container reuses the views of its items for other records while it scrolls, so the components
+ * in them that animate their state changes (e.g. a chip or a checkbox) disable their transitions under
+ * the class and show the state of the new record right away.
+ *
+ * @hidden @internal
+ */
+export class ScrollingClassController {
+    private _timer: ReturnType<typeof setTimeout> | null = null;
+    private _element: HTMLElement | null = null;
+
+    constructor(private readonly zone: NgZone, private readonly className: string) { }
+
+    /**
+     * Adds the class to the element and removes it once the element has not scrolled for `SCROLLING_CLASS_DELAY`.
+     *
+     * @param element The element of the virtualized container.
+     */
+    public scrolled(element: HTMLElement | null | undefined): void {
+        if (!element) {
+            return;
+        }
+        if (this._element !== element) {
+            this._element?.classList.remove(this.className);
+            this._element = element;
+            element.classList.add(this.className);
+        }
+        if (this._timer !== null) {
+            clearTimeout(this._timer);
+        }
+        this.zone.runOutsideAngular(() => {
+            this._timer = setTimeout(() => this.clear(), SCROLLING_CLASS_DELAY);
+        });
+    }
+
+    /** Removes the class and cancels its scheduled removal, e.g. when the container is destroyed. */
+    public clear(): void {
+        if (this._timer !== null) {
+            clearTimeout(this._timer);
+            this._timer = null;
+        }
+        this._element?.classList.remove(this.className);
+        this._element = null;
+    }
 }
 
 /**
