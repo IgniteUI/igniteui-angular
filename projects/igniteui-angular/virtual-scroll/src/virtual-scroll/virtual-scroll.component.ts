@@ -21,7 +21,7 @@ import {
   viewChild,
   ViewEncapsulation,
 } from "@angular/core";
-import { clamp, isLeftToRight } from "igniteui-angular/core";
+import { clamp, isLeftToRight, ScrollingClassController } from "igniteui-angular/core";
 import { VirtualScrollEngine } from "./scroll-engine";
 import {
   IgxVsItemContext,
@@ -153,6 +153,8 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
   //#region Internal state
 
   private readonly _engine = new VirtualScrollEngine();
+  /** Keeps the scrolling class on the host while it scrolls, so the reused items do not animate from their previous state. */
+  private readonly _scrollingClass = new ScrollingClassController(this._zone, "igx-virtual-scroll--scrolling");
 
   private _viewportResizeObserver: ResizeObserver | null = null;
   private _itemResizeObserver: ResizeObserver | null = null;
@@ -896,7 +898,10 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
     }
 
     this._zone.runOutsideAngular(() => {
-      this._onScroll = () => this._handleScroll();
+      this._onScroll = () => {
+        this._scrollingClass.scrolled(host);
+        this._handleScroll();
+      };
       host.addEventListener("scroll", this._onScroll, { passive: true });
     });
   }
@@ -1138,6 +1143,7 @@ export class IgxVirtualScrollComponent<T> implements OnDestroy {
 
   private _teardown(): void {
     const host = this._hostRef.nativeElement;
+    this._scrollingClass.clear();
 
     if (this._onScroll) {
       host.removeEventListener("scroll", this._onScroll);
