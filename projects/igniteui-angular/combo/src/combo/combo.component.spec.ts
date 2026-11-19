@@ -3174,6 +3174,30 @@ describe('igxCombo', () => {
                 expect(combo.dropdown.focusedItem).toBeNull();
                 expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeFalse();
             });
+            it('should keep the keyboard focus state of the default add item button while another item is active', () => {
+                combo.allowCustomValues = true;
+                fixture.detectChanges();
+                combo.toggle();
+                fixture.detectChanges();
+                // matches a single item, so the list is a group header and 'Ohio'
+                combo.searchValue = 'Ohi';
+                combo.handleInputChange();
+                fixture.detectChanges();
+                expect(combo.isAddButtonVisible()).toBeTrue();
+
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+                fixture.detectChanges();
+                expect(combo.dropdown.focusedItem.itemID).toEqual('Ohio');
+
+                // e.g. Tab reaches the button while a consumer keeps the drop-down open by canceling `closing`
+                const button: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`))
+                    .nativeElement.querySelector('button');
+                button.focus();
+                button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
+                fixture.detectChanges();
+                expect(combo.dropdown.focusedItem.itemID).toEqual('Ohio');
+                expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeTrue();
+            });
             it('should keep the item focus style on the add item when it has a custom template', () => {
                 fixture = TestBed.createComponent(IgxComboCustomAddItemComponent);
                 fixture.detectChanges();
