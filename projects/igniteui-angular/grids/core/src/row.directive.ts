@@ -27,6 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 import { trackByIdentity } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 
+/* blazorCSSuppress */
 @Directive({
     selector: '[igxRowBaseComponent]',
     standalone: true
