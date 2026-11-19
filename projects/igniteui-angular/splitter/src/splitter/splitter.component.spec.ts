@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, provideZonelessChangeDetection } from '@angular/core';
+import { Component, ViewChild, DebugElement, ChangeDetectionStrategy, ViewEncapsulation, provideZonelessChangeDetection } from '@angular/core';
 import { SplitterType, IgxSplitterComponent, ISplitterBarResizeEventArgs } from './splitter.component';
 import { By } from '@angular/platform-browser';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
@@ -925,6 +925,139 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
     });
 });
 
+describe('IgxSplitter sizing', () => {
+    const steps = [
+        { size: 'small', value: '1', bar: 6, handle: 4, expander: 4, radius: 2 },
+        { size: 'medium', value: '2', bar: 12, handle: 6, expander: 5, radius: 8 },
+        { size: 'large', value: '3', bar: 18, handle: 8, expander: 6, radius: 8 }
+    ];
+    let fixture: ComponentFixture<SplitterSizingComponent>;
+
+    const measure = () => {
+        const host: HTMLElement = fixture.nativeElement;
+        // Finishes a bar transition that is still running.
+        document.getAnimations().forEach(animation => animation.finish());
+        // The bar of a horizontal splitter is a vertical line, so its thickness is its width.
+        const extent = fixture.componentInstance.type === SplitterType.Horizontal ? 'width' : 'height';
+        const length = extent === 'width' ? 'height' : 'width';
+        const rect = (selector: string) => host.querySelector(selector).getBoundingClientRect();
+        const bar = rect(SPLITTERBAR_DIV_CLASS);
+        const handle = rect('.igx-splitter-bar__handle');
+        const expander = rect('.igx-splitter-bar__expander--start');
+
+        return {
+            bar: bar[extent],
+            barLength: bar[length],
+            handle: handle[extent],
+            handleLength: handle[length],
+            handleRadius: getComputedStyle(host.querySelector('.igx-splitter-bar__handle')).borderRadius,
+            expander: expander[extent],
+            expanderBase: expander[length]
+        };
+    };
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({ imports: [SplitterSizingComponent] }).compileComponents();
+        fixture = TestBed.createComponent(SplitterSizingComponent);
+        fixture.detectChanges();
+    });
+
+    it('should render the small size without --ig-size', () => {
+        const { bar, handle, handleRadius, expander, expanderBase } = measure();
+
+        expect(bar).toBe(6);
+        expect(handle).toBe(4);
+        expect(handleRadius).toBe('2px');
+        expect(expander).toBe(4);
+        expect(expanderBase).toBe(8);
+    });
+
+    it('should size the bar, the handle and the expanders at medium and large', () => {
+        for (const step of steps.slice(1)) {
+            fixture.componentInstance.size = step.value;
+            fixture.detectChanges();
+
+            const { bar, handle, handleRadius, expander, expanderBase } = measure();
+
+            expect(bar, step.size).toBe(step.bar);
+            expect(handle, step.size).toBe(step.handle);
+            expect(handleRadius, step.size).toBe(`${step.radius}px`);
+            expect(expander, step.size).toBe(step.expander);
+            expect(expanderBase, step.size).toBe(step.expander * 2);
+        }
+    });
+
+    it('should add each step to an overridden --ig-splitter-size', () => {
+        fixture.componentInstance.baseSize = '10px';
+
+        for (const step of steps) {
+            fixture.componentInstance.size = step.value;
+            fixture.detectChanges();
+
+            const { bar, handle, expander } = measure();
+
+            // 6px more than the default 4px size at every step.
+            expect(bar, step.size).toBe(step.bar + 6);
+            expect(handle, step.size).toBe(step.handle + 6);
+            expect(expander, step.size).toBe(step.expander + 6);
+        }
+    });
+
+    const gaps = () => {
+        const host: HTMLElement = fixture.nativeElement;
+        document.getAnimations().forEach(animation => animation.finish());
+        const rect = (selector: string) => host.querySelector(selector).getBoundingClientRect();
+        const bar = rect(SPLITTERBAR_DIV_CLASS);
+        const handle = rect('.igx-splitter-bar__handle');
+        const start = rect('.igx-splitter-bar__expander--start');
+        const end = rect('.igx-splitter-bar__expander--end');
+
+        return {
+            handleGaps: [handle.top - start.bottom, end.top - handle.bottom],
+            inside: start.top >= bar.top && end.bottom <= bar.bottom
+        };
+    };
+
+    it('should keep the handle 48px from the bar content edge with a collapsed pane', () => {
+        const panes = fixture.componentInstance.splitter.panes.toArray();
+        const handleTop = () => {
+            const host: HTMLElement = fixture.nativeElement;
+            document.getAnimations().forEach(animation => animation.finish());
+            return host.querySelector('.igx-splitter-bar__handle').getBoundingClientRect().top
+                - host.querySelector(SPLITTERBAR_DIV_CLASS).getBoundingClientRect().top;
+        };
+        // The handle, its two 48px margins and the one expander that is left, centered in the 400px bar.
+        const groupStart = (400 - (100 + 96 + 8)) / 2;
+
+        panes[0].toggle();
+        fixture.detectChanges();
+        expect(handleTop()).toBe(groupStart + 48);
+
+        panes[0].toggle();
+        panes[1].toggle();
+        fixture.detectChanges();
+        expect(handleTop()).toBe(groupStart + 8 + 48);
+    });
+
+    it('should keep the handle at 25% of a short bar and narrow the gaps at every size', () => {
+        fixture.componentInstance.height = '128px';
+
+        for (const step of steps) {
+            fixture.componentInstance.size = step.value;
+            fixture.detectChanges();
+
+            const { handleLength } = measure();
+            const { handleGaps, inside } = gaps();
+            // What the bar leaves after the handle and the two expanders, halved.
+            const gap = (128 - 32 - step.expander * 4) / 2;
+
+            expect(handleLength, step.size).toBe(32);
+            expect(handleGaps, step.size).toEqual([gap, gap]);
+            expect(inside, step.size).toBe(true);
+        }
+    });
+});
+
 describe('Zoneless IgxSplitter', () => {
     let fixture: ComponentFixture<SplitterTestComponent>;
     let splitter: IgxSplitterComponent;
@@ -1074,4 +1207,36 @@ export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
 })
 export class SplitterForOfPanesComponent extends SplitterTestComponent {
     public numbers = [1, 2, 3];
+}
+
+@Component({
+    template: `
+    <div [style.--ig-splitter-size]="baseSize">
+        <igx-splitter [type]="type" [style.--ig-size]="size" [style.height]="height" style="width: 400px;">
+            <igx-splitter-pane>Pane 1</igx-splitter-pane>
+            <igx-splitter-pane>Pane 2</igx-splitter-pane>
+        </igx-splitter>
+    </div>
+    `,
+    // Mirrors the splitter tokens of igniteui-theming that the styles read, which a global theme emits on igx-splitter.
+    styles: [`
+        igx-splitter {
+            --default-size: 1;
+            --size: var(--ig-splitter-size, 4px);
+            --border-radius: var(--ig-splitter-border-radius, max(calc(var(--is-large, 1) * 8px), calc(var(--is-medium, 1) * 8px), calc(var(--is-small, 1) * 2px)));
+            --expander-color: gray;
+        }
+    `],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxSplitterComponent, IgxSplitterPaneComponent]
+})
+export class SplitterSizingComponent {
+    public type = SplitterType.Horizontal;
+    public size: string = null;
+    public baseSize: string = null;
+
+    @ViewChild(IgxSplitterComponent, { static: true })
+    public splitter: IgxSplitterComponent;
+    public height = '400px';
 }

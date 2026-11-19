@@ -5,7 +5,11 @@
 @use 'igniteui-theming/sass/themes/schemas/components/light/splitter' as *;
 
 $theme: digest-schema($indigo-splitter);
-$slim-splitter: calc(1 / var(--splitter-size));
+$bar-size: var(--_bar-size);
+
+// The scale that leaves 1px of the bar: 1px / bar thickness, as a number.
+// CSS can't divide two lengths, and tan(atan2(a, b)) equals a / b.
+$slim-splitter: tan(atan2(1px, #{$bar-size}));
 
 @include themed-block(igx-splitter, indigo) {
     @include b(igx-splitter-bar-host) {
@@ -97,14 +101,14 @@ $slim-splitter: calc(1 / var(--splitter-size));
         @include m(horizontal) {
             &::before,
             &::after {
-                height: calc(var(--splitter-size) * 4px);
+                height: calc(#{$bar-size} * 4);
             }
         }
 
         @include m(vertical) {
             &::before,
             &::after {
-                width: calc(var(--splitter-size) * 4px);
+                width: calc(#{$bar-size} * 4);
             }
         }
     }
