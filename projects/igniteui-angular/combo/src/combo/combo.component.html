@@ -122,8 +122,9 @@
                         @if (addItemTemplate) {
                             <ng-container *ngTemplateOutlet="addItemTemplate"></ng-container>
                         } @else {
-                            <!-- Focus stays on the list, so the button shows the add item's focus state as its own. -->
-                            <button type="button" igxButton="flat" igxRipple [class.igx-button--focused]="addItem.active">{{ resourceStrings.igx_combo_addCustomValues_placeholder }}</button>
+                            <!-- Focus stays on the list, so the button shows the add item's focus state as its own.
+                                 When the add item is not active, `undefined` leaves the class to the button's own keyboard focus. -->
+                            <button type="button" igxButton="flat" igxRipple [class.igx-button--focused]="addItem.active || undefined">{{ resourceStrings.igx_combo_addCustomValues_placeholder }}</button>
                         }
                     </igx-combo-add-item>
                 }

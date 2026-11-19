@@ -2912,6 +2912,32 @@ describe('igxCombo', () => {
                     expect(dropdown.focusedItem).toBeNull();
                     expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBe(false);
                 });
+                it('should keep the keyboard focus state of the default add item button while another item is active', async () => {
+                    combo.allowCustomValues = true;
+                    combo.toggle();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+                    // matches a single item, so the list is a group header and 'Ohio'
+                    UIInteractions.triggerInputEvent(searchInput, 'Ohi');
+                    await wait();
+                    fixture.detectChanges();
+
+                    const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', dropdownContent);
+                    fixture.detectChanges();
+                    expect(dropdown.focusedItem.itemID).toEqual('Ohio');
+
+                    // e.g. Tab reaches the button while a consumer keeps the drop-down open by canceling `closing`
+                    const button: HTMLElement = fixture.debugElement.query(By.directive(IgxComboAddItemComponent))
+                        .nativeElement.querySelector('button');
+                    button.focus();
+                    button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
+                    fixture.detectChanges();
+                    expect(dropdown.focusedItem.itemID).toEqual('Ohio');
+                    expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBe(true);
+                });
                 it('should keep the item focus style on the add item when it has a custom template', async () => {
                     fixture = TestBed.createComponent(IgxComboCustomAddItemComponent);
                     fixture.detectChanges();
