@@ -438,6 +438,24 @@ $_theme: digest-schema($material-checkbox);
             }
         }
 
+        // A checkbox in a virtualized container that scrolls is reused for other records,
+        // so it shows the state of the new record right away (as with `igx-checkbox--plain`).
+        @include e(composite) {
+            @include virtualized-scrolling() {
+                transition: none !important;
+
+                &::after {
+                    transition: none !important;
+                }
+            }
+        }
+
+        @include e(composite-mark) {
+            @include virtualized-scrolling() {
+                transition: none !important;
+            }
+        }
+
         @include mx(focused, checked) {
             @include e(ripple) {
                 @extend %cbx-ripple--focused;

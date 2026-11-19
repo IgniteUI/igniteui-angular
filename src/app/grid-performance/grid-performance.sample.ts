@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { GridSelectionMode, IgxCellTemplateDirective, IgxColumnComponent, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 
 
 @Component({
@@ -7,7 +10,17 @@ import { GridSelectionMode, IgxColumnComponent, IgxGridComponent, IgxGridToolbar
     templateUrl: 'grid-performance.sample.html',
     styleUrls: ['grid-performance.sample.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxGridComponent, IgxGridToolbarComponent, IgxGridToolbarActionsComponent, IgxGridToolbarPinningComponent, IgxGridToolbarHidingComponent, IgxColumnComponent]
+    imports: [
+        IgxGridComponent,
+        IgxGridToolbarComponent,
+        IgxGridToolbarActionsComponent,
+        IgxGridToolbarPinningComponent,
+        IgxGridToolbarHidingComponent,
+        IgxColumnComponent,
+        IgxCellTemplateDirective,
+        IgxChipComponent,
+        IgxCheckboxComponent
+    ]
 })
 
 export class GridPerformanceSampleComponent implements OnInit {
