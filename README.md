@@ -54,7 +54,7 @@ This repository ships with **Copilot Skills** — structured knowledge files tha
 
 #### How It Works
 
-- **GitHub Copilot (VS Code / github.com)** — Skills should be discovered automatically via [`.github/copilot-instructions.md`](.github/copilot-instructions.md). No extra setup needed.
+- **GitHub Copilot** — Uses [`AGENTS.md`](AGENTS.md) for repository instructions on supported surfaces. Skills in standard directories are discovered automatically, while skills in `skills/` can be loaded on demand.
 - **Cursor** — Skills are picked up from the `skills/` directory. You can also reference them explicitly in `.cursorrules`.
 
 #### Manual Setup for Other IDEs

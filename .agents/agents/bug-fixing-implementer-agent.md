@@ -94,7 +94,7 @@ If you discover the root cause is in a **different place** than the orchestrator
 ## GREEN Phase — Fix the Bug
 
 1. Write the **minimum code** to make the failing reproduction test pass.
-2. Follow the conventions from `.github/copilot-instructions.md`.
+2. Follow the Coding Conventions in `AGENTS.md`.
 3. Follow existing coding patterns: signals, standalone components, `ChangeDetectionStrategy.OnPush`.
 4. Do not change the public API unless the fix requires it.
 5. Place source changes in `projects/igniteui-angular/<component>/src/`.
