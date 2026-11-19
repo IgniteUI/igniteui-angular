@@ -170,10 +170,6 @@
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]="!isRowPinningToTop ? pinnedRowHeight : 0"></div>
     </div>
 
-    <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
-    </div>
-
     <div class="igx-grid__loading-outlet">
         <div igxToggle #loadingOverlay>
             @if (shouldOverlayLoading) {
@@ -183,6 +179,9 @@
     </div>
 </div>
 
+<div class="igx-grid__addrow-snackbar">
+    <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]="snackbarDisplayTime">{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
+</div>
 
 <div class="igx-grid__tfoot" role="presentation" [style.height.px]="summaryRowHeight" #tfoot>
     <div tabindex="0" role="rowgroup" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
