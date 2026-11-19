@@ -87,6 +87,82 @@ export class ListWithSelectedItemComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
+        <igx-list>
+            <igx-list-item [isHeader]="true">Header</igx-list-item>
+            @for (item of items; track item.id) {
+                <igx-list-item [selected]="item.id === selectedId">
+                    <span igxListLineTitle>{{ item.name }}</span>
+                </igx-list-item>
+            }
+        </igx-list>
+    </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
+})
+export class SelectableListComponent extends BasicListComponent {
+    public selectedId: number | null = 2;
+    public items = [
+        { id: 1, name: 'Item 1' },
+        { id: 2, name: 'Item 2' },
+        { id: 3, name: 'Item 3' }
+    ];
+}
+
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list aria-multiselectable="true">
+            <igx-list-item [selected]="false">Ungrouped</igx-list-item>
+            <igx-list-item [isHeader]="true">Employees</igx-list-item>
+            <igx-list-item [selected]="true">Item 1</igx-list-item>
+            <igx-list-item [selected]="false" aria-description="Part-time">Item 2</igx-list-item>
+            <igx-list-item [isHeader]="true">Contractors</igx-list-item>
+            <igx-list-item [selected]="false">Item 3</igx-list-item>
+        </igx-list>
+    </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxListComponent, IgxListItemComponent]
+})
+export class GroupedSelectableListComponent extends BasicListComponent {
+}
+
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list role="listbox" tabindex="0">
+            <igx-list-item [isHeader]="true" aria-hidden="true">Header</igx-list-item>
+            <igx-list-item role="option" tabindex="-1" aria-selected="true">Item 1</igx-list-item>
+        </igx-list>
+    </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxListComponent, IgxListItemComponent]
+})
+export class ListWithOwnAttributesComponent extends BasicListComponent {
+}
+
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list [attr.tabindex]="tabIndex">
+            <igx-list-item [isHeader]="true" [attr.aria-hidden]="hidden">Header</igx-list-item>
+            <igx-list-item [attr.tabindex]="tabIndex" [attr.aria-selected]="selected" [attr.aria-description]="description">
+                Item 1
+            </igx-list-item>
+        </igx-list>
+    </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxListComponent, IgxListItemComponent]
+})
+export class ListWithBoundAttributesComponent extends BasicListComponent {
+    public tabIndex = '0';
+    public hidden = 'true';
+    public selected = 'true';
+    public description = 'Note';
+}
+
+@Component({
+    template: `
+    <div #wrapper>
         <igx-list [allowRightPanning]="allowRightPanning" [allowLeftPanning]="allowLeftPanning">
             <igx-list-item>Item 1</igx-list-item>
             <igx-list-item>Item 2</igx-list-item>

@@ -53,6 +53,14 @@ $theme: digest-schema($light-list);
                 z-index: 1;
             }
         }
+
+        @include m(selectable) {
+            @include e(item-base) {
+                &:focus-visible {
+                    outline: none;
+                }
+            }
+        }
     }
 
     @include b(igx-list-item) {

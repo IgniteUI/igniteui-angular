@@ -67,6 +67,48 @@ In order to access its elements, the list provides the following:
 - an array with items only
 - an array with headers only
 
+### Selectable lists and keyboard navigation
+When items bind `[selected]`, the list becomes an accessible [listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
+
+- The list gets `role="listbox"` and items get `role="option"` with `aria-selected`.
+- Tab focuses the list, then each item. Headers and hidden items are skipped.
+- Headers act as group names: each item gets the text of the header above it as its `aria-description`, and the headers are hidden from screen readers. A screen reader reads the item content followed by the group name, e.g. "Kate, selected, 1 of 8, Employees". An item that has its own `aria-description` in the template keeps it.
+
+| Key | Action |
+| :--- | :--- |
+| Arrow Down / Arrow Up | Next / previous item |
+| Home / End | First / last item |
+| Enter / Space | Clicks the item, so `(click)` and `itemClicked` fire |
+
+```html
+<igx-list aria-label="Employees">
+    @for (item of items(); track item.id) {
+        <igx-list-item [selected]="item.id === selectedId()" (click)="select(item)">
+            <span igxListLineTitle>{{ item.name }}</span>
+        </igx-list-item>
+    }
+</igx-list>
+```
+
+Recommendations:
+
+- **Name the list.** Set `aria-label`, or `aria-labelledby` pointing to a visible title. Headers do not name the list, and without a name some screen readers read the first item instead of the list.
+- **Mark multi-select lists.** If more than one item can be selected, set `aria-multiselectable="true"` on the list. Without it, screen readers treat the list as single-select and may not announce additional selections.
+- **Avoid interactive controls inside items.** An option should not contain buttons, links or checkboxes that can be focused. To show the selection with a checkbox, make it `inert` and bind it to the item state, so clicking it selects the item:
+
+```html
+<igx-list aria-label="Employees" aria-multiselectable="true">
+    @for (employee of employees; track employee.id) {
+        <igx-list-item [selected]="employee.selected" (click)="employee.selected = !employee.selected">
+            <span igxListLineTitle>{{ employee.name }}</span>
+            <igx-checkbox igxListAction inert [checked]="employee.selected"></igx-checkbox>
+        </igx-list-item>
+    }
+</igx-list>
+```
+
+Lists without `[selected]` are unchanged: they are not focusable, and controls inside their items work as before.
+
 ### Empty list template
 
 By default if there are no items in the list, the default empty list template will be displayed.
@@ -130,7 +172,7 @@ public rightPanPerformed(args) {
 | items  | Array of items in the list  |
 | headers  | Array of headers in the list  |
 | innerStyle  | Currently used inner style depending on whether the list is empty or not  |
-| role  | Gets the role of the list  |
+| role  | Gets/sets the role of the list - _listbox_ when items bind `selected`, _list_ otherwise  |
 
 
 ### Outputs
@@ -141,7 +183,7 @@ public rightPanPerformed(args) {
 | panStateChange  | Triggered when pan gesture is executed on list item  |
 | leftPan  | Triggered when left pan gesture is executed on list item  |
 | rightPan  | Triggered when right pan gesture is executed on list item  |
-| itemClicked  | Triggered when a list item has been clicked  |
+| itemClicked  | Triggered when a list item is clicked, or activated with Enter or Space  |
 
 
 ----------
@@ -184,6 +226,7 @@ All list items implement `IListChild`.
 | index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
+| selected  | Whether the item is selected, default _false_. Binding it makes the list a [listbox](#selectable-lists-and-keyboard-navigation)  |
 
 ### Directives
 
@@ -202,7 +245,7 @@ All list items implement `IListChild`.
 | :--- | :--- |
 | panState  | Gets the item's pan state  |
 | list  | Gets the list that is associated with the item  |
-| role  | Gets the role of the item within its respective list - _separator_ if isHeader is true and _listitem_ otherwise   |
+| role  | Gets/sets the role of the item - _separator_ for headers; for items _option_ in a listbox, _listitem_ otherwise   |
 | element  | Gets the native element that is associated with the item   |
 | width  | Gets the width of the item   |
 | maxLeft  | Gets the maximum left position of the item   |

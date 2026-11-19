@@ -2,7 +2,7 @@
     <section class="sample-content">
         <article class="sample-column">
             <h5 class="sample-title">Angular List</h5>
-            <igx-list [allowLeftPanning]="properties.enablePanning" [allowRightPanning]="properties.enablePanning">
+            <igx-list aria-multiselectable="true" [allowLeftPanning]="properties.enablePanning" [allowRightPanning]="properties.enablePanning">
                 <ng-template igxListItemLeftPanning>
                     <div class="pan pan--left">
                         <igx-icon>delete</igx-icon>Delete
@@ -13,10 +13,10 @@
                         <igx-icon>call</igx-icon>Dial
                     </div>
                 </ng-template>
-                <igx-list-item [isHeader]="true" selected>Employees List</igx-list-item>
+                <igx-list-item [isHeader]="true">Employees List</igx-list-item>
 
                 @for (employee of employeeItems; track employee) {
-                    <igx-list-item [selected]="employee.selected">
+                    <igx-list-item [selected]="!!employee.selected" (click)="employee.selected = !employee.selected">
                         @if(properties.addAvatarThumbnail) {
                             <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
                         }
@@ -30,19 +30,16 @@
                             <p igxListLineSubTitle>{{ employee.position }}</p>
                         }
                         @if(properties.addCheckboxAction) {
-                            <igx-checkbox
-                                igxListAction
-                                (click)="employee.selected = !employee.selected">
-                            </igx-checkbox>
+                            <igx-checkbox igxListAction inert [checked]="!!employee.selected"></igx-checkbox>
                         }
                         @if(properties.addIconAction) {
                             <igx-icon igxListAction>info</igx-icon>
                         }
                         @if(properties.addOutlinedButton){
-                            <button igxListAction igxButton="outlined">Text</button>
+                            <button igxListAction (click)="$event.stopPropagation()" igxButton="outlined">Text</button>
                         }
                         @if(properties.addContainedButton) {
-                            <button igxListAction igxButton="contained">Call</button>
+                            <button igxListAction (click)="$event.stopPropagation()" igxButton="contained">Call</button>
                         }
                     </igx-list-item>
                 }

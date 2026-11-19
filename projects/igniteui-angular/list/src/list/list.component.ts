@@ -7,6 +7,7 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
+    HostListener,
     Input,
     Output,
     QueryList,
@@ -17,7 +18,8 @@ import {
     inject,
     DestroyRef,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    afterEveryRender
 } from '@angular/core';
 
 import { IgxListItemComponent } from './list-item.component';
@@ -478,6 +480,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor() {
         super();
+        afterEveryRender({ write: () => this.updateAttributes() });
         onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
             this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
@@ -496,10 +499,38 @@ export class IgxListComponent extends IgxListBaseDirective {
         return null!;
     }
 
-    private _role = 'list';
+    /** Whether the list has been selectable, so its attributes and those of its items are kept in sync. */
+    private _synced = false;
+
+    /**
+     * A list whose items bind `selected` is a tab stop, and so are its options.
+     * A list that has never been selectable and its items are left untouched.
+     */
+    private updateAttributes() {
+        const selectable = this.selectable;
+        if (!selectable && !this._synced) {
+            return;
+        }
+        this._synced = true;
+        this.syncAttribute(this.element.nativeElement, 'tabindex', selectable ? '0' : null);
+        let header: IgxListItemComponent | null = null;
+        for (const item of this.children) {
+            if (item.list === this) {
+                header = item.isHeader ? item : header;
+                item.updateAttributes(selectable, header);
+            }
+        }
+    }
+
+    /** The role set by the app. While not set, the role depends on whether the list is selectable. */
+    private _role: string | undefined;
 
     /**
      * Gets/Sets the `role` attribute value.
+     *
+     * @remarks
+     * Defaults to `listbox` when its items bind `selected` and to `list` otherwise.
+     * Setting a role other than `listbox` turns off the listbox roles, the focus and the keyboard navigation of the list and its items.
      *
      * @example
      * ```typescript
@@ -509,11 +540,72 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role;
+        return this._role !== undefined ? this._role : this.selectable ? 'listbox' : 'list';
     }
 
     public set role(val: string) {
         this._role = val;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Whether the list follows the ARIA listbox pattern: an item that is not a header binds `selected`,
+     * and no role other than `listbox` is set on the list.
+     */
+    @HostBinding('class.igx-list--selectable')
+    public override get selectable(): boolean {
+        return (this._role === undefined || this._role === 'listbox') && super.selectable;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Moves the focus between the items of a list whose items bind `selected`.
+     * ArrowDown/ArrowUp go to the next/previous item, Home/End to the first/last one.
+     * Enter/Space activate the focused item like a click, so `itemClicked` and its `click` handlers fire.
+     * Keys pressed in the content of an item are not handled.
+     */
+    @HostListener('keydown', ['$event'])
+    public onKeydown(event: KeyboardEvent) {
+        if (!this.selectable) {
+            return;
+        }
+
+        const items = this.children.filter(item => item.list === this && !item.isHeader && !item.hidden);
+        const current = items.findIndex(item => item.element === event.target);
+        if (current === -1 && event.target !== this.element.nativeElement) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            if (current !== -1) {
+                event.preventDefault();
+                items[current].element.click();
+            }
+            return;
+        }
+
+        let next: number;
+        switch (event.key) {
+            case 'ArrowDown':
+                next = Math.min(current + 1, items.length - 1);
+                break;
+            case 'ArrowUp':
+                next = current === -1 ? items.length - 1 : Math.max(current - 1, 0);
+                break;
+            case 'Home':
+                next = 0;
+                break;
+            case 'End':
+                next = items.length - 1;
+                break;
+            default:
+                return;
+        }
+
+        event.preventDefault();
+        items[next]?.element.focus();
     }
 
     /**
