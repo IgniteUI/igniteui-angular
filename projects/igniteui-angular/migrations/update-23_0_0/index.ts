@@ -298,7 +298,8 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
         // `const { rowID } = args` and `({ rowID }: IRowToggleEventArgs) => ...`
         const migrateBindingElement = (node: tss.BindingElement, pattern: tss.ObjectBindingPattern) => {
             const property = node.propertyName ?? node.name;
-            if (!tss.isIdentifier(property)) {
+            // the name of a rest element, as in `{ rowKey, ...data }`, is a local variable rather than a member
+            if (node.dotDotDotToken || !tss.isIdentifier(property)) {
                 return;
             }
             const type = checker.getTypeAtLocation(pattern);
@@ -325,30 +326,43 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
             const properties = node.properties;
             const names = properties.map(p => (tss.isPropertyAssignment(p) || tss.isShorthandPropertyAssignment(p))
                 && (tss.isIdentifier(p.name) || tss.isStringLiteral(p.name)) ? p.name.text : undefined);
+            /** The properties that go, as the literal sets their replacement already */
+            const removed = new Set<number>();
             properties.forEach((property, index) => {
                 const name = names[index];
-                const removed = name && REMOVED_MEMBERS.find(m => m.member === name && typeMatches(type, m.definedIn));
-                if (!removed) {
+                const member = name && REMOVED_MEMBERS.find(m => m.member === name && typeMatches(type, m.definedIn));
+                if (!member) {
                     return;
                 }
-                if (!removed.replaceWith) {
-                    warn(property, removed.warning);
-                } else if (names.includes(removed.replaceWith)) {
-                    // the literal sets the replacement already, so the removed property goes, with the comma separating it
-                    const [start, end] = index < properties.length - 1
-                        ? [property.getStart(sourceFile), properties[index + 1].getStart(sourceFile)]
-                        : index > 0
-                            ? [properties[index - 1].getEnd(), property.getEnd()]
-                            : [property.getStart(sourceFile), property.getEnd()];
-                    removals.push({ start, end, text: '' });
+                if (!member.replaceWith) {
+                    warn(property, member.warning);
+                } else if (names.includes(member.replaceWith)) {
+                    removed.add(index);
                 } else if (tss.isShorthandPropertyAssignment(property)) {
                     // `{ rowID }` -> `{ rowKey: rowID }`, keeping the variable it reads
                     const start = property.name.getStart(sourceFile);
-                    changes.push({ start, end: start, text: `${removed.replaceWith}: ` });
+                    changes.push({ start, end: start, text: `${member.replaceWith}: ` });
                 } else {
-                    changes.push({ start: property.name.getStart(sourceFile), end: property.name.getEnd(), text: removed.replaceWith });
+                    changes.push({ start: property.name.getStart(sourceFile), end: property.name.getEnd(), text: member.replaceWith });
                 }
             });
+
+            // adjacent removed properties go as one range, with the commas separating them from the kept ones
+            const indices = [...removed];
+            for (let i = 0; i < indices.length;) {
+                const first = indices[i];
+                let last = first;
+                while (removed.has(last + 1)) {
+                    last++;
+                }
+                i += last - first + 1;
+                const [start, end] = last < properties.length - 1
+                    ? [properties[first].getStart(sourceFile), properties[last + 1].getStart(sourceFile)]
+                    : first > 0
+                        ? [properties[first - 1].getEnd(), properties[last].getEnd()]
+                        : [properties[first].getStart(sourceFile), properties[last].getEnd()];
+                removals.push({ start, end, text: '' });
+            }
         };
 
         // `carousel.indicatorsOrientation = 'bottom'`
@@ -432,10 +446,12 @@ const migrateTypeScript = (host: Tree, context: SchematicContext, update: Update
 
         visit(sourceFile);
 
+        // a removal in the value of a removed property, as in a nested literal, goes with it
+        const outer = removals.filter(r => !removals.some(o => o !== r && o.start <= r.start && r.end <= o.end));
         // an insertion where a removal ends is outside of it, as it applies after the removed text
-        const kept = changes.filter(c => !removals.some(r => r.start <= c.start && c.end <= r.end && c.start < r.end));
-        if (kept.length || removals.length) {
-            host.overwrite(entryPath, applyTextChanges(content, [...kept, ...removals]));
+        const kept = changes.filter(c => !outer.some(r => r.start <= c.start && c.end <= r.end && c.start < r.end));
+        if (kept.length || outer.length) {
+            host.overwrite(entryPath, applyTextChanges(content, [...kept, ...outer]));
         }
     }
 };
@@ -620,26 +636,50 @@ const migrateTemplateExpressions = (host: Tree, context: SchematicContext, updat
             context.logger.warn(`${templatePath}:${line}: ${message}`);
         };
 
-        // references are available in the whole template, also before the element declaring them
-        const references: Scope = new Map();
+        /**
+         * Collects the references declared in a view, which are available in the whole view, also before the element
+         * declaring them, and in the views nested in it. `ng-template` and the blocks hold views of their own.
+         */
         class ReferenceCollector extends TmplAstRecursiveVisitor {
+            public readonly references: Scope = new Map();
             public override visitElement(element: AngularCompiler.TmplAstElement) {
                 for (const reference of element.references) {
                     // a reference with a value, such as `#toggle="igxToggle"`, holds a directive rather than the component
                     const type = !reference.value && ELEMENT_TYPES[element.name];
-                    references.set(reference.name, type ? [type] : null);
+                    this.references.set(reference.name, type ? [type] : null);
                 }
                 super.visitElement(element);
             }
+            public override visitTemplate(template: AngularCompiler.TmplAstTemplate) {
+                template.references.forEach(r => this.references.set(r.name, null));
+            }
+            public override visitComponent(component: AngularCompiler.TmplAstComponent) {
+                component.references.forEach(r => this.references.set(r.name, null));
+                super.visitComponent(component);
+            }
+            public override visitIfBlock() { }
+            public override visitForLoopBlock() { }
+            public override visitSwitchBlock() { }
+            public override visitDeferredBlock() { }
+            public override visitBoundaryBlock() { }
         }
-        tmplAstVisitAll(new ReferenceCollector(), nodes);
 
-        const scopes: Scope[] = [references, new Map()];
+        const scopes: Scope[] = [];
         /** The elements whose bindings are visited, innermost last */
         const owners: string[] = [];
         const resolve = (name: string) => [...scopes].reverse().find(scope => scope.has(name))?.get(name) ?? null;
         const declare = (names: string[], type: (name: string) => string[] | null = () => null): Scope =>
             new Map(names.map(name => [name, type(name)]));
+        /** Visits the nodes of a view in a scope with the references they declare and the given variables */
+        const visitView = (visitor: AngularCompiler.TmplAstRecursiveVisitor, children: AngularCompiler.TmplAstNode[],
+            variables: Scope = new Map(), before?: () => void) => {
+            const collector = new ReferenceCollector();
+            tmplAstVisitAll(collector, children);
+            scopes.push(new Map([...collector.references, ...variables]));
+            before?.();
+            tmplAstVisitAll(visitor, children);
+            scopes.pop();
+        };
 
         const migrateRead = (ast: AngularCompiler.PropertyRead | AngularCompiler.SafePropertyRead) => {
             const receiver = ast.receiver;
@@ -681,10 +721,8 @@ const migrateTemplateExpressions = (host: Tree, context: SchematicContext, updat
                 owners.pop();
                 const rowSelector = [...template.attributes, ...template.inputs].some(a => a.name === 'igxRowSelector');
                 const contextVariables = template.variables.filter(v => !v.value || v.value === '$implicit').map(v => v.name);
-                scopes.push(declare(template.variables.map(v => v.name),
+                visitView(this, template.children, declare(template.variables.map(v => v.name),
                     name => rowSelector && contextVariables.includes(name) ? ['IgxRowSelectorTemplateDetails'] : null));
-                tmplAstVisitAll(this, template.children);
-                scopes.pop();
             }
             public override visitBoundText(text: AngularCompiler.TmplAstBoundText) {
                 text.value.visit(expressions);
@@ -700,32 +738,55 @@ const migrateTemplateExpressions = (host: Tree, context: SchematicContext, updat
             }
             public override visitForLoopBlock(block: AngularCompiler.TmplAstForLoopBlock) {
                 block.expression.visit(expressions);
-                scopes.push(declare([block.item, ...block.contextVariables].map(v => v.name)));
-                block.trackBy?.visit(expressions);
-                tmplAstVisitAll(this, block.children);
-                scopes.pop();
+                visitView(this, block.children, declare([block.item, ...block.contextVariables].map(v => v.name)),
+                    () => block.trackBy?.visit(expressions));
                 block.empty?.visit(this);
+            }
+            public override visitForLoopBlockEmpty(block: AngularCompiler.TmplAstForLoopBlockEmpty) {
+                visitView(this, block.children);
             }
             public override visitIfBlockBranch(branch: AngularCompiler.TmplAstIfBlockBranch) {
                 branch.expression?.visit(expressions);
-                scopes.push(declare(branch.expressionAlias ? [branch.expressionAlias.name] : []));
-                tmplAstVisitAll(this, branch.children);
-                scopes.pop();
+                visitView(this, branch.children, declare(branch.expressionAlias ? [branch.expressionAlias.name] : []));
             }
             public override visitSwitchBlock(block: AngularCompiler.TmplAstSwitchBlock) {
                 block.expression.visit(expressions);
                 super.visitSwitchBlock(block);
             }
+            public override visitSwitchBlockCaseGroup(group: AngularCompiler.TmplAstSwitchBlockCaseGroup) {
+                tmplAstVisitAll(this, group.cases);
+                visitView(this, group.children);
+            }
             public override visitSwitchBlockCase(block: AngularCompiler.TmplAstSwitchBlockCase) {
                 block.expression?.visit(expressions);
                 super.visitSwitchBlockCase(block);
+            }
+            public override visitDeferredBlock(block: AngularCompiler.TmplAstDeferredBlock) {
+                visitView(this, block.children);
+                tmplAstVisitAll(this, [block.placeholder, block.loading, block.error].filter(b => !!b));
+            }
+            public override visitDeferredBlockPlaceholder(block: AngularCompiler.TmplAstDeferredBlockPlaceholder) {
+                visitView(this, block.children);
+            }
+            public override visitDeferredBlockLoading(block: AngularCompiler.TmplAstDeferredBlockLoading) {
+                visitView(this, block.children);
+            }
+            public override visitDeferredBlockError(block: AngularCompiler.TmplAstDeferredBlockError) {
+                visitView(this, block.children);
+            }
+            public override visitBoundaryBlock(block: AngularCompiler.TmplAstBoundaryBlock) {
+                visitView(this, block.children);
+                tmplAstVisitAll(this, block.errorBlocks);
+            }
+            public override visitBoundaryErrorBlock(block: AngularCompiler.TmplAstBoundaryErrorBlock) {
+                visitView(this, block.children, declare(block.contextVariables.map(v => v.name)));
             }
             public override visitLetDeclaration(declaration: AngularCompiler.TmplAstLetDeclaration) {
                 declaration.value.visit(expressions);
                 scopes[scopes.length - 1].set(declaration.name, null);
             }
         }
-        tmplAstVisitAll(new TemplateVisitor(), nodes);
+        visitView(new TemplateVisitor(), nodes);
 
         if (changes.length) {
             host.overwrite(templatePath, applyTextChanges(content, changes));
@@ -753,31 +814,38 @@ const migrateComboSearchPlaceholder = (host: Tree, context: SchematicContext, up
             }
             const value = placeholder.value;
             const { line } = placeholder.sourceSpan.start;
-            if (hasAttribute(combo, ['resourceStrings', '[resourceStrings]']) || value.includes('{{')) {
+            const valueSpan = placeholder.valueSpan;
+            const quote = valueSpan && content[valueSpan.start.offset - 1] === '\'' ? '\'' : '"';
+            const bound = placeholder.name.startsWith('[');
+            // the parser decodes the entities of the value, so a bound expression is moved as it is written
+            const source = bound && valueSpan ? content.substring(valueSpan.start.offset, valueSpan.end.offset).trim() : value.trim();
+            const start = placeholder.sourceSpan.start.offset;
+            const end = placeholder.sourceSpan.end.offset;
+
+            // an empty placeholder fell back to the resource strings, so there's nothing to override
+            if (bound ? /^(['"])\1$/.test(source) : !value) {
+                const whitespace = content.substring(0, start).length - content.substring(0, start).trimEnd().length;
+                changes.push({ start: start - whitespace, end, text: '' });
+                continue;
+            }
+            // the empty value fallback can only be kept for a binding that can be read again, as in `placeholder ? { ... } : {}`
+            const readable = bound && /^[A-Za-z_$][\w$]*(\s*\??\.\s*[A-Za-z_$][\w$]*)*$/.test(source);
+            const literal = bound && /^'(?:[^'\\]|\\.)+'$|^"(?:[^"\\]|\\.)+"$/.test(source);
+            if (hasAttribute(combo, ['resourceStrings', '[resourceStrings]']) || value.includes('{{') || bound && !readable && !literal) {
                 context.logger.warn(`${templatePath}:${line + 1}: IgxComboComponent \`searchPlaceholder\` was removed. ` +
                     `Set the ${COMBO_PLACEHOLDER_STRINGS.map(s => `\`${s}\``).join(' and ')} resource strings instead.`);
                 continue;
             }
 
-            const valueSpan = placeholder.valueSpan;
-            const quote = valueSpan && content[valueSpan.start.offset - 1] === '\'' ? '\'' : '"';
-            let expression: string;
-            if (placeholder.name.startsWith('[')) {
-                // the parser decodes the entities of the value, so a bound expression is moved as it is written
-                const source = valueSpan ? content.substring(valueSpan.start.offset, valueSpan.end.offset).trim() : value.trim();
-                expression = value.includes('|') ? `(${source})` : source;
-            } else {
+            let expression = source;
+            if (!bound) {
                 const stringQuote = quote === '"' ? '\'' : '"';
-                const literal = `${stringQuote}${value.replace(/\\/g, '\\\\').replace(new RegExp(stringQuote, 'g'), `\\${stringQuote}`)}${stringQuote}`;
+                const text = `${stringQuote}${value.replace(/\\/g, '\\\\').replace(new RegExp(stringQuote, 'g'), `\\${stringQuote}`)}${stringQuote}`;
                 // encode the decoded text again, so that a quote in it doesn't end the attribute
-                expression = literal.replace(/&/g, '&amp;').replace(new RegExp(quote, 'g'), quote === '"' ? '&quot;' : '&#39;');
+                expression = text.replace(/&/g, '&amp;').replace(new RegExp(quote, 'g'), quote === '"' ? '&quot;' : '&#39;');
             }
-            const strings = COMBO_PLACEHOLDER_STRINGS.map(s => `${s}: ${expression}`).join(', ');
-            changes.push({
-                start: placeholder.sourceSpan.start.offset,
-                end: placeholder.sourceSpan.end.offset,
-                text: `[resourceStrings]=${quote}{ ${strings} }${quote}`
-            });
+            const strings = `{ ${COMBO_PLACEHOLDER_STRINGS.map(s => `${s}: ${expression}`).join(', ')} }`;
+            changes.push({ start, end, text: `[resourceStrings]=${quote}${readable ? `${expression} ? ${strings} : {}` : strings}${quote}` });
         }
 
         if (changes.length) {

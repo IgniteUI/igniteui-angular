@@ -52,30 +52,60 @@ describe(`Update to ${version}`, () => {
             appTree.create(templatePath,
                 `<igx-combo [data]="items" searchPlaceholder="Search..."></igx-combo>
 <igx-combo [data]="items" searchPlaceholder="Don't search"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="'Find'"></igx-combo>
 <igx-combo [data]="items" [searchPlaceholder]="placeholder"></igx-combo>
-<igx-combo [data]="items" [searchPlaceholder]="'search' | translate"></igx-combo>`);
+<igx-combo [data]="items" [searchPlaceholder]="settings?.placeholder"></igx-combo>`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent(templatePath)).toEqual(
                 `<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Search...', igx_combo_addCustomValues_placeholder: 'Search...' }"></igx-combo>
 <igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Don\\'t search', igx_combo_addCustomValues_placeholder: 'Don\\'t search' }"></igx-combo>
-<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: placeholder, igx_combo_addCustomValues_placeholder: placeholder }"></igx-combo>
-<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: ('search' | translate), igx_combo_addCustomValues_placeholder: ('search' | translate) }"></igx-combo>`);
+<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Find', igx_combo_addCustomValues_placeholder: 'Find' }"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="placeholder ? { igx_combo_filter_search_placeholder: placeholder, igx_combo_addCustomValues_placeholder: placeholder } : {}"></igx-combo>
+<igx-combo [data]="items" [resourceStrings]="settings?.placeholder ? { igx_combo_filter_search_placeholder: settings?.placeholder, igx_combo_addCustomValues_placeholder: settings?.placeholder } : {}"></igx-combo>`);
+        });
+
+        it('should remove an empty combo `searchPlaceholder`, which used the resource strings', async () => {
+            appTree.create(templatePath,
+                `<igx-combo [data]="items" searchPlaceholder=""></igx-combo>
+<igx-combo [data]="items" searchPlaceholder></igx-combo>
+<igx-combo
+    [data]="items"
+    [searchPlaceholder]="''"
+    placeholder="Location"></igx-combo>`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(
+                `<igx-combo [data]="items"></igx-combo>
+<igx-combo [data]="items"></igx-combo>
+<igx-combo
+    [data]="items"
+    placeholder="Location"></igx-combo>`);
+        });
+
+        it('should leave a bound combo `searchPlaceholder` that would be evaluated again in the resource strings', async () => {
+            const content = `<igx-combo [data]="items" [searchPlaceholder]="'search' | translate"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="getPlaceholder()"></igx-combo>
+<igx-combo [data]="items" [searchPlaceholder]="a &amp;&amp; b"></igx-combo>`;
+            appTree.create(templatePath, content);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(content);
         });
 
         it('should keep the combo `searchPlaceholder` entities escaped in the resource strings binding', async () => {
             appTree.create(templatePath,
                 `<igx-combo [data]="items" searchPlaceholder="Search &quot;items&quot; &amp; more"></igx-combo>
-<igx-combo [data]="items" [searchPlaceholder]="a &amp;&amp; b"></igx-combo>
-<igx-combo [data]="items" [searchPlaceholder]="a && b"></igx-combo>`);
+<igx-combo [data]="items" searchPlaceholder='Say "search"'></igx-combo>`);
 
             const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
 
             expect(tree.readContent(templatePath)).toEqual(
                 `<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: 'Search &quot;items&quot; &amp; more', igx_combo_addCustomValues_placeholder: 'Search &quot;items&quot; &amp; more' }"></igx-combo>
-<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: a &amp;&amp; b, igx_combo_addCustomValues_placeholder: a &amp;&amp; b }"></igx-combo>
-<igx-combo [data]="items" [resourceStrings]="{ igx_combo_filter_search_placeholder: a && b, igx_combo_addCustomValues_placeholder: a && b }"></igx-combo>`);
+<igx-combo [data]="items" [resourceStrings]='{ igx_combo_filter_search_placeholder: "Say \\"search\\"", igx_combo_addCustomValues_placeholder: "Say \\"search\\"" }'></igx-combo>`);
         });
 
         it('should leave the combo `searchPlaceholder` when the combo already binds resource strings', async () => {
@@ -205,6 +235,46 @@ describe(`Update to ${version}`, () => {
 @for (pager of pagers; track pager) {
     <span>{{ pager.isFirstPageDisabled }}</span>
 }`);
+        });
+
+        it('should resolve template references in the view declaring them', async () => {
+            appTree.create(templatePath,
+                `<ng-template #custom>
+    <app-pager #pager></app-pager>
+    <button [disabled]="pager.isFirstPageDisabled"></button>
+</ng-template>
+<ng-template #library>
+    <button [disabled]="pager.isFirstPageDisabled"></button>
+    <igx-paginator #pager></igx-paginator>
+</ng-template>
+@if (show) {
+    <igx-paginator #paginator></igx-paginator>
+} @else {
+    <app-pager #paginator></app-pager>
+    <span>{{ paginator.isLastPageDisabled }}</span>
+}
+<igx-paginator #outer></igx-paginator>
+<ng-template>{{ outer.isLastPageDisabled }}</ng-template>`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(templatePath)).toEqual(
+                `<ng-template #custom>
+    <app-pager #pager></app-pager>
+    <button [disabled]="pager.isFirstPageDisabled"></button>
+</ng-template>
+<ng-template #library>
+    <button [disabled]="pager.isFirstPage"></button>
+    <igx-paginator #pager></igx-paginator>
+</ng-template>
+@if (show) {
+    <igx-paginator #paginator></igx-paginator>
+} @else {
+    <app-pager #paginator></app-pager>
+    <span>{{ paginator.isLastPageDisabled }}</span>
+}
+<igx-paginator #outer></igx-paginator>
+<ng-template>{{ outer.isLastPage }}</ng-template>`);
         });
     });
 
@@ -602,6 +672,51 @@ export class TestComponent {
             expect(content).toContain(`const last: IPathSegment = { rowKey: id, rowIslandKey: 'orders' };`);
             expect(content).toContain(`const untyped = { rowID: id };`);
             expect(content).toContain(`return [both, last, { rowKey: id, rowIslandKey: 'orders' }, { rowKey: rowID, rowIslandKey: 'items' }];`);
+        });
+
+        it('should remove adjacent removed properties of an object literal together', async () => {
+            appTree.create(tsPath,
+                `import { Component } from '@angular/core';
+import { IGridEditDoneEventArgs } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public getArgs(id: string, data: any) {
+        const end: IGridEditDoneEventArgs = { rowKey: id, rowData: data, oldValue: data, rowID: id, primaryKey: id };
+        const start: IGridEditDoneEventArgs = { rowID: id, primaryKey: id, rowKey: id, rowData: data };
+        return [end, start];
+    }
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            const content = tree.readContent(tsPath);
+            expect(content).toContain(`const end: IGridEditDoneEventArgs = { rowKey: id, rowData: data, oldValue: data };`);
+            expect(content).toContain(`const start: IGridEditDoneEventArgs = { rowKey: id, rowData: data };`);
+        });
+
+        it('should not rename the rest element of a destructuring', async () => {
+            appTree.create(tsPath,
+                `import { Component } from '@angular/core';
+import { IRowDataEventArgs } from 'igniteui-angular';
+
+@Component({
+    selector: 'app-test',
+    template: ''
+})
+export class TestComponent {
+    public onRowAdded(event: IRowDataEventArgs) {
+        const { primaryKey, ...data } = event;
+        return [primaryKey, data];
+    }
+}`);
+
+            const tree = await schematicRunner.runSchematic(migrationName, {}, appTree);
+
+            expect(tree.readContent(tsPath)).toContain(`const { rowKey: primaryKey, ...data } = event;`);
         });
 
         it('should replace removed members of library types reached through a local base class', async () => {
