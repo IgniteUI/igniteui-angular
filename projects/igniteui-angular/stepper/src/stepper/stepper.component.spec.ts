@@ -1441,6 +1441,42 @@ describe('Rendering Tests', () => {
             }
         });
 
+        it('should keep moving the focus while an arrow key is held and prevent the default of the arrows in vertical orientation', () => {
+            stepper.orientation = IgxStepperOrientation.Vertical;
+            fix.detectChanges();
+            stepper.steps[1].nativeElement.focus();
+
+            const events = [false, true].map(repeat => {
+                const event = new KeyboardEvent('keydown', { key: 'ArrowDown', repeat, bubbles: true, cancelable: true });
+                document.activeElement.dispatchEvent(event);
+                fix.detectChanges();
+                return event;
+            });
+
+            expect(events.map(event => event.defaultPrevented)).toEqual([true, true]);
+            expect(document.activeElement).toBe(stepper.steps[3].nativeElement);
+        });
+
+        it('should ignore the navigation and activation keys pressed with a modifier', () => {
+            stepper.orientation = IgxStepperOrientation.Horizontal;
+            fix.detectChanges();
+
+            const stepElement = stepper.steps[1].nativeElement;
+            stepElement.focus();
+
+            for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const) {
+                for (const key of ['ArrowRight', 'ArrowLeft', 'Home', 'End', 'Enter', ' ']) {
+                    const event = new KeyboardEvent('keydown', { key, [modifier]: true, bubbles: true, cancelable: true });
+                    stepElement.dispatchEvent(event);
+                    fix.detectChanges();
+
+                    expect(event.defaultPrevented, `${modifier} + ${key}`).toBe(false);
+                    expect(document.activeElement, `${modifier} + ${key}`).toBe(stepElement);
+                    expect(stepper.steps[1].active, `${modifier} + ${key}`).toBeFalsy();
+                }
+            }
+        });
+
         it('should wrap the focus around and skip the disabled steps on arrow key press', () => {
             for (const orientation of [IgxStepperOrientation.Horizontal, IgxStepperOrientation.Vertical]) {
                 const [nextKey, prevKey] = orientation === IgxStepperOrientation.Horizontal ?

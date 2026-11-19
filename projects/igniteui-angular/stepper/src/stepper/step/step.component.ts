@@ -28,7 +28,16 @@ import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 import { CarouselAnimationDirection, IgxSlideComponentBase } from 'igniteui-angular/carousel';
-import { isLeftToRight, PlatformUtil } from 'igniteui-angular/core';
+import {
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    endKey,
+    homeKey,
+    isLeftToRight
+} from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -57,7 +66,8 @@ let NEXT_ID = 0;
     styleUrl: 'step.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
-        { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent }
+        { provide: IGX_STEP_COMPONENT, useExisting: IgxStepComponent },
+        IgxKeyBindingsService
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, IgxRippleDirective, NgTemplateOutlet]
@@ -66,9 +76,9 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
     public stepper = inject<IgxStepper>(IGX_STEPPER_COMPONENT);
     public cdr = inject(ChangeDetectorRef);
     public renderer = inject(Renderer2);
-    protected platform = inject(PlatformUtil);
     protected stepperService = inject(IgxStepperService);
     private element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
 
     /**
@@ -449,21 +459,18 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         }
     }
 
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public handleKeydown(event: KeyboardEvent): void {
-        if (!this._focused) {
-            return;
-        }
-        const key = event.key;
-        if (this.isHorizontal && (key === this.platform.KEYMAP.ARROW_UP || key === this.platform.KEYMAP.ARROW_DOWN)) {
-            return;
-        }
-        if (!(this.platform.isNavigationKey(key) || this.platform.isActivationKey(event))) {
-            return;
-        }
-        event.preventDefault();
-        this.handleNavigation(key);
+    constructor() {
+        super();
+
+        this._keyBindings
+            .configure({ skip: () => !this._focused, bindingDefaults: { repeat: true } })
+            .set(homeKey, () => this.accessibleSteps[0]?.nativeElement.focus())
+            .set(endKey, () => this.accessibleSteps.at(-1)?.nativeElement.focus())
+            .set(arrowUp, (event) => this.onVerticalArrowKey(event, this.previousStep), { preventDefault: false })
+            .set(arrowDown, (event) => this.onVerticalArrowKey(event, this.nextStep), { preventDefault: false })
+            .set(arrowLeft, () => this.onHorizontalArrowKey(false))
+            .set(arrowRight, () => this.onHorizontalArrowKey(true))
+            .setActivateHandler(() => this.activate());
     }
 
     /** @hidden @internal */
@@ -487,37 +494,6 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         this.activate();
     }
 
-    /** @hidden @internal */
-    public handleNavigation(key: string): void {
-        // the horizontal arrows follow the reading direction
-        const reversed = this.isHorizontal && !isLeftToRight(this.nativeElement);
-
-        switch (key) {
-            case this.platform.KEYMAP.HOME:
-                this.accessibleSteps[0]?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.END:
-                this.accessibleSteps.at(-1)?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_UP:
-                this.previousStep?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                this.nextStep?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_LEFT:
-                (reversed ? this.nextStep : this.previousStep)?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.ARROW_RIGHT:
-                (reversed ? this.previousStep : this.nextStep)?.nativeElement.focus();
-                break;
-            case this.platform.KEYMAP.SPACE:
-            case this.platform.KEYMAP.ENTER:
-                this.activate();
-                break;
-        }
-    }
-
     /**
      * @hidden @internal
      * Activates the step, playing the animations for the current orientation.
@@ -531,6 +507,19 @@ export class IgxStepComponent extends ToggleAnimationPlayer implements IgxStep, 
         } else {
             this.changeVerticalActiveStep();
         }
+    }
+
+    private onVerticalArrowKey(event: KeyboardEvent, step: IgxStepComponent | undefined): void {
+        if (this.isHorizontal) {
+            return;
+        }
+        event.preventDefault();
+        step?.nativeElement.focus();
+    }
+
+    private onHorizontalArrowKey(next: boolean): void {
+        const reversed = this.isHorizontal && !isLeftToRight(this.nativeElement);
+        (next !== reversed ? this.nextStep : this.previousStep)?.nativeElement.focus();
     }
 
     private get accessibleSteps(): IgxStepComponent[] {

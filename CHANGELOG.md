@@ -11,6 +11,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSliderComponent`
     - The left and right arrow keys now prevent their default action when they move a thumb, so they no longer also scroll the page or a scrollable container. Previously the default action ran as well.
     - The arrow keys combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move a thumb. The browser default runs. Previously the thumb ignored the modifiers and handled these keys as the plain arrow keys.
+- `IgxStepperComponent`
+    - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the steps or activate a step. The step ignores them, and the browser default runs. Previously the step ignored the modifiers and handled these keys as the plain keys.
 - `IgxTabsComponent`
     - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the tab headers or select a tab. The tab header ignores them, and the browser default runs. Previously the tab header ignored the modifiers and handled these keys as the plain keys.
 
