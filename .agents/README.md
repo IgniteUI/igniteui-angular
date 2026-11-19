@@ -404,7 +404,7 @@ src/app/<component>/                              demo pages
 The system also relies on repository-specific guidance and internal operational skills in:
 
 ```text
-.github/copilot-instructions.md
+AGENTS.md
 skills/igniteui-angular-components/SKILL.md
 skills/igniteui-angular-grids/SKILL.md
 skills/igniteui-angular-theming/SKILL.md
@@ -451,7 +451,7 @@ The agent infrastructure follows the [Agentic Collaboration Standard (ACS)](http
 
 - Put new agents in `.agents/agents/` and new internal (contributor-facing) skills in `.agents/skills/<skill-name>/SKILL.md`.
 - Public, user-facing skills that ship with the package stay in the root [`skills/`](../skills/) folder.
-- Repository coding standards stay in [`.github/copilot-instructions.md`](../.github/copilot-instructions.md) because GitHub Copilot only reads them from there.
+- Repository coding standards live in [`AGENTS.md`](../AGENTS.md), the single source of shared instructions. `CLAUDE.md` only imports it (`@AGENTS.md`) so Claude Code loads the same instructions.
 - VS Code discovers `.agents/skills/` by default, but GitHub Copilot (VS Code and github.com) only discovers custom agents in `.github/agents/`. Each agent therefore has a small pointer file at `.github/agents/<name>.md` that tells Copilot to read and follow `.agents/agents/<name>.md`.
 - A pointer carries a copy of its agent's frontmatter, because Copilot takes `tools`, `agents`, and `handoffs` from the frontmatter. When you change an agent's frontmatter, copy it to the pointer unchanged; edit behavior only in `.agents/agents/`.
 - Every agent lists the `read/readFile` tool so its pointer can load the full definition.
