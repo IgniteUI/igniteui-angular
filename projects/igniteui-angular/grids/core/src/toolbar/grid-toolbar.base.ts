@@ -70,7 +70,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
      */
 
     @Output()
-    public closing = new EventEmitter<ToggleViewEventArgs>();
+    public closing = new EventEmitter<ToggleViewCancelableEventArgs>();
     /**
      * Emits an event after the toggle container is closed.
      */

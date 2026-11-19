@@ -23,6 +23,13 @@ export declare interface IExpressionTree {
 /* skipEventDetails */
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs, IExpressionTree {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
+    // inherited from IBaseEventArgs, but nothing sets or reads it on a tree
+    /* blazorCSSuppress */
+    /**
+     * Provides reference to the owner component.
+     */
+    owner?: any;
+    /* blazorCSSuppress */
     /* alternateName: treeType */
     /* mustCoerceToInt */
     type?: FilteringExpressionsTreeType;

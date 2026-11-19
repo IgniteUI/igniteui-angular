@@ -14,6 +14,7 @@ export enum FilteringLogic {
  */
 export declare interface IFilteringExpression {
     fieldName: string;
+    /* blazorCSSuppress */
     condition?: IFilteringOperation | null;
     conditionName?: string | null;
     searchVal?: any;

@@ -23,6 +23,7 @@ export interface IgxExporterEvent {
     /* alternateType: ExporterOptionsBase */
     options: IgxExporterOptions;
     grid: GridType;
+    /* blazorCSSuppress */
     cancel: boolean;
 }
 

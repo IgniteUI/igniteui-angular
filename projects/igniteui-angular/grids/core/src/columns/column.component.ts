@@ -590,6 +590,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public headerClasses = '';
 
+    /* blazorOnlyScript */
+    /* treatAsRef */
     /**
      * Sets conditional style properties on the column header.
      * Similar to `ngStyle` it accepts an object literal where the keys are
@@ -627,6 +629,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
     @Input()
     public headerGroupClasses = '';
 
+    /* blazorOnlyScript */
+    /* treatAsRef */
     /**
      * Sets conditional style properties on the column header group wrapper.
      * Similar to `ngStyle` it accepts an object literal where the keys are

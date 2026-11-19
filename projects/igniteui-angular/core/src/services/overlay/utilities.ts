@@ -33,6 +33,7 @@ export class IgxOverlayOutletDirective {
     }
 }
 
+/* blazorCSSuppress */
 /* blazorAlternateName: GridHorizontalAlignment */
 export enum HorizontalAlignment {
     Left = -1,
@@ -40,6 +41,7 @@ export enum HorizontalAlignment {
     Right = 0
 }
 
+/* blazorCSSuppress */
 /* blazorAlternateName: GridVerticalAlignment */
 export enum VerticalAlignment {
     Top = -1,
@@ -97,6 +99,7 @@ export interface OutOfViewPort {
     forward: number;
 }
 
+/* blazorCSSuppress */
 export interface PositionSettings {
     /* mustCoerceToInt */
     /** Direction in which the component should show */
@@ -183,6 +186,7 @@ export interface OverlayAnimationEventArgs extends IBaseEventArgs {
     animationType: 'open' | 'close';
 }
 
+/* blazorCSSuppress */
 export interface Size {
     /** Gets or sets the horizontal component of Size */
     width: number;

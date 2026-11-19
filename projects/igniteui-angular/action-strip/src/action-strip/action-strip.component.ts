@@ -123,6 +123,7 @@ export class IgxActionStripComponent implements IgxActionStripToken, AfterViewIn
         this._context.set(value);
     }
 
+    /* blazorSuppress */
     public get context(): any {
         return this._context();
     }

@@ -74,7 +74,7 @@ export interface IColumnState {
     dataType: GridColumnDataType;
     hasSummary: boolean;
     field: string;
-    width: any;
+    width?: string;
     header: string;
     resizable: boolean;
     searchable: boolean;

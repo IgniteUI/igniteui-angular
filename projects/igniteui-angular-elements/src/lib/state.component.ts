@@ -22,6 +22,7 @@ export interface IGridStateInfo {
     /* blazorPrimitiveValue */
     expansion?: any[];
     rowIslands?: IGridStateCollection[];
+    /* blazorCSSuppress */
     id?: string;
     pivotConfiguration?: IPivotConfiguration;
 }
