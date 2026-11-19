@@ -97,11 +97,16 @@
                 </div>
             }
             @if (isAddButtonVisible()) {
-                <igx-combo-add-item [itemHeight]="itemHeight"
+                <igx-combo-add-item #addItem [itemHeight]="itemHeight"
                     [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
-                    [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length">
-                    <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">
-                    </ng-container>
+                    [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="virtualScrollContainer.igxForOf.length"
+                    [customTemplate]="!!addItemTemplate">
+                    @if (addItemTemplate) {
+                        <ng-container *ngTemplateOutlet="addItemTemplate"></ng-container>
+                    } @else {
+                        <!-- Focus stays on the list, so the button shows the add item's focus state as its own. -->
+                        <button type="button" igxButton="flat" igxRipple [class.igx-button--focused]="addItem.active">{{ resourceStrings.igx_combo_addCustomValues_placeholder }}</button>
+                    }
                 </igx-combo-add-item>
             }
         </div>
@@ -117,9 +122,6 @@
 </ng-template>
 <ng-template #empty>
     <span>{{resourceStrings.igx_combo_empty_message}}</span>
-</ng-template>
-<ng-template #addItemDefault let-control>
-    <button type="button" igxButton="flat" igxRipple>{{ resourceStrings.igx_combo_addCustomValues_placeholder }}</button>
 </ng-template>
 <ng-template #headerItemBase let-item let-key="valueKey" let-groupKey="groupKey">
     {{ item[key] }}

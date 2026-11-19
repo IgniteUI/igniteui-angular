@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - The default "Add item" button no longer takes the background or outline of a focused list item when it is reached with the keyboard. It shows the focus state of a flat button instead (#17992).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
