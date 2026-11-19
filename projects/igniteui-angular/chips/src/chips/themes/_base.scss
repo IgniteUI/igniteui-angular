@@ -119,9 +119,36 @@ $_theme: digest-schema($material-chip);
             }
         }
 
+        // Set by the chip after its initial render, so that it does not animate to its initial state.
+        @include m(animated) {
+            @include e(item) {
+                transition:
+                    color .2s $ease-in-out-quad,
+                    background-color .2s $ease-in-out-quad,
+                    border-color .2s $ease-in-out-quad,
+                    box-shadow .2s $ease-in-out-quad;
+            }
+        }
+
+        // A chip in a virtualized container that scrolls is reused for other records,
+        // so it shows the state of the new record right away.
+        @include e(item) {
+            @include virtualized-scrolling() {
+                transition: none !important;
+            }
+        }
+
+        @include e(select) {
+            @include virtualized-scrolling() {
+                transition: none !important;
+            }
+        }
+
         @include e(start) {
             @extend %chip-part;
-            gap: sizable(rem(3px), rem(6px), rem(8px));
+            --_gap: #{sizable(rem(3px), rem(6px), rem(8px))};
+
+            gap: var(--_gap);
 
             > igx-avatar,
             > igx-circular-bar {
@@ -467,12 +494,38 @@ $_theme: digest-schema($material-chip);
             max-width: rem(24px);
             opacity: 1;
             z-index: 1;
-            transition: max-width .12s $ease-in-out-quad, opacity .12s $ease-in-out-quad .06s;
+            transition:
+                max-width .12s $ease-in-out-quad,
+                margin-inline-end .12s $ease-in-out-quad,
+                opacity .12s $ease-in-out-quad .06s;
             transition-behavior: allow-discrete;
 
             @starting-style {
                 max-width: 0;
                 opacity: 0;
+            }
+
+            // When a prefix follows the icon, the gap between them is offset while the icon
+            // is collapsed, so that it opens and closes with the icon instead of in one step.
+            &:not(:last-child) {
+                @starting-style {
+                    margin-inline-end: calc(var(--_gap) * -1);
+                }
+            }
+        }
+
+        // Set by `animate.leave` while the select icon is removed on deselection.
+        // It reverses the showing: the icon fades out first, then its space collapses.
+        @include e(select, $m: 'leaving') {
+            max-width: 0;
+            opacity: 0;
+            transition:
+                max-width .12s $ease-in-out-quad .06s,
+                margin-inline-end .12s $ease-in-out-quad .06s,
+                opacity .12s $ease-in-out-quad;
+
+            &:not(:last-child) {
+                margin-inline-end: calc(var(--_gap) * -1);
             }
         }
 

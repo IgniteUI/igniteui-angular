@@ -45,6 +45,7 @@ Using `igxFor` will do the following changes to the templated DOM:
 - A virtual scrollbar will be rendered as a sibling of the display container along the direction of scrolling specified
 - A number of items will be rendered that is enough to cover the dimensions of the container
 - When the end-user scrolls the rendered items will be reused but their bindings will be updated to refer to items that would usually be visible in the new scroll position
+- While the items scroll, and for 150ms after the last scroll, the display container has the `igx-display-container--scrolling` class. The chips and checkboxes in the items do not animate under it, so a reused item shows the state of its new record right away instead of animating from the previous one
 
 ***Note:*** As of version 5.3.0, `igxFor` will simulate smooth scrolling by utilizing offset positioning of its display container. This requires that its parent element has the appropriate dimensions and `overflow: hidden; position: relative;` rules applied for the best end-user experience.
 
