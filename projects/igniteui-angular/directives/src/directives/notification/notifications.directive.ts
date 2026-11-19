@@ -89,7 +89,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      * @hidden
      */
     public override open() {
-        clearInterval(this.timeoutId);
+        clearTimeout(this.timeoutId);
 
         const overlaySettings: OverlaySettings = {
             positionStrategy: this.strategy,
