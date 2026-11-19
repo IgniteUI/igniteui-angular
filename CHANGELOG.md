@@ -17,6 +17,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSplitterComponent`
     - On a bar too short for the drag handle, the two expanders and the 48px gaps between them, the drag handle keeps 25% of the bar length and the gaps get narrower. Previously the gaps stayed 48px, so the handle shrank and the expanders touched the ends of the bar (#18013).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
