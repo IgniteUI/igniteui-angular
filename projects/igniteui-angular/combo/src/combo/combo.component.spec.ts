@@ -3187,7 +3187,7 @@ describe('igxCombo', () => {
 
                 combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
                 fixture.detectChanges();
-                expect(combo.dropdown.focusedItem.itemID).toEqual('Ohio');
+                expect((combo.dropdown.focusedItem as IgxComboItemComponent).itemID).toEqual('Ohio');
 
                 // e.g. Tab reaches the button while a consumer keeps the drop-down open by canceling `closing`
                 const button: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`))
@@ -3195,7 +3195,7 @@ describe('igxCombo', () => {
                 button.focus();
                 button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
                 fixture.detectChanges();
-                expect(combo.dropdown.focusedItem.itemID).toEqual('Ohio');
+                expect((combo.dropdown.focusedItem as IgxComboItemComponent).itemID).toEqual('Ohio');
                 expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeTrue();
             });
             it('should keep the item focus style on the add item when it has a custom template', () => {
