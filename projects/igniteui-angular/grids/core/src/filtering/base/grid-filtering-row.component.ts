@@ -317,11 +317,12 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
      * Event handler for keydown on the input group's prefix.
      */
     public onPrefixKeyDown(event: KeyboardEvent) {
-        if (this.platform.isActivationKey(event) && this.dropDownConditions.collapsed) {
+        if ((this.platform.isActivationKey(event) || (event.altKey && event.key === this.platform.KEYMAP.ARROW_DOWN))
+            && this.dropDownConditions.collapsed) {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
         } else if (event.key === this.platform.KEYMAP.TAB && !this.dropDownConditions.collapsed) {
-            this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
+            this.dropDownConditions.close();
         }
     }
 
@@ -343,7 +344,7 @@ export class IgxGridFilteringRowComponent implements OnInit, AfterViewInit, OnDe
                 return;
             }
             this.commitInput();
-        } else if (event.altKey && (event.key === this.platform.KEYMAP.ARROW_DOWN)) {
+        } else if (event.altKey && (event.key === this.platform.KEYMAP.ARROW_DOWN) && (!event.defaultPrevented || this.isUnaryCondition)) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (this.platform.isFilteringKeyCombo(event)) {
