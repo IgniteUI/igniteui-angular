@@ -22,7 +22,7 @@ import { IComboFilteringOptions, IGX_COMBO_COMPONENT } from './combo.common';
 import {
     IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangedEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
-import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
+import { IgxComboAddItemDirective, IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
 import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
@@ -41,6 +41,7 @@ const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
 const CSS_CLASS_ADDBUTTON = 'igx-combo__add-item';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
+const CSS_CLASS_BUTTON_FOCUSED = 'igx-button--focused';
 const CSS_CLASS_HEADERITEM = 'igx-drop-down__header';
 const CSS_CLASS_SCROLLBAR_VERTICAL = 'igx-vhelper--vertical';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -932,6 +933,7 @@ describe('igxCombo', () => {
                     IgxComboBindingDataAfterInitComponent,
                     IgxComboFormComponent,
                     IgxComboInTemplatedFormComponent,
+                    IgxComboCustomAddItemComponent,
                 ]
             }).compileComponents();
         }));
@@ -3139,11 +3141,81 @@ describe('igxCombo', () => {
                 expect(combo.collapsed).toBeFalsy();
                 expect(combo.displayValue).toEqual('');
 
-                const focusedItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_FOCUSED}`));
-                focusedItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                const addItem = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`));
+                addItem.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
                 expect(combo.collapsed).toBeFalsy();
                 expect(combo.displayValue).toEqual('My New Custom Item');
+            });
+            it('should show the focus state of the default add item button instead of the item focus style', () => {
+                combo.allowCustomValues = true;
+                fixture.detectChanges();
+                combo.toggle();
+                fixture.detectChanges();
+                combo.searchValue = 'My New Custom Item';
+                combo.handleInputChange();
+                fixture.detectChanges();
+                expect(combo.filteredData.length).toEqual(0);
+
+                const addItem: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`)).nativeElement;
+                const button = addItem.querySelector('button');
+                expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeFalse();
+
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+                fixture.detectChanges();
+                expect(combo.dropdown.focusedItem instanceof IgxComboAddItemComponent).toBeTrue();
+                expect(addItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalse();
+                expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeTrue();
+
+                // the add item is the only entry, so ArrowUp goes back to the search input
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                UIInteractions.triggerEventHandlerKeyDown('ArrowUp', dropdownContent);
+                fixture.detectChanges();
+                expect(combo.dropdown.focusedItem).toBeNull();
+                expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeFalse();
+            });
+            it('should keep the keyboard focus state of the default add item button while another item is active', () => {
+                combo.allowCustomValues = true;
+                fixture.detectChanges();
+                combo.toggle();
+                fixture.detectChanges();
+                // matches a single item, so the list is a group header and 'Ohio'
+                combo.searchValue = 'Ohi';
+                combo.handleInputChange();
+                fixture.detectChanges();
+                expect(combo.isAddButtonVisible()).toBeTrue();
+
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+                fixture.detectChanges();
+                expect((combo.dropdown.focusedItem as IgxComboItemComponent).itemID).toEqual('Ohio');
+
+                // e.g. Tab reaches the button while a consumer keeps the drop-down open by canceling `closing`
+                const button: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`))
+                    .nativeElement.querySelector('button');
+                button.focus();
+                button.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
+                fixture.detectChanges();
+                expect((combo.dropdown.focusedItem as IgxComboItemComponent).itemID).toEqual('Ohio');
+                expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBeTrue();
+            });
+            it('should keep the item focus style on the add item when it has a custom template', () => {
+                fixture = TestBed.createComponent(IgxComboCustomAddItemComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                combo.toggle();
+                fixture.detectChanges();
+                combo.searchValue = 'Not existing';
+                combo.handleInputChange();
+                fixture.detectChanges();
+
+                const addItem: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`)).nativeElement;
+                expect(addItem.querySelector('.custom-add-item')).not.toBeNull();
+                expect(addItem.classList.contains(CSS_CLASS_FOCUSED)).toBeFalse();
+
+                combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+                fixture.detectChanges();
+                expect(combo.dropdown.focusedItem instanceof IgxComboAddItemComponent).toBeTrue();
+                expect(addItem.classList.contains(CSS_CLASS_FOCUSED)).toBeTrue();
             });
             it('should enable/disable filtering at runtime', fakeAsync(() => {
                 combo.open(); // Open combo - all data items are in filteredData
@@ -3977,6 +4049,24 @@ class IgxComboInTemplatedFormComponent {
         }
     }
 }
+
+@Component({
+    template: `
+    <igx-combo #combo [data]="items" [allowCustomValues]="true">
+        <ng-template igxComboAddItem>
+            <span class="custom-add-item">Add a custom item</span>
+        </ng-template>
+    </igx-combo>
+    `,
+    imports: [IgxComboComponent, IgxComboAddItemDirective]
+})
+class IgxComboCustomAddItemComponent {
+    @ViewChild('combo', { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+
+    public items = ['One', 'Two', 'Three'];
+}
+
 @Injectable()
 export class LocalService {
     public getData() {

@@ -1356,6 +1356,24 @@ describe('IgxSimpleCombo', () => {
             expect(document.activeElement).toEqual(addItemButton.nativeElement);
         }));
 
+        it('should show the focus state of the default AddItem button instead of the item focus style', async () => {
+            fixture.componentInstance.allowCustomValues = true;
+            fixture.detectChanges();
+            combo.open();
+            fixture.detectChanges();
+            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(0);
+
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+            fixture.detectChanges();
+            expect(combo.dropdown.focusedItem).toBe(combo.addItem);
+
+            const addItem: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`)).nativeElement;
+            expect(addItem.classList.contains(CSS_CLASS_FOCUSED)).toBe(false);
+            expect(addItem.querySelector('button').classList.contains('igx-button--focused')).toBe(true);
+        });
+
         it('should close when an item is clicked on', () => {
             spyOn(combo, 'close').and.callThrough();
             combo.open();
