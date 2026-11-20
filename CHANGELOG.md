@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### Behavioral Changes
 
+- `IgxAccordionComponent`
+    - The arrow keys, `Home` and `End` combined with `Ctrl`, `Shift` or `Meta`, and `Home` and `End` combined with `Alt`, no longer move the focus between the panel headers. The browser default runs. Previously the accordion ignored these modifiers and handled the keys as the plain keys. `Alt` + `Shift` + `ArrowUp` / `ArrowDown` still collapse or expand all panels.
 - `IgxCalendarComponent`, `IgxMonthPickerComponent`
     - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta`, and `PageUp` and `PageDown` combined with `Ctrl`, `Alt` or `Meta`, no longer navigate or select in the dates, months or years. The browser default runs. Previously these modifiers were ignored and the keys were handled as the plain keys. `Shift` + `PageUp` / `PageDown` still move one year.
 - `IgxDialogComponent`

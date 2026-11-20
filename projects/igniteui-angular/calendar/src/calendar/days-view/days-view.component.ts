@@ -233,10 +233,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     constructor() {
         super();
 
-        // The handlers prevent the default and stop the propagation of the keys they handle,
-        // and a held key runs its handler again.
         this._keyBindings
-            .configure({ bindingDefaults: { preventDefault: false, repeat: true } })
+            .configure({ skip: [], bindingDefaults: { preventDefault: false, repeat: true } })
             .set(arrowRight, (event) => this.onArrowRight(event))
             .set(arrowLeft, (event) => this.onArrowLeft(event))
             .set(arrowUp, (event) => this.onArrowUp(event))
