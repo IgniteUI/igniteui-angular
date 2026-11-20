@@ -589,7 +589,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected get ghostLeft() {
         if (this.ghostElement) {
-            return parseInt(this.ghostElement.style.left, 10) + this._ghostHostX;
+            // Includes the margin, like the pageX the setter takes.
+            const ghostMarginLeft = parseInt((this.document.defaultView!.getComputedStyle(this.ghostElement) as any)['margin-left'], 10);
+            return parseInt(this.ghostElement.style.left, 10) + ghostMarginLeft + this._ghostHostX;
         }
         return undefined!;
     }
@@ -605,7 +607,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected get ghostTop() {
         if (this.ghostElement) {
-            return parseInt(this.ghostElement.style.top, 10) + this._ghostHostY;
+            // Includes the margin, like the pageY the setter takes.
+            const ghostMarginTop = parseInt((this.document.defaultView!.getComputedStyle(this.ghostElement) as any)['margin-top'], 10);
+            return parseInt(this.ghostElement.style.top, 10) + ghostMarginTop + this._ghostHostY;
         }
         return undefined!;
     }
