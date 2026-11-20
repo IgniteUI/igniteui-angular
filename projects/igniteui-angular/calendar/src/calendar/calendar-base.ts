@@ -20,19 +20,16 @@ import {
     WEEKDAYS,
     I18N_FORMATTER
 } from 'igniteui-angular/core';
-import { KeyboardNavigationService } from './calendar.services';
 
 /** @hidden @internal */
 @Directive({
     selector: '[igxCalendarBase]',
-    standalone: true,
-    providers: [KeyboardNavigationService]
+    standalone: true
 })
 export class IgxCalendarBaseDirective implements ControlValueAccessor {
     protected _destroyRef = inject(DestroyRef);
     protected platform = inject(PlatformUtil);
     protected _localeId = inject(LOCALE_ID);
-    protected keyboardNavigation? = inject(KeyboardNavigationService);
     protected cdr? = inject(ChangeDetectorRef);
     protected i18nFormatter = inject(I18N_FORMATTER);
 

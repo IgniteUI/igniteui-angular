@@ -33,7 +33,6 @@ import {
 } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
-import { KeyboardNavigationService } from '../calendar.services';
 import { DayDigitPipe } from "../day-digit.pipe";
 import { getDateFormatter } from 'igniteui-i18n-core';
 
@@ -45,8 +44,7 @@ let NEXT_ID = 0;
             multi: true,
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxDaysViewComponent
-        },
-        KeyboardNavigationService
+        }
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',

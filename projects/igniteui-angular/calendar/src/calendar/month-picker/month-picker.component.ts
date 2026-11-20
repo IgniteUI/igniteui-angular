@@ -8,7 +8,8 @@ import {
   AfterViewInit,
   OnInit,
   ChangeDetectionStrategy,
-  ViewEncapsulation
+  ViewEncapsulation,
+  inject
 } from "@angular/core";
 import { NgTemplateOutlet } from "@angular/common";
 import { NG_VALUE_ACCESSOR } from "@angular/forms";
@@ -18,9 +19,22 @@ import { IgxYearsViewComponent } from "../years-view/years-view.component";
 import { IgxDaysViewComponent } from "../days-view/days-view.component";
 import { IgxCalendarView } from "../calendar";
 import { IgxCalendarBaseDirective } from "../calendar-base";
-import { KeyboardNavigationService } from "../calendar.services";
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { CalendarDay, formatToParts, IgxDateFormatterPipe } from 'igniteui-angular/core';
+import {
+    CalendarDay,
+    formatToParts,
+    IgxDateFormatterPipe,
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    endKey,
+    homeKey,
+    pageDownKey,
+    pageUpKey,
+    shiftKey
+} from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 @Component({
@@ -30,10 +44,7 @@ let NEXT_ID = 0;
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxMonthPickerComponent,
         },
-        {
-            multi: false,
-            provide: KeyboardNavigationService
-        },
+        IgxKeyBindingsService
     ],
     selector: "igx-month-picker",
     templateUrl: "month-picker.component.html",
@@ -49,6 +60,8 @@ let NEXT_ID = 0;
     ]
 })
 export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements OnInit, AfterViewInit {
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+
     /**
      * Sets/gets the `id` of the month picker.
      * If not set, the `id` will have value `"igx-month-picker-0"`.
@@ -105,7 +118,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     /**
      * @hidden
      */
-    @HostListener("keydown.pageup", ["$event"])
     public previousPage(event?: KeyboardEvent) {
         event?.preventDefault();
         this.previousViewDate = this.viewDate;
@@ -127,7 +139,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
     /**
      * @hidden
      */
-    @HostListener("keydown.pagedown", ["$event"])
     public nextPage(event?: KeyboardEvent) {
         event?.preventDefault();
         this.previousViewDate = this.viewDate;
@@ -349,23 +360,37 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
         return this.activeView === IgxCalendarView.Year;
     }
 
+    constructor() {
+        super();
+
+        const inWrapper = (handler: (event: KeyboardEvent) => void) => (event: KeyboardEvent) => {
+            if (this.isWrapperEvent(event)) {
+                handler(event);
+            }
+        };
+
+        this._keyBindings
+            .configure({ bindingDefaults: { preventDefault: false, repeat: true } })
+            .set(arrowUp, inWrapper((event) => this.onArrowUp(event)))
+            .set(arrowDown, inWrapper((event) => this.onArrowDown(event)))
+            .set(arrowLeft, inWrapper((event) => this.onArrowLeft(event)))
+            .set(arrowRight, inWrapper((event) => this.onArrowRight(event)))
+            .setActivateHandler(inWrapper((event) => this.onEnter(event)))
+            .set(homeKey, inWrapper((event) => this.onHome(event)))
+            .set(endKey, inWrapper((event) => this.onEnd(event)))
+            .set(pageUpKey, (event) => this.isWrapperEvent(event) ? this.handlePageUp(event) : this.previousPage(event))
+            .set(pageDownKey, (event) => this.isWrapperEvent(event) ? this.handlePageDown(event) : this.nextPage(event))
+            .set([shiftKey, pageUpKey], inWrapper((event) => this.handlePageUp(event)))
+            .set([shiftKey, pageDownKey], inWrapper((event) => this.handlePageDown(event)));
+    }
+
     public ngOnInit() {
         this.activeView = IgxCalendarView.Year;
     }
 
     public ngAfterViewInit() {
-        this.keyboardNavigation!
-            .attachKeyboardHandlers(this.wrapper, this)
-            .set("ArrowUp", this.onArrowUp)
-            .set("ArrowDown", this.onArrowDown)
-            .set("ArrowLeft", this.onArrowLeft)
-            .set("ArrowRight", this.onArrowRight)
-            .set("Enter", this.onEnter)
-            .set(" ", this.onEnter)
-            .set("Home", this.onHome)
-            .set("End", this.onEnd)
-            .set("PageUp", this.handlePageUp)
-            .set("PageDown", this.handlePageDown);
+        // The wrapper lives as long as the picker; the service removes its listeners on destroy.
+        this._keyBindings.observeElement(this.wrapper.nativeElement);
 
         this.activeView$.subscribe((view) => {
             this.resetActiveDescendant();
@@ -375,10 +400,6 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
                 previousValue: this.previousViewDate,
                 currentValue: this.viewDate
             });
-        });
-
-        this._destroyRef.onDestroy(() => {
-            this.keyboardNavigation!.detachKeyboardHandlers();
         });
     }
 
@@ -392,6 +413,10 @@ export class IgxMonthPickerComponent extends IgxCalendarBaseDirective implements
 
         this.showActiveDay = false;
         this._onTouchedCallback();
+    }
+
+    private isWrapperEvent(event: KeyboardEvent): boolean {
+        return !!this.wrapper && event.currentTarget === this.wrapper.nativeElement;
     }
 
     private handlePageUpDown(event: KeyboardEvent, delta: number) {

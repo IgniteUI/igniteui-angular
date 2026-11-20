@@ -818,6 +818,66 @@ describe("IgxCalendar - ", () => {
                     expect(calendar.value).toEqual(lastDay.date.native);
                 });
 
+                it("should not handle the keys pressed outside the dates", () => {
+                    const { activeDate, viewDate, value } = calendar;
+                    // For example, a button in a custom header
+                    const button = document.createElement('button');
+                    dom.query(By.css('igx-calendar')).nativeElement.prepend(button);
+                    button.focus();
+
+                    for (const key of ["ArrowRight", "ArrowDown", "Home", "End", "PageDown", "Enter", " "]) {
+                        const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+                        button.dispatchEvent(event);
+                        fixture.detectChanges();
+
+                        expect(event.defaultPrevented, key).toBe(false);
+                        expect(calendar.activeDate, key).toEqual(activeDate);
+                        expect(calendar.viewDate, key).toEqual(viewDate);
+                        expect(calendar.value, key).toEqual(value);
+                    }
+                });
+
+                it("should keep the keys that the months view handles from a keydown listener on the calendar", () => {
+                    const hostKeys: string[] = [];
+                    dom.query(By.css('igx-calendar')).nativeElement
+                        .addEventListener("keydown", (event: KeyboardEvent) => hostKeys.push(event.key));
+
+                    // The days view does not stop the keys
+                    UIInteractions.triggerKeyDownEvtUponElem("ArrowRight", component.nativeElement);
+                    fixture.detectChanges();
+                    expect(hostKeys).toEqual(["ArrowRight"]);
+
+                    calendar.activeView = IgxCalendarView.Year;
+                    fixture.detectChanges();
+                    hostKeys.length = 0;
+
+                    for (const key of ["ArrowRight", "ArrowDown", "Home", "End"]) {
+                        UIInteractions.triggerKeyDownEvtUponElem(key, component.nativeElement);
+                        fixture.detectChanges();
+                    }
+                    expect(hostKeys).toEqual([]);
+                });
+
+                it("should ignore the navigation keys pressed with a modifier, except Shift + PageUp/PageDown", () => {
+                    const { activeDate, viewDate, value } = calendar;
+                    const keys = ["ArrowRight", "ArrowDown", "Home", "End", "Enter"];
+                    const cases: [string, KeyboardEventInit][] = [
+                        ...(["altKey", "ctrlKey", "metaKey"] as const).flatMap(modifier =>
+                            [...keys, "PageDown"].map((key): [string, KeyboardEventInit] => [key, { [modifier]: true }])),
+                        ...keys.map((key): [string, KeyboardEventInit] => [key, { shiftKey: true }])
+                    ];
+
+                    for (const [key, init] of cases) {
+                        const label = `${JSON.stringify(init)} + ${key}`;
+                        component.nativeElement.dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, ...init }));
+                        fixture.detectChanges();
+
+                        expect(calendar.activeDate, label).toEqual(activeDate);
+                        expect(calendar.viewDate, label).toEqual(viewDate);
+                        expect(calendar.value, label).toEqual(value);
+                    }
+                });
+
                 it("Calendar keyboard navigation - Arrow keys", () => {
                     // Initial active date must be the first if no date is selected
                     // and no prior user interaction has been made
