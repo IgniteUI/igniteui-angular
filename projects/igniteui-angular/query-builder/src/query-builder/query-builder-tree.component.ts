@@ -1196,6 +1196,7 @@ export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {
 
         this.groupContextMenuDropDown = groupContextMenuDropDown;
         this.groupContextMenuDropDownOverlaySettings.target = targetButton;
+        this.groupContextMenuDropDownOverlaySettings.excludeFromOutsideClick = [targetButton];
         this.groupContextMenuDropDownOverlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             horizontalDirection: HorizontalAlignment.Right,
             horizontalStartPoint: HorizontalAlignment.Left,
