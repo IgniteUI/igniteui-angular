@@ -510,6 +510,23 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Properties & events tests', () => {
+                it('should prevent interaction with an open calendar while disabled', async () => {
+                    dateRange.open();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    const calendarElement = document.querySelector<HTMLElement>('igx-calendar')!;
+
+                    expect(calendarElement.inert).toBeFalsy();
+
+                    dateRange.setDisabledState(true);
+                    detectChanges();
+                    expect(calendarElement.inert).toBeTruthy();
+
+                    dateRange.setDisabledState(false);
+                    detectChanges();
+                    expect(calendarElement.inert).toBeFalsy();
+                });
+
                 it('should display placeholder', () => {
                     detectChanges();
                     expect(singleInputElement.nativeElement.placeholder).toEqual('MM/dd/yyyy - MM/dd/yyyy');
