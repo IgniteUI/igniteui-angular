@@ -249,6 +249,24 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
         });
 
+        it('should prevent interaction with the open dropdown while disabled', async () => {
+            select.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            const panel = selectList.nativeElement.closest('.igx-drop-down') as HTMLElement;
+
+            expect(select.collapsed).toBeFalsy();
+            expect(panel.inert).toBeFalsy();
+
+            select.setDisabledState(true);
+            fixture.detectChanges();
+            expect(panel.inert).toBeTruthy();
+
+            select.setDisabledState(false);
+            fixture.detectChanges();
+            expect(panel.inert).toBeFalsy();
+        });
+
         it('should close dropdown on item click', async () => {
             const selectedItemEl = selectList.children[2];
             expect(select.collapsed).toBeTruthy();
