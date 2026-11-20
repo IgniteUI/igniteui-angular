@@ -8,6 +8,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 
 ## 22.3.0
 
