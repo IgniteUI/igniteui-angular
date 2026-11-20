@@ -3207,6 +3207,32 @@ describe('igxDrag window auto-scroll', () => {
         expect(drag.ghostElement).toBeTruthy();
     };
 
+    it('should scroll the window and move the ghost with it while dragging near the bottom of the viewport', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const maxScrollY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        expect(maxScrollY).toBeGreaterThan(0);
+
+        await dragToViewportBottom(firstDrag);
+        const ghostRect = firstDrag.ghostElement.getBoundingClientRect();
+
+        await vi.waitFor(() => expect(window.scrollY).toBeGreaterThan(0));
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toBe(ghostRect.top);
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toBe(ghostRect.left);
+
+        // The ghost extends the document while it moves down, but scrolling stops (within one 5px step)
+        // at the size the document had when scrolling started.
+        await vi.waitFor(() => expect(window.scrollY).toBeGreaterThanOrEqual(maxScrollY));
+        const finalScrollY = window.scrollY;
+        await wait(100);
+        expect(window.scrollY).toBe(finalScrollY);
+        expect(finalScrollY).toBeLessThan(maxScrollY + 5);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toBe(ghostRect.top);
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toBe(ghostRect.left);
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, ghostRect.left, ghostRect.top + finalScrollY);
+        expect(firstDrag.ghostElement).toBeNull();
+    });
+
     it('should stop scrolling the window when destroyed while auto-scrolling', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         await dragToViewportBottom(firstDrag);
