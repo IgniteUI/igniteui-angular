@@ -218,6 +218,29 @@ describe("Days View Component", () => {
             expect(instance.selectedDates).toEqual([instance.activeDate]);
         });
 
+        it("should keep moving while an arrow key is held", () => {
+            for (const repeat of [false, true, true]) {
+                el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", repeat, bubbles: true }));
+            }
+            fixture.detectChanges();
+
+            expect(instance.activeDate).toEqual(firstDay.add("day", 3).native);
+        });
+
+        it("should select the active date with Enter and Space without preventing their default action", () => {
+            for (const [key, day] of [["Enter", 4], [" ", 5]] as const) {
+                instance.activeDate = firstDay.add("day", day).native;
+                fixture.detectChanges();
+
+                const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+                el.dispatchEvent(event);
+                fixture.detectChanges();
+
+                expect(event.defaultPrevented, key).toBe(false);
+                expect(instance.selectedDates, key).toEqual([instance.activeDate]);
+            }
+        });
+
         it("should skip disabled dates when navigating with arrow keys", () => {
             instance.activeDate = firstDay.add("day", 10).native;
             fixture.detectChanges();

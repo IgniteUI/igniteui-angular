@@ -27,7 +27,15 @@ import {
     getNextActiveDate,
     isDate,
     isDateInRanges,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    endKey,
+    enterKey,
+    homeKey
 } from 'igniteui-angular/core';
 
 
@@ -52,6 +60,8 @@ export const DAY_INTERVAL_TOKEN = new InjectionToken<DayInterval>(
 })
 export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     protected dayInterval = inject<DayInterval>(DAY_INTERVAL_TOKEN);
+    // `self`: the months and years views provide their own instance.
+    private readonly _keyBindings = inject(IgxKeyBindingsService, { self: true });
 
     @HostBinding("attr.role")
     @Input()
@@ -190,12 +200,23 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
 
     constructor() {
         this.initLocale();
+
+        // The handlers prevent the default and stop the propagation of the keys they handle,
+        // and a held key runs its handler again.
+        this._keyBindings
+            .configure({ bindingDefaults: { preventDefault: false, repeat: true } })
+            .set(arrowDown, (event) => this.onKeydownArrowDown(event))
+            .set(arrowUp, (event) => this.onKeydownArrowUp(event))
+            .set(arrowRight, (event) => this.onKeydownArrowRight(event))
+            .set(arrowLeft, (event) => this.onKeydownArrowLeft(event))
+            .set(homeKey, (event) => this.onKeydownHome(event))
+            .set(endKey, (event) => this.onKeydownEnd(event))
+            .set(enterKey, (event) => this.onKeydownEnter(event));
     }
 
     /**
      * @hidden
      */
-    @HostListener("keydown.arrowdown", ["$event"])
     public onKeydownArrowDown(event: KeyboardEvent) {
         this.navigateTo(event, IgxCalendarNavDirection.NEXT, 3);
     }
@@ -203,7 +224,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener("keydown.arrowup", ["$event"])
     public onKeydownArrowUp(event: KeyboardEvent) {
         this.navigateTo(event, IgxCalendarNavDirection.PREV, 3);
     }
@@ -211,7 +231,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener("keydown.arrowright", ["$event"])
     public onKeydownArrowRight(event: KeyboardEvent) {
         this.navigateTo(event, IgxCalendarNavDirection.NEXT, 1);
     }
@@ -219,7 +238,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener("keydown.arrowleft", ["$event"])
     public onKeydownArrowLeft(event: KeyboardEvent) {
         this.navigateTo(event, IgxCalendarNavDirection.PREV, 1);
     }
@@ -227,7 +245,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener("keydown.home", ["$event"])
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
@@ -239,7 +256,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener("keydown.end", ["$event"])
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
@@ -251,7 +267,6 @@ export abstract class IgxCalendarViewDirective implements ControlValueAccessor {
     /**
      * @hidden
      */
-    @HostListener("keydown.enter", ["$event"])
     public onKeydownEnter(event: KeyboardEvent) {
         event.stopPropagation();
 

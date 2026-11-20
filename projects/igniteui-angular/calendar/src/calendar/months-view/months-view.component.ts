@@ -16,7 +16,7 @@ import {
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, IgxKeyBindingsService, PlatformUtil } from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -31,6 +31,7 @@ let NEXT_ID = 0;
             provide: DAY_INTERVAL_TOKEN,
             useValue: "month",
         },
+        IgxKeyBindingsService
     ],
     selector: "igx-months-view",
     templateUrl: "months-view.component.html",
