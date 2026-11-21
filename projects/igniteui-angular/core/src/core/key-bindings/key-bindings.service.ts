@@ -1,7 +1,6 @@
 import {
     ChangeDetectorRef,
     DestroyRef,
-    DOCUMENT,
     ElementRef,
     Injectable,
     NgZone,
@@ -61,11 +60,11 @@ function hasModifiers(event: KeyboardEvent): boolean {
 }
 
 /**
- * Joins keys and modifiers into a `+` separated combination key, sorted
- * alphabetically. `modifiers` must already be sorted.
+ * Joins the modifiers and the key into a `+` separated combination key.
+ * `modifiers` must already be sorted.
  */
-function createCombinationKey(keys: string[], modifiers: string[]): string {
-    return modifiers.concat(keys.length > 1 ? [...keys].sort() : keys).join('+');
+function createCombinationKey(key: string | undefined, modifiers: string[]): string {
+    return key ? modifiers.concat(key).join('+') : modifiers.join('+');
 }
 
 //#endregion
@@ -188,13 +187,11 @@ export class IgxKeyBindingsService {
     private readonly _host = injectHost();
     private readonly _zone = inject(NgZone);
     private readonly _cdr = inject(ChangeDetectorRef);
-    private readonly _document = inject(DOCUMENT);
     private readonly _isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
     private readonly _destroyRef = inject(DestroyRef);
 
     private readonly _bindings = new Map<string, KeyBinding>();
     private readonly _allowedKeys = new Set<string>();
-    private readonly _pressedKeys = new Set<string>();
     /** Events already handled, for an observed element inside the host. */
     private readonly _handledEvents = new WeakSet<Event>();
     /** One controller for the host and window listeners, one per observed element. */
@@ -218,12 +215,7 @@ export class IgxKeyBindingsService {
         }
 
         const { signal } = this._createListeners();
-        this._zone.runOutsideAngular(() => {
-            this._listen(this._host, signal);
-            // No keyup arrives when focus leaves the host or the window with a key down.
-            this._host.addEventListener('focusout', this._onHostFocusOut, { signal });
-            this._document.defaultView?.addEventListener('blur', this._releasePressedKeys, { signal });
-        });
+        this._zone.runOutsideAngular(() => this._listen(this._host, signal));
     }
 
     //#region Public API
@@ -276,8 +268,11 @@ export class IgxKeyBindingsService {
      * matter.
      *
      * @remarks
-     * A combination can be bound once. A second binding throws in dev mode and
-     * is ignored otherwise, so the first binding stays.
+     * A combination holds modifiers and at most one other key: the service
+     * matches the modifiers of the event and its own key, and does not track
+     * which other keys are down. A combination can be bound once. Either
+     * mistake throws in dev mode and is ignored otherwise, so the first
+     * binding stays.
      *
      * @param keys - A `KeyboardEvent.key` value, or the keys of a combination.
      * @param handler - Runs inside the Angular zone when the binding matches.
@@ -293,7 +288,17 @@ export class IgxKeyBindingsService {
      */
     public set(keys: string | string[], handler: IgxKeyBindingHandler, options?: IgxKeyBindingOptions): this {
         const parsed = parseKeys(keys);
-        const combination = createCombinationKey(parsed.keys, sortModifiers(parsed.modifiers));
+
+        if (parsed.keys.length > 1) {
+            if (isDevMode()) {
+                throw new Error(
+                    `IgxKeyBindingsService: a combination takes at most one key besides the modifiers, got "${parsed.keys.join('+')}".`
+                );
+            }
+            return this;
+        }
+
+        const combination = createCombinationKey(parsed.keys[0], sortModifiers(parsed.modifiers));
 
         if (this._bindings.has(combination)) {
             if (isDevMode()) {
@@ -372,18 +377,6 @@ export class IgxKeyBindingsService {
         element.addEventListener('keyup', this._onKeyEvent, { signal });
     }
 
-    private readonly _releasePressedKeys = (): void => {
-        this._pressedKeys.clear();
-    };
-
-    /** Focus that moves inside the host keeps the keys: their keyup still reaches the host. */
-    private readonly _onHostFocusOut = (event: FocusEvent): void => {
-        const next = event.relatedTarget as Node | null;
-        if (!next || !this._host.contains(next)) {
-            this._releasePressedKeys();
-        }
-    };
-
     private readonly _onKeyEvent = (event: Event): void => {
         // An observed element inside the host sees the event before the host.
         if (this._handledEvents.has(event)) {
@@ -400,46 +393,31 @@ export class IgxKeyBindingsService {
 
     private _handleKeyEvent(event: KeyboardEvent, scope: Element): void {
         const key = event.key.toLowerCase();
-        const isModifier = MODIFIERS.has(key);
 
         if (this._shouldSkip(event, key, scope)) {
-            // A skipped keyup still releases the key.
-            if (!isModifier && isKeyup(event)) {
-                this._pressedKeys.delete(key);
-            }
             return;
         }
 
-        if (!isModifier) {
-            this._pressedKeys.add(key);
-        }
-
-        const binding = this._findBinding(event, key, isModifier);
+        const binding = this._findBinding(event, key);
         if (binding) {
             this._runBinding(binding, event);
         }
-
-        if (!isModifier && isKeyup(event)) {
-            this._pressedKeys.delete(key);
-        }
     }
 
-    private _findBinding(event: KeyboardEvent, key: string, isModifier: boolean): KeyBinding | undefined {
-        if (!isModifier && !hasModifiers(event) && this._pressedKeys.size === 1) {
-            // Fast path: a single key without modifiers is its own combination.
-            return this._bindings.get(key);
+    /**
+     * Finds the binding of the modifiers of the event and its key. Only the
+     * event decides: no key state carries over from earlier events, so a
+     * keyup that never reaches the host cannot leave a key held.
+     */
+    private _findBinding(event: KeyboardEvent, key: string): KeyBinding | undefined {
+        if (MODIFIERS.has(key)) {
+            const modifiers = getActiveModifiers(event, isKeyup(event) ? key : undefined);
+            return this._bindings.get(createCombinationKey(undefined, modifiers));
         }
 
-        const modifiers = getActiveModifiers(event, isModifier && isKeyup(event) ? key : undefined);
-        const binding = this._bindings.get(createCombinationKey(Array.from(this._pressedKeys), modifiers));
-
-        // Overlapping presses leave several keys down. Fall back to the current
-        // key, so its binding still runs.
-        if (!binding && this._pressedKeys.size > 1) {
-            return this._bindings.get(createCombinationKey([key], modifiers));
-        }
-
-        return binding;
+        // Fast path: a key without modifiers is its own combination.
+        const combination = hasModifiers(event) ? createCombinationKey(key, getActiveModifiers(event)) : key;
+        return this._bindings.get(combination);
     }
 
     private _runBinding(binding: KeyBinding, event: KeyboardEvent): void {
