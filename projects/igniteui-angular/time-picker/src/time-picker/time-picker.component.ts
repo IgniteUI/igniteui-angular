@@ -863,6 +863,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public okButtonClick(): void {
+        if (this.disabled) {
+            return;
+        }
+
         this.updateValue(this._selectedDate);
         this.close();
     }
@@ -1254,7 +1258,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                     return;
                 }
                 const value = this.parseToDate(this.value);
-                if ((this.dateTimeEditor.value as Date)?.getTime() !== value?.getTime()) {
+                if (this.disabled) {
+                    this.setSelectedValue(this._dateValue);
+                    this.dateTimeEditor.value = value;
+                } else if ((this.dateTimeEditor.value as Date)?.getTime() !== value?.getTime()) {
                     this.updateValue(this._selectedDate);
                 }
                 // Do not focus the input if clicking outside in dropdown mode
