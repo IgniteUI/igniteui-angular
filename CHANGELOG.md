@@ -4,8 +4,18 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.1
 
+### New Functionality
+
+- `IgxSplitterComponent`
+    - The splitter follows `--ig-size`. The bar is 6px, 12px or 18px thick, the drag handle 4px, 6px or 8px with a 2px, 8px or 8px radius, and the expanders grow with them. The default is small, which is the size from before, so a splitter without `--ig-size` looks the same. `--size` and `--ig-splitter-size` still set the small size, and the medium and large steps add to it. A `--border-radius` or `--ig-splitter-border-radius` that you set applies at every size. The 48px gap around the drag handle is measured from the icon box of the design, so each expander is 5px further from the handle than before at the default size, 3px in the Indigo theme. In the Indigo theme the idle bar is 1px, 4px or 8px thick by size, also with an overridden size, where the 1px was thicker before (2px for `--ig-splitter-size: 10px`), and the area around the bar that takes the pointer grows with the bar. Previously the splitter had one size, so an app that sets `--ig-size` to medium or large on the splitter or on an ancestor now gets a thicker bar (#18013).
+        ```html
+        <igx-splitter style="--ig-size: var(--ig-size-large)">...</igx-splitter>
+        ```
+
 ### Bug Fixes
 
+- `IgxSplitterComponent`
+    - On a bar too short for the drag handle, the two expanders and the 48px gaps between them, the drag handle keeps 25% of the bar length and the gaps get narrower. Previously the gaps stayed 48px, so the handle shrank and the expanders touched the ends of the bar (#18013).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).

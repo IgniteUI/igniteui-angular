@@ -1,5 +1,4 @@
 /* stylelint-disable max-nesting-depth */
-@use 'sass:map';
 @use 'sass:string';
 @use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/bem' as *;
@@ -13,14 +12,31 @@ $theme: digest-schema($light-splitter);
 
 @include layer(base) {
     $splitter-color: var-get($theme, 'bar-color');
-    $splitter-size: var-get($theme, 'size');
+    $size: var-get($theme, 'size');
+    $bar-size: var(--_bar-size);
+    $handle-size: var(--_handle-size);
+    $expander-size: var(--_expander-size);
+    $expander-space: var(--_expander-space);
+
+    // The length an expander takes of the bar: the triangle and the space on its two sides.
+    $expander-box: calc(2 * #{$expander-size} + 2 * #{$expander-space});
     $hitbox-size: rem(4px);
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, 0.24);
 
     @include b(igx-splitter) {
-        //splitter-size (convert rem to px) + padding
-        --splitter-size: calc(#{unitless(map.get($theme, 'size'))} * (var(--ig-base-font-size, 16px) / 1px) + 2);
+        @include sizable();
+
+        --component-size: var(--ig-size, #{var-get($theme, 'default-size')});
+
+        // The steps are not theme tokens, so the handle can't be set thicker than the bar.
+        // Mirrored by the :host block of igc-splitter in igniteui-webcomponents.
+        --_bar-size: #{sizable(calc(#{$size} + #{rem(2px)}), calc(#{$size} + #{rem(8px)}), calc(#{$size} + #{rem(14px)}))};
+        --_handle-size: #{sizable($size, calc(#{$size} + #{rem(2px)}), calc(#{$size} + #{rem(4px)}))};
+        --_expander-size: #{sizable($size, calc(#{$size} + #{rem(1px)}), calc(#{$size} + #{rem(2px)}))};
+
+        // The space from a triangle to the edge of the 18px, 20px and 24px icon box of the design.
+        --_expander-space: #{sizable(rem(5px), rem(5px), rem(6px))};
 
         &[aria-orientation='horizontal'] {
             [dir='rtl'] & {
@@ -46,7 +62,10 @@ $theme: digest-schema($light-splitter);
         justify-content: center;
         align-items: center;
         background: $splitter-color;
-        padding-block: rem(1px);
+        height: $bar-size;
+
+        // Gives the drag handle the bar length, as container query units.
+        container-type: size;
         z-index: 99;
         opacity: 0.68;
         transition: opacity 0.15s $ease-out-quad !important;
@@ -100,22 +119,26 @@ $theme: digest-schema($light-splitter);
 
         @include e(handle, $m: horizontal) {
             width: 25%;
-            height: $splitter-size;
-            margin: 0 rem(48px);
+            height: $handle-size;
+
+            // The room for one margin when the bar is too short for 48px: half of what the 25% handle
+            // leaves, less one expander. 1cqw is 1% of the bar length, with the bar as the size container.
+            margin: 0 clamp(0px, calc((100cqw - 25cqw) / 2 - #{$expander-box}), #{rem(48px)});
         }
 
         @include e(handle, $m: vertical) {
-            width: $splitter-size;
+            width: $handle-size;
             height: 25%;
-            margin: rem(48px) 0;
+            margin: clamp(0px, calc((100cqh - 25cqh) / 2 - #{$expander-box}), #{rem(48px)}) 0;
         }
 
         @include e(expander) {
             position: relative;
             width: 0;
             height: 0;
-            border-inline-end: $splitter-size solid transparent;
-            border-inline-start: $splitter-size solid transparent;
+            border-inline-end: $expander-size solid transparent;
+            border-inline-start: $expander-size solid transparent;
+            margin: 0 $expander-space;
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.25s 0.5s ease;
@@ -130,26 +153,26 @@ $theme: digest-schema($light-splitter);
         }
 
         @include e(expander, $m: 'start') {
-            border-block-end: $splitter-size solid
+            border-block-end: $expander-size solid
                 var-get($theme, 'expander-color');
 
             &::before {
-                top: calc(100% - #{map.get($theme, 'size')});
-                left: calc(100% - (#{map.get($theme, 'size')} * 2));
-                width: calc(#{map.get($theme, 'size')} * 4);
-                height: calc(#{map.get($theme, 'size')} * 3);
+                top: calc(100% - #{$expander-size});
+                left: calc(100% - (#{$expander-size} * 2));
+                width: calc(#{$expander-size} * 4);
+                height: calc(#{$expander-size} * 3);
             }
         }
 
         @include e(expander, $m: 'end') {
-            border-block-start: $splitter-size solid
+            border-block-start: $expander-size solid
                 var-get($theme, 'expander-color');
 
             &::before {
-                top: calc(100% - (#{map.get($theme, 'size')} * 2));
-                left: calc(100% - (#{map.get($theme, 'size')} * 2));
-                width: calc(#{map.get($theme, 'size')} * 4);
-                height: calc(#{map.get($theme, 'size')} * 3);
+                top: calc(100% - (#{$expander-size} * 2));
+                left: calc(100% - (#{$expander-size} * 2));
+                width: calc(#{$expander-size} * 4);
+                height: calc(#{$expander-size} * 3);
             }
         }
 
@@ -172,8 +195,8 @@ $theme: digest-schema($light-splitter);
 
         @include m(vertical) {
             flex-direction: column;
+            width: $bar-size;
             height: 100%;
-            padding: 0 rem(1px);
 
             &::before,
             &::after {
@@ -190,33 +213,37 @@ $theme: digest-schema($light-splitter);
                 left: 100%;
             }
 
+            @include e(expander) {
+                margin: $expander-space 0;
+            }
+
             @include e(expander, $m: 'start') {
-                border-block-start: $splitter-size solid transparent;
-                border-inline-end: $splitter-size solid
+                border-block-start: $expander-size solid transparent;
+                border-inline-end: $expander-size solid
                     var-get($theme, 'expander-color');
-                border-block-end: $splitter-size solid transparent;
+                border-block-end: $expander-size solid transparent;
                 border-inline-start: unset;
 
                 &::before {
-                    top: calc(100% - (#{map.get($theme, 'size')} * 2));
-                    left: calc(100% - (#{map.get($theme, 'size')}));
-                    width: calc(#{map.get($theme, 'size')} * 3);
-                    height: calc(#{map.get($theme, 'size')} * 4);
+                    top: calc(100% - (#{$expander-size} * 2));
+                    left: calc(100% - (#{$expander-size}));
+                    width: calc(#{$expander-size} * 3);
+                    height: calc(#{$expander-size} * 4);
                 }
             }
 
             @include e(expander, $m: 'end') {
-                border-block-start: $splitter-size solid transparent;
+                border-block-start: $expander-size solid transparent;
                 border-inline-end: unset;
-                border-block-end: $splitter-size solid transparent;
-                border-inline-start: $splitter-size solid
+                border-block-end: $expander-size solid transparent;
+                border-inline-start: $expander-size solid
                     var-get($theme, 'expander-color');
 
                 &::before {
-                    top: calc(100% - (#{map.get($theme, 'size')} * 2));
-                    left: calc(100% - (#{map.get($theme, 'size')} * 2));
-                    height: calc(#{map.get($theme, 'size')} * 4);
-                    width: calc(#{map.get($theme, 'size')} * 3);
+                    top: calc(100% - (#{$expander-size} * 2));
+                    left: calc(100% - (#{$expander-size} * 2));
+                    height: calc(#{$expander-size} * 4);
+                    width: calc(#{$expander-size} * 3);
                 }
             }
 

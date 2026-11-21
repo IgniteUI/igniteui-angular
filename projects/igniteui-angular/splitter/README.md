@@ -59,6 +59,21 @@ export class SplitLayoutComponent {
 - **Non-collapsible bars** – set `nonCollapsible` on the splitter to hide the expanders and disable collapsing with `Ctrl` + arrow keys when panes must stay visible.
 - **Keyboard support** – users can resize with the arrow keys (by 10px per key press, emitting the same resize events as a drag); combine with `Ctrl` to collapse or expand panes. A splitter bar stays in the tab order unless it can neither resize nor collapse its panes.
 - **Drag constraints** – `minSize` and `maxSize` (px or % of the splitter size) enforce boundaries while resizing, ensuring important content stays visible.
+- **Sizing** – the splitter has no size input. It follows `--ig-size`, set on the splitter or on an ancestor, and defaults to small.
+
+    ```html
+    <igx-splitter style="--ig-size: var(--ig-size-large)">...</igx-splitter>
+    ```
+
+    | Size | Bar thickness | Drag handle thickness | Drag handle radius | Expander height |
+    | --- | --- | --- | --- | --- |
+    | small | 6px | 4px | 2px | 4px |
+    | medium | 12px | 6px | 8px | 5px |
+    | large | 18px | 8px | 8px | 6px |
+
+    The steps add to the `size` theme token (4px), so `--ig-splitter-size: 10px` makes the bar 12px, 18px and 24px and the drag handle 10px, 12px and 14px.
+
+    The drag handle is 48px from the icon box of each expander: the 18px, 20px and 24px icon of the design, 14px, 16px and 24px in the Indigo theme. In the Indigo theme the idle bar is 1px, 4px and 8px thick by size.
 
 ## API Reference
 
