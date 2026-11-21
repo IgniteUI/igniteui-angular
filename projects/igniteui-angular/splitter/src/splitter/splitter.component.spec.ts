@@ -927,9 +927,9 @@ describe('IgxSplitter resizing with minSize and browser window is shrinked', () 
 
 describe('IgxSplitter sizing', () => {
     const steps = [
-        { size: 'small', value: '1', bar: 6, handle: 4, expander: 4, radius: 2 },
-        { size: 'medium', value: '2', bar: 12, handle: 6, expander: 5, radius: 8 },
-        { size: 'large', value: '3', bar: 18, handle: 8, expander: 6, radius: 8 }
+        { size: 'small', value: '1', bar: 6, handle: 4, expander: 4, radius: 2, space: 5 },
+        { size: 'medium', value: '2', bar: 12, handle: 6, expander: 5, radius: 8, space: 5 },
+        { size: 'large', value: '3', bar: 18, handle: 8, expander: 6, radius: 8, space: 6 }
     ];
     let fixture: ComponentFixture<SplitterSizingComponent>;
 
@@ -1018,7 +1018,18 @@ describe('IgxSplitter sizing', () => {
         };
     };
 
-    it('should keep the handle 48px from the bar content edge with a collapsed pane', () => {
+    it('should keep 48px between the handle and the icon box of each expander at every size', () => {
+        for (const step of steps) {
+            fixture.componentInstance.size = step.value;
+            fixture.detectChanges();
+            document.getAnimations().forEach(animation => animation.finish());
+
+            const gap = 48 + step.space;
+            expect(gaps().handleGaps, step.size).toEqual([gap, gap]);
+        }
+    });
+
+    it('should keep the 48px margins around the handle with a collapsed pane', () => {
         const panes = fixture.componentInstance.splitter.panes.toArray();
         const handleTop = () => {
             const host: HTMLElement = fixture.nativeElement;
@@ -1026,8 +1037,8 @@ describe('IgxSplitter sizing', () => {
             return host.querySelector('.igx-splitter-bar__handle').getBoundingClientRect().top
                 - host.querySelector(SPLITTERBAR_DIV_CLASS).getBoundingClientRect().top;
         };
-        // The handle, its two 48px margins and the one expander that is left, centered in the 400px bar.
-        const groupStart = (400 - (100 + 96 + 8)) / 2;
+        // The handle, its two 48px margins and the 18px box of the one expander that is left, centered in the 400px bar.
+        const groupStart = (400 - (100 + 96 + 18)) / 2;
 
         panes[0].toggle();
         fixture.detectChanges();
@@ -1036,7 +1047,7 @@ describe('IgxSplitter sizing', () => {
         panes[0].toggle();
         panes[1].toggle();
         fixture.detectChanges();
-        expect(handleTop()).toBe(groupStart + 8 + 48);
+        expect(handleTop()).toBe(groupStart + 18 + 48);
     });
 
     it('should keep the handle at 25% of a short bar and narrow the gaps at every size', () => {
@@ -1048,8 +1059,8 @@ describe('IgxSplitter sizing', () => {
 
             const { handleLength } = measure();
             const { handleGaps, inside } = gaps();
-            // What the bar leaves after the handle and the two expanders, halved.
-            const gap = (128 - 32 - step.expander * 4) / 2;
+            // Half of what the bar leaves after the handle, less the triangle and the space on its far side.
+            const gap = (128 - 32) / 2 - step.expander * 2 - step.space;
 
             expect(handleLength, step.size).toBe(32);
             expect(handleGaps, step.size).toEqual([gap, gap]);

@@ -16,6 +16,10 @@ $theme: digest-schema($light-splitter);
     $bar-size: var(--_bar-size);
     $handle-size: var(--_handle-size);
     $expander-size: var(--_expander-size);
+    $expander-space: var(--_expander-space);
+
+    // The length an expander takes of the bar: the triangle and the space on its two sides.
+    $expander-box: calc(2 * #{$expander-size} + 2 * #{$expander-space});
     $hitbox-size: rem(4px);
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, 0.24);
@@ -30,6 +34,9 @@ $theme: digest-schema($light-splitter);
         --_bar-size: #{sizable(calc(#{$size} + #{rem(2px)}), calc(#{$size} + #{rem(8px)}), calc(#{$size} + #{rem(14px)}))};
         --_handle-size: #{sizable($size, calc(#{$size} + #{rem(2px)}), calc(#{$size} + #{rem(4px)}))};
         --_expander-size: #{sizable($size, calc(#{$size} + #{rem(1px)}), calc(#{$size} + #{rem(2px)}))};
+
+        // The space from a triangle to the edge of the 18px, 20px and 24px icon box of the design.
+        --_expander-space: #{sizable(rem(5px), rem(5px), rem(6px))};
 
         &[aria-orientation='horizontal'] {
             [dir='rtl'] & {
@@ -116,13 +123,13 @@ $theme: digest-schema($light-splitter);
 
             // The room for one margin when the bar is too short for 48px: half of what the 25% handle
             // leaves, less one expander. 1cqw is 1% of the bar length, with the bar as the size container.
-            margin: 0 clamp(0px, calc((100cqw - 25cqw) / 2 - 2 * #{$expander-size}), #{rem(48px)});
+            margin: 0 clamp(0px, calc((100cqw - 25cqw) / 2 - #{$expander-box}), #{rem(48px)});
         }
 
         @include e(handle, $m: vertical) {
             width: $handle-size;
             height: 25%;
-            margin: clamp(0px, calc((100cqh - 25cqh) / 2 - 2 * #{$expander-size}), #{rem(48px)}) 0;
+            margin: clamp(0px, calc((100cqh - 25cqh) / 2 - #{$expander-box}), #{rem(48px)}) 0;
         }
 
         @include e(expander) {
@@ -131,6 +138,7 @@ $theme: digest-schema($light-splitter);
             height: 0;
             border-inline-end: $expander-size solid transparent;
             border-inline-start: $expander-size solid transparent;
+            margin: 0 $expander-space;
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.25s 0.5s ease;
@@ -203,6 +211,10 @@ $theme: digest-schema($light-splitter);
 
             &::after {
                 left: 100%;
+            }
+
+            @include e(expander) {
+                margin: $expander-space 0;
             }
 
             @include e(expander, $m: 'start') {

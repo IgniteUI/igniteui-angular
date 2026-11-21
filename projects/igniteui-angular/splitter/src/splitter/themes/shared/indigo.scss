@@ -17,6 +17,9 @@ $slim-splitter: tan(atan2(var(--_idle-size), #{$bar-size}));
     @include b(igx-splitter) {
         // Mirrored by the :host block of the indigo igc-splitter theme in igniteui-webcomponents.
         --_idle-size: #{sizable(rem(1px), rem(4px), rem(8px))};
+
+        // The icon box of the design is 14px, 16px and 24px in this theme.
+        --_expander-space: #{sizable(rem(3px), rem(3px), rem(6px))};
     }
 
     @include b(igx-splitter-bar-host) {

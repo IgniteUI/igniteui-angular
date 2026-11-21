@@ -73,6 +73,8 @@ export class SplitLayoutComponent {
 
     The steps add to the `size` theme token (4px), so `--ig-splitter-size: 10px` makes the bar 12px, 18px and 24px and the drag handle 10px, 12px and 14px.
 
+    The drag handle is 48px from the icon box of each expander: the 18px, 20px and 24px icon of the design, 14px, 16px and 24px in the Indigo theme. In the Indigo theme the idle bar is 1px, 4px and 8px thick by size.
+
 ## API Reference
 
 ### IgxSplitterComponent inputs
