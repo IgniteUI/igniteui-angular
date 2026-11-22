@@ -510,21 +510,32 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Properties & events tests', () => {
-                it('should prevent interaction with an open calendar while disabled', async () => {
+                it.each(['input', 'forms'])('should close the open calendar when disabled through %s', async source => {
+                    const initialValue = dateRange.value;
+                    const change = vi.spyOn(dateRange.valueChange, 'emit');
                     dateRange.open();
                     await vi.runAllTimersAsync();
                     detectChanges();
-                    const calendarElement = document.querySelector<HTMLElement>('igx-calendar')!;
+                    expect(dateRange.collapsed).toBeFalsy();
 
-                    expect(calendarElement.inert).toBeFalsy();
-
-                    dateRange.setDisabledState(true);
+                    if (source === 'input') {
+                        dateRange.disabled = true;
+                    } else {
+                        dateRange.setDisabledState(true);
+                    }
                     detectChanges();
-                    expect(calendarElement.inert).toBeTruthy();
+                    await vi.runAllTimersAsync();
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.value).toEqual(initialValue);
+                    expect(change).not.toHaveBeenCalled();
 
                     dateRange.setDisabledState(false);
                     detectChanges();
-                    expect(calendarElement.inert).toBeFalsy();
+                    expect(dateRange.collapsed).toBeTruthy();
+                    dateRange.open();
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
                 });
 
                 it('should display placeholder', () => {

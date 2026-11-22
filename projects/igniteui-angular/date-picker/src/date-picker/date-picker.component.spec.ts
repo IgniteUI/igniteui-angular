@@ -832,21 +832,32 @@ describe('IgxDatePicker', () => {
                 vi.useRealTimers();
             });
 
-            it('should prevent interaction with an open calendar while disabled', async () => {
+            it.each(['input', 'forms'])('should close the open calendar when disabled through %s', async source => {
+                const initialValue = datePicker.value;
+                const change = vi.spyOn(datePicker.valueChange, 'emit');
                 datePicker.open();
                 await vi.runAllTimersAsync();
                 detectChanges();
-                const calendar = document.querySelector<HTMLElement>('igx-calendar')!;
+                expect(datePicker.collapsed).toBeFalsy();
 
-                expect(calendar.inert).toBeFalsy();
-
-                datePicker.setDisabledState(true);
+                if (source === 'input') {
+                    datePicker.disabled = true;
+                } else {
+                    datePicker.setDisabledState(true);
+                }
                 detectChanges();
-                expect(calendar.inert).toBeTruthy();
+                await vi.runAllTimersAsync();
+                expect(datePicker.collapsed).toBeTruthy();
+                expect(datePicker.value).toEqual(initialValue);
+                expect(change).not.toHaveBeenCalled();
 
                 datePicker.setDisabledState(false);
                 detectChanges();
-                expect(calendar.inert).toBeFalsy();
+                expect(datePicker.collapsed).toBeTruthy();
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
             });
 
             it('should activate today\'s date when reopening the calendar', async () => {
@@ -1113,13 +1124,13 @@ describe('IgxDatePicker', () => {
             mockDateEditor = {
                 _value: null as any,
                 get value() {
- return this._value; 
+ return this._value;
 },
                 set value(val: any) {
- this._value = val; 
+ this._value = val;
 },
                 clear() {
- this.valueChange.emit(null); 
+ this.valueChange.emit(null);
 },
                 increment: vi.fn(),
                 decrement: vi.fn(),
@@ -1143,13 +1154,13 @@ describe('IgxDatePicker', () => {
                         _listeners[event]?.forEach(fn => fn());
                     },
                     focus() {
- this.dispatchEvent('focus'); 
+ this.dispatchEvent('focus');
 },
                     click() {
- this.dispatchEvent('click'); 
+ this.dispatchEvent('click');
 },
                     blur() {
- this.dispatchEvent('blur'); 
+ this.dispatchEvent('blur');
 }
                 },
                 focus: () => {}
