@@ -46,6 +46,8 @@ export class MyClass {
 - If more than one `IgxSuffix` is used, the expansion arrow will be displayed always last.
 
 
+Disabling an open select closes its dropdown and preserves its value.
+
 ## Features
 
 ### Value

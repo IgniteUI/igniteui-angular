@@ -249,21 +249,42 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
         });
 
-        it('should prevent interaction with the open dropdown while disabled', async () => {
+        it.each(['input', 'forms'])('should close the open dropdown when disabled through %s', async source => {
+            select.value = 'Sofia';
+            fixture.detectChanges();
+            await fixture.whenStable();
+            const onChange = vi.fn();
+            select.registerOnChange(onChange);
+            vi.spyOn(select.selectionChanging, 'emit');
             select.open();
             await fixture.whenStable();
             fixture.detectChanges();
             const panel = selectList.nativeElement.closest('.igx-drop-down') as HTMLElement;
-
+            const item = selectList.children[2].nativeElement as HTMLElement;
             expect(select.collapsed).toBeFalsy();
-            expect(panel.inert).toBeFalsy();
 
-            select.setDisabledState(true);
+            if (source === 'input') {
+                select.disabled = true;
+            } else {
+                select.setDisabledState(true);
+            }
             fixture.detectChanges();
-            expect(panel.inert).toBeTruthy();
+            await fixture.whenStable();
+            expect(select.collapsed).toBeTruthy();
+            expect(inputElement.nativeElement.getAttribute('aria-expanded')).toBe('false');
+            item.click();
+            fixture.detectChanges();
+            expect(select.value).toBe('Sofia');
+            expect(select.selectionChanging.emit).not.toHaveBeenCalled();
+            expect(onChange).not.toHaveBeenCalled();
 
             select.setDisabledState(false);
             fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+            select.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
             expect(panel.inert).toBeFalsy();
         });
 

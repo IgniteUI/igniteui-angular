@@ -142,7 +142,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * <igx-select [disabled]="'true'"></igx-select>
      * ```
      */
-    @Input({ transform: booleanAttribute }) public disabled = false;
+    @Input({ transform: booleanAttribute })
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = value;
+        if (value && this.toggleDirective && !this.collapsed) {
+            this.close();
+        }
+    }
+
 
     /**
      * Sets custom overlay settings for the select component.
@@ -282,6 +292,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     private control: NgControlAdapter | null = null;
     private _overlayDefaults!: OverlaySettings;
     private _value: any;
+    private _disabled = false;
     private _type: IgxInputGroupType | null = null;
 
     /**
@@ -374,7 +385,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public override selectItem(newSelection: IgxDropDownItemBaseDirective, event?: any) {
         const oldSelection = this.selectedItem ?? <IgxDropDownItemBaseDirective>{};
 
-        if (newSelection === null || newSelection.disabled || newSelection.isHeader) {
+        if (this.disabled || newSelection === null || newSelection.disabled || newSelection.isHeader) {
             return;
         }
 
