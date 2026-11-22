@@ -312,6 +312,24 @@ describe('IgxForOf directive -', () => {
             horizontalScroller = null;
         });
 
+        it('should mark the display container as scrolling while the items scroll', async () => {
+            const SCROLLING_CLASS = 'igx-display-container--scrolling';
+            expect(displayContainer.classList.contains(SCROLLING_CLASS)).toBe(false);
+
+            fix.componentInstance.scrollTop(100);
+            fix.detectChanges();
+            expect(displayContainer.classList.contains(SCROLLING_CLASS)).toBe(true);
+
+            // The class is kept for the next scrolls of the gesture.
+            await wait(100);
+            fix.componentInstance.scrollTop(200);
+            fix.detectChanges();
+            await wait(100);
+            expect(displayContainer.classList.contains(SCROLLING_CLASS)).toBe(true);
+
+            await vi.waitFor(() => expect(displayContainer.classList.contains(SCROLLING_CLASS)).toBe(false));
+        });
+
         it('should initialize directive with vertical virtualization', async () => {
             expect(displayContainer).not.toBeNull();
             expect(verticalScroller).not.toBeNull();
