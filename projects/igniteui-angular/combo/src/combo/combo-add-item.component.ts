@@ -13,6 +13,11 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     /**
      * @hidden @internal
      * Set when the add item renders a custom `igxComboAddItem` template instead of the default button.
+     *
+     * @example
+     * ```html
+     * <igx-combo-add-item [customTemplate]="!!addItemTemplate"></igx-combo-add-item>
+     * ```
      */
     @Input({ transform: booleanAttribute })
     public customTemplate = false;
@@ -26,9 +31,16 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
      * @hidden @internal
      * Whether the add item is the active entry of the list. The focus stays on the list,
      * so the default button shows this state as its own focus state.
+     *
+     * @returns `true` when the drop-down's active entry is the add item.
+     *
+     * @example
+     * ```html
+     * <button igxButton="flat" [class.igx-button--focused]="addItem.active || undefined"></button>
+     * ```
      */
     public get active(): boolean {
-        return super.focused;
+        return this.dropDown.focusedItem === this;
     }
 
     /**
@@ -37,7 +49,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
      * the focus style of the list items. A custom template keeps that style.
      */
     public override get focused(): boolean {
-        return this.customTemplate && super.focused;
+        return this.customTemplate && this.active;
     }
 
     public override set focused(value: boolean) {

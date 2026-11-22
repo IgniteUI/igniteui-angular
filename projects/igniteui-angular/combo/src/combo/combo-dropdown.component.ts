@@ -30,6 +30,9 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     @ContentChildren(IgxComboItemComponent, { descendants: true })
     public override children: QueryList<IgxDropDownItemBaseDirective> = null;
 
+    /** Whether the add item was the entry made active, as opposed to an index left over from a longer list. */
+    private _addItemActive = false;
+
     /** @hidden @internal */
     public override get scrollContainer(): HTMLElement {
         // TODO: Update, use public API if possible:
@@ -60,7 +63,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden @internal
      */
     public override get focusedItem(): IgxDropDownItemBaseDirective | null {
-        return super.focusedItem;
+        const item = super.focusedItem;
+        // The add item takes the index right after the rows, so an index kept from a longer list
+        // can point at it after filtering. It is active only when it was the entry made active.
+        return item instanceof IgxComboAddItemComponent && !this._addItemActive ? null : item;
     }
 
     /**
@@ -76,15 +82,13 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
 
     /** @hidden @internal */
     public override set focusedItem(item: IgxDropDownItemBaseDirective | null) {
-        if (!item) {
-            this._activeDescendantId = null;
-        } else if (item.id !== undefined) {
-            this._activeDescendantId = item.id;
-        } else {
+        let entry = item;
+        if (item && item.id === undefined) {
             // Virtual { value, index } object passed by navigateItem() under virtual scrolling.
-            const resolved = this.children?.find(e => e.index === item.index);
-            this._activeDescendantId = resolved?.id ?? null;
+            entry = this.children?.find(e => e.index === item.index) ?? null;
         }
+        this._activeDescendantId = entry?.id ?? null;
+        this._addItemActive = entry instanceof IgxComboAddItemComponent;
         super.focusedItem = item;
     }
 
@@ -133,6 +137,18 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /**
+     * @hidden @internal
+     */
+    public override onToggleClosed() {
+        // The add item belongs to the search that showed it, so it is not active again on reopen.
+        if (this._addItemActive) {
+            this.focusedItem = null;
+            this.combo.setActiveDescendant();
+        }
+        super.onToggleClosed();
+    }
+
+    /**
      * @hidden
      */
     public override navigateFirst() {
@@ -176,6 +192,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         }
         this.comboAPI.set_selected_item(item.itemID);
         this._activeDescendantId = item.id ?? null;
+        this._addItemActive = false;
         this._focusedItem = item;
         this.combo.setActiveDescendant();
     }
