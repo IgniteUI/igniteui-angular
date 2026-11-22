@@ -114,3 +114,5 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `toggle` | `OverlaySettings` | `void` | Toggles the dropdown/dialog between opened and closed states. |
 | `increment` | `DatePart?, number?` | | `void` | Accepts a `DatePart` and increments it by one. If no value is provided, it defaults to the part at the position of the cursor.
 | `decrement` | `DatePart?, number?` | `void` | Accepts a `DatePart` and decrements it by one. If no value is provided, it defaults to the part at the position of the cursor.
+
+Disabling an open time picker closes it and preserves its saved value.

@@ -1990,7 +1990,7 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.valueChange.emit).not.toHaveBeenCalled();
             });
 
-            it('should discard a pending time when the open dialog is disabled', async () => {
+            it.each(['input', 'forms'])('should close the dialog and discard pending time when disabled through %s', async source => {
                 timePicker.mode = 'dialog';
                 fixture.detectChanges();
                 timePicker.open();
@@ -2000,16 +2000,27 @@ describe('IgxTimePicker', () => {
                 const change = vi.spyOn(timePicker.valueChange, 'emit');
                 timePicker.nextHour(1);
 
-                timePicker.setDisabledState(true);
+                if (source === 'input') {
+                    timePicker.disabled = true;
+                } else {
+                    timePicker.setDisabledState(true);
+                }
                 fixture.detectChanges();
-                const panel = fixture.debugElement.query(By.css('.igx-time-picker__body'));
-                expect(panel.nativeElement.inert).toBe(true);
+                await fixture.whenStable();
+                expect(timePicker.collapsed).toBe(true);
 
                 timePicker.okButtonClick();
                 timePicker.close();
                 await fixture.whenStable();
                 expect(timePicker.value).toEqual(initialValue);
                 expect(change).not.toHaveBeenCalled();
+                timePicker.setDisabledState(false);
+                fixture.detectChanges();
+                expect(timePicker.collapsed).toBe(true);
+                timePicker.open();
+                await fixture.whenStable();
+                fixture.detectChanges();
+                expect(timePicker.collapsed).toBe(false);
             });
 
             it('should close the dropdown when cleared while open', async () => {
