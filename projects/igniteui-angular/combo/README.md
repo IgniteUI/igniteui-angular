@@ -395,3 +395,5 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `selectAllItems`   | Select all (filtered) items              | `void`      | ignoreFilter?: `boolean` - if `true` selects **all** values   |
 | `deselectAllItems` | Deselect (filtered) all items            | `void`      | ignoreFilter?: `boolean` - if `true` deselects **all** values |
 | `selected`  | Toggles (select/deselect) an item by key | `void`      | itemID: any, select = true, event?: Event                     |
+
+Disabling an open combo closes its dropdown and preserves its value.

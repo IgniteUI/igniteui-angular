@@ -339,3 +339,5 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `opened`    | Emitted after the dropdown is opened                                    | false        | `IBaseEventArgs`                        |
 | `closing`   | Emitted before the dropdown is closed                                   | true        | `IBaseCancelableBrowserEventArgs`         |
 | `closed`    | Emitted after the dropdown is closed                                    | false        | `IBaseEventArgs`                        |
+
+Disabling an open combo closes its dropdown and preserves its value.

@@ -604,20 +604,36 @@ describe('IgxSimpleCombo', () => {
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
         });
 
-        it('should prevent interaction with the open dropdown while disabled', async () => {
+        it.each(['input', 'forms'])('should close the open dropdown when disabled through %s', async source => {
+            const initialValue = combo.value;
+            const onChange = vi.fn();
+            combo.registerOnChange(onChange);
+            vi.spyOn(combo.selectionChanging, 'emit');
             combo.open();
             await fixture.whenStable();
             fixture.detectChanges();
+            expect(combo.collapsed).toBeFalsy();
             const panel = document.querySelector<HTMLElement>('.igx-overlay__content .igx-combo')!;
 
-            expect(panel.inert).toBeFalsy();
-
-            combo.setDisabledState(true);
+            if (source === 'input') {
+                combo.disabled = true;
+            } else {
+                combo.setDisabledState(true);
+            }
             fixture.detectChanges();
-            expect(panel.inert).toBeTruthy();
+            await fixture.whenStable();
+            expect(combo.collapsed).toBeTruthy();
+            expect(combo.value).toEqual(initialValue);
+            expect(combo.selectionChanging.emit).not.toHaveBeenCalled();
+            expect(onChange).not.toHaveBeenCalled();
 
             combo.setDisabledState(false);
             fixture.detectChanges();
+            expect(combo.collapsed).toBeTruthy();
+            combo.open();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBeFalsy();
             expect(panel.inert).toBeFalsy();
         });
 
