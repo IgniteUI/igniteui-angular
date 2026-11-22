@@ -4256,6 +4256,7 @@ describe('igxCombo', () => {
 
                 combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
                 fixture.detectChanges();
+                expect(combo.dropdown.focusedItem instanceof IgxComboAddItemComponent).toBe(true);
                 const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
                 UIInteractions.triggerEventHandlerKeyDown('Space', dropdownContent);
                 fixture.detectChanges();
@@ -5740,7 +5741,6 @@ class IgxComboWithPrefixComponent {
         </ng-template>
     </igx-combo>
     `,
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxComboComponent, IgxComboAddItemDirective]
 })
 class IgxComboCustomAddItemComponent {

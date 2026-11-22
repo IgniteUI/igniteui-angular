@@ -30,6 +30,7 @@ const CSS_CLASS_TOGGLEBUTTON = 'igx-combo__toggle-button';
 const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
 const CSS_CLASS_ADDBUTTON = 'igx-combo__add-item';
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
+const CSS_CLASS_BUTTON_FOCUSED = 'igx-button--focused';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_COMBO_INPUTGROUP = 'igx-input-group__input';
 const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
@@ -1553,7 +1554,73 @@ describe('IgxSimpleCombo', () => {
 
             const addItem: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`)).nativeElement;
             expect(addItem.classList.contains(CSS_CLASS_FOCUSED)).toBe(false);
-            expect(addItem.querySelector('button').classList.contains('igx-button--focused')).toBe(true);
+            expect(addItem.querySelector('button').classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBe(true);
+        });
+
+        it('should not make the AddItem active when the typed text matches no item', async () => {
+            // without grouping the first match is at index 0, the same index the AddItem takes when nothing matches
+            combo.groupKey = undefined;
+            fixture.componentInstance.allowCustomValues = true;
+            fixture.detectChanges();
+            // typing in the input opens the list, and the focus stays in the input
+            input.nativeElement.focus();
+            UIInteractions.setInputElementValue(input.nativeElement, 'Massachusetts');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBe(false);
+            expect(combo.filteredData.length).toBeGreaterThan(0);
+
+            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(combo.filteredData.length).toEqual(0);
+
+            const button: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`))
+                .nativeElement.querySelector('button');
+            expect(combo.dropdown.focusedItem).toBeNull();
+            expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBe(false);
+
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+            fixture.detectChanges();
+            expect(combo.dropdown.focusedItem).toBe(combo.addItem);
+            expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBe(true);
+        });
+
+        it('should not keep the AddItem active after the list closes', async () => {
+            fixture.componentInstance.allowCustomValues = true;
+            fixture.detectChanges();
+            input.nativeElement.focus();
+            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsL');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBe(false);
+
+            combo.handleKeyUp(UIInteractions.getKeyboardEvent('keyup', 'ArrowDown'));
+            fixture.detectChanges();
+            expect(combo.dropdown.focusedItem).toBe(combo.addItem);
+
+            combo.close();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBe(true);
+
+            // typing again reopens the list with no matches
+            input.nativeElement.focus();
+            UIInteractions.setInputElementValue(input.nativeElement, 'MassachusettsLL');
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(combo.collapsed).toBe(false);
+            expect(combo.filteredData.length).toEqual(0);
+
+            const button: HTMLElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_ADDBUTTON}`))
+                .nativeElement.querySelector('button');
+            expect(combo.dropdown.focusedItem).toBeNull();
+            expect(button.classList.contains(CSS_CLASS_BUTTON_FOCUSED)).toBe(false);
         });
 
         it('should close when an item is clicked on', () => {
