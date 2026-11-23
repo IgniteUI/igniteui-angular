@@ -14,7 +14,8 @@ describe('IgxIconButton', () => {
         contained: 'igx-icon-button--contained',
         outlined: 'igx-icon-button--outlined',
         ready: 'igx-icon-button--ready',
-        disabled: 'igx-button--disabled'
+        disabled: 'igx-button--disabled',
+        focused: 'igx-button--focused'
     }
 
     beforeEach(async () => {
@@ -58,6 +59,18 @@ describe('IgxIconButton', () => {
         expect(hasClass(element, CSS_CLASSES.disabled)).toBe(false);
     });
 
+    it('should show the focused state while focusVisible is set', () => {
+        expect(hasClass(element, CSS_CLASSES.focused)).toBe(false);
+
+        fixture.componentRef.setInput('focusVisible', true);
+        fixture.detectChanges();
+        expect(hasClass(element, CSS_CLASSES.focused)).toBe(true);
+
+        fixture.componentRef.setInput('focusVisible', false);
+        fixture.detectChanges();
+        expect(hasClass(element, CSS_CLASSES.focused)).toBe(false);
+    });
+
     it('should properly set the correct CSS class on the element using the type input', () => {
         fixture.detectChanges(); // applies the post-render `--ready` class
 
@@ -89,7 +102,7 @@ describe('IgxIconButton', () => {
 
 @Component({
     template: `
-        <button [igxIconButton]="type()" [disabled]="disabled()" igxRipple="white">
+        <button [igxIconButton]="type()" [disabled]="disabled()" [focusVisible]="focusVisible()" igxRipple="white">
             <igx-icon>search</igx-icon>
         </button>
     `,
@@ -100,6 +113,7 @@ class IconButtonComponent {
     public button = viewChild.required(IgxIconButtonDirective);
     public type = input<IgxIconButtonType>();
     public disabled = input<boolean>(false);
+    public focusVisible = input<boolean>(false);
 }
 
 function hasClass(element: HTMLElement, className: string): boolean {

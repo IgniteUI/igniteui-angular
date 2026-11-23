@@ -13,7 +13,7 @@ export const IgxBaseButtonType = {
     host: {
         'role': 'button',
         '[attr.disabled]': '_disabled() || null',
-        '[class.igx-button--focused]': '_hasKeyboardFocus()',
+        '[class.igx-button--focused]': '_hasKeyboardFocus() || _focusVisible()',
         '[class.igx-button--disabled]': '_disabled()',
         '(click)': 'buttonClick.emit($event)',
     },
@@ -30,6 +30,26 @@ export abstract class IgxButtonBaseDirective {
      */
     protected readonly _hasRendered = signal(false);
     protected readonly _disabled = signal(false);
+    protected readonly _focusVisible = signal(false);
+
+    /**
+     * Gets or sets whether the button shows its focused state while the focus is on another element,
+     * for example a list that marks the button as its active entry with `aria-activedescendant`.
+     * The button also shows the focused state when it has keyboard focus, whatever the value.
+     *
+     * @example
+     * ```html
+     * <button type="button" igxButton="flat" [focusVisible]="isActive"></button>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public set focusVisible(value: boolean) {
+        this._focusVisible.set(value);
+    }
+
+    public get focusVisible(): boolean {
+        return this._focusVisible();
+    }
 
     /**
      * Gets or sets whether the button is disabled.

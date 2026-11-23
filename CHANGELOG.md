@@ -4,6 +4,11 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.1
 
+### New Functionality
+
+- `IgxButtonDirective`, `IgxIconButtonDirective`
+    - Added a `focusVisible` input. It shows the focused state of the button while the focus is on another element, for example a list that marks the button as its active entry with `aria-activedescendant`. The button still shows the focused state when it has keyboard focus.
+
 ### Bug Fixes
 
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`

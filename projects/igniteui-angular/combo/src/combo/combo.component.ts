@@ -24,8 +24,6 @@ import {
     EditorProvider
 } from 'igniteui-angular/core';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
-import { IgxRippleDirective } from 'igniteui-angular/directives';
-import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboDataWindowPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboRecordWindowPipe } from './combo.pipes';
@@ -130,8 +128,6 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
         IgxVirtualItemDirective,
         IgxComboItemComponent,
         IgxComboAddItemComponent,
-        IgxButtonDirective,
-        IgxRippleDirective,
         IgxReadOnlyInputDirective,
         IgxComboFilteringPipe,
         IgxComboGroupingPipe,
