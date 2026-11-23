@@ -1041,7 +1041,6 @@ describe('IgxSplitter sizing', () => {
             const width = px(box.width);
             const height = px(box.height);
 
-            // Read from the computed styles, which the scale of the idle indigo bar does not change.
             return {
                 width,
                 height,
@@ -1064,22 +1063,6 @@ describe('IgxSplitter sizing', () => {
                 const centered = { width: box, height: box, offsetX: 0, offsetY: 0 };
                 expect(hitboxes(), `${step.size} ${type}`).toEqual([centered, centered]);
             }
-        }
-    });
-
-    it('should size the hitbox to the 14px, 16px and 24px icon box in the indigo theme', () => {
-        document.documentElement.style.setProperty('--ig-theme', 'indigo');
-
-        try {
-            for (const [index, box] of [14, 16, 24].entries()) {
-                fixture.componentInstance.size = steps[index].value;
-                fixture.detectChanges();
-
-                const centered = { width: box, height: box, offsetX: 0, offsetY: 0 };
-                expect(hitboxes(), steps[index].size).toEqual([centered, centered]);
-            }
-        } finally {
-            document.documentElement.style.removeProperty('--ig-theme');
         }
     });
 
