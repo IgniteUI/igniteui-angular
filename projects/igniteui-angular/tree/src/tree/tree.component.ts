@@ -32,7 +32,7 @@ import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { growVerIn, growVerOut } from 'igniteui-angular/animations';
-import { PlatformUtil, resizeObservable } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, PlatformUtil, resizeObservable } from 'igniteui-angular/core';
 import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
 
 /**
@@ -92,6 +92,7 @@ export class IgxTreeExpandIndicatorDirective {
     styleUrl: 'tree.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
+        IgxKeyBindingsService,
         IgxTreeService,
         IgxTreeSelectionService,
         IgxTreeNavigationService,
@@ -436,11 +437,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         const compareFunc = comparer || this._comparer;
         const results = this.nodes.filter(node => compareFunc(searchTerm, node));
         return results?.length === 0 ? null : results;
-    }
-
-    /** @hidden @internal */
-    public handleKeydown(event: KeyboardEvent) {
-        this.navService.handleKeydown(event);
     }
 
     /** @hidden @internal */

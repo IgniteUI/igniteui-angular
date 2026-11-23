@@ -34,6 +34,8 @@ export const tabKey = 'Tab' as const;
 export const deleteKey = 'Delete' as const;
 /** @hidden @internal */
 export const backspaceKey = 'Backspace' as const;
+/** @hidden @internal */
+export const asteriskKey = '*' as const;
 
 /** @hidden @internal */
 export const altKey = 'Alt' as const;
