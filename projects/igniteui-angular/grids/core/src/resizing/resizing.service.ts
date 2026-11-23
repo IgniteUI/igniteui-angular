@@ -107,7 +107,7 @@ export class IgxColumnResizingService {
 
         const colWidth = this.column.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-        let currentColWidth = parseFloat(colWidth);
+        let currentColWidth = isPercentageWidth ? parseFloat(colWidth) : this.getResizeStartWidth(this.column);
         const actualWidth = this.getColumnHeaderRenderedWidth();
         currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth as any) : currentColWidth;
 
@@ -133,8 +133,20 @@ export class IgxColumnResizingService {
         this.isColumnResizing = false;
     }
 
+    /**
+     * Returns the width a pixel resize should start from: the width the column is
+     * actually drawn at. A column without a set width reports its clamped default
+     * through `column.width` (e.g. 136px) while it is drawn wider through its
+     * `minWidth`; `calcWidth` holds that drawn width. Falls back to `column.width`
+     * when the calculated width is not finite.
+     */
+    protected getResizeStartWidth(column: ColumnType): number {
+        const calcWidth = parseFloat(column.calcWidth?.toString() || column.width);
+        return Number.isFinite(calcWidth) ? calcWidth : parseFloat(column.width);
+    }
+
     protected _handlePixelResize(diff: number, column: ColumnType) {
-        const currentColWidth = parseFloat(column.width);
+        const currentColWidth = this.getResizeStartWidth(column);
         const colMinWidth = column.minWidthPx;
         const colMaxWidth = column.maxWidthPx;
         if (currentColWidth + diff < colMinWidth) {
