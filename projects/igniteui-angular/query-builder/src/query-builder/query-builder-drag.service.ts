@@ -1,9 +1,10 @@
-import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
+import { fromEvent, sampleTime, Subscription } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, Injectable, inject } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
 import { IBaseChipEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
 import { IDragBaseEventArgs } from 'igniteui-angular/directives';
+import { IgxKeyBindingObserver, IgxKeyBindingsService, arrowDown, arrowUp, escapeKey, shiftKey, tabKey } from 'igniteui-angular/core';
 
 const DEFAULT_SET_Z_INDEX_DELAY = 10;
 const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
@@ -22,7 +23,10 @@ export class IgxQueryBuilderDragService {
     private _targetExpressionItem!: ExpressionItem;
     private _dropUnder!: boolean;
     private _ghostChipMousemoveSubscription$!: Subscription;
-    private _keyboardSubscription$!: Subscription;
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+    /** The expression tree observed for the drag keys while a drag is in progress */
+    private _observedTree?: HTMLElement;
+    private _treeObserver?: IgxKeyBindingObserver;
     private _keyDragCurrentIndex: number = 0;
     private _keyDragInitialIndex: number = 0;
     private _isKeyDragsFirstMove: boolean = true;
@@ -55,6 +59,20 @@ export class IgxQueryBuilderDragService {
         return !!this._sourceElement && this.isKeyboardDrag;
     }
 
+
+    constructor() {
+        this._keyBindings
+            .configure({
+                skip: (_target, event) => !this._observedTree || event.currentTarget !== this._observedTree,
+                bindingDefaults: { preventDefault: false, repeat: true }
+            })
+            .set(arrowUp, (event) => this.onArrowKey(event))
+            .set(arrowDown, (event) => this.onArrowKey(event))
+            .setActivateHandler((event) => this.onDropKey(event))
+            .set(escapeKey, (event) => this.onEscapeKey(event))
+            .set(tabKey, (event) => this.onTabKey(event))
+            .set([shiftKey, tabKey], (event) => this.onTabKey(event));
+    }
 
     public register(tree: IgxQueryBuilderTreeComponent, el: ElementRef) {
         this._queryBuilderTreeComponent = tree;
@@ -105,7 +123,7 @@ export class IgxQueryBuilderDragService {
         }
 
         this._ghostChipMousemoveSubscription$?.unsubscribe();
-        this._keyboardSubscription$?.unsubscribe();
+        this.stopListeningToKeyboard();
 
         if (!drop) {
             this.startKeyboardDragOnFocusedIndicator();
@@ -272,7 +290,7 @@ export class IgxQueryBuilderDragService {
     public onChipDragIndicatorFocusOut() {
         if (this._sourceElement?.style?.display !== 'none') {
             this.resetDragAndDrop(true);
-            this._keyboardSubscription$?.unsubscribe();
+            this.stopListeningToKeyboard();
         }
     }
 
@@ -283,7 +301,7 @@ export class IgxQueryBuilderDragService {
             setTimeout(() => {
                 if (document.activeElement!.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR) === -1) {
                     this.resetDragAndDrop(true);
-                    this._keyboardSubscription$?.unsubscribe();
+                    this.stopListeningToKeyboard();
                 }
             }, 0);
         }
@@ -412,40 +430,61 @@ export class IgxQueryBuilderDragService {
 
     /** Start listening for drag and drop specific keys */
     private listenToKeyboard() {
-        this._keyboardSubscription$?.unsubscribe();
-        this._keyboardSubscription$ = fromEvent<KeyboardEvent>(this.getMainExpressionTree, 'keydown')
-            .pipe(filter(e => ['ArrowUp', 'ArrowDown', 'Enter', ' ', 'Space', 'Escape', 'Tab'].includes(e.key)))
-            //Keep the browser from scrolling on the keys that move or drop a keyboard-dragged chip (held keys included)
-            //and inhibit Tabs once there's a drop ghost (don't allow to lose focus of the drop ghost's drag indicator)
-            .pipe(tap(e => {
-                if (this.isKeyboardDragInProgress &&
-                    (e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
-                        (this.dropGhostExpression && (e.key === 'Enter' || e.key === ' ' || e.key === 'Space' || e.key === 'Tab')))) {
-                    e.preventDefault();
-                }
-            }))
-            .pipe(filter(event => !event.repeat))
-            .subscribe(e => {
-                if (this.isMouseDragInProgress) {
-                    //A mouse-dragged chip follows the pointer only, it's dropped on release or cancelled with Escape by the chip's igxDrag
-                    return;
-                } else if (e.key === 'Escape') {
-                    this.resetDragAndDrop(false);
-                    //Regain focus on the drag icon after keyboard drag cancel
-                    if (this.isKeyboardDrag) {
-                        (this._sourceElement.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild as HTMLElement).focus();
-                    }
-                } else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                    this.arrowDrag(e.key);
-                } else if (e.key === 'Enter' || e.key === ' ' || e.key === 'Space') {
-                    //this.platform.isActivationKey(eventArgs) Maybe use this rather that Enter/Space?
-                    //Without a drop ghost there is no drop target yet; committing would only delete the source expression.
-                    if (this.dropGhostExpression) {
-                        this.onChipDropped();
-                        this._keyboardSubscription$.unsubscribe();
-                    }
-                }
-            });
+        this.stopListeningToKeyboard();
+        this._observedTree = this.getMainExpressionTree;
+        this._treeObserver = this._keyBindings.observeElement(this._observedTree);
+    }
+
+    private stopListeningToKeyboard() {
+        this._treeObserver?.unsubscribe();
+        this._treeObserver = undefined;
+        this._observedTree = undefined;
+    }
+
+    /** ArrowUp / ArrowDown move a keyboard-dragged chip's drop ghost; the browser must not scroll, held keys included */
+    private onArrowKey(event: KeyboardEvent) {
+        if (this.isKeyboardDragInProgress) {
+            event.preventDefault();
+        }
+        //A mouse-dragged chip follows the pointer only, it's dropped on release or cancelled with Escape by the chip's igxDrag
+        if (event.repeat || this.isMouseDragInProgress) {
+            return;
+        }
+        this.arrowDrag(event.key as 'ArrowUp' | 'ArrowDown');
+    }
+
+    /** Enter / Space drop a keyboard-dragged chip at its drop ghost */
+    private onDropKey(event: KeyboardEvent) {
+        if (this.isKeyboardDragInProgress && this.dropGhostExpression) {
+            event.preventDefault();
+        }
+        if (event.repeat || this.isMouseDragInProgress) {
+            return;
+        }
+        // Without a drop ghost there is no drop target yet; committing would only delete the source expression.
+        if (this.dropGhostExpression) {
+            this.onChipDropped();
+            this.stopListeningToKeyboard();
+        }
+    }
+
+    /** Escape cancels a keyboard drag */
+    private onEscapeKey(event: KeyboardEvent) {
+        if (event.repeat || this.isMouseDragInProgress) {
+            return;
+        }
+        this.resetDragAndDrop(false);
+        // Regain focus on the drag icon after keyboard drag cancel
+        if (this.isKeyboardDrag) {
+            (this._sourceElement.firstElementChild!.firstElementChild!.firstElementChild!.firstElementChild as HTMLElement).focus();
+        }
+    }
+
+    /** Once there's a drop ghost, Tab must not move the focus away from the drop ghost's drag indicator */
+    private onTabKey(event: KeyboardEvent) {
+        if (this.isKeyboardDragInProgress && this.dropGhostExpression) {
+            event.preventDefault();
+        }
     }
 
     /** Perform up/down movement of drop ghost along the expression tree*/
