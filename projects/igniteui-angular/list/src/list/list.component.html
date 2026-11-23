@@ -7,12 +7,16 @@
 </ng-template>
 
 <ng-template #defaultDataLoading>
-    <article class="igx-list__message" [attr.aria-hidden]="isListbox && children?.length ? 'true' : null">
+    <article class="igx-list__message">
         {{resourceStrings.igx_list_loading}}
     </article>
 </ng-template>
 
 @if (!children || children.length === 0 || isLoading) {
-    <ng-container *ngTemplateOutlet="template; context: context">
-    </ng-container>
+    <div class="igx-list__message-wrapper"
+        [attr.role]="isListbox && !hasOptions ? 'option' : null"
+        [attr.aria-hidden]="isListbox && hasOptions ? 'true' : null">
+        <ng-container *ngTemplateOutlet="template; context: context">
+        </ng-container>
+    </div>
 }

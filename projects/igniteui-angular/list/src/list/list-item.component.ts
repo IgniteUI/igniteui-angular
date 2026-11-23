@@ -46,6 +46,9 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /** The `aria-describedby` the list set last, to tell it apart from one set or bound by the app, which is kept. */
     private _describedBy: string | null = null;
 
+    /** The `id` the item generated as a header of a listbox, so it is removed when the item is no longer one. */
+    private _headerId: string | null = null;
+
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
      * ```typescript
@@ -316,6 +319,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * Syncs the listbox attributes of the item. Options expose their selected state, only the active one is a tab stop,
      * and they are described by the header of their group, unless they have their own `aria-describedby`.
      * Headers are hidden from assistive technology and get an `id` when they have none, so options can point to them.
+     * The generated `id` is removed when the list is no longer a listbox.
      * Called by the list after rendering.
      *
      * @param listbox Whether the list is a listbox.
@@ -327,8 +331,16 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
         syncAttribute(this.element, 'tabindex', option ? (tabStop ? '0' : '-1') : null);
         syncAttribute(this.element, 'aria-selected', option ? String(this.selected) : null);
         syncAttribute(this.element, 'aria-hidden', listbox && this.isHeader ? 'true' : null);
-        if (listbox && this.isHeader && !this.element.id) {
-            this.element.id = `igx-list-header-${NEXT_HEADER_ID++}`;
+        if (listbox && this.isHeader) {
+            if (!this.element.id) {
+                this._headerId = `igx-list-header-${NEXT_HEADER_ID++}`;
+                this.element.id = this._headerId;
+            }
+        } else if (this._headerId !== null) {
+            if (this.element.id === this._headerId) {
+                this.element.removeAttribute('id');
+            }
+            this._headerId = null;
         }
         const describedBy = this.element.getAttribute('aria-describedby');
         if (describedBy === null || describedBy === this._describedBy) {

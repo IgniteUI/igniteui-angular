@@ -132,6 +132,27 @@ export class GroupedListboxComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
+        <igx-list [role]="listbox ? 'listbox' : 'list'" aria-label="Results" [isLoading]="isLoading">
+            @for (item of items; track item) {
+                <igx-list-item>{{ item }}</igx-list-item>
+            }
+            <ng-template igxDataLoading>
+                <h3>Loading data...</h3>
+            </ng-template>
+        </igx-list>
+    </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxListComponent, IgxListItemComponent, IgxDataLoadingTemplateDirective]
+})
+export class EmptyListboxComponent extends BasicListComponent {
+    public listbox = true;
+    public isLoading = false;
+    public items: string[] = [];
+}
+
+@Component({
+    template: `
+    <div #wrapper>
         <igx-list role="listbox" tabindex="0" aria-activedescendant="own-item-1">
             <igx-list-item [isHeader]="true" aria-hidden="true">Header</igx-list-item>
             <igx-list-item id="own-item-1" role="option" tabindex="-1" aria-selected="true">Item 1</igx-list-item>

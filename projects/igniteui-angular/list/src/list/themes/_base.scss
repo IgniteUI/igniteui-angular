@@ -42,6 +42,17 @@ $theme: digest-schema($light-list);
             outline-style: none;
         }
 
+        @include e(message-wrapper) {
+            display: contents;
+        }
+
+        @include m(focusable) {
+            &:focus-visible {
+                outline: var(--_focus-ring-width, #{rem(1px)}) solid var-get($theme, 'item-focus-outline-color');
+                outline-offset: calc(var(--_focus-ring-width, #{rem(1px)}) * -1);
+            }
+        }
+
         @include m(empty) {
             justify-content: center;
             align-items: center;

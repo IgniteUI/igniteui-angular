@@ -5,7 +5,7 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -767,7 +767,7 @@ describe('List', () => {
         let list: IgxListComponent;
 
         const pressKey = (target: HTMLElement, key: string, repeat = false): KeyboardEvent => {
-            const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true });
+            const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true, composed: true });
             target.dispatchEvent(event);
             return event;
         };
@@ -886,12 +886,16 @@ describe('List', () => {
         });
 
         it('should reset the list and its items when its role is no longer listbox', () => {
+            const header = list.children.first.element;
+            expect(header.id).toMatch(/^igx-list-header-\d+$/);
+
             fixture.componentInstance.listbox = false;
             fixture.detectChanges();
 
             const listElement = list.element.nativeElement as HTMLElement;
             expect(listElement.getAttribute('role')).toBe('list');
-            expect(list.children.first.element.hasAttribute('aria-hidden')).toBe(false);
+            expect(header.hasAttribute('aria-hidden')).toBe(false);
+            expect(header.hasAttribute('id')).toBe(false);
             list.items.forEach(item => {
                 expect(item.element.getAttribute('role')).toBe('listitem');
                 expect(item.element.hasAttribute('tabindex')).toBe(false);
@@ -942,17 +946,49 @@ describe('List', () => {
             expect(item3.element.getAttribute('aria-describedby')).toBe(employees.element.id);
         });
 
-        it('should mark the listbox busy and hide the loading message while loading', () => {
-            const listElement = list.element.nativeElement as HTMLElement;
-            list.isLoading = true;
-            fixture.detectChanges();
-            expect(listElement.getAttribute('aria-busy')).toBe('true');
-            expect(listElement.querySelector('.igx-list__message').getAttribute('aria-hidden')).toBe('true');
+        it('should be the tab stop with its empty or loading message as an option while it has no options', () => {
+            const emptyFixture = TestBed.createComponent(EmptyListboxComponent);
+            emptyFixture.detectChanges();
+            const emptyList = emptyFixture.componentInstance.list;
+            const listElement = emptyList.element.nativeElement as HTMLElement;
+            const message = () => listElement.querySelector('.igx-list__message-wrapper') as HTMLElement;
+            const owned = () => Array.from(listElement.children).filter(child => child.getAttribute('aria-hidden') !== 'true');
 
-            list.isLoading = false;
-            fixture.detectChanges();
+            expect(listElement.getAttribute('tabindex')).toBe('0');
+            expect(listElement.classList).toContain('igx-list--focusable');
+            expect(owned()).toEqual([message()]);
+            expect(message().getAttribute('role')).toBe('option');
+            expect(message().textContent.trim()).toBe(emptyList.resourceStrings.igx_list_no_items);
+
+            emptyFixture.componentInstance.isLoading = true;
+            emptyFixture.detectChanges();
+            expect(listElement.getAttribute('aria-busy')).toBe('true');
+            expect(owned()).toEqual([message()]);
+            expect(message().getAttribute('role')).toBe('option');
+            expect(message().textContent.trim()).toBe('Loading data...');
+
+            listElement.focus();
+            emptyFixture.componentInstance.items = ['Item 1', 'Item 2'];
+            emptyFixture.detectChanges();
+            expect(listElement.hasAttribute('tabindex')).toBe(false);
+            expect(listElement.classList).not.toContain('igx-list--focusable');
+            expect(message().hasAttribute('role')).toBe(false);
+            expect(message().getAttribute('aria-hidden')).toBe('true');
+            expect(owned().map(child => child.getAttribute('role'))).toEqual(['option', 'option']);
+            expect(document.activeElement).toBe(emptyList.items[0].element);
+
+            emptyFixture.componentInstance.isLoading = false;
+            emptyFixture.detectChanges();
             expect(listElement.hasAttribute('aria-busy')).toBe(false);
-            expect(listElement.querySelector('.igx-list__message')).toBeNull();
+            expect(message()).toBeNull();
+
+            emptyFixture.componentInstance.items = [];
+            emptyFixture.componentInstance.listbox = false;
+            emptyFixture.detectChanges();
+            expect(listElement.hasAttribute('tabindex')).toBe(false);
+            expect(listElement.classList).not.toContain('igx-list--focusable');
+            expect(message().hasAttribute('role')).toBe(false);
+            expect(message().hasAttribute('aria-hidden')).toBe(false);
         });
 
         describe('Keyboard navigation', () => {
@@ -1028,16 +1064,27 @@ describe('List', () => {
                 expect(clickedItems).toEqual([items[1], items[1]]);
             });
 
-            it('should not handle keys pressed in the content of an item or on the list', () => {
+            it('should not handle keys pressed in the content of an item, also inside a shadow root, or on the list', () => {
                 const clickSpy = vi.fn();
                 list.itemClicked.subscribe(clickSpy);
                 const listElement = list.element.nativeElement as HTMLElement;
-                const title = list.items[0].element.querySelector('[igxListLineTitle]') as HTMLElement;
+                const option = list.items[0].element;
+                const title = option.querySelector('[igxListLineTitle]') as HTMLElement;
+                const shadowHost = document.createElement('div');
+                option.appendChild(shadowHost);
+                const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+                shadowRoot.innerHTML = '<input type="text" />';
+                const input = shadowRoot.querySelector('input')!;
 
                 expect(pressKey(title, 'ArrowDown').defaultPrevented).toBe(false);
                 expect(pressKey(title, 'Enter').defaultPrevented).toBe(false);
+                expect(pressKey(input, 'ArrowDown').defaultPrevented).toBe(false);
+                expect(pressKey(input, 'Enter').defaultPrevented).toBe(false);
+                expect(pressKey(input, ' ').defaultPrevented).toBe(false);
                 expect(pressKey(listElement, ' ').defaultPrevented).toBe(false);
                 expect(clickSpy).not.toHaveBeenCalled();
+
+                expect(pressKey(option, 'ArrowDown').defaultPrevented).toBe(true);
             });
         });
     });

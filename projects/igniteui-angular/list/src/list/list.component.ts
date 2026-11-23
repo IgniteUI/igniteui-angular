@@ -506,9 +506,27 @@ export class IgxListComponent extends IgxListBaseDirective {
     /** The option that was focused last, which keeps the tab stop. */
     private _activeItem: IgxListItemComponent | null = null;
 
+    /** The `tabindex` the list set on itself, so a `tabindex` set by the app is kept. */
+    private _tabIndex: string | null = null;
+
+    /**
+     * @hidden
+     * @internal
+     * Whether the list has options that are not hidden. Without them, the empty or loading message of a listbox is an option.
+     */
+    protected get hasOptions(): boolean {
+        return this.ownItems.some(item => !item.isHeader && !item.hidden);
+    }
+
+    /** The items of this list, without those of nested lists, in the order they are displayed. */
+    private get ownItems(): IgxListItemComponent[] {
+        return this.sortedChildren?.filter(item => item.list === this) ?? [];
+    }
+
     /**
      * Syncs the listbox attributes of the list and its items, in the order the items are displayed.
      * Only the active option is a tab stop: the one focused last, else the first selected option, else the first option.
+     * Without options, the list itself is the tab stop, and when options are added while it has the focus, the focus moves to them.
      * While loading, the listbox is marked busy. A list that is not a listbox, and has not just stopped being one, is left untouched.
      */
     private updateAttributes() {
@@ -517,15 +535,27 @@ export class IgxListComponent extends IgxListBaseDirective {
             return;
         }
         this._synced = listbox;
-        syncAttribute(this.element.nativeElement, 'aria-busy', listbox && this.isLoading ? 'true' : null);
-        const children = this.sortedChildren.filter(item => item.list === this);
+        const element = this.element.nativeElement as HTMLElement;
+        syncAttribute(element, 'aria-busy', listbox && this.isLoading ? 'true' : null);
+        const children = this.ownItems;
         const options = children.filter(item => !item.isHeader && !item.hidden);
         const tabStop = options.includes(this._activeItem!) ? this._activeItem
             : options.find(item => item.selected) ?? options[0];
+        const tabIndex = element.getAttribute('tabindex');
+        const focused = tabIndex !== null && tabIndex === this._tabIndex
+            && (element.getRootNode() as Document | ShadowRoot).activeElement === element;
+        if (tabIndex === null || tabIndex === this._tabIndex) {
+            this._tabIndex = listbox && !tabStop ? '0' : null;
+            element.classList.toggle('igx-list--focusable', this._tabIndex !== null);
+            syncAttribute(element, 'tabindex', this._tabIndex);
+        }
         let header: IgxListItemComponent | null = null;
         for (const item of children) {
             header = item.isHeader ? item : header;
             item.updateAttributes(listbox, item === tabStop, header);
+        }
+        if (listbox && tabStop && focused) {
+            tabStop.element.focus();
         }
     }
 
@@ -582,7 +612,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostListener('focusin', ['$event'])
     public onFocusIn(event: FocusEvent) {
         const target = event.composedPath()[0];
-        this._activeItem = this.items.find(item => item.list === this && item.element === target) ?? this._activeItem;
+        this._activeItem = this.ownItems.find(item => item.element === target) ?? this._activeItem;
     }
 
     /**
@@ -602,7 +632,7 @@ export class IgxListComponent extends IgxListBaseDirective {
         }
 
         const target = event.composedPath()[0];
-        const items = this.items.filter(item => item.list === this && !item.hidden);
+        const items = this.ownItems.filter(item => !item.isHeader && !item.hidden);
         const current = items.findIndex(item => item.element === target);
         if (current === -1) {
             return;

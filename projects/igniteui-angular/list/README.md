@@ -74,7 +74,8 @@ Set `role="listbox"` on the list to make it an accessible [listbox](https://www.
 - The list has a single tab stop. Tab focuses the option that was focused last, else the first selected option, else the first option, and the next Tab leaves the list. Headers and hidden items are skipped.
 - Headers act as group names: they are hidden from screen readers, and each option points to the header above it with `aria-describedby`. A header without an `id` gets one. A screen reader reads the option content followed by the group name, e.g. "Kate, selected, 1 of 8, Employees". An option that has its own `aria-describedby`, set or bound in the template, keeps it.
 - The focused option shows an inset focus ring, also when it is selected. Its color is the `item-focus-outline-color` of the list theme.
-- While `isLoading` is set, the list has `aria-busy="true"`. When the list has items, the default loading message is hidden from screen readers.
+- While `isLoading` is set, the list has `aria-busy="true"`.
+- While the list has no options, the list itself is the tab stop and shows the focus ring, and its empty or loading message, the default or a custom template, is read as an option. When options are added while the list has the focus, the focus moves to them. While the list has options, the loading message is hidden from screen readers.
 
 | Key | Action |
 | :--- | :--- |
