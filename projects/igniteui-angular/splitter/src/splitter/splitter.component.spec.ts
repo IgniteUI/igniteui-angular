@@ -1029,6 +1029,60 @@ describe('IgxSplitter sizing', () => {
         }
     });
 
+    const hitboxes = () => {
+        const host: HTMLElement = fixture.nativeElement;
+        document.getAnimations().forEach(animation => animation.finish());
+
+        return ['start', 'end'].map(side => {
+            const expander = host.querySelector(`.igx-splitter-bar__expander--${side}`);
+            const border = getComputedStyle(expander);
+            const box = getComputedStyle(expander, '::before');
+            const px = (value: string) => parseFloat(value);
+            const width = px(box.width);
+            const height = px(box.height);
+
+            // Read from the computed styles, which the scale of the idle indigo bar does not change.
+            return {
+                width,
+                height,
+                // The offset of the center of the hitbox from the center of the triangle.
+                offsetX: px(box.left) + width / 2 - (px(border.borderRightWidth) - px(border.borderLeftWidth)) / 2,
+                offsetY: px(box.top) + height / 2 - (px(border.borderBottomWidth) - px(border.borderTopWidth)) / 2
+            };
+        });
+    };
+
+    it('should size the hitbox of each expander to the icon box and center it on the triangle', () => {
+        for (const type of [SplitterType.Horizontal, SplitterType.Vertical]) {
+            fixture.componentInstance.type = type;
+
+            for (const step of steps) {
+                fixture.componentInstance.size = step.value;
+                fixture.detectChanges();
+
+                const box = 2 * step.expander + 2 * step.space;
+                const centered = { width: box, height: box, offsetX: 0, offsetY: 0 };
+                expect(hitboxes(), `${step.size} ${type}`).toEqual([centered, centered]);
+            }
+        }
+    });
+
+    it('should size the hitbox to the 14px, 16px and 24px icon box in the indigo theme', () => {
+        document.documentElement.style.setProperty('--ig-theme', 'indigo');
+
+        try {
+            for (const [index, box] of [14, 16, 24].entries()) {
+                fixture.componentInstance.size = steps[index].value;
+                fixture.detectChanges();
+
+                const centered = { width: box, height: box, offsetX: 0, offsetY: 0 };
+                expect(hitboxes(), steps[index].size).toEqual([centered, centered]);
+            }
+        } finally {
+            document.documentElement.style.removeProperty('--ig-theme');
+        }
+    });
+
     it('should keep the 48px margins around the handle with a collapsed pane', () => {
         const panes = fixture.componentInstance.splitter.panes.toArray();
         const handleTop = () => {

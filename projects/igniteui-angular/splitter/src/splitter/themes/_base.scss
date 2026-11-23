@@ -145,9 +145,12 @@ $theme: digest-schema($light-splitter);
             pointer-events: none;
             z-index: 1;
 
+            // The hitbox is the icon box of the design, centered on the triangle.
             &::before {
                 position: absolute;
                 content: '';
+                width: $expander-box;
+                height: $expander-box;
                 background: if($debug-hitbox, $hitbox-debug-color, transparent);
             }
         }
@@ -157,10 +160,8 @@ $theme: digest-schema($light-splitter);
                 var-get($theme, 'expander-color');
 
             &::before {
-                top: calc(100% - #{$expander-size});
-                left: calc(100% - (#{$expander-size} * 2));
-                width: calc(#{$expander-size} * 4);
-                height: calc(#{$expander-size} * 3);
+                top: calc((#{$expander-size} - #{$expander-box}) / 2);
+                inset-inline-start: calc(#{$expander-box} / -2);
             }
         }
 
@@ -169,10 +170,8 @@ $theme: digest-schema($light-splitter);
                 var-get($theme, 'expander-color');
 
             &::before {
-                top: calc(100% - (#{$expander-size} * 2));
-                left: calc(100% - (#{$expander-size} * 2));
-                width: calc(#{$expander-size} * 4);
-                height: calc(#{$expander-size} * 3);
+                top: calc((#{$expander-size} + #{$expander-box}) / -2);
+                inset-inline-start: calc(#{$expander-box} / -2);
             }
         }
 
@@ -225,10 +224,8 @@ $theme: digest-schema($light-splitter);
                 border-inline-start: unset;
 
                 &::before {
-                    top: calc(100% - (#{$expander-size} * 2));
-                    left: calc(100% - (#{$expander-size}));
-                    width: calc(#{$expander-size} * 3);
-                    height: calc(#{$expander-size} * 4);
+                    top: calc(#{$expander-box} / -2);
+                    inset-inline-start: calc((#{$expander-size} - #{$expander-box}) / 2);
                 }
             }
 
@@ -240,10 +237,8 @@ $theme: digest-schema($light-splitter);
                     var-get($theme, 'expander-color');
 
                 &::before {
-                    top: calc(100% - (#{$expander-size} * 2));
-                    left: calc(100% - (#{$expander-size} * 2));
-                    height: calc(#{$expander-size} * 4);
-                    width: calc(#{$expander-size} * 3);
+                    top: calc(#{$expander-box} / -2);
+                    inset-inline-start: calc((#{$expander-size} + #{$expander-box}) / -2);
                 }
             }
 
