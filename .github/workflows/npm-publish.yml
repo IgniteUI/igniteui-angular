@@ -352,3 +352,31 @@ jobs:
               "release_tag": "${{ github.event.release.tag_name }}"
             }
 
+  # Hands the release to IgniteUI/api-docs, which decides where its API docs go: every X.Y.0 and
+  # pre-release to staging, and an X.Y.0 to production once staging has it. Patches are deployed by
+  # hand. Gated by the publish job, so docs never go out for a release that isn't on npm.
+  dispatch-api-docs:
+    name: Release the API docs
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions: {}
+    steps:
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}
+          private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+          owner: IgniteUI
+          repositories: api-docs
+          permission-actions: write
+
+      # The deploy runs in api-docs, which opens an issue there if it fails.
+      - name: Trigger the API docs release
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: >-
+          gh workflow run release-api-docs.yml --repo IgniteUI/api-docs --ref master
+          -f product=igniteui-angular -f version="$VERSION"
+
