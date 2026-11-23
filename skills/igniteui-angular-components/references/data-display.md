@@ -40,6 +40,18 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
 
 Auxiliary directives for list items: `igxListThumbnail`, `igxListAction`, `igxListLine`, `igxListLineTitle`, `igxListLineSubTitle`.
 
+For a list where the user selects items, set `role="listbox"` on it and name it. It becomes an accessible listbox with one tab stop, arrow key navigation and Enter/Space to click the focused option. Bind `[selected]` on the items, add `aria-multiselectable="true"` when more than one item can be selected, and keep focusable controls out of the items (an `inert` checkbox bound to the state is fine). Do not set `aria-activedescendant` on it: a list with that attribute is expected to handle the focus and the keys itself, so the built-in listbox behavior turns off. The keyboard navigation only reaches rendered items, so do not use `role="listbox"` on a list virtualized with `igxFor`:
+
+```html
+<igx-list role="listbox" aria-label="Contacts">
+  @for (contact of contacts; track contact.id) {
+    <igx-list-item [selected]="contact.id === selectedId" (click)="selectedId = contact.id">
+      <span igxListLineTitle>{{ contact.name }}</span>
+    </igx-list-item>
+  }
+</igx-list>
+```
+
 ## Tree
 
 ```typescript

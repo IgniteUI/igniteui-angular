@@ -29,39 +29,25 @@ export class IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * The items that bind `selected`.
+     * Whether the list follows the ARIA listbox pattern.
      */
-    public readonly selectionItems = new Set<{ isHeader: boolean }>();
-
-    /**
-     * @hidden
-     * @internal
-     * Whether an item that is not a header binds `selected`.
-     * Such a list follows the ARIA listbox pattern.
-     */
-    public get selectable(): boolean {
-        for (const item of this.selectionItems) {
-            if (!item.isHeader) {
-                return true;
-            }
-        }
+    public get isListbox(): boolean {
         return false;
     }
+}
 
-    /**
-     * @hidden
-     * @internal
-     * Sets or removes (with `null`) an attribute of the list or one of its items, when it changes.
-     */
-    public syncAttribute(element: Element, name: string, value: string | null) {
-        if (element.getAttribute(name) === value) {
-            return;
-        }
-        if (value === null) {
-            element.removeAttribute(name);
-        } else {
-            element.setAttribute(name, value);
-        }
+/**
+ * @hidden
+ * Sets an attribute, or removes it with `null`, only when its value changes.
+ */
+export function syncAttribute(element: Element, name: string, value: string | null) {
+    if (element.getAttribute(name) === value) {
+        return;
+    }
+    if (value === null) {
+        element.removeAttribute(name);
+    } else {
+        element.setAttribute(name, value);
     }
 }
 

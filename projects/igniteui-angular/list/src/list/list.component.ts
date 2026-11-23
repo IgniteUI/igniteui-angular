@@ -29,7 +29,8 @@ import {
     IgxEmptyListTemplateDirective,
     IgxListPanState,
     IgxListItemLeftPanningTemplateDirective,
-    IgxListItemRightPanningTemplateDirective
+    IgxListItemRightPanningTemplateDirective,
+    syncAttribute
 } from './list.common';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
@@ -499,38 +500,52 @@ export class IgxListComponent extends IgxListBaseDirective {
         return null!;
     }
 
-    /** Whether the list has been selectable, so its attributes and those of its items are kept in sync. */
+    /** Whether the list was a listbox at the last render, so its items are reset when it stops being one. */
     private _synced = false;
 
+    /** The option that was focused last, which keeps the tab stop. */
+    private _activeItem: IgxListItemComponent | null = null;
+
     /**
-     * A list whose items bind `selected` is a tab stop, and so are its options.
-     * A list that has never been selectable and its items are left untouched.
+     * Syncs the listbox attributes of the list and its items, in the order the items are displayed.
+     * Only the active option is a tab stop: the one focused last, else the first selected option, else the first option.
+     * While loading, the listbox is marked busy. A list that is not a listbox, and has not just stopped being one, is left untouched.
      */
     private updateAttributes() {
-        const selectable = this.selectable;
-        if (!selectable && !this._synced) {
+        const listbox = this.isListbox;
+        if (!listbox && !this._synced) {
             return;
         }
-        this._synced = true;
-        this.syncAttribute(this.element.nativeElement, 'tabindex', selectable ? '0' : null);
+        this._synced = listbox;
+        syncAttribute(this.element.nativeElement, 'aria-busy', listbox && this.isLoading ? 'true' : null);
+        const children = this.sortedChildren.filter(item => item.list === this);
+        const options = children.filter(item => !item.isHeader && !item.hidden);
+        const tabStop = options.includes(this._activeItem!) ? this._activeItem
+            : options.find(item => item.selected) ?? options[0];
         let header: IgxListItemComponent | null = null;
-        for (const item of this.children) {
-            if (item.list === this) {
-                header = item.isHeader ? item : header;
-                item.updateAttributes(selectable, header);
-            }
+        for (const item of children) {
+            header = item.isHeader ? item : header;
+            item.updateAttributes(listbox, item === tabStop, header);
         }
     }
 
-    /** The role set by the app. While not set, the role depends on whether the list is selectable. */
-    private _role: string | undefined;
+    private _role = 'list';
 
     /**
      * Gets/Sets the `role` attribute value.
      *
      * @remarks
-     * Defaults to `listbox` when its items bind `selected` and to `list` otherwise.
-     * Setting a role other than `listbox` turns off the listbox roles, the focus and the keyboard navigation of the list and its items.
+     * Defaults to `list`. With `listbox`, the list follows the ARIA listbox pattern: its items become options
+     * that expose their `selected` state, Tab focuses the selected option, Arrow Up/Down and Home/End
+     * move between the options, and Enter/Space click the focused option.
+     * A listbox that manages the focus itself with `aria-activedescendant` is left as it is.
+     *
+     * @example
+     * ```html
+     * <igx-list role="listbox" aria-label="Employees">
+     *     <igx-list-item [selected]="true">Kate</igx-list-item>
+     * </igx-list>
+     * ```
      *
      * @example
      * ```typescript
@@ -540,7 +555,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role !== undefined ? this._role : this.selectable ? 'listbox' : 'list';
+        return this._role;
     }
 
     public set role(val: string) {
@@ -550,37 +565,52 @@ export class IgxListComponent extends IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * Whether the list follows the ARIA listbox pattern: an item that is not a header binds `selected`,
-     * and no role other than `listbox` is set on the list.
+     * Whether the list follows the ARIA listbox pattern: its role is `listbox`,
+     * and it does not manage the focus itself with `aria-activedescendant`, like the grid's Excel-style filter list.
      */
-    @HostBinding('class.igx-list--selectable')
-    public override get selectable(): boolean {
-        return (this._role === undefined || this._role === 'listbox') && super.selectable;
+    public override get isListbox(): boolean {
+        return this._role === 'listbox' && !this.element.nativeElement.hasAttribute('aria-activedescendant');
     }
 
     /**
      * @hidden
      * @internal
-     * Moves the focus between the items of a list whose items bind `selected`.
-     * ArrowDown/ArrowUp go to the next/previous item, Home/End to the first/last one.
-     * Enter/Space activate the focused item like a click, so `itemClicked` and its `click` handlers fire.
-     * Keys pressed in the content of an item are not handled.
+     * Keeps the tab stop on the option that was focused last.
+     *
+     * @param event The focusin event of the list.
+     */
+    @HostListener('focusin', ['$event'])
+    public onFocusIn(event: FocusEvent) {
+        const target = event.composedPath()[0];
+        this._activeItem = this.items.find(item => item.list === this && item.element === target) ?? this._activeItem;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Moves the focus between the options of a listbox.
+     * ArrowDown/ArrowUp go to the next/previous option, Home/End to the first/last one.
+     * Enter/Space activate the focused option like a click, so `itemClicked` and its `click` handlers fire,
+     * once per key press, also when the key is held down. Keys pressed in the content of an option are not handled.
+     *
+     * @param event The keydown event that bubbled up from an option.
      */
     @HostListener('keydown', ['$event'])
     public onKeydown(event: KeyboardEvent) {
-        if (!this.selectable) {
+        if (!this.isListbox) {
             return;
         }
 
-        const items = this.children.filter(item => item.list === this && !item.isHeader && !item.hidden);
-        const current = items.findIndex(item => item.element === event.target);
-        if (current === -1 && event.target !== this.element.nativeElement) {
+        const target = event.composedPath()[0];
+        const items = this.items.filter(item => item.list === this && !item.hidden);
+        const current = items.findIndex(item => item.element === target);
+        if (current === -1) {
             return;
         }
 
         if (event.key === 'Enter' || event.key === ' ') {
-            if (current !== -1) {
-                event.preventDefault();
+            event.preventDefault();
+            if (!event.repeat) {
                 items[current].element.click();
             }
             return;
@@ -592,7 +622,7 @@ export class IgxListComponent extends IgxListBaseDirective {
                 next = Math.min(current + 1, items.length - 1);
                 break;
             case 'ArrowUp':
-                next = current === -1 ? items.length - 1 : Math.max(current - 1, 0);
+                next = Math.max(current - 1, 0);
                 break;
             case 'Home':
                 next = 0;
@@ -605,7 +635,7 @@ export class IgxListComponent extends IgxListBaseDirective {
         }
 
         event.preventDefault();
-        items[next]?.element.focus();
+        items[next].element.focus();
     }
 
     /**

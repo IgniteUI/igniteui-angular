@@ -9,10 +9,8 @@ import { FormsModule } from '@angular/forms';
 import {
     IGX_LIST_DIRECTIVES,
     IgxAvatarComponent,
-    IgxButtonDirective,
     IgxCheckboxComponent,
     IgxIconComponent,
-    IgxButtonModule,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -22,7 +20,6 @@ import {
     IgcListItemComponent,
     IgcIconComponent,
     IgcCheckboxComponent,
-    IgcButtonComponent,
     registerIconFromText,
 } from 'igniteui-webcomponents';
 import {
@@ -38,7 +35,6 @@ defineComponents(
     IgcAvatarComponent,
     IgcIconComponent,
     IgcCheckboxComponent,
-    IgcButtonComponent
 );
 
 const icons = [
@@ -77,9 +73,6 @@ interface Employee {
         IgxIconComponent,
         IgxCheckboxComponent,
         IgxAvatarComponent,
-        IgxButtonModule,
-        IgxButtonModule,
-        IgxButtonDirective,
     ],
     changeDetection: ChangeDetectionStrategy.Eager
 })
@@ -125,20 +118,6 @@ export class ListSampleComponent {
             control: {
                 type: 'boolean',
                 defaultValue: true
-            }
-        },
-        addOutlinedButton: {
-            label: 'Add Outlined Button',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
-        },
-        addContainedButton: {
-            label: 'Add Contained Button',
-            control: {
-                type: 'boolean',
-                defaultValue: false
             }
         },
         enablePanning: {

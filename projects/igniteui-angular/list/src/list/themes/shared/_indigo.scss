@@ -9,6 +9,7 @@
 @include themed-block(igx-list-item, indigo) {
     --_padding-block: #{pad-block(rem(4px), rem(6px), rem(8px))};
     --_padding-inline: #{pad-block(rem(8px), rem(12px), rem(16px))};
+    --_focus-ring-width: #{rem(2px)};
 
     igx-avatar {
         --ig-size: 2;

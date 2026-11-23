@@ -7,7 +7,7 @@
 </ng-template>
 
 <ng-template #defaultDataLoading>
-    <article class="igx-list__message">
+    <article class="igx-list__message" [attr.aria-hidden]="isListbox && children?.length ? 'true' : null">
         {{resourceStrings.igx_list_loading}}
     </article>
 </ng-template>

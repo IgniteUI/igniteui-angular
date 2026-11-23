@@ -5,7 +5,7 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, SelectableListComponent, GroupedSelectableListComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -32,8 +32,8 @@ describe('List', () => {
                 ListWithIgxForAndScrollingComponent,
                 ListDirectivesComponent,
                 ListWithSelectedItemComponent,
-                SelectableListComponent,
-                GroupedSelectableListComponent,
+                ListboxComponent,
+                GroupedListboxComponent,
                 ListWithOwnAttributesComponent,
                 ListWithBoundAttributesComponent
             ]
@@ -762,23 +762,23 @@ describe('List', () => {
         expect(headerItem.element.classList.contains('igx-list__item-base--selected')).toBe(false);
     });
 
-    describe('Selectable list', () => {
-        let fixture: ComponentFixture<SelectableListComponent>;
+    describe('Listbox', () => {
+        let fixture: ComponentFixture<ListboxComponent>;
         let list: IgxListComponent;
 
-        const pressKey = (target: HTMLElement, key: string): KeyboardEvent => {
-            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+        const pressKey = (target: HTMLElement, key: string, repeat = false): KeyboardEvent => {
+            const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true });
             target.dispatchEvent(event);
             return event;
         };
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(SelectableListComponent);
+            fixture = TestBed.createComponent(ListboxComponent);
             list = fixture.componentInstance.list;
             fixture.detectChanges();
         });
 
-        it('should keep the attributes set by the app when no item binds selected', () => {
+        it('should keep the attributes set by the app on a listbox that manages the focus with aria-activedescendant', () => {
             const ownFixture = TestBed.createComponent(ListWithOwnAttributesComponent);
             ownFixture.detectChanges();
             const ownList = ownFixture.componentInstance.list;
@@ -788,9 +788,20 @@ describe('List', () => {
             expect(header.element.getAttribute('aria-hidden')).toBe('true');
             expect(item.element.getAttribute('tabindex')).toBe('-1');
             expect(item.element.getAttribute('aria-selected')).toBe('true');
+            expect(item.element.classList).not.toContain('igx-list-item--option');
+
+            ownList.isLoading = true;
+            ownFixture.detectChanges();
+            expect(ownList.element.nativeElement.hasAttribute('aria-busy')).toBe(false);
+
+            const clickSpy = vi.fn();
+            ownList.itemClicked.subscribe(clickSpy);
+            expect(pressKey(item.element, 'ArrowDown').defaultPrevented).toBe(false);
+            expect(pressKey(item.element, ' ').defaultPrevented).toBe(false);
+            expect(clickSpy).not.toHaveBeenCalled();
         });
 
-        it('should keep the attributes bound by the app when no item binds selected', () => {
+        it('should keep the attributes bound by the app when the list is not a listbox', () => {
             const boundFixture = TestBed.createComponent(ListWithBoundAttributesComponent);
             boundFixture.detectChanges();
             const boundList = boundFixture.componentInstance.list;
@@ -800,7 +811,7 @@ describe('List', () => {
             expect(header.element.getAttribute('aria-hidden')).toBe('true');
             expect(item.element.getAttribute('tabindex')).toBe('0');
             expect(item.element.getAttribute('aria-selected')).toBe('true');
-            expect(item.element.getAttribute('aria-description')).toBe('Note');
+            expect(item.element.getAttribute('aria-describedby')).toBe('Note');
 
             boundFixture.componentInstance.tabIndex = '-1';
             boundFixture.componentInstance.selected = 'false';
@@ -810,8 +821,9 @@ describe('List', () => {
             expect(item.element.getAttribute('aria-selected')).toBe('false');
         });
 
-        it('should leave a list whose items do not bind selected unchanged', () => {
-            const plainFixture = TestBed.createComponent(ListWithHeaderComponent);
+        it('should leave a list that is not a listbox unchanged, even when its items bind selected', () => {
+            const plainFixture = TestBed.createComponent(ListboxComponent);
+            plainFixture.componentInstance.listbox = false;
             plainFixture.detectChanges();
             const plainList = plainFixture.componentInstance.list;
             const listElement = plainList.element.nativeElement as HTMLElement;
@@ -826,22 +838,22 @@ describe('List', () => {
                 expect(item.element.getAttribute('role')).toBe('listitem');
                 expect(item.element.hasAttribute('tabindex')).toBe(false);
                 expect(item.element.hasAttribute('aria-selected')).toBe(false);
-                expect(item.element.hasAttribute('aria-description')).toBe(false);
+                expect(item.element.hasAttribute('aria-describedby')).toBe(false);
             });
             expect(pressKey(plainList.items[0].element, 'ArrowDown').defaultPrevented).toBe(false);
         });
 
-        it('should be a focusable listbox with option items that expose their selected state', () => {
+        it('should be a listbox that only owns options and hidden headers, and exposes their selected state', () => {
             const listElement = list.element.nativeElement as HTMLElement;
             const [header, ...items] = list.children.toArray();
+            const owned = Array.from(listElement.children).filter(child => child.getAttribute('aria-hidden') !== 'true');
 
             expect(listElement.getAttribute('role')).toBe('listbox');
-            expect(listElement.getAttribute('tabindex')).toBe('0');
-            expect(header.element.getAttribute('role')).toBe('separator');
-            expect(header.element.getAttribute('aria-hidden')).toBe('true');
+            expect(listElement.hasAttribute('tabindex')).toBe(false);
+            expect(owned.map(child => child.getAttribute('role'))).toEqual(['option', 'option', 'option']);
             expect(header.element.hasAttribute('tabindex')).toBe(false);
-            expect(items.map(i => i.element.getAttribute('role'))).toEqual(['option', 'option', 'option']);
-            expect(items.map(i => i.element.getAttribute('tabindex'))).toEqual(['0', '0', '0']);
+            expect(header.element.classList).not.toContain('igx-list-item--option');
+            expect(items.every(i => i.element.classList.contains('igx-list-item--option'))).toBe(true);
             expect(items.map(i => i.element.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
 
             fixture.componentInstance.selectedId = 3;
@@ -849,14 +861,43 @@ describe('List', () => {
             expect(items.map(i => i.element.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
         });
 
-        it('should go back to the list roles when the items that bind selected are removed', () => {
-            fixture.componentInstance.items = [];
+        it('should keep a single tab stop on the option focused last, else the selected one, else the first one', () => {
+            const items = list.items;
+            const tabIndexes = () => list.items.map(i => i.element.getAttribute('tabindex'));
+            expect(tabIndexes()).toEqual(['-1', '0', '-1']);
+
+            fixture.componentInstance.selectedId = null;
+            fixture.detectChanges();
+            expect(tabIndexes()).toEqual(['0', '-1', '-1']);
+
+            items[0].element.focus();
+            pressKey(items[0].element, 'End');
+            fixture.detectChanges();
+            expect(document.activeElement).toBe(items[2].element);
+            expect(tabIndexes()).toEqual(['-1', '-1', '0']);
+
+            items[2].hidden = true;
+            fixture.detectChanges();
+            expect(tabIndexes()).toEqual(['0', '-1', '-1']);
+
+            fixture.componentInstance.items = fixture.componentInstance.items.slice(1);
+            fixture.detectChanges();
+            expect(tabIndexes()).toEqual(['0', '-1']);
+        });
+
+        it('should reset the list and its items when its role is no longer listbox', () => {
+            fixture.componentInstance.listbox = false;
             fixture.detectChanges();
 
             const listElement = list.element.nativeElement as HTMLElement;
             expect(listElement.getAttribute('role')).toBe('list');
-            expect(listElement.hasAttribute('tabindex')).toBe(false);
             expect(list.children.first.element.hasAttribute('aria-hidden')).toBe(false);
+            list.items.forEach(item => {
+                expect(item.element.getAttribute('role')).toBe('listitem');
+                expect(item.element.hasAttribute('tabindex')).toBe(false);
+                expect(item.element.hasAttribute('aria-selected')).toBe(false);
+                expect(item.element.classList).not.toContain('igx-list-item--option');
+            });
         });
 
         it('should keep the roles set by the app and not follow the listbox pattern with a role other than listbox', () => {
@@ -877,15 +918,41 @@ describe('List', () => {
             expect(listElement.hasAttribute('role')).toBe(false);
         });
 
-        it('should describe every option with the header of its group, unless it has its own description', () => {
-            const groupedFixture = TestBed.createComponent(GroupedSelectableListComponent);
+        it('should describe every option with the header of its group, unless it has its own aria-describedby', () => {
+            const groupedFixture = TestBed.createComponent(GroupedListboxComponent);
             groupedFixture.detectChanges();
-            const [ungrouped, item1, item2, item3] = groupedFixture.componentInstance.list.items;
+            const groupedList = groupedFixture.componentInstance.list;
+            const [employees, contractors] = groupedList.headers;
+            const [ungrouped, item1, item2, item3, item4] = groupedList.items;
 
-            expect(ungrouped.element.hasAttribute('aria-description')).toBe(false);
-            expect(item1.element.getAttribute('aria-description')).toBe('Employees');
-            expect(item2.element.getAttribute('aria-description')).toBe('Part-time');
-            expect(item3.element.getAttribute('aria-description')).toBe('Contractors');
+            expect(employees.element.id).toBeTruthy();
+            expect(contractors.element.id).toBeTruthy();
+            expect(ungrouped.element.hasAttribute('aria-describedby')).toBe(false);
+            expect(item1.element.getAttribute('aria-describedby')).toBe(employees.element.id);
+            expect(item2.element.getAttribute('aria-describedby')).toBe('item-2-note');
+            expect(item3.element.getAttribute('aria-describedby')).toBe('item-3-note');
+            expect(item4.element.getAttribute('aria-describedby')).toBe(contractors.element.id);
+
+            groupedFixture.componentInstance.note = 'item-3-other-note';
+            groupedFixture.detectChanges();
+            expect(item3.element.getAttribute('aria-describedby')).toBe('item-3-other-note');
+
+            groupedFixture.componentInstance.note = null;
+            groupedFixture.detectChanges();
+            expect(item3.element.getAttribute('aria-describedby')).toBe(employees.element.id);
+        });
+
+        it('should mark the listbox busy and hide the loading message while loading', () => {
+            const listElement = list.element.nativeElement as HTMLElement;
+            list.isLoading = true;
+            fixture.detectChanges();
+            expect(listElement.getAttribute('aria-busy')).toBe('true');
+            expect(listElement.querySelector('.igx-list__message').getAttribute('aria-hidden')).toBe('true');
+
+            list.isLoading = false;
+            fixture.detectChanges();
+            expect(listElement.hasAttribute('aria-busy')).toBe(false);
+            expect(listElement.querySelector('.igx-list__message')).toBeNull();
         });
 
         describe('Keyboard navigation', () => {
@@ -909,8 +976,7 @@ describe('List', () => {
                 expect(document.activeElement).toBe(items[0].element);
             });
 
-            it('should move the focus to the first and last item with Home and End, also from the list', () => {
-                const listElement = list.element.nativeElement as HTMLElement;
+            it('should move the focus to the first and last item with Home and End', () => {
                 const items = list.items;
                 items[1].element.focus();
 
@@ -919,14 +985,25 @@ describe('List', () => {
 
                 pressKey(items[2].element, 'Home');
                 expect(document.activeElement).toBe(items[0].element);
+            });
 
-                listElement.focus();
-                pressKey(listElement, 'ArrowDown');
-                expect(document.activeElement).toBe(items[0].element);
+            it('should follow the displayed order of virtualized items', async () => {
+                const forFixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+                forFixture.componentInstance.listbox = true;
+                forFixture.detectChanges();
+                await nextFrame();
+                // Scrolling down and back up reuses the views, so the children are no longer in the displayed order.
+                for (const index of [8, 0]) {
+                    forFixture.componentInstance.igxFor.scrollTo(index);
+                    await nextFrame();
+                    forFixture.detectChanges();
+                }
 
-                listElement.focus();
-                pressKey(listElement, 'ArrowUp');
-                expect(document.activeElement).toBe(items[2].element);
+                const items = forFixture.componentInstance.forOfList.items;
+                items[0].element.focus();
+                pressKey(items[0].element, 'ArrowDown');
+                expect(document.activeElement).toBe(items[1].element);
+                expect(items[1].index).toBe(1);
             });
 
             it('should skip hidden items', () => {
@@ -947,10 +1024,11 @@ describe('List', () => {
 
                 expect(pressKey(items[1].element, 'Enter').defaultPrevented).toBe(true);
                 expect(pressKey(items[1].element, ' ').defaultPrevented).toBe(true);
+                expect(pressKey(items[1].element, ' ', true).defaultPrevented).toBe(true);
                 expect(clickedItems).toEqual([items[1], items[1]]);
             });
 
-            it('should not handle keys pressed in the content of an item, or Enter and Space on the list', () => {
+            it('should not handle keys pressed in the content of an item or on the list', () => {
                 const clickSpy = vi.fn();
                 list.itemClicked.subscribe(clickSpy);
                 const listElement = list.element.nativeElement as HTMLElement;

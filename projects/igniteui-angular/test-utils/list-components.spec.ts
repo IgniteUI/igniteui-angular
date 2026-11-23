@@ -87,7 +87,7 @@ export class ListWithSelectedItemComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list>
+        <igx-list [role]="listbox ? 'listbox' : 'list'">
             <igx-list-item [isHeader]="true">Header</igx-list-item>
             @for (item of items; track item.id) {
                 <igx-list-item [selected]="item.id === selectedId">
@@ -99,7 +99,8 @@ export class ListWithSelectedItemComponent extends BasicListComponent {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
 })
-export class SelectableListComponent extends BasicListComponent {
+export class ListboxComponent extends BasicListComponent {
+    public listbox = true;
     public selectedId: number | null = 2;
     public items = [
         { id: 1, name: 'Item 1' },
@@ -111,27 +112,29 @@ export class SelectableListComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list aria-multiselectable="true">
+        <igx-list role="listbox" aria-multiselectable="true">
             <igx-list-item [selected]="false">Ungrouped</igx-list-item>
             <igx-list-item [isHeader]="true">Employees</igx-list-item>
             <igx-list-item [selected]="true">Item 1</igx-list-item>
-            <igx-list-item [selected]="false" aria-description="Part-time">Item 2</igx-list-item>
+            <igx-list-item [selected]="false" aria-describedby="item-2-note">Item 2</igx-list-item>
+            <igx-list-item [selected]="false" [attr.aria-describedby]="note">Item 3</igx-list-item>
             <igx-list-item [isHeader]="true">Contractors</igx-list-item>
-            <igx-list-item [selected]="false">Item 3</igx-list-item>
+            <igx-list-item [selected]="false">Item 4</igx-list-item>
         </igx-list>
     </div>`,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxListComponent, IgxListItemComponent]
 })
-export class GroupedSelectableListComponent extends BasicListComponent {
+export class GroupedListboxComponent extends BasicListComponent {
+    public note: string | null = 'item-3-note';
 }
 
 @Component({
     template: `
     <div #wrapper>
-        <igx-list role="listbox" tabindex="0">
+        <igx-list role="listbox" tabindex="0" aria-activedescendant="own-item-1">
             <igx-list-item [isHeader]="true" aria-hidden="true">Header</igx-list-item>
-            <igx-list-item role="option" tabindex="-1" aria-selected="true">Item 1</igx-list-item>
+            <igx-list-item id="own-item-1" role="option" tabindex="-1" aria-selected="true">Item 1</igx-list-item>
         </igx-list>
     </div>`,
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -145,7 +148,7 @@ export class ListWithOwnAttributesComponent extends BasicListComponent {
     <div #wrapper>
         <igx-list [attr.tabindex]="tabIndex">
             <igx-list-item [isHeader]="true" [attr.aria-hidden]="hidden">Header</igx-list-item>
-            <igx-list-item [attr.tabindex]="tabIndex" [attr.aria-selected]="selected" [attr.aria-description]="description">
+            <igx-list-item [attr.tabindex]="tabIndex" [attr.aria-selected]="selected" [attr.aria-describedby]="description">
                 Item 1
             </igx-list-item>
         </igx-list>
@@ -292,7 +295,7 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
 
 @Component({
     template: `
-    <igx-list #forOfList>
+    <igx-list #forOfList [role]="listbox ? 'listbox' : 'list'">
         <div [style.height]="'240px'" [style.overflow]="'hidden'" [style.position]="'relative'">
             <igx-list-item
                 [index]="i"
@@ -317,6 +320,8 @@ export class ListWithIgxForAndScrollingComponent {
 
     @ViewChild(IgxForOfDirective)
     public igxFor: IgxForOfDirective<any>;
+
+    public listbox = false;
 
     public data = [
         { key: 1, name: 'John' },

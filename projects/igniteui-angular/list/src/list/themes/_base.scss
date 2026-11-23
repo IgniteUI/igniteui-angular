@@ -53,14 +53,6 @@ $theme: digest-schema($light-list);
                 z-index: 1;
             }
         }
-
-        @include m(selectable) {
-            @include e(item-base) {
-                &:focus-visible {
-                    outline: none;
-                }
-            }
-        }
     }
 
     @include b(igx-list-item) {
@@ -183,6 +175,17 @@ $theme: digest-schema($light-list);
             display: flex;
             color: var-get($theme, 'header-text-color');
             background: var-get($theme, 'header-background');
+        }
+
+        @include m(option) {
+            &:focus-visible {
+                outline: none;
+
+                @include e(content) {
+                    outline: var(--_focus-ring-width, #{rem(1px)}) solid var-get($theme, 'item-focus-outline-color');
+                    outline-offset: calc(var(--_focus-ring-width, #{rem(1px)}) * -1);
+                }
+            }
         }
 
         @include m(base) {

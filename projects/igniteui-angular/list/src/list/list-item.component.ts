@@ -3,11 +3,14 @@ import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListen
 import {
     IgxListPanState,
     IListChild,
-    IgxListBaseDirective
+    IgxListBaseDirective,
+    syncAttribute
 } from './list.common';
 
 import { rem, IgxTouchManager, IgxGestureEvent } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+
+let NEXT_HEADER_ID = 0;
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
@@ -40,8 +43,8 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      */
     private _gestures: IgxTouchManager | null = null;
 
-    /** The `aria-description` set on the item in the template, which is kept instead of the group name. */
-    private readonly _ownDescription = this.elementRef.nativeElement.getAttribute('aria-description');
+    /** The `aria-describedby` the list set last, to tell it apart from one set or bound by the app, which is kept. */
+    private _describedBy: string | null = null;
 
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
@@ -261,8 +264,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     /**
      * Gets/Sets the `role` attribute of the `list item`.
-     * Defaults to `separator` for headers, and for items to `option` when the items of the list bind `selected`
-     * and to `listitem` otherwise.
+     * Defaults to `separator` for headers, and for items to `option` in a listbox and to `listitem` otherwise.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -272,7 +274,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role ? this._role : this.isHeader ? 'separator' : this.list.selectable ? 'option' : 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator' : this.list.isListbox ? 'option' : 'listitem';
     }
 
     public set role(val: string) {
@@ -306,23 +308,32 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     public set selected(value: boolean) {
         this._selected = value;
-        this.list.selectionItems.add(this);
     }
 
     /**
      * @hidden
      * @internal
-     * In a list whose items bind `selected`, the options are tab stops that expose their selected state
-     * and are described by the header of their group, unless they have their own `aria-description`.
-     * The headers are hidden from assistive technology. Called by the list after rendering.
+     * Syncs the listbox attributes of the item. Options expose their selected state, only the active one is a tab stop,
+     * and they are described by the header of their group, unless they have their own `aria-describedby`.
+     * Headers are hidden from assistive technology and get an `id` when they have none, so options can point to them.
+     * Called by the list after rendering.
+     *
+     * @param listbox Whether the list is a listbox.
+     * @param tabStop Whether the item is the active option.
+     * @param header The header of the item's group.
      */
-    public updateAttributes(selectable: boolean, header: IgxListItemComponent | null) {
-        const option = selectable && !this.isHeader;
-        this.list.syncAttribute(this.element, 'tabindex', option ? '0' : null);
-        this.list.syncAttribute(this.element, 'aria-selected', option ? String(this.selected) : null);
-        this.list.syncAttribute(this.element, 'aria-hidden', selectable && this.isHeader ? 'true' : null);
-        if (!this._ownDescription) {
-            this.list.syncAttribute(this.element, 'aria-description', (option && header?.element.textContent.trim()) || null);
+    public updateAttributes(listbox: boolean, tabStop: boolean, header: IgxListItemComponent | null) {
+        const option = listbox && !this.isHeader;
+        syncAttribute(this.element, 'tabindex', option ? (tabStop ? '0' : '-1') : null);
+        syncAttribute(this.element, 'aria-selected', option ? String(this.selected) : null);
+        syncAttribute(this.element, 'aria-hidden', listbox && this.isHeader ? 'true' : null);
+        if (listbox && this.isHeader && !this.element.id) {
+            this.element.id = `igx-list-header-${NEXT_HEADER_ID++}`;
+        }
+        const describedBy = this.element.getAttribute('aria-describedby');
+        if (describedBy === null || describedBy === this._describedBy) {
+            this._describedBy = (option && header?.element.id) || null;
+            syncAttribute(this.element, 'aria-describedby', this._describedBy);
         }
     }
 
@@ -357,6 +368,12 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('class.igx-list-item--active')
     public get active(): boolean {
         return false;
+    }
+
+    /** @hidden @internal Applies the option style when the item is an option of a listbox. */
+    @HostBinding('class.igx-list-item--option')
+    public get optionStyle(): boolean {
+        return !this.isHeader && this.list.isListbox;
     }
 
     /**
@@ -394,7 +411,6 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      */
     public ngOnDestroy() {
         this._gestures?.destroy();
-        this.list.selectionItems.delete(this);
     }
 
     /**

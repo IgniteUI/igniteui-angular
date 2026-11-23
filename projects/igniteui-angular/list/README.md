@@ -67,21 +67,25 @@ In order to access its elements, the list provides the following:
 - an array with items only
 - an array with headers only
 
-### Selectable lists and keyboard navigation
-When items bind `[selected]`, the list becomes an accessible [listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
+### Listbox and keyboard navigation
+Set `role="listbox"` on the list to make it an accessible [listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
 
-- The list gets `role="listbox"` and items get `role="option"` with `aria-selected`.
-- Tab focuses the list, then each item. Headers and hidden items are skipped.
-- Headers act as group names: each item gets the text of the header above it as its `aria-description`, and the headers are hidden from screen readers. A screen reader reads the item content followed by the group name, e.g. "Kate, selected, 1 of 8, Employees". An item that has its own `aria-description` in the template keeps it.
+- Items get `role="option"` with `aria-selected`, from their `selected` state.
+- The list has a single tab stop. Tab focuses the option that was focused last, else the first selected option, else the first option, and the next Tab leaves the list. Headers and hidden items are skipped.
+- Headers act as group names: they are hidden from screen readers, and each option points to the header above it with `aria-describedby`. A header without an `id` gets one. A screen reader reads the option content followed by the group name, e.g. "Kate, selected, 1 of 8, Employees". An option that has its own `aria-describedby`, set or bound in the template, keeps it.
+- The focused option shows an inset focus ring, also when it is selected. Its color is the `item-focus-outline-color` of the list theme.
+- While `isLoading` is set, the list has `aria-busy="true"`. When the list has items, the default loading message is hidden from screen readers.
 
 | Key | Action |
 | :--- | :--- |
-| Arrow Down / Arrow Up | Next / previous item |
-| Home / End | First / last item |
-| Enter / Space | Clicks the item, so `(click)` and `itemClicked` fire |
+| Arrow Down / Arrow Up | Next / previous option |
+| Home / End | First / last option |
+| Enter / Space | Clicks the option, so `(click)` and `itemClicked` fire. Holding the key down clicks once. |
+
+When an option is activated with Enter or Space, the `event` of `itemClicked` is the synthetic `MouseEvent` of that click.
 
 ```html
-<igx-list aria-label="Employees">
+<igx-list role="listbox" aria-label="Employees">
     @for (item of items(); track item.id) {
         <igx-list-item [selected]="item.id === selectedId()" (click)="select(item)">
             <span igxListLineTitle>{{ item.name }}</span>
@@ -92,12 +96,12 @@ When items bind `[selected]`, the list becomes an accessible [listbox](https://w
 
 Recommendations:
 
-- **Name the list.** Set `aria-label`, or `aria-labelledby` pointing to a visible title. Headers do not name the list, and without a name some screen readers read the first item instead of the list.
+- **Name the list.** Set `aria-label`, or `aria-labelledby` pointing to a visible title. When the focus moves into the list, screen readers announce its name and role together with the focused option. Without a name, they only announce the role. Headers do not name the list.
 - **Mark multi-select lists.** If more than one item can be selected, set `aria-multiselectable="true"` on the list. Without it, screen readers treat the list as single-select and may not announce additional selections.
 - **Avoid interactive controls inside items.** An option should not contain buttons, links or checkboxes that can be focused. To show the selection with a checkbox, make it `inert` and bind it to the item state, so clicking it selects the item:
 
 ```html
-<igx-list aria-label="Employees" aria-multiselectable="true">
+<igx-list role="listbox" aria-label="Employees" aria-multiselectable="true">
     @for (employee of employees; track employee.id) {
         <igx-list-item [selected]="employee.selected" (click)="employee.selected = !employee.selected">
             <span igxListLineTitle>{{ employee.name }}</span>
@@ -107,7 +111,9 @@ Recommendations:
 </igx-list>
 ```
 
-Lists without `[selected]` are unchanged: they are not focusable, and controls inside their items work as before.
+Lists with another role are unchanged: they are not focusable, and controls inside their items work as before. A listbox that manages the focus itself with `aria-activedescendant`, like the grid's Excel-style filter list, is also left as it is: the two focus models cannot be combined, because the list would move the focus to an option while the app keeps a different option active. Do not set `aria-activedescendant` on a listbox unless the app handles the focus and the keys itself.
+
+The keyboard navigation only moves between the rendered items. A list virtualized with `igxFor` is not scrolled to the items that are not rendered, so do not set `role="listbox"` on it. Handle the focus and the keys of a virtualized list in the app with `aria-activedescendant`, like the grid's Excel-style filter list does.
 
 ### Empty list template
 
@@ -172,7 +178,7 @@ public rightPanPerformed(args) {
 | items  | Array of items in the list  |
 | headers  | Array of headers in the list  |
 | innerStyle  | Currently used inner style depending on whether the list is empty or not  |
-| role  | Gets/sets the role of the list - _listbox_ when items bind `selected`, _list_ otherwise  |
+| role  | Gets/sets the role of the list, default _list_. _listbox_ makes it an accessible [listbox](#listbox-and-keyboard-navigation) with keyboard navigation  |
 
 
 ### Outputs
@@ -226,7 +232,7 @@ All list items implement `IListChild`.
 | index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
-| selected  | Whether the item is selected, default _false_. Binding it makes the list a [listbox](#selectable-lists-and-keyboard-navigation)  |
+| selected  | Whether the item is selected, default _false_. In a [listbox](#listbox-and-keyboard-navigation) it sets `aria-selected`  |
 
 ### Directives
 
