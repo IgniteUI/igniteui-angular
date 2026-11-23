@@ -2,11 +2,12 @@
 
 # Current Milestone
 
-## Milestone 47, version 22.4 (Due Jan 12, 2027)
+## Milestone 47, version 22.4 (Due Jan 19, 2027)
 
-1. Mask input undo-redo
+1. `igxMask` parity with `igc-mask-input` - undo/redo history, validation of unfilled required positions, select on focus, digits from all Unicode numbering systems [#17811](https://github.com/IgniteUI/igniteui-angular/issues/17811)
 2. Native CSS anchor positioning for `IgxOverlayService` [#17765](https://github.com/IgniteUI/igniteui-angular/issues/17765)
-3. Disabled items in `IgxCombo` and `IgxSimpleCombo`
+3. Group header selection in `IgxCombo`
+4. Optimizing `IgxGrid` search for big data sets [#17820](https://github.com/IgniteUI/igniteui-angular/issues/17820)
 
 ## Going down the road
 
@@ -14,7 +15,6 @@
 2. Grid formula & calculated fields
 3. Grid auto-fill functionality 
 4. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
-5. Optimizing `IgxGrid` search for big data sets
 
 # Previous Milestone
 
@@ -23,6 +23,7 @@
 2. **[DONE]** Templating support for `IgxCalendar` days [#17822](https://github.com/IgniteUI/igniteui-angular/issues/17822)
 3. **[DONE]** Vertical tabs - new `headerPosition` input for `IgxTabsComponent` [#1982](https://github.com/IgniteUI/igniteui-angular/issues/1982)
 4. **[DONE]** Ignite UI Theming 30.0.0 - new contrast-based `fitted` palette generator and surface roles
+5. **[DONE]** Grid validation - new `validationTooltipTrigger` input to show the validation error tooltip only on error icon hover [#17345](https://github.com/IgniteUI/igniteui-angular/issues/17345)
 
 ## Milestone 45, version 22.2 (Released Sep 30, 2026)
 1. **[DONE]** Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
