@@ -1471,9 +1471,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                     searchVal: 299
                 }
             ];
+            const filtered = filteringDone(treeGrid);
             treeGrid.filter('ID', null, expressionTree);
+            // Let the pipes filter the rows before filteringDone fires, as change detection does in an app;
+            // otherwise 317 still has visible children when its cascade state is updated.
+            fix.detectChanges();
 
-            await nextFrame();
+            await filtered;
             fix.detectChanges();
 
             expect(getVisibleSelectedRows(fix).length).toBe(1);
