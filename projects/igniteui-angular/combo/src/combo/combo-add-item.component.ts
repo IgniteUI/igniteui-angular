@@ -36,7 +36,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
      * ```
      */
     @Input()
-    public label = '';
+    public label?: string;
 
     @HostBinding('class.igx-drop-down__item')
     public get isDropDownItem(): boolean {
