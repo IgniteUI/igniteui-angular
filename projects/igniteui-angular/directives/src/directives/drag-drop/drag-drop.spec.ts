@@ -1382,6 +1382,113 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.animInProgress).toBe(false);
     });
 
+    it('should disable the transitions of the base element only while dragging.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+
+        // The element's own transitions (e.g. on hover) are not overridden outside of a drag.
+        expect(firstElement.style.transitionDuration).toBe('');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+        expect(firstElement.style.transitionDuration).toBe('');
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await nextFrame();
+
+        // Hiding the base for the ghost must not wait for its transitions.
+        expect(firstDrag.ghostElement).toBeTruthy();
+        expect(firstElement.style.transitionDuration).toBe('0s');
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+
+        expect(transitionedSpy).toHaveBeenCalledTimes(1);
+        expect(firstElement.style.transitionDuration).toBe('');
+    });
+
+    it('should restore the inline transition duration of the base element after dragging.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+        // Set by the application before the drag.
+        firstElement.style.transitionDuration = '0.5s';
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await nextFrame();
+        expect(firstElement.style.transitionDuration).toBe('0s');
+
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait();
+
+        expect(transitionedSpy).toHaveBeenCalledTimes(1);
+        expect(firstElement.style.transitionDuration).toBe('0.5s');
+    });
+
+    it('should ignore transitionend events of non-positional properties and of child elements.', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const transitionedSpy = vi.spyOn(firstDrag.transitioned, 'emit');
+        firstDrag.dragEnd.pipe(first()).subscribe(() => firstDrag.transitionToOrigin({ duration: 0.3 }));
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await nextFrame();
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await nextFrame();
+
+        const ghost = firstDrag.ghostElement;
+        expect(ghost).toBeTruthy();
+
+        // E.g. a background-color transition of the base when its hover state changes while dragging.
+        firstElement.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+        ghost.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+        // A positional transition of a descendant bubbling up to the ghost.
+        const ghostChild = document.createElement('span');
+        ghost.appendChild(ghostChild);
+        ghostChild.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'left', bubbles: true }));
+
+        expect(transitionedSpy).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).toBe(ghost);
+
+        UIInteractions.simulatePointerEvent('pointerup', ghost, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(50);
+        expect(firstDrag.animInProgress).toBe(true);
+
+        ghost.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'color', bubbles: true }));
+
+        expect(transitionedSpy).not.toHaveBeenCalled();
+        expect(firstDrag.ghostElement).toBe(ghost);
+        expect(firstDrag.animInProgress).toBe(true);
+
+        await vi.waitFor(() => expect(transitionedSpy).toHaveBeenCalledTimes(1));
+        expect(firstDrag.ghostElement).toBeNull();
+        expect(firstDrag.animInProgress).toBe(false);
+    });
+
     it('should not cancel the drag on Escape by default.', async () => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
@@ -3057,6 +3164,71 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
         const result = (firstDrag as any).getFromShadowRoot(shadowHost, 100, 100, mockParentElems);
 
         expect(result).toContain(innerElem);
+    });
+})
+
+describe('igxDrag window auto-scroll', () => {
+    let fix: ComponentFixture<TestDragDropComponent>;
+    let spacer: HTMLElement;
+    const extraScrollHeight = 100;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestDragDropComponent]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        // Makes the document a fixed amount taller than the viewport so the window can scroll.
+        spacer = document.createElement('div');
+        spacer.style.cssText = `position: absolute; top: 0; left: 0; width: 1px; height: ${window.innerHeight + extraScrollHeight}px;`;
+        document.body.appendChild(spacer);
+        window.scrollTo(0, 0);
+
+        fix = TestBed.createComponent(TestDragDropComponent);
+        fix.detectChanges();
+    });
+
+    afterEach(() => {
+        spacer.remove();
+        window.scrollTo(0, 0);
+    });
+
+    /** Starts dragging `drag` and moves its ghost within the scroll threshold of the viewport bottom. */
+    const dragToViewportBottom = async (drag: IgxDragDirective) => {
+        const element = drag.element.nativeElement;
+        const rect = getElemRects(element);
+        const startingX = (rect.left + rect.right) / 2;
+        const startingY = (rect.top + rect.bottom) / 2;
+
+        UIInteractions.simulatePointerEvent('pointerdown', element, startingX, startingY);
+        await nextFrame();
+        UIInteractions.simulatePointerEvent('pointermove', element, startingX, window.innerHeight - 10);
+        expect(drag.ghostElement).toBeTruthy();
+    };
+
+    it('should stop scrolling the window when destroyed while auto-scrolling', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        await dragToViewportBottom(firstDrag);
+        await vi.waitFor(() => expect(window.scrollY).toBeGreaterThan(0));
+
+        // Each scroll step is queued for the next animation frame. Destroying right after one is queued
+        // runs that step without a ghost, which must not throw.
+        const step = (firstDrag as any).onScrollContainerStep.bind(firstDrag);
+        const stepQueued = new Promise<void>(resolve => {
+            vi.spyOn(firstDrag as any, 'onScrollContainerStep').mockImplementationOnce((direction) => {
+                step(direction);
+                resolve();
+            });
+        });
+        await stepQueued;
+        fix.destroy();
+        expect(firstDrag.ghostElement).toBeNull();
+
+        await nextFrame();
+        const scrollY = window.scrollY;
+        await wait(100);
+        expect(window.scrollY).toBe(scrollY);
     });
 })
 
