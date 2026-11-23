@@ -10,6 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - The arrow keys, `Home` and `End` combined with `Ctrl`, `Shift` or `Meta`, and `Home` and `End` combined with `Alt`, no longer move the focus between the panel headers. The browser default runs. Previously the accordion ignored these modifiers and handled the keys as the plain keys. `Alt` + `Shift` + `ArrowUp` / `ArrowDown` still collapse or expand all panels.
 - `IgxCalendarComponent`, `IgxMonthPickerComponent`
     - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta`, and `PageUp` and `PageDown` combined with `Ctrl`, `Alt` or `Meta`, no longer navigate or select in the dates, months or years. The browser default runs. Previously these modifiers were ignored and the keys were handled as the plain keys. `Shift` + `PageUp` / `PageDown` still move one year.
+- `IgxCarouselComponent`
+    - The arrow keys, `Home` and `End` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer change the slide from the indicators. The browser default runs. Previously the indicators ignored the modifiers and handled these keys as the plain keys.
 - `IgxDialogComponent`
     - `Tab` combined with `Ctrl` or `Meta` no longer moves the focus inside the focus trap. The browser default runs. Previously the focus trap ignored these modifiers and handled the keys as `Tab` or `Shift` + `Tab`. Browsers and operating systems usually use these combinations themselves, so they rarely reach the page. `Option` + `Tab`, which Safari uses to move the focus to links, is still trapped.
 - `IgxQueryBuilderComponent`
@@ -25,6 +27,8 @@ All notable changes for each version of this project will be documented in this 
     - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the steps or activate a step. The step ignores them, and the browser default runs. Previously the step ignored the modifiers and handled these keys as the plain keys.
 - `IgxTabsComponent`
     - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the tab headers or select a tab. The tab header ignores them, and the browser default runs. Previously the tab header ignored the modifiers and handled these keys as the plain keys.
+- `IgxTreeComponent`
+    - The navigation keys combined with a modifier no longer move the focus, expand, collapse, select or activate nodes. The browser default runs. Previously the tree ignored most modifiers and handled these keys as the plain keys. `Ctrl` + `ArrowUp` / `ArrowDown` (move the focus without activating the node), `Shift` + `Space` (select a range) and `*` with or without `Shift` keep working.
 
 ## 22.3.0
 

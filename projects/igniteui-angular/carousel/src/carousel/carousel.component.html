@@ -17,7 +17,7 @@
 </ng-template>
 
 @if (showIndicators) {
-    <div [ngClass]="indicatorsClass" role="tablist" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()" (keydown)="handleKeydown($event)">
+    <div #indicatorsContainer [ngClass]="indicatorsClass" role="tablist" (keyup)="handleKeyUp($event)" (focusout)="handleFocusOut($event)" (click)="handleClick()">
         @for (slide of slides; track slide) {
             <div #indicators
                 class="igx-carousel-indicators__indicator"
