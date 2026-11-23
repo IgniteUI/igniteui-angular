@@ -1099,6 +1099,75 @@ describe('IgxRadioGroupDirective', () => {
             expect(event.stopPropagation).not.toHaveBeenCalled();
         });
 
+        it('Should handle the keys pressed on the native input of a radio button', async () => {
+            const fixture = TestBed.createComponent(RadioGroupComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const [, bar, baz] = radioGroup.radioButtons.toArray();
+            expect(baz.checked).toBe(true);
+
+            const arrow = new KeyboardEvent('keydown', { key: 'ArrowUp', bubbles: true, cancelable: true });
+            baz.nativeElement.dispatchEvent(arrow);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(arrow.defaultPrevented).toBe(true);
+            expect(radioGroup.selected).toBe(bar);
+
+            for (const shiftKey of [false, true]) {
+                const tab = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true });
+                vi.spyOn(tab, 'stopPropagation');
+                bar.nativeElement.dispatchEvent(tab);
+
+                expect(tab.stopPropagation, `shiftKey: ${shiftKey}`).toHaveBeenCalled();
+                expect(tab.defaultPrevented, `shiftKey: ${shiftKey}`).toBe(false);
+            }
+        });
+
+        it('Should keep moving the selection while an arrow key is held', async () => {
+            const fixture = TestBed.createComponent(RadioGroupComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const [foo, , baz] = radioGroup.radioButtons.toArray();
+            const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
+            for (const repeat of [false, true]) {
+                groupElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', repeat }));
+                fixture.detectChanges();
+                await fixture.whenStable();
+            }
+
+            // baz -> foo (wraps) -> the next one
+            expect(baz.checked).toBe(false);
+            expect(foo.checked).toBe(false);
+            expect(radioGroup.selected).toBe(radioGroup.radioButtons.toArray()[1]);
+        });
+
+        // The browser's native radio navigation may still move the selection (synthetic events have no default action)
+        it('Should not handle the arrow keys pressed with a modifier', async () => {
+            const fixture = TestBed.createComponent(RadioGroupComponent);
+            const radioGroup = fixture.componentInstance.radioGroup;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const selected = radioGroup.selected;
+            const groupElement = fixture.debugElement.query(By.css('igx-radio-group')).nativeElement;
+            for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const) {
+                for (const key of ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']) {
+                    const event = new KeyboardEvent('keydown', { key, [modifier]: true, cancelable: true });
+                    groupElement.dispatchEvent(event);
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+
+                    expect(event.defaultPrevented, `${modifier} + ${key}`).toBe(false);
+                    expect(radioGroup.selected, `${modifier} + ${key}`).toBe(selected);
+                }
+            }
+        });
+
         it('Should focus the checked radio button on Tab keyup', async () => {
             const fixture = TestBed.createComponent(RadioGroupComponent);
             const radioGroup = fixture.componentInstance.radioGroup;

@@ -14,6 +14,10 @@ All notable changes for each version of this project will be documented in this 
     - `Tab` combined with `Ctrl` or `Meta` no longer moves the focus inside the focus trap. The browser default runs. Previously the focus trap ignored these modifiers and handled the keys as `Tab` or `Shift` + `Tab`. Browsers and operating systems usually use these combinations themselves, so they rarely reach the page. `Option` + `Tab`, which Safari uses to move the focus to links, is still trapped.
 - `IgxQueryBuilderComponent`
     - While a condition is dragged with the keyboard, `ArrowUp`, `ArrowDown`, `Enter`, `Space` and `Escape` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move, drop or cancel it. The browser default runs. Previously the modifiers were ignored and the keys were handled as the plain keys. `Tab` and `Shift` + `Tab` still keep the focus on the drop location.
+- `IgxRadioComponent`
+    - The native `change` event of the radio button's input no longer bubbles, as with the checkbox and the switch. The radio button emits its own `change` event.
+- `IgxRadioGroupDirective`
+    - The arrow keys combined with `Shift`, `Ctrl`, `Alt` or `Meta` are no longer handled by the radio group. The browser's native radio button navigation runs instead, so whether they move the selection depends on the browser: `Shift` + arrow keys still do in Chrome, Firefox and Safari, while `Ctrl`, `Alt` or `Meta` + arrow keys do only in Safari. Previously the radio group ignored the modifiers and handled these keys as the plain arrow keys.
 - `IgxSliderComponent`
     - The left and right arrow keys now prevent their default action when they move a thumb, so they no longer also scroll the page or a scrollable container. Previously the default action ran as well.
     - The arrow keys combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move a thumb. The browser default runs. Previously the thumb ignored the modifiers and handled these keys as the plain arrow keys.

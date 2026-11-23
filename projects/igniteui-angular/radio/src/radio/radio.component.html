@@ -11,6 +11,7 @@
     [attr.aria-checked]="checked"
     [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
+    (change)="_onCheckboxChange($event)"
     (blur)="onBlur()" />
 
 <span #label class="igx-radio__composite" igxRipple

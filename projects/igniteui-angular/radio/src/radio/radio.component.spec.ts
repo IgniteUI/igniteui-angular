@@ -249,6 +249,22 @@ describe('IgxRadio', () => {
         expect(radio.nativeElement.getAttribute('aria-invalid')).toEqual('true');
     });
 
+    it('Should not let the native change event of its input reach the radio host', () => {
+        const fixture = TestBed.createComponent(InitRadioComponent);
+        fixture.detectChanges();
+
+        const radio = fixture.componentInstance.radio;
+        const host: HTMLElement = fixture.debugElement.query(By.css('igx-radio')).nativeElement;
+        const received: string[] = [];
+        host.addEventListener('change', () => received.push('host'));
+        fixture.nativeElement.addEventListener('change', () => received.push('parent'));
+
+        // Browsers fire it on the input when Space or the native arrow key navigation checks the radio.
+        radio.nativeInput.nativeElement.dispatchEvent(new Event('change', { bubbles: true }));
+
+        expect(received).toEqual([]);
+    });
+
     describe('EditorProvider', () => {
         it('Should return correct edit element', () => {
             const fixture = TestBed.createComponent(InitRadioComponent);
