@@ -84,11 +84,42 @@ describe('MaskHistory', () => {
             history.record('delete-backward', at('1/2', 3));
             history.settle('1/_', 2);
             // A backspace over the literal changes no text, so nothing is recorded.
+            history.pass('delete-backward', at('1/_', 2));
             history.settle('1/_', 1);
             history.record('delete-backward', at('1/_', 1));
             history.settle('_/_', 0);
 
             expect(history.undo(at('_/_', 0))).toEqual(at('1/2', 3));
+            expect(history.canUndo).toBe(false);
+        });
+
+        it('should end the run when an edit that changed nothing came after a caret move', () => {
+            history.record('insert', at('___ ___', 0));
+            history.settle('a__ ___', 1);
+
+            // The caret moved to 4 and the character typed there was rejected.
+            history.pass('insert', at('a__ ___', 4));
+            history.settle('a__ ___', 4);
+
+            history.record('insert', at('a__ ___', 4));
+            history.settle('a__ b__', 5);
+
+            expect(history.undo(at('a__ b__', 5))).toEqual(at('a__ ___', 4));
+            expect(history.undo(at('a__ ___', 4))).toEqual(at('___ ___', 0));
+        });
+
+        it('should keep the run when an edit that changed nothing continues it', () => {
+            history.record('insert', at('___', 0));
+            history.settle('a__', 1);
+
+            // A rejected character where the caret already is.
+            history.pass('insert', at('a__', 1));
+            history.settle('a__', 1);
+
+            history.record('insert', at('a__', 1));
+            history.settle('ab_', 2);
+
+            expect(history.undo(at('ab_', 2))).toEqual(at('___', 0));
             expect(history.canUndo).toBe(false);
         });
 

@@ -855,7 +855,7 @@ describe('igxMask', () => {
             expect(event.preventDefault).toHaveBeenCalledTimes(1);
             expect(element.value).toEqual('(1__) ____-___');
 
-            const command = { inputType: 'historyUndo', preventDefault: vi.fn() };
+            const command = { inputType: 'historyUndo', cancelable: true, preventDefault: vi.fn() };
             input.triggerEventHandler('beforeinput', command);
             expect(command.preventDefault).toHaveBeenCalledTimes(1);
             expect(element.value).toEqual('(1__) ____-___');
@@ -949,6 +949,26 @@ describe('igxMask', () => {
             // there is no step left for the rejected edits
             redo(input);
             undo(input);
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should start a new step when a rejected edit follows a caret move', async () => {
+            const { input, element } = await setup();
+
+            type('1', input, 0);
+            // the caret moves and the character typed at the new position is rejected
+            type('a', input, 7);
+            expect(element.value).toEqual('(1__) ____-___');
+            expectSelection(element, 7);
+
+            type('5', input);
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            // the rejected edit must not join the two runs
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+
             undo(input);
             expect(element.value).toEqual(EMPTY_MASK);
         });
@@ -1056,12 +1076,12 @@ describe('igxMask', () => {
             type('1', input, 0);
 
             // context menu, Edit menu, software keyboard
-            const undoCommand = { inputType: 'historyUndo', preventDefault: vi.fn() };
+            const undoCommand = { inputType: 'historyUndo', cancelable: true, preventDefault: vi.fn() };
             input.triggerEventHandler('beforeinput', undoCommand);
             expect(undoCommand.preventDefault).toHaveBeenCalledTimes(1);
             expect(element.value).toEqual(EMPTY_MASK);
 
-            const redoCommand = { inputType: 'historyRedo', preventDefault: vi.fn() };
+            const redoCommand = { inputType: 'historyRedo', cancelable: true, preventDefault: vi.fn() };
             input.triggerEventHandler('beforeinput', redoCommand);
             expect(redoCommand.preventDefault).toHaveBeenCalledTimes(1);
             expect(element.value).toEqual('(1__) ____-___');
@@ -1077,6 +1097,27 @@ describe('igxMask', () => {
 
             input.triggerEventHandler('input', { target: element, inputType: 'historyRedo' });
             expect(element.value).toEqual('(1__) ____-___');
+        });
+
+        it('should move a single step for a history command that cannot be canceled', async () => {
+            const { input, element } = await setup();
+            type('1', input, 0);
+            type('5', input, 7);
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            // the browser sends both events for one command
+            const undoCommand = { inputType: 'historyUndo', cancelable: false, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', undoCommand);
+            expect(undoCommand.preventDefault).not.toHaveBeenCalled();
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            input.triggerEventHandler('input', { target: element, inputType: 'historyUndo' });
+            expect(element.value).toEqual('(1__) ____-___');
+
+            const redoCommand = { inputType: 'historyRedo', cancelable: false, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', redoCommand);
+            input.triggerEventHandler('input', { target: element, inputType: 'historyRedo' });
+            expect(element.value).toEqual('(1__) _5__-___');
         });
 
         it('should restore the caret of an edit that comes with no keydown', async () => {

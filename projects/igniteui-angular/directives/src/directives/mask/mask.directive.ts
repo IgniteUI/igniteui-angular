@@ -308,6 +308,12 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
+        // Where the command cannot be canceled, the `input` event that follows handles it. Stepping here too
+        // would move two steps for a single command.
+        if (!event.cancelable) {
+            return;
+        }
+
         // Undo and redo from the context menu, the Edit menu or a software keyboard never reach `keydown`.
         event.preventDefault();
         if (!this._composing) {
@@ -513,9 +519,12 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
 
         // Only an edit that the mask accepts is a history step. The snapshot is the state that the edit overwrites.
+        const { start, end } = this._selectionBefore ?? { start: this._start, end: Math.max(this._start, this._end) };
+        const before = this.createHistoryState(this._oldText, start, end);
         if (replacedData.value !== this._oldText) {
-            const { start, end } = this._selectionBefore ?? { start: this._start, end: Math.max(this._start, this._end) };
-            this.history.record(kind, this.createHistoryState(this._oldText, start, end));
+            this.history.record(kind, before);
+        } else {
+            this.history.pass(kind, before);
         }
 
         this.inputValue = replacedData.value;
@@ -524,7 +533,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         }
 
         this.setSelectionRange(replacedData.end);
-        // Settle even when the text is the same: a delete over a literal only moves the caret and the run goes on.
+        // Settle even when the text is the same: a delete over a literal only moves the caret.
         this.settleHistory(replacedData.end);
         this.emitValue();
         this.afterInput();

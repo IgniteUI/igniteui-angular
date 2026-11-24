@@ -1568,6 +1568,99 @@ describe('IgxDateTimeEditor', () => {
                     expect(dateTimeEditorDirective.value).toEqual(new Date(2010, 0, 1));
                 });
 
+                it('should drop the history when a different date with the same text is set from outside', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15, 10, 0);
+                    focus();
+                    inputElement.nativeElement.setSelectionRange(1, 1);
+
+                    // through the value
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 16, 18, 30);
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 16, 18, 30));
+
+                    // through the form control
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('17/06/2020');
+                    dateTimeEditorDirective.writeValue(new Date(2020, 5, 17, 20, 0));
+                    expect(inputElement.nativeElement.value).toEqual('17/06/2020');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('17/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 17, 20, 0));
+                });
+
+                it('should keep the history when the same date is set again from outside', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15, 10, 0);
+                    focus();
+                    inputElement.nativeElement.setSelectionRange(1, 1);
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    // an application that keeps its own copy of the value writes it back
+                    dateTimeEditorDirective.value = new Date(2020, 5, 16, 10, 0);
+                    dateTimeEditorDirective.writeValue(new Date(2020, 5, 16, 10, 0));
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 15, 10, 0));
+                });
+
+                it('should drop the history when a spin changes the date while the input is not focused', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15, 10, 0);
+                    focus();
+                    inputElement.nativeElement.setSelectionRange(1, 1);
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    blur();
+
+                    // the hours are not in the input format, so the text stays the same
+                    dateTimeEditorDirective.increment(DatePart.Hours);
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 16, 11, 0));
+                });
+
+                it('should record an edit that changes only a part that the input format hides', () => {
+                    vi.useFakeTimers({ toFake: ['Date'] });
+                    try {
+                        vi.setSystemTime(new Date(2024, 5, 15, 14, 35, 12, 500));
+                        setFormat('dd/MM/yyyy');
+                        dateTimeEditorDirective.value = new Date(2024, 5, 15, 8, 0);
+                        focus();
+                        inputElement.nativeElement.setSelectionRange(1, 1);
+
+                        // the current date and time: the same day, another time
+                        UIInteractions.triggerEventHandlerKeyDown(';', inputElement, false, false, true);
+                        expect(inputElement.nativeElement.value).toEqual('15/06/2024');
+                        expect(dateTimeEditorDirective.value).toEqual(new Date(2024, 5, 15, 14, 35, 12, 500));
+
+                        undo();
+                        expect(inputElement.nativeElement.value).toEqual('15/06/2024');
+                        expect(dateTimeEditorDirective.value).toEqual(new Date(2024, 5, 15, 8, 0));
+
+                        redo();
+                        expect(dateTimeEditorDirective.value).toEqual(new Date(2024, 5, 15, 14, 35, 12, 500));
+
+                        // such an edit also discards the steps that could be redone
+                        undo();
+                        vi.setSystemTime(new Date(2024, 5, 15, 20, 0));
+                        UIInteractions.triggerEventHandlerKeyDown(';', inputElement, false, false, true);
+                        redo();
+                        expect(dateTimeEditorDirective.value).toEqual(new Date(2024, 5, 15, 20, 0));
+                    } finally {
+                        vi.useRealTimers();
+                    }
+                });
+
                 it('should drop the history when the input format changes, but not when the display format is set again', () => {
                     setFormat('dd/MM/yyyy', 'longDate');
                     focus();
@@ -1613,7 +1706,7 @@ describe('IgxDateTimeEditor', () => {
 
                     inputElement.nativeElement.readOnly = true;
                     undo();
-                    inputElement.triggerEventHandler('beforeinput', { inputType: 'historyUndo', preventDefault: () => { } });
+                    inputElement.triggerEventHandler('beforeinput', { inputType: 'historyUndo', cancelable: true, preventDefault: () => { } });
                     expect(inputElement.nativeElement.value).toEqual('18/12/2004');
                     expect(dateTimeEditorDirective.value).toEqual(new Date(2004, 11, 18));
                 });
@@ -1623,7 +1716,7 @@ describe('IgxDateTimeEditor', () => {
                     focus();
                     UIInteractions.simulateTyping('18122004', inputElement);
 
-                    const undoCommand = { inputType: 'historyUndo', preventDefault: vi.fn() };
+                    const undoCommand = { inputType: 'historyUndo', cancelable: true, preventDefault: vi.fn() };
                     inputElement.triggerEventHandler('beforeinput', undoCommand);
                     expect(undoCommand.preventDefault).toHaveBeenCalledTimes(1);
                     expect(inputElement.nativeElement.value).toEqual('__/__/____');
