@@ -334,6 +334,7 @@ Pass a `TemplateRef` via `[itemTemplate]` when the template is defined outside t
 |---|---|---|
 | `igx-virtual-scroll` | Host | Always present. |
 | `data-orientation` | Host | Reflects the `orientation` input: `"vertical"` or `"horizontal"`. |
+| `igx-virtual-scroll--scrolling` | Host | Present while the host scrolls and for 150ms after its last scroll event. The chips and checkboxes in the items do not animate under it, so an item reused for another record shows the new record's state right away. |
 | `igx-virtual-scroll__track` | Inner spacer div | Sized to the full virtual height/width. |
 | `igx-virtual-scroll__content` | Rendered-items wrapper | Absolutely positioned; translated to the correct virtual offset. |
 | `igx-virtual-item` | Per-item wrapper | One per rendered item; carries `data-index` and is the element the engine measures. |
