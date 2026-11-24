@@ -27,16 +27,28 @@ export function observeTooltipLayout(tooltip: HTMLElement, target: HTMLElement, 
         }
     };
 
-    const resizeObserver = new view.ResizeObserver(schedule);
-    resizeObserver.observe(tooltip);
-    resizeObserver.observe(target);
+    const moveObserver = observeMove(target, schedule);
 
-    const stopMoveObserver = observeMove(target, schedule);
+    let started = false;
+    const resizeObserver = new view.ResizeObserver(entries => {
+        // The move observer watches the rectangle that the target had. A target that has shrunk stays
+        // inside that rectangle after a small move, so watch it again at its new size. The first report
+        // only tells the size that the move observer already has.
+        if (started && entries.some(entry => entry.target === target)) {
+            moveObserver.observe();
+        }
+        started = true;
+        schedule();
+    });
+    // The tooltip is positioned by its outer size. The default content box misses a change of the
+    // padding or of the border.
+    resizeObserver.observe(tooltip, { box: 'border-box' });
+    resizeObserver.observe(target, { box: 'border-box' });
 
     return () => {
         view.cancelAnimationFrame(frame);
         resizeObserver.disconnect();
-        stopMoveObserver();
+        moveObserver.disconnect();
     };
 }
 
@@ -44,8 +56,10 @@ export function observeTooltipLayout(tooltip: HTMLElement, target: HTMLElement, 
  * Calls `onMove` when `element` moves. The root of the intersection observer is shrunk to the
  * rectangle of the element, so a move of the element changes its intersection ratio.
  * After each move, the element is observed again at its new place.
+ *
+ * @returns `observe` to watch the element again at its current rectangle, and `disconnect` to stop.
  */
-function observeMove(element: HTMLElement, onMove: () => void): () => void {
+function observeMove(element: HTMLElement, onMove: () => void): { observe: () => void; disconnect: () => void } {
     const document = element.ownerDocument;
     const view = document.defaultView!;
     const root = document.documentElement;
@@ -74,6 +88,15 @@ function observeMove(element: HTMLElement, onMove: () => void): () => void {
             if (isFirstCall) {
                 isFirstCall = false;
 
+                // The element can move before the first entry comes, as in a move that takes several
+                // frames. The entry is then for the new place and must not be taken for a clipped element.
+                const current = element.getBoundingClientRect();
+                if (current.left !== left || current.top !== top) {
+                    onMove();
+                    observe();
+                    return;
+                }
+
                 // The viewport clips the element. Observe it again with its visible ratio as the threshold.
                 if (ratio > 0 && ratio !== threshold) {
                     observe(ratio);
@@ -98,5 +121,8 @@ function observeMove(element: HTMLElement, onMove: () => void): () => void {
 
     observe();
 
-    return () => observer?.disconnect();
+    return {
+        observe: () => observe(),
+        disconnect: () => observer?.disconnect()
+    };
 }
