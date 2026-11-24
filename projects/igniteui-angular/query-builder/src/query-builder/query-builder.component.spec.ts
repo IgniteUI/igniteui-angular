@@ -3033,10 +3033,32 @@ describe('IgxQueryBuilder', () => {
         let chipComponents = [];
         // Post-drop chip focus timeout (DEFAULT_CHIP_FOCUS_DELAY in query-builder-tree.component.ts)
         const CHIP_FOCUS_DELAY = 50;
-        // A mouse drag keeps an RxJS sampleTime() timer alive in the drag service (and dropping on a chip
-        // never unsubscribes it), so the fixture never becomes stable. Specs calling this install a fake
-        // clock first and advance it past the post-drop chip focus timeout instead of fix.whenStable().
+        // A mouse drag in progress keeps an RxJS sampleTime() timer alive in the drag service, so the fixture
+        // does not become stable until the drag ends. Specs calling this install a fake clock first and
+        // advance it past the post-drop chip focus timeout instead of fix.whenStable().
         const waitForMouseDragToSettle = (ms = CHIP_FOCUS_DELAY) => advance(fix, ms);
+        // Mouse drags a condition over another condition's chip, keeping the pointer down
+        const dragOverChip = async (draggedChip: IgxChipComponent, targetChip: IgxChipComponent) => {
+            const dragDir = draggedChip.dragDirective;
+            const draggedChipCenter = QueryBuilderFunctions.getElementCenter(draggedChip.chipArea.nativeElement);
+            dragDir.onPointerDown({ pointerId: 1, pageX: draggedChipCenter.X, pageY: draggedChipCenter.Y } as PointerEvent);
+            await QueryBuilderFunctions.dragMove(dragDir, draggedChipCenter.X + 10, draggedChipCenter.Y + 10);
+            fix.detectChanges();
+
+            // The dragged condition collapses and the drop ghost is rendered, so the target is measured after each move
+            for (let i = 0; i < 2; i++) {
+                const targetChipCenter = QueryBuilderFunctions.getElementCenter(targetChip.chipArea.nativeElement);
+                await QueryBuilderFunctions.dragMove(dragDir, targetChipCenter.X, targetChipCenter.Y);
+                fix.detectChanges();
+            }
+        };
+        // Releases the pointer over the target chip, so the drop is executed by the target chip (dragDrop)
+        // before the dragged chip ends its move (moveEnd)
+        const releaseOverChip = (draggedChip: IgxChipComponent, targetChip: IgxChipComponent) => {
+            const targetChipCenter = QueryBuilderFunctions.getElementCenter(targetChip.chipArea.nativeElement);
+            draggedChip.dragDirective.onPointerUp({ pointerId: 1, pageX: targetChipCenter.X, pageY: targetChipCenter.Y } as PointerEvent);
+            fix.detectChanges();
+        };
         beforeEach(() => {
             queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
             fix.detectChanges();
@@ -4232,6 +4254,118 @@ describe('IgxQueryBuilder', () => {
             expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
             expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderId');
             expect((queryBuilder.expressionTree.filteringOperands[1] as IFilteringExpression).fieldName).toBe('OrderName');
+        });
+
+        it('Should stop listening to the drag ghost and the keyboard when a condition is dropped on another condition.', async () => {
+            useFakeClock();
+
+            const dragService = queryBuilder.queryTree.dragService;
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+            const targetChip = chipComponents[1].componentInstance; // "OrderId In Products / OrderId" chip
+            const targetChipDropSpy = vi.spyOn(targetChip.dragDrop, 'emit');
+            const moveEndSpy = vi.spyOn(draggedChip.moveEnd, 'emit');
+
+            await dragOverChip(draggedChip, targetChip);
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+            const ghostMousemoveSubscription = (dragService as any)._ghostChipMousemoveSubscription$;
+            const keyboardSubscription = (dragService as any)._keyboardSubscription$;
+            expect(ghostMousemoveSubscription.closed).toBe(false);
+            expect(keyboardSubscription.closed).toBe(false);
+
+            releaseOverChip(draggedChip, targetChip);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+
+            expect(targetChipDropSpy).toHaveBeenCalledTimes(1);
+            expect(moveEndSpy).toHaveBeenCalledTimes(1);
+            expect(targetChipDropSpy.mock.invocationCallOrder[0]).toBeLessThan(moveEndSpy.mock.invocationCallOrder[0]);
+            expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderId');
+            expect((queryBuilder.expressionTree.filteringOperands[1] as IFilteringExpression).fieldName).toBe('OrderName');
+            expect(ghostMousemoveSubscription.closed).toBe(true);
+            expect(keyboardSubscription.closed).toBe(true);
+        });
+
+        it('Should let the application become stable after a condition is dropped on another condition.', async () => {
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+            const targetChip = chipComponents[1].componentInstance; // "OrderId In Products / OrderId" chip
+            const targetChipDropSpy = vi.spyOn(targetChip.dragDrop, 'emit');
+
+            await dragOverChip(draggedChip, targetChip);
+            releaseOverChip(draggedChip, targetChip);
+            expect(targetChipDropSpy).toHaveBeenCalledTimes(1);
+
+            // Only the post-drop chip focus timeout is left, the sampled drag ghost mousemove timer is gone
+            await vi.waitFor(() => expect(fix.isStable()).toBe(true), { timeout: 1000 });
+            expect((queryBuilder.expressionTree.filteringOperands[0] as IFilteringExpression).fieldName).toBe('OrderId');
+        });
+
+        it('Should listen to the drag ghost of a mouse drag that follows a drop on another condition.', async () => {
+            useFakeClock();
+
+            const dragService = queryBuilder.queryTree.dragService;
+            const firstChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+            const secondChip = chipComponents[1].componentInstance; // "OrderId In Products / OrderId" chip
+            const secondChipDropSpy = vi.spyOn(secondChip.dragDrop, 'emit');
+
+            // Drop the first condition on the second one
+            await dragOverChip(firstChip, secondChip);
+            releaseOverChip(firstChip, secondChip);
+            await waitForMouseDragToSettle();
+            fix.detectChanges();
+            expect(secondChipDropSpy).toHaveBeenCalledTimes(1);
+            const previousGhostMousemoveSubscription = (dragService as any)._ghostChipMousemoveSubscription$;
+
+            // Drag the condition that is first now (the "OrderId" one) over the next one
+            const draggedChip = QueryBuilderFunctions.getVisibleChips(fix)[0].componentInstance as IgxChipComponent;
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChip.nativeElement.offsetHeight, false);
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+            const ghostMousemoveSubscription = (dragService as any)._ghostChipMousemoveSubscription$;
+            expect(ghostMousemoveSubscription).not.toBe(previousGhostMousemoveSubscription);
+            expect(ghostMousemoveSubscription.closed).toBe(false);
+
+            // A mouse move over the new drag ghost is sampled and checked against the drop ghost
+            const chipLeaveSpy = vi.spyOn(dragService, 'onChipLeave');
+            draggedChip.dragDirective.ghostElement.dispatchEvent(new MouseEvent('mousemove'));
+            await advance(fix, 100);
+            expect(chipLeaveSpy).toHaveBeenCalled();
+        });
+
+        it('Should stop listening to the drag ghost and the keyboard when destroyed during a mouse drag.', async () => {
+            useFakeClock();
+
+            const dragService = queryBuilder.queryTree.dragService;
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChip.nativeElement.offsetHeight, false);
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+            const ghostMousemoveSubscription = (dragService as any)._ghostChipMousemoveSubscription$;
+            const keyboardSubscription = (dragService as any)._keyboardSubscription$;
+            const chipLeaveSpy = vi.spyOn(dragService, 'onChipLeave');
+
+            // A mouse move over the drag ghost that is still to be sampled when the query builder is destroyed
+            draggedChip.dragDirective.ghostElement.dispatchEvent(new MouseEvent('mousemove'));
+            fix.destroy();
+            await vi.advanceTimersByTimeAsync(200);
+
+            expect(ghostMousemoveSubscription.closed).toBe(true);
+            expect(keyboardSubscription.closed).toBe(true);
+            expect(chipLeaveSpy).not.toHaveBeenCalled();
+        });
+
+        it('Should remove the drop ghost when leaving a condition after the drag ghost is gone.', () => {
+            const dragService = queryBuilder.queryTree.dragService;
+            const draggedChip = chipComponents[0].componentInstance; // "OrderName Equals foo" chip
+
+            UIInteractions.moveDragDirective(fix, draggedChip.dragDirective, 0, draggedChip.nativeElement.offsetHeight, false);
+            expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+
+            draggedChip.dragDirective.ghostElement.remove();
+            expect(() => dragService.onChipLeave()).not.toThrow();
+            fix.detectChanges();
+
+            expect(QueryBuilderFunctions.getDropGhost(fix)).toBeNull();
+            expect(dragService.dropGhostExpression).toBeFalsy();
         });
 
         it('Should prevent the browser default action of the keys that move or drop a keyboard dragged condition.', async () => {

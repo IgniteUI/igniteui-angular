@@ -1,6 +1,6 @@
 import { filter, fromEvent, sampleTime, Subscription, tap } from 'rxjs';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, Injectable, OnDestroy } from '@angular/core';
 import { ExpressionGroupItem, ExpressionItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
 import { IBaseChipEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
 import { IDragBaseEventArgs } from 'igniteui-angular/directives';
@@ -10,7 +10,7 @@ const Z_INDEX_TO_SET = 10010; //overlay z-index is 10005
 
 /** @hidden @internal */
 @Injectable()
-export class IgxQueryBuilderDragService {
+export class IgxQueryBuilderDragService implements OnDestroy {
 
     /** The ExpressionItem that's actually the drop ghost's content */
     public dropGhostExpression!: ExpressionItem;
@@ -61,6 +61,12 @@ export class IgxQueryBuilderDragService {
         this._queryBuilderTreeComponentElRef = el;
     }
 
+    /** Stops listening to a drag in progress when the query builder tree is destroyed */
+    public ngOnDestroy(): void {
+        this.unsubscribeFromDragEvents();
+        clearTimeout(this._timeoutId);
+    }
+
     /** When chip is picked up for dragging
      *
      * @param sourceDragElement The HTML element of the chip that's been dragged
@@ -103,9 +109,6 @@ export class IgxQueryBuilderDragService {
         } else {
             this.resetDragAndDrop(true);
         }
-
-        this._ghostChipMousemoveSubscription$?.unsubscribe();
-        this._keyboardSubscription$?.unsubscribe();
 
         if (!drop) {
             this.startKeyboardDragOnFocusedIndicator();
@@ -272,7 +275,6 @@ export class IgxQueryBuilderDragService {
     public onChipDragIndicatorFocusOut() {
         if (this._sourceElement?.style?.display !== 'none') {
             this.resetDragAndDrop(true);
-            this._keyboardSubscription$?.unsubscribe();
         }
     }
 
@@ -283,7 +285,6 @@ export class IgxQueryBuilderDragService {
             setTimeout(() => {
                 if (document.activeElement!.className.indexOf(QueryBuilderSelectors.DRAG_INDICATOR) === -1) {
                     this.resetDragAndDrop(true);
-                    this._keyboardSubscription$?.unsubscribe();
                 }
             }, 0);
         }
@@ -304,7 +305,7 @@ export class IgxQueryBuilderDragService {
 
     /** Checks if the dragged ghost is horizontally on the same line with the drop ghost*/
     private dragGhostIsOnDropGhostRow() {
-        const dragGhostBounds = this.getDragGhostElement.getBoundingClientRect();
+        const dragGhostBounds = this.getDragGhostElement?.getBoundingClientRect();
 
         const dropGhostBounds = this.getDropGhostElement?.nativeElement?.parentElement!.getBoundingClientRect();
 
@@ -407,7 +408,15 @@ export class IgxQueryBuilderDragService {
             this._queryBuilderTreeComponent._expressionTreeCopy = null!;
             this._sourceExpressionItem = null!;
             this._sourceElement = null!;
+            //The drag is over, however it ended (moveEnd, a drop on a chip, a keyboard drop or a cancel)
+            this.unsubscribeFromDragEvents();
         }
+    }
+
+    /** Stops listening to the dragged ghost's mouse moves and to the drag and drop specific keys */
+    private unsubscribeFromDragEvents() {
+        this._ghostChipMousemoveSubscription$?.unsubscribe();
+        this._keyboardSubscription$?.unsubscribe();
     }
 
     /** Start listening for drag and drop specific keys */
@@ -442,7 +451,6 @@ export class IgxQueryBuilderDragService {
                     //Without a drop ghost there is no drop target yet; committing would only delete the source expression.
                     if (this.dropGhostExpression) {
                         this.onChipDropped();
-                        this._keyboardSubscription$.unsubscribe();
                     }
                 }
             });
