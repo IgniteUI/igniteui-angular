@@ -1343,6 +1343,53 @@ describe('IgxTooltip', () => {
 
             verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
         });
+
+        it('should fit into the viewport anew when its target moves away from or to a viewport edge', async () => {
+            vi.useRealTimers();
+            // At the left viewport edge the centered tooltip is pushed to the right.
+            button.nativeElement.style.cssText = 'position: fixed; left: 0; top: 200px; margin: 0';
+            fix.detectChanges();
+            tooltipTarget.showTooltip();
+            await waitForLayout();
+
+            const content = tooltipNativeElement.parentElement;
+            expect(content.style.transform).toContain('translateX');
+
+            // Away from the edge the push is not needed any more.
+            button.nativeElement.style.left = '300px';
+            await waitForLayout();
+            expect(content.style.transform).not.toContain('translateX');
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+            // Back at the edge the tooltip is pushed into the viewport again, and not clipped.
+            button.nativeElement.style.left = '0';
+            await waitForLayout();
+            expect(content.style.transform).toContain('translateX');
+            expect(tooltipNativeElement.getBoundingClientRect().left).toBeGreaterThanOrEqual(0);
+        });
+
+        it('should put the arrow at the very start of a square tooltip that is pushed into the viewport', async () => {
+            tooltipTarget.hasArrow = true;
+            tooltipNativeElement.style.borderRadius = '0';
+            // A target at the left viewport edge that is narrower than the arrow. The arrow points at it
+            // only from the very start of the tooltip.
+            button.nativeElement.style.cssText =
+                'position: fixed; left: 0; top: 200px; margin: 0; padding: 0; border: 0; min-width: 0; width: 4px';
+            fix.detectChanges();
+
+            hoverElement(button);
+            await vi.runAllTimersAsync();
+
+            const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
+            expect(arrow.style.left).toBe('0px');
+
+            // The arrow starts where the tooltip starts, and the target is under it.
+            const arrowRect = arrow.getBoundingClientRect();
+            const targetCenter = getCenterX(button.nativeElement);
+            expect(Math.abs(arrowRect.left - tooltipNativeElement.getBoundingClientRect().left)).toBeLessThanOrEqual(alignmentTolerance);
+            expect(targetCenter).toBeGreaterThanOrEqual(arrowRect.left);
+            expect(targetCenter).toBeLessThanOrEqual(arrowRect.right);
+        });
     });
 });
 
