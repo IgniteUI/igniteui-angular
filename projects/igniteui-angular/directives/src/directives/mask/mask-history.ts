@@ -84,9 +84,12 @@ export class MaskHistory {
      * Reports an edit that changed no text, so it is not recorded. It ends the current run, unless it
      * continues it, as a delete over a literal or a rejected character in the middle of typing does.
      * Without this a rejected edit after a caret move would hide the move from the next {@link record}.
+     * Like {@link record}, it drops the history when the text was changed from outside.
      */
     public pass(kind: MaskEditKind, state: MaskHistoryState): void {
-        if (!this.shouldCoalesce(kind, state)) {
+        // Check the text here as well. The edit is settled next, and that would make steps taken for a text
+        // that was changed from outside look current again.
+        if (!this.validate(state.value) || !this.shouldCoalesce(kind, state)) {
             this._lastKind = null;
         }
     }

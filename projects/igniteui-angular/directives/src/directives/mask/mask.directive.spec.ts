@@ -1173,6 +1173,41 @@ describe('igxMask', () => {
             expect(element.value).toEqual('(1__) _5__-___');
         });
 
+        it('should keep the caret for redo when a history command that cannot be canceled changes the text', async () => {
+            const { input, element } = await setup();
+            type('12', input, 0);
+            expectSelection(element, 3);
+
+            // the native undo changes the text and moves the caret before the input event comes
+            input.triggerEventHandler('beforeinput', { inputType: 'historyUndo', cancelable: false, preventDefault: vi.fn() });
+            element.value = '(1__) ____-___';
+            input.triggerEventHandler('input', { target: element, inputType: 'historyUndo' });
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            redo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+            // where the caret was before the undo, not at the end of the text
+            expectSelection(element, 3);
+        });
+
+        it('should not undo over a text that was changed from outside before a rejected edit', async () => {
+            const { fixture, input, element } = await setup();
+            type('1', input, 0);
+
+            // the text changes without the form control, for example through a native value binding
+            element.value = '(555) ____-___';
+            fixture.detectChanges();
+
+            // a rejected character must not make the old step look current
+            type('a', input, 6);
+            expect(element.value).toEqual('(555) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(555) ____-___');
+            redo(input);
+            expect(element.value).toEqual('(555) ____-___');
+        });
+
         it('should restore the caret of an edit that comes with no keydown', async () => {
             const { input, element } = await setup();
             type('1', input, 0);

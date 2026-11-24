@@ -279,6 +279,31 @@ describe('MaskHistory', () => {
             expect(history.canRedo).toBe(false);
         });
 
+        it('should drop the history when an edit that changed nothing follows an outside change', () => {
+            history.record('atomic', at('___', 0));
+            history.settle('a__', 1);
+
+            // The text was changed from outside, and then a character was rejected.
+            history.pass('insert', at('xyz', 0));
+            history.settle('xyz', 0);
+
+            // Settling must not make the old step look current.
+            expect(history.canUndo).toBe(false);
+            expect(history.undo(at('xyz', 0))).toBeNull();
+        });
+
+        it('should drop the redo steps when an edit that changed nothing follows an outside change', () => {
+            history.record('atomic', at('___', 0));
+            history.settle('a__', 1);
+            history.undo(at('a__', 1));
+
+            history.pass('insert', at('xyz', 0));
+            history.settle('xyz', 0);
+
+            expect(history.canRedo).toBe(false);
+            expect(history.redo(at('xyz', 0))).toBeNull();
+        });
+
         it('should drop the history when the mask pattern changes', () => {
             history.record('atomic', at('___', 0));
             history.settle('a__', 1);

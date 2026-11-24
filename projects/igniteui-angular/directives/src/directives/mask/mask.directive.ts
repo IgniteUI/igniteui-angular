@@ -170,6 +170,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _pasting = false;
     /** The selection before the browser applied the pending edit. `_start` and `_end` are adjusted per edit. */
     private _selectionBefore: { start: number; end: number } | null = null;
+    /** The selection before a native undo or redo command that could not be canceled. */
+    private _historyCommandSelection: { start: number; end: number } | null = null;
 
     /**
      * The last edit, when it changed no text and so was not recorded. A subclass whose value holds more
@@ -267,7 +269,13 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         if (event.inputType === 'historyUndo' || event.inputType === 'historyRedo') {
             // Reached only where `beforeinput` cannot be canceled. The native undo stack does not match the mask,
             // so drop what the command did to the text and step the history instead.
+            const selection = this._historyCommandSelection;
+            this._historyCommandSelection = null;
             this.inputValue = this._oldText;
+            // Writing the text moves the caret to its end. The step must see the selection as it was.
+            if (selection) {
+                this.setSelectionRange(selection.start, selection.end);
+            }
             this.historyStep(event.inputType === 'historyUndo' ? 'undo' : 'redo');
             return;
         }
@@ -335,8 +343,12 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         }
 
         // Where the command cannot be canceled, the `input` event that follows handles it. Stepping here too
-        // would move two steps for a single command.
+        // would move two steps for a single command. Keep the selection, which the command is about to change.
         if (!event.cancelable) {
+            this._historyCommandSelection = {
+                start: this.nativeElement.selectionStart!,
+                end: this.nativeElement.selectionEnd!
+            };
             return;
         }
 
