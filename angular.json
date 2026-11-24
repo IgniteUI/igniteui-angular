@@ -174,7 +174,8 @@
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/igniteui-angular/tsconfig.lib.prod.json"
+              "tsConfig": "projects/igniteui-angular/tsconfig.lib.prod.json",
+              "deleteOutputPath": true
             },
             "development": {
               "compilationMode": "full"
