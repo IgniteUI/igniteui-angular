@@ -174,8 +174,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      */
     @Input()
     public set value(value: Date | string | null) {
+        const previous = this.dateTime;
         this._value = value;
         this.setDateValue(value);
+        this.dropHistoryOnOutsideChange(previous);
         this.onChangeCallback(value);
         this.updateMask();
     }
@@ -238,6 +240,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private _oldValue!: Date;
     private _dateValue!: Date;
     private _onClear!: boolean;
+    /** Whether the editor itself is committing a value, as opposed to a value that is set from outside. */
+    private _committing = false;
     private document: Document;
     private _defaultInputFormat!: string;
     private _value!: Date | string | null;
@@ -297,6 +301,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     private get dateValue(): Date {
         return this._dateValue;
+    }
+
+    /** The time value of the current date, or `null` when the editor has no valid date. */
+    private get dateTime(): number | null {
+        return DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue.getTime() : null;
     }
 
     constructor() {
@@ -384,8 +393,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override writeValue(value: any): void {
+        const previous = this.dateTime;
         this._value = value;
         this.setDateValue(value);
+        this.dropHistoryOnOutsideChange(previous);
         this.updateMask();
     }
 
@@ -492,8 +503,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * @hidden @internal
      */
     protected override createHistoryState(value: string, start: number, end: number): MaskHistoryState {
-        const model = DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue.getTime() : null;
-        return { value, start, end, model };
+        return { value, start, end, model: this.dateTime };
     }
 
     /** @hidden @internal */
@@ -514,18 +524,35 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     /** Runs an edit that bypasses the mask input, such as a spin, as a single undo step. */
     private recordAtomicEdit(edit: () => void): void {
         // Without the focus the input shows the display format, which the history does not track.
+        // The steps taken before are for another date then.
         if (!this._focused) {
+            const previous = this.dateTime;
             edit();
+            if (this.dateTime !== previous) {
+                this.history.clear();
+            }
             return;
         }
 
         const before = this.createHistoryState(this.inputValue, this.selectionStart, this.selectionEnd);
         edit();
 
-        if (this.inputValue !== before.value) {
+        // A change in a part that the input format hides leaves the text the same.
+        if (this.inputValue !== before.value || this.dateTime !== before.model) {
             this.history.record('atomic', before);
         }
         this.settleHistory();
+    }
+
+    /**
+     * Drops the undo history when a different date is set from outside. The text does not tell that alone:
+     * two dates can look the same in the input format. A value that the editor commits itself is not such a
+     * change, and neither is what its events write back into it meanwhile, as the pickers do.
+     */
+    private dropHistoryOnOutsideChange(previous: number | null): void {
+        if (!this._committing && this.dateTime !== previous) {
+            this.history.clear();
+        }
     }
 
     /** Updates the value from the text in the input. */
@@ -725,15 +752,21 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     private updateValue(newDate: Date | null): void {
-        this._oldValue = this.dateValue;
-        this.value = newDate;
+        const committing = this._committing;
+        this._committing = true;
+        try {
+            this._oldValue = this.dateValue;
+            this.value = newDate;
 
-        // TODO: should we emit events here?
-        if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
-            this.valueChange.emit(this.dateValue);
-        }
-        if (this.dateValue && !this.valueInRange(this.dateValue)) {
-            this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
+            // TODO: should we emit events here?
+            if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
+                this.valueChange.emit(this.dateValue);
+            }
+            if (this.dateValue && !this.valueInRange(this.dateValue)) {
+                this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
+            }
+        } finally {
+            this._committing = committing;
         }
     }
 
