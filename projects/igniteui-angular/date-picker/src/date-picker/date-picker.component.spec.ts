@@ -456,6 +456,48 @@ describe('IgxDatePicker', () => {
                 const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
                 expect(wrapper.getAttribute('aria-activedescendant')).toEqual(activeDescendantDate);
             });
+
+            it('should undo and redo typing in the input and keep the value in sync', async () => {
+                datePicker.value = new Date(2025, 0, 1);
+                detectChanges();
+
+                const input = fixture.debugElement.query(By.css('.igx-input-group__input'));
+                input.nativeElement.focus();
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                UIInteractions.simulateTyping('02/01/2025', input);
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.value).toEqual(new Date(2025, 0, 2));
+
+                // Ctrl + Z
+                UIInteractions.triggerEventHandlerKeyDown('z', input, false, false, true);
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(input.nativeElement.value).toEqual('01/01/2025');
+                expect(datePicker.value).toEqual(new Date(2025, 0, 1));
+
+                // Ctrl + Y
+                UIInteractions.triggerEventHandlerKeyDown('y', input, false, false, true);
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(input.nativeElement.value).toEqual('02/01/2025');
+                expect(datePicker.value).toEqual(new Date(2025, 0, 2));
+
+                // a date selected in the calendar discards the steps that are left
+                UIInteractions.triggerEventHandlerKeyDown('z', input, false, false, true);
+                datePicker.select(new Date(2025, 0, 20));
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(input.nativeElement.value).toEqual('20/01/2025');
+
+                UIInteractions.triggerEventHandlerKeyDown('y', input, false, false, true);
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(input.nativeElement.value).toEqual('20/01/2025');
+                expect(datePicker.value).toEqual(new Date(2025, 0, 20));
+            });
         });
 
         describe('NgControl integration', () => {

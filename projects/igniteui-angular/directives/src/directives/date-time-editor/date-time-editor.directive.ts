@@ -4,6 +4,7 @@ import {
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
+import { MaskHistoryState } from '../mask/mask-history';
 import { isDate, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs } from './date-time-editor.common';
 import { noop } from 'rxjs';
@@ -363,7 +364,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
         const newValue = this.trySpinValue(targetPart, delta);
-        this.updateValue(newValue);
+        this.recordAtomicEdit(() => this.updateValue(newValue));
     }
 
     /**
@@ -378,7 +379,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
         const newValue = this.trySpinValue(targetPart, delta, true);
-        this.updateValue(newValue);
+        this.recordAtomicEdit(() => this.updateValue(newValue));
     }
 
     /** @hidden @internal */
@@ -435,32 +436,21 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
         this.updateValue(this.parseDate(this.inputValue));
         this.updateMask();
+        // The value update can rewrite the text that the mask has just settled on.
+        this.settleHistory();
     }
 
     /** @hidden @internal */
     public override onInputChanged(event: InputEvent): void {
         super.onInputChanged(event);
-        if (this._composing) {
+        // A history step that came as an input event has already restored the value.
+        if (this._composing || event.inputType === 'historyUndo' || event.inputType === 'historyRedo') {
             return;
         }
 
-        if (this.inputIsComplete()) {
-            const parsedDate = this.parseDate(this.inputValue);
-            if (DateTimeUtil.isValidDate(parsedDate)) {
-                this.updateValue(parsedDate);
-            } else {
-                const oldValue = this.value && new Date(this.dateValue.getTime());
-                const args: IgxDateTimeEditorEventArgs = { oldValue: oldValue as Date | undefined, newValue: parsedDate!, userInput: this.inputValue };
-                this.validationFailed.emit(args);
-                if (DateTimeUtil.isValidDate(args.newValue)) {
-                    this.updateValue(args.newValue);
-                } else {
-                    this.updateValue(null);
-                }
-            }
-        } else {
-            this.updateValue(null);
-        }
+        this.commitInputText();
+        // The value update can rewrite the text that the mask has just settled on.
+        this.settleHistory();
     }
 
     /** @hidden @internal */
@@ -481,10 +471,82 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
 
         if (event.ctrlKey && key === this.platform.KEYMAP.SEMICOLON) {
-            this.updateValue(new Date());
+            this.recordAtomicEdit(() => this.updateValue(new Date()));
         }
 
         this.moveCursor(event);
+    }
+
+    /**
+     * The source format identifies the pattern: `MM/dd/yyyy` and `dd/MM/yyyy` produce the same mask.
+     *
+     * @hidden @internal
+     */
+    protected override get historySignature(): string {
+        return `${this.inputFormat} ${this.promptChar}`;
+    }
+
+    /**
+     * The text shows only the parts of the input format, so the snapshot keeps the whole date next to it.
+     *
+     * @hidden @internal
+     */
+    protected override createHistoryState(value: string, start: number, end: number): MaskHistoryState {
+        const model = DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue.getTime() : null;
+        return { value, start, end, model };
+    }
+
+    /** @hidden @internal */
+    protected override restoreHistoryState(state: MaskHistoryState): void {
+        super.restoreHistoryState(state);
+
+        if (typeof state.model === 'number') {
+            this.updateValue(new Date(state.model));
+        } else {
+            this.commitInputText();
+        }
+
+        // The value update rewrites the text and collapses the selection.
+        this.setSelectionRange(state.start, state.end);
+        this.settleHistory(state.start);
+    }
+
+    /** Runs an edit that bypasses the mask input, such as a spin, as a single undo step. */
+    private recordAtomicEdit(edit: () => void): void {
+        // Without the focus the input shows the display format, which the history does not track.
+        if (!this._focused) {
+            edit();
+            return;
+        }
+
+        const before = this.createHistoryState(this.inputValue, this.selectionStart, this.selectionEnd);
+        edit();
+
+        if (this.inputValue !== before.value) {
+            this.history.record('atomic', before);
+        }
+        this.settleHistory();
+    }
+
+    /** Updates the value from the text in the input. */
+    private commitInputText(): void {
+        if (this.inputIsComplete()) {
+            const parsedDate = this.parseDate(this.inputValue);
+            if (DateTimeUtil.isValidDate(parsedDate)) {
+                this.updateValue(parsedDate);
+            } else {
+                const oldValue = this.value && new Date(this.dateValue.getTime());
+                const args: IgxDateTimeEditorEventArgs = { oldValue: oldValue as Date | undefined, newValue: parsedDate!, userInput: this.inputValue };
+                this.validationFailed.emit(args);
+                if (DateTimeUtil.isValidDate(args.newValue)) {
+                    this.updateValue(args.newValue);
+                } else {
+                    this.updateValue(null);
+                }
+            }
+        } else {
+            this.updateValue(null);
+        }
     }
 
     /** @hidden @internal */
