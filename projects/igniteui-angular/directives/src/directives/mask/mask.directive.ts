@@ -172,6 +172,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _selectionBefore: { start: number; end: number } | null = null;
     /** The selection before a native undo or redo command that could not be canceled. */
     private _historyCommandSelection: { start: number; end: number } | null = null;
+    /** The selection when an IME composition began. The composition replaces it. */
+    private _compositionSelection: { start: number; end: number } | null = null;
 
     /**
      * The last edit, when it changed no text and so was not recorded. A subclass whose value holds more
@@ -229,6 +231,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     public onCompositionStart(): void {
         if (!this._composing) {
             this._compositionStartIndex = this._start;
+            this._compositionSelection = {
+                start: this.nativeElement.selectionStart!,
+                end: this.nativeElement.selectionEnd!
+            };
             this._composing = true;
         }
     }
@@ -239,8 +245,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._start = this._compositionStartIndex;
         const end = this.selectionEnd;
         const valueToParse = this.inputValue.substring(this._start, end);
-        // The whole composition is a single undo step, anchored where it began.
-        this._selectionBefore = { start: this._start, end: this._start };
+        // The whole composition is a single undo step. Its snapshot keeps the selection that the composition
+        // replaced, so that an undo restores the selected text as selected.
+        this._selectionBefore = this._compositionSelection ?? { start: this._start, end: this._start };
+        this._compositionSelection = null;
         this.updateInput(valueToParse, 'atomic');
         this._end = this.selectionEnd;
         this._compositionValue = this.inputValue;

@@ -865,6 +865,24 @@ describe('igxMask', () => {
             expect(element.value).toEqual(EMPTY_MASK);
         });
 
+        it('should restore the selection that an IME composition replaced', async () => {
+            const { input, element } = await setup();
+            type('123', input, 0);
+
+            // the composition replaces the selected '12'
+            UIInteractions.simulateCompositionEvent('9', input, 1, 3, false);
+            expect(element.value).toEqual('(9_3) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            // selected again, as after undoing a typed replacement or a cut
+            expectSelection(element, 1, 3);
+
+            // so typing replaces the restored selection
+            UIInteractions.simulateTyping('7', input, element.selectionStart, element.selectionEnd);
+            expect(element.value).toEqual('(7_3) ____-___');
+        });
+
         it('should not undo while an IME composition is in progress', async () => {
             const { input, element } = await setup();
             type('1', input, 0);
