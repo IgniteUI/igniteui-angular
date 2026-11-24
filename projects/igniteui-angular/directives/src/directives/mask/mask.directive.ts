@@ -5,6 +5,12 @@ import { MaskEditKind, MaskHistory, MaskHistoryState } from './mask-history';
 import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { noop } from 'rxjs';
 
+/** The keys that move the caret or change the selection without editing the text. */
+const NAVIGATION_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'PageUp', 'PageDown']);
+
+/** The input types that are always a history step of their own, whichever key started them. */
+const ATOMIC_INPUT_TYPES = new Set(['deleteByCut', 'deleteByDrag']);
+
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],
     selector: '[igxMask]',
@@ -165,6 +171,14 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** The selection before the browser applied the pending edit. `_start` and `_end` are adjusted per edit. */
     private _selectionBefore: { start: number; end: number } | null = null;
 
+    /**
+     * The last edit, when it changed no text and so was not recorded. A subclass whose value holds more
+     * than the text shows can still record it.
+     *
+     * @hidden @internal
+     */
+    protected skippedEdit: { kind: MaskEditKind; state: MaskHistoryState } | null = null;
+
     private readonly defaultMask = 'CCCCCCCCCC';
 
     protected _onTouchedCallback: () => void = noop;
@@ -189,11 +203,23 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
+        // The caret can come back to where it was before the next edit, which would hide that it has moved.
+        if (NAVIGATION_KEYS.has(key)) {
+            this.history.endRun();
+        }
+
         this._key = key;
         this._start = this.selectionStart;
         this._end = this.selectionEnd;
         this._selectionBefore = { start: this._start, end: this._end };
         this._pasting = false;
+    }
+
+    /** @hidden @internal */
+    @HostListener('pointerdown')
+    public onPointerDown(): void {
+        // A click moves the caret or changes the selection, so the next edit starts a new history step.
+        this.history.endRun();
     }
 
     /** @hidden @internal */
@@ -523,8 +549,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const before = this.createHistoryState(this._oldText, start, end);
         if (replacedData.value !== this._oldText) {
             this.history.record(kind, before);
+            this.skippedEdit = null;
         } else {
             this.history.pass(kind, before);
+            this.skippedEdit = { kind, state: before };
         }
 
         this.inputValue = replacedData.value;
@@ -563,7 +591,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     private getEditKind(event: InputEvent): MaskEditKind {
-        if (this._pasting || this._hasDropAction) {
+        // A cut can come from a key that deletes otherwise, such as Shift + Delete.
+        if (this._pasting || this._hasDropAction || ATOMIC_INPUT_TYPES.has(event.inputType)) {
             return 'atomic';
         }
 

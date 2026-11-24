@@ -1611,6 +1611,56 @@ describe('IgxDateTimeEditor', () => {
                     expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 15, 10, 0));
                 });
 
+                it('should drop the history when the same Date instance is set again with another time', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15, 10, 0);
+                    focus();
+                    inputElement.nativeElement.setSelectionRange(1, 1);
+
+                    // through the value: the application changes the instance that the editor holds
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    let current = dateTimeEditorDirective.value as Date;
+                    current.setHours(18, 30);
+                    dateTimeEditorDirective.value = current;
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 16, 18, 30));
+
+                    // through the form control
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    current = dateTimeEditorDirective.value as Date;
+                    current.setHours(20, 0);
+                    dateTimeEditorDirective.writeValue(current);
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('17/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 17, 20, 0));
+                });
+
+                it('should restore the time that typing over a part of the date has dropped', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15, 14, 35);
+                    focus();
+
+                    // the first character is the same as the one it replaces, so the text does not change yet
+                    UIInteractions.simulateTyping('16', inputElement, 0, 0);
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 16));
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 15, 14, 35));
+
+                    // nothing more to undo: it was a single step
+                    undo();
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 15, 14, 35));
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 16));
+                });
+
                 it('should drop the history when a spin changes the date while the input is not focused', () => {
                     setFormat('dd/MM/yyyy');
                     dateTimeEditorDirective.value = new Date(2020, 5, 15, 10, 0);
