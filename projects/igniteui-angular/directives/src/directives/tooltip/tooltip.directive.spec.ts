@@ -1312,10 +1312,55 @@ describe('IgxTooltip', () => {
             expect(parseFloat(content.style.width)).toBeCloseTo(tooltipNativeElement.getBoundingClientRect().width, 1);
             verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
         });
+
+        it('should follow its target when the target moves after it has shrunk', async () => {
+            vi.useRealTimers();
+            button.nativeElement.style.cssText = 'display: block; width: 300px; margin: 100px 0 0 100px';
+            fix.detectChanges();
+            tooltipTarget.showTooltip();
+            await waitForLayout();
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+            // The smaller target is still inside the rectangle that it had before.
+            button.nativeElement.style.width = '80px';
+            await waitForLayout();
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+            // So is the target after a small move.
+            button.nativeElement.style.marginLeft = '160px';
+            await waitForLayout();
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+        });
+
+        it('should follow its target to the place where a move over several frames ends', async () => {
+            vi.useRealTimers();
+            tooltipTarget.showTooltip();
+            await waitForLayout();
+
+            // As in a transition, the target is at a new place in each frame.
+            await moveInFrames(button.nativeElement, 12, 20);
+            await waitForLayout();
+
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+        });
     });
 });
 
 const waitForLayout = () => new Promise(resolve => setTimeout(resolve, 100));
+
+/** Moves the element down by `distance` pixels in each of the next `frames` animation frames. */
+const moveInFrames = (element: HTMLElement, frames: number, distance: number) => new Promise<void>(resolve => {
+    let frame = 0;
+    const move = () => {
+        element.style.marginTop = `${++frame * distance}px`;
+        if (frame < frames) {
+            requestAnimationFrame(move);
+        } else {
+            resolve();
+        }
+    };
+    requestAnimationFrame(move);
+});
 
 const getCenterX = (element: Element) => {
     const rect = element.getBoundingClientRect();
