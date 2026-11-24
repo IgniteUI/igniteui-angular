@@ -90,6 +90,10 @@ public datePart: typeof DatePart = DatePart;
 | `Down Arrow` | On a date/time section should decrement that part of the edited date. |
 | `Up Arrow` | On a date/time section should increment that part of the edited date. |
 | `CTRL/COMMAND` + `;` | Sets the current date and time as the value of the editor. |
+| `CTRL/COMMAND` + `Z` | Undoes the last edit step. |
+| `CTRL` + `Y` or `CTRL/COMMAND` + `SHIFT` + `Z` | Redoes the last undone step. |
+
+A run of typed characters is a single undo step, and so is a run of deletes in the same direction. Each spin of a date/time section, a paste and `CTRL` + `;` are separate steps. A restored step updates the value and emits `valueChange` and `validationFailed` the same way typing does. The history is dropped when the value is set from outside or when the input format changes, and is kept while the editor loses and regains the focus.
 
 ### API
 | Name | Type | Description |
