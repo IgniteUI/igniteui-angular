@@ -288,7 +288,14 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
             info.settings.positionStrategy.position(content, { width, height }, this.element.ownerDocument, true, target);
         } else {
-            this.overlayService.reposition(this._overlayId);
+            // Fit the tooltip into the viewport anew at the new place of the target. A reposition alone
+            // keeps the push that the tooltip had: away from a viewport edge it would stay off its target,
+            // and at an edge it would be clipped.
+            content.style.transform = '';
+
+            const { width, height } = content.getBoundingClientRect();
+
+            info.settings.positionStrategy.position(content, { width, height }, this.element.ownerDocument, true, target);
         }
 
         this._layout = this._measureLayout(target);
