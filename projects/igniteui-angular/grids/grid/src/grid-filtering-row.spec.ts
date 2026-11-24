@@ -415,6 +415,54 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect((expr.searchVal as Date).toDateString()).toBe(tomorrow.toDateString());
         });
 
+        it('Should open the conditions drop-down instead of the calendar after Alt + ArrowDown on the prefix', async () => {
+            GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
+            await fix.whenStable();
+            fix.detectChanges();
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            const datePicker = filterUIRow.query(By.directive(IgxDatePickerComponent)).componentInstance as IgxDatePickerComponent;
+            (filterUIRow.query(By.css('igx-prefix')).nativeElement as HTMLElement).focus();
+            await userEvent.keyboard('{Alt>}{ArrowDown}{/Alt}');
+            await fix.whenStable();
+            fix.detectChanges();
+
+            GridFunctions.verifyFilteringDropDownIsOpened(fix);
+            expect(datePicker.collapsed).toBe(true);
+        });
+
+        it('Should open the conditions drop-down instead of the picker after Alt + ArrowDown with a unary condition', async () => {
+            const unaryConditions: [string, string][] = [
+                ['ReleaseDate', 'Today'],
+                ['ReleaseTime', 'Empty']
+            ];
+
+            for (const [field, condition] of unaryConditions) {
+                GridFunctions.clickFilterCellChipUI(fix, field);
+                await fix.whenStable();
+                fix.detectChanges();
+                await selectFilterRowCondition(fix, condition);
+
+                const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+                const picker = filterUIRow.query(By.css('igx-date-picker, igx-time-picker'))
+                    .componentInstance as IgxDatePickerComponent | IgxTimePickerComponent;
+                const input = picker.getEditElement() as HTMLInputElement;
+                expect(input.readOnly, `the ${field} input is not read-only`).toBe(true);
+
+                input.focus();
+                await userEvent.keyboard('{Alt>}{ArrowDown}{/Alt}');
+                await fix.whenStable();
+                fix.detectChanges();
+
+                GridFunctions.verifyFilteringDropDownIsOpened(fix);
+                expect(picker.collapsed, `the ${field} picker is opened`).toBe(true);
+
+                GridFunctions.getFilterRowCloseButton(fix).nativeElement.click();
+                await fix.whenStable();
+                fix.detectChanges();
+            }
+        });
+
         it('Should correctly select month from month view datepicker/calendar component', async () => {
             GridFunctions.clickFilterCellChip(fix, 'ReleaseDate');
 
