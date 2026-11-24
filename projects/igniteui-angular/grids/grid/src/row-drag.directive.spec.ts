@@ -593,6 +593,151 @@ describe('Row Drag Tests', () => {
                     expect(rowDragDirective.ghostElement).toBeFalsy();
                     expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
                 });
+
+                describe('Destroying the dragged row', () => {
+                    const startRowDrag = (index: number) => {
+                        rowToDrag = rows[index];
+                        rowDragDirective = dragRows[index].injector.get(IgxRowDragDirective);
+                        startPoint = UIInteractions.getPointFromElement(rowDragDirective.element.nativeElement);
+                        dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                        rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                        rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                        fixture.detectChanges();
+                        expect(grid.rowDragging).toBe(true);
+                        expect(rowToDrag.dragging).toBe(true);
+                        expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(1);
+                        expect(document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF).length).toBeGreaterThan(0);
+                    };
+
+                    /** Removes the last record, which destroys the view of the last row. */
+                    const removeLastRecord = () => {
+                        const lastIndex = rows.length - 1;
+                        fixture.componentInstance.data = fixture.componentInstance.data.slice(0, lastIndex);
+                        fixture.detectChanges();
+                        expect(grid.rowList.toArray()).not.toContain(rows[lastIndex]);
+                    };
+
+                    const verifyRowDragEnded = () => {
+                        expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                        expect(rowDragDirective.ghostElement).toBeFalsy();
+                        expect(grid.rowDragging).toBe(false);
+                        expect(grid.dragRowID).toBeNull();
+                        expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                        expect(grid.rowDragEnd.emit).toHaveBeenCalledWith(expect.objectContaining({ dragDirective: rowDragDirective }));
+
+                        // The window keydown listener added when the drag started is removed, so Escape does not end the drag again.
+                        expect((rowDragDirective as any).subscription$.closed).toBe(true);
+                        UIInteractions.triggerKeyDownEvtUponElem('Escape', document.body);
+                        expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    };
+
+                    it('should cancel the drag when the record of the dragged row is removed during the drag.', async () => {
+                        vi.spyOn(grid.rowDragEnd, 'emit');
+                        startRowDrag(rows.length - 1);
+                        const dragEndSpy = vi.spyOn(rowDragDirective.dragEnd, 'emit');
+                        const dropAreaLeaveSpy = vi.spyOn(fixture.componentInstance.dropArea.leave, 'emit');
+
+                        removeLastRecord();
+                        await wait();
+                        fixture.detectChanges();
+
+                        verifyRowDragEnded();
+                        expect(dragEndSpy).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({ cancelled: true }));
+                        // The drop area under the ghost is left without a drop.
+                        expect(dropAreaLeaveSpy).toHaveBeenCalledTimes(1);
+                        // The other rows show their drag indicators again.
+                        expect(document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF).length).toEqual(0);
+                    });
+
+                    it('should cancel the drag when the grid is destroyed during the drag.', async () => {
+                        vi.spyOn(grid.rowDragEnd, 'emit');
+                        startRowDrag(1);
+
+                        expect(() => fixture.destroy()).not.toThrow();
+                        await wait();
+
+                        verifyRowDragEnded();
+                    });
+
+                    it('should cancel the drag when row dragging is disabled during the drag.', async () => {
+                        vi.spyOn(grid.rowDragEnd, 'emit');
+                        startRowDrag(1);
+
+                        fixture.componentInstance.enableRowDraggable = false;
+                        fixture.detectChanges();
+                        expect(fixture.debugElement.queryAll(By.directive(IgxRowDragDirective)).length).toEqual(0);
+                        await wait();
+                        fixture.detectChanges();
+
+                        verifyRowDragEnded();
+                        expect(rowToDrag.dragging).toBe(false);
+                        expect(rowToDrag.nativeElement.classList).not.toContain(CSS_CLASS_DRAG_ROW);
+                    });
+
+                    it('should remove the ghost when the dragged row is destroyed and a dragEnd handler animates it back.', async () => {
+                        vi.spyOn(grid.rowDragEnd, 'emit');
+                        startRowDrag(rows.length - 1);
+                        const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                            dragEndSub.unsubscribe();
+                            rowDragDirective.transitionToOrigin({ duration: 0.1 });
+                        });
+
+                        removeLastRecord();
+                        await wait();
+                        fixture.detectChanges();
+
+                        // The row is gone, so there is no origin to animate the ghost back to.
+                        verifyRowDragEnded();
+                        // The pending return animation finishes without errors.
+                        await wait(DEBOUNCE_TIME);
+                        expect(rowDragDirective.animInProgress).toBe(false);
+                        expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                    });
+
+                    it('should end the drag when a rowDragEnd handler removes the dragged row and the ghost animates back.', async () => {
+                        startRowDrag(rows.length - 1);
+                        const rowDragEndSub = grid.rowDragEnd.subscribe(() => {
+                            rowDragEndSub.unsubscribe();
+                            removeLastRecord();
+                        });
+                        const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                            dragEndSub.unsubscribe();
+                            rowDragDirective.transitionToOrigin({ duration: 0.1 });
+                        });
+                        const transitionedSpy = vi.spyOn(rowDragDirective.transitioned, 'emit');
+
+                        // Released outside a drop area.
+                        const releasePoint = UIInteractions.getPointFromElement(nonDroppableAreaElement);
+                        rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', releasePoint));
+                        rowDragDirective.onPointerUp(UIInteractions.createPointerEvent('pointerup', releasePoint));
+                        await wait();
+                        fixture.detectChanges();
+
+                        // The ghost finishes its return animation, which ends the row drag.
+                        await vi.waitFor(() => expect(transitionedSpy).toHaveBeenCalledTimes(1));
+                        fixture.detectChanges();
+                        expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                        expect(grid.rowDragging).toBe(false);
+                        expect(grid.dragRowID).toBeNull();
+                        expect(document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF).length).toEqual(0);
+                    });
+
+                    it('should end the drag once when the dragged row is removed by a drop handler.', () => {
+                        vi.spyOn(grid.rowDragEnd, 'emit');
+                        startRowDrag(rows.length - 1);
+                        const dragEndSpy = vi.spyOn(rowDragDirective.dragEnd, 'emit');
+                        fixture.componentInstance.dropArea.dropped.subscribe(() => removeLastRecord());
+
+                        expect(() => rowDragDirective.onPointerUp(UIInteractions.createPointerEvent('pointerup', dropPoint))).not.toThrow();
+                        fixture.detectChanges();
+
+                        verifyRowDragEnded();
+                        // The drag is dropped, not cancelled.
+                        expect(dragEndSpy).toHaveBeenCalledTimes(1);
+                        expect(dragEndSpy.mock.calls[0][0].cancelled).toBeUndefined();
+                        expect(document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF).length).toEqual(0);
+                    });
+                });
             });
             describe('Custom ghost template tests', () => {
                 let grid: IgxGridComponent;

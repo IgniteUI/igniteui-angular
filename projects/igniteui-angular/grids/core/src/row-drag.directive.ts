@@ -39,6 +39,20 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         return this._data;
     }
 
+    /**
+     * @hidden @internal
+     * Cancels the row drag when the dragged row is destroyed during it, e.g. when the grid is destroyed or renders fewer rows,
+     * so the ghost and the grid row dragging state do not stay behind.
+     */
+    public override ngOnDestroy() {
+        if (this._clicked) {
+            // Angular can destroy the row while it checks the views, so cancel once the check completes.
+            Promise.resolve().then(() => this.cancelDestroyedRowDrag());
+        }
+        this._unsubscribe();
+        super.ngOnDestroy();
+    }
+
     public override onPointerDown(event: PointerEvent) {
         event.preventDefault();
         this._rowDragStarted = false;
@@ -187,6 +201,14 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     private _unsubscribe() {
         if (this.subscription$ && !this.subscription$.closed) {
             this.subscription$.unsubscribe();
+        }
+    }
+
+    private cancelDestroyedRowDrag() {
+        // When the drag already ended, e.g. a rowDragEnd handler removed the row, the ghost animates back and its transitionend ends the row drag.
+        if (this.cancelDragInternal(null) && this.ghostElement) {
+            // A dragEnd handler animates the ghost back, but the row is gone.
+            this.clearGhost();
         }
     }
 
