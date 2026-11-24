@@ -26,6 +26,7 @@ describe('IgxGrid - Column Moving #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid-thead__title';
     const COLUMN_RESIZE_CLASS = '.igx-grid-th__resize-line';
+    const GHOST_CLASS = 'igx-grid__drag-ghost-image';
 
     let fixture;
     let grid: IgxGridComponent;
@@ -425,11 +426,14 @@ describe('IgxGrid - Column Moving #grid', () => {
             await nextFrame();
             UIInteractions.simulatePointerEvent('pointermove', header, 270, 71);
             await wait();
+            expect(document.querySelector(`.${GHOST_CLASS}`)).not.toBeNull();
 
             // step 2 - hit ESCAPE over the headers area and verify column moving is canceled
-            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+            // The moving directive listens for keydown on the window.
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape', bubbles: true }));
             fixture.detectChanges();
+            expect(document.querySelector(`.${GHOST_CLASS}`), 'ESCAPE should end the drag').toBeNull();
 
             UIInteractions.simulatePointerEvent('pointerup', header, 270, 71);
             await wait();
@@ -690,14 +694,16 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
 
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
-            await wait();
+            // The drag directive drops pointer moves within the same animation frame.
+            await nextFrame();
 
-            if (fixture.componentInstance.source.field === 'ID') {
-                fixture.componentInstance.cancel = true;
-            }
+            expect(fixture.componentInstance.source.field).toBe('ID');
+            expect(document.querySelector(`.${GHOST_CLASS}`)).not.toBeNull();
+            fixture.componentInstance.cancel = true;
 
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await nextFrame();
+            expect(document.querySelector(`.${GHOST_CLASS}`), 'canceling columnMoving should end the drag').toBeNull();
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
             await wait();
             fixture.detectChanges();
