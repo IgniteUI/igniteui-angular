@@ -122,12 +122,11 @@ function normalizeString(str: string, caseSensitive = false): string {
         .replace(/\p{M}/gu, '');
 }
 
-function groupBy<T>(data: T[], key: keyof T | ((item: T) => any)) {
+function groupBy<T>(data: T[], getKey: (item: T) => any) {
     const result: Record<string, T[]> = {};
-    const _get = typeof key === 'function' ? key : (item: T) => item[key];
 
     for (const item of data) {
-      const category = _get(item);
+      const category = getKey(item);
       const group = result[category];
 
       Array.isArray(group) ? group.push(item) : (result[category] = [item]);

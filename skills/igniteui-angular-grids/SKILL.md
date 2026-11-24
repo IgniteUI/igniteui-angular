@@ -1,7 +1,7 @@
 ---
 license: MIT
 name: igniteui-angular-grids
-description: "Provides guidance on all Ignite UI for Angular data grid types (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) including setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, and state persistence. WHEN TO USE: users ask about grids, tables, data grids, tabular data display, cell editing, batch editing, row selection, column pinning, column hiding, grouping rows, pivot tables, tree-structured data, hierarchical data, master-detail views, or exporting grid data. WHEN NOT TO USE: non-grid UI components such as forms, dialogs, navigation, or charts (use igniteui-angular-components); theming or styling (use igniteui-angular-theming)."
+description: "Provides guidance on all Ignite UI for Angular data grid types (Flat Grid, Tree Grid, Hierarchical Grid, Grid Lite, Pivot Grid) including setup, column configuration, sorting, filtering, selection, editing, grouping, summaries, toolbar, export, paging, remote data, and state persistence. WHEN TO USE: users ask about grids, tables, data grids, tabular data display, cell editing, batch editing, row selection, column pinning, column hiding, grouping rows, pivot tables, tree-structured data, hierarchical data, master-detail views, exporting grid data, or grids in SSR / prerendered apps. WHEN NOT TO USE: non-grid UI components such as forms, dialogs, navigation, or charts (use igniteui-angular-components); theming or styling (use igniteui-angular-theming)."
 user-invocable: true
 ---
 
@@ -31,7 +31,7 @@ user-invocable: true
 | Cell editing, row editing, batch editing, transactions, validation, summaries | [`references/editing.md`](./references/editing.md) |
 | Paging, remote data, server-side ops, noop strategies, virtual scroll, multi-grid coordination | [`references/paging-remote.md`](./references/paging-remote.md) |
 | State persistence, Tree Grid / Hierarchical Grid / Pivot Grid data operations | [`references/state.md`](./references/state.md) |
-| Grid sizing (width, height, column sizing, null/px/% modes, cell spacing CSS variables) | [`references/sizing.md`](./references/sizing.md) |
+| Grid sizing (width, height, column sizing, null/px/% modes, cell spacing CSS variables), SSR / prerendering / hydration | [`references/sizing.md`](./references/sizing.md) |
 | Migrating from Grid Lite (`igx-grid-lite`) to the full `igx-grid` when features outgrow Grid Lite | [`references/grid-migration.md`](./references/grid-migration.md) |
 
 > When in doubt, read more rather than fewer reference files — an unnecessary file read is cheap; a hallucinated API is a broken application.

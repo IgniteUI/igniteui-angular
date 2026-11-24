@@ -10,11 +10,11 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
 import { IFilteringEventArgs, IgxGridNavigationService, IgxGridToolbarAdvancedFilteringComponent } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { changei18n, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridResourceStringsEN, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGridCreatedEventArgs, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild, inject, signal, viewChild } from '@angular/core';
 import { IgxColumnComponent } from 'igniteui-angular/grids/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -32,7 +32,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringWithToolbarComponent,
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridExportComponent,
-                IgxHGridRemoteOnDemandComponent
+                IgxHGridRemoteOnDemandComponent,
+                IgxGridAdvancedFilteringConditionalComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -80,6 +81,26 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             await nextFrame();
 
             expect(document.querySelector('.igx-advanced-filter')).toBeNull();
+        });
+
+        it('Should not warn about a wrong overlay id when the grid is destroyed while the dialog is opened - issue #17962', async () => {
+            const conditionalFix = TestBed.createComponent(IgxGridAdvancedFilteringConditionalComponent);
+            conditionalFix.detectChanges();
+            await conditionalFix.whenStable();
+            const warnSpy = vi.spyOn(console, 'warn');
+
+            conditionalFix.componentInstance.grid()!.openAdvancedFilteringDialog();
+            conditionalFix.detectChanges();
+            await conditionalFix.whenStable();
+            expect(document.querySelector('.igx-advanced-filter')).not.toBeNull();
+
+            conditionalFix.componentInstance.showGrid.set(false);
+            conditionalFix.detectChanges();
+            await conditionalFix.whenStable();
+
+            expect(conditionalFix.componentInstance.grid()).toBeUndefined();
+            expect(document.querySelector('.igx-advanced-filter')).toBeNull();
+            expect(warnSpy).not.toHaveBeenCalledWith('igxOverlay.detach was called with wrong id: ', expect.anything());
         });
 
         it('Should correctly initialize the Advanced Filtering dialog.', async () => {
@@ -1360,6 +1381,37 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(addingButtons[0].innerText).toBe('add\nMy condition');
             expect(addingButtons[1].innerText).toBe('add\nMy group');
         });
+
+        it('Should update the opened Advanced Filtering dialog when the resource strings change globally.', async () => {
+            const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
+            const grid: IgxGridComponent = fix.componentInstance.grid;
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            const getAddConditionButtonText = () =>
+                (QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText;
+            expect(getAddConditionButtonText()).toBe('Condition');
+
+            try {
+                // The dialog passes the grid's advanced filtering strings to the query builder as custom strings,
+                // which the query builder does not refresh by itself.
+                changei18n({ igx_grid_advanced_filter_add_condition_root: 'Bedingung' });
+                fix.detectChanges();
+
+                expect(getAddConditionButtonText()).toBe('Bedingung');
+            } finally {
+                changei18n(GridResourceStringsEN);
+            }
+        });
     });
 
     describe('Column groups - ', () => {
@@ -1851,6 +1903,49 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(dropdownValues).toEqual(expectedValues);
         });
 
+        it('Should have proper fields in UI when auto-generated child data is loaded on demand without a schema.', async () => {
+            const fixture = TestBed.createComponent(IgxHGridAutoGenerateOnDemandComponent);
+            const hierarchicalGrid = fixture.componentInstance.hGrid;
+            hierarchicalGrid.allowAdvancedFiltering = true;
+            fixture.detectChanges();
+
+            // There is no child data yet, but the child entities are generated from the row islands.
+            const [childEntity] = hierarchicalGrid.schema[0].childEntities;
+            expect(childEntity.name).toBe('childData');
+            expect(childEntity.fields).toEqual([]);
+            expect(childEntity.childEntities.map(e => e.name)).toEqual(['childData2']);
+
+            // Load the child data on demand.
+            hierarchicalGrid.expandRow('0');
+            fixture.detectChanges();
+            await fixture.componentInstance.childDataLoaded;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            hierarchicalGrid.openAdvancedFilteringDialog();
+            fixture.detectChanges();
+
+            // Click the initial 'Add Condition' button.
+            QueryBuilderFunctions.clickQueryBuilderInitialAddConditionBtn(fixture, 0);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            // Populate edit inputs.
+            await QueryBuilderFunctions.selectColumnInEditModeExpression(fixture, 0); // Select 'ID' column.
+            await QueryBuilderFunctions.selectOperatorInEditModeExpression(fixture, 10); // Select 'In' operator.
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            const entityInputGroup = QueryBuilderFunctions.getQueryBuilderEntitySelect(fixture, 1).querySelector('input');
+            expect(entityInputGroup.value).toBe('childData');
+
+            // Verify return fields
+            const queryBuilderElement: HTMLElement = fixture.debugElement.queryAll(By.css(`.${QueryBuilderSelectors.QUERY_BUILDER_TREE}`))[1].nativeElement;
+            QueryBuilderFunctions.clickQueryBuilderFieldsCombo(fixture, 1);
+            fixture.detectChanges();
+            const dropdownValues = QueryBuilderFunctions.getQueryBuilderSelectDropdownItems(queryBuilderElement, 0).map((x: any) => x.innerText);
+            expect(dropdownValues).toEqual(['ID', 'ProductName', 'Price']);
+        });
+
         it('Should correctly change resource strings for hierarchical Advanced Filtering dialog.', async () => {
             hgrid.closeAdvancedFilteringDialog(false);
             await fix.whenStable();
@@ -2031,6 +2126,37 @@ class IgxHGridRemoteOnDemandComponent {
 
 @Component({
     template: `
+    <igx-hierarchical-grid #hGrid [data]="data" [primaryKey]="'ID'" [autoGenerate]="true" [height]="'600px'">
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" (gridCreated)="gridCreated($event)">
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true"></igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent]
+})
+class IgxHGridAutoGenerateOnDemandComponent {
+    @ViewChild('hGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    public data = [
+        { ID: '0', ProductName: 'Product: A0' },
+        { ID: '1', ProductName: 'Product: A1' }
+    ];
+
+    /** Resolved when the on demand child data is assigned to the created child grid. */
+    public childDataLoaded: Promise<void>;
+
+    public gridCreated(event: IGridCreatedEventArgs) {
+        this.childDataLoaded = new Promise(resolve => setTimeout(() => {
+            event.grid.data = [{ ID: 10, ProductName: 'Child: A0', Price: 5 }];
+            event.grid.cdr.detectChanges();
+            resolve();
+        }));
+    }
+}
+
+@Component({
+    template: `
     <igx-hierarchical-grid #hGrid [data]="data" [autoGenerate]="false"
         [height]="'400px'" [width]="'500px'">
         <igx-column field="root1" [dataType]="'number'"></igx-column>
@@ -2056,4 +2182,19 @@ class IgxHierarchicalGridMissingChildDataComponent {
         { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
         { root1: 3, root2: 3, level1data: [] }
     ];
+}
+
+@Component({
+    template: `
+    @if (showGrid()) {
+        <igx-grid [data]="data" height="500px">
+            <igx-column field="ProductName" dataType="string"></igx-column>
+        </igx-grid>
+    }`,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+class IgxGridAdvancedFilteringConditionalComponent {
+    public grid = viewChild(IgxGridComponent);
+    public showGrid = signal(true);
+    public data = SampleTestData.excelFilteringData();
 }

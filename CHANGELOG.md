@@ -2,11 +2,24 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.1
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
+    - In the filtering row, `Alt + Arrow Down` on the conditions button opens the conditions, and not the date or time picker. With a unary condition, such as Today, the date and time inputs are read-only and `Alt + Arrow Down` in them opens the conditions. `Tab` on the conditions button closes the conditions. Previously they opened again.
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+
 ## 22.3.0
 
 ### General
 
 - **Browser support** - The minimum supported browser versions are now documented: Chrome and Edge 131, Firefox 151, and Safari 18 on macOS and iOS. The component styles rely on CSS container style queries and relative colors, so older browsers, including Firefox ESR 140, are not supported. See the [Browser Support](README.md#browser-support) section of the README.
+- `IgxHierarchicalGridComponent`
+    - **Deprecation** - The `schema` input has been deprecated and will be removed in a future version. Define the columns and the row islands of the grid instead, the advanced filtering schema is generated from them. A `schema` that is set is still used as before.
 
 ### New Functionality
 
@@ -44,6 +57,7 @@ All notable changes for each version of this project will be documented in this 
 - Including the theme inside a class (`.dark-theme { @include theme(...); }`) now produces the same styles as including it at the root:
     - The cascade layer order (`@layer ig.reset, ig.base, ig.<theme>, ig.derived;`) is declared at the stylesheet root. Inside the class, browsers dropped it and the layers were ordered by first appearance.
     - The tooltip, button, icon button, ripple, label, overlay, highlight, rating, dock manager, watermark and chart tokens are no longer declared on the class itself. Previously every element in the class inherited them, so, for example, the grid and its toolbar took the tooltip background.
+- Fixed components losing styles when a theme they depend on is excluded through `$exclude`. For example, excluding `igx-label` no longer leaves the label of a textarea input group stuck to its top border. Such themes are now kept when a component you still include needs them, with a warning that tells you which one. `igx-simple-combo` and `igx-accordion` can also be excluded now.
 - The grid, grid toolbar, paginator, column actions, Excel-style filtering and query builder themes no longer pick up `--background`, `--foreground` or `--accent-color` declared on an ancestor or on `:root`, for example by the application's own CSS. Their themes now declare these tokens on the component, without a value unless one is passed to the theme function.
 
 ### Behavioral Changes
@@ -54,6 +68,14 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
     - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+- `IgxChipComponent`
+    - Selecting and deselecting a chip now animates the change of its text, background, border and shadow colors, as the checkbox and the switch do. The hover and focus colors change with the same transition.
+    - The select icon now animates out when the chip is deselected, as it already animated in when the chip was selected. It stays in the DOM, with the `igx-chip__select--leaving` class, until its animation ends. Tests that check for the icon's removal right after deselection keep working, as `TestBed` disables these animations by default.
+    - The color transitions are enabled after the chip is first rendered, when the `igx-chip--animated` class is added to it, so a chip does not animate to its initial state.
+    - A chip in an `igxFor` or `igx-virtual-scroll` item, such as a grid cell or a combo item, does not animate while the container scrolls, because the container reuses the chip for other records. It shows the state of the new record right away.
+    - **Breaking Change** - The `selectClass` and `onSelectTransitionDone` methods have been removed. They were leftovers of the previous select icon animation and were not used by the chip. `selectClass` was marked as internal, and `selectedChanged` is still emitted when the selection changes.
+- `IgxDragDirective`
+    - The transitions of the dragged element are disabled only while it is dragged. Previously the directive set `transition-duration: 0s` on the element when it was initialized, which disabled its own transitions, such as a color change on hover, at all times.
 - `IgxSplitterComponent`
     - Arrow keys combined with `Shift`, `Alt` or `Meta`, and `Ctrl` + arrow keys combined with another modifier, no longer resize or collapse the panes. The splitter bar ignores them, and the browser default runs. Previously the splitter bar ignored the extra modifiers and handled these keys as the plain arrow keys or `Ctrl` + arrow keys.
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
@@ -68,6 +90,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### Bug Fixes
 
+- **Forms**
+    - `IgxSnackbarComponent` - The default action button now renders with `type="button"`. Previously, when the snackbar was inside a `form` (for example as part of a grid), it became the default button of the form, so pressing Enter in any input of the form clicked it, which triggered the snackbar action and submitted the form.
+    - `IgxQueryBuilderComponent` - The add expression and the group (AND/OR) buttons now render with `type="button"`. Previously, clicking them inside a `form` submitted it. Pressing Enter in the query builder inputs also no longer submits a surrounding `form`.
+    - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent` - Pressing Enter in the grid UI, such as the filtering row, cell and row editors, the toolbar column hiding and pinning, Excel-style filtering and advanced filtering, as well as selecting a date in their date pickers with Enter, no longer submits a surrounding `form`.
+    - `IgxAdvancedFilteringDialogComponent`, `IgxColumnActionsComponent`, `IgxPivotDataSelectorComponent` - Pressing Enter in their inputs no longer submits a surrounding `form` when they are rendered outside of the grid, e.g. used standalone, or the advanced filtering dialog opened with custom overlay settings.
 - `IgxAccordionComponent`
     - When `singleBranchExpand` is set initially and the panels are rendered with `@for`, the panels collapsed on init no longer keep `aria-expanded="true"` and no `ExpressionChangedAfterItHasBeenCheckedError` is thrown in development mode.
 - `IgxCarouselComponent`
@@ -85,11 +112,14 @@ All notable changes for each version of this project will be documented in this 
     - Opening the calendar from the default icon no longer briefly selects the input value in the `inputFormat` (e.g. `09/15/2026`). As with `igx-picker-toggle`, the icon click no longer propagates to the picker's ancestors.
     - The calendar receives the focus as soon as it starts opening instead of after the opening animation.
     - The default browser action of `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, is now prevented.
+    - Destroying the picker while its calendar is open no longer logs `igxOverlay.detach was called with wrong id` in the console. In the grid, this happened whenever a date cell edit ended while the calendar was open.
 - `IgxDateRangePickerComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up`, which open and close the calendar, no longer scroll the page. Previously their default browser action was not prevented.
+    - Destroying the picker while its calendar is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
 - `IgxDragDirective`
     - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
     - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
+    - Only the end of the position transition that the directive started (`left`, `top` or `transform` of the dragged element itself) ends a drag or its return animation. Previously any `transitionend` event on the element, including a color transition on hover or one that bubbled up from a descendant, removed the ghost and emitted `transitioned` early.
 - `IgxExpansionPanelComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up` no longer expand or collapse the panel when its header is disabled.
 - `IgxFilterDirective`, `IgxFilterPipe`
@@ -105,6 +135,8 @@ All notable changes for each version of this project will be documented in this 
     - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
     - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
+- `IgxForOfDirective`, `IgxVirtualScrollComponent`
+    - The items that a virtualized container reuses for other records while it scrolls no longer animate from the state of the previous record. For example, a chip or a checkbox in a grid cell, combo item or list item shows the new record's state right away. While the container scrolls, and for 150ms after its last scroll event, the `igxFor` display container has the `igx-display-container--scrolling` class and `igx-virtual-scroll` has the `igx-virtual-scroll--scrolling` class. Under them the chips and checkboxes turn off their transitions with `!important`, also in nested containers such as the child grids of a hierarchical grid, and an application style cannot turn them back on. Sorting, filtering and other changes of the items without a scroll still animate.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
@@ -114,10 +146,17 @@ All notable changes for each version of this project will be documented in this 
     - Autosizing a column with quick filtering enabled now fits its content and filtering chip, instead of keeping its current width or growing by 1px on each call with fractional scaling.
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
+    - Destroying the grid while its advanced filtering dialog is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
+    - A row released outside a drop area animates back to its place until the end. Previously a transition in its drag ghost, such as a color change of a chip in a cell, ended the animation early.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied and no column is pinned at the start, the group-by indentation and the summary area below it use the pinned border.
     - Multi-row layout cell borders stay visible when the row is hovered or selected.
+- `IgxHierarchicalGridComponent`
+    - The advanced filtering dialog now lists the nested row islands of a row island whose child data is not available yet, e.g. when it is loaded on demand. Previously they were left out when the first record had no child data.
+    - The fields of an auto-generated row island in the advanced filtering dialog are updated when its child grids generate their columns, e.g. when the child data is loaded on demand, and take the column `header`, `dataType` and formatting options set in `columnInit`. The fields of its nested row islands that are still empty are resolved from the loaded child data. The child grids of a row island share its fields, so a child grid adds the fields it has columns for and does not change the type of a field that has no value in its first record. Previously they were resolved only from the first record and were empty when it had no child data.
+    - The fields of a row island with declared columns in the advanced filtering dialog now take the column `header`, `filters`, `editorOptions` and formatting options, as the fields of the root grid do. Previously only the `field` and the `dataType` were used.
+    - The fields in the advanced filtering dialog are updated when the columns of the root grid or of a row island are added, removed or changed after the dialog was first opened, e.g. when they are rendered conditionally or loaded later.
 - `IgxTreeGridComponent`
     - Setting `data` before the grid is initialized while `autoGenerate` is enabled no longer throws an error. In Ignite UI for Web Components this happened when `data` was set on `igc-tree-grid` before the element was attached to the page.
 - `IgxPivotGridComponent`
@@ -126,6 +165,8 @@ All notable changes for each version of this project will be documented in this 
     - Writable properties that are not inputs, such as `selected` of `igc-column` and `totalPages` of `igc-paginator`, are now applied when set on the element. Previously the value was ignored and an `NG0303` error was logged.
     - The deprecated `getFilterFactory` method is now available on `igc-grid`, as intended for backwards compatibility.
     - Icon changes broadcast from other pages now update only the icons or icon references that match the message's action type.
+- `IgxNavigationDrawerComponent`
+    - `opened` and `closed` are emitted when the drawer finishes opening or closing. Previously a transition of the drawer content that ended first, such as a color change of an item on hover, emitted them early.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`

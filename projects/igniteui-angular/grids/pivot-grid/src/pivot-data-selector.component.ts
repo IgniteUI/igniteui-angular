@@ -25,7 +25,7 @@ import { IgxExpansionPanelBodyComponent, IgxExpansionPanelComponent, IgxExpansio
 import { IDragBaseEventArgs, IDragGhostBaseEventArgs, IDragMoveEventArgs, IDropBaseEventArgs, IDropDroppedEventArgs, IgxDragDirective, IgxDragHandleDirective, IgxDropDirective } from 'igniteui-angular/directives';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxDropDownComponent, IgxDropDownItemComponent, IgxDropDownItemNavigationDirective, ISelectionEventArgs } from 'igniteui-angular/drop-down';
-import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
+import { AbsoluteScrollStrategy, AutoPositionStrategy, ColumnType, OverlaySettings, PositionSettings, preventImplicitSubmission, ɵSize, SortingDirection, VerticalAlignment } from 'igniteui-angular/core';
 import { IPivotAggregator, IPivotDimension, IPivotValue, PivotDimensionType, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
 import { Subscription } from 'rxjs';
 
@@ -76,6 +76,8 @@ export class IgxPivotDataSelectorComponent implements OnDestroy {
     private cdr = inject(ChangeDetectorRef);
     private pivotConfigChangeSub?: Subscription;
     protected pipeRetrigger = 0;
+
+    protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
 
     /**

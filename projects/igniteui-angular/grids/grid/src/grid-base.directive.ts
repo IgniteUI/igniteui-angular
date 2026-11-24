@@ -38,6 +38,7 @@ import {
 import {
     areEqualArrays,
     columnFieldPath,
+    getResizeObserver,
     resizeObservable,
     Transaction,
     TransactionType,
@@ -103,7 +104,8 @@ import {
     runAfterRenderOnce,
     GridStyleCSSProperty,
     I18N_FORMATTER,
-    IgxStylesRegistrar
+    IgxStylesRegistrar,
+    preventImplicitSubmission
 } from 'igniteui-angular/core';
 import { IgcTrialWatermark } from 'igniteui-trial-watermark';
 import {
@@ -3296,6 +3298,8 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
     protected _defaultExpandState = false;
     protected _headerFeaturesWidth = NaN;
+    private _headerFeaturesObserver: ResizeObserver | null = null;
+    private _observedHeaderFeatures: HTMLElement[] = [];
     protected _init = true;
     protected _firstAutoResize = true;
     protected _autoSizeColumnsNotify = new Subject<void>();
@@ -3357,6 +3361,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     private _loadingGridTemplate!: TemplateRef<IgxGridTemplateContext>;
 
     private _cdrRequests = false;
+    private _repaintAfterRender = false;
     private _defaultResourceStrings = getCurrentResourceStrings(GridResourceStringsEN);
     private _emptyGridMessage: string = null!;
     private _emptyFilteredGridMessage: string = null!;
@@ -3827,6 +3832,12 @@ export abstract class IgxGridBaseDirective implements GridType,
      */
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
+        // Capture phase, since internal handlers (filtering row, editors, dialogs) stop the propagation of key events.
+        // The keypress is also handled, as a picker selecting on Enter may move the focus to its input before it.
+        merge(
+            fromEvent<KeyboardEvent>(this.nativeElement, 'keydown', { capture: true }),
+            fromEvent<KeyboardEvent>(this.nativeElement, 'keypress', { capture: true })
+        ).pipe(destructor).subscribe(preventImplicitSubmission);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
             const activeNode = this.navigation.activeNode;
             if (!this.crudService.cell && !!activeNode &&
@@ -4442,13 +4453,16 @@ export abstract class IgxGridBaseDirective implements GridType,
         this.transactionChange$.next();
         this.transactionChange$.complete();
         this._destroyed = true;
+        this._headerFeaturesObserver?.disconnect();
 
         this.textHighlightService.destroyGroup(this.id);
 
-        if (this._advancedFilteringOverlayId) {
+        // The overlay service detaches the dialog on its own when Angular destroys it, which happens
+        // before this hook because the dialog is created in the grid's view container.
+        if (this._advancedFilteringOverlayId && this.overlayService.getOverlayById(this._advancedFilteringOverlayId)) {
             this.overlayService.detach(this._advancedFilteringOverlayId);
-            this._advancedFilteringOverlayId = '';
         }
+        this._advancedFilteringOverlayId = '';
 
         this.overlayIDs.forEach(overlayID => {
             const overlay = this.overlayService.getOverlayById(overlayID);
@@ -4719,8 +4733,31 @@ export abstract class IgxGridBaseDirective implements GridType,
                 this.headerGroupContainer.nativeElement.getBoundingClientRect().width : 0;
             const expanderWidth = expander?.nativeElement?.getBoundingClientRect ? expander.nativeElement.getBoundingClientRect().width : 0;
             this._headerFeaturesWidth = rowSelectArea + rowDragArea + groupableArea + expanderWidth;
+            this.observeHeaderFeatures([this.headerSelectorContainer, this.headerDragContainer, this.headerGroupContainer, expander]);
         }
         return this._headerFeaturesWidth;
+    }
+
+    private observeHeaderFeatures(refs: (ElementRef<HTMLElement> | undefined)[]) {
+        const elements = refs.map(ref => ref?.nativeElement).filter((el): el is HTMLElement => !!el);
+        const ResizeObserverCtor = getResizeObserver();
+        if (!ResizeObserverCtor || this._destroyed ||
+            (elements.length === this._observedHeaderFeatures.length && elements.every((el, i) => el === this._observedHeaderFeatures[i]))) {
+            return;
+        }
+        this._observedHeaderFeatures = elements;
+        this._headerFeaturesObserver?.disconnect();
+        this._headerFeaturesObserver ??= this.zone.runOutsideAngular(() => new ResizeObserverCtor(() => {
+            const width = this._headerFeaturesWidth;
+            if (Number.isNaN(width) || this._destroyed) {
+                return;
+            }
+            this._headerFeaturesWidth = NaN;
+            if (this.featureColumnsWidth() !== width) {
+                this.resizeNotify.next();
+            }
+        }));
+        elements.forEach(el => this._headerFeaturesObserver!.observe(el, { box: 'border-box' }));
     }
 
     /**
@@ -6939,6 +6976,7 @@ export abstract class IgxGridBaseDirective implements GridType,
     protected resetNotifyChanges() {
         this._cdrRequestRepaint = false;
         this._cdrRequests = false;
+        this._repaintAfterRender = false;
     }
 
     /** @hidden @internal */
@@ -7222,6 +7260,11 @@ export abstract class IgxGridBaseDirective implements GridType,
             this.zone.run(() => {
                 this._applyWidthHostBinding();
                 this.cdr.detectChanges();
+                if (this._cdrRequestRepaint) {
+                    // repaint again after the deferred repaints; the flag survives a plain notifyChanges() in between
+                    this._repaintAfterRender = true;
+                    Promise.resolve().then(() => this._repaintAfterRender && this.notifyChanges(true));
+                }
             });
         });
         this.resetCaches(recalcFeatureWidth);
@@ -7689,9 +7732,6 @@ export abstract class IgxGridBaseDirective implements GridType,
         for (const col of columnsInView) {
             if (!col.autoSize && col.headerCell) {
                 const cellsContentWidths: number[] = [];
-                if (col._cells.length !== this.rowList.length) {
-                    this.rowList.forEach(x => x.cdr.detectChanges());
-                }
                 const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
                 cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
                 let maxForCells = Math.max(...cellsContentWidths);
@@ -7879,6 +7919,9 @@ export abstract class IgxGridBaseDirective implements GridType,
             }
             width = currentWidth + 'px';
             this.resetCaches();
+        }
+        if (this._hostWidth === width) {
+            return;
         }
         this._hostWidth = width;
         this.cdr.markForCheck();

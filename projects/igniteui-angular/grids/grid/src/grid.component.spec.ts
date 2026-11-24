@@ -9,7 +9,10 @@ import {
     TemplateRef,
     inject,
     ChangeDetectionStrategy,
-    provideZonelessChangeDetection
+    provideCheckNoChangesConfig,
+    provideZonelessChangeDetection,
+    signal,
+    viewChild
 } from '@angular/core';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
@@ -26,8 +29,11 @@ import {
     IgxGridRow,
     IgxGroupByRow,
     IgxSummaryRow,
-    GridSelectionMode
+    GridSelectionMode,
+    IgxCellTemplateDirective
 } from 'igniteui-angular/grids/core';
+import { IgxChipComponent } from 'igniteui-angular/chips';
+import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IForOfState } from 'igniteui-angular/directives';
 import { GridTemplateStrings } from '../../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
@@ -55,7 +61,7 @@ import {
 } from 'igniteui-angular/core';
 import { IgxPaginatorComponent, IgxPaginatorContentDirective } from 'igniteui-angular/paginator';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
+import { IgxGridBaseDirective, SCROLL_THROTTLE_TIME_MULTIPLIER } from './../src/grid-base.directive';
 
 /** Throttle of the grid's ResizeObserver handler (`throttleTime(40, ...)` in grid-base.directive.ts). */
 const RESIZE_THROTTLE_TIME = 40;
@@ -1098,6 +1104,104 @@ describe('IgxGrid Component Tests #grid', () => {
                 // Without the trailing edge the settle is dropped and the last row is never brought into view.
                 expect((virtDir.state.startIndex ?? 0) + (virtDir.state.chunkSize ?? 0)).toBeGreaterThanOrEqual(lastIndex + 1);
                 expect(grid.gridAPI.get_row_by_index(lastIndex)).toBeDefined();
+            });
+        });
+
+        describe('transitions of the cell content', () => {
+            const SCROLLING_CLASS = 'igx-display-container--scrolling';
+            let fix: ComponentFixture<IgxGridCellTemplateTransitionsComponent>;
+            let grid: IgxGridComponent;
+
+            const runningTransitions = (selector: string) => Array.from(grid.tbody.nativeElement.querySelectorAll(selector) as NodeListOf<HTMLElement>)
+                .flatMap(el => el.getAnimations({ subtree: true }))
+                .filter(animation => animation instanceof CSSTransition && animation.playState === 'running');
+            const firstChipSelected = () => grid.tbody.nativeElement.querySelector('igx-chip').getAttribute('aria-selected');
+            const rowsContainer = (): HTMLElement => grid.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
+
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
+                    imports: [NoopAnimationsModule, IgxGridCellTemplateTransitionsComponent],
+                    // The select icon of a deselected chip is removed with `animate.leave`.
+                    animationsEnabled: true
+                }).compileComponents();
+
+                fix = TestBed.createComponent(IgxGridCellTemplateTransitionsComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+                // The chips and checkboxes enable their transitions shortly after their initial render.
+                await wait(200);
+            });
+
+            it('should not animate the cell content of the rows reused for other records while the grid scrolls', async () => {
+                expect(firstChipSelected()).toBe('true');
+
+                // Jump by more than the viewport and an odd number of rows, so that every row is
+                // updated in place for a record with the opposite state.
+                grid.verticalScrollContainer.getScroll().scrollTop = grid.renderedRowHeight * 101;
+                await nextFrame();
+                fix.detectChanges();
+
+                expect(grid.verticalScrollContainer.state.startIndex).toBe(101);
+                expect(firstChipSelected()).toBe('false');
+                expect(rowsContainer().classList.contains(SCROLLING_CLASS)).toBe(true);
+                expect(runningTransitions('igx-chip')).toEqual([]);
+                expect(runningTransitions('igx-checkbox')).toEqual([]);
+
+                // Nothing animates also after the next frames are rendered, and the select icons
+                // of the deselected chips are removed right away.
+                await wait(50);
+                expect(runningTransitions('igx-chip')).toEqual([]);
+                expect(runningTransitions('igx-checkbox')).toEqual([]);
+                const selectedChips = grid.tbody.nativeElement.querySelectorAll('igx-chip[aria-selected="true"]').length;
+                expect(grid.tbody.nativeElement.querySelectorAll('.igx-chip__select').length).toBe(selectedChips);
+
+                // The transitions are enabled again once the scrolling ends.
+                await vi.waitFor(() => expect(rowsContainer().classList.contains(SCROLLING_CLASS)).toBe(false));
+            });
+
+            it('should keep the transitions disabled for a whole scroll gesture also when the scroll is throttled', async () => {
+                // The grid throttles the vertical scroll by up to 60ms, depending on the number of rendered cells.
+                (grid as any).throttleTime$.next(60);
+                const classList = rowsContainer().classList;
+                const addSpy = vi.spyOn(classList, 'add');
+                const removeSpy = vi.spyOn(classList, 'remove');
+                const scroll = grid.verticalScrollContainer.getScroll();
+
+                for (let i = 1; i <= 8; i++) {
+                    scroll.scrollTop = grid.renderedRowHeight * i;
+                    await wait(30);
+                    fix.detectChanges();
+                    // The transitions stay disabled while the grid keeps scrolling.
+                    expect(classList.contains(SCROLLING_CLASS)).toBe(true);
+                }
+
+                await vi.waitFor(() => expect(classList.contains(SCROLLING_CLASS)).toBe(false));
+                expect(addSpy.mock.calls.filter(([cls]) => cls === SCROLLING_CLASS).length).toBe(1);
+                expect(removeSpy.mock.calls.filter(([cls]) => cls === SCROLLING_CLASS).length).toBe(1);
+            });
+
+            it('should disable the transitions in the rows while the grid scrolls horizontally', async () => {
+                const rowContainers = () => Array.from(grid.tbody.nativeElement.querySelectorAll('igx-grid-row igx-display-container') as NodeListOf<HTMLElement>);
+                expect(rowContainers().length).toBeGreaterThan(0);
+
+                grid.headerContainer.getScroll().scrollLeft = 300;
+                await nextFrame();
+                fix.detectChanges();
+
+                expect(rowContainers().every(el => el.classList.contains(SCROLLING_CLASS))).toBe(true);
+                await vi.waitFor(() => expect(rowContainers().some(el => el.classList.contains(SCROLLING_CLASS))).toBe(false));
+            });
+
+            it('should animate the cell content when the visible records change on sorting', async () => {
+                expect(firstChipSelected()).toBe('true');
+
+                // The records 0, 1, 2... become 199, 198, 197..., so that every visible row gets the opposite state.
+                grid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
+                fix.detectChanges();
+
+                expect(firstChipSelected()).toBe('false');
+                expect(runningTransitions('igx-chip').length).toBeGreaterThan(0);
+                expect(runningTransitions('igx-checkbox').length).toBeGreaterThan(0);
             });
         });
     });
@@ -2379,6 +2483,73 @@ describe('IgxGrid Component Tests #grid', () => {
 
                 expect(grid.headerContainer.state.startIndex).toBeGreaterThan(0);
             });
+        });
+    });
+
+    describe('IgxGrid - sizing after data and column replacement', () => {
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, PercentHeightDynamicColumnsGridComponent],
+                providers: [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
+            });
+        });
+
+        for (const newFields of [false, true]) {
+            it(`should not run a duplicate sizing pass when data and columns are replaced in a percentage-height grid (new fields: ${newFields})`, async () => {
+                const fix = TestBed.createComponent(PercentHeightDynamicColumnsGridComponent);
+                await fix.whenStable();
+                const host = fix.componentInstance;
+                const grid = host.grid();
+                expectDynamicColumnsContent(grid, 0);
+                if (newFields) {
+                    grid.filter('f0', 'r1', IgxStringFilteringOperand.instance().condition('contains'));
+                    await fix.whenStable();
+                }
+                const sizing = vi.spyOn(IgxGridBaseDirective.prototype as any, 'calculateGridSizes');
+
+                host.data.set(makeDynamicData(1, newFields));
+                host.columns.set(makeDynamicColumns(1, newFields));
+                await fix.whenStable();
+
+                const rendered = expectDynamicColumnsContent(grid, 1);
+                expectDynamicColumnsGeometry(grid, 1, 1200, rendered);
+                expect(sizing.mock.calls.length).toBeLessThanOrEqual(2);
+            });
+        }
+
+        it('should size the grid when its data and column widths change in the same pass', async () => {
+            const fix = TestBed.createComponent(PercentHeightDynamicColumnsGridComponent);
+            fix.componentInstance.width.set(null);
+            await fix.whenStable();
+            const host = fix.componentInstance;
+            const grid = host.grid();
+            const hostWidth = grid.nativeElement.offsetWidth;
+
+            host.data.set(makeDynamicData(1));
+            host.columns.set(makeDynamicColumns(1).map((col, i) => ({ ...col, key: `g0c${i}` })));
+            await fix.whenStable();
+
+            expect(expectDynamicColumnsContent(grid, 1)).toBe(DYNAMIC_COLUMNS_COUNT);
+            expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * dynamicColumnWidth(1));
+            expect(grid.nativeElement.offsetWidth).toBe(hostWidth + DYNAMIC_COLUMNS_COUNT * (dynamicColumnWidth(1) - dynamicColumnWidth(0)));
+        });
+
+        it('should size the grid when isLoading turns off together with a column width change', async () => {
+            const fix = TestBed.createComponent(PercentHeightDynamicColumnsGridComponent);
+            fix.componentInstance.width.set(null);
+            fix.componentInstance.loading.set(true);
+            await fix.whenStable();
+            const host = fix.componentInstance;
+            const grid = host.grid();
+            const hostWidth = grid.nativeElement.offsetWidth;
+
+            host.loading.set(false);
+            host.data.set(makeDynamicData(1));
+            host.columns.set(makeDynamicColumns(1).map((col, i) => ({ ...col, key: `g0c${i}` })));
+            await fix.whenStable();
+
+            expect(expectDynamicColumnsContent(grid, 1)).toBe(DYNAMIC_COLUMNS_COUNT);
+            expect(grid.nativeElement.offsetWidth).toBe(hostWidth + DYNAMIC_COLUMNS_COUNT * (dynamicColumnWidth(1) - dynamicColumnWidth(0)));
         });
     });
 
@@ -3907,6 +4078,74 @@ class ZonelessFinJsGridComponent {
         Object.fromEntries(this.columns.map((column, columnIndex) => [column, `${rowIndex}-${columnIndex}`])));
 }
 
+const DYNAMIC_COLUMNS_ROWS = 10000;
+const DYNAMIC_COLUMNS_COUNT = 30;
+
+interface DynamicColumnDef { key: string; field: string; header: string; width: string }
+
+const dynamicColumnWidth = (gen: number) => 100 + (gen % 2) * 40;
+
+const dynamicField = (gen: number, i: number, newFields: boolean) => newFields ? `g${gen}f${i}` : `f${i}`;
+
+const makeDynamicColumns = (gen: number, newFields = false): DynamicColumnDef[] => Array.from({ length: DYNAMIC_COLUMNS_COUNT }, (_, i) =>
+    ({ key: `g${gen}c${i}`, field: dynamicField(gen, i, newFields), header: `G${gen} C${i}`, width: `${dynamicColumnWidth(gen)}px` }));
+
+const makeDynamicData = (gen: number, newFields = false) => Array.from({ length: DYNAMIC_COLUMNS_ROWS }, (_, r) => {
+    const row: Record<string, any> = { id: r };
+    for (let c = 0; c < DYNAMIC_COLUMNS_COUNT; c++) {
+        row[dynamicField(gen, c, newFields)] = `g${gen} r${r} c${c}`;
+    }
+    return row;
+});
+
+@Component({
+    template: `
+    <div style="height: 700px; width: 1200px">
+        <igx-grid #grid [data]="data()" [width]="width()" [height]="'100%'" [allowFiltering]="true" [rowSelection]="'multiple'"
+            [isLoading]="loading()">
+            @for (col of columns(); track col.key) {
+                <igx-column [field]="col.field" [header]="col.header" [sortable]="true" [width]="col.width"></igx-column>
+            }
+        </igx-grid>
+    </div>`,
+    imports: [IgxGridComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class PercentHeightDynamicColumnsGridComponent {
+    public grid = viewChild.required<IgxGridComponent>('grid');
+    public data = signal(makeDynamicData(0));
+    public columns = signal(makeDynamicColumns(0));
+    public width = signal<string | null>('100%');
+    public loading = signal(false);
+}
+
+function expectDynamicColumnsContent(grid: IgxGridComponent, gen: number) {
+    const titles = Array.from(grid.nativeElement.querySelectorAll('igx-grid-header .igx-grid-th__title'))
+        .map(title => title.textContent!.trim());
+    const cells = Array.from(grid.dataRowList.first.nativeElement.querySelectorAll('igx-grid-cell')) as HTMLElement[];
+    expect(titles[0]).toBe(`G${gen} C0`);
+    expect(cells[0].textContent!.trim()).toBe(`g${gen} r0 c0`);
+    expect(cells.length, 'cells follow the header window').toBe(titles.length);
+    expect(cells[cells.length - 1].textContent!.trim()).toBe(`g${gen} r0 c${titles.length - 1}`);
+    expect(grid.columns.length).toBe(DYNAMIC_COLUMNS_COUNT);
+    expect((grid.verticalScrollContainer as any).scrollComponent.size).toBe(DYNAMIC_COLUMNS_ROWS * grid.renderedRowHeight);
+    expect(grid.dataRowList.length).toBe(grid.verticalScrollContainer.state.chunkSize);
+    expect(grid.tbody.nativeElement.offsetHeight).toBe(grid.calcHeight);
+    return titles.length;
+}
+
+function expectDynamicColumnsGeometry(grid: IgxGridComponent, gen: number, hostWidth: number, rendered: number) {
+    const el: HTMLElement = grid.nativeElement;
+    const columnWidth = dynamicColumnWidth(gen);
+    const hScroll = grid.headerContainer.getScroll() as HTMLElement;
+    expect(grid.totalWidth).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
+    expect(el.offsetWidth).toBe(hostWidth);
+    expect(grid.isHorizontalScrollHidden).toBe(false);
+    expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(DYNAMIC_COLUMNS_COUNT * columnWidth);
+    expect(hScroll.clientWidth).toBe(grid.unpinnedWidth);
+    expect(rendered).toBeLessThanOrEqual(Math.ceil(grid.unpinnedWidth / columnWidth) + 2);
+}
+
 @Component({
     template: `
     <div [hidden]="gridContainerHidden">
@@ -4464,4 +4703,28 @@ class IgxGridScrollThrottleComponent {
         }
         return record;
     });
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" primaryKey="ID" height="500px" width="600px" [rowHeight]="50">
+        <igx-column field="ID" [sortable]="true" dataType="number" width="200px"></igx-column>
+        <igx-column field="Chip" width="200px">
+            <ng-template igxCell let-cell="cell">
+                <igx-chip [selected]="cell.row.data.ID % 2 === 0" [variant]="cell.row.data.ID % 2 === 0 ? 'success' : 'danger'">Chip</igx-chip>
+            </ng-template>
+        </igx-column>
+        <igx-column field="Checkbox" width="200px">
+            <ng-template igxCell let-cell="cell">
+                <igx-checkbox [checked]="cell.row.data.ID % 2 === 0"></igx-checkbox>
+            </ng-template>
+        </igx-column>
+        <!-- Overflows the grid width, so that it scrolls horizontally. -->
+        <igx-column field="Name" width="400px"></igx-column>
+    </igx-grid>`,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxChipComponent, IgxCheckboxComponent]
+})
+class IgxGridCellTemplateTransitionsComponent {
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    public data = Array.from({ length: 200 }, (_row, rowIndex) => ({ ID: rowIndex }));
 }

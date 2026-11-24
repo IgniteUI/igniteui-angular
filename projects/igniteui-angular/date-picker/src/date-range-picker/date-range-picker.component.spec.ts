@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ElementRef, signal, provideZonelessChangeDetection } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, ChangeDetectionStrategy, inject, ElementRef, signal, provideZonelessChangeDetection, viewChild } from '@angular/core';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { CustomDateRange, DateRange, PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,12 +57,12 @@ describe('IgxDateRangePicker', () => {
         const elementRef = { nativeElement: null };
 
         let onChangeFn: ReturnType<typeof vi.fn>;
-        let _onTouchedFn: ReturnType<typeof vi.fn>;
+        let onTouchedFn: ReturnType<typeof vi.fn>;
         let onValidatorChangeFn: ReturnType<typeof vi.fn>;
 
         beforeEach(async () => {
             onChangeFn = vi.fn().mockName('NgControl.onChange');
-            _onTouchedFn = vi.fn().mockName('NgControl.onTouched');
+            onTouchedFn = vi.fn().mockName('NgControl.onTouched');
             onValidatorChangeFn = vi.fn().mockName('NgControl.onValidatorChange');
 
             await TestBed.configureTestingModule({
@@ -161,6 +161,16 @@ describe('IgxDateRangePicker', () => {
 
                 dateRange.setDisabledState(false);
                 expect(dateRange.disabled).toBe(false);
+            });
+
+            it('calls the onTouched callback on input blur and leaves the validity state untouched when no form control is bound', () => {
+                dateRange.registerOnTouched(onTouchedFn);
+                const input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
+
+                input.nativeElement.dispatchEvent(new FocusEvent('blur'));
+
+                expect(onTouchedFn).toHaveBeenCalledTimes(1);
+                expect(dateRange.inputDirective.valid).toBe(IgxInputState.INITIAL);
             });
         });
 
@@ -995,6 +1005,21 @@ describe('IgxDateRangePicker', () => {
                 // clean up test
                 await vi.runAllTimersAsync();
                 detectChanges();
+            });
+
+            it('should clear the calendar selection when the value is cleared while it\'s open', async () => {
+                dateRange.value = { start: new Date(2025, 1, 3), end: new Date(2025, 1, 5) };
+                dateRange.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+
+                const rangeCalendar = (dateRange as any).calendar;
+                expect(rangeCalendar.selectedDates.length).toBeGreaterThan(0);
+
+                dateRange.value = null;
+                detectChanges();
+
+                expect(rangeCalendar.selectedDates).toEqual([]);
             });
 
             it('should set initial validity state when the form group is disabled', () => {
@@ -2227,6 +2252,40 @@ describe('IgxDateRangePicker', () => {
                 expect(dateRange['_calendar'].disabledDates).toEqual(disabledDates);
             });
 
+            it('should disable calendar dates when min and/or max values as dates are provided', async () => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.componentInstance.minValue = new Date(2000, 10, 1);
+                fixture.componentInstance.maxValue = new Date(2000, 10, 20);
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.open();
+                await vi.runAllTimersAsync();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].disabledDates).toEqual([
+                    { type: DateRangeType.Before, dateRange: [new Date(2000, 10, 1)] },
+                    { type: DateRangeType.After, dateRange: [new Date(2000, 10, 20)] }
+                ]);
+            });
+
+            it('should disable calendar dates when min and/or max values as strings are provided', async () => {
+                fixture = TestBed.createComponent(DateRangeDefaultComponent);
+                fixture.componentInstance.minValue = '2000-10-01T00:00:00';
+                fixture.componentInstance.maxValue = '2000-10-30T00:00:00';
+                fixture.detectChanges();
+                dateRange = fixture.componentInstance.dateRange;
+
+                dateRange.open();
+                await vi.runAllTimersAsync();
+                fixture.detectChanges();
+
+                expect(dateRange['_calendar'].disabledDates).toEqual([
+                    { type: DateRangeType.Before, dateRange: [new Date(2000, 9, 1)] },
+                    { type: DateRangeType.After, dateRange: [new Date(2000, 9, 30)] }
+                ]);
+            });
+
             it('should initialize activeDate with current date, when not set', async () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
@@ -2403,6 +2462,41 @@ describe('IgxDateRangePicker', () => {
                 expect(drp.value).toEqual(null);
             });
         });
+    });
+
+    describe('Destroy', () => {
+        let fixture: ComponentFixture<DateRangeConditionalComponent>;
+
+        beforeEach(async () => {
+            TestBed.resetTestingModule();
+            await TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, DateRangeConditionalComponent]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(DateRangeConditionalComponent);
+            fixture.detectChanges();
+            await fixture.whenStable();
+        });
+
+        it.each([PickerInteractionMode.DropDown, PickerInteractionMode.Dialog])(
+            'should not warn about a wrong overlay id when destroyed while open in %s mode - issue #17938', async (mode) => {
+                fixture.componentInstance.mode.set(mode);
+                fixture.detectChanges();
+                const warnSpy = vi.spyOn(console, 'warn');
+
+                fixture.componentInstance.dateRange()!.open();
+                await fixture.whenStable();
+                expect(fixture.componentInstance.dateRange()!.collapsed).toBe(false);
+                expect(document.querySelector('igx-calendar-container')).not.toBeNull();
+
+                fixture.componentInstance.showPicker.set(false);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(fixture.componentInstance.dateRange()).toBeUndefined();
+                expect(document.querySelector('igx-calendar-container')).toBeNull();
+                expect(warnSpy).not.toHaveBeenCalledWith('igxOverlay.detach was called with wrong id: ', expect.anything());
+            });
     });
 
     describe('Zoneless', () => {
@@ -2612,6 +2706,19 @@ export class DateRangeTestComponent implements OnInit {
 })
 export class DateRangeDefaultComponent extends DateRangeTestComponent {
     public override disabled = false;
+}
+
+@Component({
+    template: `
+    @if (showPicker()) {
+        <igx-date-range-picker [mode]="mode()"></igx-date-range-picker>
+    }`,
+    imports: [IgxDateRangePickerComponent]
+})
+export class DateRangeConditionalComponent {
+    public dateRange = viewChild(IgxDateRangePickerComponent);
+    public showPicker = signal(true);
+    public mode = signal<PickerInteractionMode>(PickerInteractionMode.DropDown);
 }
 
 @Component({
