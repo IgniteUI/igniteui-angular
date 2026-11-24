@@ -762,6 +762,35 @@ describe('igxMask', () => {
             expect(element.value).toEqual('(1__) _5__-___');
         });
 
+        it('should start a new step when the caret leaves and comes back', async () => {
+            const { input, element } = await setup();
+
+            // with the arrow keys
+            type('12', input, 0);
+            press(input, 'ArrowLeft');
+            element.setSelectionRange(2, 2);
+            press(input, 'ArrowRight');
+            element.setSelectionRange(3, 3);
+            type('3', input);
+            expect(element.value).toEqual('(123) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+
+            // with a click at the same position
+            type('3', input);
+            input.triggerEventHandler('pointerdown', {});
+            type('4', input);
+            expect(element.value).toEqual('(123) 4___-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            undo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
         it('should undo a run of backspaces across a literal as a single step', async () => {
             const { input, element, component } = await setup();
 
@@ -891,6 +920,30 @@ describe('igxMask', () => {
 
             undo(input);
             expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should not join a cut with Shift + Delete and a delete that follows it', async () => {
+            const { input, element } = await setup();
+            type('1234', input, 0);
+
+            // Shift + Delete cuts the selected '12'
+            element.setSelectionRange(1, 3);
+            press(input, 'Delete', { shiftKey: true });
+            element.value = '(3) 4___-___';
+            element.setSelectionRange(1, 1);
+            input.triggerEventHandler('input', { target: element, inputType: 'deleteByCut' });
+            expect(element.value).toEqual('(__3) 4___-___');
+            expectSelection(element, 3);
+
+            del(input);
+            expect(element.value).toEqual('(___) 4___-___');
+
+            // only the delete is undone
+            undo(input);
+            expect(element.value).toEqual('(__3) 4___-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) 4___-___');
         });
 
         it('should record a drop as its own step', async () => {

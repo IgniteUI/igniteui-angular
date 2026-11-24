@@ -123,6 +123,20 @@ describe('MaskHistory', () => {
             expect(history.canUndo).toBe(false);
         });
 
+        it('should start a new step after the run is ended, even with the caret back in place', () => {
+            history.record('insert', at('___', 0));
+            history.settle('ab_', 2);
+
+            // The caret left and came back, for example with the Left and the Right arrow keys.
+            history.endRun();
+
+            history.record('insert', at('ab_', 2));
+            history.settle('abc', 3);
+
+            expect(history.undo(at('abc', 3))).toEqual(at('ab_', 2));
+            expect(history.undo(at('ab_', 2))).toEqual(at('___', 0));
+        });
+
         it('should break the run when the kind changes', () => {
             history.record('insert', at('___', 0));
             history.settle('a__', 1);

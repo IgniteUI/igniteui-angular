@@ -174,10 +174,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      */
     @Input()
     public set value(value: Date | string | null) {
-        const previous = this.dateTime;
         this._value = value;
         this.setDateValue(value);
-        this.dropHistoryOnOutsideChange(previous);
+        this.dropHistoryOnOutsideChange();
         this.onChangeCallback(value);
         this.updateMask();
     }
@@ -242,6 +241,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private _onClear!: boolean;
     /** Whether the editor itself is committing a value, as opposed to a value that is set from outside. */
     private _committing = false;
+    /** The time of the date as of the last assignment. Tells a change of the date that was made from outside. */
+    private _knownDateTime: number | null = null;
     private document: Document;
     private _defaultInputFormat!: string;
     private _value!: Date | string | null;
@@ -393,10 +394,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     /** @hidden @internal */
     public override writeValue(value: any): void {
-        const previous = this.dateTime;
         this._value = value;
         this.setDateValue(value);
-        this.dropHistoryOnOutsideChange(previous);
+        this.dropHistoryOnOutsideChange();
         this.updateMask();
     }
 
@@ -447,6 +447,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
         this.updateValue(this.parseDate(this.inputValue));
         this.updateMask();
+        this.recordHiddenChange();
         // The value update can rewrite the text that the mask has just settled on.
         this.settleHistory();
     }
@@ -460,6 +461,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
 
         this.commitInputText();
+        this.recordHiddenChange();
         // The value update can rewrite the text that the mask has just settled on.
         this.settleHistory();
     }
@@ -549,9 +551,24 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
      * two dates can look the same in the input format. A value that the editor commits itself is not such a
      * change, and neither is what its events write back into it meanwhile, as the pickers do.
      */
-    private dropHistoryOnOutsideChange(previous: number | null): void {
-        if (!this._committing && this.dateTime !== previous) {
+    private dropHistoryOnOutsideChange(): void {
+        const current = this.dateTime;
+        // Compare with a saved time and not with the date before the assignment: an application can change
+        // the time of the very `Date` instance that the editor holds and then set that instance again.
+        if (!this._committing && current !== this._knownDateTime) {
             this.history.clear();
+        }
+        this._knownDateTime = current;
+    }
+
+    /**
+     * Records a typed edit that left the text the same, but changed a part of the date that the input
+     * format hides. Typing over `15` in `15/06/2020` rebuilds the date from the text and drops its time.
+     */
+    private recordHiddenChange(): void {
+        const skipped = this.skippedEdit;
+        if (skipped && this.dateTime !== skipped.state.model) {
+            this.history.record(skipped.kind, skipped.state);
         }
     }
 

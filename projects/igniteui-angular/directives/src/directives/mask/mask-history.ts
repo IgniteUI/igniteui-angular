@@ -92,6 +92,14 @@ export class MaskHistory {
     }
 
     /**
+     * Ends the current run, so that the next edit is a step of its own. The caret position at the next edit
+     * does not show that the caret left and came back in between, for example with the arrow keys.
+     */
+    public endRun(): void {
+        this._lastKind = null;
+    }
+
+    /**
      * Reports the state that an edit settled on, so that the next {@link record} can tell
      * whether it continues the run.
      */
