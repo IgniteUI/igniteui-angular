@@ -3,7 +3,7 @@ import { AfterViewInit, Component, DoCheck, EventEmitter, Output, ViewChild, Vie
 import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, IgxKeyBindingsService, PlatformUtil, altKey, arrowDown } from 'igniteui-angular/core';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -54,20 +54,18 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
     templateUrl: 'simple-combo.component.html',
     styleUrls: ['../../../combo/src/combo/combo.component.css'],
     providers: [
+        IgxKeyBindingsService,
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxSimpleComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxSimpleComboComponent, multi: true }
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    host: {
-        '(keydown.ArrowDown)': 'onArrowDown($any($event))',
-        '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
-    },
     imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboDataWindowPipe, IgxComboRecordWindowPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     private platformUtil = inject(PlatformUtil);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
     private formGroupDirective = inject(FormGroupDirective, { optional: true });
 
     /** @hidden @internal */
@@ -161,6 +159,11 @@ export class IgxSimpleComboComponent extends IgxComboBaseDirective implements Co
     constructor() {
         super();
         this.comboAPI.register(this);
+
+        this._keyBindings
+            .configure({ skip: [], bindingDefaults: { preventDefault: false, repeat: true } })
+            .set(arrowDown, (event) => this.onArrowDown(event))
+            .set([altKey, arrowDown], (event) => this.onArrowDown(event));
     }
 
     /** @hidden @internal */

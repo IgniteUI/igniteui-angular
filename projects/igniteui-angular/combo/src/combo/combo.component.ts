@@ -8,11 +8,11 @@ import {
     Input,
     Output,
     EventEmitter,
-    HostListener,
     DoCheck,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    inject
 } from '@angular/core';
 
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -21,7 +21,11 @@ import {
     IBaseEventArgs,
     IBaseCancelableEventArgs,
     CancelableEventArgs,
-    EditorProvider
+    EditorProvider,
+    IgxKeyBindingsService,
+    altKey,
+    arrowDown,
+    escapeKey
 } from 'igniteui-angular/core';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -111,6 +115,7 @@ const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     styleUrl: 'combo.component.css',
     encapsulation: ViewEncapsulation.None,
     providers: [
+        IgxKeyBindingsService,
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
         { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
@@ -204,20 +209,25 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
 
     private _displayText!: string;
 
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+
     constructor() {
         super();
         this.comboAPI.register(this);
+
+        this._keyBindings
+            .configure({ skip: [], bindingDefaults: { preventDefault: false, repeat: true } })
+            .set(arrowDown, (event) => this.onArrowDown(event))
+            .set([altKey, arrowDown], (event) => this.onArrowDown(event))
+            .set(escapeKey, (event) => this.onEscape(event));
     }
 
-    @HostListener('keydown.ArrowDown', ['$event'])
-    @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public onArrowDown(event: Event) {
         event.preventDefault();
         event.stopPropagation();
         this.open();
     }
 
-    @HostListener('keydown.Escape', ['$event'])
     public onEscape(event: Event) {
         event.stopPropagation();
         if (this.collapsed) {
