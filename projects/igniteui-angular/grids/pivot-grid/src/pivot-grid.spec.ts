@@ -3,10 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
+    changei18n,
     ColumnPinningPosition,
     FilteringExpressionsTree,
     FilteringLogic,
     GridColumnDataType,
+    GridResourceStringsEN,
     GridSummaryCalculationMode,
     IDataCloneStrategy,
     IgxStringFilteringOperand,
@@ -2602,6 +2604,30 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
                 expect(dateDimension.locale).toBe(pivotGrid.locale);
                 expect(dateDimension.resourceStrings.igx_grid_pivot_date_dimension_total).toBe('Custom total');
+            });
+
+            it('should regenerate the date dimension columns when the resource strings change globally.', async () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                // The grid subscribes to resource changes only after its initial columns are generated.
+                await fixture.whenStable();
+                pivotGrid.pivotConfiguration = {
+                    columns: [new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { years: false, months: false, fullDate: false })],
+                    rows: [{ memberName: 'SellerName', enabled: true }],
+                    values: [fixture.componentInstance.pivotConfigHierarchy.values[0]]
+                };
+                fixture.detectChanges();
+                expect(pivotGrid.columns.map(x => x.header)).toEqual(['All Periods']);
+
+                try {
+                    changei18n({ igx_grid_pivot_date_dimension_total: 'Alle Perioden' });
+                    // The columns are regenerated asynchronously after the resource change.
+                    await vi.waitFor(() => expect(pivotGrid.columns.map(x => x.header)).toEqual(['Alle Perioden']));
+                    fixture.detectChanges();
+
+                    expect(GridFunctions.getColumnHeaderTitleByIndex(fixture, 0).innerText).toBe('Alle Perioden');
+                } finally {
+                    changei18n(GridResourceStringsEN);
+                }
             });
 
             it('should sort row dimensions with date values.', () => {

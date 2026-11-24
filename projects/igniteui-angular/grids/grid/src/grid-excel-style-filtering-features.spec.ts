@@ -1596,6 +1596,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             expect(console.error).not.toHaveBeenCalled();
         });
+
+        it('Should show the templated ESF again when reopened after the custom dialog was cancelled.', async () => {
+            const esfComponent = grid.excelStyleFilteringComponent;
+            const esf: HTMLElement = esfComponent.element.nativeElement;
+            await GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            expect(esf.isConnected).toBe(true);
+            const originalDisplay = getComputedStyle(esf).display;
+            expect(originalDisplay).not.toBe('none');
+
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(GridFunctions.getExcelStyleCustomFilteringDialog(fix)).not.toBeNull();
+            expect(getComputedStyle(esf).display).toBe('none');
+
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+            await fix.whenStable();
+            fix.detectChanges();
+
+            // The ESF declared in the grid template is one instance reused for every opening, so it stays hidden
+            // unless reopening undoes the hiding done for the dialog.
+            await GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+            expect(esfComponent.column.field).toBe('ProductName');
+            expect(esf.isConnected).toBe(true);
+            expect(getComputedStyle(esf).display).toBe(originalDisplay);
+        });
     });
 });
 
