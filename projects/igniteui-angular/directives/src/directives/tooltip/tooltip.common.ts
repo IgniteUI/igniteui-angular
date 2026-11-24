@@ -222,13 +222,16 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
         // Move the arrow back by the same amount, so it keeps pointing at the target.
         const push = this.getViewportPush(tooltip.parentElement as HTMLElement | null);
         const startOffset = this._placement.endsWith('-start') ? this.getArrowEdgeOffset() : 0;
+        let pushed: 'top' | 'left' | undefined;
 
         if (TooltipRegexes.vertical.test(this._placement)) {
             if (push.x) {
                 left = this.keepArrowInTooltip(left + startOffset - push.x, arrowSize, tooltipSize, tooltip, 'left');
+                pushed = 'left';
             }
         } else if (push.y) {
             top = this.keepArrowInTooltip(top + startOffset - push.y, arrowSize, tooltipSize, tooltip, 'top');
+            pushed = 'top';
         }
 
         const arrowFit: ArrowFit = {
@@ -240,6 +243,12 @@ export class TooltipPositionStrategy extends AutoPositionStrategy {
         };
 
         this.positionArrow(arrow, arrowFit);
+
+        // `positionArrow` writes no style for a zero offset, which leaves a `start` aligned arrow at its
+        // default place. After a push, zero is a place of its own: the very start of the tooltip.
+        if (pushed && !arrowFit[pushed]) {
+            arrow.style[pushed] = '0px';
+        }
     }
 
     /**

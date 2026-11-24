@@ -1240,10 +1240,99 @@ describe('IgxTooltip', () => {
             expect(parseFloat(content.style.width)).toBeCloseTo(tooltipNativeElement.getBoundingClientRect().width, 1);
             verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
         });
+
+        it('should follow its target when the target moves after it has shrunk', async () => {
+            button.nativeElement.style.cssText = 'display: block; width: 300px; margin: 100px 0 0 100px';
+            fix.detectChanges();
+            tooltipTarget.showTooltip();
+            await waitForLayout();
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+            // The smaller target is still inside the rectangle that it had before.
+            button.nativeElement.style.width = '80px';
+            await waitForLayout();
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+            // So is the target after a small move.
+            button.nativeElement.style.marginLeft = '160px';
+            await waitForLayout();
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+        });
+
+        it('should follow its target to the place where a move over several frames ends', async () => {
+            tooltipTarget.showTooltip();
+            await waitForLayout();
+
+            // As in a transition, the target is at a new place in each frame.
+            await moveInFrames(button.nativeElement, 12, 20);
+            await waitForLayout();
+
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+        });
+
+        it('should fit into the viewport anew when its target moves away from or to a viewport edge', async () => {
+            // At the left viewport edge the centered tooltip is pushed to the right.
+            button.nativeElement.style.cssText = 'position: fixed; left: 0; top: 200px; margin: 0';
+            fix.detectChanges();
+            tooltipTarget.showTooltip();
+            await waitForLayout();
+
+            const content = tooltipNativeElement.parentElement;
+            expect(content.style.transform).toContain('translateX');
+
+            // Away from the edge the push is not needed any more.
+            button.nativeElement.style.left = '300px';
+            await waitForLayout();
+            expect(content.style.transform).not.toContain('translateX');
+            verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+            // Back at the edge the tooltip is pushed into the viewport again, and not clipped.
+            button.nativeElement.style.left = '0';
+            await waitForLayout();
+            expect(content.style.transform).toContain('translateX');
+            expect(tooltipNativeElement.getBoundingClientRect().left).toBeGreaterThanOrEqual(0);
+        });
+
+        it('should put the arrow at the very start of a square tooltip that is pushed into the viewport', fakeAsync(() => {
+            tooltipTarget.hasArrow = true;
+            tooltipNativeElement.style.borderRadius = '0';
+            // A target at the left viewport edge that is narrower than the arrow. The arrow points at it
+            // only from the very start of the tooltip.
+            button.nativeElement.style.cssText =
+                'position: fixed; left: 0; top: 200px; margin: 0; padding: 0; border: 0; min-width: 0; width: 4px';
+            fix.detectChanges();
+
+            hoverElement(button);
+            flush();
+
+            const arrow = tooltipNativeElement.querySelector(TOOLTIP_ARROW_SELECTOR) as HTMLElement;
+            expect(arrow.style.left).toBe('0px');
+
+            // The arrow starts where the tooltip starts, and the target is under it.
+            const arrowRect = arrow.getBoundingClientRect();
+            const targetCenter = getCenterX(button.nativeElement);
+            expect(Math.abs(arrowRect.left - tooltipNativeElement.getBoundingClientRect().left)).toBeLessThanOrEqual(alignmentTolerance);
+            expect(targetCenter).toBeGreaterThanOrEqual(arrowRect.left);
+            expect(targetCenter).toBeLessThanOrEqual(arrowRect.right);
+        }));
     })
 });
 
 const waitForLayout = () => new Promise(resolve => setTimeout(resolve, 100));
+
+/** Moves the element down by `distance` pixels in each of the next `frames` animation frames. */
+const moveInFrames = (element: HTMLElement, frames: number, distance: number) => new Promise<void>(resolve => {
+    let frame = 0;
+    const move = () => {
+        element.style.marginTop = `${++frame * distance}px`;
+        if (frame < frames) {
+            requestAnimationFrame(move);
+        } else {
+            resolve();
+        }
+    };
+    requestAnimationFrame(move);
+});
 
 const getCenterX = (element: Element) => {
     const rect = element.getBoundingClientRect();
