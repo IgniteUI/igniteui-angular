@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 22.4.0
+## 22.3.1
 
 ### New Functionality
 
@@ -12,8 +12,6 @@ All notable changes for each version of this project will be documented in this 
     - A restored step updates the bound value and emits `valueChanged`, and in `IgxDateTimeEditorDirective` also `valueChange` and `validationFailed`, the same as typing does.
     - The history is dropped when the value is set from outside, for example through the form control or a date selected in the calendar of a picker, and when the mask, the input format or the prompt character changes. It is kept while the input loses and regains the focus. Nothing is undone while the input is readonly.
     - The same applies to the inputs of `IgxDatePickerComponent`, `IgxTimePickerComponent`, `IgxDateRangePickerComponent` with two inputs, and the date and time cell editors of the grids.
-
-## 22.3.1
 
 ### Bug Fixes
 
