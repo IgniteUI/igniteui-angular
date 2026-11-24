@@ -1,6 +1,7 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Output, PipeTransform, Renderer2, Input, OnInit, AfterViewChecked, booleanAttribute, inject } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MaskParsingService, MaskOptions, parseMask } from './mask-parsing.service';
+import { MaskEditKind, MaskHistory, MaskHistoryState } from './mask-history';
 import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { noop } from 'rxjs';
 
@@ -34,6 +35,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             this.setPlaceholder(val);
             this._mask = val;
             this.updateInputValue(cleanInputValue);
+            this.history.clear();
         }
     }
 
@@ -129,6 +131,24 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         return this._end;
     }
 
+    /**
+     * The identity of the mask pattern that the history snapshots are taken against.
+     *
+     * @hidden @internal
+     */
+    protected get historySignature(): string {
+        const { format, promptChar } = this.maskOptions;
+        return `${format} ${promptChar}`;
+    }
+
+    /**
+     * The undo and redo history. The mask writes the value of the input on each edit,
+     * which clears the native undo stack, so this history replaces it.
+     *
+     * @hidden @internal
+     */
+    protected history = new MaskHistory(() => this.historySignature);
+
     protected _composing!: boolean;
     protected _compositionStartIndex!: number;
     protected _focused = false;
@@ -141,6 +161,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _dataValue = '';
     private _droppedData!: string;
     private _hasDropAction!: boolean;
+    private _pasting = false;
+    /** The selection before the browser applied the pending edit. `_start` and `_end` are adjusted per edit. */
+    private _selectionBefore: { start: number; end: number } | null = null;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -155,13 +178,22 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
-        if ((event.ctrlKey && (key === this.platform.KEYMAP.Z || key === this.platform.KEYMAP.Y))) {
+        const historyAction = this.getHistoryAction(event);
+        if (historyAction) {
+            // The native undo stack is empty, because the mask writes the input value on each edit.
             event.preventDefault();
+            // An IME composition owns the text until it is committed.
+            if (!this._composing && !event.isComposing) {
+                this.historyStep(historyAction);
+            }
+            return;
         }
 
         this._key = key;
         this._start = this.selectionStart;
         this._end = this.selectionEnd;
+        this._selectionBefore = { start: this._start, end: this._end };
+        this._pasting = false;
     }
 
     /** @hidden @internal */
@@ -179,7 +211,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._start = this._compositionStartIndex;
         const end = this.selectionEnd;
         const valueToParse = this.inputValue.substring(this._start, end);
-        this.updateInput(valueToParse);
+        // The whole composition is a single undo step, anchored where it began.
+        this._selectionBefore = { start: this._start, end: this._start };
+        this.updateInput(valueToParse, 'atomic');
         this._end = this.selectionEnd;
         this._compositionValue = this.inputValue;
     }
@@ -201,6 +235,14 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 // software keyboard input delete
                 this._key = this.platform.KEYMAP.BACKSPACE;
             }
+            return;
+        }
+
+        if (event.inputType === 'historyUndo' || event.inputType === 'historyRedo') {
+            // Reached only where `beforeinput` cannot be canceled. The native undo stack does not match the mask,
+            // so drop what the command did to the text and step the history instead.
+            this.inputValue = this._oldText;
+            this.historyStep(event.inputType === 'historyUndo' ? 'undo' : 'redo');
             return;
         }
 
@@ -232,8 +274,11 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         if (this._hasDropAction) {
             this._start = this.selectionStart;
+            // A drop from outside has no selection of its own in this input.
+            this._selectionBefore = { start: this._start, end: this._start };
         }
 
+        const kind = this.getEditKind(event);
         let valueToParse = '';
         switch (this._key) {
             case this.platform.KEYMAP.DELETE:
@@ -247,7 +292,27 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 break;
         }
 
-        this.updateInput(valueToParse);
+        this.updateInput(valueToParse, kind);
+    }
+
+    /** @hidden @internal */
+    @HostListener('beforeinput', ['$event'])
+    public onBeforeInput(event: InputEvent): void {
+        const inputType = event.inputType;
+        if (inputType !== 'historyUndo' && inputType !== 'historyRedo') {
+            // The selection that the edit is about to replace. An edit that comes with no `keydown`,
+            // for example from a software keyboard or the context menu, has no other source for it.
+            if (!this._composing) {
+                this._selectionBefore = { start: this.nativeElement.selectionStart!, end: this.nativeElement.selectionEnd! };
+            }
+            return;
+        }
+
+        // Undo and redo from the context menu, the Edit menu or a software keyboard never reach `keydown`.
+        event.preventDefault();
+        if (!this._composing) {
+            this.historyStep(inputType === 'historyUndo' ? 'undo' : 'redo');
+        }
     }
 
     /** @hidden */
@@ -255,6 +320,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     public onPaste(): void {
         this._oldText = this.inputValue;
         this._start = this.selectionStart;
+        this._selectionBefore = { start: this._start, end: this.selectionEnd };
+        this._pasting = true;
     }
 
     /** @hidden */
@@ -265,6 +332,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         }
         this._focused = true;
         this.showMask(this.inputValue);
+        // The history survives a blur as long as the focus brings the same text back.
+        this.history.resync(this.inputValue);
     }
 
     /** @hidden */
@@ -318,6 +387,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     /** @hidden */
     public writeValue(value: string): void {
+        this.history.clear();
+
         if (this.promptChar && this.promptChar.length > 1) {
             this.maskOptions.promptChar = this.promptChar.substring(0, 1);
         }
@@ -367,6 +438,59 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._end = 0;
         this._key = null!;
         this._composing = false;
+        this._pasting = false;
+        this._selectionBefore = null;
+    }
+
+    /**
+     * Captures a history snapshot of the given text and selection.
+     * Override it to attach data that the text alone cannot restore.
+     *
+     * @hidden @internal
+     */
+    protected createHistoryState(value: string, start: number, end: number): MaskHistoryState {
+        return { value, start, end };
+    }
+
+    /**
+     * Puts a history snapshot back in the input, updates the bound value and emits `valueChanged`.
+     *
+     * @hidden @internal
+     */
+    protected restoreHistoryState(state: MaskHistoryState): void {
+        this.inputValue = state.value;
+        this.setSelectionRange(state.start, state.end);
+        this.settleHistory(state.start);
+        this.emitValue();
+        this.afterInput();
+    }
+
+    /**
+     * Reports the text and the caret that an edit settled on to the history.
+     * Call it again when the text is rewritten after the edit.
+     *
+     * @hidden @internal
+     */
+    protected settleHistory(caret = this.selectionEnd): void {
+        this.history.settle(this.inputValue, caret);
+    }
+
+    /**
+     * Restores the neighboring history step in the given direction.
+     *
+     * @hidden @internal
+     */
+    protected historyStep(direction: 'undo' | 'redo'): void {
+        if (this.nativeElement.readOnly) {
+            return;
+        }
+
+        const current = this.createHistoryState(this.inputValue, this.selectionStart, this.selectionEnd);
+        const state = direction === 'undo' ? this.history.undo(current) : this.history.redo(current);
+
+        if (state) {
+            this.restoreHistoryState(state);
+        }
     }
 
     /** @hidden */
@@ -385,21 +509,65 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         }
     }
 
-    private updateInput(valueToParse: string) {
+    private updateInput(valueToParse: string, kind: MaskEditKind = 'atomic') {
         const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
+
+        // Only an edit that the mask accepts is a history step. The snapshot is the state that the edit overwrites.
+        if (replacedData.value !== this._oldText) {
+            const { start, end } = this._selectionBefore ?? { start: this._start, end: Math.max(this._start, this._end) };
+            this.history.record(kind, this.createHistoryState(this._oldText, start, end));
+        }
+
         this.inputValue = replacedData.value;
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
         }
 
         this.setSelectionRange(replacedData.end);
+        // Settle even when the text is the same: a delete over a literal only moves the caret and the run goes on.
+        this.settleHistory(replacedData.end);
+        this.emitValue();
+        this.afterInput();
+    }
 
+    private emitValue(): void {
         const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
         this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
         this._onChangeCallback(this._dataValue);
 
         this.valueChanged.emit({ rawValue: rawVal, formattedValue: this.inputValue });
-        this.afterInput();
+    }
+
+    private getHistoryAction(event: KeyboardEvent): 'undo' | 'redo' | null {
+        // AltGr reports both `ctrlKey` and `altKey`.
+        if (event.altKey || !(event.ctrlKey || event.metaKey)) {
+            return null;
+        }
+
+        // With Shift the key comes in upper case.
+        const key = event.key.toLowerCase();
+        if (key === this.platform.KEYMAP.Z) {
+            return event.shiftKey ? 'redo' : 'undo';
+        }
+
+        return key === this.platform.KEYMAP.Y && event.ctrlKey && !event.shiftKey ? 'redo' : null;
+    }
+
+    private getEditKind(event: InputEvent): MaskEditKind {
+        if (this._pasting || this._hasDropAction) {
+            return 'atomic';
+        }
+
+        switch (this._key) {
+            case this.platform.KEYMAP.BACKSPACE:
+                return 'delete-backward';
+            case this.platform.KEYMAP.DELETE:
+                return 'delete-forward';
+        }
+
+        // A synthetic input event carries no `inputType`. The pressed key tells a typed character then.
+        const typed = event.inputType === undefined ? this._key?.length === 1 : event.inputType === 'insertText';
+        return typed ? 'insert' : 'atomic';
     }
 
     private showDisplayValue(value: string) {

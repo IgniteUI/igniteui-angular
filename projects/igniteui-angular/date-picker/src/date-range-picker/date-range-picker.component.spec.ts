@@ -1378,6 +1378,42 @@ describe('IgxDateRangePicker', () => {
                     expect((rangePicker as any).calendar.selectedDates.length).toBe(7);
                 });
 
+                it('should undo typing in each input separately', async () => {
+                    const undo = (input: DebugElement) => UIInteractions.triggerEventHandlerKeyDown('z', input, false, false, true);
+                    const type = async (text: string, input: DebugElement) => {
+                        input.triggerEventHandler('focus', {});
+                        detectChanges();
+                        UIInteractions.simulateTyping(text, input);
+                        await vi.runAllTimersAsync();
+                        detectChanges();
+                    };
+                    detectChanges();
+
+                    await type('11/10/2015', startInput);
+                    await type('11/16/2015', endInput);
+                    expect(dateRange.value).toEqual({ start: new Date(2015, 10, 10), end: new Date(2015, 10, 16) });
+
+                    undo(endInput);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(endInput.nativeElement.value).toEqual('__/__/____');
+                    expect(startInput.nativeElement.value).toEqual('11/10/2015');
+                    expect(dateRange.value.start).toEqual(new Date(2015, 10, 10));
+                    expect(dateRange.value.end).toBeFalsy();
+
+                    // back in the start input, it still has its own step
+                    startInput.triggerEventHandler('focus', {});
+                    detectChanges();
+                    expect(startInput.nativeElement.value).toEqual('11/10/2015');
+                    undo(startInput);
+                    await vi.runAllTimersAsync();
+                    detectChanges();
+                    expect(startInput.nativeElement.value).toEqual('__/__/____');
+                    // the end input has lost the focus and has no value
+                    expect(endInput.nativeElement.value).toEqual('');
+                    expect(dateRange.value?.start).toBeFalsy();
+                });
+
                 it('should set initial validity state when the form group is disabled', () => {
                     const fix = TestBed.createComponent(DateRangeReactiveFormComponent);
                     fix.detectChanges();

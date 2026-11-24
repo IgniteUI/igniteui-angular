@@ -1298,6 +1298,41 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
         });
 
+        it('Date: should undo and redo typing in the cell editor', async () => {
+            const firstCell = grid.getColumnByName('ProducedDate')._cells[0];
+            const original = new Date((firstCell.value as Date).getTime());
+
+            firstCell.setEditMode(true);
+            fix.detectChanges();
+            await fix.whenStable();
+
+            const inputDebugElement = fix.debugElement.query(By.directive(IgxInputDirective));
+            const dateTimeEditor = inputDebugElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.nativeElement.focus();
+            await fix.whenStable();
+            fix.detectChanges();
+            expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
+
+            UIInteractions.simulateTyping('1', inputDebugElement, 1, 1);
+            fix.detectChanges();
+            expect(dateTimeEditor.nativeElement.value).toEqual('11/01/2014');
+            expect(firstCell.editValue).toEqual(new Date(2014, 10, 1));
+
+            // Ctrl + Z, as a real event that also passes through the grid
+            UIInteractions.triggerKeyDownEvtUponElem('z', dateTimeEditor.nativeElement, true, false, false, true);
+            fix.detectChanges();
+            expect(dateTimeEditor.nativeElement.value).toEqual('10/01/2014');
+            // with the time of the original value, which the editor does not show
+            expect(firstCell.editValue).toEqual(original);
+            expect(firstCell.editMode).toBe(true);
+
+            // Ctrl + Y
+            UIInteractions.triggerKeyDownEvtUponElem('y', dateTimeEditor.nativeElement, true, false, false, true);
+            fix.detectChanges();
+            expect(dateTimeEditor.nativeElement.value).toEqual('11/01/2014');
+            expect(firstCell.editValue).toEqual(new Date(2014, 10, 1));
+        });
+
         it('Time: Use pipeArgs.format as inputFormat for cell editor if numeric and editorOptions.dateTimeFormat is unset', async () => {
             const receivedTimeColumn = grid.getColumnByName('ReceiveTime');
             const firstCell = receivedTimeColumn._cells[0];

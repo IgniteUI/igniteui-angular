@@ -1309,6 +1309,334 @@ describe('IgxDateTimeEditor', () => {
 
                 expect(inputElement.nativeElement.value.normalize('NFKC')).toBe('1.02.23 г.');
             });
+
+            describe('Undo / redo', () => {
+                const focus = () => {
+                    inputElement.triggerEventHandler('focus', {});
+                    fixture.detectChanges();
+                };
+                const blur = () => {
+                    inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
+                    fixture.detectChanges();
+                };
+                const undo = () => UIInteractions.triggerEventHandlerKeyDown('z', inputElement, false, false, true);
+                const redo = () => UIInteractions.triggerEventHandlerKeyDown('y', inputElement, false, false, true);
+                const setFormat = (inputFormat: string, displayFormat?: string) => {
+                    fixture.componentInstance.dateTimeFormat = inputFormat;
+                    fixture.componentInstance.displayFormat = displayFormat;
+                    fixture.detectChanges();
+                };
+
+                it('should undo a typed date as a single step and redo it', () => {
+                    setFormat('dd/MM/yyyy');
+                    vi.spyOn(dateTimeEditorDirective.valueChange, 'emit');
+                    focus();
+
+                    UIInteractions.simulateTyping('18122004', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2004, 11, 18));
+                    expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+                    expect(fixture.componentInstance.date).toBeNull();
+                    expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(2);
+                    expect(inputElement.nativeElement.selectionStart).toEqual(0);
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2004, 11, 18));
+                    expect(fixture.componentInstance.date).toEqual(new Date(2004, 11, 18));
+                    expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(3);
+                });
+
+                it('should undo each spin as a separate step and keep the parts that the input format hides', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15, 14, 35, 12, 500);
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+
+                    // the focus selects the whole text, so put the caret in the date part
+                    inputElement.nativeElement.setSelectionRange(1, 1);
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('18/06/2020');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('17/06/2020');
+                    // the text alone would bring the time back as 00:00:00
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 17, 14, 35, 12, 500));
+
+                    undo();
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 15, 14, 35, 12, 500));
+
+                    // nothing more to undo
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 16, 14, 35, 12, 500));
+                });
+
+                it('should keep the century of a two digit year on undo', () => {
+                    setFormat('dd/MM/yy');
+                    dateTimeEditorDirective.value = new Date(1975, 2, 10);
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('10/03/75');
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('11/03/75');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('10/03/75');
+                    expect((dateTimeEditorDirective.value as Date).getFullYear()).toEqual(1975);
+                });
+
+                it('should undo and redo setting the current date and time with Ctrl + ;', () => {
+                    setFormat('dd/MM/yyyy');
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+
+                    UIInteractions.triggerEventHandlerKeyDown(';', inputElement, false, false, true);
+                    const now = dateTimeEditorDirective.value as Date;
+                    expect(now instanceof Date).toBe(true);
+                    const text = inputElement.nativeElement.value;
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual(text);
+                    // including the time, which the input format does not show
+                    expect((dateTimeEditorDirective.value as Date).getTime()).toEqual(now.getTime());
+                });
+
+                it('should undo a spin of the AM/PM part', () => {
+                    setFormat('hh:mm tt');
+                    dateTimeEditorDirective.value = new Date(2020, 0, 1, 9, 30);
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('09:30 AM');
+
+                    dateTimeEditorDirective.increment(DatePart.AmPm);
+                    expect(inputElement.nativeElement.value).toEqual('09:30 PM');
+                    expect((dateTimeEditorDirective.value as Date).getHours()).toEqual(21);
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('09:30 AM');
+                    expect((dateTimeEditorDirective.value as Date).getHours()).toEqual(9);
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('09:30 PM');
+                    expect((dateTimeEditorDirective.value as Date).getHours()).toEqual(21);
+                });
+
+                it('should not record a spin while the input is not focused', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15);
+                    fixture.detectChanges();
+
+                    dateTimeEditorDirective.increment();
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                });
+
+                it('should restore an incomplete text without a value and then the date before it', () => {
+                    const date = new Date(2020, 5, 15);
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = date;
+                    focus();
+
+                    // replace the whole date, then continue in the month part
+                    UIInteractions.simulateTyping('1', inputElement, 0, 10);
+                    UIInteractions.simulateTyping('2', inputElement, 3, 3);
+                    expect(inputElement.nativeElement.value).toEqual('1_/2_/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+
+                    vi.spyOn(dateTimeEditorDirective.valueChange, 'emit');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('1_/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+                    // as while typing, an incomplete date does not emit
+                    expect(dateTimeEditorDirective.valueChange.emit).not.toHaveBeenCalled();
+                    expect(inputElement.nativeElement.selectionStart).toEqual(3);
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(date);
+                    expect(fixture.componentInstance.date).toEqual(date);
+                    expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
+                    expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledWith(date);
+                    expect(inputElement.nativeElement.selectionStart).toEqual(0);
+                    expect(inputElement.nativeElement.selectionEnd).toEqual(10);
+                });
+
+                it('should emit validationFailed when an invalid date is restored', () => {
+                    setFormat('dd/MM/yy');
+                    vi.spyOn(dateTimeEditorDirective.validationFailed, 'emit');
+                    focus();
+
+                    UIInteractions.simulateTyping('333333', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('33/33/33');
+                    expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
+
+                    UIInteractions.simulateTyping('1', inputElement, 0, 8);
+                    expect(inputElement.nativeElement.value).toEqual('1_/__/__');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('33/33/33');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+                    expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(2);
+                });
+
+                it('should undo a paste and an IME composition as single steps', () => {
+                    setFormat('dd/MM/yyyy');
+                    focus();
+
+                    UIInteractions.simulatePaste('18122004', inputElement, 0, 0);
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+
+                    UIInteractions.simulateCompositionEvent('18122004', inputElement, 0, 0, false);
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+                });
+
+                it('should keep the history after a blur and a refocus with a different display format', () => {
+                    setFormat('dd/MM/yyyy', 'longDate');
+                    focus();
+
+                    UIInteractions.simulateTyping('18122004', inputElement);
+                    blur();
+                    expect(inputElement.nativeElement.value).toEqual('December 18, 2004');
+                    focus();
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                });
+
+                it('should drop the history when the blur completes an incomplete date', () => {
+                    setFormat('dd/MM/yyyy');
+                    focus();
+
+                    UIInteractions.simulateTyping('18', inputElement);
+                    expect(inputElement.nativeElement.value).toEqual('18/__/____');
+                    blur();
+                    focus();
+                    const completed = inputElement.nativeElement.value;
+                    expect(completed).not.toContain('_');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual(completed);
+                });
+
+                it('should drop the history when the value is set from outside', () => {
+                    setFormat('dd/MM/yyyy');
+                    focus();
+
+                    UIInteractions.simulateTyping('18122004', inputElement);
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+
+                    // only a redo step is left when the new value comes, e.g. from the calendar of a picker
+                    dateTimeEditorDirective.value = new Date(2010, 0, 1);
+                    fixture.detectChanges();
+                    expect(inputElement.nativeElement.value).toEqual('01/01/2010');
+
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('01/01/2010');
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('01/01/2010');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2010, 0, 1));
+                });
+
+                it('should drop the history when the input format changes, but not when the display format is set again', () => {
+                    setFormat('dd/MM/yyyy', 'longDate');
+                    focus();
+                    UIInteractions.simulateTyping('18122004', inputElement);
+
+                    dateTimeEditorDirective.displayFormat = 'longDate';
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    redo();
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+
+                    // both formats produce the same mask
+                    setFormat('MM/dd/yyyy', 'longDate');
+                    expect(dateTimeEditorDirective.mask).toEqual('00/00/0000');
+                    expect(inputElement.nativeElement.value).toEqual('12/18/2004');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('12/18/2004');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2004, 11, 18));
+                });
+
+                it('should keep typing after a spin as a separate step', () => {
+                    setFormat('dd/MM/yyyy');
+                    dateTimeEditorDirective.value = new Date(2020, 5, 15);
+                    focus();
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', inputElement);
+                    fixture.detectChanges();
+                    UIInteractions.simulateTyping('2', inputElement, 0, 0);
+                    expect(inputElement.nativeElement.value).toEqual('26/06/2020');
+
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('16/06/2020');
+                    undo();
+                    expect(inputElement.nativeElement.value).toEqual('15/06/2020');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2020, 5, 15));
+                });
+
+                it('should do nothing while readonly', () => {
+                    setFormat('dd/MM/yyyy');
+                    focus();
+                    UIInteractions.simulateTyping('18122004', inputElement);
+
+                    inputElement.nativeElement.readOnly = true;
+                    undo();
+                    inputElement.triggerEventHandler('beforeinput', { inputType: 'historyUndo', preventDefault: () => { } });
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2004, 11, 18));
+                });
+
+                it('should handle the undo and redo commands that do not come from the keyboard', () => {
+                    setFormat('dd/MM/yyyy');
+                    focus();
+                    UIInteractions.simulateTyping('18122004', inputElement);
+
+                    const undoCommand = { inputType: 'historyUndo', preventDefault: vi.fn() };
+                    inputElement.triggerEventHandler('beforeinput', undoCommand);
+                    expect(undoCommand.preventDefault).toHaveBeenCalledTimes(1);
+                    expect(inputElement.nativeElement.value).toEqual('__/__/____');
+                    expect(dateTimeEditorDirective.value).toBeNull();
+
+                    // where `beforeinput` cannot be canceled the command arrives as an input event
+                    vi.spyOn(dateTimeEditorDirective.valueChange, 'emit');
+                    inputElement.triggerEventHandler('input', { target: inputElement.nativeElement, inputType: 'historyRedo' });
+                    expect(inputElement.nativeElement.value).toEqual('18/12/2004');
+                    expect(dateTimeEditorDirective.value).toEqual(new Date(2004, 11, 18));
+                    expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
+                });
+            });
         });
 
         describe('Form control tests: ', () => {
