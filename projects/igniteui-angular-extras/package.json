@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Ignite UI for Angular Extras - Grid enhancements and data analysis features",
   "author": "Infragistics",
+  "exports": {
+    ".": "./src/public-api.ts"
+  },
   "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://www.infragistics.com/products/ignite-ui-angular",
   "repository": {
@@ -23,7 +26,6 @@
     "data visualization"
   ],
   "dependencies": {
-    "tslib": "^2.8.1",
     "igniteui-trial-watermark": "^3.1.0"
   },
   "peerDependencies": {

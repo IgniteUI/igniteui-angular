@@ -1,128 +1,177 @@
 {
-    "name": "igniteui-angular",
-    "version": "0.0.1",
-    "description": "Ignite UI for Angular is a dependency-free Angular toolkit for building modern web apps",
-    "author": "Infragistics",
-    "license": "SEE LICENSE IN LICENSE",
-    "homepage": "https://www.infragistics.com/products/ignite-ui-angular",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/IgniteUI/igniteui-angular.git",
-        "directory": "projects/igniteui-angular"
+  "name": "igniteui-angular",
+  "version": "0.0.1",
+  "description": "Ignite UI for Angular is a dependency-free Angular toolkit for building modern web apps",
+  "author": "Infragistics",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://www.infragistics.com/products/ignite-ui-angular",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IgniteUI/igniteui-angular.git",
+    "directory": "projects/igniteui-angular"
+  },
+  "bugs": {
+    "url": "https://github.com/IgniteUI/igniteui-angular/issues"
+  },
+  "keywords": [
+    "angular",
+    "UI components",
+    "accordion",
+    "autocomplete",
+    "avatar",
+    "badge",
+    "banner",
+    "bottom nav",
+    "button",
+    "button group",
+    "calendar",
+    "card",
+    "carousel",
+    "checkbox",
+    "chip",
+    "chips",
+    "circular progress",
+    "combo",
+    "csv export",
+    "data table",
+    "datepicker",
+    "datetime editor",
+    "dialog",
+    "drag drop",
+    "drop down",
+    "excel export",
+    "pdf export",
+    "expansion panel",
+    "grid",
+    "hierarchical grid",
+    "hierarchical table",
+    "icon",
+    "input",
+    "linear progress",
+    "list",
+    "mask",
+    "navbar",
+    "navdrawer",
+    "progress bar",
+    "radio",
+    "rating",
+    "select",
+    "slider",
+    "snackbar",
+    "stepper",
+    "switch",
+    "tabs",
+    "timepicker",
+    "toast",
+    "toggle",
+    "tree grid",
+    "tree table",
+    "tree view",
+    "tree"
+  ],
+  "dependencies": {
+    "fflate": "^0.8.2",
+    "igniteui-trial-watermark": "^3.1.0",
+    "jspdf": "^4.2.1",
+    "lodash-es": "^4.17.21",
+    "igniteui-theming": "^30.2.0",
+    "igniteui-i18n-core": "^2.0.0",
+    "@igniteui/material-icons-extended": "^3.1.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "22",
+    "@angular/core": "22",
+    "@angular/animations": "22",
+    "@angular/forms": "22",
+    "igniteui-webcomponents": "~7.5.0",
+    "igniteui-grid-lite": "~0.12.0"
+  },
+  "peerDependenciesMeta": {
+    "igniteui-webcomponents": {
+      "optional": true
     },
-    "bugs": {
-        "url": "https://github.com/IgniteUI/igniteui-angular/issues"
+    "igniteui-grid-lite": {
+      "optional": true
+    }
+  },
+  "igxDevDependencies": {
+    "@igniteui/angular-schematics": "~22.3.1600"
+  },
+  "ng-update": {
+    "migrations": "./migrations/migration-collection.json",
+    "packageGroup": [
+      "igniteui-angular",
+      "igniteui-angular-extras",
+      "igniteui-angular-i18n"
+    ]
+  },
+  "schematics": "./schematics/collection.json",
+  "exports": {
+    "./schematics/*": {
+      "default": "./schematics/*"
     },
-    "keywords": [
-        "angular",
-        "UI components",
-        "accordion",
-        "autocomplete",
-        "avatar",
-        "badge",
-        "banner",
-        "bottom nav",
-        "button",
-        "button group",
-        "calendar",
-        "card",
-        "carousel",
-        "checkbox",
-        "chip",
-        "chips",
-        "circular progress",
-        "combo",
-        "csv export",
-        "data table",
-        "datepicker",
-        "datetime editor",
-        "dialog",
-        "drag drop",
-        "drop down",
-        "excel export",
-        "pdf export",
-        "expansion panel",
-        "grid",
-        "hierarchical grid",
-        "hierarchical table",
-        "icon",
-        "input",
-        "linear progress",
-        "list",
-        "mask",
-        "navbar",
-        "navdrawer",
-        "progress bar",
-        "radio",
-        "rating",
-        "select",
-        "slider",
-        "snackbar",
-        "stepper",
-        "switch",
-        "tabs",
-        "timepicker",
-        "toast",
-        "toggle",
-        "tree grid",
-        "tree table",
-        "tree view",
-        "tree"
-    ],
-    "dependencies": {
-        "fflate": "^0.8.2",
-        "tslib": "^2.8.1",
-        "igniteui-trial-watermark": "^3.1.0",
-        "jspdf": "^4.2.1",
-        "lodash-es": "^4.17.21",
-        "igniteui-theming": "^30.2.0",
-        "igniteui-i18n-core": "^2.0.0",
-        "@igniteui/material-icons-extended": "^3.1.0"
+    "./migrations/*": {
+      "default": "./migrations/*"
     },
-    "peerDependencies": {
-        "@angular/common": "22",
-        "@angular/core": "22",
-        "@angular/animations": "22",
-        "@angular/forms": "22",
-        "igniteui-webcomponents": "~7.5.0",
-        "igniteui-grid-lite": "~0.12.0"
+    "./lib/core/styles/themes/index": {
+      "sass": "./lib/core/styles/themes/_index.scss"
     },
-    "peerDependenciesMeta": {
-        "igniteui-webcomponents": {
-            "optional": true
-        },
-        "igniteui-grid-lite": {
-            "optional": true
-        }
+    "./theming": {
+      "sass": "./lib/core/styles/themes/_index.scss"
     },
-    "igxDevDependencies": {
-        "@igniteui/angular-schematics": "~22.3.1600"
+    "./themes": {
+      "sass": "./lib/core/styles/themes/_index.scss"
     },
-    "ng-update": {
-        "migrations": "./migrations/migration-collection.json",
-        "packageGroup": [
-            "igniteui-angular",
-            "igniteui-angular-extras",
-            "igniteui-angular-i18n"
-        ]
-    },
-    "schematics": "./schematics/collection.json",
-    "exports": {
-        "./schematics/*": {
-            "default": "./schematics/*"
-        },
-        "./migrations/*": {
-            "default": "./migrations/*"
-        },
-        "./lib/core/styles/themes/index": {
-            "sass": "./lib/core/styles/themes/_index.scss"
-        },
-        "./theming": {
-            "sass": "./lib/core/styles/themes/_index.scss"
-        },
-        "./themes": {
-            "sass": "./lib/core/styles/themes/_index.scss"
-        }
-    },
-    "sideEffects": false
+    ".": "./src/public_api.ts",
+    "./accordion": "./accordion/src/public_api.ts",
+    "./action-strip": "./action-strip/src/public_api.ts",
+    "./animations": "./animations/src/public_api.ts",
+    "./avatar": "./avatar/src/public_api.ts",
+    "./badge": "./badge/src/public_api.ts",
+    "./banner": "./banner/src/public_api.ts",
+    "./bottom-nav": "./bottom-nav/src/public_api.ts",
+    "./button-group": "./button-group/src/public_api.ts",
+    "./calendar": "./calendar/src/public_api.ts",
+    "./card": "./card/src/public_api.ts",
+    "./carousel": "./carousel/src/public_api.ts",
+    "./chat": "./chat/src/public_api.ts",
+    "./chat-extras": "./chat-extras/src/public_api.ts",
+    "./checkbox": "./checkbox/src/public_api.ts",
+    "./chips": "./chips/src/public_api.ts",
+    "./combo": "./combo/src/public_api.ts",
+    "./core": "./core/src/public_api.ts",
+    "./date-picker": "./date-picker/src/public_api.ts",
+    "./dialog": "./dialog/src/public_api.ts",
+    "./directives": "./directives/src/public_api.ts",
+    "./drop-down": "./drop-down/src/public_api.ts",
+    "./expansion-panel": "./expansion-panel/src/public_api.ts",
+    "./icon": "./icon/src/public_api.ts",
+    "./input-group": "./input-group/src/public_api.ts",
+    "./list": "./list/src/public_api.ts",
+    "./navbar": "./navbar/src/public_api.ts",
+    "./navigation-drawer": "./navigation-drawer/src/public_api.ts",
+    "./paginator": "./paginator/src/public_api.ts",
+    "./progressbar": "./progressbar/src/public_api.ts",
+    "./query-builder": "./query-builder/src/public_api.ts",
+    "./radio": "./radio/src/public_api.ts",
+    "./select": "./select/src/public_api.ts",
+    "./simple-combo": "./simple-combo/src/public_api.ts",
+    "./slider": "./slider/src/public_api.ts",
+    "./snackbar": "./snackbar/src/public_api.ts",
+    "./splitter": "./splitter/src/public_api.ts",
+    "./stepper": "./stepper/src/public_api.ts",
+    "./switch": "./switch/src/public_api.ts",
+    "./tabs": "./tabs/src/public_api.ts",
+    "./time-picker": "./time-picker/src/public_api.ts",
+    "./toast": "./toast/src/public_api.ts",
+    "./tree": "./tree/src/public_api.ts",
+    "./virtual-scroll": "./virtual-scroll/src/public_api.ts",
+    "./grids/core": "./grids/core/src/public_api.ts",
+    "./grids/grid": "./grids/grid/src/public_api.ts",
+    "./grids/hierarchical-grid": "./grids/hierarchical-grid/src/public_api.ts",
+    "./grids/lite": "./grids/lite/src/public_api.ts",
+    "./grids/pivot-grid": "./grids/pivot-grid/src/public_api.ts",
+    "./grids/tree-grid": "./grids/tree-grid/src/public_api.ts"
+  },
+  "sideEffects": false
 }
