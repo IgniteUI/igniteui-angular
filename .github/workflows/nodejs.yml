@@ -122,19 +122,29 @@ jobs:
   # Builds igniteui-webcomponents-grids from this change the way its CD in igniteui-api-analyzer does,
   # runs the Blazor generator on it and builds igniteui-react against the package. On pull requests it
   # also compares the public API of the Web Components grids with the base branch and fails when public
-  # API is removed or changed. The React and Blazor wrappers are generated from that API.
-  # igniteui-api-analyzer is private, so the job needs the IgniteUI GitHub App. Fork and Dependabot
-  # pull requests get no secrets and skip it; the push after the merge still runs it.
+  # API is removed or changed, unless the pull request has one of the labels that accept the change.
+  # The React and Blazor wrappers are generated from that API.
+  # igniteui-api-analyzer is private, so the job needs the IgniteUI GitHub App. Forks of the repository,
+  # fork pull requests and Dependabot pull requests get no secrets and skip it; the push after the merge
+  # still runs it.
   analyzer-downstream:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    if: github.event_name == 'push' || (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]')
+    if: >-
+        github.repository == 'IgniteUI/igniteui-angular' &&
+        (github.event_name == 'push' ||
+        (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'))
+    # The comparison reads the labels of the pull request.
+    permissions:
+        contents: read
+        pull-requests: read
     env:
-        # The igniteui-api-analyzer branch, tag or commit to build with. A change that needs a matching
-        # analyzer change points this at the analyzer branch until both are merged.
-        # Maintenance branches pin the analyzer version that matches their file layout.
+        # The igniteui-api-analyzer and igniteui-react branch, tag or commit to build with. A change that
+        # needs a matching analyzer change points ANALYZER_REF at the analyzer branch until both are merged.
+        # Maintenance branches pin both to the commits that match their release, since the analyzer has no tags.
         ANALYZER_REF: master
+        REACT_REF: master
 
     steps:
       # The token is only used by the analyzer checkout, which runs before any code of this change.
@@ -173,6 +183,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
             repository: IgniteUI/igniteui-react
+            ref: ${{ env.REACT_REF }}
             path: igniteui-react
             persist-credentials: false
       - name: Use Node.js 24
@@ -190,7 +201,9 @@ jobs:
       - name: Build Elements
         working-directory: igniteui-angular
         run: npm run build:elements
-      - name: Generate and check the grid declarations
+      # Fails when a grid entry point is missing or a declaration does not parse. With skipLibCheck on, tsc
+      # does not type-check the declarations.
+      - name: Generate the grid declarations and check that they parse
         working-directory: igniteui-api-analyzer
         run: |
             npm ci
@@ -237,13 +250,45 @@ jobs:
             npm run typecheck:tests
             npm run validate:dist
       # Also runs when the React build failed, since the comparison names the API that changed.
-      # The base resolves its types against the dependencies of this change.
+      # The base resolves its types against the dependencies of this change. An analyzer branch that follows
+      # moved grid entry points cannot read the base, so the comparison is skipped with a warning then.
+      # Removed or changed API passes when the pull request has one of API_CHANGE_LABELS: add the label and
+      # re-run the job. The labels are read when the step runs, since a re-run reuses the event payload.
       - name: Compare the public API with the base branch
         if: ${{ !cancelled() && github.event_name == 'pull_request' && steps.api-head.outcome == 'success' }}
         working-directory: igniteui-api-analyzer
+        env:
+            GH_TOKEN: ${{ github.token }}
+            PR_NUMBER: ${{ github.event.pull_request.number }}
+            API_CHANGE_LABELS: |
+                :bangbang: breaking-change
+                api-change-reviewed
         run: |
+            set -o pipefail
             ln -s "$GITHUB_WORKSPACE/igniteui-angular/node_modules" ../igniteui-angular-base/node_modules
-            npm run clean-output
-            npm run generate:grids -- --grid-root=../igniteui-angular-base/
+            if ! npm run generate:grids -- --grid-root=../igniteui-angular-base/ 2>&1 | tee "$RUNNER_TEMP/api/base.log"; then
+                if grep -q 'Missing grid entry points' "$RUNNER_TEMP/api/base.log"; then
+                    message="The analyzer cannot find the grid entry points in the base branch, so the public API was not compared."
+                    echo "::warning::$message"
+                    printf '## Public API of the Web Components grids\n\n%s\n' "$message" >> "$GITHUB_STEP_SUMMARY"
+                    exit 0
+                fi
+                exit 1
+            fi
             npm run api:grids -- report --report "$RUNNER_TEMP/api/base.json"
-            npm run api:grids -- compare --base "$RUNNER_TEMP/api/base.json" --head "$RUNNER_TEMP/api/head.json" --summary "$GITHUB_STEP_SUMMARY"
+            status=0
+            npm run api:grids -- compare --base "$RUNNER_TEMP/api/base.json" --head "$RUNNER_TEMP/api/head.json" --summary "$GITHUB_STEP_SUMMARY" || status=$?
+            if [ "$status" -ne 1 ]; then
+                exit "$status"
+            fi
+            labels=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json labels --jq '.labels[].name')
+            while IFS= read -r label; do
+                if [ -n "$label" ] && grep -qxF -- "$label" <<< "$labels"; then
+                    echo "::notice::The label \"$label\" accepts the removed or changed public API."
+                    printf '\nThe label `%s` accepts these changes.\n' "$label" >> "$GITHUB_STEP_SUMMARY"
+                    exit 0
+                fi
+            done <<< "$API_CHANGE_LABELS"
+            accepted=$(sed '/^$/d; s/.*/"&"/' <<< "$API_CHANGE_LABELS" | paste -sd ',' - | sed 's/,/ or /g')
+            echo "::error::Public API was removed or changed. If that is intended, add the label $accepted and re-run this job."
+            exit 1
