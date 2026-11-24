@@ -542,6 +542,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         // A change in a part that the input format hides leaves the text the same.
         if (this.inputValue !== before.value || this.dateTime !== before.model) {
             this.history.record('atomic', before);
+        } else {
+            this.history.pass('atomic', before);
         }
         this.settleHistory();
     }
