@@ -12,6 +12,8 @@ All notable changes for each version of this project will be documented in this 
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+- `IgxMaskDirective`
+    - No mask position accepts an emoji or another character that takes two UTF-16 code units. Previously such a character was written into one position, which made the masked text longer than the mask and left the caret in the middle of the character (#17818).
 
 ## 22.3.0
 
