@@ -6,6 +6,9 @@ import { IgxFocusTrapDirective } from './focus-trap.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
+import { IgxCalendarComponent } from '../../../../calendar/src/calendar/calendar.component';
+import { IgxRadioComponent } from '../../../../radio/src/radio/radio.component';
+import { IgxRadioGroupDirective } from '../../../../radio/src/radio/radio-group/radio-group.directive';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('igxFocusTrap', () => {
@@ -16,7 +19,9 @@ describe('igxFocusTrap', () => {
                 TrapFocusTestComponent,
                 TrapFocusElementsTestComponent,
                 TrapFocusTabOrderTestComponent,
-                TrapFocusShadowDomTestComponent
+                TrapFocusShadowDomTestComponent,
+                TrapFocusCalendarHostTestComponent,
+                TrapFocusRadioGroupTestComponent
             ]
         }).compileComponents();
     });
@@ -503,6 +508,43 @@ describe('igxFocusTrap', () => {
 
         expect(pressKey(input, 'Tab').defaultPrevented).toBe(false);
     });
+
+    it('should trap focus on the host of a component that handles keys too', () => {
+        const fix = TestBed.createComponent(TrapFocusCalendarHostTestComponent);
+        fix.detectChanges();
+
+        const calendar = fix.debugElement.query(By.directive(IgxCalendarComponent)).componentInstance as IgxCalendarComponent;
+        const wrapper = fix.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement as HTMLElement;
+        calendar.viewDate = new Date(2017, 5, 13);
+        fix.detectChanges();
+
+        wrapper.focus();
+        expect(pressKey(wrapper, 'Tab').defaultPrevented).toBe(true);
+        expect(document.activeElement).not.toBe(wrapper);
+
+        pressKey(wrapper, 'PageDown');
+        fix.detectChanges();
+        expect(calendar.viewDate.getMonth()).toBe(6);
+    });
+
+    it('should trap focus on an element with the radio group directive', () => {
+        const fix = TestBed.createComponent(TrapFocusRadioGroupTestComponent);
+        fix.detectChanges();
+
+        const group = fix.debugElement.query(By.directive(IgxRadioGroupDirective));
+        const radios = fix.debugElement.queryAll(By.directive(IgxRadioComponent))
+            .map(radio => radio.componentInstance as IgxRadioComponent);
+        radios[0].select();
+        fix.detectChanges();
+
+        pressKey(radios[0].nativeElement, 'ArrowDown');
+        fix.detectChanges();
+        expect(radios[1].checked).toBe(true);
+
+        const tab = pressKey(radios[1].nativeElement, 'Tab');
+        expect(tab.defaultPrevented).toBe(true);
+        expect(group.nativeElement.contains(document.activeElement)).toBe(true);
+    });
 });
 
 function pressKey(target: HTMLElement, key: string, shiftKey = false, init?: KeyboardEventInit): KeyboardEvent {
@@ -607,3 +649,19 @@ class TrapFocusTabOrderTestComponent { }
     imports: [IgxFocusTrapDirective]
 })
 class TrapFocusShadowDomTestComponent { }
+
+@Component({
+    template: `<igx-calendar igxFocusTrap></igx-calendar>`,
+    imports: [IgxFocusTrapDirective, IgxCalendarComponent]
+})
+class TrapFocusCalendarHostTestComponent { }
+
+@Component({
+    template: `
+    <div igxRadioGroup igxFocusTrap name="group">
+        <igx-radio value="1">One</igx-radio>
+        <igx-radio value="2">Two</igx-radio>
+    </div>`,
+    imports: [IgxFocusTrapDirective, IgxRadioGroupDirective, IgxRadioComponent]
+})
+class TrapFocusRadioGroupTestComponent { }

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
+import { DestroyRef, Directive, ElementRef, Injector, Input, booleanAttribute, inject } from '@angular/core';
 import { IgxKeyBindingsService, altKey, shiftKey, tabKey } from 'igniteui-angular/core';
 
 const NATIVELY_FOCUSABLE = [
@@ -14,12 +14,22 @@ const NATIVELY_FOCUSABLE = [
 const TABBABLE_CANDIDATES = `${NATIVELY_FOCUSABLE}, [contenteditable], [tabindex]`;
 
 @Directive({
-    selector: '[igxFocusTrap]',
-    providers: [IgxKeyBindingsService]
+    selector: '[igxFocusTrap]'
 })
 export class IgxFocusTrapDirective {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly _keyBindings = inject(IgxKeyBindingsService);
+
+    /**
+     * The focus trap has its own key bindings instance. The trap can be placed on the host of a component that
+     * provides and configures the element's instance (e.g. `<igx-calendar igxFocusTrap>`), and the two must not
+     * share a configuration or bindings. The child injector resolves the element, the change detector and the
+     * rest from the directive's injector.
+     */
+    private readonly _keyBindingsInjector = Injector.create({
+        providers: [IgxKeyBindingsService],
+        parent: inject(Injector)
+    });
+    private readonly _keyBindings = this._keyBindingsInjector.get(IgxKeyBindingsService);
 
     /** @hidden */
     public get element(): HTMLElement {
@@ -38,6 +48,9 @@ export class IgxFocusTrapDirective {
     public focusTrap = true;
 
     constructor() {
+        // The service removes its listeners when its injector is destroyed, which is not the directive's.
+        inject(DestroyRef).onDestroy(() => this._keyBindingsInjector.destroy());
+
         const moveFocus = (event: KeyboardEvent) => this.moveFocus(event.shiftKey);
 
         this._keyBindings
