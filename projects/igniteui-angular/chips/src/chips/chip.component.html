@@ -19,7 +19,7 @@
 
     <div class="igx-chip__start" #selectContainer>
         @if (selected) {
-            <div [ngClass]="selectClass(selected)">
+            <div class="igx-chip__select" animate.leave="igx-chip__select--leaving">
                 <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
             </div>
         }

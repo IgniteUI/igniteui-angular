@@ -1,13 +1,27 @@
 /* stylelint-disable max-nesting-depth */
 @use 'igniteui-theming/sass/animations' as *;
 @use 'igniteui-theming/sass/bem' as *;
+@use 'igniteui-theming/sass/themes' as *;
+@use 'igniteui-theming/sass/typography' as *;
 @use '../../../../../core/src/core/styles/themes/scoping' as *;
 @use 'igniteui-theming/sass/themes/schemas/components/light/splitter' as *;
 
 $theme: digest-schema($indigo-splitter);
-$slim-splitter: calc(1 / var(--splitter-size));
+$bar-size: var(--_bar-size);
+
+// The scale that leaves the idle thickness of the bar: idle / bar thickness, as a number.
+// CSS can't divide two lengths, and tan(atan2(a, b)) equals a / b.
+$slim-splitter: tan(atan2(var(--_idle-size), #{$bar-size}));
 
 @include themed-block(igx-splitter, indigo) {
+    @include b(igx-splitter) {
+        // Mirrored by the :host block of the indigo igc-splitter theme in igniteui-webcomponents.
+        --_idle-size: #{sizable(rem(1px), rem(4px), rem(8px))};
+
+        // The icon box of the design is 14px, 16px and 24px in this theme.
+        --_expander-space: #{sizable(rem(3px), rem(3px), rem(6px))};
+    }
+
     @include b(igx-splitter-bar-host) {
         transition: box-shadow 0.25s 0.1s ease-in;
 
@@ -97,14 +111,14 @@ $slim-splitter: calc(1 / var(--splitter-size));
         @include m(horizontal) {
             &::before,
             &::after {
-                height: calc(var(--splitter-size) * 4px);
+                height: calc(#{$bar-size} * 4);
             }
         }
 
         @include m(vertical) {
             &::before,
             &::after {
-                width: calc(var(--splitter-size) * 4px);
+                width: calc(#{$bar-size} * 4);
             }
         }
     }

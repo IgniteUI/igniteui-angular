@@ -30,6 +30,33 @@ All notable changes for each version of this project will be documented in this 
 
 - `ContainerPositionStrategy` no longer throws from its `IntersectionObserver` after the overlay is detached (#16988).
 - The Excel-style filtering submenu opens on the side the grid requests on every open, in browsers with native anchor positioning.
+## 22.3.1
+
+### General
+
+- `IgxSplitterComponent`
+    - An app that sets `--ig-size` to medium or large on the splitter or on an ancestor gets a thicker bar. Previously the splitter had one size (#18013).
+    - The 48px gap around the drag handle is measured from the icon box of the design, so each expander is 5px further from the handle at the default size, 3px in the Indigo theme. The area of an expander that takes the pointer is that icon box, centered on the arrow: 18px, 20px or 24px square, 14px, 16px or 24px in the Indigo theme. Previously it was 16px by 12px at the default size in every theme.
+    - In the Indigo theme, the idle bar is 1px thick at the default size also with an overridden `--ig-splitter-size`. Previously it was thicker, 2px for `--ig-splitter-size: 10px`.
+
+### New Functionality
+
+- `IgxSplitterComponent`
+    - The splitter follows `--ig-size`. The bar is 6px, 12px or 18px thick, the drag handle 4px, 6px or 8px with a 2px, 8px or 8px radius, and the expanders grow with them. The default is small, which is the size from before, so a splitter without `--ig-size` looks the same. `--size` and `--ig-splitter-size` still set the small size, and the medium and large steps add to it. A `--border-radius` or `--ig-splitter-border-radius` that you set applies at every size. In the Indigo theme the idle bar is 1px, 4px or 8px thick by size, and the area around the bar that takes the pointer grows with the bar (#18013).
+        ```html
+        <igx-splitter style="--ig-size: var(--ig-size-large)">...</igx-splitter>
+        ```
+
+### Bug Fixes
+
+- `IgxSplitterComponent`
+    - On a bar too short for the drag handle, the two expanders and the 48px gaps between them, the drag handle keeps 25% of the bar length and the gaps get narrower. Previously the gaps stayed 48px, so the handle shrank and the expanders touched the ends of the bar (#18013).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
+    - In the filtering row, `Alt + Arrow Down` on the conditions button opens the conditions, and not the date or time picker. With a unary condition, such as Today, the date and time inputs are read-only and `Alt + Arrow Down` in them opens the conditions. `Tab` on the conditions button closes the conditions. Previously they opened again.
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 
 ## 22.3.0
 
@@ -86,6 +113,14 @@ All notable changes for each version of this project will be documented in this 
     - The `aria-live` region of the slides is now `off` only while the carousel is rotating automatically. Previously it stayed `off` whenever an `interval` was set, even after `stop()` was called or a non-looping carousel reached its last slide.
     - The automatic rotation of a non-looping carousel now ends on its last slide also when `pause` is `false`: `isPlaying` becomes `false` and `carouselPaused` is emitted. Previously the carousel kept playing on the last slide.
     - Touch gestures now follow the carousel orientation: a vertical carousel sets `touch-action: pan-x` instead of `pan-y`, drags across the carousel axis are left to the browser for scrolling and no longer resume a carousel paused by a tap, and a pan starts only after the touch moves at least 5px, the distance below which it is recognized as a tap.
+- `IgxChipComponent`
+    - Selecting and deselecting a chip now animates the change of its text, background, border and shadow colors, as the checkbox and the switch do. The hover and focus colors change with the same transition.
+    - The select icon now animates out when the chip is deselected, as it already animated in when the chip was selected. It stays in the DOM, with the `igx-chip__select--leaving` class, until its animation ends. Tests that check for the icon's removal right after deselection keep working, as `TestBed` disables these animations by default.
+    - The color transitions are enabled after the chip is first rendered, when the `igx-chip--animated` class is added to it, so a chip does not animate to its initial state.
+    - A chip in an `igxFor` or `igx-virtual-scroll` item, such as a grid cell or a combo item, does not animate while the container scrolls, because the container reuses the chip for other records. It shows the state of the new record right away.
+    - **Breaking Change** - The `selectClass` and `onSelectTransitionDone` methods have been removed. They were leftovers of the previous select icon animation and were not used by the chip. `selectClass` was marked as internal, and `selectedChanged` is still emitted when the selection changes.
+- `IgxDragDirective`
+    - The transitions of the dragged element are disabled only while it is dragged. Previously the directive set `transition-duration: 0s` on the element when it was initialized, which disabled its own transitions, such as a color change on hover, at all times.
 - `IgxSplitterComponent`
     - Arrow keys combined with `Shift`, `Alt` or `Meta`, and `Ctrl` + arrow keys combined with another modifier, no longer resize or collapse the panes. The splitter bar ignores them, and the browser default runs. Previously the splitter bar ignored the extra modifiers and handled these keys as the plain arrow keys or `Ctrl` + arrow keys.
     - Resizing panes with the arrow keys now updates the pane `size` and emits `resizeStart`, `resizing` and `resizeEnd` for each key press, as a pointer drag does. Previously only a temporary size was applied, `resizeEnd` was not emitted and percentage or `auto` sized panes no longer adjusted to the splitter size.
@@ -129,6 +164,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDragDirective`
     - `transitionToOrigin()` with a start location equal to the origin location no longer animates. Previously the vertical start position was compared with the horizontal origin.
     - `transitionToOrigin()` and `transitionTo()` now emit `transitioned` right away when the element is already at the target or there is no ghost to animate (e.g. its creation was canceled in `ghostCreate`). Previously no `transitioned` was emitted and the next drag did not start correctly.
+    - Only the end of the position transition that the directive started (`left`, `top` or `transform` of the dragged element itself) ends a drag or its return animation. Previously any `transitionend` event on the element, including a color transition on hover or one that bubbled up from a descendant, removed the ghost and emitted `transitioned` early.
 - `IgxExpansionPanelComponent`
     - `Alt + Arrow Down` and `Alt + Arrow Up` no longer expand or collapse the panel when its header is disabled.
 - `IgxFilterDirective`, `IgxFilterPipe`
@@ -144,6 +180,8 @@ All notable changes for each version of this project will be documented in this 
     - Growing the container of a virtualized list or grid scrolled to its end (for example by resizing the grid) no longer renders the rows or columns out of order or shifts the visible content by one item (#17575).
     - In right-to-left direction, changing the items of a horizontally scrolled `igxFor` no longer moves the visible items away from the scroll position.
     - Grids and other horizontally virtualized `igxFor` instances no longer throw `ReferenceError: window is not defined` during server-side rendering (#17927).
+- `IgxForOfDirective`, `IgxVirtualScrollComponent`
+    - The items that a virtualized container reuses for other records while it scrolls no longer animate from the state of the previous record. For example, a chip or a checkbox in a grid cell, combo item or list item shows the new record's state right away. While the container scrolls, and for 150ms after its last scroll event, the `igxFor` display container has the `igx-display-container--scrolling` class and `igx-virtual-scroll` has the `igx-virtual-scroll--scrolling` class. Under them the chips and checkboxes turn off their transitions with `!important`, also in nested containers such as the child grids of a hierarchical grid, and an application style cannot turn them back on. Sorting, filtering and other changes of the items without a scroll still animate.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - The grid scrollbars use the theme's scrollbar colors again. Unless the grid theme had a `$background`, the derived scrollbar track color was invalid and the browser's default scrollbar was shown.
     - Restored the style recalculation performance of 21.2.x in Chromium-based browsers. The grid, Excel-style filtering and query builder themes no longer use multi-selector `:where()` lists as rule subjects, which Chromium matched against every element on each style recalculation. The styles are otherwise unchanged.
@@ -154,6 +192,7 @@ All notable changes for each version of this project will be documented in this 
     - A single filter chip whose label is longer than the column now shrinks to the filter cell and truncates its label with an ellipsis instead of being clipped by the cell. The condition and remove icons keep their size; only a column narrower than the icons still clips the chip. The "more filters" indicator no longer shows its icon while it is hidden.
     - Pinned filter row cells use the pinned border, row action cells use the header border width, and selected cells and columns no longer show stray borders.
     - Destroying the grid while its advanced filtering dialog is open no longer logs `igxOverlay.detach was called with wrong id` in the console.
+    - A row released outside a drop area animates back to its place until the end. Previously a transition in its drag ghost, such as a color change of a chip in a cell, ended the animation early.
 - `IgxGridComponent`
     - Autosizing a child column of a column layout now fits its content, instead of keeping the width of its layout area.
     - When grouping is applied and no column is pinned at the start, the group-by indentation and the summary area below it use the pinned border.
@@ -171,6 +210,8 @@ All notable changes for each version of this project will be documented in this 
     - Writable properties that are not inputs, such as `selected` of `igc-column` and `totalPages` of `igc-paginator`, are now applied when set on the element. Previously the value was ignored and an `NG0303` error was logged.
     - The deprecated `getFilterFactory` method is now available on `igc-grid`, as intended for backwards compatibility.
     - Icon changes broadcast from other pages now update only the icons or icon references that match the message's action type.
+- `IgxNavigationDrawerComponent`
+    - `opened` and `closed` are emitted when the drawer finishes opening or closing. Previously a transition of the drawer content that ended first, such as a color change of an item on hover, emitted them early.
 - `IgxNavigationToggleDirective`, `IgxNavigationCloseDirective`
     - The `igxNavToggle` and `igxNavClose` inputs are now public, so they can be set in applications compiled with `strictInputAccessModifiers`. Previously the inputs were private and setting them failed the template type check.
 - `IgxOverlayService`

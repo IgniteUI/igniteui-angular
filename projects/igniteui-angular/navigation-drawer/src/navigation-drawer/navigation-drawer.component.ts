@@ -920,12 +920,28 @@ export class IgxNavigationDrawerComponent implements
         }
     }
 
-    private toggleOpenedEvent = () => {
+    /**
+     * Whether a `transitionend` event comes from the drawer itself, rather than bubbling up from its content
+     * (e.g. a hover color transition of an item), which must not complete the opening or closing.
+     */
+    private isDrawerTransition(event: Event) {
+        const target = event.target;
+        return target === this.elementRef.nativeElement || target === this._drawer.nativeElement ||
+            target === this._overlay.nativeElement;
+    }
+
+    private toggleOpenedEvent = (event: Event) => {
+        if (!this.isDrawerTransition(event)) {
+            return;
+        }
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleOpenedEvent, false);
         this.opened.emit();
     };
 
-    private toggleClosedEvent = () => {
+    private toggleClosedEvent = (event: Event) => {
+        if (!this.isDrawerTransition(event)) {
+            return;
+        }
         this.elementRef.nativeElement.removeEventListener('transitionend', this.toggleClosedEvent, false);
         this._closingAnimation.set(false);
         this.closed.emit();

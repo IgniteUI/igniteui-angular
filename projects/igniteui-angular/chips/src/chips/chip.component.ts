@@ -14,6 +14,7 @@ import {
   booleanAttribute,
   OnInit,
   inject,
+  afterNextRender,
   DOCUMENT,
   ChangeDetectionStrategy,
   ViewEncapsulation
@@ -23,7 +24,7 @@ import { IBaseEventArgs, ɵSize } from 'igniteui-angular/core';
 import { ChipResourceStringsEN, IChipResourceStrings } from 'igniteui-angular/core';
 import { Subject } from 'rxjs';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { NgClass, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
 export const IgxChipTypeVariant = {
@@ -89,7 +90,7 @@ let CHIP_ID = 0;
     styleUrl: 'chip.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [IgxDropDirective, IgxDragDirective, NgClass, NgTemplateOutlet, IgxIconComponent]
+    imports: [IgxDropDirective, IgxDragDirective, NgTemplateOutlet, IgxIconComponent]
 })
 export class IgxChipComponent implements OnInit, OnDestroy {
     public cdr = inject(ChangeDetectorRef);
@@ -436,7 +437,8 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     public selectedChanging = new EventEmitter<IChipSelectEventArgs>();
 
     /**
-     * Emits event when the chip is selected/deselected and any related animations and transitions also end.
+     * Emits event after the chip is selected/deselected, once the new `selected` state is applied.
+     * It is emitted right away, so the selection animations of the chip may still be running.
      *
      * @example
      * ```html
@@ -636,6 +638,12 @@ export class IgxChipComponent implements OnInit, OnDestroy {
             this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
             this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
+
+        // Enable the state transitions (e.g. on selection) only after the initial render,
+        // so that a chip does not animate to its initial state.
+        afterNextRender({
+            write: () => this.renderer.addClass(this.ref.nativeElement, 'igx-chip--animated')
+        });
     }
 
     /**
@@ -645,29 +653,6 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     @HostListener('keydown', ['$event'])
     public keyEvent(event: KeyboardEvent) {
         this.onChipKeyDown(event);
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public selectClass(condition: boolean): any {
-        const SELECT_CLASS = 'igx-chip__select';
-
-        return {
-            [SELECT_CLASS]: condition,
-            [`${SELECT_CLASS}--hidden`]: !condition
-        };
-    }
-
-    public onSelectTransitionDone(event: any) {
-        if (event.target.tagName) {
-            // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
-            this.selectedChanged.emit({
-                owner: this,
-                originalEvent: event
-            });
-        }
     }
 
     /**
