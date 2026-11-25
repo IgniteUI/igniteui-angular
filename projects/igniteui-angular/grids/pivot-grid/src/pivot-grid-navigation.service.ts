@@ -114,7 +114,9 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
             }
 
             this.setActiveNode(newActiveNode);
-            if (!this.grid.hasHorizontalLayout && verticalContainer.isIndexOutsideView(newActiveNode.row)) {
+            if (this.grid.hasHorizontalLayout) {
+                this.grid.notifyChanges();
+            } else if (verticalContainer.isIndexOutsideView(newActiveNode.row)) {
                 verticalContainer.scrollTo(newActiveNode.row);
             }
         } else {
@@ -385,13 +387,11 @@ export class IgxPivotGridNavigationService extends IgxGridNavigationService {
         if (verticalContainer.isIndexOutsideView(nextDataViewIndex)) {
             verticalContainer.scrollTo(nextDataViewIndex);
             await new Promise((resolve) => {
-                this.grid.gridScroll.pipe(take(1), timeout({ first: 10000 })).subscribe({
+                verticalContainer.chunkLoad.pipe(take(1), timeout({ first: 10000 })).subscribe({
                     next: (value) => resolve(value),
                     error: (err) => resolve(err)
                 });
             });
-            // Large scroll jumps only reassign the row contexts, so update the row dimension rows before looking them up.
-            this.grid.cdr.detectChanges();
         }
     }
 
