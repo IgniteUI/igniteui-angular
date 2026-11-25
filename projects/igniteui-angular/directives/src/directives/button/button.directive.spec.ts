@@ -120,6 +120,73 @@ describe('IgxButton', () => {
         const button = fixture.debugElement.query(By.css('span')).nativeElement as HTMLElement;
         expect(button.getAttribute('role')).toBe('menuitem');
     });
+
+    describe('aria-label', () => {
+        it('should keep a static aria-label', () => {
+            const fixture = TestBed.createComponent(ButtonWithAriaLabelComponent);
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('span').getAttribute('aria-label')).toBe('Save');
+        });
+
+        it('should keep a bound aria-label', () => {
+            const fixture = TestBed.createComponent(ButtonWithBoundAriaLabelComponent);
+            fixture.detectChanges();
+            const button = fixture.nativeElement.querySelector('span') as HTMLElement;
+
+            expect(button.getAttribute('aria-label')).toBe('Save');
+
+            fixture.componentRef.setInput('ariaLabel', 'Close');
+            fixture.detectChanges();
+
+            expect(button.getAttribute('aria-label')).toBe('Close');
+        });
+
+        it('should not add an aria-label when neither aria-label nor igxLabel is set', () => {
+            const fixture = TestBed.createComponent(ButtonWithAttribsComponent);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('span').hasAttribute('aria-label')).toBe(false);
+        });
+
+        it('should set aria-label from igxLabel', () => {
+            const fixture = TestBed.createComponent(ButtonWithIgxLabelComponent);
+            fixture.detectChanges();
+            const button = fixture.nativeElement.querySelector('span') as HTMLElement;
+
+            expect(button.getAttribute('aria-label')).toBe('Close');
+
+            fixture.componentRef.setInput('label', 'Dismiss');
+            fixture.detectChanges();
+
+            expect(button.getAttribute('aria-label')).toBe('Dismiss');
+        });
+
+        it('should remove the aria-label it set when igxLabel is cleared', () => {
+            const fixture = TestBed.createComponent(ButtonWithIgxLabelComponent);
+            fixture.detectChanges();
+            const button = fixture.nativeElement.querySelector('span') as HTMLElement;
+
+            fixture.componentRef.setInput('label', null);
+            fixture.detectChanges();
+
+            expect(button.hasAttribute('aria-label')).toBe(false);
+        });
+
+        it('should restore the static aria-label when igxLabel is cleared', () => {
+            const fixture = TestBed.createComponent(ButtonWithAriaLabelAndIgxLabelComponent);
+            fixture.detectChanges();
+            const button = fixture.nativeElement.querySelector('span') as HTMLElement;
+
+            expect(button.getAttribute('aria-label')).toBe('Close');
+
+            fixture.componentRef.setInput('label', null);
+            fixture.detectChanges();
+
+            expect(button.getAttribute('aria-label')).toBe('Save');
+        });
+    });
 });
 
 @Component({
@@ -155,4 +222,39 @@ function hasClass(element: HTMLElement, className: string): boolean {
     imports: [IgxButtonDirective]
 })
 class ButtonWithRoleComponent {
+}
+
+@Component({
+    template: `<span igxButton aria-label="Save">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithAriaLabelComponent {
+}
+
+@Component({
+    template: `<span igxButton [attr.aria-label]="ariaLabel()">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithBoundAriaLabelComponent {
+    public ariaLabel = input('Save');
+}
+
+@Component({
+    template: `<span igxButton [igxLabel]="label()">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithIgxLabelComponent {
+    public label = input<string | null>('Close');
+}
+
+@Component({
+    template: `<span igxButton aria-label="Save" [igxLabel]="label()">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithAriaLabelAndIgxLabelComponent {
+    public label = input<string | null>('Close');
 }
