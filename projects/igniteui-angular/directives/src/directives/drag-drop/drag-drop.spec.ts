@@ -3167,6 +3167,71 @@ describe('igxDrag touch, mouse, pointerLost and shadow root coverage', () => {
     });
 })
 
+describe('igxDrag window auto-scroll', () => {
+    let fix: ComponentFixture<TestDragDropComponent>;
+    let spacer: HTMLElement;
+    const extraScrollHeight = 100;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestDragDropComponent]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        // Makes the document a fixed amount taller than the viewport so the window can scroll.
+        spacer = document.createElement('div');
+        spacer.style.cssText = `position: absolute; top: 0; left: 0; width: 1px; height: ${window.innerHeight + extraScrollHeight}px;`;
+        document.body.appendChild(spacer);
+        window.scrollTo(0, 0);
+
+        fix = TestBed.createComponent(TestDragDropComponent);
+        fix.detectChanges();
+    });
+
+    afterEach(() => {
+        spacer.remove();
+        window.scrollTo(0, 0);
+    });
+
+    /** Starts dragging `drag` and moves its ghost within the scroll threshold of the viewport bottom. */
+    const dragToViewportBottom = async (drag: IgxDragDirective) => {
+        const element = drag.element.nativeElement;
+        const rect = getElemRects(element);
+        const startingX = (rect.left + rect.right) / 2;
+        const startingY = (rect.top + rect.bottom) / 2;
+
+        UIInteractions.simulatePointerEvent('pointerdown', element, startingX, startingY);
+        await nextFrame();
+        UIInteractions.simulatePointerEvent('pointermove', element, startingX, window.innerHeight - 10);
+        expect(drag.ghostElement).toBeTruthy();
+    };
+
+    it('should stop scrolling the window when destroyed while auto-scrolling', async () => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        await dragToViewportBottom(firstDrag);
+        await vi.waitFor(() => expect(window.scrollY).toBeGreaterThan(0));
+
+        // Each scroll step is queued for the next animation frame. Destroying right after one is queued
+        // runs that step without a ghost, which must not throw.
+        const step = (firstDrag as any).onScrollContainerStep.bind(firstDrag);
+        const stepQueued = new Promise<void>(resolve => {
+            vi.spyOn(firstDrag as any, 'onScrollContainerStep').mockImplementationOnce((direction) => {
+                step(direction);
+                resolve();
+            });
+        });
+        await stepQueued;
+        fix.destroy();
+        expect(firstDrag.ghostElement).toBeNull();
+
+        await nextFrame();
+        const scrollY = window.scrollY;
+        await wait(100);
+        expect(window.scrollY).toBe(scrollY);
+    });
+})
+
 const getDragDirsRects = (dragDirs: QueryList<IgxDragDirective>) => {
     const dragDirsRects = [];
     dragDirs.forEach((dragDir) => {

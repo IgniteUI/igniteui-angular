@@ -25,6 +25,7 @@ All notable changes for each version of this project will be documented in this 
     - On a bar too short for the drag handle, the two expanders and the 48px gaps between them, the drag handle keeps 25% of the bar length and the gaps get narrower. Previously the gaps stayed 48px, so the handle shrank and the expanders touched the ends of the bar (#18013).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
+    - In the filtering row, `Alt + Arrow Down` on the conditions button opens the conditions, and not the date or time picker. With a unary condition, such as Today, the date and time inputs are read-only and `Alt + Arrow Down` in them opens the conditions. `Tab` on the conditions button closes the conditions. Previously they opened again.
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
