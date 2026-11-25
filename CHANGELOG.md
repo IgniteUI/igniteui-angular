@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.28
+
+### Bug Fixes
+
+- `IgxForOfDirective`
+    - In Safari, the horizontal scrollbar of a horizontally virtualized `igxFor` is now visible and usable when the list first renders. Previously it was collapsed until change detection ran again.
+
 ## 21.2.27
 
 ### Bug Fixes
