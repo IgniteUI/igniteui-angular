@@ -4,10 +4,17 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.1
 
+### General
+
+- `IgxSplitterComponent`
+    - An app that sets `--ig-size` to medium or large on the splitter or on an ancestor gets a thicker bar. Previously the splitter had one size (#18013).
+    - The 48px gap around the drag handle is measured from the icon box of the design, so each expander is 5px further from the handle at the default size, 3px in the Indigo theme. The area of an expander that takes the pointer is that icon box, centered on the arrow: 18px, 20px or 24px square, 14px, 16px or 24px in the Indigo theme. Previously it was 16px by 12px at the default size in every theme.
+    - In the Indigo theme, the idle bar is 1px thick at the default size also with an overridden `--ig-splitter-size`. Previously it was thicker, 2px for `--ig-splitter-size: 10px`.
+
 ### New Functionality
 
 - `IgxSplitterComponent`
-    - The splitter follows `--ig-size`. The bar is 6px, 12px or 18px thick, the drag handle 4px, 6px or 8px with a 2px, 8px or 8px radius, and the expanders grow with them. The default is small, which is the size from before, so a splitter without `--ig-size` looks the same. `--size` and `--ig-splitter-size` still set the small size, and the medium and large steps add to it. A `--border-radius` or `--ig-splitter-border-radius` that you set applies at every size. The 48px gap around the drag handle is measured from the icon box of the design, so each expander is 5px further from the handle than before at the default size, 3px in the Indigo theme. The area of an expander that takes the pointer is that icon box, centered on the arrow: 18px, 20px or 24px square, 14px, 16px or 24px in the Indigo theme. Previously it was 16px by 12px at the default size in every theme. In the Indigo theme the idle bar is 1px, 4px or 8px thick by size, also with an overridden size, where the 1px was thicker before (2px for `--ig-splitter-size: 10px`), and the area around the bar that takes the pointer grows with the bar. Previously the splitter had one size, so an app that sets `--ig-size` to medium or large on the splitter or on an ancestor now gets a thicker bar (#18013).
+    - The splitter follows `--ig-size`. The bar is 6px, 12px or 18px thick, the drag handle 4px, 6px or 8px with a 2px, 8px or 8px radius, and the expanders grow with them. The default is small, which is the size from before, so a splitter without `--ig-size` looks the same. `--size` and `--ig-splitter-size` still set the small size, and the medium and large steps add to it. A `--border-radius` or `--ig-splitter-border-radius` that you set applies at every size. In the Indigo theme the idle bar is 1px, 4px or 8px thick by size, and the area around the bar that takes the pointer grows with the bar (#18013).
         ```html
         <igx-splitter style="--ig-size: var(--ig-size-large)">...</igx-splitter>
         ```
