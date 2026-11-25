@@ -5,6 +5,8 @@ export * from './animation/animation';
 export * from './overlay/overlay';
 export * from './overlay/position';
 export * from './overlay/scroll';
+export { provideOverlayAnchoring } from './overlay/anchoring/anchoring';
+export type { OverlayAnchoringMode } from './overlay/anchoring/anchoring';
 export {
     AbsolutePosition, ConnectedFit, HorizontalAlignment, OffsetMode, OverlayAnimationEventArgs, OverlayCancelableEventArgs, OverlayClosingEventArgs,
     OverlayCreateSettings, OverlayEventArgs, OverlaySettings, Point, PositionSettings, RelativePosition, RelativePositionStrategy, Size, VerticalAlignment, Util,

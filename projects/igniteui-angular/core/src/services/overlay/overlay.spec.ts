@@ -11,6 +11,7 @@ import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { IgxOverlayService } from './overlay';
+import { provideOverlayAnchoring } from './anchoring/anchoring';
 import { ContainerPositionStrategy } from './position';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
@@ -183,13 +184,19 @@ const formatString = (inputString: string, formatters: any[]) => {
     return inputString;
 };
 
-describe('igxOverlay', () => {
+// Every group runs under both positioning engines (D9). The native run is the default in Chromium; the script
+// run is what Safari 18 and `provideOverlayAnchoring('script')` get.
+describe.each(['script', 'native'] as const)('igxOverlay (%s engine)', (engine) => {
     const formatters = [
         { pattern: /:\s/g, replacement: ':' },
         { pattern: /red;/, replacement: 'red' }
     ];
     beforeEach(async () => {
         UIInteractions.clearOverlay();
+        if (engine === 'script') {
+            // Merged into each group's testing module; groups configure theirs in their own beforeEach.
+            TestBed.configureTestingModule({ providers: [provideOverlayAnchoring('script')] });
+        }
     });
 
     afterAll(() => {
@@ -1137,7 +1144,8 @@ describe('igxOverlay', () => {
             fixture.componentInstance.hide();
         });
 
-        it('#1799 - content div should reposition on window resize.', async () => {
+        // Mocks Util.getTargetRect, which only the script engine reads.
+        it.skipIf(engine === 'native')('#1799 - content div should reposition on window resize.', async () => {
             const rect = {
                 bottom: 50,
                 height: 0,

@@ -2,6 +2,35 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.4.0
+
+### New Functionality
+
+- `IgxOverlayService`
+    - Overlays that use `ConnectedPositioningStrategy`, `AutoPositionStrategy` or `ContainerPositionStrategy` are positioned with native CSS anchor positioning in browsers that support it (Chrome, Edge, Firefox and Safari 26). The browser keeps the content attached to its target while the page scrolls or resizes, with no script running on scroll. Safari 18, subclasses of these strategies, `Point` targets, other strategies and start point/direction combinations such as `Left → Center` keep script positioning. See [Positioning engines](projects/igniteui-angular/core/src/services/overlay/README.md#positioning-engines).
+    - Added `HideScrollStrategy`, which hides the overlay content while its target is scrolled out of view and shows it again when the target returns. The overlay stays open.
+        ```typescript
+        settings.scrollStrategy = new HideScrollStrategy();
+        ```
+    - Added `provideOverlayAnchoring()`. Add `provideOverlayAnchoring('script')` to the application providers to keep script positioning for every overlay.
+        ```typescript
+        bootstrapApplication(AppComponent, { providers: [provideOverlayAnchoring('script')] });
+        ```
+
+### General
+
+- `IgxOverlayService`
+    - **Behavioral changes** with native anchor positioning. `provideOverlayAnchoring('script')` restores the previous behavior.
+        - Anchored content follows its target on scroll with every scroll strategy, including `NoOpScrollStrategy`. It follows one rendering frame after the scroll, so code that scrolls and measures in the same task sees the previous position.
+        - `AutoPositionStrategy` content also flips while the overlay is open, when the current side stops fitting. When no side fits, the browser shifts the content into the viewport; the exact position can differ from before.
+        - Positions are no longer rounded to whole pixels.
+        - While an overlay is open, its target has an inline `anchor-name` style.
+
+### Bug Fixes
+
+- `ContainerPositionStrategy` no longer throws from its `IntersectionObserver` after the overlay is detached (#16988).
+- The Excel-style filtering submenu opens on the side the grid requests on every open, in browsers with native anchor positioning.
+
 ## 22.3.0
 
 ### General

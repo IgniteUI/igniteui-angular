@@ -401,6 +401,10 @@ describe('IgxToggle', () => {
 
         document.documentElement.scrollTop += 100;
         document.dispatchEvent(new Event('scroll'));
+        // Native anchor positioning applies scroll offsets in the next rendering update.
+        // DISCUSS(#17765): accepted behavioral change? See the note in IgxOverlayService.reposition().
+        await new Promise(resolve => requestAnimationFrame(resolve));
+        await new Promise(resolve => requestAnimationFrame(resolve));
 
         toggle = fixture.debugElement.query(By.css('#toggle1'));
         toggleRect = toggle.nativeElement.getBoundingClientRect();

@@ -43,6 +43,9 @@ export const appConfig: ApplicationConfig = {
 | Provider | Package | Required for |
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
+| `provideOverlayAnchoring('script')` | `igniteui-angular/core` | Optional. Keeps script positioning for every overlay instead of native CSS anchor positioning. Root providers only. |
+
+`HideScrollStrategy` (from `igniteui-angular/core`) hides an overlay while its target is scrolled out of view, without closing it.
 
 > **`provideAnimationsAsync()`** lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
 > ```typescript

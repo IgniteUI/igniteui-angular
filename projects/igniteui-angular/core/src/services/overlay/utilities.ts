@@ -215,6 +215,20 @@ export interface OverlayInfo {
     event?: Event;
     wrapperElement?: HTMLElement;
     size?: string;
+    /** Engine chosen by the last show(). Undefined before the first show(). */
+    engine?: 'script' | 'native-connected' | 'native-container';
+    /** Generated anchor name, created on the first native show() and kept until detach(). */
+    anchorName?: string;
+    /** The element that currently carries `anchorName` (target or container div). */
+    anchorElement?: HTMLElement;
+    /** The container div created for ContainerPositionStrategy, if any. */
+    containerElement?: HTMLElement;
+    /** Animations chosen by the native Auto flip check. `undefined` means "use the strategy settings". */
+    resolvedOpenAnimation?: AnimationReferenceMetadata | null;
+    resolvedCloseAnimation?: AnimationReferenceMetadata | null;
+    /** Animations the current players were built from. */
+    builtOpenAnimation?: AnimationReferenceMetadata | null;
+    builtCloseAnimation?: AnimationReferenceMetadata | null;
 }
 
 /** @hidden */

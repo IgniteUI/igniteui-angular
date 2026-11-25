@@ -15,6 +15,22 @@ import { ElasticPositionStrategy } from './position/elastic-position-strategy';
 import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
+import { HideScrollStrategy } from './scroll/hide-scroll-strategy';
+import { IGX_OVERLAY_ANCHORING, supportsNativeAnchoring, supportsPositionVisibility } from './anchoring/anchoring';
+import { acquireAnchorName, addAnchorName, removeAnchorName } from './anchoring/anchor-names';
+import {
+    connectedDeclarations,
+    containerDeclarations,
+    flipAnimation,
+    isExpressible,
+    NATIVE_CONTENT_PROPS,
+    NATIVE_WRAPPER_PROPS,
+    NativeDeclarations,
+    OverlayEngine,
+    resolveFlippedAxes,
+    SCRIPT_CONTENT_PROPS,
+    SCRIPT_WRAPPER_PROPS
+} from './anchoring/native-engine';
 import {
     AbsolutePosition,
     HorizontalAlignment,
@@ -44,6 +60,9 @@ export class IgxOverlayService implements OnDestroy {
     private _zone = inject(NgZone);
     protected platformUtil = inject(PlatformUtil);
     private animationService = inject<AnimationService>(IgxAngularAnimationService);
+    private _anchoringMode = inject(IGX_OVERLAY_ANCHORING, { optional: true }) ?? 'auto';
+    private _nativeSupported?: boolean;
+    private _positionVisibilitySupported?: boolean;
 
     /**
      * Emitted just before the overlay content starts to open.
@@ -389,6 +408,7 @@ export class IgxOverlayService implements OnDestroy {
         info.detached = true;
         this.finishAnimations(info);
         info.settings!.scrollStrategy!.detach();
+        this.releaseAnchor(info);
         // Dispose position strategy if it has a dispose method
         if (typeof (info.settings!.positionStrategy as any).dispose === 'function') {
             (info.settings!.positionStrategy as any).dispose();
@@ -443,8 +463,6 @@ export class IgxOverlayService implements OnDestroy {
             }
         }
         this.updateSize(info);
-        const openAnimation = info.settings!.positionStrategy!.settings.openAnimation;
-        const closeAnimation = info.settings!.positionStrategy!.settings.closeAnimation;
         // Show the overlay using Popover API BEFORE positioning
         // This ensures the element is in the top layer when position calculations happen
         if (info.wrapperElement?.isConnected && typeof info.wrapperElement.showPopover === 'function') {
@@ -454,18 +472,40 @@ export class IgxOverlayService implements OnDestroy {
                 // Popover API call failed, element may already be showing
             }
         }
-        info.settings!.positionStrategy!.position(
-            info.elementRef!.nativeElement.parentElement,
-            { width: info.initialSize!.width, height: info.initialSize!.height },
-            this._document,
-            true,
-            info.settings!.target);
-        if (openAnimation !== info.settings!.positionStrategy!.settings.openAnimation ||
-            closeAnimation !== info.settings!.positionStrategy!.settings.closeAnimation){
-                this.buildAnimationPlayers(info);
+        const strategy = info.settings!.positionStrategy!;
+        const contentElement: HTMLElement = info.elementRef!.nativeElement.parentElement;
+        const engine = this.resolveEngine(info);
+        if (info.engine && info.engine !== engine) {
+            this.switchEngine(info);
+        }
+        info.engine = engine;
+        if (engine === 'script') {
+            strategy.position(
+                contentElement,
+                { width: info.initialSize!.width, height: info.initialSize!.height },
+                this._document,
+                true,
+                info.settings!.target);
+        } else {
+            this.applyNative(info, true);
+            if (engine === 'native-container') {
+                (strategy as ContainerPositionStrategy).applyLayout(contentElement);
             }
+        }
+        if (engine === 'native-connected' && strategy.constructor === AutoPositionStrategy) {
+            this.resolveAnimations(info, 'both');
+        } else {
+            info.resolvedOpenAnimation = info.resolvedCloseAnimation = undefined;
+        }
+        this.updateAnimationPlayers(info);
+        const scrollStrategy = info.settings!.scrollStrategy;
+        if (scrollStrategy instanceof HideScrollStrategy) {
+            const anchor = this.getHideAnchor(info);
+            const useObserver = engine === 'script' || !this.positionVisibilitySupported();
+            this._zone.runOutsideAngular(() => scrollStrategy._onShown(anchor, contentElement, useObserver));
+        }
         this.addModalClasses(info);
-        if (info.settings!.positionStrategy!.settings.openAnimation) {
+        if (this.getOpenAnimation(info)) {
             // TODO: should we build players again. This was already done in attach!!!
             // this.buildAnimationPlayers(info);
             this.playOpenAnimation(info);
@@ -514,6 +554,14 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         if (!overlayInfo.visible) {
+            return;
+        }
+        if (overlayInfo.engine && overlayInfo.engine !== 'script') {
+            // The browser keeps native overlays in place. Only settings changes need a write.
+            // DISCUSS(#17765): native content follows a scroll at the next rendering frame, while the script
+            // engine moved it synchronously in the scroll handler. Code that scrolls and measures in the same
+            // task sees the old position (the toggle #3636 spec needed a frame wait). Not in plan §17 yet.
+            this.applyNative(overlayInfo, false);
             return;
         }
         const contentElement = overlayInfo.elementRef!.nativeElement.parentElement;
@@ -601,8 +649,18 @@ export class IgxOverlayService implements OnDestroy {
         if (eventArgs.cancel) {
             return;
         }
+        if (info.engine === 'native-connected' &&
+            info.settings!.positionStrategy!.constructor === AutoPositionStrategy &&
+            info.visible &&
+            !info.openAnimationPlayer?.hasStarted()) {
+            // The browser may have flipped the content since show(); close from the side it is on now.
+            this.resolveAnimations(info, 'close');
+            if (this.getCloseAnimation(info) !== info.builtCloseAnimation && !info.closeAnimationPlayer?.hasStarted()) {
+                this.buildCloseAnimationPlayer(info);
+            }
+        }
         this.removeModalClasses(info);
-        if (info.settings!.positionStrategy!.settings.closeAnimation) {
+        if (this.getCloseAnimation(info)) {
             this.playCloseAnimation(info, event);
         } else {
             this.closeDone(info);
@@ -723,6 +781,7 @@ export class IgxOverlayService implements OnDestroy {
         container.style.pointerEvents = 'none';
         container.appendChild(info.wrapperElement!);
         parent.appendChild(container);
+        info.containerElement = container;
     }
 
     private getWrapperElement(): HTMLElement {
@@ -782,6 +841,12 @@ export class IgxOverlayService implements OnDestroy {
                     // Hide failed, element may not be in popover state
                 }
             }
+        }
+        // A closed overlay leaves nothing on its target.
+        this.releaseAnchor(info);
+        const scrollStrategy = info.settings?.scrollStrategy;
+        if (scrollStrategy instanceof HideScrollStrategy) {
+            scrollStrategy._onHidden();
         }
         if (!info.closeAnimationDetaching) {
             this.closed.emit({ id: info.id!, componentRef: info.componentRef, event: info.event });
@@ -890,6 +955,14 @@ export class IgxOverlayService implements OnDestroy {
         delete info.closeAnimationPlayer;
         delete (info as any).ngZone;
         delete info.wrapperElement;
+        delete info.engine;
+        delete info.anchorName;
+        delete info.anchorElement;
+        delete info.containerElement;
+        delete info.resolvedOpenAnimation;
+        delete info.resolvedCloseAnimation;
+        delete info.builtOpenAnimation;
+        delete info.builtCloseAnimation;
     }
 
     private playOpenAnimation(info: OverlayInfo) {
@@ -1065,7 +1138,7 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings!.modal) {
             const wrapperElement = info.elementRef!.nativeElement.parentElement.parentElement;
             wrapperElement.classList.remove('igx-overlay__wrapper');
-            this.applyAnimationParams(wrapperElement, info.settings!.positionStrategy!.settings.openAnimation);
+            this.applyAnimationParams(wrapperElement, this.getOpenAnimation(info) ?? undefined);
             requestAnimationFrame(() => {
                 wrapperElement.classList.add('igx-overlay__wrapper--modal');
             });
@@ -1075,28 +1148,206 @@ export class IgxOverlayService implements OnDestroy {
     private removeModalClasses(info: OverlayInfo) {
         if (info.settings!.modal) {
             const wrapperElement = info.elementRef!.nativeElement.parentElement.parentElement;
-            this.applyAnimationParams(wrapperElement, info.settings!.positionStrategy!.settings.closeAnimation);
+            this.applyAnimationParams(wrapperElement, this.getCloseAnimation(info) ?? undefined);
             wrapperElement.classList.remove('igx-overlay__wrapper--modal');
             wrapperElement.classList.add('igx-overlay__wrapper');
         }
     }
 
     private buildAnimationPlayers(info: OverlayInfo) {
-        if (info.settings!.positionStrategy!.settings.openAnimation) {
-            info.openAnimationPlayer = this.animationService
-                .buildAnimation(info.settings!.positionStrategy!.settings.openAnimation, info.elementRef!.nativeElement);
+        this.buildOpenAnimationPlayer(info);
+        this.buildCloseAnimationPlayer(info);
+    }
+
+    private buildOpenAnimationPlayer(info: OverlayInfo) {
+        const animation = this.getOpenAnimation(info);
+        info.builtOpenAnimation = animation;
+        if (animation) {
+            info.openAnimationPlayer = this.animationService.buildAnimation(animation, info.elementRef!.nativeElement);
             info.openAnimationPlayer.animationEnd
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => this.openAnimationDone(info));
         }
-        if (info.settings!.positionStrategy!.settings.closeAnimation) {
-            info.closeAnimationPlayer = this.animationService
-                .buildAnimation(info.settings!.positionStrategy!.settings.closeAnimation, info.elementRef!.nativeElement);
+    }
+
+    private buildCloseAnimationPlayer(info: OverlayInfo) {
+        const animation = this.getCloseAnimation(info);
+        info.builtCloseAnimation = animation;
+        if (animation) {
+            info.closeAnimationPlayer = this.animationService.buildAnimation(animation, info.elementRef!.nativeElement);
             info.closeAnimationPlayer.animationEnd
                 .pipe(takeUntil(this.destroy$))
                 .subscribe(() => this.closeAnimationDone(info));
         }
     }
+
+    /**
+     * Rebuilds the players whose animation changed since they were built (script Auto flip mutates the
+     * strategy settings; native Auto resolves the animations per show). A running player is kept,
+     * because the open/close hand-off needs the player that is playing.
+     */
+    private updateAnimationPlayers(info: OverlayInfo) {
+        if (this.getOpenAnimation(info) !== info.builtOpenAnimation && !info.openAnimationPlayer?.hasStarted()) {
+            this.buildOpenAnimationPlayer(info);
+        }
+        if (this.getCloseAnimation(info) !== info.builtCloseAnimation && !info.closeAnimationPlayer?.hasStarted()) {
+            this.buildCloseAnimationPlayer(info);
+        }
+    }
+
+    private getOpenAnimation(info: OverlayInfo): AnimationReferenceMetadata | null | undefined {
+        return info.resolvedOpenAnimation !== undefined
+            ? info.resolvedOpenAnimation
+            : info.settings!.positionStrategy!.settings.openAnimation;
+    }
+
+    private getCloseAnimation(info: OverlayInfo): AnimationReferenceMetadata | null | undefined {
+        return info.resolvedCloseAnimation !== undefined
+            ? info.resolvedCloseAnimation
+            : info.settings!.positionStrategy!.settings.closeAnimation;
+    }
+
+    //#region Native anchoring
+
+    private nativeSupported(): boolean {
+        return this._nativeSupported ??= supportsNativeAnchoring(this._document.defaultView);
+    }
+
+    private positionVisibilitySupported(): boolean {
+        return this._positionVisibilitySupported ??= supportsPositionVisibility(this._document.defaultView);
+    }
+
+    /** Picks the engine for this show(). Exact class matches only: subclasses keep the script engine. */
+    private resolveEngine(info: OverlayInfo): OverlayEngine {
+        if (this._anchoringMode === 'script' || !this.nativeSupported()) {
+            return 'script';
+        }
+        const strategy = info.settings!.positionStrategy!;
+        const ctor = strategy.constructor;
+        if (ctor === ConnectedPositioningStrategy || ctor === AutoPositionStrategy) {
+            const target = info.settings!.target;
+            const content: HTMLElement = info.elementRef!.nativeElement.parentElement;
+            const HTMLElementCtor = this._document.defaultView?.HTMLElement;
+            const eligible = !!HTMLElementCtor && target instanceof HTMLElementCtor &&
+                target.isConnected &&
+                target.getRootNode() === content.getRootNode() &&
+                isExpressible(strategy.settings);
+            return eligible ? 'native-connected' : 'script';
+        }
+        // DISCUSS(#17765): native Container is likely obsolete after #17986 (see containerDeclarations).
+        if (ctor === ContainerPositionStrategy && info.containerElement?.isConnected) {
+            return 'native-container';
+        }
+        return 'script';
+    }
+
+    /** Clears both engines' inline styles and anchors when an overlay changes engine between shows. */
+    private switchEngine(info: OverlayInfo) {
+        const content: HTMLElement = info.elementRef!.nativeElement.parentElement;
+        const wrapper = info.wrapperElement!;
+        for (const prop of [...SCRIPT_CONTENT_PROPS, ...NATIVE_CONTENT_PROPS]) {
+            content.style.removeProperty(prop);
+        }
+        for (const prop of [...SCRIPT_WRAPPER_PROPS, ...NATIVE_WRAPPER_PROPS]) {
+            wrapper.style.removeProperty(prop);
+        }
+        this.releaseAnchor(info);
+        if (info.engine === 'native-container') {
+            info.containerElement?.style.removeProperty('anchor-name');
+        }
+        delete info.anchorElement;
+        info.resolvedOpenAnimation = info.resolvedCloseAnimation = undefined;
+        if (info.transformX || info.transformY) {
+            content.style.transform = `translate(${info.transformX}px, ${info.transformY}px)`;
+        }
+    }
+
+    /**
+     * Writes the native declarations from the current settings. Never reads layout, so it is cheap to
+     * call on every scroll; rewriting unchanged inline values does not invalidate layout.
+     *
+     * @param moveAnchor whether the anchor may move to the current target (show only).
+     */
+    private applyNative(info: OverlayInfo, moveAnchor: boolean) {
+        const name = info.anchorName ??= acquireAnchorName();
+        const settings = info.settings!;
+        const strategy = settings.positionStrategy!;
+        const hide = settings.scrollStrategy instanceof HideScrollStrategy && this.positionVisibilitySupported();
+        let element: HTMLElement;
+        let declarations: NativeDeclarations;
+
+        if (info.engine === 'native-container') {
+            if (info.anchorElement !== info.containerElement) {
+                info.containerElement!.style.setProperty('anchor-name', name);
+                info.anchorElement = info.containerElement;
+            }
+            element = info.wrapperElement!;
+            declarations = containerDeclarations(name, hide);
+        } else {
+            const target = settings.target as HTMLElement;
+            if (moveAnchor && info.anchorElement !== target) {
+                if (info.anchorElement) {
+                    removeAnchorName(info.anchorElement, name);
+                }
+                addAnchorName(target, name);
+                info.anchorElement = target;
+            }
+            element = info.elementRef!.nativeElement.parentElement;
+            // D16: always the current settings, never a snapshot.
+            declarations = connectedDeclarations(strategy.settings, strategy.constructor === AutoPositionStrategy, name, hide);
+        }
+
+        for (const [property, value] of declarations) {
+            element.style.setProperty(property, value);
+        }
+    }
+
+    /** Removes the overlay's anchor name from its target. Idempotent. */
+    private releaseAnchor(info: OverlayInfo) {
+        if (info.engine === 'native-connected' && info.anchorElement && info.anchorName) {
+            removeAnchorName(info.anchorElement, info.anchorName);
+            delete info.anchorElement;
+        }
+    }
+
+    /**
+     * Native Auto: CSS does not report which position option the browser chose, so compare the rendered
+     * rectangles with the configured and the flipped placement, and reverse the animations of flipped axes.
+     * Strategy settings are never written.
+     */
+    private resolveAnimations(info: OverlayInfo, which: 'open' | 'close' | 'both') {
+        if (!info.anchorElement) {
+            return;
+        }
+        const settings = info.settings!.positionStrategy!.settings;
+        const content: HTMLElement = info.elementRef!.nativeElement.parentElement;
+        const flipped = resolveFlippedAxes(settings, content.getBoundingClientRect(), info.anchorElement.getBoundingClientRect());
+        if (which !== 'close') {
+            info.resolvedOpenAnimation = flipAnimation(settings.openAnimation, flipped);
+        }
+        if (which !== 'open') {
+            info.resolvedCloseAnimation = flipAnimation(settings.closeAnimation, flipped);
+        }
+    }
+
+    /** The element whose visibility controls a `HideScrollStrategy` overlay, if any. */
+    private getHideAnchor(info: OverlayInfo): HTMLElement | null {
+        if (info.engine !== 'script') {
+            return info.anchorElement ?? null;
+        }
+        const strategy = info.settings!.positionStrategy;
+        if (strategy instanceof ContainerPositionStrategy) {
+            return info.containerElement ?? null;
+        }
+        if (strategy instanceof GlobalPositionStrategy) {
+            return null;
+        }
+        const target = info.settings!.target;
+        const HTMLElementCtor = this._document.defaultView?.HTMLElement;
+        return HTMLElementCtor && target instanceof HTMLElementCtor ? target : null;
+    }
+
+    //#endregion
 
     private openAnimationDone(info: OverlayInfo) {
         if (!info.openAnimationDetaching) {

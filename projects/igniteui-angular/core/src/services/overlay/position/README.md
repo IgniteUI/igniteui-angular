@@ -32,6 +32,27 @@ Position strategies determine where to display the component in the provided Igx
 |:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|-------------------------|
 | new Point(0, 0) | HorizontalAlignment.Right | VerticalAlignment.Bottom | HorizontalAlignment.Left | VerticalAlignment.Bottom | { width: 0, height: 0 } |
 
+## Native anchor positioning
+
+In browsers with CSS anchor positioning, `ConnectedPositioningStrategy`, `AutoPositionStrategy` and `ContainerPositionStrategy` overlays are positioned by the browser instead of by the strategy's `position()` method (see [Positioning engines](../README.md#positioning-engines)). Global and Elastic positioning, and subclasses of any strategy, always use script positioning.
+
+**Connected and Auto** go native when each axis uses one of these start point → direction pairs:
+
+| Horizontal | Vertical |
+|:-----------|:---------|
+| `Left → Left` (before the target) | `Top → Top` (above the target) |
+| `Left → Right` (left edges aligned) | `Top → Bottom` (top edges aligned) |
+| `Center → Center` (centered) | `Middle → Middle` (centered) |
+| `Right → Left` (right edges aligned) | `Bottom → Top` (bottom edges aligned) |
+| `Right → Right` (after the target) | `Bottom → Bottom` (below the target) |
+
+Other pairs, such as `Left → Center`, use script positioning. The start points default to `Left` and `Bottom`, so set them together with the directions, for example `horizontalStartPoint: HorizontalAlignment.Center` with `horizontalDirection: HorizontalAlignment.Center`. The `offset` setting applies to the axes where the content is outside the target (`Left → Left`, `Right → Right`, `Top → Top`, `Bottom → Bottom`), as with script positioning.
+
+- **Connected** keeps the content where the settings place it, even when it does not fit in the viewport.
+- **Auto** flips each axis to the opposite side of the target when the content does not fit, and flips both when needed. The open and close animations are reversed after a flip, as with script positioning. The browser re-evaluates the fit while the overlay is open, and keeps the flipped side until the overlay is shown again. When no side fits, the content is shifted into the viewport. The strategy `settings` are never changed by a flip.
+
+**Container** anchors the overlay wrapper to the container that the service creates, so the wrapper covers the container and follows it on scroll without an `IntersectionObserver`.
+
 ## Usage
 
 ### Container positioning

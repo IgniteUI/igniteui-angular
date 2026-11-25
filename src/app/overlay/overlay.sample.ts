@@ -11,6 +11,7 @@ import {
     BlockScrollStrategy,
     CloseScrollStrategy,
     NoOpScrollStrategy,
+    HideScrollStrategy,
     ElasticPositionStrategy,
     IgxDragDirective,
     ContainerPositionStrategy,
@@ -65,7 +66,7 @@ export class OverlaySampleComponent implements AfterViewInit {
     public verticalStartPoint = 'Top';
     public positionStrategies = ['Auto', 'Connected', 'Global', 'Container', 'Elastic'];
     public positionStrategy = 'Global';
-    public scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
+    public scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp', 'Hide'];
     public scrollStrategy = 'NoOp';
     public closeOnOutsideClick = true;
     public modal = true;
@@ -177,6 +178,9 @@ export class OverlaySampleComponent implements AfterViewInit {
             case 'NoOp':
                 this._overlaySettings.scrollStrategy = new NoOpScrollStrategy();
                 break;
+            case 'Hide':
+                this._overlaySettings.scrollStrategy = new HideScrollStrategy();
+                break;
         }
     }
 
@@ -186,7 +190,8 @@ export class OverlaySampleComponent implements AfterViewInit {
                 Absolute: new AbsoluteScrollStrategy(),
                 Block: new BlockScrollStrategy(),
                 Close: new CloseScrollStrategy(),
-                NoOp: new NoOpScrollStrategy()
+                NoOp: new NoOpScrollStrategy(),
+                Hide: new HideScrollStrategy()
             },
             PositionStrategy: {
                 Auto: new AutoPositionStrategy(),
