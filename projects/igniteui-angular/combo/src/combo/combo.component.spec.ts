@@ -3923,6 +3923,23 @@ describe('igxCombo', () => {
                 expect(rows().some(row => row.classList.contains(CSS_CLASS_NESTED_ITEM))).toBe(false);
             });
 
+            it('should name the group header options by their text', async () => {
+                await openList();
+                const group = rows()[0].textContent.trim();
+                // A group is named only by its label.
+                expect(rows()[0].getAttribute('aria-label')).toEqual(group);
+
+                combo.groupSelection = true;
+                await render();
+                expect(firstGroupRow().hasAttribute('aria-label')).toBe(false);
+
+                // Without a valueKey, the record of a group header has no field to name it.
+                combo.valueKey = null;
+                await render();
+                expect(firstGroupRow().textContent.trim()).toEqual(group);
+                expect(firstGroupRow().hasAttribute('aria-label')).toBe(false);
+            });
+
             it('should select the shown items of a group from its header, and deselect them when all are selected', async () => {
                 combo.groupSelection = true;
                 await openList();

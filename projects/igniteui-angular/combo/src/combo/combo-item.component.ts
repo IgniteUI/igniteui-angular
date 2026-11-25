@@ -7,7 +7,6 @@ import {
   ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxComboAPIService } from './combo.api';
-import { COMBO_SELECT_ALL_RECORD } from './combo.common';
 import { rem } from 'igniteui-angular/core';
 import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
@@ -42,8 +41,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     @HostBinding('attr.aria-label')
     @Input()
     public override get ariaLabel(): string {
-        if (this.value === COMBO_SELECT_ALL_RECORD) {
-            // The option is named by its text.
+        if (this.comboAPI.is_toggle(this.value)) {
+            // The "Select all" option and a group header option are named by their text.
             return null!;
         }
         const valueKey = this.comboAPI.valueKey;
