@@ -7,7 +7,8 @@
 /// @see {mixin} tokens
 /// @param {Map} $theme - The theme used to style the component.
 @mixin label($theme) {
-    @include tokens($theme, $mode: 'scoped', $scope: '[igxLabel]');
+    // igxButton has an igxLabel input of its own, so keep label styles off buttons.
+    @include tokens($theme, $mode: 'scoped', $scope: '[igxLabel]:where(:not(.igx-button))');
 
     @include layer(base) {
         $variant: map.get($theme, '_meta', 'theme');
