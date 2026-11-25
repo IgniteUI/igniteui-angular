@@ -1907,6 +1907,28 @@ describe('igxCombo', () => {
                 expect(rowText()).toEqual(renderedAfterB);
             });
 
+            it('should not ask again for a page when the host clears the data while it loads with "Select all"', async () => {
+                host.clearWhileLoading = true;
+                combo.showSelectAll = true;
+                combo.toggle();
+                await settle();
+
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                expect(combo.data).toEqual([]);
+                const requestCount = host.service.requests.length;
+                const request = host.service.requests[requestCount - 1];
+
+                host.service.complete(request);
+                await settle();
+
+                // The records keep their rows while the data is empty, so the page answers the
+                // window and the list wants nothing more.
+                expect(host.service.requests.length).toBe(requestCount);
+                expect(combo.virtualizationState.startIndex).toEqual(request.state.startIndex);
+                expect(combo.data[0].id).toEqual(request.state.startIndex);
+            });
+
             it('should leave the loaded page where it is until a response arrives', async () => {
                 combo.toggle();
                 await settle();
@@ -5792,6 +5814,9 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
 
     public data: any[] = [];
 
+    /** Empties the list while a page loads, as a host that shows a loading state does. */
+    public clearWhileLoading = false;
+
     private pending: Subscription | null = null;
 
     public ngAfterViewInit() {
@@ -5800,6 +5825,10 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
 
     /** The documented pattern: answer the window the event carries, drop the one in flight. */
     public dataLoading(state: IForOfState) {
+        if (this.clearWhileLoading) {
+            this.data = [];
+            this.cdr.markForCheck();
+        }
         this.request(state);
     }
 

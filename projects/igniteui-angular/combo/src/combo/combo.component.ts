@@ -473,9 +473,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return this.groupSelection && (!!groupKey || groupKey === 0);
     }
 
-    /** @hidden @internal Whether the list starts with the "Select all" option. */
+    /**
+     * @hidden @internal
+     * Whether the list starts with the "Select all" option. With remote records, the row stays
+     * while a page loads, so emptied data does not move the records to other rows.
+     */
     protected get hasSelectAllRow(): boolean {
-        return this.showSelectAll && !!this.filteredData?.length;
+        return this.showSelectAll && (this.totalItemCount > 0 || !!this.filteredData?.length);
     }
 
     /**
