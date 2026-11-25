@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
-import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
+import { COMBO_SELECT_ALL_RECORD, IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { SortingDirection } from 'igniteui-angular/core';
 
 /**
@@ -24,6 +24,9 @@ export class IgxComboRecordWindowPipe implements PipeTransform {
  * @hidden @internal
  * The items the drop-down has and where they sit in the collection they came from. Pure, so
  * the window keeps its identity while its inputs do.
+ *
+ * With `selectAll`, the "Select all" option is the first row, so each record sits one row
+ * further down. A remote page that does not start at the first record does not hold it.
  */
 @Pipe({
     name: 'comboDataWindow',
@@ -31,15 +34,27 @@ export class IgxComboRecordWindowPipe implements PipeTransform {
 })
 export class IgxComboDataWindowPipe implements PipeTransform {
     public transform(
-        collection: any[], totalItemCount: number, startIndex: number
+        collection: any[], totalItemCount: number, startIndex: number, selectAll = false
     ): VirtualDataWindow<any> {
+        const leadingRows = selectAll ? 1 : 0;
+
         if (!(totalItemCount > 0)) {
-            return { items: collection, startIndex: 0, totalCount: collection.length };
+            const items = selectAll ? [COMBO_SELECT_ALL_RECORD, ...collection] : collection;
+            return { items, startIndex: 0, totalCount: items.length };
         }
 
         // An empty page has no position of its own, and anchoring one would stretch the
         // collection to reach it.
-        return { items: collection, startIndex: collection.length ? startIndex : 0, totalCount: totalItemCount };
+        if (!collection.length) {
+            return { items: collection, startIndex: 0, totalCount: totalItemCount + leadingRows };
+        }
+
+        const items = selectAll && startIndex === 0 ? [COMBO_SELECT_ALL_RECORD, ...collection] : collection;
+        return {
+            items,
+            startIndex: startIndex === 0 ? 0 : startIndex + leadingRows,
+            totalCount: totalItemCount + leadingRows
+        };
     }
 }
 

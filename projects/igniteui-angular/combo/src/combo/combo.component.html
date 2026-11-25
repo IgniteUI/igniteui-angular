@@ -43,7 +43,7 @@
     | comboRecordWindow:totalItemCount:virtualStartIndex
     | comboFiltering:filterValue:displayKey:filteringOptions:filterFunction:disableFiltering
     | comboGrouping:groupKey:valueKey:groupSortingDirection:compareCollator
-    | comboDataWindow:totalItemCount:virtualStartIndex;
+    | comboDataWindow:totalItemCount:virtualStartIndex:hasSelectAllRow;
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down"
     [labelledBy]="ariaLabelledBy || label?.id || placeholder || ''"
     [width]="itemsWidth || '100%'" (opening)="handleOpening($event)" (closing)="handleClosing($event)"
@@ -87,16 +87,22 @@
                                 [initialViewportSize]="viewportSize"
                                 (stateChange)="handleVirtualStateChange($event)">
                 <ng-template igxVirtualItem let-item let-rowIndex="index">
+                    <!-- The "Select all" option and the group header options of groupSelection are options, not headers. -->
                     <igx-combo-item [itemHeight]="itemHeight"
-                                    [value]="item" [isHeader]="item?.isHeader" [index]="rowIndex" [role]="item?.isHeader? 'group' : 'option'">
+                                    [value]="item" [isHeader]="item?.isHeader && !selectableGroups" [index]="rowIndex"
+                                    [role]="item?.isHeader && !selectableGroups ? 'group' : 'option'"
+                                    [class.igx-combo__select-all]="item?.isSelectAll"
+                                    [class.igx-combo__group-option]="item?.isHeader && selectableGroups"
+                                    [class.igx-combo__item--nested]="selectableGroups && !item?.isHeader && !item?.isSelectAll">
                         @if (item?.isHeader) {
                             <ng-container
                                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
                             context: {$implicit: item, data: data, valueKey: valueKey, groupKey: groupKey, displayKey: displayKey}">
                             </ng-container>
-                        }
-                        <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
-                        @if (!item?.isHeader) {
+                        } @else if (item?.isSelectAll) {
+                            {{ resourceStrings.igx_combo_select_all }}
+                        } @else {
+                            <!-- if item is 'null' it should be displayed and !!(item?.isHeader) would resolve it to 'false' and not display it -->
                             <ng-container #listItem
                                           *ngTemplateOutlet="template; context: {$implicit: item, data: data, valueKey: valueKey, displayKey: displayKey};">
                             </ng-container>

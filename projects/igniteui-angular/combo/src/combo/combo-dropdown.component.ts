@@ -127,7 +127,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         // The first selectable entry can only be looked for in what is loaded. A page that
         // starts further in does not hold it, so the collection's own start is the target.
         this.navigateItem(this.virtualization?.startIndex === 0
-            ? this.virtualization.findIndex(e => !e?.isHeader)
+            ? this.virtualization.findIndex(e => !e?.isHeader || this.comboAPI.is_toggle(e))
             : 0);
         this.combo.setActiveDescendant();
     }
@@ -166,7 +166,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         if (item === null || item === undefined) {
             return;
         }
-        this.comboAPI.set_selected_item(item.itemID);
+        this.comboAPI.select_record(item.value, item.itemID);
         this._activeDescendantId = item.id ?? null;
         this._focusedItem = item;
         this.combo.setActiveDescendant();

@@ -19,4 +19,9 @@ $_theme: digest-schema($indigo-combo);
     @include e(content) {
         max-height: calc(var(--size) * var(--item-count) + rem(16px));
     }
+
+    // The indent of the Indigo tree.
+    @include e(item, $m: nested) {
+        --_combo-item-indent: var(--ig-combo-item-indent, #{rem(24px)});
+    }
 }

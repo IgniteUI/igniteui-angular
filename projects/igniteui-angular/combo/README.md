@@ -203,6 +203,24 @@ Defining a combo's groupKey option will group the items, according to that key.
 
 <div class="divider--half"></div>
 
+### Select All
+Setting `showSelectAll` to `true` adds a "Select all" option as the first row of the list. It selects the items that the list shows, after the search, or deselects them when all of them are selected. Its checkbox is indeterminate while only some of them are selected. The change emits one `selectionChanging` event, which you can cancel. The list shows the option only while it shows items. With `totalItemCount`, it acts on the loaded items. The text comes from the `igx_combo_select_all` resource string.
+
+```html
+<igx-combo [showSelectAll]="true"></igx-combo>
+```
+
+<div class="divider--half"></div>
+
+### Group Selection
+Setting `groupSelection` to `true` with a `groupKey` makes each group header an option. It selects the items of its group that the list shows, or deselects them when all of them are selected, with one `selectionChanging` event. Its checkbox is indeterminate while only some of them are selected. The items are indented under their header. Set the `--ig-combo-item-indent` CSS variable to change the indent. A group is not part of the selection: `value`, `selection` and the events hold only items.
+
+```html
+<igx-combo [groupKey]="'region'" [groupSelection]="true"></igx-combo>
+```
+
+<div class="divider--half"></div>
+
 ### Templates
 Templates for different parts of the control can be defined, including items, header and footer, etc.
 When defining one of them, you need to reference list of predefined names, as follows:
@@ -314,7 +332,9 @@ When igxCombo is opened and list item is focused:
 
 - `Home` will move to first list item.
 
-- `Space` will select/deselect active list item.
+- `Space` will select/deselect active list item. On the "Select all" option or on a group header option of `groupSelection`, it selects the shown items, or deselects them when all of them are selected.
+
+The "Select all" option and the group header options of `groupSelection` are list items for the arrow keys, `Home` and `End`.
 
 - `Enter` will confirm the already selected items and will close the list.
 
@@ -340,6 +360,8 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `valueKey`            | combo value data source property                  | string                      |
 | `displayKey`          | combo display data source property                | string                      |
 | `groupKey`            | combo item group                                  | string                      |
+| `showSelectAll`       | shows a "Select all" option as the first row of the list - disabled by default | boolean |
+| `groupSelection`      | makes each group header an option that selects the items of its group - disabled by default | boolean |
 | `virtualizationState` | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize` | `IForOfState` |
 | `totalItemCount`      | total count of the virtual data items, when using remote service | number       |
 | `width `              | defines combo width                               | string                      |

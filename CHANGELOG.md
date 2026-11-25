@@ -2,6 +2,22 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.4.0
+
+### New Functionality
+
+- `IgxComboComponent`
+    - Added the `showSelectAll` input. It adds a "Select all" option as the first row of the list, which selects the items that the list shows, or deselects them when all of them are selected. Its checkbox is indeterminate while only some of them are selected. The list shows the option only while it shows items, and with `totalItemCount` it acts on the loaded items. The text comes from the `igx_combo_select_all` resource string.
+        ```html
+        <igx-combo [showSelectAll]="true"></igx-combo>
+        ```
+    - Added the `groupSelection` input. With a `groupKey`, it makes each group header an option that selects the items of its group that the list shows, or deselects them when all of them are selected. Its checkbox is indeterminate while only some of them are selected. The items are indented under their header; set `--ig-combo-item-indent` to change the indent. A group is not part of the selection.
+        ```html
+        <igx-combo [groupKey]="'region'" [groupSelection]="true"></igx-combo>
+        ```
+    - The "Select all" option and the group header options are reached with the arrow keys, `Home` and `End`, and `Space` toggles them. A click or `Space` on them emits one `selectionChanging` event, which can be canceled, with all the items that change. They have `role="option"` and `aria-checked`, which is `mixed` while only some of their items are selected.
+    - With `showSelectAll`, the list shows the records one row further down. `virtualizationState` and the `dataPreLoad` event still give the indices of the records in the data source, not of the rows.
+
 ## 22.3.1
 
 ### Bug Fixes

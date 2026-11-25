@@ -27,6 +27,28 @@ $theme: digest-schema($light-combo);
             margin-inline-end: rem(8px);
         }
 
+        // A group header option of `groupSelection` keeps the text style of a group header.
+        // The item rules come later, so this one needs both classes. The active, hover and
+        // selected states keep the colors of an item.
+        @include e(group-option) {
+            &.igx-drop-down__item {
+                @include type-style(overline);
+            }
+
+            &.igx-drop-down__item:not(:hover, :focus, .igx-drop-down__item--focused, .igx-drop-down__item--selected) {
+                color: var(--header-text-color);
+            }
+        }
+
+        // The items are one level in under a group header option, as in the tree.
+        @include e(item, $m: nested) {
+            --_combo-item-indent: var(--ig-combo-item-indent, #{sizable(rem(12px), rem(16px), rem(24px))});
+
+            .igx-combo__checkbox {
+                margin-inline-start: var(--_combo-item-indent);
+            }
+        }
+
         @include e(search) {
             --ig-input-group-border-border-radius: 0;
 
