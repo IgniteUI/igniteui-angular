@@ -44,9 +44,8 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     private readonly _renderer = inject(Renderer2);
     protected readonly _type = signal<IgxButtonType>(IgxButtonType.Flat);
     protected readonly _selected = signal(false);
+    /** The aria-label last written by igxLabel. */
     private _label: string | null = null;
-    /** The element's own aria-label, saved when igxLabel first replaces it. */
-    private _ownAriaLabel: string | null = null;
 
     /** Emitted when the button is selected. */
     @Output()
@@ -84,7 +83,7 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     }
 
     /**
-     * Sets the `aria-label` attribute.
+     * Sets the `aria-label` attribute. While it has a value, it replaces any other `aria-label` on the button.
      *
      * @deprecated in version 22.2.8. Use the native `aria-label` attribute instead.
      *
@@ -98,18 +97,11 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
         const label = value || null;
         const element = this.nativeElement;
 
-        // Touch aria-label only through igxLabel, so the template's own value survives.
         if (label) {
-            if (!this._label) {
-                this._ownAriaLabel = element.getAttribute('aria-label');
-            }
             this._renderer.setAttribute(element, 'aria-label', label);
-        } else if (this._label) {
-            if (this._ownAriaLabel === null) {
-                this._renderer.removeAttribute(element, 'aria-label');
-            } else {
-                this._renderer.setAttribute(element, 'aria-label', this._ownAriaLabel);
-            }
+        } else if (this._label !== null && element.getAttribute('aria-label') === this._label) {
+            // Remove only the value igxLabel wrote; a newer aria-label belongs to someone else.
+            this._renderer.removeAttribute(element, 'aria-label');
         }
 
         this._label = label;
