@@ -21,6 +21,7 @@ const STYLES = {
         loadPaths: ["node_modules"],
         sourceMap: false,
         sourceMapEmbed: false,
+        silenceDeprecations: ['if-function'],
     },
 };
 

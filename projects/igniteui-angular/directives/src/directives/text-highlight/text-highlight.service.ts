@@ -22,7 +22,7 @@ export class IgxTextHighlightService {
     /**
      * Clears any existing highlight.
      */
-    public clearActiveHighlight(groupName) {
+    public clearActiveHighlight(groupName: string) {
         this.highlightGroupsMap.set(groupName, {
             index: -1
         });

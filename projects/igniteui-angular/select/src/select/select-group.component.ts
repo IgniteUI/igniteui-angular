@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IgxDropDownGroupComponent } from 'igniteui-angular/drop-down';
 
 /**
@@ -11,6 +11,7 @@ import { IgxDropDownGroupComponent } from 'igniteui-angular/drop-down';
         <label id="{{labelId}}">{{ label }}</label>
         <ng-content select="igx-select-item"></ng-content>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxSelectGroupComponent extends IgxDropDownGroupComponent {

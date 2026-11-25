@@ -66,3 +66,4 @@ export * from 'igniteui-angular/tabs';
 export * from 'igniteui-angular/time-picker';
 export * from 'igniteui-angular/toast';
 export * from 'igniteui-angular/tree';
+export * from 'igniteui-angular/virtual-scroll';

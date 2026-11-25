@@ -1,4 +1,5 @@
-import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal, inject } from '@angular/core';
+import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, booleanAttribute, signal, inject, ChangeDetectionStrategy } from '@angular/core';
+import type { IgxSplitterComponent } from '../splitter.component';
 
 /**
  * Represents individual resizable/collapsible panes.
@@ -17,14 +18,15 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter, boolea
 @Component({
     selector: 'igx-splitter-pane',
     templateUrl: './splitter-pane.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxSplitterPaneComponent {
     private el = inject(ElementRef);
 
-    private _minSize: string;
-    private _maxSize: string;
-    private _order = signal<number | null>(null);
+    private _minSize!: string;
+    private _maxSize!: string;
+    private _order = signal<number>(0);
 
     /**
      * @hidden @internal
@@ -142,17 +144,24 @@ export class IgxSplitterPaneComponent {
 
     /**
      * @hidden @internal
-     * Gets/Sets the `maxHeight` properties of the current `IgxSplitterPaneComponent`.
+     * Gets/Sets the `maxHeight` properties of the current splitter pane.
      */
     @HostBinding('style.max-height')
     public maxHeight = '100%';
 
     /** @hidden @internal */
-    public owner;
+    public get owner(): IgxSplitterComponent | undefined {
+        return this._owner;
+    }
+    public set owner(value: IgxSplitterComponent | undefined) {
+        this._owner = value;
+        this.refreshFlex();
+    }
 
     /**
-     * Gets/Sets the size of the current pane.
-     *  * @example
+     * Gets/Sets the size of the current pane. Nullish values fall back to `'auto'`.
+     *
+     * @example
      * ```html
      * <igx-splitter>
      *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
@@ -160,27 +169,27 @@ export class IgxSplitterPaneComponent {
      * ```
      */
     @Input()
-    public get size() {
+    public get size(): string {
         return this._size;
     }
 
-    public set size(value) {
-        this._size = value;
-        this.el.nativeElement.style.flex = this.flex;
+    public set size(value: string | null | undefined) {
+        this._size = value || 'auto';
+        this.refreshFlex();
     }
 
     /** @hidden @internal */
     public get isPercentageSize() {
-        return this.size === 'auto' || this.size.indexOf('%') !== -1;
+        return this.size === 'auto' || this.size.includes('%');
     }
 
     /** @hidden @internal */
-    public get dragSize() {
+    public get dragSize(): string | null {
         return this._dragSize;
     }
-    public set dragSize(val) {
+    public set dragSize(val: string | null) {
         this._dragSize = val;
-        this.el.nativeElement.style.flex = this.flex;
+        this.refreshFlex();
     }
 
     /**
@@ -188,18 +197,18 @@ export class IgxSplitterPaneComponent {
      * @hidden @internal
      * Gets the host native element.
      */
-    public get element(): any {
+    public get element(): HTMLElement {
         return this.el.nativeElement;
     }
 
     /**
      * @hidden @internal
-     * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
+     * Gets the `flex` property of the current splitter pane.
      */
     @HostBinding('style.flex')
     public get flex() {
         const size = this.dragSize || this.size;
-        const grow = this.isPercentageSize && !this.dragSize ? 1 : 0;
+        const grow = (this.isPercentageSize || this.hasCollapsedSibling) && !this.dragSize ? 1 : 0;
         return `${grow} ${grow} ${size}`;
     }
 
@@ -213,15 +222,11 @@ export class IgxSplitterPaneComponent {
      */
     @Input({ transform: booleanAttribute })
     public set collapsed(value) {
-        if (this.owner) {
-            // reset sibling sizes when pane collapse state changes.
-            this._getSiblings().forEach(sibling => {
-                sibling.size = 'auto'
-                sibling.dragSize = null;
-            });
-        }
         this._collapsed = value;
         this.display = this._collapsed ? 'none' : 'flex';
+        if (this.owner) {
+            this._getSiblings().forEach(sibling => sibling.resetDragSize());
+        }
         this.collapsedChange.emit(this._collapsed);
     }
 
@@ -230,8 +235,9 @@ export class IgxSplitterPaneComponent {
     }
 
     private _size = 'auto';
-    private _dragSize;
+    private _dragSize: string | null = null;
     private _collapsed = false;
+    private _owner?: IgxSplitterComponent;
 
     /**
      * Toggles the collapsed state of the pane.
@@ -245,11 +251,24 @@ export class IgxSplitterPaneComponent {
         this.collapsed = !this.collapsed;
     }
 
+    private refreshFlex() {
+        this.el.nativeElement.style.flex = this.flex;
+    }
+
+    private resetDragSize() {
+        this._dragSize = null;
+        this.refreshFlex();
+    }
+
+    private get hasCollapsedSibling() {
+        return this.owner ? this._getSiblings().some(sibling => sibling.collapsed) : false;
+    }
+
     /** @hidden @internal */
-    private _getSiblings() {
-        const panes = this.owner.panes.toArray();
+    private _getSiblings(): IgxSplitterPaneComponent[] {
+        const panes = this.owner!.panes.toArray();
         const index = panes.indexOf(this);
-        const siblings = [];
+        const siblings: IgxSplitterPaneComponent[] = [];
         if (index !== 0) {
             siblings.push(panes[index - 1]);
         }

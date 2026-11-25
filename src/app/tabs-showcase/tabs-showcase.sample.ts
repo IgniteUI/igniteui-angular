@@ -1,14 +1,15 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    inject,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
-    OnInit,
-    ElementRef,
-    ChangeDetectorRef,
-    DestroyRef,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  inject,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  OnInit,
+  ElementRef,
+  ChangeDetectorRef,
+  DestroyRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 
 import {
@@ -42,6 +43,7 @@ registerIconFromText(
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxIconComponent, IGX_TABS_DIRECTIVES]
 })
 export class TabsShowcaseSampleComponent implements OnInit {
@@ -74,6 +76,14 @@ export class TabsShowcaseSampleComponent implements OnInit {
                     type: 'select',
                     options: ['start', 'end', 'center', 'justify'],
                     defaultValue: 'start'
+                }
+            },
+            headerPosition: {
+                label: 'Header position',
+                control: {
+                    type: 'button-group',
+                    options: ['top', 'start', 'end'],
+                    defaultValue: 'top'
                 }
             },
             activation: {
@@ -120,6 +130,13 @@ export class TabsShowcaseSampleComponent implements OnInit {
     public selectTab(id: string) {
         this.selectedTabId = id;
         this.cdr.detectChanges(); // Notify Angular of the programmatic change
+    }
+
+    public onSelectedIndexChange(index: number) {
+        // -1 is reported while the previous tab is deselected, before the next one is selected
+        if (index >= 0) {
+            this.selectedTabId = this.contacts[index].id;
+        }
     }
 
     /**

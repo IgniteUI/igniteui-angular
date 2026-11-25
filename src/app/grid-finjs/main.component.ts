@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 
 import { Subject } from 'rxjs';
@@ -13,6 +13,7 @@ import { GridFinJSComponent } from './grid-finjs.component';
     selector: 'app-finjs-main',
     styleUrls: ['./main.component.scss'],
     templateUrl: './main.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ControllerComponent, GridFinJSComponent, AsyncPipe]
 })
 export class MainComponent implements OnDestroy {

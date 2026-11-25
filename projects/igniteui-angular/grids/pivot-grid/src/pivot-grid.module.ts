@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { IgxPivotDataSelectorComponent } from './pivot-data-selector.component';
 import { IgxPivotGridComponent } from './pivot-grid.component';
-import { IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
+import { IgxPivotRowDimensionHeaderTemplateDirective, IgxPivotValueChipTemplateDirective } from './pivot-grid.directives';
 
 /* Imports that cannot be resolved from IGX_GRID_COMMON_DIRECTIVES spread
     NOTE: Do not remove! Issue: https://github.com/IgniteUI/igniteui-angular/issues/13310
@@ -75,6 +75,7 @@ export const IGX_PIVOT_GRID_DIRECTIVES = [
     IgxPivotGridComponent,
     IgxPivotDataSelectorComponent,
     IgxPivotValueChipTemplateDirective,
+    IgxPivotRowDimensionHeaderTemplateDirective,
     // IGX_GRID_COMMON_DIRECTIVES:
     IgxRowDirective,
     IgxGridFooterComponent,

@@ -1,11 +1,13 @@
 import { Directive, HostBinding } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 
 /**
  * @hidden
  */
 @Directive({
     selector: '[igxDialogTitle],igx-dialog-title',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxDialogTitleDirective {
 

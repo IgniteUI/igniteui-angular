@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, OnInit } from '@angular/core';
+import { Component, TemplateRef, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent } from 'igniteui-angular/grids/core';
@@ -13,6 +13,7 @@ import { IgxCellHeaderTemplateDirective, IgxColumnComponent, IgxColumnGroupCompo
         </igx-grid>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneGroupOneColGridComponent {
@@ -36,10 +37,12 @@ export class OneGroupOneColGridComponent {
         </igx-grid>
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneGroupThreeColsGridComponent {
-    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+    @ViewChild('grid', { static: true })
+    public grid: IgxGridComponent;
     public gridWrapperWidthPx = '900';
     public gridHeight = '500px';
     public columnWidth: string;
@@ -74,6 +77,7 @@ export class OneGroupThreeColsGridComponent {
         </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupTestComponent {
@@ -118,6 +122,7 @@ export class ColumnGroupTestComponent {
         </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ColumnGroupFourLevelTestComponent implements OnInit {
@@ -168,11 +173,11 @@ export class ColumnGroupFourLevelTestComponent implements OnInit {
 
     public ngOnInit() {
         this.genInfoColsAndGroups = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
-        this.contactNameCol, this.contactTitleCol];
+            this.contactNameCol, this.contactTitleCol];
 
         this.addressColsAndGroups = [this.addrInfoColGroup, this.locationColGroup, this.countryCol,
-        this.regionCol, this.locCityColGroup, this.cityCol, this.addressCol, this.contactInfoColGroup,
-        this.phoneCol, this.faxCol, this.postalCodeColGroup, this.postalCodeCol];
+            this.regionCol, this.locCityColGroup, this.cityCol, this.addressCol, this.contactInfoColGroup,
+            this.phoneCol, this.faxCol, this.postalCodeColGroup, this.postalCodeCol];
 
         this.colsAndGroupsNaturalOrder = [this.idCol].concat(this.genInfoColsAndGroups)
             .concat(this.addressColsAndGroups);
@@ -199,6 +204,7 @@ export class ColumnGroupFourLevelTestComponent implements OnInit {
         </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class ThreeGroupsThreeColumnsGridComponent {
@@ -251,6 +257,7 @@ export class ThreeGroupsThreeColumnsGridComponent {
         <igx-column #cityCol field="City"></igx-column>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColGroupsGridComponent {
@@ -290,6 +297,7 @@ export class NestedColGroupsGridComponent {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class DynamicColGroupsGridComponent {
@@ -359,6 +367,7 @@ export class DynamicColGroupsGridComponent {
         </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class StegosaurusGridComponent implements OnInit {
@@ -427,7 +436,7 @@ export class StegosaurusGridComponent implements OnInit {
 
     public ngOnInit() {
         this.genInfoColList = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
-        this.contactNameCol, this.contactTitleCol];
+            this.contactNameCol, this.contactTitleCol];
         this.postalCodeColList = [this.postalCodeColGroup, this.postalCodeCol];
         this.cityColList = [this.cityColGroup, this.cityCol];
         this.countryColList = [this.countryColGroup, this.countryCol];
@@ -484,6 +493,7 @@ export class StegosaurusGridComponent implements OnInit {
             </igx-column-group>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class BlueWhaleGridComponent {
@@ -526,6 +536,7 @@ export class BlueWhaleGridComponent {
             </igx-column-group>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class OneColPerGroupGridComponent {
@@ -566,6 +577,7 @@ export class OneColPerGroupGridComponent {
             </igx-column-group>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class NestedColumnGroupsGridComponent {
@@ -599,6 +611,7 @@ export class NestedColumnGroupsGridComponent {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
 export class DynamicGridComponent {
@@ -630,6 +643,7 @@ export class DynamicGridComponent {
         <igx-column #cityCol field="City"></igx-column>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent, IgxCellHeaderTemplateDirective]
 })
 export class NestedColGroupsWithTemplatesGridComponent {
@@ -687,6 +701,8 @@ export class NestedColGroupsWithTemplatesGridComponent {
         </igx-column-group>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnGroupComponent, IgxColumnComponent]
 })
-export class ColumnGroupHiddenInTemplateComponent extends ColumnGroupTestComponent { }
+export class ColumnGroupHiddenInTemplateComponent extends ColumnGroupTestComponent {
+}

@@ -77,7 +77,7 @@ _By design when the user presses the **Tab** key over the step header the focus 
    | contentTop| Whether the steps content should be displayed above the steps header when the stepper orientation is Horizontal. Default value is `false`. | `boolean` |
    | verticalAnimationType | Gets/sets the animation type of the stepper when the orientation direction is vertical. Default value is `grow`. | `VerticalAnimationType` |
    | horizontalAnimationType | Gets/sets the animation type of the stepper when the orientation direction is horizontal. Default value is `slide`. |`HorizontalAnimationType` |
-   | animationDuration | 320 | `number` |
+   | animationDuration | Gets/sets the animation duration in milliseconds. Default value is `320`, which is also used when the value is not a positive number. | `number` |
 
 #### Methods
    | Name           | Description               | Parameters             | Returns |
@@ -91,7 +91,7 @@ _By design when the user presses the **Tab** key over the step header the focus 
 
    | Name           | Description                                                             | Cancelable | Arguments |
    |----------------|-------------------------------------------------------------------------|------------|------------|
-   | activeStepChanging  | Emitted when the active step is about to change. | true       | `{ oldIndex: number, newIndex: number, owner: IgxStepperComponent, cancel: boolean }` |
+   | activeStepChanging  | Emitted when the active step is about to change. `oldIndex` is `-1` when there is no active step. | true       | `{ oldIndex: number, newIndex: number, owner: IgxStepperComponent, cancel: boolean }` |
    | activeStepChanged  | Emitted when the active step is changed.  | false      | `{ index: number, owner: IgxStepperComponent }` |
 ### IgxStepComponent
 
@@ -110,7 +110,7 @@ _By design when the user presses the **Tab** key over the step header the focus 
    | id | The id of the step. Bound to attr.id | `string` |
    | disabled        | Gets/sets whether the step is interactable. | `boolean` |
    | active       | Gets/sets whether the step is activе. Two-way data binding.                     | `boolean` |
-   | optional        | Gets/sets whether the step is optional.    | `boolean`           |
+   | optional        | Gets/sets whether the step is optional. In linear mode an invalid optional step does not prevent moving forward. | `boolean`           |
    | complete           | Gets/sets whether the step is completed.     | `boolean`               |
    | isValid         | Gets/sets whether the step is valid. Default value is `true`. | `boolean` |
 

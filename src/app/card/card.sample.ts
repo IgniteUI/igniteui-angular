@@ -1,11 +1,12 @@
 import {
-    Component,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
-    OnInit,
-    TemplateRef,
-    ViewChild,
-    ViewEncapsulation,
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
@@ -100,6 +101,7 @@ const cardFactory = (params: any): ICard => ({
     styleUrls: ['card.sample.scss'],
     templateUrl: 'card.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxButtonDirective,
@@ -124,6 +126,13 @@ export class CardSampleComponent implements OnInit {
     public orderInput: string = '';
 
     public panelConfig: PropertyPanelConfig = {
+        elevated: {
+            label: 'Elevated',
+            control: {
+                type: 'boolean',
+                defaultValue: false
+            }
+        },
         hideMedia: {
             label: 'Hide Media',
             control: {

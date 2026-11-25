@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxColumnComponent, IgxGridComponent, IgxGridEditingActionsComponent, IgxGridPinningActionsComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent } from 'igniteui-angular';
 
@@ -6,6 +6,7 @@ import { IRowDataCancelableEventArgs, IRowDataEventArgs, IgxActionStripComponent
     selector: 'app-grid-add-row',
     styleUrls: ['grid-add-row.sample.scss'],
     templateUrl: `grid-add-row.sample.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxActionStripComponent, IgxGridPinningActionsComponent, IgxGridEditingActionsComponent, IgxPaginatorComponent, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxButtonDirective, IgxSelectComponent, FormsModule, IgxSelectItemComponent, IgxInputGroupComponent, IgxInputDirective, IgxLabelDirective]
 })
 export class GridAddRowSampleComponent implements OnInit {
@@ -76,7 +77,12 @@ export class GridAddRowSampleComponent implements OnInit {
     }
 
     public add() {
-        this.grid.addRow({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative'});
+        let id = 'TEST';
+        let suffix = 1;
+        while (this.grid.data.some(record => record.ID === id)) {
+            id = `TEST-${suffix++}`;
+        }
+        this.grid.addRow({ ID: id, CompanyName: 'Test Company Name', ContactName: 'Test Contact Name', ContactTitle: 'Test Title'});
     }
 
     public beginAddRowAtIndex(index: string) {

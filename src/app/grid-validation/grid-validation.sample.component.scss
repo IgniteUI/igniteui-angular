@@ -2,6 +2,18 @@
     flex-flow: row wrap;
     padding: 2rem;
 }
+// Invalid rows tint the grid row tokens, so hover and selection still apply
+::ng-deep .invalid-row {
+    --_invalid: color-mix(in srgb, var(--ig-error-500) 20%, var(--ig-surface-500));
+    --_invalid-hover: color-mix(in srgb, var(--ig-error-500) 30%, var(--ig-surface-500));
+    --row-odd-background: var(--_invalid);
+    --row-even-background: var(--_invalid);
+    --body-column-border-color-odd: var(--_invalid);
+    --body-column-border-color-even: var(--_invalid);
+    --row-hover-background: var(--_invalid-hover);
+    --body-column-hover-border-color: var(--_invalid-hover);
+}
+
 .dialog__header {
     font-weight: 800;
 }

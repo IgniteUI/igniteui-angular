@@ -4,7 +4,7 @@
         <igx-splitter-bar [order]="pane.order + 1" role="separator"
             [type]="type"
             [pane]="pane"
-            [siblings]="getPaneSiblingsByOrder(pane.order + 1, index)"
+            [siblings]="[pane, panes.get(index + 1)!]"
             (moveStart)="onMoveStart($event)"
             (moving)="onMoving($event)"
             (movingEnd)="onMoveEnd($event)"

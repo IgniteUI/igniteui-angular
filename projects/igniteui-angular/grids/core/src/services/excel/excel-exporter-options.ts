@@ -28,9 +28,9 @@ export class IgxExcelExporterOptions extends IgxExporterOptionsBase {
      */
     public exportAsTable = true;
 
-    private _columnWidth: number;
-    private _rowHeight: number;
-    private _worksheetName: string;
+    private _columnWidth!: number;
+    private _rowHeight!: number;
+    private _worksheetName!: string;
 
     constructor(fileName: string) {
         super(fileName, '.xlsx');

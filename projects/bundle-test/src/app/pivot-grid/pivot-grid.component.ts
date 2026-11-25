@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IGX_PIVOT_GRID_DIRECTIVES } from 'igniteui-angular/grids/pivot-grid';
 import { IgxPivotDateDimension, IPivotConfiguration } from 'igniteui-angular/grids/core';
 
@@ -6,6 +6,7 @@ import { IgxPivotDateDimension, IPivotConfiguration } from 'igniteui-angular/gri
     selector: 'app-pivot-grid',
     templateUrl: './pivot-grid.component.html',
     styleUrls: ['./pivot-grid.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_PIVOT_GRID_DIRECTIVES]
 })
 export class PivotGridComponent {

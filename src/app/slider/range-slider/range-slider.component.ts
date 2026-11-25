@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxSliderComponent, IgxSliderType, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IRangeSliderValue } from 'igniteui-angular';
 
@@ -6,6 +6,7 @@ import { IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxSlider
     selector: 'app-range-slider',
     templateUrl: './range-slider.component.html',
     styleUrls: ['./range-slider.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, FormsModule, IgxInputGroupComponent, IgxLabelDirective, IgxInputDirective]
 })
 export class RangeSliderComponent {

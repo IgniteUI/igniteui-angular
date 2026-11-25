@@ -106,7 +106,7 @@ export class TemplateRefWrapper<C extends object> extends TemplateRef<C> {
 
 /** @internal */
 class TemplateRefWrapperContentContext {
-    public _id: string;
+    public _id!: string;
     public root: any;
     public templateFunction: any;
 }

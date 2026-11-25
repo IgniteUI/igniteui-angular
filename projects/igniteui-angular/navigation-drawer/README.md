@@ -1,6 +1,6 @@
 # IgxNavigationDrawer Component
 
-The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.  
+The **igx-nav-drawer** is a container element for side navigation, providing quick access between views. It can be used for navigation apps and with top-level views. Drawer will be hidden until invoked by the user.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/navdrawer)
 
 ## Dependencies
@@ -58,7 +58,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 |:----------|:----:|:------|
 | `id`| string | Unique identifier of the Grid. ID required to register with provided `IgxNavigationService` allow directives to target the control from other template files. |
 | `position` | string | Position of the Navigation Drawer. Can be "left"(default) or "right". Only has effect when not pinned.|
-| `enableGestures`| boolean | Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open, swipe toggle and pan drag. |
+| `enableGestures`| boolean | Enables the use of touch gestures to manipulate the drawer - such as swipe/pan from edge to open, swipe toggle and pan drag. Swipes require a recognized horizontal pan; movement that stays below 5 px does not toggle the drawer. |
 | `isOpen` | boolean | State of the drawer. |
 | `pin` | boolean | When pinned the drawer is relatively positioned instead of sitting above content. May require additional layout styling. |
 | `pinThreshold` | number | Minimum device width required for automatic pin to be toggled. Default is 1024, can be set to a falsy value to disable this behavior. |
@@ -86,7 +86,7 @@ The navigation drawer can either sit above content or be pinned alongside it and
 
 ## Modes
 
-Unpinned (elevated above content) mode is the normal behavior where the drawer sits above and applies a darkened overlay over all content. Generally used to provide a temporary navigation suitable for mobile devices. 
+Unpinned (elevated above content) mode is the normal behavior where the drawer sits above and applies a darkened overlay over all content. Generally used to provide a temporary navigation suitable for mobile devices.
 
 The drawer can be pinned to take advantage of larger screens, placing it within normal content flow with relative position. Depending on whether the app provides a way to toggle the drawer, the pinned mode can be used to achieve either [permanent or persistent behavior](https://material.io/guidelines/patterns/navigation-drawer.html#navigation-drawer-behavior).
 
@@ -138,13 +138,13 @@ This variant is enabled simply by the presence of an alternative mini template m
 <igx-nav-drawer id="navdrawer">
     <ng-template igxDrawer>
         <span igxDrawerItem [isHeader]="true"> Header </span>
-        <span igxDrawerItem igxRipple> 
+        <span igxDrawerItem igxRipple>
             <igx-icon>home</igx-icon>
             <span>Home</span>
         </span>
     </ng-template>
     <ng-template igxDrawerMini>
-        <span igxDrawerItem igxRipple> 
+        <span igxDrawerItem igxRipple>
             <igx-icon>home</igx-icon>
         </span>
     </ng-template>
@@ -188,15 +188,15 @@ export class AppComponent {
     ];
 }
 ```
-One way to tie in the active state is to directly use the [`routerLinkActive`](https://angular.io/api/router/RouterLinkActive) default functionality and pass the drawer items active class `igx-nav-drawer__item--active`, so the `<igx-nav-drawer>` template would look like:
+One way to tie in the active state is to directly use the [`routerLinkActive`](https://angular.io/api/router/RouterLinkActive) default functionality and pass the drawer items active class `igx-nav-drawer-item--active`, so the `<igx-nav-drawer>` template would look like:
 
 ```html
 <!-- ... -->
 <ng-template igxDrawer>
     <nav>
         <span *ngFor="let item of componentLinks" routerLink="{{item.link}}"
-            igxDrawerItem igxRipple 
-            routerLinkActive="igx-nav-drawer__item--active" >
+            igxDrawerItem igxRipple
+            routerLinkActive="igx-nav-drawer-item--active" >
                 {{item.name}}
         </span>
     </nav>

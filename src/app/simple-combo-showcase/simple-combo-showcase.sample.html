@@ -1,0 +1,40 @@
+<div class="simple-combo-sample">
+    <section class="simple-combo-sample__section">
+        <h1 class="simple-combo-sample__title">
+            Angular and WC simple combo next to each other
+        </h1>
+        <form class="simple-combo-sample__form">
+            <div class="simple-combo-sample__row simple-combo-sample__row--stretch">
+                <igx-simple-combo
+                    name="angularSimpleCombo"
+                    [placeholder]="properties.placeholder"
+                    type="border"
+                    [disabled]="properties.disabled"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''"
+                    [(ngModel)]="angularSimpleComboVal"
+                    [required]="properties.required">
+                    <label igxLabel>Angular Simple Combo</label>
+                    <igx-hint>Select a state</igx-hint>
+                </igx-simple-combo>
+                <igc-combo
+                    [name]="properties.name"
+                    [required]="properties.required"
+                    [disabled]="properties.disabled"
+                    [placeholder]="properties.placeholder"
+                    [singleSelect]="true"
+                    outlined
+                    label="WC Combo (Single Select)"
+                    [data]="items"
+                    [displayKey]="valueKeyVar"
+                    [valueKey]="valueKeyVar"
+                    [groupKey]="valueKeyVar ? 'region' : ''"
+                >
+                    <span slot="helper-text">Select a state</span>
+                </igc-combo>
+            </div>
+        </form>
+    </section>
+</div>

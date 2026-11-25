@@ -13,13 +13,16 @@ export class IgxPivotColumnResizingService extends IgxColumnResizingService {
     /**
      * @hidden
      */
-    public rowHeaderGroup: PivotRowHeaderGroupType;
+    public rowHeaderGroup!: PivotRowHeaderGroupType;
 
     /**
      * @hidden
      */
     public override getColumnHeaderRenderedWidth() {
-        return this.rowHeaderGroup.header.nativeElement.getBoundingClientRect().width;
+        const headerWidth = this.rowHeaderGroup.header.nativeElement.getBoundingClientRect().width;
+        // A collapsed or summary header spans several dimensions, but only the first one is resized.
+        const rowDimWidth = this.rowHeaderGroup.grid.rowDimensionWidthToPixels(this.rowHeaderGroup.parent.rootDimension);
+        return rowDimWidth < headerWidth ? rowDimWidth : headerWidth;
     }
 
     protected override _handlePixelResize(diff: number, column: ColumnType) {

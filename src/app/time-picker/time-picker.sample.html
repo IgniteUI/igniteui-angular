@@ -1,7 +1,7 @@
 <div class="columns-container">
     <article class="timepicker-column">
         <h4 class="sample-title">Angular Time Picker with Reactive Form</h4>
-        <div class="preview" [igSize]="properties.size">
+        <div class="preview">
             <form [formGroup]="reactiveForm">
                 <igx-time-picker
                     #tpReactive
@@ -24,7 +24,7 @@
     <article class="timepicker-column">
         <h4 class="sample-title">Time Picker with Date value binding</h4>
         <p class="sample-description">{{showDate(date)}}</p>
-        <div class="preview" [igSize]="properties.size">
+        <div class="preview">
             <igx-time-picker
             #tp
             [mode]="properties.mode"

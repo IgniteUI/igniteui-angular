@@ -2,6 +2,7 @@
     @if (grid.summariesMargin) {
         <div
             class="igx-grid__summaries-patch"
+            [class.igx-grid__summaries-patch--grouped]="!!grid.groupingExpressions?.length"
             [style.min-width.px]="grid.summariesMargin"
             [style.flex-basis.px]="grid.summariesMargin"
             (pointerdown)="$event.preventDefault()"
@@ -21,7 +22,7 @@
             [gridResourceStrings]="grid.resourceStrings"
             [rowIndex]="index"
             [firstCellIndentation]="firstCellIndentation"
-            [summaryResults]="getColumnSummaries(col.field)"
+            [summaryResults]="getColumnSummaries(col.field)!"
             [summaryTemplate]="col.summaryTemplate"
             [hasSummary]="col.hasSummary"
             [summaryFormatter]="col.summaryFormatter"
@@ -51,7 +52,7 @@
             [gridResourceStrings]="grid.resourceStrings"
             [firstCellIndentation]="firstCellIndentation"
             [rowIndex]="index"
-            [summaryResults]="getColumnSummaries(col.field)"
+            [summaryResults]="getColumnSummaries(col.field)!"
             [summaryTemplate]="col.summaryTemplate"
             [hasSummary]="col.hasSummary"
             [active]="isCellActive(col.visibleIndex)"

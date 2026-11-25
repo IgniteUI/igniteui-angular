@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxMonthPickerComponent, IgxButtonDirective } from 'igniteui-angular';
 
@@ -6,6 +6,7 @@ import { IgxMonthPickerComponent, IgxButtonDirective } from 'igniteui-angular';
     selector: 'app-monthpicker',
     styleUrls: ['./month-picker.sample.scss'],
     templateUrl: './month-picker.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxMonthPickerComponent, IgxButtonDirective, FormsModule]
 })
 export class MonthPickerSampleComponent {

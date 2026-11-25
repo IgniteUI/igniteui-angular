@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-lazy-icon-sample',
     styleUrls: ['./lazyIcon.sample.css'],
     templateUrl: 'lazyIcon.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
 export class LazyIconSampleComponent implements OnInit {

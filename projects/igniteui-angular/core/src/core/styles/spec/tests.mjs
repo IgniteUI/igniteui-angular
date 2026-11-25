@@ -1,8 +1,9 @@
 import * as path from 'path';
 import * as sassTrue from 'sass-true';
-import { fileURLToPath } from "url";
-import {} from 'jasmine';
+import { fileURLToPath } from 'url';
+import { describe, it } from 'vitest';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const file = path.join(__dirname, '_index.scss');
-sassTrue.runSass({ describe, it }, file, { loadPaths: ['node_modules'] });
+// sass-embedded's sync compiler can garble multi-byte output
+sassTrue.runSass({ describe, it, sass: 'sass' }, file, { loadPaths: ['node_modules'] });

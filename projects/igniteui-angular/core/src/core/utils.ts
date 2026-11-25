@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, InjectionToken, PLATFORM_ID, inject, afterNextRender, type AfterRenderRef, type Injector, type NgZone } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { isDevMode } from '@angular/core';
@@ -8,6 +8,88 @@ import type { IgxTheme } from '../services/theme/theme.token';
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
 
+/** @hidden @internal */
+export type RenderPhase = 'earlyRead' | 'write' | 'mixedReadWrite' | 'read';
+
+interface AfterNextRenderSpec {
+    earlyRead?: () => void;
+    write?: () => void;
+    mixedReadWrite?: () => void;
+    read?: () => void;
+}
+
+/**
+ * Schedules `callback` to run once after Angular finishes the next render pass.
+ *
+ * Central scheduling point for all work that previously waited on `NgZone.onStable`,
+ * which never emits in zoneless applications. Every deferred render callback in the
+ * library goes through here, so if the scheduling needs to change (different phase,
+ * timing or API), change it in this single place.
+ *
+ * @hidden @internal
+ */
+export function runAfterRenderOnce(injector: Injector, callback: () => void, phase: RenderPhase = 'mixedReadWrite'): AfterRenderRef {
+    const spec: AfterNextRenderSpec = {};
+    spec[phase as keyof AfterNextRenderSpec] = callback;
+    return afterNextRender(spec, { injector });
+}
+
+/**
+ * How long a virtualized container keeps its scrolling class after the last scroll. It is longer than
+ * the throttle of the grid scroll (up to 60ms) and the frames that render the items for the last scroll,
+ * so that the class is kept for a whole scroll gesture.
+ *
+ * @hidden @internal
+ */
+export const SCROLLING_CLASS_DELAY = 150;
+
+/**
+ * Keeps a class on the element of a virtualized container while it scrolls.
+ *
+ * The container reuses the views of its items for other records while it scrolls, so the components
+ * in them that animate their state changes (e.g. a chip or a checkbox) disable their transitions under
+ * the class and show the state of the new record right away.
+ *
+ * @hidden @internal
+ */
+export class ScrollingClassController {
+    private _timer: ReturnType<typeof setTimeout> | null = null;
+    private _element: HTMLElement | null = null;
+
+    constructor(private readonly zone: NgZone, private readonly className: string) { }
+
+    /**
+     * Adds the class to the element and removes it once the element has not scrolled for `SCROLLING_CLASS_DELAY`.
+     *
+     * @param element The element of the virtualized container.
+     */
+    public scrolled(element: HTMLElement | null | undefined): void {
+        if (!element) {
+            return;
+        }
+        if (this._element !== element) {
+            this._element?.classList.remove(this.className);
+            this._element = element;
+            element.classList.add(this.className);
+        }
+        if (this._timer !== null) {
+            clearTimeout(this._timer);
+        }
+        this.zone.runOutsideAngular(() => {
+            this._timer = setTimeout(() => this.clear(), SCROLLING_CLASS_DELAY);
+        });
+    }
+
+    /** Removes the class and cancels its scheduled removal, e.g. when the container is destroyed. */
+    public clear(): void {
+        if (this._timer !== null) {
+            clearTimeout(this._timer);
+            this._timer = null;
+        }
+        this._element?.classList.remove(this.className);
+        this._element = null;
+    }
+}
 
 /**
  * Returns true if the element's direction is left-to-right
@@ -80,7 +162,7 @@ export const cloneHierarchicalArray = (array: any[], childDataKey: any): any[] =
  * @param obj Source to copy prototype and descriptors from
  * @returns New object with cloned prototype and property descriptors
  */
-export const copyDescriptors = (obj) => {
+export const copyDescriptors = (obj: any) => {
     if (obj) {
         return Object.create(
             Object.getPrototypeOf(obj),
@@ -98,9 +180,10 @@ export const copyDescriptors = (obj) => {
  * @returns Obj1 with merged cloned keys from Obj2
  * @hidden
  */
-export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue, srcValue) => {
+export const mergeObjects = (obj1: any, obj2: any): any => mergeWith(obj1, obj2, (objValue: any, srcValue: any) => {
     if (Array.isArray(srcValue)) {
-        return objValue = srcValue;
+        objValue = srcValue;
+        return objValue;
     }
 });
 
@@ -126,7 +209,7 @@ export const cloneValue = (value: any): any => {
     }
 
     if (isObject(value)) {
-        const result = {};
+        const result: Record<string, any> = {};
 
         for (const key of Object.keys(value)) {
             if (key === "externalObject") {
@@ -168,7 +251,7 @@ export const cloneValueCached = (value: any, cache: Map<any, any>): any => {
             return cache.get(value);
         }
 
-        const result = {};
+        const result: Record<string, any> = {};
         cache.set(value, result);
 
         for (const key of Object.keys(value)) {
@@ -238,7 +321,7 @@ export const isDate = (value: any): value is Date => {
  * @returns: `boolean`
  * @hidden
  */
-export const isEqual = (obj1, obj2): boolean => {
+export const isEqual = (obj1: any, obj2: any): boolean => {
     if (isDate(obj1) && isDate(obj2)) {
         return obj1.getTime() === obj2.getTime();
     }
@@ -275,7 +358,7 @@ export class PlatformUtil {
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
         /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
-    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)) : 0;
+    public browserVersion = this.isBrowser ? parseFloat(navigator.userAgent.match(/Version\/([\d.]+)/)?.at(1)!) : 0;
 
     /** @hidden @internal */
     public isElements = inject(ELEMENTS_TOKEN, { optional: true });
@@ -312,16 +395,15 @@ export class PlatformUtil {
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      *
      * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+     * ```
      *
      * @remarks
-     * The last parameter is useful when the size of the element to measure is modified by a
-     * parent element that has explicit size. In such cases the calculated size is never lower
-     * and the function may instead remove the parent size while measuring to get the correct value.
-     * ```
+     * While measuring, the last parameter (usually the node itself) is laid out at its `max-content` width,
+     * so neither its explicit width nor a stretching parent affects the result.
      */
     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
-        let nodeStyles: string[];
+        let nodeStyles!: string[];
 
         if (!this.isFirefox) {
             overflow = node.style.overflow;
@@ -332,7 +414,8 @@ export class PlatformUtil {
         if (sizeHoldingNode) {
             const style = sizeHoldingNode.style;
             nodeStyles = [style.width, style.minWidth, style.flexBasis];
-            style.width = '';
+            // not '' - a flex or grid parent may stretch the node
+            style.width = 'max-content';
             style.minWidth = '';
             style.flexBasis = '';
         }
@@ -343,7 +426,7 @@ export class PlatformUtil {
 
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
-            node.style.overflow = overflow;
+            node.style.overflow = overflow!;
         }
 
         if (sizeHoldingNode) {
@@ -402,7 +485,7 @@ export class PlatformUtil {
  * @hidden
  */
 export const flatten = (arr: any[]) => {
-    let result = [];
+    let result: any[] = [];
 
     arr.forEach(el => {
         result.push(el);
@@ -415,6 +498,7 @@ export const flatten = (arr: any[]) => {
 };
 
 export interface CancelableEventArgs {
+    /* csSuppress */
     /**
      * Provides the ability to cancel the event.
      */
@@ -453,6 +537,25 @@ export const NAVIGATION_KEYS = new Set([
     'spacebar',
     ' '
 ]);
+
+/** Input types on which Enter has its own activation behavior instead of submitting the form. */
+const ACTIVATABLE_INPUT_TYPES = new Set(['button', 'submit', 'reset', 'image', 'file', 'color']);
+
+/**
+ * @hidden
+ * @internal
+ *
+ * Cancels the implicit submission of the surrounding form, which the browser performs as the default action
+ * of an Enter keydown in an `<input>`.
+ * Only inputs which have a form owner and no activation behavior of their own are affected.
+ */
+export function preventImplicitSubmission(event: KeyboardEvent): void {
+    const target = event.composedPath()[0];
+    if (event.key === 'Enter' && !event.isComposing && target instanceof HTMLInputElement &&
+        target.form && !ACTIVATABLE_INPUT_TYPES.has(target.type)) {
+        event.preventDefault();
+    }
+}
 
 /**
  * @hidden
@@ -532,7 +635,7 @@ export function resolveNestedPath<T extends object, U>(obj: unknown, pathParts: 
 
     for (const key of pathParts) {
         if (_isObject(current) && key in (current as T)) {
-            current = current[key];
+            current = (current as any)[key];
         } else {
             return defaultValue;
         }
@@ -563,14 +666,14 @@ export const reverseMapper = (path: string, value: any) => {
     let mapping: any;
 
     // Initial binding for first level bindings
-    obj[_prop] = value;
+    (obj as any)[_prop!] = value;
     mapping = obj;
 
     parts.forEach(prop => {
         // Start building the hierarchy
-        mapping[_prop] = {};
+        mapping[_prop!] = {};
         // Go down a level
-        mapping = mapping[_prop];
+        mapping = mapping[_prop!];
         // Bind the value and move the key
         mapping[prop] = value;
         _prop = prop;
@@ -654,10 +757,19 @@ export function normalizeURI(path: string) {
     return path?.split('/').map(encodeURI).join('/');
 }
 
+/**
+ * Reads the theme that is actually in effect at a given DOM position, based on the
+ * live `--ig-theme` custom property (see `themes/_scoping.scss`'s `themed()` mixin,
+ * the single source of truth for coupling emitted CSS to the runtime theme signal).
+ * `--ig-theme` inherits, so this reflects the nearest CSS-scoped `theme(...)` call
+ * (if any), not necessarily the app's root/global theme.
+ *
+ * @param el - The element to read the effective theme for.
+ */
 export function getComponentTheme(el: Element) {
     return globalThis.window
         ?.getComputedStyle(el)
-        .getPropertyValue('--theme')
+        .getPropertyValue('--ig-theme')
         .trim() as IgxTheme;
 }
 

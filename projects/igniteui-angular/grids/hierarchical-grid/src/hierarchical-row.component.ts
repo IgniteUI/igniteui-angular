@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { IgxRowDirective } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { GridType } from 'igniteui-angular/grids/core';
 import { IgxGridNotGroupedPipe, IgxGridCellStylesPipe, IgxGridCellStyleClassesPipe, IgxGridDataMapperPipe, IgxGridTransactionStatePipe } from 'igniteui-angular/grids/core';
 import { IgxRowDragDirective } from 'igniteui-angular/grids/core';
 import { NgTemplateOutlet, NgClass, NgStyle } from '@angular/common';
@@ -28,28 +27,28 @@ import { IgxCheckboxComponent } from 'igniteui-angular/checkbox';
 })
 export class IgxHierarchicalRowComponent extends IgxRowDirective {
     @ViewChild('expander', { read: ElementRef })
-    public expander: ElementRef<HTMLElement>;
+    public expander!: ElementRef<HTMLElement>;
 
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
-    protected override _cells: QueryList<IgxHierarchicalGridCellComponent>;
+    protected override _cells!: QueryList<IgxHierarchicalGridCellComponent>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-    protected defaultExpandedTemplate: TemplateRef<any>;
+    protected defaultExpandedTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultEmptyTemplate', { read: TemplateRef, static: true })
-    protected defaultEmptyTemplate: TemplateRef<any>;
+    protected defaultEmptyTemplate!: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-    protected defaultCollapsedTemplate: TemplateRef<any>;
+    protected defaultCollapsedTemplate!: TemplateRef<any>;
 
     protected expanderClass = 'igx-grid__hierarchical-expander';
     protected rolActionClass = 'igx-grid__tr-action';
@@ -59,7 +58,8 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
      */
     public get expanderClassResolved() {
         return {
-            [`${this.expanderClass} ${this.rolActionClass}`]: !this.pinned || this.disabled,
+            [this.expanderClass]: true,
+            [this.rolActionClass]: !this.pinned || this.disabled,
             [`${this.expanderClass}--empty`]: this.pinned && !this.disabled
         };
     }
@@ -87,7 +87,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     }
 
     public override get hasChildren() {
-        return !!this.grid.childLayoutKeys.length;
+        return !!this.grid.childLayoutKeys!.length;
     }
 
     /**
@@ -101,7 +101,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
     /**
      * @hidden
      */
-    public expanderClick(event) {
+    public expanderClick(event: MouseEvent) {
         event.stopPropagation();
         this.toggle();
     }
@@ -116,8 +116,6 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         if (this.added) {
             return;
         }
-        // K.D. 28 Feb, 2022 #10634 Don't trigger endEdit/commit upon row expansion state change
-        // this.endEdit(this.grid.rootGrid);
         this.grid.gridAPI.set_row_expansion_state(this.key, !this.expanded);
         this.grid.cdr.detectChanges();
     }
@@ -154,17 +152,5 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective {
         } else {
             return this.grid.rowCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
-    }
-
-    // TODO: consider moving into CRUD
-    protected endEdit(grid: GridType) {
-        if (grid.gridAPI.crudService.cellInEditMode) {
-            grid.gridAPI.crudService.endEdit();
-        }
-        grid.gridAPI.getChildGrids(true).forEach(g => {
-            if (g.gridAPI.crudService.cellInEditMode) {
-                g.gridAPI.crudService.endEdit();
-            }
-        });
     }
 }

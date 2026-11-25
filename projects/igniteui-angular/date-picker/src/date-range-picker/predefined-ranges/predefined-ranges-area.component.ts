@@ -30,7 +30,7 @@ export class IgxPredefinedRangesAreaComponent {
         return [...base, ...(this.customRanges ?? [])];
     }
 
-    public trackByLabel = (i: number, r: CustomDateRange) => r.label;
+    public trackByLabel = (_i: number, r: CustomDateRange) => r.label;
 
     public onSelect(range: DateRange) {
         this.rangeSelect.emit(range);

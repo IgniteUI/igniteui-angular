@@ -1,5 +1,5 @@
 /**
- * IgxTreeGrid - Tree grid component for hierarchical data
+ * Tree grid - Tree grid component for hierarchical data
  *
  * Import tree-grid-specific components and re-export core grid functionality
  */

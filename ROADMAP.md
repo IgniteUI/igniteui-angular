@@ -2,28 +2,65 @@
 
 # Current Milestone
 
-## Milestone 43, version 22.0 (Due by May, 2026)
-1. Support for Angular 22
+## Milestone 47, version 22.4 (Due Jan 19, 2027)
+
+1. `igxMask` parity with `igc-mask-input` - undo/redo history, validation of unfilled required positions, select on focus, digits from all Unicode numbering systems [#17811](https://github.com/IgniteUI/igniteui-angular/issues/17811)
+2. Native CSS anchor positioning for `IgxOverlayService` [#17765](https://github.com/IgniteUI/igniteui-angular/issues/17765)
+3. Group header selection in `IgxCombo`
+4. Optimizing `IgxGrid` search for big data sets [#17820](https://github.com/IgniteUI/igniteui-angular/issues/17820)
 
 ## Going down the road
 
-1. Transition the library to signals
-2. Zoneless support
+1. Transition the whole library to signals [RFC live](https://github.com/IgniteUI/igniteui-angular/discussions/17796)
+2. Grid formula & calculated fields
+3. Grid auto-fill functionality 
+4. Integrating the Virtual Scroll component in IgxGrid, replacing the current igxFor* based virtualization
 
 # Previous Milestone
+
+## Milestone 46, version 22.3 (Released Nov 17, 2026)
+1. **[DONE]** Drag & Drop - allow cancelling an in-progress drag [#17735](https://github.com/IgniteUI/igniteui-angular/issues/17735)
+2. **[DONE]** Templating support for `IgxCalendar` days [#17822](https://github.com/IgniteUI/igniteui-angular/issues/17822)
+3. **[DONE]** Vertical tabs - new `headerPosition` input for `IgxTabsComponent` [#1982](https://github.com/IgniteUI/igniteui-angular/issues/1982)
+4. **[DONE]** Ignite UI Theming 30.0.0 - new contrast-based `fitted` palette generator and surface roles
+5. **[DONE]** Grid validation - new `validationTooltipTrigger` input to show the validation error tooltip only on error icon hover [#17345](https://github.com/IgniteUI/igniteui-angular/issues/17345)
+
+## Milestone 45, version 22.2 (Released Sep 30, 2026)
+1. **[DONE]** Color Picker component [#12821](https://github.com/IgniteUI/igniteui-angular/issues/12821)
+2. **[DONE]** Breadcrumb component [#6642](https://github.com/IgniteUI/igniteui-angular/issues/6642)
+3. **[DONE]** QR Code component
+4. **[DONE]** Virtual Scroll Component replacing the virtual igxFor* directive
+5. **[DONE]** Signal Forms support
+6. **[DONE]** Migration of IgxCombo, IgxSimpleCombo and Excel-style Filtering list to using the Virtual Scroll component
+
+## Milestone 44, version 22.1 (Released Aug 26th, 2026)
+1. **[DONE]** Full zoneless support - the library no longer depends on `NgZone` for change detection, so applications can run zoneless or keep using Zone.js with no behavioral differences
+2. **[DONE]** Scope component styles to component - The `tokens()` mixin is now the single way to apply a component theme, replacing the per-component wrapper and typography mixins across the rest of the library [#13770](https://github.com/IgniteUI/igniteui-angular/issues/13770)
+3. **[DONE]** Strict TypeScript - the library is built with `strict: true` and `strictTemplates: true`, so the shipped typings are more accurate [#17483](https://github.com/IgniteUI/igniteui-angular/pull/17483)
+4. **[DONE]** Removed the `hammerjs` peer dependency - all touch gesture support is now implemented with native Pointer and Touch Events
+5. **[DONE]** `IgxDividerComponent` replaces `IgxDividerDirective`
+6. **[DONE]** Scoped, tree-shakable component styles - structural styles ship inside each component's own bundle instead of a single global stylesheet, making the pre-built themes roughly half the size [#15125](https://github.com/IgniteUI/igniteui-angular/pull/15125)
+
+## Milestone 43, version 22.0 (Released Jun 24th, 2026)
+1. **[DONE]** Support for Angular 22
+2. **[DONE]** Derived themes for the Grid, Excel Filtering, Grid Toolbar, Paginator, Column Actions and Query Builder - nested buttons, icons, inputs, dropdowns, checkboxes, scrollbars and chips derive their tokens from the parent component theme
+3. **[DONE]** New dedicated `excel-filtering-theme()` for styling the Excel Style Filtering
+4. **[DONE]** `IgxSelectComponent` - `AutoPositionStrategy` is now the default positioning strategy; the new publicly exported `IgxSelectOverlapPositionStrategy` preserves the previous behavior
+5. **[DONE]** `IgxInputGroupComponent`, `IgxSelectComponent`, `IgxDatePickerComponent`, `IgxDateRangePickerComponent`, `IgxTimePickerComponent` - default `type` changed from `line` to `box`
+6. **[DONE]** `IgxCarouselComponent` - improved default tab order, focus now flows starting with the active slide indicator
 
 ## Milestone 42, version 21.2 (Released Apr 27th, 2026), [Release Blog 21.2](https://www.infragistics.com/blogs/ignite-ui-cli-mcp-release)
 1. **[DONE]** `IgxCombo`, `IgxSimpleCombo` - Introduced `selectionChanged` event and `disableClear` input
 2. **[DONE]** `IgxSnackbarComponent`, `IgxToastComponent` - New `positioning` input for container-based placement
 3. **[DONE]** `IgxOverlayService` - New `createAbsoluteOverlaySettings` overload accepting `useContainerStrategy`
-4. **[DONE]** AI Copilot Skill: Generate Angular views from design images (screenshots, mockups, wireframes)
-5. **[DONE]** AI Copilot Skills improvements for Components, Grids, and Theming
+4. **[DONE]** Agent Skills: Generate Angular views from design images (screenshots, mockups, wireframes)
+5. **[DONE]** Agent Skills improvements for Components, Grids, and Theming
 
 ## Milestone 41, version 21.1 (Released Feb 17th, 2026), [Release Blog 21.1](https://www.infragistics.com/blogs/ignite-ui-for-angular-21-1)
 1. **[DONE]** HTML Popover API integration in `IgxOverlayService` and `IgxNavigationDrawer`
 2. **[DONE]** `IgxGridLiteComponent` Grid Lite component _(Developer Preview)_
 3. **[DONE]** `IgxPdfExporterService` - Unicode character support with custom TrueType fonts
-4. **[DONE]** AI Copilot Skills for Components, Data Grids, and Theming & Styling (including MCP server support)
+4. **[DONE]** Copilot Skills for Components, Data Grids, and Theming & Styling (including MCP server setup)
 5. **[DONE]** Grids performance improvements
 6. **[DONE]** New `Intl`-based localization implementation for all components
 

@@ -1,5 +1,5 @@
-import { ViewChild, Component, DebugElement, OnInit, QueryList } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ViewChild, Component, DebugElement, OnInit, QueryList, ChangeDetectionStrategy } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -8,22 +8,23 @@ import { CellType, IgxColumnComponent, IgxGridDetailTemplateDirective, IgxGridMR
 import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
+import { frames, nextFrame, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { clearGridSubs, setupGridScrollDetection } from '../../../test-utils/helper-utils.spec';
 import { GridRowConditionalStylingComponent } from '../../../test-utils/grid-base-components.spec';
 import { IgxColumnLayoutComponent } from 'igniteui-angular/grids/core';
 import { ColumnPinningPosition, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
-    const DEBOUNCE_TIME = 60;
+    const PINNED_ROW_HEIGHT_TOLERANCE = 2;
 
     let fix;
     let grid: IgxGridComponent;
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
                 GridRowConditionalStylingComponent,
@@ -38,7 +39,7 @@ describe('Row Pinning #grid', () => {
                 IgxGridMRLNavigationService
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('', () => {
         beforeEach(() => {
@@ -77,8 +78,8 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should pin rows to bottom.', () => {
@@ -116,8 +117,8 @@ describe('Row Pinning #grid', () => {
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should allow pinning row at specified index via API.', () => {
@@ -146,7 +147,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinning on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             let row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -174,7 +175,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit correct rowPinning arguments on pin/unpin.', () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
 
             const row = grid.getRowByIndex(5);
             const rowID = row.key;
@@ -230,7 +231,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should emit rowPinned on pin/unpin.', () => {
-            spyOn(grid.rowPinned, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinned, 'emit');
 
             const row = grid.getRowByIndex(0);
             const rowID = row.key;
@@ -257,7 +258,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it(`Should be able to cancel rowPinning on pin/unpin event.`, () => {
-            spyOn(grid.rowPinning, 'emit').and.callThrough();
+            vi.spyOn(grid.rowPinning, 'emit');
             let sub = grid.rowPinning.subscribe((e: IPinRowEventArgs) => {
                 e.cancel = true;
             });
@@ -343,6 +344,16 @@ describe('Row Pinning #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).key).toBe(fix.componentInstance.data[1]);
         });
 
+        it('should return false and not emit rowPinning when unpinning a row that is not pinned', () => {
+            vi.spyOn(grid.rowPinning, 'emit');
+
+            expect(grid.unpinRow(fix.componentInstance.data[1])).toBe(false);
+            fix.detectChanges();
+
+            expect(grid.rowPinning.emit).not.toHaveBeenCalled();
+            expect(grid.pinnedRows.length).toBe(0);
+        });
+
         it('should pin/unpin via row API methods.', () => {
             // pin 2nd row
             let row = grid.gridAPI.get_row_by_index(1);
@@ -406,8 +417,8 @@ describe('Row Pinning #grid', () => {
             const rowType = grid.getRowByIndex(1);
 
             expect(renderedRow).toBeDefined();
-            expect(renderedRow.disabled).toBeTrue();
-            expect(rowType.disabled).toBeTrue();
+            expect(renderedRow.disabled).toBeTruthy();
+            expect(rowType.disabled).toBeTruthy();
         });
 
         it('should search in both pinned and unpinned rows.', () => {
@@ -538,8 +549,8 @@ describe('Row Pinning #grid', () => {
             expect(pinRowContainer.length).toBe(1);
 
             fix.detectChanges();
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ID', 'B', IgxStringFilteringOperand.instance().condition('startsWith'), false);
             fix.detectChanges();
@@ -549,8 +560,8 @@ describe('Row Pinning #grid', () => {
 
             fix.detectChanges();
             expect(grid.pinnedRowHeight).toBe(0);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should return correct filterData collection.', () => {
@@ -610,12 +621,12 @@ describe('Row Pinning #grid', () => {
             const row = grid.gridAPI.get_row_by_index(0);
             row.pinned = true;
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.pinnedRows[0]);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
 
@@ -881,9 +892,9 @@ describe('Row Pinning #grid', () => {
 
             // Should emit twice: once for unpin (ALFKI) and once for re-pin (ALFKI_RENAMED)
             expect(rowPinningEvents.length).toBe(2);
-            expect(rowPinningEvents[0].isPinned).toBeFalse();
+            expect(rowPinningEvents[0].isPinned).toBe(false);
             expect(rowPinningEvents[0].rowKey).toBe('ALFKI');
-            expect(rowPinningEvents[1].isPinned).toBeTrue();
+            expect(rowPinningEvents[1].isPinned).toBe(true);
             expect(rowPinningEvents[1].rowKey).toBe('ALFKI_RENAMED');
         });
 
@@ -1071,8 +1082,8 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 1 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(grid.renderedRowHeight + 2);
-            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            const expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
 
         it('should keep the scrollbar sizes correct when partially filtering out pinned records', () => {
@@ -1083,16 +1094,16 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
             // 4 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(4 * grid.renderedRowHeight + 2);
-            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            let expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
 
             grid.filter('ContactTitle', 'Owner', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
             // 2 records pinned + 2px border
             expect(grid.pinnedRowHeight).toBe(2 * grid.renderedRowHeight + 2);
-            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - 18 - grid.theadRow.nativeElement.offsetHeight;
-            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
+            expectedHeight = parseInt(grid.height, 10) - grid.pinnedRowHeight - (2 + grid.scrollSize) - grid.theadRow.nativeElement.offsetHeight;
+            expect(grid.calcHeight - expectedHeight).toBeLessThanOrEqual(PINNED_ROW_HEIGHT_TOLERANCE);
         });
     });
 
@@ -1107,7 +1118,7 @@ describe('Row Pinning #grid', () => {
         });
 
         it('should enter edit mode for the next editable cell when tabbing.', () => {
-            const  gridContent = GridFunctions.getGridContent(fix);
+            const gridContent = GridFunctions.getGridContent(fix);
             grid.gridAPI.get_row_by_index(0).pin();
             grid.gridAPI.get_row_by_index(3).pin();
 
@@ -1143,7 +1154,7 @@ describe('Row Pinning #grid', () => {
             expect(fourthEditable.editMode).toBeTruthy();
         });
         it('should enter edit mode for the previous editable cell when shift+tabbing.', () => {
-            const  gridContent = GridFunctions.getGridContent(fix);
+            const gridContent = GridFunctions.getGridContent(fix);
             grid.gridAPI.get_row_by_index(0).pin();
             grid.gridAPI.get_row_by_index(3).pin();
 
@@ -1200,16 +1211,16 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const lastRowCell =  grid.getRowByIndex(27).cells[1];
+            const lastRowCell = grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             // expect(selectedCell).toBe(lastRowCell);
             expect(selectedCell.row.index).toBe(lastRowCell.row.index);
@@ -1220,21 +1231,21 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
             grid.navigateTo(10);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const secondRowCell =  grid.getRowByIndex(1).cells[1];
+            const secondRowCell = grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(secondRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(secondRowCell.column.visibleIndex);
@@ -1244,25 +1255,25 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
             grid.navigateTo(27);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
 
             const lastRowCell = (grid.gridAPI.get_row_by_index(27).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const firstRowCell =  grid.getRowByIndex(0).cells[1];
+            const firstRowCell = grid.getRowByIndex(0).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(firstRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(firstRowCell.column.visibleIndex);
@@ -1275,17 +1286,17 @@ describe('Row Pinning #grid', () => {
 
             const thirdRowCell = (grid.gridAPI.get_row_by_index(2).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(thirdRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(2);
             expect(grid.navigation.activeNode.column).toBe(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const secondRowCell =  grid.getRowByIndex(1).cells[1];
+            const secondRowCell = grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(secondRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(secondRowCell.column.visibleIndex);
@@ -1296,26 +1307,26 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(5).pin();
 
             grid.navigateTo(26);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowCell = (grid.gridAPI.get_row_by_index(27).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(lastRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(27);
             expect(grid.navigation.activeNode.column).toBe(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const firstRowCell =  grid.getRowByIndex(0).cells[1];
+            const firstRowCell = grid.getRowByIndex(0).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(firstRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(firstRowCell.column.visibleIndex);
@@ -1328,16 +1339,16 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(27).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowUp', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const lastUnpinnedRowCell =  grid.getRowByIndex(26).cells[1];
+            const lastUnpinnedRowCell = grid.getRowByIndex(26).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(lastUnpinnedRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(lastUnpinnedRowCell.column.visibleIndex);
@@ -1351,13 +1362,13 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent, false, false, true);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const lastRowCell = grid.getRowByIndex(27).cells[1];
@@ -1372,28 +1383,28 @@ describe('Row Pinning #grid', () => {
             fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
             grid.gridAPI.get_row_by_index(5).pin();
             grid.gridAPI.get_row_by_index(1).pin();
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             grid.navigateTo(26);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(26).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
             expect(grid.navigation.activeNode.row).toBe(26);
             expect(grid.navigation.activeNode.column).toBe(1);
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
-            const lastRowCell =  grid.getRowByIndex(27).cells[1];
+            const lastRowCell = grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(lastRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(lastRowCell.column.visibleIndex);
@@ -1407,14 +1418,14 @@ describe('Row Pinning #grid', () => {
 
             const firstRowCell = (grid.gridAPI.get_row_by_index(0).cells as QueryList<CellType>).toArray()[1];
             UIInteractions.simulateClickAndSelectEvent(firstRowCell);
-            await wait(DEBOUNCE_TIME);
+            await nextFrame();
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('ArrowDown', gridContent);
-            await wait(DEBOUNCE_TIME);
+            await frames(2);
             fix.detectChanges();
 
-            const lastRowCell =  grid.getRowByIndex(1).cells[1];
+            const lastRowCell = grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell.row.index).toBe(lastRowCell.row.index);
             expect(selectedCell.column.visibleIndex).toBe(lastRowCell.column.visibleIndex);
@@ -1430,7 +1441,7 @@ describe('Row Pinning #grid', () => {
 
         it('should pin rows on OnInit.', () => {
             fix.detectChanges();
-            expect(grid.hasPinnedRecords).toBeTrue();
+            expect(grid.hasPinnedRecords).toBe(true);
         });
     });
 
@@ -1448,14 +1459,14 @@ describe('Row Pinning #grid', () => {
             const fourthRow = grid.gridAPI.get_row_by_index(3);
 
             expect(firstRow).toBeDefined();
-            expect(firstRow.nativeElement.classList.contains('eventRow')).toBeTrue();
-            expect(firstRow.nativeElement.classList.contains('oddRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBeFalse();
-            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBeTrue();
+            expect(firstRow.nativeElement.classList.contains('eventRow')).toBe(true);
+            expect(firstRow.nativeElement.classList.contains('oddRow')).toBe(false);
+            expect(fourthRow.nativeElement.classList.contains('eventRow')).toBe(false);
+            expect(fourthRow.nativeElement.classList.contains('oddRow')).toBe(true);
         });
 
         it('Should apply custom CSS bindings to the grid cells/rows. Check the style attribute to match each binding', () => {
-            const  evenColStyles = {
+            const evenColStyles = {
                 background: (row) => row.index % 2 === 0 ? 'gray' : 'white',
                 animation: '0.75s popin'
             };
@@ -1491,6 +1502,7 @@ describe('Row Pinning #grid', () => {
             }
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxPaginatorComponent]
 })
 export class GridRowPinningComponent {
@@ -1502,7 +1514,7 @@ export class GridRowPinningComponent {
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
 
     public createSimpleData(count: number) {
-        this.data = Array(count).fill({}).map((x, idx) => x = { idx: idx + 1 });
+        this.data = Array(count).fill({}).map((_x, idx) => ({ idx: idx + 1 }));
     }
 }
 
@@ -1521,6 +1533,7 @@ export class GridRowPinningComponent {
         }
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnLayoutComponent, IgxColumnComponent]
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
@@ -1555,9 +1568,11 @@ export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
         </ng-template>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxGridDetailTemplateDirective]
 })
-export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
+export class GridRowPinningWithMDVComponent extends GridRowPinningComponent {
+}
 
 
 @Component({
@@ -1572,9 +1587,11 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
             [autoGenerate]="true">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
-export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
+export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent {
+}
 
 @Component({
     template: `
@@ -1588,6 +1605,7 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
             [autoGenerate]="true">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridRowPinningWithInitialPinningComponent implements OnInit {
@@ -1615,6 +1633,7 @@ export class GridRowPinningWithInitialPinningComponent implements OnInit {
             <igx-column field="ContactName" [editable]="true"></igx-column>
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridRowPinningWithPrimaryKeyComponent extends GridRowPinningComponent { }

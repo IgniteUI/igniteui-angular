@@ -1,8 +1,9 @@
 import {
-    Component,
-    Input,
+  Component,
+  Input,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import { IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
+import { IBaseChipsAreaEventArgs, IChipsAreaReorderEventArgs, IgxChipComponent, IgxChipsAreaComponent } from 'igniteui-angular/chips';
 import { FlatGridType, IgxGroupByAreaDirective, IgxGroupByMetaPipe, IgxGroupAreaDropDirective } from 'igniteui-angular/grids/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -19,6 +20,7 @@ import { IGroupingExpression, ISortingExpression } from 'igniteui-angular/core';
     selector: 'igx-grid-group-by-area',
     templateUrl: '../../../core/src/grouping/group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxIconComponent, IgxSuffixDirective, IgxGroupAreaDropDirective, IgxDropDirective, NgTemplateOutlet, IgxGroupByMetaPipe]
 })
 export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
@@ -27,22 +29,34 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
 
     /** The parent grid containing the component. */
     @Input()
-    public override grid: FlatGridType;
+    public override grid!: FlatGridType;
 
     public handleReorder(event: IChipsAreaReorderEventArgs) {
         const { chipsArray, originalEvent } = event;
         const newExpressions = this.getReorderedExpressions(chipsArray);
 
-        this.grid.groupingExpansionState = [];
         this.expressions = newExpressions;
 
         // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
         if (originalEvent instanceof KeyboardEvent) {
+            this.grid.groupingExpansionState = [];
             this.grid.groupingExpressions = newExpressions;
         }
     }
 
-    public handleMoveEnd() {
+    public handleMoveEnd(event?: IBaseChipsAreaEventArgs) {
+        if (this.isMoveCancelled(event)) {
+            // Restore the chips order changed while dragging.
+            this.expressions = this.grid.groupingExpressions;
+            return;
+        }
+        // Clear the expansion state only when a reorder is committed.
+        const committed = this.grid.groupingExpressions;
+        const reordered = this.expressions.length !== committed.length ||
+            this.expressions.some((expr, i) => expr.fieldName !== committed[i].fieldName);
+        if (reordered) {
+            this.grid.groupingExpansionState = [];
+        }
         this.grid.groupingExpressions = this.expressions;
     }
 

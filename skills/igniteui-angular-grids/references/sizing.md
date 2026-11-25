@@ -1,4 +1,4 @@
-# Grid Sizing — Width, Height, Column Sizing & Spacing
+# Grid Sizing — Width, Height, Column Sizing, Spacing & SSR
 
 > **Part of the [`igniteui-angular-grids`](../SKILL.md) skill hub.**
 > For grid setup, column config, sorting, filtering, selection — see [`structure.md`](./structure.md).
@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Grid Width](#grid-width)
 - [Grid Height](#grid-height)
+- [Server-Side Rendering (SSR) and Prerendering](#server-side-rendering-ssr-and-prerendering)
 - [Column Sizing](#column-sizing)
 - [Grid Cell Spacing Control](#grid-cell-spacing-control)
 - [Key Rules](#key-rules)
@@ -24,6 +25,15 @@ The grid supports both component inputs (`width`/`height`) and regular CSS/layou
 > **Docs:** [Grid Sizing — Width](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sizing#width)
 
 **Default:** `100%` — the grid fills available width of the parent/window.
+
+### `null` Width
+
+```html
+<igx-grid [width]="null" ...></igx-grid>
+```
+
+- All columns are rendered in the DOM — **horizontal column virtualization is disabled**.
+- **Warning:** rendering many columns without virtualization can significantly impact performance.
 
 ### Pixel Width
 
@@ -97,6 +107,35 @@ html, body, .grid-container {
 </div>
 ```
 
+## Server-Side Rendering (SSR) and Prerendering
+
+> **Docs:** [Server-Side Rendering](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/ssr-rendering)
+
+On the server the grid cannot measure its container:
+
+- **Any height:** the grid renders its empty-grid template ("Grid has no data.") on the server, or the loading indicator when `isLoading` is `true`. A pixel or `null` height does not avoid this.
+- **Percentage height** — including the default `100%` when `height` is not set: the grid also renders at `%` size with **no data rows**. Rows appear only after the client application hydrates.
+- **Pixel or `null` height:** data rows render, with the empty-grid message (or loading indicator) below them. With `null` height **every** row is rendered, so avoid `null` height for large data sets in SSR.
+- **Percentage width, or no width:** the grid renders at `%` size with all columns.
+
+So a prerendered page shows "Grid has no data." until hydration. Set `isLoading` while rendering on the server so the prerendered grid shows the loading indicator instead. Do this for every grid in an SSR or prerendered application, whatever its height — it does not change the browser render:
+
+```ts
+import { PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+
+// in the component class that hosts the grid
+protected readonly isServer = isPlatformServer(inject(PLATFORM_ID));
+```
+
+```html
+<igx-grid [data]="orders()" height="100%" [isLoading]="isServer"></igx-grid>
+```
+
+- When the grid already binds `isLoading` for remote data (see [`paging-remote.md`](./paging-remote.md#remote-data-operations)), combine both: `[isLoading]="isServer || isLoading()"`.
+- A custom `igxGridLoading` or `igxGridEmpty` template is used in the server render as well.
+- Applies to `igx-grid`, `igx-tree-grid`, `igx-hierarchical-grid`, and `igx-pivot-grid`. Exception: a Pivot Grid with no dimensions or values configured shows its own empty-pivot template, whatever `isLoading` is.
+
 ## Column Sizing
 
 > **Docs:** [Grid Sizing — Column Sizing](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/sizing#column-sizing)
@@ -141,6 +180,7 @@ html, body, .grid-container {
 - Column width is calculated as a percentage of the grid width.
 - Responsive — resizes when the grid resizes.
 - Combined percentages less than `100%` leave an empty area; greater than `100%` triggers a horizontal scrollbar.
+- If the grid `width` is `null`, percentage-width columns fall back to `136px` each.
 
 ## Grid Cell Spacing Control
 
@@ -201,4 +241,6 @@ igx-grid {
 - **Never** override `box-sizing` on the grid — it uses border-box and relies on this.
 - Use `null` for height only when the data set is small; row virtualization is disabled and large data will hurt performance.
 - When using percentage height, the parent **must** have an explicit height for the percentage to resolve correctly. Without it, the grid falls back to 10 visible rows.
+- In SSR or prerendered applications, set `isLoading` during the server render — see [SSR and Prerendering](#server-side-rendering-ssr-and-prerendering).
 - A mix of fixed-width and auto-sized columns is valid — auto-sized columns fill the remaining space after fixed-width columns are laid out.
+- **Omit `width` on generated columns.** No `width` = columns equally share available grid width. Pixel widths leave empty space when their sum is less than the grid width. Only set `width` when the user explicitly asks for it. If column widths are used, at least one column must not have a specified width so that it fills the remaining space in the grid.

@@ -1,7 +1,8 @@
-:host::ng-deep {
-    .activeRow {
-        background-color: rgb(201, 241, 201);
-      }
+:host {
+    > .igx-grid {
+        --ig-grid-row-odd-background: rgb(248, 255, 248);
+        --ig-grid-body-column-border-color-odd: rgb(248, 255, 248);
+    }
 }
 
 [igxButton="contained"] {

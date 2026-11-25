@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostBinding, inject, Input } from '@angular/core';
+import { Component, DestroyRef, HostBinding, inject, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IQueryBuilderResourceStrings, QueryBuilderResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 
@@ -14,12 +14,14 @@ import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angu
 */
 @Component({
     selector: 'igx-query-builder-header',
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: 'query-builder-header.component.html'
 })
 export class IgxQueryBuilderHeaderComponent {
 
     private _destroyRef = inject(DestroyRef);
-    private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _resourceStrings: IQueryBuilderResourceStrings = null!;
+    private _customResourceStrings: IQueryBuilderResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
 
     /**
@@ -30,7 +32,7 @@ export class IgxQueryBuilderHeaderComponent {
     }
 
     /**
-     * Sets the title of the `IgxQueryBuilderHeaderComponent`.
+     * Sets the title of the query builder header.
      *
      * @example
      * ```html
@@ -38,7 +40,7 @@ export class IgxQueryBuilderHeaderComponent {
      * ```
      */
     @Input()
-    public title: string;
+    public title!: string;
 
     /**
      * Show/hide the legend.
@@ -60,19 +62,21 @@ export class IgxQueryBuilderHeaderComponent {
      */
     @Input()
     public set resourceStrings(value: IQueryBuilderResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     constructor() {
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
     }
 }

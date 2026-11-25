@@ -1,5 +1,6 @@
 import { cloneValue, cloneValueCached } from "../core/utils";
 
+/* blazorCSSuppress */
 export interface IDataCloneStrategy {
     /**
      * Clones provided data

@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { ProjectType } from '../../schematics/utils/util';
 import { setupTestTree } from '../common/setup.spec';
 
@@ -16,8 +16,7 @@ describe(`Update to ${version}`, () => {
                 sourceRoot: '/testSrc',
                 architect: {
                     build: {
-                      options: {
-                      }
+                        options: {}
                     }
                 }
             }
@@ -33,8 +32,7 @@ describe(`Update to ${version}`, () => {
                 projectType: ProjectType.Library,
                 architect: {
                     build: {
-                      options: {
-                      }
+                        options: {}
                     }
                 }
             }

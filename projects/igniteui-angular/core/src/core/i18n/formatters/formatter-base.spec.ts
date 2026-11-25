@@ -1,7 +1,16 @@
 import { BaseFormatter } from './formatter-base';
+import { registerLocaleData } from '@angular/common';
+import localeBg from '@angular/common/locales/bg';
+import localeDe from '@angular/common/locales/de';
+import { describe, it, expect, beforeAll } from 'vitest';
 
 describe('Localization', () => {
     const i18nFormatter = new BaseFormatter();
+
+    beforeAll(() => {
+        registerLocaleData(localeBg);
+        registerLocaleData(localeDe);
+    });
 
     describe('number formatting', () => {
         it('should format number correctly', () => {
@@ -35,7 +44,7 @@ describe('Localization', () => {
             expect(i18nFormatter.formatCurrency(12345, 'en', 'symbol', 'EUR', '1.1-3')).toEqual('€12,345.0');
             expect(i18nFormatter.formatCurrency('12345', 'en', 'symbol', 'EUR', '1.1-3')).toEqual('€12,345.0');
         });
-    })
+    });
 
     describe('date formatting', () => {
         it('should format string to dateTime using Angular', () => {

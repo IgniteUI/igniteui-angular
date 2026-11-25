@@ -1,10 +1,11 @@
 import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    QueryList,
-    Renderer2,
-    ViewChildren
+  AfterViewInit,
+  Component,
+  ElementRef,
+  QueryList,
+  Renderer2,
+  ViewChildren,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent, IgxBottomNavHeaderComponent, IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective, IgxBottomNavItemComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
@@ -12,6 +13,7 @@ import { IgxAvatarComponent, IgxBottomNavComponent, IgxBottomNavContentComponent
     selector: 'app-bottomnav-sample',
     styleUrls: ['bottomnav.sample.scss'],
     templateUrl: 'bottomnav.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxBottomNavComponent,
         IgxBottomNavItemComponent,
@@ -100,6 +102,7 @@ export class BottomNavSampleComponent implements AfterViewInit {
 @Component({
     selector: 'app-custom-content',
     templateUrl: 'template.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 

@@ -5,7 +5,10 @@
         <ng-content select="igx-expansion-panel-description"></ng-content>
     </div>
     <ng-content></ng-content>
-    <div [class]="iconPositionClass">
+    <div
+        [class]="iconPositionClass"
+        [class.igx-expansion-panel__header-icon]="true"
+    >
         @if (iconTemplate) {
             <ng-content select="igx-expansion-panel-icon"></ng-content>
         }

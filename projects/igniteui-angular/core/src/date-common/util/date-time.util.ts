@@ -114,10 +114,10 @@ export abstract class DateTimeUtil {
 
     /** Parse the mask into date/time and literal parts */
     public static parseDateTimeFormat(mask: string, formatter: BaseFormatter, locale?: string): DatePartInfo[] {
-        const format = mask || DateTimeUtil.getDefaultInputFormat(locale, formatter);
+        const format = mask || DateTimeUtil.getDefaultInputFormat(locale!, formatter);
         const dateTimeParts: DatePartInfo[] = [];
         const formatArray = Array.from(format);
-        let currentPart: DatePartInfo = null;
+        let currentPart: DatePartInfo = null!;
         let position = 0;
         let lastPartAdded = false;
         for (let i = 0; i < formatArray.length; i++, position++) {
@@ -174,7 +174,7 @@ export abstract class DateTimeUtil {
     }
 
     public static getPartValue(value: Date, datePartInfo: DatePartInfo, partLength: number): string {
-        let maskedValue;
+        let maskedValue: any;
         const datePart = datePartInfo.type;
         switch (datePart) {
             case DatePart.Date:
@@ -436,7 +436,7 @@ export abstract class DateTimeUtil {
     public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string,
         includeTime = true, includeDate = true): ValidationErrors {
         if (!value) {
-            return null;
+            return null!;
         }
         const errors = {};
         const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
@@ -515,7 +515,7 @@ export abstract class DateTimeUtil {
             return resultFormat;
         }
         if (predefinedNumericFormats.has(format)) {
-            resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, formatter, predefinedNumericFormats.get(format));
+            resultFormat = DateTimeUtil.getLocaleInputFormatFromParts(locale, formatter, predefinedNumericFormats.get(format)!);
 
         } else if (DateTimeUtil.isFormatNumeric(locale, format, formatter)) {
             resultFormat = format;
@@ -525,7 +525,7 @@ export abstract class DateTimeUtil {
 
     /** Gets the locale-based format from an array of date parts */
     private static getLocaleInputFormatFromParts(locale: string, formatter: BaseFormatter, dateParts: DateParts[]): string {
-        const options = {};
+        const options: any = {};
         dateParts.forEach(p => {
             if (p === DateParts.Year) {
                 options[p] = FormatDesc.Numeric;

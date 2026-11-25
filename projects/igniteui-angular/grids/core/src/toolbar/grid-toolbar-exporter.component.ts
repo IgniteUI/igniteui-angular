@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, booleanAttribute, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { BaseToolbarDirective } from './grid-toolbar.base';
 import { IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective } from './common';
@@ -18,6 +18,7 @@ export type IgxExporterOptions = IgxCsvExporterOptions | IgxExcelExporterOptions
 /* jsonAPIComplexObject */
 /* wcAlternateName: ExporterEventArgs */
 export interface IgxExporterEvent {
+    /* blazorCSSuppress */
     exporter: IgxBaseExporter;
     /* alternateType: ExporterOptionsBase */
     options: IgxExporterOptions;
@@ -45,6 +46,7 @@ export interface IgxExporterEvent {
 @Component({
     selector: 'igx-grid-toolbar-exporter',
     templateUrl: './grid-toolbar-exporter.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent, IgxToggleDirective, IgxExcelTextDirective, IgxCSVTextDirective, IgxPdfTextDirective]
 })
 export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {

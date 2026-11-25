@@ -3,7 +3,7 @@
 > **Part of the [`igniteui-angular-components`](../SKILL.md) skill hub.**
 > For app setup, providers, and import patterns — see [`setup.md`](./setup.md).
 
-> **AGENT INSTRUCTION:** All components in this file rely on Angular animations and the Ignite UI overlay system. Before using any of them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — these components will throw runtime errors or silently fail to animate without it.
+> **Important:** All components in this file rely on Angular animations and the Ignite UI overlay system. Before using any of them, ensure `provideAnimations()` (or `provideAnimationsAsync()`) is present in `app.config.ts`. If it is missing, add it — these components will throw runtime errors or silently fail to animate without it.
 
 ## Contents
 
@@ -13,12 +13,7 @@
 - [Banner](#banner)
 - [Key Rules](#key-rules)
 
-## Overview
-This reference gives high-level guidance on when to use each feedback and overlay component, their key features, and common API members. For detailed documentation, call `get_doc` and `get_api_reference` from `igniteui-cli` with the specific component or feature you're interested in.
-
 ## Dialog
-
-> **Docs:** [Dialog Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/dialog)
 
 ```typescript
 import { IgxDialogComponent, IgxDialogTitleDirective, IgxDialogActionsDirective } from 'igniteui-angular/dialog';
@@ -31,7 +26,6 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
   [isModal]="true"
   [closeOnEscape]="true"
   [closeOnOutsideSelect]="false"
-  title="Confirm Delete"
   (closed)="onDialogClosed()">
   <igx-dialog-title>Confirm Delete</igx-dialog-title>
   <p>Are you sure you want to delete this item? This action cannot be undone.</p>
@@ -57,10 +51,8 @@ Events: `(opening)`, `(opened)`, `(closing)`, `(closed)`, `(leftButtonSelect)`, 
 
 ## Snackbar
 
-> **Docs:** [Snackbar Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/snackbar)
-
 ```typescript
-import { IgxSnackbarComponent, IgxSnackbarActionDirective } from 'igniteui-angular/snackbar';
+import { IgxSnackbarComponent } from 'igniteui-angular/snackbar';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 ```
 
@@ -69,9 +61,10 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
   #snackbar
   [displayTime]="3000"
   [autoHide]="true"
+  actionText="UNDO"
+  (clicked)="undo()"
   (animationDone)="onSnackbarDone()">
   Item saved successfully
-  <button igxButton="flat" igxSnackbarAction (click)="undo()">UNDO</button>
 </igx-snackbar>
 ```
 
@@ -88,8 +81,6 @@ save() {
 
 ## Toast
 
-> **Docs:** [Toast Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)
-
 ```typescript
 import { IgxToastComponent } from 'igniteui-angular/toast';
 ```
@@ -104,8 +95,6 @@ Toast vs Snackbar: Toast is non-interactive (no action button), always auto-hide
 
 ## Banner
 
-> **Docs:** [Banner Component](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner)
-
 ```typescript
 import { IgxBannerComponent, IgxBannerActionsDirective } from 'igniteui-angular/banner';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -114,12 +103,12 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 
 ```html
 <igx-banner #banner (closed)="onBannerClosed()">
-  <igx-icon igxBannerIcon>wifi_off</igx-icon>
+  <igx-icon>wifi_off</igx-icon>
   You are offline. Some features may not be available.
-  <div igxBannerActions>
-    <button igxButton="flat" (click)="banner.dismiss()">Dismiss</button>
+  <igx-banner-actions>
+    <button igxButton="flat" (click)="banner.close()">Dismiss</button>
     <button igxButton="flat" (click)="retry()">Retry</button>
-  </div>
+  </igx-banner-actions>
 </igx-banner>
 ```
 

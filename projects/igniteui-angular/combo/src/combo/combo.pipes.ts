@@ -1,8 +1,50 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
+import { VirtualDataWindow } from 'igniteui-angular/virtual-scroll';
 import { IComboFilteringOptions, IgxComboBase, IGX_COMBO_COMPONENT } from './combo.common';
 import { SortingDirection } from 'igniteui-angular/core';
 
-/** @hidden */
+/**
+ * @hidden @internal
+ * Keeps the loaded records inside the remote total without changing their indices.
+ * Runs before grouping, so headers do not count against the number of remote records.
+ */
+@Pipe({
+    name: 'comboRecordWindow'
+})
+export class IgxComboRecordWindowPipe implements PipeTransform {
+    public transform(collection: any[], totalItemCount: number, startIndex: number): any[] {
+        const remaining = Math.max(0, totalItemCount - startIndex);
+        return totalItemCount > 0 && collection.length > remaining
+            ? collection.slice(0, remaining)
+            : collection;
+    }
+}
+
+/**
+ * @hidden @internal
+ * The items the drop-down has and where they sit in the collection they came from. Pure, so
+ * the window keeps its identity while its inputs do.
+ */
+@Pipe({
+    name: 'comboDataWindow',
+    standalone: true
+})
+export class IgxComboDataWindowPipe implements PipeTransform {
+    public transform(
+        collection: any[], totalItemCount: number, startIndex: number
+    ): VirtualDataWindow<any> {
+        if (!(totalItemCount > 0)) {
+            return { items: collection, startIndex: 0, totalCount: collection.length };
+        }
+
+        // An empty page has no position of its own, and anchoring one would stretch the
+        // collection to reach it.
+        return { items: collection, startIndex: collection.length ? startIndex : 0, totalCount: totalItemCount };
+    }
+}
+
+
+
 @Pipe({
     name: 'comboFiltering',
     standalone: true
@@ -69,7 +111,7 @@ function defaultFilterFunction<T>(collection: T[], searchValue: string, filterin
     const term = caseSensitive ? searchValue : searchValue.toLowerCase();
 
     return collection.filter(item => {
-        const str = filteringKey ? `${item[filteringKey]}` : `${item}`;
+        const str = filteringKey ? `${(item as any)[filteringKey]}` : `${item}`;
         return (caseSensitive ? str : str.toLowerCase()).includes(term);
     });
 }
@@ -80,12 +122,11 @@ function normalizeString(str: string, caseSensitive = false): string {
         .replace(/\p{M}/gu, '');
 }
 
-function groupBy<T>(data: T[], key: keyof T | ((item: T) => any)) {
+function groupBy<T>(data: T[], getKey: (item: T) => any) {
     const result: Record<string, T[]> = {};
-    const _get = typeof key === 'function' ? key : (item: T) => item[key];
 
     for (const item of data) {
-      const category = _get(item);
+      const category = getKey(item);
       const group = result[category];
 
       Array.isArray(group) ? group.push(item) : (result[category] = [item]);
@@ -112,7 +153,7 @@ export function comboIgnoreDiacriticsFilter<T>(collection: T[], searchValue: str
     const term = normalizeString(searchValue, caseSensitive);
 
     return collection.filter(item => {
-        const str = filteringKey ? `${item[filteringKey]}` : `${item}`;
+        const str = filteringKey ? `${(item as any)[filteringKey]}` : `${item}`;
         return normalizeString(str, caseSensitive).includes(term);
     });
 }

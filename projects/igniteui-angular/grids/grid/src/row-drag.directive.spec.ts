@@ -1,5 +1,5 @@
-import { Component, ViewChild, DebugElement, QueryList, TemplateRef } from '@angular/core';
-import { TestBed, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, DebugElement, QueryList, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -20,6 +20,7 @@ import { IgxStringFilteringOperand, Point, SortingDirection } from 'igniteui-ang
 import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
 import { IgxTreeGridComponent } from 'igniteui-angular/grids/tree-grid';
 import { IgxIconComponent } from 'igniteui-angular/icon';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 const DEBOUNCE_TIME = 50;
 const CSS_CLASS_DRAG_INDICATOR = '.igx-grid__drag-indicator';
@@ -36,7 +37,7 @@ const CSS_CLASS_NON_DROPPABLE_AREA = '.non-droppable-area';
 
 describe('Row Drag Tests', () => {
 
-    describe('Flat Grid', () => {
+    describe('Flat Grid #grid', () => {
         let fixture: ComponentFixture<any>;
         let dropAreaElement: Element;
         let dragIndicatorElements: DebugElement[];
@@ -57,14 +58,14 @@ describe('Row Drag Tests', () => {
                 let dragRows: DebugElement[];
                 let rowToDrag: IgxRowDirective;
 
-                beforeEach(waitForAsync(() => {
-                    TestBed.configureTestingModule({
+                beforeEach(async () => {
+                    await TestBed.configureTestingModule({
                         imports: [
                             NoopAnimationsModule,
                             IgxGridRowDraggableComponent
                         ]
                     }).compileComponents();
-                }));
+                });
 
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
@@ -89,8 +90,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -120,10 +121,7 @@ describe('Row Drag Tests', () => {
                     const dragIndicatorPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
                     const rowPoint = UIInteractions.getPointFromElement(rowElement);
                     movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
-                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
-                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
-                    pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
-                    spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -153,8 +151,8 @@ describe('Row Drag Tests', () => {
 
                     startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
                     movePoint = UIInteractions.getPointFromElement(rows[4].nativeElement);
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
                     rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', movePoint));
@@ -288,8 +286,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
-                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -311,8 +309,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -348,8 +346,8 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit');
-                    spyOn(grid.rowDragEnd, 'emit');
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
 
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
@@ -368,7 +366,9 @@ describe('Row Drag Tests', () => {
                     rowDragDirective.onPointerUp(pointerUpEvent);
                     expect(rowToDrag.dragging).toBeFalsy();
                     expect(rowToDrag.grid.rowDragging).toBeFalsy();
-                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false);
+                    // vi.spyOn calls through (a bare Jasmine spyOn stubbed emit), so the rowDragEnd
+                    // handler above now runs and sets animation to true on the emitted args.
+                    verifyRowDragEndEvent(grid, grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, true);
                     const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
                     expect(ghostElements.length).toEqual(0);
                     const dragIndicatorsOff = document.getElementsByClassName(CSS_CLASS_DRAG_INDICATOR_OFF);
@@ -388,18 +388,210 @@ describe('Row Drag Tests', () => {
                     pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
                     pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                    spyOn(grid.rowDragStart, 'emit').and.callThrough();
-                    spyOn(grid.rowDragEnd, 'emit').and.callThrough();
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+                    // Set by the application before the drag.
+                    rowDragDirective.element.nativeElement.style.transitionDuration = '0.5s';
 
                     rowDragDirective.onPointerDown(pointerDownEvent);
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
+                    // The removed ghost is not kept as the pointer capture target.
+                    expect((rowDragDirective as any)._pointerCaptureTarget).toBeNull();
+                    // The transitions of the element, disabled when the drag started, are restored.
+                    expect(rowDragDirective.element.nativeElement.style.transitionDuration).toBe('0.5s');
 
                     rowDragDirective.onPointerMove(pointerMoveEvent);
                     rowDragDirective.onPointerUp(pointerUpEvent);
                     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(0);
                     const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
                     expect(ghostElements.length).toEqual(0);
+                    // The Escape listener registered when the drag started is removed.
+                    expect((rowDragDirective as any)._escapeSubscription).toBeNull();
+                });
+
+                it('should end row dragging when cancelDrag() is called during the drag.', () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    expect(grid.rowDragging).toBe(true);
+                    expect(rowToDrag.dragging).toBe(true);
+
+                    rowDragDirective.cancelDrag();
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+
+                    // A later release does nothing.
+                    rowDragDirective.onPointerUp(UIInteractions.createPointerEvent('pointerup', dropPoint));
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBe(false);
+                });
+
+                it('should keep the return animation when the row drag is cancelled and dragEnd handler calls transitionToOrigin().', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.3 });
+                    });
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+                    const transitionedSpy = vi.spyOn(rowDragDirective.transitioned, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    expect(grid.rowDragging).toBe(true);
+                    const ghost = rowDragDirective.ghostElement;
+                    expect(ghost).toBeTruthy();
+
+                    rowDragDirective.cancelDrag();
+                    fixture.detectChanges();
+                    await wait(50);
+
+                    // The grid state is reset right away, while the ghost still animates back.
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowDragDirective.ghostElement).toBe(ghost);
+                    expect(rowDragDirective.animInProgress).toBe(true);
+                    expect(transitionedSpy).not.toHaveBeenCalled();
+
+                    await wait(500);
+                    fixture.detectChanges();
+                    expect(transitionedSpy).toHaveBeenCalledTimes(1);
+                    expect(rowDragDirective.ghostElement).toBeFalsy();
+                    expect(rowDragDirective.animInProgress).toBe(false);
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+
+                it('should not end the return animation of the ghost on transitions of other properties or of its content.', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(nonDroppableAreaElement);
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.3 });
+                    });
+                    const transitionedSpy = vi.spyOn(rowDragDirective.transitioned, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    const ghost = rowDragDirective.ghostElement;
+                    expect(ghost).toBeTruthy();
+
+                    // Released outside a drop area, so the ghost animates back.
+                    rowDragDirective.onPointerUp(UIInteractions.createPointerEvent('pointerup', dropPoint));
+                    fixture.detectChanges();
+                    await wait(50);
+                    expect(rowDragDirective.animInProgress).toBe(true);
+
+                    // E.g. a color transition of a chip in a cell of the ghost, or of the ghost itself.
+                    const ghostCell = ghost.querySelector('igx-grid-cell') as HTMLElement;
+                    ghostCell.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'left', bubbles: true }));
+                    ghost.dispatchEvent(new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+
+                    expect(rowDragDirective.ghostElement).toBe(ghost);
+                    expect(rowDragDirective.animInProgress).toBe(true);
+                    expect(transitionedSpy).not.toHaveBeenCalled();
+
+                    await vi.waitFor(() => expect(transitionedSpy).toHaveBeenCalledTimes(1));
+                    fixture.detectChanges();
+                    expect(rowDragDirective.ghostElement).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                });
+
+                it('should not start row dragging when cancelDrag() is called in a rowDragStart handler.', () => {
+                    const rowDragStartSub = grid.rowDragStart.subscribe((e: IRowDragStartEventArgs) => {
+                        rowDragStartSub.unsubscribe();
+                        e.dragDirective.cancelDrag();
+                    });
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowToDrag.dragging).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+
+                    // Escape no longer reaches a row drag listener.
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', dragIndicatorElement);
+                    expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(1);
+                });
+
+                it('should not start row dragging when cancelled in a ghostCreate handler with a return animation.', async () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    const ghostCreateSub = rowDragDirective.ghostCreate.subscribe(() => {
+                        ghostCreateSub.unsubscribe();
+                        rowDragDirective.cancelDrag();
+                    });
+                    const dragEndSub = rowDragDirective.dragEnd.subscribe(() => {
+                        dragEndSub.unsubscribe();
+                        rowDragDirective.transitionToOrigin({ duration: 0.1 });
+                    });
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    vi.spyOn(grid.rowDragStart, 'emit');
+                    vi.spyOn(grid.rowDragEnd, 'emit');
+
+                    rowDragDirective.onPointerDown(UIInteractions.createPointerEvent('pointerdown', startPoint));
+                    rowDragDirective.onPointerMove(UIInteractions.createPointerEvent('pointermove', dropPoint));
+                    fixture.detectChanges();
+
+                    expect(grid.rowDragStart.emit).not.toHaveBeenCalled();
+                    expect(grid.rowDragEnd.emit).not.toHaveBeenCalled();
+                    expect(grid.rowDragging).toBe(false);
+
+                    await wait(300);
+                    fixture.detectChanges();
+                    expect(grid.rowDragging).toBe(false);
+                    expect(rowDragDirective.animInProgress).toBe(false);
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
+                });
+
+                it('should not throw when the drag is cancelled in a ghostCreate handler.', () => {
+                    rowToDrag = rows[2];
+                    rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
+                    const ghostCreateSub = rowDragDirective.ghostCreate.subscribe(() => {
+                        ghostCreateSub.unsubscribe();
+                        rowDragDirective.cancelDrag();
+                    });
+                    dragIndicatorElement = dragIndicatorElements[rowToDrag.index].nativeElement;
+
+                    startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
+                    dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+                    pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
+                    pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
+
+                    rowDragDirective.onPointerDown(pointerDownEvent);
+                    expect(() => rowDragDirective.onPointerMove(pointerMoveEvent)).not.toThrow();
+                    expect(rowDragDirective.ghostElement).toBeFalsy();
+                    expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
                 });
             });
             describe('Custom ghost template tests', () => {
@@ -407,14 +599,14 @@ describe('Row Drag Tests', () => {
                 let rows: IgxRowDirective[];
                 let dragRows: DebugElement[];
 
-                beforeEach(waitForAsync(() => {
-                    TestBed.configureTestingModule({
+                beforeEach(async () => {
+                    await TestBed.configureTestingModule({
                         imports: [
                             NoopAnimationsModule,
                             IgxGridRowCustomGhostDraggableComponent
                         ]
                     }).compileComponents();
-                }));
+                });
                 beforeEach(() => {
                     fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
                     grid = fixture.componentInstance.instance;
@@ -493,14 +685,14 @@ describe('Row Drag Tests', () => {
             let dropGridRows: IgxRowDirective[];
             let dragRows: DebugElement[];
 
-            beforeEach(waitForAsync(() => {
-                TestBed.configureTestingModule({
+            beforeEach(async () => {
+                await TestBed.configureTestingModule({
                     imports: [
                         NoopAnimationsModule,
                         IgxGridFeaturesRowDragComponent
                     ]
                 }).compileComponents();
-            }));
+            });
             beforeEach(() => {
                 fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
                 dragGrid = fixture.componentInstance.dragGrid;
@@ -555,8 +747,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -595,8 +787,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -634,8 +826,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -667,8 +859,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -699,8 +891,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -736,14 +928,14 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
                 expect(row.dragging).toBeTruthy();
                 expect(row.grid.rowDragging).toBeTruthy();
-                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement,  rowDragDirective);
+                verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(row.index), row.nativeElement, rowDragDirective);
 
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -813,8 +1005,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -852,8 +1044,8 @@ describe('Row Drag Tests', () => {
                 pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
                 pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-                spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-                spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+                vi.spyOn(dragGrid.rowDragStart, 'emit');
+                vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
                 rowDragDirective.onPointerDown(pointerDownEvent);
                 rowDragDirective.onPointerMove(pointerMoveEvent);
@@ -893,7 +1085,7 @@ describe('Row Drag Tests', () => {
                 const cellElement = dragCell.nativeElement;
                 let cellInput = null;
 
-                spyOn(dragGrid.gridAPI.crudService, 'endEdit').and.callThrough();
+                vi.spyOn(dragGrid.gridAPI.crudService, 'endEdit');
 
                 cellElement.dispatchEvent(new Event('focus'));
                 fixture.detectChanges();
@@ -931,7 +1123,7 @@ describe('Row Drag Tests', () => {
         });
     });
 
-    describe('Hierarchical Grid', () => {
+    describe('Hierarchical Grid #hGrid', () => {
         let fixture: ComponentFixture<any>;
         let dropAreaElement: Element;
         let dragIndicatorElement: Element;
@@ -946,8 +1138,8 @@ describe('Row Drag Tests', () => {
         let dragRows: DebugElement[];
         let pointerMoveToDropEvent: PointerEvent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxHierarchicalGridTestComponent,
@@ -957,7 +1149,7 @@ describe('Row Drag Tests', () => {
                     IgxGridNavigationService
                 ]
             }).compileComponents();
-        }));
+        });
         it('should be able to drag row on every hierarchical level', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
             fixture.detectChanges();
@@ -978,19 +1170,17 @@ describe('Row Drag Tests', () => {
             pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
             pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(dragGrid.rowDragStart, 'emit');
+            vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
-                rowToDrag.nativeElement, rowDragDirective, 1);
+            verifyRowDragStartEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, 1);
             // pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
-                rowToDrag.nativeElement, rowDragDirective, false, 1);
+            verifyRowDragEndEvent(dragGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false, 1);
 
             // second level row
             const childGrid = dragGrid.gridAPI.getChildGrids(false)[0];
@@ -1000,18 +1190,16 @@ describe('Row Drag Tests', () => {
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            spyOn(childGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(childGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(childGrid.rowDragStart, 'emit');
+            vi.spyOn(childGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
-                rowToDrag.nativeElement, rowDragDirective, 1);
+            verifyRowDragStartEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, 1);
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
-            verifyRowDragEndEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
-                rowToDrag.nativeElement, rowDragDirective, false, 1);
+            verifyRowDragEndEvent(childGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false, 1);
 
             // third level row
             const nestedChildGrid = childGrid.gridAPI.getChildGrids(false)[0];
@@ -1021,18 +1209,16 @@ describe('Row Drag Tests', () => {
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
 
-            spyOn(nestedChildGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(nestedChildGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(nestedChildGrid.rowDragStart, 'emit');
+            vi.spyOn(nestedChildGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
-                rowToDrag.nativeElement, rowDragDirective, 1);
+            verifyRowDragStartEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, 1);
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
-            verifyRowDragEndEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index),
-            rowToDrag.nativeElement, rowDragDirective, false, 1);
+            verifyRowDragEndEvent(nestedChildGrid, rowToDrag.grid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false, 1);
         });
 
         it('should correctly create custom ghost element', () => {
@@ -1048,7 +1234,10 @@ describe('Row Drag Tests', () => {
 
             startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
             movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
-            dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
+            // This fixture has no drop area, so release the row just below the grid instead of
+            // relying on a drop area element left over from a previous test's fixture.
+            const gridRect = dragGrid.nativeElement.getBoundingClientRect();
+            dropPoint = { x: gridRect.left + 10, y: gridRect.bottom + 20 };
             pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
             pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
             pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
@@ -1059,6 +1248,7 @@ describe('Row Drag Tests', () => {
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
+            expect(document.getElementsByClassName(CSS_CLASS_GHOST_ROW).length).toEqual(0);
 
             expect((rowDragDirective as any).ghostContext.data.ProductName).toEqual('Product: A0');
             expect((rowDragDirective as any).ghostContext.grid).toEqual(dragGrid);
@@ -1083,7 +1273,7 @@ describe('Row Drag Tests', () => {
         });
     });
 
-    describe('Tree Grid', () => {
+    describe('Tree Grid #tGrid', () => {
         let fixture: ComponentFixture<any>;
         let dropAreaElement: Element;
         let dragIndicatorElements: DebugElement[];
@@ -1099,14 +1289,14 @@ describe('Row Drag Tests', () => {
         let dragRows: DebugElement[];
         let pointerMoveToDropEvent: PointerEvent;
 
-        beforeEach(waitForAsync(() => {
-            TestBed.configureTestingModule({
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
                 imports: [
                     NoopAnimationsModule,
                     IgxTreeGridTestComponent
                 ]
             }).compileComponents();
-        }));
+        });
         beforeEach(() => {
             fixture = TestBed.createComponent(IgxTreeGridTestComponent);
             fixture.detectChanges();
@@ -1130,18 +1320,16 @@ describe('Row Drag Tests', () => {
             pointerMoveToDropEvent = UIInteractions.createPointerEvent('pointermove', dropPoint);
             pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
-            spyOn(dragGrid.rowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.rowDragEnd, 'emit').and.callThrough();
+            vi.spyOn(dragGrid.rowDragStart, 'emit');
+            vi.spyOn(dragGrid.rowDragEnd, 'emit');
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
-                rowToDrag.nativeElement, rowDragDirective, 1);
+            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key), rowToDrag.nativeElement, rowDragDirective, 1);
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
-                rowToDrag.nativeElement, rowDragDirective, false, 1);
+            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key), rowToDrag.nativeElement, rowDragDirective, false, 1);
 
             // second level row
             dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -1167,13 +1355,11 @@ describe('Row Drag Tests', () => {
 
             rowDragDirective.onPointerDown(pointerDownEvent);
             rowDragDirective.onPointerMove(pointerMoveEvent);
-            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
-                rowToDrag.nativeElement, rowDragDirective, 3);
+            verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key), rowToDrag.nativeElement, rowDragDirective, 3);
             rowDragDirective.onPointerMove(pointerMoveToDropEvent);
             rowDragDirective.onPointerUp(pointerUpEvent);
             fixture.detectChanges();
-            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key),
-                rowToDrag.nativeElement, rowDragDirective, false, 3);
+            verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.key), rowToDrag.nativeElement, rowDragDirective, false, 3);
         });
     });
 });
@@ -1196,6 +1382,7 @@ describe('Row Drag Tests', () => {
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxDropDirective, NgStyle]
 })
 export class IgxGridRowDraggableComponent extends DataParent {
@@ -1265,16 +1452,17 @@ export class IgxGridRowDraggableComponent extends DataParent {
             <igx-icon>expand_less</igx-icon>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxIconComponent, IgxDropDirective, IgxRowDragGhostDirective, IgxDragIndicatorIconDirective, NgStyle]
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('rowDragGhostTemplate', {read: TemplateRef, static: true })
+    @ViewChild('rowDragGhostTemplate', { read: TemplateRef, static: true })
     public rowDragGhostTemplate: TemplateRef<any>;
 
-    @ViewChild('rowDragTemplate', {read: TemplateRef, static: true })
+    @ViewChild('rowDragTemplate', { read: TemplateRef, static: true })
     public rowDragTemplate: TemplateRef<any>;
 
     @ViewChild('dropArea', { read: IgxDropDirective, static: true })
@@ -1328,6 +1516,7 @@ export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
             <igx-column [field]="'Released'"></igx-column>
         </igx-grid></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxGridFeaturesRowDragComponent extends DataParent {
@@ -1368,13 +1557,18 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             <igx-column [field]="'Col3'"></igx-column>
         </igx-hierarchical-grid>
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent, IgxDropDirective]
 })
 export class IgxHierarchicalGridTestComponent {
-    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
-    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDropGrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hDropGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
 
     public data;
     public newData = [];
@@ -1408,12 +1602,16 @@ export class IgxHierarchicalGridTestComponent {
             </div>
         </ng-template>
     </igx-hierarchical-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxHierarchicalGridComponent, IgxRowIslandComponent, IgxRowDragGhostDirective]
 })
 export class IgxHierarchicalGridCustomGhostTestComponent {
-    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hDragGrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
 
     public data;
     public newData = [];
@@ -1440,11 +1638,14 @@ export class IgxHierarchicalGridCustomGhostTestComponent {
         <igx-column [field]="'Salary'" dataType="number" ></igx-column>
     </igx-grid></div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeGridComponent, IgxGridComponent, IgxColumnComponent, IgxDropDirective]
 })
 export class IgxTreeGridTestComponent {
-    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
-    @ViewChild(IgxGridComponent, { static: true }) public dropGrid: IgxGridComponent;
+    @ViewChild(IgxTreeGridComponent, { static: true })
+    public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public dropGrid: IgxGridComponent;
     public data = SampleTestData.employeeScrollingData();
     public newData = [];
 
@@ -1508,13 +1709,7 @@ const pointerUp = async (element: Element, startPoint: Point, fixture: Component
  * @param timesCalled The number of times the rowDragStart event has been emitted. Defaults to 1.
  * @param cancel Indicates weather the rowDragStart event is cancelled. Default value is false.
  */
-const verifyRowDragStartEvent =(
-    grid: GridType,
-    dragRow: RowType,
-    dragElement: HTMLElement,
-    dragDirective: IgxRowDragDirective,
-    timesCalled = 1,
-    cancel = false) => {
+const verifyRowDragStartEvent = (grid: GridType, dragRow: RowType, dragElement: HTMLElement, dragDirective: IgxRowDragDirective, timesCalled = 1, cancel = false) => {
     expect(grid.rowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.rowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
@@ -1533,13 +1728,7 @@ const verifyRowDragStartEvent =(
  * @param dragDirective IgxRowDragDirective of the dragged row
  * @param timesCalled The number of times the rowDragEnd event has been emitted. Defaults to 1.
  */
-const verifyRowDragEndEvent = (
-    grid: GridType,
-    dragRow: RowType,
-    dragElement: HTMLElement,
-    dragDirective: IgxRowDragDirective,
-    animations: boolean,
-    timesCalled = 1) => {
+const verifyRowDragEndEvent = (grid: GridType, dragRow: RowType, dragElement: HTMLElement, dragDirective: IgxRowDragDirective, animations: boolean, timesCalled = 1) => {
     expect(grid.rowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.rowDragEnd.emit).toHaveBeenCalledWith({
         dragDirective,

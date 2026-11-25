@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxToolbarToken } from './token';
 import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -26,12 +26,13 @@ import { IFilteringExpressionsTree, isTree, OverlaySettings } from 'igniteui-ang
 @Component({
     selector: 'igx-grid-toolbar-advanced-filtering',
     templateUrl: './grid-toolbar-advanced-filtering.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     private toolbar = inject<IgxToolbarToken>(IgxToolbarToken);
 
-    protected numberOfColumns: number;
+    protected numberOfColumns!: number;
     /**
      * Returns the grid containing this component.
      * @hidden @internal
@@ -41,7 +42,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     }
 
     @Input()
-    public overlaySettings: OverlaySettings;
+    public overlaySettings!: OverlaySettings;
 
     /**
      * @hidden
@@ -57,7 +58,7 @@ export class IgxGridToolbarAdvancedFilteringComponent implements OnInit {
     }
 
     protected extractUniqueFieldNamesFromFilterTree(filteringTree?: IFilteringExpressionsTree) : string[] {
-        const columnNames = [];
+        const columnNames: string[] = [];
         if (!filteringTree) return columnNames;
         filteringTree.filteringOperands.forEach((expr) => {
             if (isTree(expr)) {

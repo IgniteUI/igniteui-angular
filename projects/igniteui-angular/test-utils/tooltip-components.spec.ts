@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxTooltipDirective, IgxTooltipTargetDirective, ITooltipHideEventArgs, ITooltipShowEventArgs } from 'igniteui-angular/directives';
 
 
@@ -17,11 +17,14 @@ import { IgxToggleActionDirective, IgxToggleDirective, IgxTooltipDirective, IgxT
         Hello, I am a tooltip!
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipSingleTargetComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: false }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: false })
+    public tooltipTarget: IgxTooltipTargetDirective;
     public cancelShowing = false;
     public cancelHiding = false;
     public showButton = true;
@@ -63,14 +66,20 @@ export class IgxTooltipSingleTargetComponent {
         <div class="my-second-close-btn">Second Custom Close Button</div>
     </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTargetsComponent {
-    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipTargetDirective;
-    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild('customClose', { static: true }) public customCloseTemplate: TemplateRef<any>;
-    @ViewChild('secondCustomClose', { static: true }) public secondCustomCloseTemplate: TemplateRef<any>;
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true })
+    public targetOne: IgxTooltipTargetDirective;
+    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true })
+    public targetTwo: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild('customClose', { static: true })
+    public customCloseTemplate: TemplateRef<any>;
+    @ViewChild('secondCustomClose', { static: true })
+    public secondCustomCloseTemplate: TemplateRef<any>;
 }
 
 @Component({
@@ -92,13 +101,18 @@ export class IgxTooltipMultipleTargetsComponent {
         Hello, I am tooltip 2!
     </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipMultipleTooltipsComponent {
-    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true }) public targetOne: IgxTooltipTargetDirective;
-    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true }) public targetTwo: IgxTooltipTargetDirective;
-    @ViewChild('tooltipRef1', { read: IgxTooltipDirective, static: true }) public tooltipOne: IgxTooltipDirective;
-    @ViewChild('tooltipRef2', { read: IgxTooltipDirective, static: true }) public tooltipTwo: IgxTooltipDirective;
+    @ViewChild('targetOne', { read: IgxTooltipTargetDirective, static: true })
+    public targetOne: IgxTooltipTargetDirective;
+    @ViewChild('targetTwo', { read: IgxTooltipTargetDirective, static: true })
+    public targetTwo: IgxTooltipTargetDirective;
+    @ViewChild('tooltipRef1', { read: IgxTooltipDirective, static: true })
+    public tooltipOne: IgxTooltipDirective;
+    @ViewChild('tooltipRef2', { read: IgxTooltipDirective, static: true })
+    public tooltipTwo: IgxTooltipDirective;
 }
 
 
@@ -108,10 +122,12 @@ export class IgxTooltipMultipleTooltipsComponent {
             info
     </button>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipTargetDirective]
 })
 export class IgxTooltipPlainStringComponent {
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
 }
 
 @Component({
@@ -122,12 +138,16 @@ export class IgxTooltipPlainStringComponent {
     <div #toggleDiv="toggle" class="toggle-content" igxToggle>Toggle content</div>
     <div #tooltipRef="tooltip" igxTooltip>Test</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective, IgxToggleActionDirective, IgxToggleDirective]
 })
 export class IgxTooltipWithToggleActionComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
-    @ViewChild(IgxToggleDirective, { static: true }) public toggleDir: IgxToggleDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxToggleDirective, { static: true })
+    public toggleDir: IgxToggleDirective;
 }
 
 @Component({
@@ -142,11 +162,14 @@ export class IgxTooltipWithToggleActionComponent {
 
     <div #tooltipRef="tooltip" igxTooltip>Test</div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective]
 })
 export class IgxTooltipWithCloseButtonComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget: IgxTooltipTargetDirective;
 }
 
 @Component({
@@ -162,11 +185,14 @@ export class IgxTooltipWithCloseButtonComponent {
     </div>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTooltipWithNestedContentComponent {
-    @ViewChild(IgxTooltipDirective, { static: true }) public tooltip!: IgxTooltipDirective;
-    @ViewChild(IgxTooltipTargetDirective, { static: true }) public tooltipTarget!: IgxTooltipTargetDirective;
+    @ViewChild(IgxTooltipDirective, { static: true })
+    public tooltip!: IgxTooltipDirective;
+    @ViewChild(IgxTooltipTargetDirective, { static: true })
+    public tooltipTarget!: IgxTooltipTargetDirective;
 }
 
 @Component({
@@ -196,14 +222,21 @@ export class IgxTooltipWithNestedContentComponent {
     </div>
     `,
     imports: [IgxTooltipDirective, IgxTooltipTargetDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxTooltipNestedTooltipsComponent {
-    @ViewChild('targetLevel1', { read: IgxTooltipTargetDirective, static: true }) public targetLevel1: IgxTooltipTargetDirective;
-    @ViewChild('targetLevel2', { read: IgxTooltipTargetDirective, static: true }) public targetLevel2: IgxTooltipTargetDirective;
-    @ViewChild('targetLevel3', { read: IgxTooltipTargetDirective, static: true }) public targetLevel3: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel1', { read: IgxTooltipTargetDirective, static: true })
+    public targetLevel1: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel2', { read: IgxTooltipTargetDirective, static: true })
+    public targetLevel2: IgxTooltipTargetDirective;
+    @ViewChild('targetLevel3', { read: IgxTooltipTargetDirective, static: true })
+    public targetLevel3: IgxTooltipTargetDirective;
 
-    @ViewChild('tooltipLevel1', { read: IgxTooltipDirective, static: true }) public tooltipLevel1: IgxTooltipDirective;
-    @ViewChild('tooltipLevel2', { read: IgxTooltipDirective, static: true }) public tooltipLevel2: IgxTooltipDirective;
-    @ViewChild('tooltipLevel3', { read: IgxTooltipDirective, static: true }) public tooltipLevel3: IgxTooltipDirective;
+    @ViewChild('tooltipLevel1', { read: IgxTooltipDirective, static: true })
+    public tooltipLevel1: IgxTooltipDirective;
+    @ViewChild('tooltipLevel2', { read: IgxTooltipDirective, static: true })
+    public tooltipLevel2: IgxTooltipDirective;
+    @ViewChild('tooltipLevel3', { read: IgxTooltipDirective, static: true })
+    public tooltipLevel3: IgxTooltipDirective;
 }

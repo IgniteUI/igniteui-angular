@@ -1,0 +1,31 @@
+:host {
+    display: block;
+    padding: var(--content-spacing, 1.5rem);
+}
+
+.flicker-demo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    max-width: 640px;
+
+    &__hint {
+        margin: 0;
+        color: var(--ig-gray-700, #666);
+
+        code {
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            background: var(--ig-gray-200, #eee);
+            font-family: monospace;
+        }
+    }
+
+    &__stage {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        min-height: 3rem;
+    }
+}

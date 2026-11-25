@@ -9,19 +9,19 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
 
     /** @hidden */
     @ContentChild(IgxTabHeaderBase)
-    public headerComponent: IgxTabHeaderBase;
+    public headerComponent!: IgxTabHeaderBase;
 
     /** @hidden */
     @ContentChild(IgxTabContentBase)
-    public panelComponent: IgxTabContentBase;
+    public panelComponent!: IgxTabContentBase;
 
     /** @hidden */
     @ViewChild('headerTemplate', { static: true })
-    public headerTemplate: TemplateRef<any>;
+    public headerTemplate!: TemplateRef<any>;
 
     /** @hidden */
     @ViewChild('panelTemplate', { static: true })
-    public panelTemplate: TemplateRef<any>;
+    public panelTemplate!: TemplateRef<any>;
 
     /**
      * Output to enable support for two-way binding on [(selected)]
@@ -38,7 +38,7 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     /** @hidden */
     public direction = CarouselAnimationDirection.NONE;
     /** @hidden */
-    public previous: boolean;
+    public previous!: boolean;
 
     private _selected = false;
 

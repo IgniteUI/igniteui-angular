@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { data, dataWithoutPK } from '../shared/data';
-import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxPaginatorComponent, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
+import { IColumnPipeArgs, IgxButtonDirective, IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxGridComponent, IgxInputDirective, IgxInputGroupComponent, IgxLabelDirective, IgxSelectComponent, IgxSelectItemComponent, IgxStringFilteringOperand } from 'igniteui-angular';
 
  @Component({
     providers: [],
     selector: 'app-grid-percantge-widths.sample',
     templateUrl: 'grid-percantge-widths.sample.html',
     styleUrls: ['grid-percantge-widths.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective, IgxCardComponent, IgxCardHeaderComponent, IgxCardHeaderTitleDirective, IgxCardContentDirective, IgxInputGroupComponent, IgxLabelDirective, FormsModule, IgxInputDirective, IgxSelectComponent, IgxSelectItemComponent, IgxButtonDirective, CurrencyPipe, DatePipe]
 })
  export class GridColumnPercentageWidthsSampleComponent implements OnInit {

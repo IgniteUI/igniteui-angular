@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IGX_HIERARCHICAL_GRID_DIRECTIVES } from 'igniteui-angular/grids/hierarchical-grid';
 
 @Component({
     selector: 'app-h-grid',
     templateUrl: './h-grid.component.html',
     styleUrls: ['./h-grid.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IGX_HIERARCHICAL_GRID_DIRECTIVES]
 })
 export class HGridComponent {

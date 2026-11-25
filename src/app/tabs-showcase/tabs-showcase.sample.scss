@@ -1,5 +1,10 @@
 .items-wrapper {
     height: 400px;
+
+    .igx-tabs--start,
+    .igx-tabs--end {
+        height: 360px;
+    }
 }
 
 strong {
@@ -14,12 +19,21 @@ strong {
     display: flex;
 }
 
+.panel-actions--section {
+    gap: 16px;
+}
+
 .panel-actions:not(.panel-actions--col) {
     gap: 8px;
 }
 
 .panel-actions--col {
     flex-direction: column;
+}
+
+.properties-panel__property-label {
+    display: block;
+    margin-block-end: 5px;
 }
 
 .select-index {

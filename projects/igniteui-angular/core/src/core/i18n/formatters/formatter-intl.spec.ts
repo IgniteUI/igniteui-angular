@@ -1,4 +1,5 @@
 import { IntlFormatter } from './formatter-intl';
+import { describe, it, expect } from 'vitest';
 
 describe('Localization', () => {
     const i18nFormatter = new IntlFormatter();
@@ -35,7 +36,7 @@ describe('Localization', () => {
             expect(i18nFormatter.formatCurrency(12345, 'en', 'symbol', 'EUR', '1.1-3')).toEqual('€12,345.0');
             expect(i18nFormatter.formatCurrency('12345', 'en', 'symbol', 'EUR', '1.1-3')).toEqual('€12,345.0');
         });
-    })
+    });
 
     describe('date formatting', () => {
         it('should format string to dateTime using Intl', () => {

@@ -1,77 +1,62 @@
 @use '../../../projects/igniteui-angular/core/src/core/styles/base' as *;
 
-:host {
-    display: block;
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-}
-
-:host ::ng-deep {
-    --ph-background: var(--ig-primary-800);
-    --ph-foreground: var(--ig-primary-800-contrast);
-
-    .hamburger {
-        color: var(--ph-foreground);
-        margin-right: rem(16px);
-
-        [dir='rtl'] & {
-            margin-left: rem(16px);
-            margin-right: initial;
-        }
+.demos-navbar {
+    .igx-navbar__title {
+        display: none !important;
     }
+
+    igx-input-group {
+        display: block grid !important;
+    }
+
+    .igx-navbar__left:not(:empty) {
+        margin-inline: 0;
+    }
+
+    @include tokens(navbar-theme(
+        $background: var(--ig-gray-100),
+        $disable-shadow: true,
+        $border-color: var(--ig-gray-300)
+    ));
 }
 
-.header-actions,
-.sample-header,
-.wrapper {
+.header-actions {
     display: flex;
     align-items: center;
-}
-
-.sample-header {
-    justify-content: space-between;
-    height: rem(90px);
-    padding: 0 rem(16px);
-    background: var(--ph-background);
-    overflow: hidden;
-
-    .title {
-        color: var(--ph-foreground);
-        margin: 0;
-        text-transform: capitalize;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .header-actions {
-        gap: .2em
-    }
+    gap: 1rem;
 
     .toggle-button {
-        color: var(--ph-foreground);
+        --ig-size: 2;
+
+        @container style(--ig-theme: material) or style(--ig-theme: fluent) {
+            --ig-size: 3;
+        }
     }
 
-    .locale-select {
-        --ig-size: var(--ig-size-small);
-        width: 100px;
+    .locale-select,
+    .size-select {
+        --ig-size: 2;
+        --_bundle-template-columns: auto auto auto auto;
+
+        width: fit-content;
+        min-width: 4ch;
         cursor: pointer;
 
-        ::ng-deep {
-            input {
-                color: white !important;
-            }
-
-            input[readonly] {
-                cursor: pointer;
-            }
+        .igx-input-group__input {
+            width: auto;
+            field-sizing: content;
         }
     }
 }
 
-.header-actions__title {
-    color: var(--ig-primary-900-contrast);
+
+.demos-header {
+    --ig-size: 1;
+
+    grid-column: 1 / -1;
+    grid-row: var(--header-row);
+
+    nav {
+        min-height: var(--demo-navbar-size);
+    }
 }

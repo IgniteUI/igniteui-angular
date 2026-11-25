@@ -8,16 +8,13 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Node schematics tests",
-            "args": [
-                "-r",
-                "ts-node/register",
-                "./node_modules/jasmine/bin/jasmine.js",
-                "./projects/igniteui-angular/schematics/**/*.spec.ts",
-                "./projects/igniteui-angular/migrations/**/*.spec.ts"
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "test:schematics"
             ],
-            "env": {
-                "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json"
-            }
+            "autoAttachChildProcesses": true,
+            "console": "integratedTerminal"
         },
         {
             "name": "Run migrations",

@@ -1,6 +1,6 @@
-import { Component, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTreeComponent, IgxTreeExpandIndicatorDirective, IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './public_api';
-import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
+import { HIERARCHICAL_SAMPLE_DATA } from '../../../../../src/app/shared/sample-data';
 import { NgTemplateOutlet } from '@angular/common';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 
@@ -24,11 +24,16 @@ import { IgxIconComponent } from 'igniteui-angular/icon';
         }
     </igx-tree>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSimpleComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
+    public data;
+    constructor () {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }
 
 @Component({
@@ -51,12 +56,14 @@ export class IgxTreeSimpleComponent {
         }
     </igx-tree>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeComponent, IgxTreeNodeComponent]
 })
 export class IgxTreeSelectionSampleComponent {
     public cdr = inject(ChangeDetectorRef);
 
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
     public data;
     constructor() {
         this.data = HIERARCHICAL_SAMPLE_DATA;
@@ -124,13 +131,19 @@ export class IgxTreeSelectionSampleComponent {
         </ng-template>
     </igx-tree>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeNodeLinkDirective, NgTemplateOutlet]
 })
 export class IgxTreeNavigationComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
+    public data;
     public showNodesWithDirective = false;
     public isDisabled = false;
+
+    constructor() {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }
 @Component({
     template: `
@@ -155,9 +168,15 @@ export class IgxTreeNavigationComponent {
         </ng-template>
     </igx-tree>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxTreeComponent, IgxTreeNodeComponent, IgxTreeExpandIndicatorDirective, IgxIconComponent]
 })
 export class IgxTreeScrollComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    @ViewChild(IgxTreeComponent, { static: true })
+    public tree: IgxTreeComponent;
+    public data;
+
+    constructor() {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+    }
 }

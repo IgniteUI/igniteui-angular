@@ -1,4 +1,4 @@
-import { Component, OnDestroy, ViewChild, inject, signal } from '@angular/core';
+import { Component, OnDestroy, ViewChild, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -33,6 +33,7 @@ import { INVOICE_DATA } from '../shared/invoiceData';
     selector: 'app-grid-cellMerging',
     templateUrl: 'grid-cellMerging.component.html',
     styleUrl: 'grid-cellMerging.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxColumnComponent,

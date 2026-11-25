@@ -1,0 +1,21 @@
+@use 'sass-true' as *;
+@use '../themes' as *;
+
+// The public theming entry keeps the BEM block() alias; the scoped block() stays private.
+@include describe('Block through the public theming entry') {
+    @include it('should resolve to the BEM block() alias') {
+        @include assert() {
+            @include output() {
+                @include block(my-component) {
+                    color: red;
+                }
+            }
+
+            @include expect() {
+                @at-root .my-component {
+                    color: red;
+                }
+            }
+        }
+    }
+}

@@ -1,6 +1,6 @@
 import { useAnimation } from '@angular/animations';
 import { NgTemplateOutlet, AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxTreeNodeComponent,
@@ -11,6 +11,7 @@ import {
     ITreeNodeSelectionEvent,
     IgxTreeNode,
     IgxButtonDirective,
+    IButtonGroupButton,
     IgxButtonGroupComponent,
     IgxIconComponent,
     IgxInputDirective,
@@ -50,6 +51,7 @@ interface CompanyData {
     selector: 'app-tree-sample',
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxLayoutDirective,
         IgxInputGroupComponent,
@@ -76,7 +78,7 @@ export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('test', { static: true })
     public testNode: IgxTreeNodeComponent<any>;
 
-    public selectionModes = [];
+    public selectionModes: (IButtonGroupButton & { selectMode: string })[] = [];
 
     public selectionMode = 'Cascading';
 

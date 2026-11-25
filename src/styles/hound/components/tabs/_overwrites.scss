@@ -1,7 +1,7 @@
 @use '../../../../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
 .igx-tabs {
-    .igx-tabs__header-content {
+    .igx-tabs-header__content {
         margin-bottom: pad(rem(16px));
     }
 
@@ -29,6 +29,6 @@
     }
 }
 
-.ig-typography .igx-tabs__header-item--selected .igx-tabs__header-item-inner > [igxtabheaderlabel]{
+.ig-typography .igx-tab-header--selected .igx-tab-header__inner > [igxtabheaderlabel]{
     font-weight: 600;
 }

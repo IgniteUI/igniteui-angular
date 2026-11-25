@@ -1,5 +1,5 @@
 ﻿import { NgForOfContext } from '@angular/common';
-import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, afterNextRender, runInInjectionContext, EnvironmentInjector, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, Directive, EmbeddedViewRef, EventEmitter, Input, IterableChanges, IterableDiffer, IterableDiffers, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, TemplateRef, TrackByFunction, ViewContainerRef, booleanAttribute, DOCUMENT, inject, EnvironmentInjector, AfterViewInit, IterableChangeRecord } from '@angular/core';
 
 import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
@@ -7,12 +7,19 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
-import { getResizeObserver } from 'igniteui-angular/core';
+import { takeUntil, filter, throttleTime } from 'rxjs/operators';
+import { getResizeObserver, runAfterRenderOnce, ScrollingClassController } from 'igniteui-angular/core';
 import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
 const MAX_PERF_SCROLL_DIFF = 4;
+
+/**
+ * Engine max element size per document, keyed by probe edge and DPR (e.g. 'top@1').
+ * It changes only with zoom, yet each probe forces a full document layout,
+ * so igxFor instances (one per grid row) share one probe instead of each running it.
+ */
+const maxBrowserSizes = new WeakMap<Document, Map<string, number>>();
 
 /**
  *  @publicApi
@@ -95,6 +102,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected syncScrollService = inject(IgxForOfScrollSyncService);
     protected platformUtil = inject(PlatformUtil);
     protected document = inject(DOCUMENT);
+    /** Keeps the scrolling class on the display container while the items scroll. */
+    private _scrollingClass = new ScrollingClassController(this._zone, 'igx-display-container--scrolling');
     private _igxForOf: U & T[] | null = null;
     protected _embeddedViewSizesCache = new WeakMap<EmbeddedViewRef<any>, number>();
 
@@ -120,7 +129,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * Sets the property name from which to read the size in the data object.
      */
     @Input()
-    public igxForSizePropName;
+    public igxForSizePropName: any;
 
     /**
      * Specifies the scroll orientation.
@@ -253,7 +262,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * @hidden
      */
-    public dc: ComponentRef<DisplayContainerComponent>;
+    public dc!: ComponentRef<DisplayContainerComponent>;
 
     /**
      * The current state of the directive. It contains `startIndex` and `chunkSize`.
@@ -269,11 +278,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         chunkSize: 0
     };
 
-    protected func;
+    protected func!: (evt: any) => void;
     protected _sizesCache: number[] = [];
-    protected scrollComponent: VirtualHelperBaseDirective;
+    protected scrollComponent!: VirtualHelperBaseDirective;
     protected _differ: IterableDiffer<T> | null = null;
-    protected _trackByFn: TrackByFunction<T>;
+    protected _trackByFn!: TrackByFunction<T>;
     protected individualSizeCache: number[] = [];
     /**
      * @hidden
@@ -285,8 +294,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     // End properties related to virtual height handling
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
     protected contentResizeNotify = new Subject<void>();
-    protected contentObserver: ResizeObserver;
-    protected viewObserver: ResizeObserver;
+    protected contentObserver!: ResizeObserver;
+    protected viewObserver!: ResizeObserver;
     protected viewResizeNotify = new Subject<ResizeObserverEntry[]>();
     /** Size that is being virtualized. */
     protected _virtSize = 0;
@@ -295,11 +304,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     protected destroy$ = new Subject<any>();
 
-    private _totalItemCount: number = null;
-    private _adjustToIndex;
+    private _totalItemCount: number = null!;
+    private _adjustToIndex!: number | null;
     // Start properties related to virtual size handling due to browser limitation
     /** Maximum size for an element of the browser. */
-    private _maxSize;
+    private _maxSize!: number;
     /**
      * Ratio for height that's being virtualizaed and the one visible
      * If _virtHeightRatio = 1, the visible height and the virtualized are the same, also _maxSize > _virtHeight.
@@ -336,12 +345,12 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (this._totalItemCount !== val) {
             this._totalItemCount = val;
             // update sizes in case total count changes.
-            const newSize = this.initSizesCache(this.igxForOf);
+            const newSize = this.initSizesCache(this.igxForOf!);
             const sizeDiff = this.scrollComponent.size - newSize;
             this.scrollComponent.size = newSize;
-            const lastChunkExceeded = this.state.startIndex + this.state.chunkSize > val;
+            const lastChunkExceeded = this.state.startIndex! + this.state.chunkSize! > val;
             if (lastChunkExceeded) {
-                this.state.startIndex = val - this.state.chunkSize;
+                this.state.startIndex = val - this.state.chunkSize!;
             }
             this._adjustScrollPositionAfterSizeChange(sizeDiff);
         }
@@ -388,6 +397,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * @hidden
      */
     protected get isRTL() {
+        if (!this.platformUtil.isBrowser) {
+            return false;
+        }
         const dir = window.getComputedStyle(this.dc.instance._viewContainer.element.nativeElement).getPropertyValue('direction');
         return dir === 'rtl';
     }
@@ -410,10 +422,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     private get _isAtBottomIndex() {
-        return this.igxForOf && this.state.startIndex + this.state.chunkSize > this.igxForOf.length;
+        return this.igxForOf && this.state.startIndex! + this.state.chunkSize! > this.igxForOf.length;
     }
 
-    public verticalScrollHandler(event) {
+    public verticalScrollHandler(event: any) {
         this.onScroll(event);
     }
 
@@ -449,19 +461,19 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this.dc = this._viewContainer.createComponent(DisplayContainerComponent, { index: 0 });
         this.dc.instance.scrollDirection = this.igxForScrollOrientation;
         if (this.igxForOf && this.igxForOf.length) {
-            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation)!;
             this.state.chunkSize = this._calculateChunkSize();
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.scrollComponent && !this.scrollComponent.destroyed) {
                 this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache),
                     this.igxForOf.length - this.state.chunkSize);
             }
-            for (let i = this.state.startIndex; i < this.state.startIndex + this.state.chunkSize &&
+            for (let i = this.state.startIndex!; i < this.state.startIndex! + this.state.chunkSize! &&
                 this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    new IgxForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
+                    new IgxForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length) as any
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -469,7 +481,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this._maxSize = this._calcMaxBrowserSize();
         if (this.igxForScrollOrientation === 'vertical') {
             this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(0px)`;
-            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation)!;
             if (!this.scrollComponent || this.scrollComponent.destroyed) {
                 this.scrollComponent = vc.createComponent(VirtualHelperComponent).instance;
             }
@@ -491,7 +503,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
         if (this.igxForScrollOrientation === 'horizontal') {
             this.func = (evt) => this.onHScroll(evt);
-            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation)!;
             if (!this.scrollComponent) {
                 this.scrollComponent = vc.createComponent(HVirtualHelperComponent).instance;
                 this.scrollComponent.size = this.igxForOf ? this._calcSize() : 0;
@@ -523,7 +535,28 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
-    protected subscribeToViewObserver(target: Element) {
+    /**
+     * @hidden
+     * Resolves the element a view is tracked by.
+     *
+     * The view's root nodes are not always elements: when the template's root is
+     * a control flow block they are comment anchors, and the rendered element
+     * follows the first of them. Both lookups can come up empty - the view may
+     * hold no element at all, or be torn down before its content is rendered -
+     * in which case there is nothing to observe and null is returned.
+     */
+    protected getViewObservedNode(view: EmbeddedViewRef<any> | null | undefined): Element | null {
+        const rootNodes = view?.rootNodes ?? [];
+        const elementNode = rootNodes.find(node=> node?.nodeType === Node.ELEMENT_NODE);
+        const candidate = elementNode ?? rootNodes[0]?.nextElementSibling;
+        return candidate?.nodeType === Node.ELEMENT_NODE ? candidate : null;
+    }
+
+    protected subscribeToViewObserver(target: Element | null) {
+        if (!target) {
+            return;
+        }
+
         if (this.igxForScrollOrientation === 'vertical' && this.viewObserver) {
             this._zone.runOutsideAngular(() => {
                 if (this.platformUtil.isBrowser) {
@@ -538,6 +571,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     public ngOnDestroy() {
         this.removeScrollEventListeners();
+        this._scrollingClass.clear();
         this.destroy$.next(true);
         this.destroy$.complete();
         if (this.contentObserver) {
@@ -554,9 +588,10 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * Asserts the correct type of the context for the template that `igxForOf` will render.
      *
      * The presence of this method is a signal to the Ivy template type-check compiler that the
-     * `IgxForOf` structural directive renders its template with a specific context type.
+     * ForOf structural directive renders its template with a specific context type.
      */
-    public static ngTemplateContextGuard<T, U extends T[]>(dir: IgxForOfDirective<T, U>, ctx: any):
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static ngTemplateContextGuard<T, U extends T[]>(_dir: IgxForOfDirective<T, U>, ctx: any):
         ctx is IgxForOfContext<T, U> {
         return true;
     }
@@ -571,7 +606,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             if (!this._differ && value) {
                 try {
                     this._differ = this._differs.find(value).create(this.igxForTrackBy);
-                } catch (e) {
+                } catch (_e) {
                     throw new Error(
                         `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
                      NgFor only supports binding to Iterables such as Arrays.`);
@@ -601,14 +636,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             if (changes) {
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    this.igxForOf = [] as U;
+                    this.igxForOf = [] as unknown as U;
                 }
                 this._updateSizeCache();
                 this._zone.run(() => {
                     this._applyChanges();
                     this.cdr.markForCheck();
                     this._updateScrollOffset();
-                    const args: IForOfDataChangingEventArgs = {
+                    const args: IForOfDataChangeEventArgs = {
                         containerSize: this.igxForContainerSize,
                         state: this.state
                     };
@@ -658,13 +693,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             // Actual scroll delta that was added is smaller than 1 and onScroll handler doesn't trigger when scrolling < 1px
             const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
             // scrollOffset = scrollOffset !== parseInt(this.igxForItemSize, 10) ? scrollOffset : 0;
-            runInInjectionContext(this._injector, () => {
-                afterNextRender({
-                    write: () => {
-                        this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    }
-                  });
-              });
+            runAfterRenderOnce(this._injector, () => {
+                this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+            }, 'write');
         }
 
         const maxRealScrollTop = this.scrollComponent.nativeElement.scrollHeight - containerSize;
@@ -692,11 +723,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * @param index
      */
     public scrollTo(index: number) {
-        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf.length) - 1) {
+        if (index < 0 || index > (this.isRemote ? this.totalItemCount : this.igxForOf!.length) - 1) {
             return;
         }
         const containerSize = parseFloat(this.igxForContainerSize);
-        const isPrevItem = index < this.state.startIndex || this.scrollPosition > this.sizesCache[index];
+        const isPrevItem = index < this.state.startIndex! || this.scrollPosition > this.sizesCache[index];
         let nextScroll = isPrevItem ? this.sizesCache[index] : this.sizesCache[index + 1] - containerSize;
         if (nextScroll < 0) {
             return;
@@ -732,7 +763,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     public scrollPrev() {
-        this.scrollTo(this.state.startIndex - 1);
+        this.scrollTo(this.state.startIndex! - 1);
     }
 
     /**
@@ -761,7 +792,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * @hidden
      */
-    public getColumnScrollLeft(colIndex) {
+    public getColumnScrollLeft(colIndex: number) {
         return this.sizesCache[colIndex];
     }
 
@@ -837,11 +868,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * ```
      */
     public isIndexOutsideView(index: number) {
-        const targetNode = index >= this.state.startIndex && index <= this.state.startIndex + this.state.chunkSize ?
-            this.embeddedViewNodes[index - this.state.startIndex] : null;
+        const targetNode = index >= this.state.startIndex! && index <= this.state.startIndex! + this.state.chunkSize! ?
+            this.embeddedViewNodes[index - this.state.startIndex!] : null;
         const rowHeight = this.getSizeAt(index);
         const containerSize = parseFloat(this.igxForContainerSize);
-        const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex]);
+        const containerOffset = -(this.scrollPosition - this.sizesCache[this.state.startIndex!]);
         const endTopOffset = targetNode ? targetNode.offsetTop + rowHeight + containerOffset : containerSize + rowHeight;
         return !targetNode || targetNode.offsetTop < Math.abs(containerOffset)
             || containerSize && endTopOffset - containerSize > 5;
@@ -851,8 +882,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
         this.igxForSizePropName : 'height';
         const nodeSize = dimension === 'height' ?
-            rNode.clientHeight + this.getMargin(rNode, dimension):
-            rNode.clientWidth + this.getMargin(rNode, dimension);
+            rNode.clientHeight + this.getBorder(rNode, dimension) + this.getMargin(rNode, dimension):
+            rNode.clientWidth + this.getBorder(rNode, dimension) + this.getMargin(rNode, dimension);
         return nodeSize;
     }
 
@@ -871,7 +902,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let totalDiff = 0;
         const nodes = this.embeddedViewNodes;
         for (let index = 0; index < this._embeddedViews.length; index++) {
-            const targetIndex = this.state.startIndex + index;
+            const targetIndex = this.state.startIndex! + index;
             const nodeSize = this.getNodeSize(nodes[index], index);
             const oldVal = this.individualSizeCache[targetIndex];
             const currDiff = nodeSize - oldVal;
@@ -882,12 +913,12 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         // update cache
         if (Math.abs(totalDiff) > 0) {
-            for (let j = this.state.startIndex + this.state.chunkSize + 1; j < this.sizesCache.length; j++) {
+            for (let j = this.state.startIndex! + this.state.chunkSize! + 1; j < this.sizesCache.length; j++) {
                 this.sizesCache[j] = (this.sizesCache[j] || 0) + totalDiff;
             }
 
             // update scrBar heights/widths
-            const reducer = (acc, val) => acc + val;
+            const reducer = (acc: number, val: number) => acc + val;
 
             this._virtSize += totalDiff;
             if (this._virtSize > this._maxSize) {
@@ -910,8 +941,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             if (this._adjustToIndex) {
                 // in case scrolled to specific index where after scroll heights are changed
                 // need to adjust the offsets so that item is last in view.
-                const updatesToIndex = this._adjustToIndex - this.state.startIndex + 1;
-                const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer);
+                const updatesToIndex = this._adjustToIndex - this.state.startIndex! + 1;
+                const sumDiffs = diffs.slice(0, updatesToIndex).reduce(reducer, 0);
                 if (sumDiffs !== 0) {
                     this.addScroll(sumDiffs);
                 }
@@ -947,7 +978,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * @hidden
      * Function that is called when scrolling vertically
      */
-    protected onScroll(event) {
+    protected onScroll(event: any) {
         /* in certain situations this may be called when no scrollbar is visible */
         if (!parseFloat(this.scrollComponent.nativeElement.style.height)) {
             return;
@@ -958,18 +989,14 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this._bScrollInternal = false;
         }
+        this.markScrolling();
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
 
-        runInInjectionContext(this._injector, () => {
-            afterNextRender({
-                write: () => {
-                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                }
-              });
-          });
-
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        runAfterRenderOnce(this._injector, () => {
+            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+        }, 'write');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes());
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1005,9 +1032,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected updateViewSizes(entries:ResizeObserverEntry[] ) {
         for (const entry of entries) {
-            const index = parseInt(entry.target.getAttribute('data-index'), 10);
+            const index = parseInt(entry.target.getAttribute('data-index')!, 10);
             const height = entry.contentRect.height;
-            const embView = this._embeddedViews[index - this.state.startIndex];
+            const embView = this._embeddedViews[index - this.state.startIndex!];
             if (embView) {
                 this._embeddedViewSizesCache.set(embView, height);
             }
@@ -1019,15 +1046,15 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * @hidden
      */
     protected fixedUpdateAllElements(inScrollTop: number): number {
-        const count = this.isRemote ? this.totalItemCount : this.igxForOf.length;
+        const count = this.isRemote ? this.totalItemCount : this.igxForOf!.length;
         let newStart = this.getIndexAt(inScrollTop, this.sizesCache);
 
-        if (newStart + this.state.chunkSize > count) {
-            newStart = count - this.state.chunkSize;
+        if (newStart + this.state.chunkSize! > count) {
+            newStart = count - this.state.chunkSize!;
         }
 
-        const prevStart = this.state.startIndex;
-        const diff = newStart - this.state.startIndex;
+        const prevStart = this.state.startIndex!;
+        const diff = newStart - this.state.startIndex!;
         this.state.startIndex = newStart;
 
         if (diff) {
@@ -1055,18 +1082,22 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * The function applies an optimized state change for scrolling down/right employing context change with view rearrangement
      */
     protected moveApplyScrollNext(prevIndex: number): void {
-        const start = prevIndex + this.state.chunkSize;
-        const end = start + this.state.startIndex - prevIndex;
+        const start = prevIndex + this.state.chunkSize!;
+        const end = start + this.state.startIndex! - prevIndex;
         const container = this.dc.instance._vcr as ViewContainerRef;
 
-        for (let i = start; i < end && this.igxForOf[i] !== undefined; i++) {
+        for (let i = start; i < end && this.igxForOf![i] !== undefined; i++) {
             const embView = this._embeddedViews.shift();
-            if (!embView.destroyed) {
+            if (embView && !embView.destroyed) {
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
-                const view = container.detach(0);
-
+                const view = container.detach(0)!;
                 this.updateTemplateContext(embView.context, i);
+
+                // Because in Elements the whole parent div (containing data-index) gets removed (possibly due to being disconnected). In Angular it just gets moved.
+                // This ensures to update it with the new context and remove it first from DOM because of detach action before inserting it manually.
+                view.detectChanges();
+
                 container.insert(view);
                 this._embeddedViews.push(embView);
             }
@@ -1079,14 +1110,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     protected moveApplyScrollPrev(prevIndex: number): void {
         const container = this.dc.instance._vcr as ViewContainerRef;
-        for (let i = prevIndex - 1; i >= this.state.startIndex && this.igxForOf[i] !== undefined; i--) {
+        for (let i = prevIndex - 1; i >= this.state.startIndex! && this.igxForOf![i] !== undefined; i--) {
             const embView = this._embeddedViews.pop();
-            if (!embView.destroyed) {
+            if (embView && !embView.destroyed) {
                 this.scrollFocus(embView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE)
                     || embView.rootNodes[0].nextElementSibling);
-                const view = container.detach(container.length - 1);
-
+                // embView and view both refer to the same collections
+                const view = container.detach(container.length - 1)!;
                 this.updateTemplateContext(embView.context, i);
+                view.detectChanges();
+
                 container.insert(view, 0);
                 this._embeddedViews.unshift(embView);
             }
@@ -1096,8 +1129,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * @hidden
      */
-    protected getContextIndex(input) {
-        return this.isRemote ? this.state.startIndex + this.igxForOf.indexOf(input) : this.igxForOf.indexOf(input);
+    protected getContextIndex(input: T) {
+        return this.isRemote ? this.state.startIndex! + this.igxForOf!.indexOf(input) : this.igxForOf!.indexOf(input);
     }
 
     /**
@@ -1107,9 +1140,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * Often, called while handling a scroll event.
      */
     protected updateTemplateContext(context: any, index = 0): void {
-        context.$implicit = this.igxForOf[index];
-        context.index = this.getContextIndex(this.igxForOf[index]);
-        context.count = this.igxForOf.length;
+        context.$implicit = this.igxForOf![index];
+        context.index = this.getContextIndex(this.igxForOf![index]);
+        context.count = this.igxForOf!.length;
     }
 
     /**
@@ -1118,8 +1151,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     protected fixedApplyScroll(): void {
         let j = 0;
-        const endIndex = this.state.startIndex + this.state.chunkSize;
-        for (let i = this.state.startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
+        const endIndex = this.state.startIndex! + this.state.chunkSize!;
+        for (let i = this.state.startIndex!; i < endIndex && this.igxForOf![i] !== undefined; i++) {
             const embView = this._embeddedViews[j++];
             this.updateTemplateContext(embView.context, i);
         }
@@ -1150,10 +1183,21 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     /**
+     * @hidden @internal
+     * Keeps the scrolling class on the display container while the items scroll, so that the components
+     * in the views reused for other records (e.g. a chip or a checkbox) do not animate from their previous state.
+     */
+    protected markScrolling() {
+        if (this.platformUtil.isBrowser) {
+            this._scrollingClass.scrolled(this.dc?.instance._viewContainer.element.nativeElement);
+        }
+    }
+
+    /**
      * @hidden
      * Function that is called when scrolling horizontally
      */
-    protected onHScroll(event) {
+    protected onHScroll(event: any) {
         /* in certain situations this may be called when no scrollbar is visible */
         const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
         if (!parseFloat(firstScrollChild.style.width)) {
@@ -1165,6 +1209,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this._bScrollInternal = false;
         }
+        this.markScrolling();
         const prevStartIndex = this.state.startIndex;
         const scrLeft = this.scrollComponent.scrollAmount;
         // Updating horizontal chunks
@@ -1175,7 +1220,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
         }
-        this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this));
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes());
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
@@ -1221,16 +1266,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
         if (this.igxForOf && this.igxForOf.length && this.dc) {
-            const embeddedViewCopy = Object.assign([], this._embeddedViews);
-            let startIndex = this.state.startIndex;
-            let endIndex = this.state.chunkSize + this.state.startIndex;
+            const embeddedViewCopy: Array<EmbeddedViewRef<any>> = Object.assign([], this._embeddedViews);
+            let startIndex = this.state.startIndex!;
+            let endIndex = this.state.chunkSize! + this.state.startIndex!;
             if (this.isRemote) {
                 startIndex = 0;
                 endIndex = this.igxForOf.length;
             }
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
                 const embView = embeddedViewCopy.shift();
-                this.updateTemplateContext(embView.context, i);
+                this.updateTemplateContext(embView!.context, i);
             }
             if (prevChunkSize !== this.state.chunkSize) {
                 this.chunkLoad.emit(this.state);
@@ -1245,14 +1290,30 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (!this.platformUtil.isBrowser) {
             return 0;
         }
+        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
+
+        // Reuse this document's probe; zoom changes the value in CSS px, hence the DPR.
+        const sizes = maxBrowserSizes.get(this.document) ?? new Map<string, number>();
+        const key = `${dir}@${this.document.defaultView?.devicePixelRatio}`;
+        const cached = sizes.get(key);
+
+        if (cached) {
+            return cached;
+        }
+
         const div = this.document.createElement('div');
         const style = div.style;
         style.position = 'absolute';
-        const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'top';
         style[dir] = '9999999999999999px';
         this.document.body.appendChild(div);
         const size = Math.abs(div.getBoundingClientRect()[dir]);
         this.document.body.removeChild(div);
+
+        // 0 means no layout yet (e.g. hidden body); probe again next time.
+        if (size) {
+            sizes.set(key, size);
+            maxBrowserSizes.set(this.document, sizes);
+        }
         return size;
     }
 
@@ -1265,7 +1326,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let chunkSize = 0;
         if (this.igxForContainerSize !== null && this.igxForContainerSize !== undefined) {
             if (!this.sizesCache || this.sizesCache.length === 0) {
-                this.initSizesCache(this.igxForOf);
+                this.initSizesCache(this.igxForOf!);
             }
             chunkSize = this._calcMaxChunkSize();
             if (this.igxForOf && chunkSize > this.igxForOf.length) {
@@ -1282,7 +1343,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * @hidden
      */
-    protected getElement(viewref, nodeName) {
+    protected getElement(viewref: any, nodeName: string) {
         const elem = viewref.element.nativeElement.parentNode.getElementsByTagName(nodeName);
         return elem.length > 0 ? elem[0] : null;
     }
@@ -1310,11 +1371,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
 
     protected _updateSizeCache() {
         if (this.igxForScrollOrientation === 'horizontal') {
-            this.initSizesCache(this.igxForOf);
+            this.initSizesCache(this.igxForOf!);
             return;
         }
         const oldHeight = this.individualSizeCache.length > 0 ? this.individualSizeCache.reduce((acc, val) => acc + val) : 0;
-        const newHeight = this.initSizesCache(this.igxForOf);
+        const newHeight = this.initSizesCache(this.igxForOf!);
 
         const diff = oldHeight - newHeight;
         this._adjustScrollPositionAfterSizeChange(diff);
@@ -1327,7 +1388,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         let i = 0;
         let length = 0;
         let maxLength = 0;
-        const arr = [];
+        const arr: any[] = [];
         let sum = 0;
         const availableSize = parseFloat(this.igxForContainerSize);
         if (!availableSize) {
@@ -1335,11 +1396,11 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         const dimension = this.igxForScrollOrientation === 'horizontal' ?
             this.igxForSizePropName : 'height';
-        const reducer = (accumulator, currentItem) => accumulator + this._getItemSize(currentItem, dimension);
-        for (i; i < this.igxForOf.length; i++) {
-            let item: T | { value: T, height: number } = this.igxForOf[i];
+        const reducer = (accumulator: number, currentItem: any) => accumulator + this._getItemSize(currentItem, dimension);
+        for (i; i < this.igxForOf!.length; i++) {
+            let item: T | { value: T, height: number } = this.igxForOf![i];
             if (dimension === 'height') {
-                item = { value: this.igxForOf[i], height: this.individualSizeCache[i] };
+                item = { value: this.igxForOf![i], height: this.individualSizeCache[i] };
             }
             const size = dimension === 'height' ?
                 this.individualSizeCache[i] :
@@ -1348,18 +1409,18 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
             if (sum < availableSize) {
                 arr.push(item);
                 length = arr.length;
-                if (i === this.igxForOf.length - 1) {
+                if (i === this.igxForOf!.length - 1) {
                     // reached end without exceeding
                     // include prev items until size is filled or first item is reached.
                     let curItem = dimension === 'height' ? arr[0].value : arr[0];
-                    let prevIndex = this.igxForOf.indexOf(curItem) - 1;
+                    let prevIndex = this.igxForOf!.indexOf(curItem) - 1;
                     while (prevIndex >= 0 && sum <= availableSize) {
                         curItem = dimension === 'height' ? arr[0].value : arr[0];
-                        prevIndex = this.igxForOf.indexOf(curItem) - 1;
-                        const prevItem = this.igxForOf[prevIndex];
+                        prevIndex = this.igxForOf!.indexOf(curItem) - 1;
+                        const prevItem = this.igxForOf![prevIndex];
                         const prevSize = dimension === 'height' ?
                             this.individualSizeCache[prevIndex] :
-                            parseFloat(prevItem[dimension]);
+                            parseFloat((prevItem as any)[dimension]);
                         sum = arr.reduce(reducer, prevSize);
                         arr.unshift(prevItem);
                         length = arr.length;
@@ -1380,7 +1441,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     /**
      * @hidden
      */
-    protected getIndexAt(left, set) {
+    protected getIndexAt(left: number, set: number[]) {
         let start = 0;
         let end = set.length - 1;
         if (left === 0) {
@@ -1401,9 +1462,9 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return end;
     }
 
-    protected _recalcScrollBarSize(containerSizeInfo = null) {
+    protected _recalcScrollBarSize(containerSizeInfo: { prevSize: number; newSize: number } | null = null) {
         const count = this.isRemote ? this.totalItemCount : (this.igxForOf ? this.igxForOf.length : 0);
-        this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize < count);
+        this.dc.instance.notVirtual = !(this.igxForContainerSize && this.dc && this.state.chunkSize! < count);
         const scrollable = containerSizeInfo ? this.scrollComponent.size > containerSizeInfo.prevSize : this.isScrollable();
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = parseFloat(this.igxForContainerSize) > 0 ? this._calcSize() : 0;
@@ -1432,7 +1493,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (this.individualSizeCache && this.individualSizeCache.length > 0) {
             size = this.individualSizeCache.reduce((acc, val) => acc + val, 0);
         } else {
-            size = this.initSizesCache(this.igxForOf);
+            size = this.initSizesCache(this.igxForOf!);
         }
         this._virtSize = size;
         if (size > this._maxSize) {
@@ -1442,10 +1503,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         return size;
     }
 
-    protected _recalcOnContainerChange(containerSizeInfo = null) {
+    protected _recalcOnContainerChange(containerSizeInfo: { prevSize: number; newSize: number } | null = null) {
         const prevChunkSize = this.state.chunkSize;
+        const prevStartIndex = this.state.startIndex!;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize(containerSizeInfo);
+        if (prevStartIndex !== this.state.startIndex) {
+            // items were prepended to fill the grown container, so sync the display container offset
+            // to keep the scroll position's content in view
+            this._updateScrollOffset();
+        }
         if (prevChunkSize !== this.state.chunkSize) {
             this.chunkLoad.emit(this.state);
         }
@@ -1456,15 +1523,24 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * Removes an element from the embedded views and updates chunkSize.
      */
     protected removeLastElem() {
-        const oldElem = this._embeddedViews.pop();
+        const oldElem = this._embeddedViews.pop()!;
         this.beforeViewDestroyed.emit(oldElem);
-        this.viewObserver?.unobserve(oldElem.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || oldElem.rootNodes[0].nextElementSibling);
+        // The observed node is not necessarily a root node of the view: when the
+        // template's root is a control flow block the root nodes are comment
+        // anchors, and the rendered element follows the first of them. Either
+        // lookup can come up empty - the view may hold no element at all, or be
+        // torn down before its content is rendered - and ResizeObserver throws
+        // on anything that is not an Element.
+        const observedNode = this.getViewObservedNode(oldElem);
+        if (observedNode) {
+            this.viewObserver?.unobserve(observedNode);
+        }
         // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
         this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
         this._embeddedViewSizesCache.delete(oldElem);
 
-        this.state.chunkSize--;
+        this.state.chunkSize!--;
     }
 
     /**
@@ -1472,24 +1548,53 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      * If there exists an element that we can create embedded view for creates it, appends it and updates chunkSize
      */
     protected addLastElem() {
-        let elemIndex = this.state.startIndex + this.state.chunkSize;
+        if (this.insertChunkElem()) {
+            this._zone.run(() => this.cdr.markForCheck());
+        }
+    }
+
+    /**
+     * Creates an embedded view for the item after the current chunk and updates chunkSize.
+     * When the chunk already reaches the end of the data, the view is created for the item before it
+     * and prepended instead, so that the rendered items stay in order.
+     */
+    protected insertChunkElem(): EmbeddedViewRef<any> | null {
         if (!this.isRemote && !this.igxForOf) {
-            return;
+            return null;
         }
 
-        if (elemIndex >= this.igxForOf.length) {
-            elemIndex = this.igxForOf.length - this.state.chunkSize;
+        let elemIndex = this.state.startIndex! + this.state.chunkSize!;
+        let prepend = false;
+        if (elemIndex >= this.igxForOf!.length) {
+            if (!this.isRemote && this.state.startIndex! > 0) {
+                elemIndex = --this.state.startIndex!;
+                prepend = true;
+            } else {
+                elemIndex = this.igxForOf!.length - this.state.chunkSize!;
+            }
         }
-        const input = this.igxForOf[elemIndex];
+        const input = this.igxForOf![elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,
-            new IgxForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
+            this.createTemplateContext(input) as any,
+            { index: prepend ? 0 : undefined }
         );
 
-        this._embeddedViews.push(embeddedView);
-        this.state.chunkSize++;
+        if (prepend) {
+            this._embeddedViews.unshift(embeddedView);
+        } else {
+            this._embeddedViews.push(embeddedView);
+        }
+        this.state.chunkSize!++;
+        return embeddedView;
+    }
 
-        this._zone.run(() => this.cdr.markForCheck());
+    /**
+     * @hidden
+     * Creates the template context for an item rendered by insertChunkElem().
+     */
+    protected createTemplateContext(input: T): IgxForOfContext<T, U> {
+        return new IgxForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length);
     }
 
     /**
@@ -1501,13 +1606,13 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         if (chunkSize !== this.state.chunkSize) {
             this.chunkSizeChange.emit(chunkSize);
         }
-        if (chunkSize > this.state.chunkSize) {
-            const diff = chunkSize - this.state.chunkSize;
+        if (chunkSize > this.state.chunkSize!) {
+            const diff = chunkSize - this.state.chunkSize!;
             for (let i = 0; i < diff; i++) {
                 this.addLastElem();
             }
-        } else if (chunkSize < this.state.chunkSize) {
-            const diff = this.state.chunkSize - chunkSize;
+        } else if (chunkSize < this.state.chunkSize!) {
+            const diff = this.state.chunkSize! - chunkSize;
             for (let i = 0; i < diff; i++) {
                 this.removeLastElem();
             }
@@ -1522,36 +1627,36 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         this._virtScrollPosition = realPercentScrolled * maxVirtScroll;
     }
 
-    protected _getItemSize(item, dimension: string): number {
+    protected _getItemSize(item: any, dimension: string): number {
         const dim = item ? item[dimension] : null;
         return typeof dim === 'number' ? dim : parseFloat(this.igxForItemSize) || 0;
     }
 
     protected _updateScrollOffset() {
         let scrollOffset = 0;
-        let currentScroll = this.scrollPosition;
+        const currentScroll = Math.abs(this.scrollPosition);
         if (this._virtRatio !== 1) {
-            this._calcVirtualScrollPosition(this.scrollPosition);
+            this._calcVirtualScrollPosition(currentScroll);
             scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         } else {
             const scroll = this.scrollComponent.nativeElement;
             scrollOffset = scroll && this.scrollComponent.size ?
-            currentScroll - this.sizesCache[this.state.startIndex] : 0;
+            currentScroll - this.sizesCache[this.state.startIndex!] : 0;
         }
         const dir = this.igxForScrollOrientation === 'horizontal' ? 'left' : 'transform';
         this.dc.instance._viewContainer.element.nativeElement.style[dir] = this.igxForScrollOrientation === 'horizontal' ?
-         -(scrollOffset) + 'px' :
+         (this.isRTL ? scrollOffset : -scrollOffset) + 'px' :
          `translateY(${-scrollOffset}px)`;
     }
 
-    protected _adjustScrollPositionAfterSizeChange(sizeDiff) {
+    protected _adjustScrollPositionAfterSizeChange(sizeDiff: number) {
         // if data has been changed while container is scrolled
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(sizeDiff) > 0 && this.scrollPosition > 0) {
             const offset = this.igxForScrollOrientation === 'horizontal' ?
                 parseFloat(this.dc.instance._viewContainer.element.nativeElement.style.left) :
                 Number(this.dc.instance._viewContainer.element.nativeElement.style.transform?.match(/translateY\((-?\d+\.?\d*)px\)/)?.[1]);
-            const newSize = this.sizesCache[this.state.startIndex] - offset;
+            const newSize = this.sizesCache[this.state.startIndex!] - offset;
             this.scrollPosition = newSize;
             if (this.scrollPosition !== newSize) {
                 this.scrollComponent.scrollAmount = newSize;
@@ -1559,7 +1664,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
     }
 
-    protected getMargin(node, dimension: string): number {
+    protected getMargin(node: Element, dimension: string): number {
         const styles = window.getComputedStyle(node);
         if (dimension === 'height') {
             return parseFloat(styles['marginTop']) +
@@ -1567,6 +1672,16 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         }
         return parseFloat(styles['marginLeft']) +
             parseFloat(styles['marginRight']) || 0;
+    }
+
+    protected getBorder(node: Element, dimension: string): number {
+        const styles = window.getComputedStyle(node);
+        if (dimension === 'height') {
+            return (parseFloat(styles['borderTopWidth']) || 0) +
+                (parseFloat(styles['borderBottomWidth']) || 0);
+        }
+        return (parseFloat(styles['borderLeftWidth']) || 0) +
+            (parseFloat(styles['borderRightWidth']) || 0);
     }
 }
 
@@ -1661,12 +1776,13 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     /**
      * @hidden @internal
-     * Asserts the correct type of the context for the template that `IgxGridForOfDirective` will render.
+     * Asserts the correct type of the context for the template that Grid ForOf will render.
      *
      * The presence of this method is a signal to the Ivy template type-check compiler that the
-     * `IgxGridForOfDirective` structural directive renders its template with a specific context type.
+     * Grid ForOf structural directive renders its template with a specific context type.
      */
-    public static override ngTemplateContextGuard<T, U extends T[]>(dir: IgxGridForOfDirective<T, U>, ctx: any):
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static override ngTemplateContextGuard<T, U extends T[]>(_dir: IgxGridForOfDirective<T, U>, ctx: any):
         ctx is IgxGridForOfContext<T, U> {
         return true;
     }
@@ -1678,7 +1794,10 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         super.ngOnInit();
         this.removeScrollEventListeners();
         const destructor = takeUntil<any>(this.destroy$);
-        this.viewObserver = new (getResizeObserver())((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        const resizeObserver = getResizeObserver();
+        if (resizeObserver) {
+            this.viewObserver = new resizeObserver((entries: ResizeObserverEntry[]) => this.viewResizeNotify.next(entries));
+        }
         this.viewResizeNotify.pipe(
             filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
             destructor
@@ -1695,7 +1814,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             if (!this._differ && value) {
                 try {
                     this._differ = this._differs.find(value).create(this.igxForTrackBy);
-                } catch (e) {
+                } catch (_e) {
                     throw new Error(
                         `Cannot find a differ supporting object "${value}" of type "${getTypeNameForDebugging(value)}".
                      NgFor only supports binding to Iterables such as Arrays.`);
@@ -1740,7 +1859,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                 this.dataChanging.emit(args);
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    this.igxForOf = [] as U;
+                    this.igxForOf = [] as unknown as U;
                 }
                 /* we need to reset the master dir if all rows are removed
                 (e.g. because of filtering); if all columns are hidden, rows are
@@ -1765,7 +1884,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
     }
 
-    public override onScroll(event) {
+    public override onScroll(event: any) {
         this.scrollComponent.scrollAmount = event.target.scrollTop;
         if (!this.scrollComponent.size) {
             return;
@@ -1775,27 +1894,25 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         } else {
             this._bScrollInternal = false;
         }
+        this.markScrolling();
         const prevState = Object.assign({}, this.state);
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
-        runInInjectionContext(this._injector, () => {
-            afterNextRender({
-                write: () => {
-                    this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
-                    this._zone.onStable.pipe(first()).subscribe(this.recalcUpdateSizes.bind(this, prevState));
-                }
-              });
-          });
+        runAfterRenderOnce(this._injector, () => {
+            this.dc.instance._viewContainer.element.nativeElement.style.transform = `translateY(${-scrollOffset}px)`;
+        }, 'write');
+        runAfterRenderOnce(this._injector, () => this.recalcUpdateSizes(prevState));
 
         this.cdr.markForCheck();
     }
 
-    public override onHScroll(scrollAmount) {
+    public override onHScroll(scrollAmount: number) {
         /* in certain situations this may be called when no scrollbar is visible */
         const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
         if (!this.scrollComponent || !parseFloat(firstScrollChild.style.width)) {
             return;
         }
         this.scrollComponent.scrollAmount = scrollAmount;
+        this.markScrolling();
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllElements(Math.abs(scrollAmount));
         if (scrollAmount < 0) {
@@ -1807,7 +1924,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         }
     }
 
-    protected getItemSize(item) {
+    protected getItemSize(item: any) {
         let size = 0;
         const dimension = this.igxForSizePropName || 'height';
         if (this.igxForScrollOrientation === 'vertical') {
@@ -1846,14 +1963,14 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
 
     protected override getNodeSize(rNode: Element, index?: number): number {
         if (this.igxForScrollOrientation === 'vertical') {
-            const view = this._embeddedViews[index];
+            const view = this._embeddedViews[index!];
             return this._embeddedViewSizesCache.get(view) || parseFloat(this.igxForItemSize);
         } else {
-            return super.getNodeSize(rNode, index);
+            return super.getNodeSize(rNode, index!);
         }
     }
 
-    protected override _updateSizeCache(changes: IterableChanges<T> = null) {
+    protected override _updateSizeCache(changes: IterableChanges<T> | null = null) {
         const oldSize = this.individualSizeCache.length > 0 ? this.individualSizeCache.reduce((acc, val) => acc + val) : 0;
         let newSize = oldSize;
         if (changes && !this.isRemote) {
@@ -1867,9 +1984,9 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     protected handleCacheChanges(changes: IterableChanges<T>) {
-        const identityChanges = [];
-        const newHeightCache = [];
-        const newSizesCache = [];
+        const identityChanges: Array<IterableChangeRecord<T>> = [];
+        const newHeightCache: number[] = [];
+        const newSizesCache: number[] = [];
         newSizesCache.push(0);
         let newHeight = 0;
 
@@ -1881,25 +1998,25 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         changes.forEachIdentityChange((item) => {
             if (item.currentIndex !== item.previousIndex) {
                 // Filter out ones that have not changed their index.
-                identityChanges[item.currentIndex] = item;
+                identityChanges[item.currentIndex!] = item;
             }
         });
 
         // Processing each item that is passed to the igxForOf so far seem to be most reliable. We parse the updated list of items.
         changes.forEachItem((item) => {
             if (item.previousIndex !== null &&
-                (numRemovedItems < 2 || !identityChanges.length || identityChanges[item.currentIndex])
+                (numRemovedItems < 2 || !identityChanges.length || identityChanges[item.currentIndex!])
                 && this.igxForScrollOrientation !== "horizontal" && this.individualSizeCache.length > 0) {
                 // Reuse cache on those who have previousIndex.
                 // When there are more than one removed items currently the changes are not readable so ones with identity change
                 // should be racalculated.
-                newHeightCache[item.currentIndex] = this.individualSizeCache[item.previousIndex];
+                newHeightCache[item.currentIndex!] = this.individualSizeCache[item.previousIndex];
             } else {
                 // Assign default item size.
-                newHeightCache[item.currentIndex] = this.getItemSize(item.item);
+                newHeightCache[item.currentIndex!] = this.getItemSize(item.item);
             }
-            newSizesCache[item.currentIndex + 1] = newSizesCache[item.currentIndex] + newHeightCache[item.currentIndex];
-            newHeight += newHeightCache[item.currentIndex];
+            newSizesCache[item.currentIndex! + 1] = newSizesCache[item.currentIndex!] + newHeightCache[item.currentIndex!];
+            newHeight += newHeightCache[item.currentIndex!];
         });
         this.individualSizeCache = newHeightCache;
         this.sizesCache = newSizesCache;
@@ -1907,28 +2024,19 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
     }
 
     protected override addLastElem() {
-        let elemIndex = this.state.startIndex + this.state.chunkSize;
-        if (!this.isRemote && !this.igxForOf) {
-            return;
+        const embeddedView = this.insertChunkElem();
+        if (embeddedView) {
+            this.subscribeToViewObserver(this.getViewObservedNode(embeddedView));
         }
-
-        if (elemIndex >= this.igxForOf.length) {
-            elemIndex = this.igxForOf.length - this.state.chunkSize;
-        }
-        const input = this.igxForOf[elemIndex];
-        const embeddedView = this.dc.instance._vcr.createEmbeddedView(
-            this._template,
-            new IgxGridForOfContext<T, U>(input, this.igxForOf, this.getContextIndex(input), this.igxForOf.length)
-        );
-
-        this._embeddedViews.push(embeddedView);
-        this.subscribeToViewObserver(embeddedView.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || embeddedView.rootNodes[0].nextElementSibling);
-        this.state.chunkSize++;
     }
 
-    protected _updateViews(prevChunkSize) {
+    protected override createTemplateContext(input: T): IgxGridForOfContext<T, U> {
+        return new IgxGridForOfContext<T, U>(input, this.igxForOf!, this.getContextIndex(input), this.igxForOf!.length);
+    }
+
+    protected _updateViews(prevChunkSize: number | undefined) {
         if (this.igxForOf && this.igxForOf.length && this.dc) {
-            const embeddedViewCopy = Object.assign([], this._embeddedViews);
+            const embeddedViewCopy: Array<EmbeddedViewRef<any>> = Object.assign([], this._embeddedViews);
             let startIndex;
             let endIndex;
             if (this.isRemote) {
@@ -1936,16 +2044,16 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
                 endIndex = this.igxForOf.length;
             } else {
                 startIndex = this.getIndexAt(this.scrollPosition, this.sizesCache);
-                if (startIndex + this.state.chunkSize > this.igxForOf.length) {
-                    startIndex = this.igxForOf.length - this.state.chunkSize;
+                if (startIndex + this.state.chunkSize! > this.igxForOf.length) {
+                    startIndex = this.igxForOf.length - this.state.chunkSize!;
                 }
                 this.state.startIndex = startIndex;
-                endIndex = this.state.chunkSize + this.state.startIndex;
+                endIndex = this.state.chunkSize! + this.state.startIndex;
             }
 
             for (let i = startIndex; i < endIndex && this.igxForOf[i] !== undefined; i++) {
                 const embView = embeddedViewCopy.shift();
-                this.updateTemplateContext(embView.context, i);
+                this.updateTemplateContext(embView!.context, i);
             }
             if (prevChunkSize !== this.state.chunkSize) {
                 this.chunkLoad.emit(this.state);

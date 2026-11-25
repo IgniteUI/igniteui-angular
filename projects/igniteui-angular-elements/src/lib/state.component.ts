@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output, inject } from '@angular/core';
-import { IFilteringExpressionsTree, IGroupingState, IPagingState, ISortingExpression } from 'igniteui-angular/core';
-import { GridFeatures, GridSelectionRange, GridType, IColumnState, IGridStateCollection, IGX_GRID_BASE, IgxGridStateBaseDirective, IPinningConfig, IPivotConfiguration } from 'igniteui-angular/grids/core';
+import { Component, EventEmitter, Output, inject, ChangeDetectionStrategy } from '@angular/core';
+import { GridSelectionRange, IFilteringExpressionsTree, IGroupingState, IPagingState, ISortingExpression } from 'igniteui-angular/core';
+import { GridFeatures, GridType, IColumnState, IGridStateCollection, IGX_GRID_BASE, IgxGridStateBaseDirective, IPinningConfig, IPivotConfiguration } from 'igniteui-angular/grids/core';
 
 /* tsPlainInterface */
 /* marshalByValue */
@@ -31,6 +31,8 @@ export interface IGridStateInfo {
 /* blazorIndirectRender */
 /* singleInstanceIdentifier */
 /* contentParent: GridBaseDirective */
+/* contentParent: Grid */
+/* contentParent: TreeGrid */
 /* contentParent: HierarchicalGrid */
 /* jsonAPIManageCollectionInMarkup */
 /**
@@ -41,6 +43,7 @@ export interface IGridStateInfo {
     selector: 'igx-grid-state',
     template: ``,
     styles: `:host { display: none }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxGridStateComponent extends IgxGridStateBaseDirective {
@@ -53,7 +56,7 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
      */
     public applyState(state: IGridStateInfo , features: GridFeatures | GridFeatures[] = []) {
         if (features.length === 0) {
-            features = null;
+            features = null!;
         }
         super.setStateInternal(state, features);
     }
@@ -65,7 +68,7 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
      */
     public applyStateFromString(state: string, features: GridFeatures | GridFeatures[] = []) {
         if (features.length === 0) {
-            features = null;
+            features = null!;
         }
         const gridState = JSON.parse(state) as IGridStateInfo;
         this.stateParsed.emit(gridState);
@@ -82,7 +85,7 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
         /** Due to return type in getState being union type and having no support for union type in the translators
          * hiding getState in favor of a simpler extractState method that omits the serialize property and always returns just a string. */
         if (features.length === 0) {
-            features = null;
+            features = null!;
         }
         return super.getStateInternal(false, features) as IGridStateInfo;
     }
@@ -95,7 +98,7 @@ export class IgxGridStateComponent extends IgxGridStateBaseDirective {
      */
     public getStateAsString(features: GridFeatures | GridFeatures[] = []): string {
         if (features.length === 0) {
-            features = null;
+            features = null!;
         }
         return super.getStateInternal(true, features) as string;
     }

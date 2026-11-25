@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { IgxButtonDirective, IgxColumnComponent, IgxGridComponent } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -7,6 +7,7 @@ import { SAMPLE_DATA } from '../shared/sample-data';
     selector: 'app-grid-column-resizing-sample',
     styleUrls: ['grid-column-resizing.sample.scss'],
     templateUrl: 'grid-column-resizing.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxButtonDirective]
 })
 export class GridColumnResizingSampleComponent implements OnInit {

@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import { setupTestTree } from '../common/setup.spec';
 
 const version = '16.0.0';
@@ -16,9 +16,7 @@ describe(`Update to ${version}`, () => {
     const migrationName = 'migration-30';
 
     it('Should replace IgxProcessBarTextTemplateDirective with IgxProgressBarTextTemplateDirective', async () => {
-        appTree.create(
-            '/testSrc/appPrefix/component/test.component.ts',
-            `import { Component, ViewChild } from '@angular/core';
+        appTree.create('/testSrc/appPrefix/component/test.component.ts', `import { Component, ViewChild } from '@angular/core';
         import { IgxProcessBarTextTemplateDirective } from 'igniteui-angular';
 
         @Component({

@@ -1,0 +1,100 @@
+@use 'sass:list';
+@use 'sass:map';
+@use 'sass:meta';
+@use 'sass-true' as *;
+@use '../base';
+@use '../themes' as *;
+
+// Each entity and the components that render it.
+$rendered-by: (
+    // Structural styles come from theme()
+    igx-label: (
+        igx-input-group,
+        igx-combo,
+        igx-simple-combo,
+        igx-select,
+        igx-date-picker,
+        igx-time-picker
+    ),
+    igx-ripple: (
+        igx-action-strip,
+        igx-banner,
+        igx-button-group,
+        igx-checkbox,
+        igx-column-actions,
+        igx-combo,
+        igx-date-picker,
+        igx-date-range-picker,
+        igx-dialog,
+        igx-grid,
+        igx-grid-toolbar,
+        igx-paginator,
+        igx-radio,
+        igx-stepper,
+        igx-switch,
+        igx-tabs
+    ),
+    igx-button: (
+        igx-carousel,
+        igx-column-actions,
+        igx-combo,
+        igx-date-picker,
+        igx-date-range-picker,
+        igx-input-group,
+        igx-time-picker
+    ),
+    igx-icon-button: (igx-tabs),
+    igx-overlay: (
+        igx-date-picker,
+        igx-date-range-picker,
+        igx-grid-excel-style-filtering,
+        igx-pivot-data-selector,
+        igx-time-picker
+    ),
+    igx-tooltip: (igx-grid, igx-query-builder),
+    igx-highlight: (igx-grid),
+    // Tokens only
+    igx-icon: (igx-button-group, igx-pivot-data-selector),
+    igx-input-group: (igx-column-actions, igx-date-picker, igx-pivot-data-selector),
+    igx-checkbox: (igx-column-actions, igx-pivot-data-selector),
+    igx-chip: (igx-date-range-picker, igx-pivot-data-selector),
+    igx-divider: (igx-date-picker, igx-date-range-picker, igx-time-picker),
+    igx-drop-down: (igx-grid-excel-style-filtering, igx-pivot-data-selector),
+    igx-expansion-panel: (igx-accordion, igx-pivot-data-selector),
+    igx-list: (igx-grid-excel-style-filtering, igx-pivot-data-selector),
+    igx-select: (igx-grid-excel-style-filtering, igx-paginator),
+    igx-circular-bar: (igx-grid, igx-grid-excel-style-filtering, igx-tree),
+    igx-badge: (igx-grid),
+    igx-snackbar: (igx-grid),
+    igx-tree: (igx-grid-excel-style-filtering),
+    igx-button-group: (igx-grid-excel-style-filtering),
+    igx-date-picker: (igx-grid, igx-grid-excel-style-filtering, igx-query-builder),
+    igx-time-picker: (igx-grid, igx-grid-excel-style-filtering, igx-query-builder),
+    igx-combo: (igx-query-builder, igx-simple-combo),
+    igx-dialog: (igx-query-builder),
+);
+
+// Drop the fixtures from other specs
+base.$components: ();
+@include component-registry();
+
+@include describe('Component dependency registry') {
+    @each $entity, $dependents in $rendered-by {
+        @include it('should hold back #{$entity} for the components that render it') {
+            $used-by: map.get(base.$components, $entity, 'usedBy') or ();
+            $missing: ();
+
+            @each $dependent in $dependents {
+                @if not list.index($used-by, $dependent) {
+                    $missing: list.append($missing, $dependent, comma);
+                }
+            }
+
+            @include assert-equal($missing, (), 'Missing dependents: #{meta.inspect($missing)}');
+        }
+    }
+
+    @include it('should keep igx-label when only it is excluded') {
+        @include assert-equal(base.is-used('igx-label', (igx-label)), true);
+    }
+}

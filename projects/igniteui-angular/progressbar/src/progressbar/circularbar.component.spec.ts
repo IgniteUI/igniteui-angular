@@ -1,20 +1,22 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { IgxCircularProgressBarComponent } from './progressbar.component';
 import { hasClass } from "../../../test-utils/helper-utils.spec";
+import { describe, it, expect, beforeEach } from 'vitest';
+import { nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 
 describe('IgxCircularProgressBarComponent', () => {
     let fixture: ComponentFixture<IgxCircularProgressBarComponent>;
     let progress: IgxCircularProgressBarComponent;
     let circularBar: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxCircularProgressBarComponent]
         }).compileComponents();
-    }));
+    });
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [IgxCircularProgressBarComponent]
         }).compileComponents();
 
@@ -136,5 +138,42 @@ describe('IgxCircularProgressBarComponent', () => {
 
         expect(circularBar.getAttribute('aria-valuenow')).toBe('50');
         expect(circularBar.getAttribute('aria-valuemax')).toBe('200');
+    });
+
+    it('should go straight to a value set while the initial animation is still running', async () => {
+        // A separate fixture, so the bar is first rendered with the value already set and animates it in.
+        const initialFixture = TestBed.createComponent(IgxCircularProgressBarComponent);
+        const bar = initialFixture.componentInstance;
+        bar.animationDuration = 600;
+        bar.value = 100;
+        initialFixture.detectChanges();
+
+        const stroke = initialFixture.nativeElement.querySelector('.igx-circular-svg__outer') as SVGElement;
+        // the rendered fill, as a percentage of the circumference
+        const rendered = () => {
+            const style = getComputedStyle(stroke);
+            return (1 - parseFloat(style.strokeDashoffset) / parseFloat(style.strokeDasharray)) * 100;
+        };
+
+        await wait(200);
+        bar.value = 10;
+        initialFixture.detectChanges();
+
+        // The stroke is part way between 0 and 100 and now heads for 10 from there,
+        // instead of continuing towards 100 first (#17649).
+        const atChange = rendered();
+        expect(atChange).toBeGreaterThan(10);
+        expect(atChange).toBeLessThan(100);
+        expect(stroke.getAnimations().length).toBe(1);
+
+        let previous = atChange;
+        while (stroke.getAnimations().length) {
+            await nextFrame();
+            const current = rendered();
+            expect(current).toBeLessThanOrEqual(previous + 0.1);
+            expect(current).toBeGreaterThanOrEqual(9.9);
+            previous = current;
+        }
+        expect(rendered()).toBeCloseTo(10, 0);
     });
 });

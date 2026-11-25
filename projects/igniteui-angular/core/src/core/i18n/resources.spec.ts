@@ -2,9 +2,10 @@ import { getCurrentResourceStrings, getI18nManager, IResourceStrings, registerI1
 import { ActionStripResourceStringsEN } from './action-strip-resources';
 import { BannerResourceStringsEN } from './banner-resources';
 import { changei18n, getCurrentResourceStrings as igxGetCurrentResourceStrings } from './resources';
-import { ActionStripResourceStringsBG } from 'projects/igniteui-angular-i18n/src/i18n/BG/action-strip-resources';
+import { ActionStripResourceStringsBG } from '../../../../../igniteui-angular-i18n/src/i18n/BG/action-strip-resources';
 import { BannerResourceStringsBG, ResourceStringsBG } from 'igniteui-i18n-resources';
-import { IResourceCategories } from 'node_modules/igniteui-i18n-core/i18n-manager.interfaces';
+import { IResourceCategories } from '../../../../../../node_modules/igniteui-i18n-core/i18n-manager.interfaces';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('i18n', () => {
     beforeEach(() => {
@@ -107,7 +108,7 @@ describe('i18n', () => {
             });
 
             setCurrentI18n('en-US');
-        })
+        });
 
         it('should return default strings if locale is changed using new API, but its missing resources', () => {
             // Components init their default locales

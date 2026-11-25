@@ -1,14 +1,3 @@
-// Import the IgniteUI themes library first
-@use '../../../projects/igniteui-angular/core/src/core/styles/themes/index' as *;
-
-$new-card-theme: card-theme(
-    $background: royalblue
-);
-
-::ng-deep {
-    @include card($new-card-theme);
-}
-
 .padding {
     gap: 2rem;
 }

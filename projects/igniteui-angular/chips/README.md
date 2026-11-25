@@ -26,6 +26,8 @@ An event `onSelection` is fired when the selection state of the `igxChip` change
 
 Also by default an icon is shown indicating that the chip is being selected. It is fully customizable and can be done through the `selectIcon` input. It accepts values of type `TemplateRef` and overrides the default icon while retaining the same functionality.
 
+Changing the selection animates the chip colors, and the select icon animates in when the chip is selected and out when it is deselected.
+
 Example of customizing the select icon:
 
 ```html
@@ -158,7 +160,7 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | Name | Argument Type | Description |
 |:--:|:---|:---|
 | `moveStart` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) starts. |
-| `moveEnd` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) ends. |
+| `moveEnd` | `IBaseChipEventArgs` | Fired when the chip moving(dragging) ends. When the drag was canceled (e.g. with `dragDirective.cancelDrag()`), `originalEvent.cancelled` is `true`. |
 | `remove ` | `IBaseChipEventArgs` | Fired when the chip remove button is clicked. |
 | `chipClick ` | `IChipClickEventArgs` | Fired when the chip is clicked instead of dragged. |
 | `selectedChanging` | `IChipSelectEventArgs` | Fired when the chip is being selected/deselected. Cancellable |
@@ -184,7 +186,7 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | `reorder ` | `IChipsAreaReorderEventArgs` | Fired when the chips order should be changed(from dragging). Requires custom logic for actual reorder. |
 | `selectionChange ` | `IChipsAreaSelectEventArgs` | Fired for all initially selected chips and when chip is being selected/deselected. |
 | `moveStart  ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) starts. |
-| `moveEnd ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) ends. |
+| `moveEnd ` | `IBaseChipsAreaEventArgs` | Fired when any chip moving(dragging) ends. When the drag was canceled (e.g. with `dragDirective.cancelDrag()`), `originalEvent.cancelled` is `true`. |
 
 ### Properties
 | Name   | Return Type | Description |

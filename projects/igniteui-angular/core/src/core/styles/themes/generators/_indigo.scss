@@ -39,7 +39,8 @@
             $info: $info,
             $success: $success,
             $warn: $warn,
-            $error: $error
+            $error: $error,
+            $generator: 'legacy'
         ),
         $schema: $light-indigo-schema,
         $exclude: $exclude,
@@ -78,7 +79,8 @@
             $info: $info,
             $success: $success,
             $warn: $warn,
-            $error: $error
+            $error: $error,
+            $generator: 'legacy'
         ),
         $schema: $dark-indigo-schema,
         $exclude: $exclude,

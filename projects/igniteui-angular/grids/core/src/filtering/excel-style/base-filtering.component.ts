@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Directive, ElementRef, EventEmitter, inject } from '@angular/core';
 import { ExpressionUI, FilterListItem } from './common';
 import { IgxOverlayService, PlatformUtil } from 'igniteui-angular/core';
+import { GridType } from '../../common/grid.interface';
 
 
 
@@ -12,7 +13,7 @@ export abstract class BaseFilteringComponent {
 
 
     public abstract column: any;
-    public abstract get grid(): any;
+    public abstract get grid(): GridType;
 
     public abstract overlayComponentId: string;
     public abstract mainDropdown: ElementRef<HTMLElement>;
@@ -32,7 +33,7 @@ export abstract class BaseFilteringComponent {
     public abstract detectChanges(): void;
     public abstract hide(): void;
     public abstract closeDropdown(): void;
-    public abstract onSelect(): void;
+    public abstract onSelect(event?: MouseEvent): void;
     public abstract onPin(): void;
     public abstract onHideToggle(): void;
     public abstract cancel(): void;

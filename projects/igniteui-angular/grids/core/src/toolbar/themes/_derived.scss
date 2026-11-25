@@ -1,0 +1,44 @@
+@use 'sass:map';
+@use 'igniteui-theming/sass/themes' as *;
+@use '../../../../../core/src/core/styles/themes/scoping' as *;
+
+/// Emits the derived token overrides for the sub-components rendered inside
+/// `igx-grid-toolbar`, computed from the igx-grid-toolbar's own background, foreground and
+/// accent tokens. Emitted once per theme into the `ig.derived` cascade layer.
+/// @access private
+/// @param {Map} $schema - The active theme schema used to resolve the sub-component themes.
+/// @param {string} $theme - The active theme name - material, indigo, bootstrap, or fluent.
+/// @requires {mixin} scope
+/// @requires {mixin} tokens
+/// @requires {function} digest-schema
+/// @output Scoped CSS custom properties for the sub-components, under `:where(.igx-grid-toolbar)`.
+@mixin derived-themes($schema, $theme) {
+    // .igx-grid-toolbar is applied via host binding regardless of the tag name a consumer
+    // (e.g. igniteui-angular-elements, which renders this as igc-grid-toolbar) uses.
+    @include scope(derived, '.igx-grid-toolbar', $schema) using ($schema) {
+        --_grid-toolbar-background: var(--background, var(--ig-grid-toolbar-background));
+        --_grid-toolbar-foreground: var(--foreground, var(--ig-grid-toolbar-foreground));
+        --_grid-toolbar-accent-color: var(--accent-color, var(--ig-grid-toolbar-accent-color));
+        --ig-grid-toolbar-title-text-color: var(--_grid-toolbar-foreground);
+
+        @include tokens(
+            column-actions-theme(
+                $schema: $schema,
+                $background: var(--_grid-toolbar-background),
+                $foreground: var(--_grid-toolbar-foreground),
+                $title-color: var(--_grid-toolbar-accent-color),
+                $accent-color: var(--_grid-toolbar-accent-color)
+            )
+        );
+
+        @include tokens(
+            outlined-button-theme(
+                $schema: $schema,
+                $foreground: var(--_grid-toolbar-accent-color),
+                $disabled-background: transparent,
+                $disabled-foreground: color-mix(in srgb, var(--_grid-toolbar-accent-color) 50%, var(--_grid-toolbar-background)),
+                $disabled-border-color: color-mix(in srgb, var(--_grid-toolbar-accent-color) 50%, var(--_grid-toolbar-background)),
+            )
+        );
+    }
+}

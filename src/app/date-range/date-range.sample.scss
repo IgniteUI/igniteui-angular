@@ -1,14 +1,46 @@
-$range-sample-space: 16px;
+:host {
+    display: grid;
+    gap: 2rem;
 
-.range-holder {
-    display: flex;
+    p {
+        color: var(--ig-gray-600);
+        margin-block: .5rem;
+    }
+
+    pre {
+        padding: 2rem;
+        background: var(--ig-gray-100);
+        border: 1px solid var(--ig-gray-200);
+        border-radius: 1rem;
+        overflow: auto;
+        grid-column: span 2
+    }
+}
+
+.date-range-demo {
+    display: grid;
+    gap: 1rem;
+
+    h6 {
+        font-size: 1rem;
+        margin-bottom: 1rem
+    }
+}
+
+.date-range-demo__patterns {
+    display: grid;
+    gap: 1rem;
+
+    h6 {
+        margin-top: 1rem;
+    }
 }
 
 .range-sample-column {
     display: flex;
     flex-direction: column;
     flex-basis: 50%;
-    padding: $range-sample-space;
+    padding: 16px;
     border-right: 1px solid #ddd;
 
     .date-picker-sample-buttons {
@@ -27,15 +59,7 @@ $range-sample-space: 16px;
     }
 }
 
-.sample-ul {
-    flex: 1;
-}
-
-.sample-row {
-    display: flex;
-    max-width: 1200px;
-}
-
-.angular-wc, h6 {
-    margin: 18px;
+.patterns-form-data {
+    list-style-type: none;
+    padding: 0;
 }

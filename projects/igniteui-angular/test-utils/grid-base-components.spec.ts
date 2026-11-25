@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings } from './template-strings.spec';
 import { IgxPaginatorComponent } from 'igniteui-angular/paginator';
 import { IgxGridComponent } from 'igniteui-angular/grids/grid';
 import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxColumnHidingDirective, IgxColumnPinningDirective, IgxGridToolbarActionsComponent, IgxGridToolbarComponent, IgxGridToolbarHidingComponent, IgxGridToolbarPinningComponent } from 'igniteui-angular/grids/core';
+import { GridPagingMode } from 'igniteui-angular/grids/core';
 
 @Component({
     template: `
@@ -13,6 +14,7 @@ import { IgxCellTemplateDirective, IgxColumnActionsComponent, IgxColumnComponent
         </igx-grid>
     `,
     selector: 'igx-basic-grid',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class BasicGridComponent {
@@ -30,6 +32,7 @@ export class BasicGridComponent {
         </igx-grid>
     `,
     selector: 'igx-auto-generate-grid',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridAutoGenerateComponent extends BasicGridComponent {
@@ -44,6 +47,7 @@ export class GridAutoGenerateComponent extends BasicGridComponent {
             [height]="height" [width]="width">
         </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridWithSizeComponent extends GridAutoGenerateComponent {
@@ -57,6 +61,7 @@ export class GridWithSizeComponent extends GridAutoGenerateComponent {
 
 @Component({
     template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.generatedEditable),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
@@ -71,8 +76,8 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 
     public ngOnInit() {
         this.columns = (this.hasEditableColumns) ?
-                                SampleTestData.generateEditableColumns(this.colsCount, this.columnsType, this.columnNamePrefix)
-                                : SampleTestData.generateColumnsByType(this.colsCount, this.columnsType, this.columnNamePrefix);
+            SampleTestData.generateEditableColumns(this.colsCount, this.columnsType, this.columnNamePrefix)
+            : SampleTestData.generateColumnsByType(this.colsCount, this.columnsType, this.columnNamePrefix);
         this.data = SampleTestData.generateDataForColumns(this.columns, this.rowsCount, this.startFromOne);
     }
 
@@ -83,10 +88,10 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '',
-            `@if (paging) {
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '', `@if (paging) {
                 <igx-paginator></igx-paginator>
             }`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class BasicGridSearchComponent extends GridWithSizeComponent {
@@ -96,10 +101,10 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(``,
-        '', ColumnDefinitions.idNameJobTitle, '', `@if (paging) {
+    template: GridTemplateStrings.declareGrid(``, '', ColumnDefinitions.idNameJobTitle, '', `@if (paging) {
             <igx-paginator [perPage]="perPage"></igx-paginator>
         }`),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class PagingComponent extends GridWithSizeComponent {
@@ -110,10 +115,11 @@ export class PagingComponent extends GridWithSizeComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid('[pagingMode]="pagingMode"', '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator [perPage]="perPage" [totalRecords]="totalRecords"></igx-paginator>'),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxPaginatorComponent]
 })
 export class RemotePagingComponent extends GridWithSizeComponent {
-    public pagingMode = 'remote';
+    public pagingMode: GridPagingMode = GridPagingMode.Remote;
     public perPage = 3;
     public totalRecords = 10;
     public override data = SampleTestData.personJobDataFull();
@@ -121,6 +127,7 @@ export class RemotePagingComponent extends GridWithSizeComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` rowSelection = "multiple"`, '', ColumnDefinitions.productBasicNumberID),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent]
 })
 export class SelectionComponent extends BasicGridComponent {
@@ -128,21 +135,21 @@ export class SelectionComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [exportExcel]="exportExcel" [exportCsv]="exportCsv"`, '', ''),
+    template: GridTemplateStrings.declareGrid(` [autoGenerate]="true"`, '', ''),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridWithToolbarComponent extends GridWithSizeComponent {
     public showToolbar = true;
     public columnHiding = true;
     public columnPinning = true;
-    public exportExcel = true;
-    public exportCsv = true;
 
     public override data = SampleTestData.contactInfoData();
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="true" [rowClasses]="rowClasses"`, '', ''),
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent]
 })
 export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
@@ -165,10 +172,10 @@ export class GridRowConditionalStylingComponent extends GridWithSizeComponent {
         [grid]="grid"
         [hideFilter]="hideFilter"></igx-column-actions>
     }
-    ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
-        '<igx-grid-toolbar><igx-grid-toolbar-actions>' + '<igx-grid-toolbar-hiding buttonText="Hidden"></igx-grid-toolbar-hiding>' +
+    ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable, '<igx-grid-toolbar><igx-grid-toolbar-actions>' + '<igx-grid-toolbar-hiding buttonText="Hidden"></igx-grid-toolbar-hiding>' +
         '</igx-grid-toolbar-actions></igx-grid-toolbar>', '@if (paging) { <igx-paginator></igx-paginator> }')}
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxGridComponent,
         IgxColumnComponent,
@@ -211,10 +218,12 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     }
     ${GridTemplateStrings.declareGrid(' #grid [height]="height" [width]="width" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns)}
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnGroupComponent, IgxColumnHidingDirective]
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
-    @ViewChild(IgxGridComponent, { static: true }) public override grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })
+    public override grid: IgxGridComponent;
 
     public hasGroupColumns = false;
     public override data = SampleTestData.contactInfoDataFull();
@@ -225,17 +234,18 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
         @if (showInline) {
             <igx-column-actions igxColumnPinning [grid]="grid" [hideFilter]="hideFilter"></igx-column-actions>
         }
-        ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable,
-            '<igx-grid-toolbar>' +
-            '<igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>' +
-            '</igx-grid-toolbar>')}
+        ${GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productFilterable, '<igx-grid-toolbar>' +
+        '<igx-grid-toolbar-actions><igx-grid-toolbar-pinning></igx-grid-toolbar-pinning></igx-grid-toolbar-actions>' +
+        '</igx-grid-toolbar>')}
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnActionsComponent, IgxColumnPinningDirective, IgxGridToolbarComponent, IgxGridToolbarPinningComponent, IgxGridToolbarActionsComponent]
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
     private cdr = inject(ChangeDetectorRef);
 
-    @ViewChild(IgxColumnActionsComponent) public chooser: IgxColumnActionsComponent;
+    @ViewChild(IgxColumnActionsComponent)
+    public chooser: IgxColumnActionsComponent;
 
     public override height = '500px';
     public override width = '500px';
@@ -268,6 +278,7 @@ export class ColumnPinningTestComponent extends GridWithSizeComponent implements
     </igx-column>
     </igx-grid>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxCellTemplateDirective]
 })
 export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestComponent {
@@ -278,9 +289,9 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
     @if (showInline) {
         <igx-column-actions igxColumnPinning [grid]="grid"></igx-column-actions>
     }
-    ${ GridTemplateStrings.declareGrid(' #grid [height]="height" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns,
-        '<igx-grid-toolbar></igx-grid-toolbar>')}
+    ${GridTemplateStrings.declareGrid(' #grid [height]="height" [moving]="true"', '', ColumnDefinitions.contactInfoGroupableColumns, '<igx-grid-toolbar></igx-grid-toolbar>')}
     </div>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxGridToolbarComponent, IgxColumnActionsComponent, IgxColumnPinningDirective]
 })
 export class ColumnGroupsPinningTestComponent extends ColumnPinningTestComponent {

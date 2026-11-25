@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SvgPipe } from './svg.pipe';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('SvgPipe', () => {
     let pipe: SvgPipe;
@@ -24,7 +25,7 @@ describe('SvgPipe', () => {
     });
 
     it('should bypass security for the provided SVG markup', () => {
-        const spy = spyOn(sanitizer, 'bypassSecurityTrustHtml').and.callThrough();
+        const spy = vi.spyOn(sanitizer, 'bypassSecurityTrustHtml');
         // Re-create pipe so the spy is in place via the same sanitizer instance
         const freshPipe = TestBed.runInInjectionContext(() => new SvgPipe());
         const markup = '<svg><circle cx="50" cy="50" r="40"/></svg>';

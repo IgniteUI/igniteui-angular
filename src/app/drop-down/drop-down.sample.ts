@@ -1,10 +1,11 @@
 import {
-    Component,
-    OnInit,
-    ViewChild,
-    ElementRef,
-    CUSTOM_ELEMENTS_SCHEMA,
-    DestroyRef,
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  CUSTOM_ELEMENTS_SCHEMA,
+  DestroyRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { foods } from './foods';
 import {
@@ -12,7 +13,6 @@ import {
     CloseScrollStrategy,
     ConnectedPositioningStrategy,
     HorizontalAlignment,
-    IgSizeDirective,
     IgxButtonDirective,
     IgxButtonGroupComponent,
     IgxDropDownComponent,
@@ -80,8 +80,8 @@ icons.forEach((icon) => {
         IgxRippleDirective,
         IgxOverlayOutletDirective,
         IgxIconComponent,
-        IgSizeDirective
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DropDownSampleComponent implements OnInit {
@@ -98,12 +98,6 @@ export class DropDownSampleComponent implements OnInit {
     public foods = foods;
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large']
-            }
-        },
         placement: {
             control: {
                 type: 'select',

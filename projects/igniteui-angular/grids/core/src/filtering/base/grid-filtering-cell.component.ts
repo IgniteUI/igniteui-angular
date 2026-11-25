@@ -28,30 +28,31 @@ import { ColumnType, IFilteringExpression, ɵSize } from 'igniteui-angular/core'
 export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoCheck {
     public cdr = inject(ChangeDetectorRef);
     public filteringService = inject(IgxFilteringService);
+    private ref = inject<ElementRef<HTMLElement>>(ElementRef);
 
     @Input()
-    public column: ColumnType;
+    public column!: ColumnType;
 
     @ViewChild('emptyFilter', { read: TemplateRef, static: true })
-    protected emptyFilter: TemplateRef<any>;
+    protected emptyFilter!: TemplateRef<any>;
 
     @ViewChild('defaultFilter', { read: TemplateRef, static: true })
-    protected defaultFilter: TemplateRef<any>;
+    protected defaultFilter!: TemplateRef<any>;
 
     @ViewChild('complexFilter', { read: TemplateRef, static: true })
-    protected complexFilter: TemplateRef<any>;
+    protected complexFilter!: TemplateRef<any>;
 
     @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
-    protected chipsArea: IgxChipsAreaComponent;
+    protected chipsArea!: IgxChipsAreaComponent;
 
     @ViewChild('moreIcon', { read: ElementRef })
-    protected moreIcon: ElementRef;
+    protected moreIcon!: ElementRef;
 
     @ViewChild('ghostChip', { read: IgxChipComponent })
-    protected ghostChip: IgxChipComponent;
+    protected ghostChip!: IgxChipComponent;
 
     @ViewChild('complexChip', { read: IgxChipComponent })
-    protected complexChip: IgxChipComponent;
+    protected complexChip!: IgxChipComponent;
 
 
     @HostBinding('class')
@@ -61,7 +62,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             'igx-grid__filtering-cell';
     }
 
-    public expressionsList: ExpressionUI[];
+    public expressionsList!: ExpressionUI[];
     public moreFiltersCount = 0;
 
     @HostBinding('class.igx-grid-th--pinned')
@@ -76,7 +77,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     @HostBinding('class.igx-grid-th--pinned-first')
     public get pinnedFirstCSS() {
-        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;;
+        return !this.column.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
     }
 
     @HostBinding('attr.role')
@@ -118,7 +119,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     public get template(): TemplateRef<any> {
         if (!this.column.filterable) {
-            return null;
+            return null!;
         }
         if (this.column.filterCellTemplate) {
             return this.column.filterCellTemplate;
@@ -143,6 +144,21 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     /**
+     * @hidden @internal
+     */
+    public get nativeElement() {
+        return this.ref.nativeElement;
+    }
+
+    /**
+     * @hidden @internal
+     * Whether the chips that do not fit are collapsed into the "more" indicator.
+     */
+    public get collapsesChips() {
+        return !!this.chipsArea && this.expressionsList.length > 1;
+    }
+
+    /**
      * Chip clicked event handler.
      */
     public onChipClicked(expression?: IFilteringExpression) {
@@ -159,13 +175,13 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.filteringService.grid.navigation.performHorizontalScrollToCell(this.column.visibleIndex);
         this.filteringService.filteredColumn = this.column;
         this.filteringService.isFilterRowVisible = true;
-        this.filteringService.selectedExpression = expression;
+        this.filteringService.selectedExpression = expression!;
     }
 
     /**
      * Chip removed event handler.
      */
-    public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
+    public onChipRemoved(_eventArgs: IBaseChipEventArgs, item: ExpressionUI): void {
         const indexToRemove = this.expressionsList.indexOf(item);
         this.removeExpression(indexToRemove);
         this.filteringService.grid.theadRow.nativeElement.focus();
@@ -206,7 +222,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     }
 
     private isMoreIconHidden(): boolean {
-        return this.filteringService.columnToMoreIconHidden.get(this.column.field);
+        return this.filteringService.columnToMoreIconHidden.get(this.column.field)!;
     }
 
     private updateVisibleFilters() {
@@ -217,7 +233,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         }
         this.cdr.detectChanges();
 
-        if (this.chipsArea && this.expressionsList.length > 1) {
+        if (this.collapsesChips) {
             const areaWidth = this.chipsArea.element.nativeElement.offsetWidth;
             let viewWidth = 0;
             const chipsAreaElements = this.chipsArea.element.nativeElement.children;
@@ -225,7 +241,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             const moreIconWidth = this.moreIcon.nativeElement.offsetWidth -
                 parseInt(this.column?.grid.document.defaultView.getComputedStyle(this.moreIcon.nativeElement)['margin-left'], 10);
 
-            for (let index = 0; index < chipsAreaElements.length - 1; index++) {
+          for (let index = 0; index < chipsAreaElements.length - 1; index++) {
                 if (viewWidth + chipsAreaElements[index].offsetWidth < areaWidth) {
                     viewWidth += chipsAreaElements[index].offsetWidth;
                     if (index % 2 === 0) {

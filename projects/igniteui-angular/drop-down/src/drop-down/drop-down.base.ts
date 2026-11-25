@@ -15,7 +15,7 @@ let NEXT_ID = 0;
 /**
  * An abstract class, defining a drop-down component, with:
  * Properties for display styles and classes
- * A collection items of type `IgxDropDownItemBaseDirective`
+ * A collection items of type drop down item base
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
@@ -48,7 +48,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    public width: string;
+    public width!: string;
 
     /**
      * Gets/Sets the height of the drop down
@@ -63,7 +63,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * ```
      */
     @Input()
-    public height: string;
+    public height!: string;
 
     /**
      * Gets/Sets the drop down's id
@@ -100,13 +100,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     @Input()
     @HostBinding('style.maxHeight')
-    public maxHeight = null;
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-drop-down')
-    public cssClass = true;
+    public maxHeight: string = null!;
 
     /**
      * Get all non-header items
@@ -170,23 +164,23 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      * @hidden @internal
      * Gets the id of the focused item during dropdown navigation.
      * This is used to update the `aria-activedescendant` attribute of
-     * the IgxDropDownNavigationDirective host element.
+     * the drop down navigation host element.
      */
-    public get activeDescendant (): string {
-        return this.focusedItem ? this.focusedItem.id : null;
+    public get activeDescendant (): string | null {
+        return this.focusedItem?.id ?? null;
     }
 
     /**
      * @hidden
      * @internal
      */
-    public children: QueryList<IgxDropDownItemBaseDirective>;
+    public children!: QueryList<IgxDropDownItemBaseDirective>;
 
-    protected _width;
-    protected _height;
+    protected _width: any;
+    protected _height: any;
     protected _focusedItem: any = null;
     protected _id = `igx-drop-down-${NEXT_ID++}`;
-    protected computedStyles;
+    protected computedStyles: any;
 
     /**
      * Gets if the dropdown is collapsed
@@ -194,7 +188,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     public abstract readonly collapsed: boolean;
 
     public ngOnInit(): void {
-        this.computedStyles = this.document.defaultView.getComputedStyle(this.elementRef.nativeElement);
+        this.computedStyles = this.document.defaultView!.getComputedStyle(this.elementRef.nativeElement);
     }
 
     /** Keydown Handler */
@@ -202,7 +196,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
         switch (key) {
             case DropDownActionKey.ENTER:
             case DropDownActionKey.SPACE:
-                this.selectItem(this.focusedItem, event);
+                this.selectItem(this.focusedItem!, event);
                 break;
             case DropDownActionKey.ESCAPE:
             case DropDownActionKey.TAB:
@@ -218,8 +212,8 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
      */
     public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event, emit = true) {  // eslint-disable-line
         this.selectionChanging.emit({
-            newSelection,
-            oldSelection: null,
+            newSelection: newSelection!,
+            oldSelection: null!,
             cancel: false
         });
     }
@@ -227,14 +221,14 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     /**
      * @hidden @internal
      */
-    public get focusedItem(): IgxDropDownItemBaseDirective {
+    public get focusedItem(): IgxDropDownItemBaseDirective | null {
         return this._focusedItem;
     }
 
     /**
      * @hidden @internal
      */
-    public set focusedItem(item: IgxDropDownItemBaseDirective) {
+    public set focusedItem(item: IgxDropDownItemBaseDirective | null) {
         this._focusedItem = item;
     }
 
@@ -299,7 +293,7 @@ export abstract class IgxDropDownBaseDirective implements IDropDownList, OnInit 
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this.focusedItem.itemIndex;
+            index = currentIndex ? currentIndex : this.focusedItem!.itemIndex;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
         this.navigateItem(newIndex);

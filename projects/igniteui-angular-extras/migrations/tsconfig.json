@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "ES2022",
+        "lib": ["ESNext", "DOM"],
         "module": "commonjs",
         "sourceMap": false,
         "declaration": true,

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {
     IgxButtonModule,
     IgxCheckboxComponent,
@@ -54,6 +54,7 @@ import {FormsModule} from "@angular/forms";
         IgxTabHeaderComponent,
     ],
     templateUrl: './hound.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './hound.component.scss'
 })
 export class HoundComponent implements OnInit {

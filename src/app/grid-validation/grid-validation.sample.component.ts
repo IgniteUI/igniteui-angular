@@ -1,4 +1,4 @@
-import { Component, Directive, ViewChild, Input } from '@angular/core';
+import { Component, Directive, ViewChild, Input, ChangeDetectionStrategy } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, NG_VALIDATORS, ValidationErrors, ValidatorFn, Validators, FormsModule } from '@angular/forms';
 
@@ -34,6 +34,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     selector: 'app-grid-row-edit',
     styleUrls: [`grid-validation.sample.component.scss`],
     templateUrl: 'grid-validation.sample.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgTemplateOutlet,
         FormsModule,
@@ -53,11 +54,9 @@ export class GridValidationSampleComponent {
     public rowEditNoTransactions = true;
     public transactionData = JSON.parse(JSON.stringify(data));
     public data = data;
-    public rowStyles = {
-      background: (row: RowType) => {
-          return row.validation.status === 'INVALID' ? '#FF000033' : '#00000000';
-      }
-  };
+    public rowClasses = {
+        'invalid-row': (row: RowType) => row.validation.status === 'INVALID'
+    };
     public columns = [
         { field: 'ProductID' },
         { field: 'ProductName' },

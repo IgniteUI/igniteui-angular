@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostBinding, Input, inject } from '@angular/core';
+import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
 import { IgxStep, IGX_STEP_COMPONENT } from './stepper.common';
 import { IgxStepperService } from './stepper.service';
 
@@ -7,7 +8,7 @@ import { IgxStepperService } from './stepper.service';
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -28,7 +29,7 @@ export class IgxStepActiveIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -49,7 +50,7 @@ export class IgxStepCompletedIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -70,7 +71,7 @@ export class IgxStepInvalidIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -91,7 +92,7 @@ export class IgxStepIndicatorDirective { }
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -103,11 +104,15 @@ export class IgxStepIndicatorDirective { }
  */
 @Directive({
     selector: '[igxStepTitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxStepTitleDirective {
-    @HostBinding('class.igx-stepper__step-title')
+    @HostBinding('class.igx-step__title')
     public defaultClass = true;
+
+    @HostBinding('class.igx-step-header__title')
+    public headerElementClass = true;
 }
 
 /**
@@ -115,7 +120,7 @@ export class IgxStepTitleDirective {
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -127,11 +132,15 @@ export class IgxStepTitleDirective {
  */
 @Directive({
     selector: '[igxStepSubtitle]',
-    standalone: true
+    standalone: true,
+    hostDirectives: [IgxNoTypographyDirective]
 })
 export class IgxStepSubtitleDirective {
-    @HostBinding('class.igx-stepper__step-subtitle')
-    public defaultClass = true;
+    @HostBinding('class.igx-step__subtitle')
+    public elementClass = true;
+
+    @HostBinding('class.igx-step-header__subtitle')
+    public headerElementClass = true;
 }
 
 /**
@@ -139,7 +148,7 @@ export class IgxStepSubtitleDirective {
  *
  * @igxModule IgxStepperModule
  * @igxTheme igx-stepper-theme
- * @igxKeywords stepper 
+ * @igxKeywords stepper
  * @igxGroup Layouts
  *
  * @example
@@ -158,10 +167,6 @@ export class IgxStepContentDirective {
     private stepperService = inject(IgxStepperService);
     public elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    private get target(): IgxStep {
-        return this.step;
-    }
-
     @HostBinding('class.igx-stepper__step-content')
     public defaultClass = true;
 
@@ -170,12 +175,12 @@ export class IgxStepContentDirective {
 
     @HostBinding('attr.aria-labelledby')
     public get stepId(): string {
-        return this.target.id;
+        return this.step.id;
     }
 
     @HostBinding('attr.id')
     @Input()
-    public id = this.target.id.replace('step', 'content');
+    public id = this.step.id.replace('step', 'content');
 
     @HostBinding('attr.tabindex')
     @Input()
@@ -184,12 +189,12 @@ export class IgxStepContentDirective {
             return this._tabIndex;
         }
 
-        return this.stepperService.activeStep === this.target ? 0 : -1;
+        return this.stepperService.activeStep === this.step ? 0 : -1;
     }
 
     public set tabIndex(val: number) {
         this._tabIndex = val;
     }
 
-    private _tabIndex = null;
+    private _tabIndex: number | null = null;
 }

@@ -35,14 +35,26 @@
     </ng-template>
   </igx-grid-lite-column>
 
-  <igx-grid-lite-column
-    field="age"
-    dataType="number"
-    header="Age"
-    filterable
-    resizable
-    sortable
-  ></igx-grid-lite-column>
+  @for(column of columns; track column.field) {
+    <igx-grid-lite-column
+        [field]="column.field"
+        [header]="column.header"
+        [dataType]="column.dataType"
+        filterable
+        resizable
+        sortable
+    >
+    </igx-grid-lite-column>
+  }
+  @for(column of typedColumns; track column.field) {
+    <igx-grid-lite-column
+        [field]="column.field"
+        [header]="column.header"
+        [dataType]="column.dataType"
+    >
+    </igx-grid-lite-column>
+  }
+
   <igx-grid-lite-column field="active" dataType="boolean" header="Active">
     <ng-template
       igxGridLiteCell

@@ -7,9 +7,9 @@ import { getUUID } from '../../common/random';
 export class FilterListItem {
     public value: any;
     public label: any;
-    public isSelected: boolean;
-    public indeterminate: boolean;
-    public isFiltered: boolean;
+    public isSelected!: boolean;
+    public indeterminate!: boolean;
+    public isFiltered!: boolean;
     public isSpecial = false;
     public isBlanks = false;
     public children?: Array<FilterListItem>;
@@ -21,9 +21,9 @@ export class FilterListItem {
  */
 export class ExpressionUI {
     public expressionId: string;
-    public expression: IFilteringExpression;
-    public beforeOperator: FilteringLogic;
-    public afterOperator: FilteringLogic;
+    public expression!: IFilteringExpression;
+    public beforeOperator!: FilteringLogic;
+    public afterOperator!: FilteringLogic;
     public isSelected = false;
     public isVisible = true;
 
@@ -37,9 +37,9 @@ export class ExpressionUI {
  * @hidden @internal
  */
 export class ActiveElement {
-    public index: number;
-    public id: string;
-    public checked: boolean;
+    public index!: number;
+    public id!: string;
+    public checked!: boolean;
 }
 
 export function generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
@@ -49,7 +49,7 @@ export function generateExpressionsList(expressions: IFilteringExpressionsTree |
 
     // The beforeOperator of the first expression and the afterOperator of the last expression should be null
     if (expressionsUIs.length) {
-        expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        expressionsUIs[expressionsUIs.length - 1].afterOperator = null!;
     }
 }
 

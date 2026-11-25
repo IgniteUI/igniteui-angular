@@ -1,6 +1,6 @@
 @if (!contentTop || orientation !== 'horizontal') {
     <div class="igx-stepper__header">
-        <ng-template *ngTemplateOutlet="stepTemplate"></ng-template>
+        <ng-container *ngTemplateOutlet="stepTemplate"></ng-container>
     </div>
 }
 
@@ -14,7 +14,7 @@
 
 @if (contentTop && orientation === 'horizontal') {
     <div class="igx-stepper__header">
-        <ng-template *ngTemplateOutlet="stepTemplate"></ng-template>
+        <ng-container *ngTemplateOutlet="stepTemplate"></ng-container>
     </div>
 }
 

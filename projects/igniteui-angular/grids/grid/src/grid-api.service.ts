@@ -7,17 +7,17 @@ import { cloneArray, DataUtil, IGroupByExpandState, IGroupByRecord, IGroupingExp
 export class IgxGridAPIService extends GridBaseAPIService<GridType> implements GridServiceType {
 
     public groupBy(expression: IGroupingExpression): void {
-        const groupingState = cloneArray(this.grid.groupingExpressions);
-        this.prepare_grouping_expression([groupingState], expression);
+        const groupingState = cloneArray(this.grid.groupingExpressions!);
+        this.prepare_grouping_expression(groupingState, expression);
         this.grid.groupingExpressions = groupingState;
         this.arrange_sorting_expressions();
     }
 
     public groupBy_multiple(expressions: IGroupingExpression[]): void {
-        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const groupingState = cloneArray(this.grid.groupingExpressions!);
 
         for (const each of expressions) {
-            this.prepare_grouping_expression([groupingState], each);
+            this.prepare_grouping_expression(groupingState, each);
         }
 
         this.grid.groupingExpressions = groupingState;
@@ -25,7 +25,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
     }
 
     public override clear_groupby(name?: string | Array<string>) {
-        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const groupingState = cloneArray(this.grid.groupingExpressions!);
 
         if (name) {
             const names = typeof name === 'string' ? [name] : name;
@@ -33,7 +33,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
             this.grid.groupingExpressions = groupedCols;
             names.forEach((colName) => {
                 const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
-                const grpExpandState = this.grid.groupingExpansionState;
+                const grpExpandState = this.grid.groupingExpansionState!;
                 /* remove expansion states related to the cleared group
                    and all with deeper hierarchy than the cleared group */
                 const newExpandState = grpExpandState.filter((val) => val.hierarchy && val.hierarchy.length <= grExprIndex);
@@ -51,24 +51,13 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
     }
 
     public groupBy_get_expanded_for_group(groupRow: IGroupByRecord): IGroupByExpandState {
-        const grState = this.grid.groupingExpansionState;
+        const grState = this.grid.groupingExpansionState!;
         const hierarchy = DataUtil.getHierarchy(groupRow);
         return grState.find((state) =>
             DataUtil.isHierarchyMatch(
                 state.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }],
                 hierarchy,
-                this.grid.groupingExpressions));
-    }
-
-    public groupBy_is_row_in_group(groupRow: IGroupByRecord, rowID): boolean {
-        const grid = this.grid;
-        let rowInGroup = false;
-        groupRow.records.forEach(row => {
-            if (grid.primaryKey ? row[grid.primaryKey] === rowID : row === rowID) {
-                rowInGroup = true;
-            }
-        });
-        return rowInGroup;
+                this.grid.groupingExpressions!))!;
     }
 
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
@@ -77,7 +66,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
             this.crudService.endEdit(false);
         }
 
-        const expansionState = grid.groupingExpansionState;
+        const expansionState = grid.groupingExpansionState!;
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);
         if (state) {
             state.expanded = !state.expanded;
@@ -120,7 +109,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
     }
 
     public arrange_sorting_expressions() {
-        const groupingState = this.grid.groupingExpressions;
+        const groupingState = this.grid.groupingExpressions!;
         const sortingState = cloneArray(this.grid.sortingExpressions);
         for (const grExpr of groupingState) {
             const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
@@ -149,7 +138,7 @@ export class IgxGridAPIService extends GridBaseAPIService<GridType> implements G
     }
 
     public override remove_grouping_expression(fieldName: string) {
-        const groupingExpressions = this.grid.groupingExpressions;
+        const groupingExpressions = this.grid.groupingExpressions!;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
         if (index !== -1) {
             groupingExpressions.splice(index, 1);

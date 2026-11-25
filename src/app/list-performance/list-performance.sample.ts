@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, IgxButtonDirective, IgxCardComponent, IgxFilterOptions, IgxFilterPipe, IgxForOfDirective, IgxIconComponent, IgxRippleDirective } from 'igniteui-angular';
 
@@ -8,6 +8,7 @@ import { IGX_INPUT_GROUP_DIRECTIVES, IGX_LIST_DIRECTIVES, IgxAvatarComponent, Ig
     selector: 'app-list-performance-sample',
     styleUrls: ['list-performance.sample.scss'],
     templateUrl: 'list-performance.sample.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent, FormsModule, IgxButtonDirective, IgxCardComponent, IgxForOfDirective, IgxRippleDirective, IgxAvatarComponent, IgxFilterPipe, IGX_LIST_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES]
 })
 export class ListPerformanceSampleComponent {

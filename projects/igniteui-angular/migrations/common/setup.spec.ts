@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 
 import { EmptyTree } from '@angular-devkit/schematics';
-import { UnitTestTree } from '@angular-devkit/schematics/testing';
+import { UnitTestTree } from '@angular-devkit/schematics/testing/index.js';
 import * as tss from 'typescript/lib/tsserverlibrary';
 import { serviceContainer } from './project-service-container';
 
@@ -39,14 +39,15 @@ const tsConfig = readFileSync('tsconfig.json');
 class IgxUnitTestTree extends UnitTestTree {
     public override create(path: string, content: string | Buffer): void {
         super.create(path, content);
-        if (!path.endsWith('.ts') && !path.endsWith('.html')) return;
+        if (!path.endsWith('.ts') && !path.endsWith('.html'))
+            return;
 
         const configured = serviceContainer.configured && serviceContainer.projectService.configuredProjects.size;
         if (configured) {
             // rush host update
             serviceContainer.serverHost.host = this;
 
-            const entryPath = tss.server.toNormalizedPath(join(process.cwd(), path))
+            const entryPath = tss.server.toNormalizedPath(join(process.cwd(), path));
             const scriptInfo = serviceContainer.projectService?.getOrCreateScriptInfoForNormalizedPath(entryPath, false);
             if (!scriptInfo) {
                 return;
@@ -58,11 +59,13 @@ class IgxUnitTestTree extends UnitTestTree {
                 scriptInfo.attachToProject(project);
                 // add root in advance for ng LS discovery if two files test.component.ts/html and html is analyzed first
                 project.addMissingFileRoot(scriptInfo.fileName);
-            } else {
+            }
+            else {
                 // if using same file, force-reload from host for new content
                 scriptInfo.reloadFromFile(tss.server.asNormalizedPath(entryPath));
             }
-        } else {
+        }
+        else {
             // strip leading slash as it messes with the resolve and assign as new main entry
             path = path.startsWith('/') ? path.substring(1) : path;
             const config = JSON.parse(this.readContent('angular.json'));

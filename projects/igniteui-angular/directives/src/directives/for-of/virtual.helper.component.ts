@@ -1,20 +1,24 @@
-import { Component, HostBinding, Input, ViewChild, ViewContainerRef,
-    OnDestroy, OnInit} from '@angular/core';
+import {
+  Component, HostBinding, Input, ViewChild, ViewContainerRef,
+  OnDestroy, OnInit,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
 @Component({
     selector: 'igx-virtual-helper',
     template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="size"></div>',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnInit, OnDestroy  {
     @HostBinding('scrollTop')
-    public scrollTop;
+    public scrollTop!: number;
 
-    public scrollWidth;
+    public scrollWidth!: number;
 
-    @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr;
-    @Input() public itemsLength: number;
+    @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr!: ViewContainerRef;
+    @Input() public itemsLength!: number;
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { IGX_CHIPS_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxGridComponent, IgxHierarchicalGridComponent, IgxIconComponent, IgxTreeGridComponent } from 'igniteui-angular';
@@ -7,6 +7,7 @@ import { IGX_CHIPS_DIRECTIVES, IGX_INPUT_GROUP_DIRECTIVES, IgxGridComponent, Igx
     selector: 'app-grid-search-box',
     styleUrls: ['./grid-search-box.component.scss'],
     templateUrl: './grid-search-box.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent, FormsModule, IGX_INPUT_GROUP_DIRECTIVES, IGX_CHIPS_DIRECTIVES]
 })
 export class GridSearchBoxComponent {

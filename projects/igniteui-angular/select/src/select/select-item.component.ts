@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IgxDropDownItemComponent } from 'igniteui-angular/drop-down';
 
 @Component({
     selector: 'igx-select-item',
 	templateUrl: 'select-item.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent {
     /** @hidden @internal */
-    public override isHeader: boolean;
+    public override isHeader!: boolean;
 
     private _text: any;
 
@@ -53,7 +54,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent {
      * ```
      */
     public override get selected() {
-        return !this.isHeader && !this.disabled && this.selection.is_item_selected(this.dropDown.id, this);
+        return !this.isHeader && !this.disabled && this.selection!.is_item_selected(this.dropDown.id, this);
     }
 
     public override set selected(value: any) {

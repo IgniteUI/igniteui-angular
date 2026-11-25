@@ -40,7 +40,7 @@ Closes #
 
 
 ## Checklist:
- - [ ] All relevant tags have been applied to this PR
+ - [ ] All relevant labels have been applied to this PR
  - [ ] This PR includes unit tests covering all the new code ([test guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/Test-implementation-guidelines-for-Ignite-UI-for-Angular))
  - [ ] This PR includes API docs for newly added methods/properties ([api docs guidelines](https://github.com/IgniteUI/igniteui-angular/wiki/Documentation-Guidelines))
  - [ ] This PR includes `feature/README.MD` updates for the feature docs

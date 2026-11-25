@@ -19,7 +19,7 @@ export class ExpressionsTreeUtil {
             return tree.filteringOperands[index];
         }
 
-        return null;
+        return null!;
     }
 
     /**
@@ -125,7 +125,7 @@ function getFilteringCondition(dataType: string, name: string): IFilteringOperat
  */
 function recreateOperatorFromDataType(expression: IFilteringExpression, dataType: string): IFilteringOperation {
     if (!expression.condition?.logic) {
-        return getFilteringCondition(dataType, expression.conditionName || expression.condition?.name);
+        return getFilteringCondition(dataType, (expression.conditionName || expression.condition?.name)!);
     }
 
     return expression.condition;
@@ -145,7 +145,7 @@ export function recreateExpression(expression: IFilteringExpression, fields: Fie
         if (!field.filters) {
             expression.condition = recreateOperatorFromDataType(expression, field.dataType);
         } else {
-            expression.condition = field.filters.condition(expression.conditionName || expression.condition?.name);
+            expression.condition = field.filters.condition((expression.conditionName || expression.condition?.name)!);
         }
     }
 
@@ -157,7 +157,7 @@ export function recreateExpression(expression: IFilteringExpression, fields: Fie
         expression.conditionName = expression.condition?.name;
     }
 
-    expression.searchVal = recreateSearchValue(expression.searchVal, field?.dataType);
+    expression.searchVal = recreateSearchValue(expression.searchVal, field?.dataType!);
 
     return expression;
 }

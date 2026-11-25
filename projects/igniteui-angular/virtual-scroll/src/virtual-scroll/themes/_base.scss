@@ -1,0 +1,61 @@
+@use '../../../../core/src/core/styles/themes/scoping' as *;
+
+$block: '.igx-virtual-scroll';
+
+@include layer(base) {
+    #{$block} {
+        display: block;
+        position: relative;
+        overflow: auto;
+
+        &[data-orientation='vertical'] {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        &[data-orientation='horizontal'] {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    }
+
+    #{$block}__track {
+        position: relative;
+        width: 100%;
+        min-height: 100%;
+
+        #{$block}[data-orientation='horizontal'] & {
+            height: 100%;
+            width: auto;
+            min-height: unset;
+        }
+    }
+
+    #{$block}__content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        will-change: transform;
+        contain: layout style paint;
+
+        #{$block}[data-orientation='horizontal'] & {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            width: auto;
+        }
+
+        #{$block}[data-orientation='horizontal']:dir(rtl) & {
+            left: auto;
+            right: 0;
+        }
+    }
+
+    .igx-virtual-item {
+        #{$block}[data-orientation='horizontal'] & {
+            flex-shrink: 0;
+            height: 100%;
+        }
+    }
+}

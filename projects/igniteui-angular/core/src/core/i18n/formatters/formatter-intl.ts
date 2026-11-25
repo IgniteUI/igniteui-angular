@@ -17,7 +17,7 @@ export class IntlFormatter extends BaseFormatter {
             // Any angular method should work.
             return Intl.getCanonicalLocales(locale)[0];
         } catch {
-            return undefined;
+            return undefined!;
         }
     }
 
@@ -57,7 +57,7 @@ export class IntlFormatter extends BaseFormatter {
     }
 
     public override getCurrencySymbol(currencyCode: string, locale?: string, currencyDisplay: keyof Intl.NumberFormatOptionsCurrencyDisplayRegistry = "symbol"): string {
-        return getNumberFormatter().getCurrencySymbol(currencyCode, locale, currencyDisplay);
+        return getNumberFormatter().getCurrencySymbol(currencyCode, locale, currencyDisplay)!;
     }
 
     public override getLocaleFirstDayOfWeek(locale?: string): number {

@@ -1,4 +1,22 @@
-import { AfterViewInit, Component, ContentChildren, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output, QueryList, Renderer2, ViewChildren, OnDestroy, ElementRef, booleanAttribute, inject } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ChangeDetectorRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    QueryList,
+    Renderer2,
+    ViewChildren,
+    OnDestroy,
+    ElementRef,
+    booleanAttribute,
+    inject,
+    ChangeDetectionStrategy,
+    ViewEncapsulation,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxRippleDirective } from 'igniteui-angular/directives';
@@ -32,15 +50,18 @@ let NEXT_ID = 0;
  * ```
  * The `fontOptions` value shown above is defined as:
  * ```typescript
- * this.fontOptions = [
- *   { icon: 'format_bold', selected: false },
- *   { icon: 'format_italic', selected: false },
- *   { icon: 'format_underlined', selected: false }];
+ * public fontOptions: IButtonGroupButton[] = [
+ *   { label: 'Bold', icon: 'format_bold', selected: false },
+ *   { label: 'Italic', icon: 'format_italic', selected: false },
+ *   { label: 'Underline', icon: 'format_underlined', selected: false }];
  * ```
  */
 @Component({
     selector: 'igx-buttongroup',
     templateUrl: 'button-group-content.component.html',
+    styleUrl: 'buttongroup-content.component.css',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxButtonDirective, IgxRippleDirective, IgxIconComponent]
 })
 export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
@@ -65,11 +86,31 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     @Input()
     public id = `igx-buttongroup-${NEXT_ID++}`;
 
+    /** @hidden @internal */
+    @HostBinding('class.igx-button-group')
+    public cssClass = 'igx-button-group';
+
+    /** @hidden @internal */
+
     /**
      * @hidden
      */
     @HostBinding('style.zIndex')
     public zIndex = 0;
+
+    /**
+     * Sets/gets the role attribute value.
+     *
+     * @example
+     * ```typescript
+     * @ViewChild("MyButtonGroup", { read: IgxButtonGroupComponent })
+     * public badge: IgxButtonGroupComponent;
+     *
+     * buttonGroup.role = 'group';
+     * ```
+     */
+    @HostBinding('attr.role')
+    public role = 'group';
 
     /**
      * Allows you to set a style using the `itemContentCssClass` input.
@@ -88,7 +129,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Returns the CSS class of the item content of the `IgxButtonGroup`.
+     * Returns the CSS class of the item content of the button group.
      * ```typescript
      *  @ViewChild("MyChild")
      * public buttonG: IgxButtonGroupComponent;
@@ -99,27 +140,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      */
     public get itemContentCssClass(): string {
         return this._itemContentCssClass;
-    }
-
-    /**
-     * Enables selecting multiple buttons. By default, multi-selection is false.
-     *
-     * @deprecated in version 16.1.0. Use the `selectionMode` property instead.
-     */
-    @Input()
-    public get multiSelection() {
-        if (this.selectionMode === 'multi') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public set multiSelection(selectionMode: boolean) {
-        if (selectionMode) {
-            this.selectionMode = 'multi';
-        } else {
-            this.selectionMode = 'single';
-        }
     }
 
     /**
@@ -134,7 +154,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
     public set selectionMode(selectionMode: 'single' | 'singleRequired' | 'multi') {
         if (this.viewButtons && selectionMode !== this._selectionMode) {
-            this.buttons.forEach((b,i) => {
+            this.buttons.forEach((_, i) => {
                 this.deselectButton(i);
             });
             this._selectionMode = selectionMode;
@@ -144,32 +164,25 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 
     /**
-     * Property that configures the buttons in the button group using a collection of `Button` objects.
+     * Configures the buttons rendered by the button group using a collection of `IButtonGroupButton` objects.
+     * The buttons are rendered before any buttons projected in the group's content.
+     *
+     * The `selected` flag of each item is kept in sync with the selection state of its button.
+     *
+     * @example
      * ```typescript
-     *  public ngOnInit() {
-     *      this.cities = [
-     *        new Button({
-     *          label: "Sofia"
-     *      }),
-     *        new Button({
-     *          label: "London"
-     *      }),
-     *        new Button({
-     *          label: "New York",
-     *          selected: true
-     *      }),
-     *        new Button({
-     *          label: "Tokyo"
-     *      })
-     *  ];
-     *  }
-     *  //..
+     * public cities: IButtonGroupButton[] = [
+     *     { label: 'Sofia' },
+     *     { label: 'London' },
+     *     { label: 'New York', selected: true },
+     *     { label: 'Tokyo', disabled: true }
+     * ];
      * ```
      * ```html
-     *  <igx-buttongroup [selectionMode]="'single'" [values]="cities"></igx-buttongroup>
+     * <igx-buttongroup [selectionMode]="'single'" [values]="cities"></igx-buttongroup>
      * ```
      */
-    @Input() public values: any;
+    @Input() public values: IButtonGroupButton[] = [];
 
     /**
      * Disables the `igx-buttongroup` component. By default it's false.
@@ -256,8 +269,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     @Output()
     public deselected = new EventEmitter<IButtonGroupEventArgs>();
 
-    @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
-    @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
+    @ViewChildren(IgxButtonDirective) private viewButtons!: QueryList<IgxButtonDirective>;
+    @ContentChildren(IgxButtonDirective) private templateButtons!: QueryList<IgxButtonDirective>;
 
     /**
      * Returns true if the `igx-buttongroup` alignment is vertical.
@@ -274,6 +287,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
      * }
      * ```
      */
+    @HostBinding('class.igx-button-group--vertical')
     public get isVertical(): boolean {
         return this._isVertical;
     }
@@ -286,12 +300,12 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     protected buttonClickNotifier$ = new Subject<void>();
     protected queryListNotifier$ = new Subject<void>();
 
-    private _isVertical: boolean;
-    private _itemContentCssClass: string;
+    private _isVertical!: boolean;
+    private _itemContentCssClass!: string;
     private _disabled = false;
     private _selectionMode: 'single' | 'singleRequired' | 'multi' = 'single';
 
-    private mutationObserver: MutationObserver;
+    private mutationObserver!: MutationObserver;
     private observerConfig: MutationObserverInit = {
       attributeFilter: ["data-selected"],
       childList: true,
@@ -330,8 +344,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        const button = this.buttons[index];
-        button.select();
+        this.buttons[index].selected = true;
+        this.updateSelected(index);
     }
 
     /**
@@ -358,7 +372,6 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             this.buttons.forEach((_, i) => {
                 if (i !== index && this.selectedIndexes.indexOf(i) !== -1) {
                     this.deselectButton(i);
-                    this.updateDeselected(i);
                 }
             });
         }
@@ -398,8 +411,8 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        const button = this.buttons[index];
-        button.deselect();
+        this.buttons[index].selected = false;
+        this.updateDeselected(index);
     }
 
     /**
@@ -429,7 +442,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
             });
         };
 
-        this.mutationObserver = this.setMutationsObserver();
+        this.mutationObserver = this.setMutationsObserver()!;
 
         this.viewButtons.changes.pipe(takeUntil(this.queryListNotifier$)).subscribe(() => {
             this.mutationObserver.disconnect();
@@ -536,4 +549,34 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs {
     owner: IgxButtonGroupComponent;
     button: IgxButtonDirective;
     index: number;
+}
+
+/**
+ * Describes a button rendered by `IgxButtonGroupComponent` through its `values` input.
+ *
+ * @example
+ * ```typescript
+ * public alignOptions: IButtonGroupButton[] = [
+ *     { label: 'Left', icon: 'format_align_left', selected: true },
+ *     { label: 'Center', icon: 'format_align_center' },
+ *     { label: 'Right', icon: 'format_align_right', disabled: true }
+ * ];
+ * ```
+ */
+export interface IButtonGroupButton {
+    /**
+     * The text displayed in the button. It is also used as the button's `aria-label`
+     * and to track the button when the `values` collection changes, so it should be unique in the collection.
+     */
+    label: string;
+    /** The name of the icon displayed before the label. */
+    icon?: string;
+    /** The color of the ripple effect shown when the button is clicked. */
+    ripple?: string;
+    /** Whether the button is selected. Kept in sync with the selection state of the button group. */
+    selected?: boolean;
+    /** Whether the button is disabled. Disabling the button group disables all of its buttons. */
+    disabled?: boolean;
+    /** Rendered as the button's `data-togglable` attribute. */
+    togglable?: boolean;
 }

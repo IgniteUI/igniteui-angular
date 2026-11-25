@@ -13,7 +13,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridTypeBase): ITreeGridRecord[] {
-        return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined, grid);
+        return this.filterImpl(data, expressionsTree, advancedExpressionsTree!, undefined!, grid);
     }
 
     protected getFieldValue(rec: any, fieldName: string, isDate = false, isTime = false, grid?: GridTypeBase): any {
@@ -30,7 +30,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         return value;
     }
 
-    private getHierarchicalFieldValue(record: ITreeGridRecord, field: string) {
+    private getHierarchicalFieldValue(record: ITreeGridRecord, field: string): string {
         const value = resolveNestedPath(record.data, columnFieldPath(field));
 
         return record.parent ?
@@ -52,7 +52,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             rec.parent = parent;
             if (rec.children) {
                 const filteredChildren = this.filterImpl(rec.children, expressionsTree, advancedExpressionsTree, rec, grid);
-                rec.children = filteredChildren.length > 0 ? filteredChildren : null;
+                rec.children = filteredChildren.length > 0 ? filteredChildren : null!;
             }
 
             if (this.matchRecord(rec, expressionsTree, grid) && this.matchRecord(rec, advancedExpressionsTree, grid)) {
@@ -98,7 +98,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
             const applyFormatter = column.formatter && this.shouldFormatFilterValues(column);
 
             value = applyFormatter ?
-                column.formatter(value, record.data) :
+                column.formatter!(value, record.data) :
                 value;
 
             const hierarchicalValue = parent ?
@@ -107,7 +107,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 
             const filterItem: IgxFilterItem = { value: hierarchicalValue };
             filterItem.label = this.getFilterItemLabel(column, value, !applyFormatter, record.data);
-            filterItem.children = this.getHierarchicalFilterItems(record.children, column, filterItem);
+            filterItem.children = this.getHierarchicalFilterItems(record.children!, column, filterItem);
             return filterItem;
         });
     }
@@ -132,7 +132,7 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
 export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilteringStrategy {
     public override filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridTypeBase): ITreeGridRecord[] {
-        return this.filterImplementation(data, expressionsTree, advancedExpressionsTree, undefined, grid);
+        return this.filterImplementation(data, expressionsTree, advancedExpressionsTree!, undefined!, grid);
     }
 
     private filterImplementation(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
@@ -149,13 +149,13 @@ export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilter
             rec.parent = parent;
             if (rec.children) {
                 const filteredChildren = this.filterImplementation(rec.children, expressionsTree, advancedExpressionsTree, rec, grid);
-                rec.children = filteredChildren.length > 0 ? filteredChildren : null;
+                rec.children = filteredChildren.length > 0 ? filteredChildren : null!;
             }
             if (this.matchRecord(rec, expressionsTree, grid) && this.matchRecord(rec, advancedExpressionsTree, grid)) {
                 res.push(rec);
             } else if (rec.children && rec.children.length > 0) {
                 rec = this.setCorrectLevelToFilteredRecords(rec);
-                res.push(...rec.children);
+                res.push(...rec.children!);
             }
         }
         return res;
@@ -164,7 +164,7 @@ export class TreeGridMatchingRecordsOnlyFilteringStrategy extends TreeGridFilter
     private setCorrectLevelToFilteredRecords(rec: ITreeGridRecord): ITreeGridRecord {
         if (rec.children && rec.children.length > 0) {
             rec.children.map(child => {
-                child.level = child.level - 1;
+                child.level = child.level! - 1;
                 return this.setCorrectLevelToFilteredRecords(child);
             });
         }

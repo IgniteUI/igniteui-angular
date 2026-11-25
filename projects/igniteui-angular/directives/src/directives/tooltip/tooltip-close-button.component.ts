@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, HostListener, Input, TemplateRef } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, Input, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { CommonModule } from '@angular/common';
 
@@ -11,11 +11,12 @@ import { CommonModule } from '@angular/common';
           <igx-icon aria-hidden="true" family="default" name="close"></igx-icon>
         }
         `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [IgxIconComponent, CommonModule],
 })
 export class IgxTooltipCloseButtonComponent {
     @Input()
-    public customTemplate: TemplateRef<any>;
+    public customTemplate!: TemplateRef<any>;
 
     @Output()
     public clicked = new EventEmitter<void>();

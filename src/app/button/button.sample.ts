@@ -5,14 +5,14 @@ import {
     OnInit,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
+    ChangeDetectionStrategy,
+    ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     IgxButtonDirective,
     IgxIconComponent,
     IgxSwitchComponent,
-    IgSizeDirective,
 } from 'igniteui-angular';
 import {
     defineComponents,
@@ -38,12 +38,12 @@ registerIconFromText('face', face);
     templateUrl: 'button.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         FormsModule,
         IgxSwitchComponent,
         IgxButtonDirective,
         IgxIconComponent,
-        IgSizeDirective,
     ],
 })
 export class ButtonSampleComponent implements OnInit {
@@ -54,12 +54,6 @@ export class ButtonSampleComponent implements OnInit {
     public hasSuffix = false;
 
     public panelConfig: PropertyPanelConfig = {
-        size: {
-            control: {
-                type: 'button-group',
-                options: ['small', 'medium', 'large'],
-            }
-        },
         variant: {
             control: {
                 type: 'button-group',

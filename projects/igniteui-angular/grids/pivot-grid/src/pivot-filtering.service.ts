@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { first, takeUntil } from 'rxjs/operators';
-import { DimensionValuesFilteringStrategy, PivotUtil } from 'igniteui-angular/grids/core';
+import { DimensionValuesFilteringStrategy, IPivotDimension, PivotGridType, PivotUtil } from 'igniteui-angular/grids/core';
 import { IgxFilteringService } from 'igniteui-angular/grids/core';
-import { ColumnType, FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IFilteringOperation } from 'igniteui-angular/core';
+import { ColumnType, ExpressionsTreeUtil, FilteringExpressionsTree, FilteringLogic, IFilteringExpressionsTree, IFilteringOperation } from 'igniteui-angular/core';
+
 
 @Injectable()
 export class IgxPivotFilteringService extends IgxFilteringService {
-    private filtersESFId;
+    private filtersESFId: any;
 
     public override clearFilter(field: string): void {
         this.clear_filter(field);
@@ -14,27 +15,33 @@ export class IgxPivotFilteringService extends IgxFilteringService {
 
     public override clear_filter(fieldName: string) {
         super.clear_filter(fieldName);
-        const grid = this.grid;
-        const allDimensions = grid.allDimensions;
-        const allDimensionsFlat = PivotUtil.flatten(allDimensions);
-        const dim = allDimensionsFlat.find(x => x.memberName === fieldName);
+        const grid = this.grid as PivotGridType;
+        const allDimensions = (grid as PivotGridType).allDimensions;
+        const allDimensionsFlat = PivotUtil.flatten(allDimensions) as IPivotDimension[];
+        const dim = allDimensionsFlat.find((x: any) => x.memberName === fieldName);
+        if (!dim) {
+            return;
+        }
         dim.filter = undefined;
         grid.filteringPipeTrigger++;
         if (allDimensions.indexOf(dim) !== -1) {
             // update columns
-            (grid as any).setupColumns();
+            grid.setupColumns();
         }
     }
-    protected override filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+    protected override filter_internal(fieldName: string, term: any, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase: boolean) {
         super.filter_internal(fieldName, term, conditionOrExpressionsTree, ignoreCase);
-        const grid = this.grid;
+        const grid = (this.grid as PivotGridType);
         const config = grid.pivotConfiguration;
-        const allDimensions = PivotUtil.flatten(config.rows.concat(config.columns).concat(config.filters).filter(x => x !== null && x !== undefined));
-        const enabledDimensions = allDimensions.filter(x => x && x.enabled);
-        const dim = enabledDimensions.find(x => x.memberName === fieldName || x.member === fieldName);
-        const filteringTree = dim.filter || new FilteringExpressionsTree(FilteringLogic.And);
-        const fieldFilterIndex = filteringTree.findIndex(fieldName);
+        const allDimensions = PivotUtil.flatten((config.rows ?? []).concat(config.columns ?? []).concat(config.filters ?? []).filter((x) => x !== null && x !== undefined)) as IPivotDimension[];
+        const enabledDimensions = allDimensions.filter((x) => x && x.enabled);
+        const dim = enabledDimensions.find((x) => x.memberName === fieldName || x.memberName === fieldName);
+        if (!dim) {
+            return;
+        }
+        const filteringTree = dim.filter ?? new FilteringExpressionsTree(FilteringLogic.And);
+        const fieldFilterIndex = ExpressionsTreeUtil.findIndex(filteringTree, fieldName);
         if (fieldFilterIndex > -1) {
             filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
         }

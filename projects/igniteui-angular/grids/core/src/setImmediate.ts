@@ -21,7 +21,7 @@
 
 // Note: Originally copied from core-js-pure package and modified. (https://github.com/zloirock/core-js)
 
-const queue = {};
+const queue: Record<string, () => void> = {};
 let counter = 0;
 let eventListenerAdded = false;
 
@@ -32,7 +32,7 @@ declare global {
     }
 }
 
-const run = (id) => {
+const run = (id: any) => {
     if (queue.hasOwnProperty(id)) {
         const fn = queue[id];
         delete queue[id];
@@ -40,10 +40,10 @@ const run = (id) => {
     }
 };
 
-const listener = (event) => run(event.data);
+const listener = (event: MessageEvent) => run(event.data);
 
 // Use function instead of arrow function to workaround an issue in codesandbox
-export function setImmediate(cb: () => void, ...args) {
+export function setImmediate(cb: () => void, ...args: any[]) {
     if (window.setImmediate) {
         return window.setImmediate(cb);
     }
@@ -54,7 +54,7 @@ export function setImmediate(cb: () => void, ...args) {
     }
 
     queue[++counter] = () => {
-        cb.apply(undefined, args);
+        cb.apply(undefined, args as []);
     };
 
     const windowLocation = window.location;

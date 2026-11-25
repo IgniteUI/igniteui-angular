@@ -11,7 +11,7 @@ import { yieldingLoop } from '../exporter-common/yielding-loop';
  */
 export class RootRelsFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['.rels'] = strToU8(ExcelStrings.getRels());
+        (folder as any)['.rels'] = strToU8(ExcelStrings.getRels());
     }
 }
 
@@ -20,7 +20,7 @@ export class RootRelsFile implements IExcelFile {
  */
 export class AppFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
-        folder['app.xml'] = strToU8(ExcelStrings.getApp(worksheetData.options.worksheetName));
+        (folder as any)['app.xml'] = strToU8(ExcelStrings.getApp(worksheetData.options.worksheetName));
     }
 }
 
@@ -29,7 +29,7 @@ export class AppFile implements IExcelFile {
  */
 export class CoreFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['core.xml'] = strToU8(ExcelStrings.getCore());
+        (folder as any)['core.xml'] = strToU8(ExcelStrings.getCore());
     }
 }
 
@@ -39,7 +39,7 @@ export class CoreFile implements IExcelFile {
 export class WorkbookRelsFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
-        folder['workbook.xml.rels'] = strToU8(ExcelStrings.getWorkbookRels(hasSharedStrings));
+        (folder as any)['workbook.xml.rels'] = strToU8(ExcelStrings.getWorkbookRels(hasSharedStrings));
     }
 }
 
@@ -48,7 +48,7 @@ export class WorkbookRelsFile implements IExcelFile {
  */
 export class ThemeFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['theme1.xml'] = strToU8(ExcelStrings.getTheme());
+        (folder as any)['theme1.xml'] = strToU8(ExcelStrings.getTheme());
     }
 }
 
@@ -84,8 +84,8 @@ export class WorksheetFile implements IExcelFile {
     private currentHierarchicalOwner = '';
     private firstColumn = Number.MAX_VALUE;
     private firstDataRow = Number.MAX_VALUE;
-    private isValidGrid: boolean;
-    private lastValidRow: string;
+    private isValidGrid!: boolean;
+    private lastValidRow!: string;
 
     private currencyStyleMap = new Map<string, CurrencyInfo>([
         ['USD', {styleXf: 5, symbol: '$'}],
@@ -103,7 +103,7 @@ export class WorksheetFile implements IExcelFile {
                 const hasTable = (!worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders)
                     && worksheetData.options.exportAsTable;
 
-                folder['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(
+                (folder as any)['sheet1.xml'] = strToU8(ExcelStrings.getSheetXML(
                     this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, worksheetData.isHierarchical));
                 resolve();
             });
@@ -136,8 +136,8 @@ export class WorksheetFile implements IExcelFile {
 
             let headersForLevel: IColumnInfo[] = [];
 
-            for(let i = 0; i <= owner.maxRowLevel; i++) {
-                headersForLevel =  owner.columns.filter(c => c.level === i && c.rowSpan > 0 && !c.skip)
+            for(let i = 0; i <= owner.maxRowLevel!; i++) {
+                headersForLevel =  owner.columns.filter(c => c.level === i && c.rowSpan! > 0 && !c.skip)
 
                 this.printHeaders(worksheetData, headersForLevel, i, true);
 
@@ -146,7 +146,7 @@ export class WorksheetFile implements IExcelFile {
 
             this.rowIndex = 0;
 
-            for (let i = 0; i <= owner.maxLevel; i++) {
+            for (let i = 0; i <= owner.maxLevel!; i++) {
                 this.rowIndex++;
                 const pivotGridColumns = this.pivotGridRowHeadersMap.get(this.rowIndex) ?? "";
                 this.sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>${pivotGridColumns}`;
@@ -158,15 +158,15 @@ export class WorksheetFile implements IExcelFile {
 
                 headersForLevel = hasMultiColumnHeader ?
                     allowedColumns
-                        .filter(c => (c.level < i &&
-                            c.headerType !== ExportHeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
-                        .sort((a, b) => a.startIndex - b.startIndex)
-                        .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
+                        .filter(c => (c.level! < i &&
+                            c.headerType !== ExportHeaderType.MultiColumnHeader || c.level === i) && c.columnSpan! > 0 && !c.skip)
+                        .sort((a, b) => a.startIndex! - b.startIndex!)
+                        .sort((a, b) => a.pinnedIndex! - b.pinnedIndex!) :
                     hasUserSetIndex ?
                         allowedColumns.filter(c => !c.skip) :
                         allowedColumns.filter(c => !c.skip)
-                            .sort((a, b) => a.startIndex - b.startIndex)
-                            .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+                            .sort((a, b) => a.startIndex! - b.startIndex!)
+                            .sort((a, b) => a.pinnedIndex! - b.pinnedIndex!);
 
                 this.printHeaders(worksheetData, headersForLevel, i, false);
 
@@ -174,7 +174,7 @@ export class WorksheetFile implements IExcelFile {
             }
 
             const multiColumnHeaderLevel = worksheetData.options.ignoreMultiColumnHeaders ? 0 : owner.maxLevel;
-            const freezeHeaders = worksheetData.options.freezeHeaders ? 2 + multiColumnHeaderLevel : 1;
+            const freezeHeaders = worksheetData.options.freezeHeaders ? 2 + multiColumnHeaderLevel! : 1;
 
             if (!isHierarchicalGrid) {
                 const col = worksheetData.hasSummaries ? worksheetData.columnCount + 1 : worksheetData.columnCount - 1
@@ -246,7 +246,7 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
-        const rowDataArr = [];
+        const rowDataArr: any[] = [];
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
@@ -264,8 +264,8 @@ export class WorksheetFile implements IExcelFile {
                         } else {
                             recordHeaders = worksheetData.owner.columns
                                 .filter(c => c.headerType === ExportHeaderType.ColumnHeader && !c.skip)
-                                .sort((a, b) => a.startIndex-b.startIndex)
-                                .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
+                                .sort((a, b) => a.startIndex!-b.startIndex!)
+                                .sort((a, b) => a.pinnedIndex!-b.pinnedIndex!)
                                 .map(c => c.field);
                         }
                     } else {
@@ -273,10 +273,10 @@ export class WorksheetFile implements IExcelFile {
 
                         if (record.type === ExportRecordType.HeaderRecord) {
                             const recordOwner = worksheetData.owners.get(record.owner);
-                            const hasMultiColumnHeaders = recordOwner.columns.some(c => !c.skip && c.headerType === ExportHeaderType.MultiColumnHeader);
+                            const hasMultiColumnHeaders = recordOwner!.columns.some(c => !c.skip && c.headerType === ExportHeaderType.MultiColumnHeader);
 
                             if (hasMultiColumnHeaders) {
-                                this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
+                                this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner!);
                             }
                         }
 
@@ -293,7 +293,7 @@ export class WorksheetFile implements IExcelFile {
 
     private hGridPrintMultiColHeaders(worksheetData: WorksheetData, rowDataArr: any[], record: IExportRecord,
         owner: IColumnList) {
-        for (let j = 0; j < owner.maxLevel; j++) {
+        for (let j = 0; j < owner.maxLevel!; j++) {
             const recordLevel = record.level;
             const outlineLevel = recordLevel > 0 ? ` outlineLevel="${recordLevel}"` : '';
             this.maxOutlineLevel = this.maxOutlineLevel < recordLevel ? recordLevel : this.maxOutlineLevel;
@@ -303,10 +303,10 @@ export class WorksheetFile implements IExcelFile {
             let row = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
             const headersForLevel = owner.columns
-                .filter(c => (c.level < j &&
-                    c.headerType !== ExportHeaderType.MultiColumnHeader || c.level === j) && c.columnSpan > 0 && !c.skip)
-                .sort((a, b) => a.startIndex - b.startIndex)
-                .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
+                .filter(c => (c.level! < j &&
+                    c.headerType !== ExportHeaderType.MultiColumnHeader || c.level === j) && c.columnSpan! > 0 && !c.skip)
+                .sort((a, b) => a.startIndex! - b.startIndex!)
+                .sort((a, b) => a.pinnedIndex! - b.pinnedIndex!);
 
             let startValue = 0 + record.level;
 
@@ -325,9 +325,9 @@ export class WorksheetFile implements IExcelFile {
 
                         if (currentCol.headerType === ExportHeaderType.ColumnHeader) {
                             columnCoordinate = ExcelStrings.getExcelColumn(startValue) +
-                                (this.rowIndex + owner.maxLevel - currentCol.level);
+                                (this.rowIndex + owner.maxLevel! - currentCol.level);
                         } else {
-                            for (let k = 1; k < currentCol.columnSpan; k++) {
+                            for (let k = 1; k < currentCol.columnSpan!; k++) {
                                 columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + this.rowIndex;
                                 row += `<c r="${columnCoordinate}" s="3" />`;
                             }
@@ -337,7 +337,7 @@ export class WorksheetFile implements IExcelFile {
                     }
                 }
 
-                startValue += currentCol.columnSpan;
+                startValue += currentCol.columnSpan!;
             }
             row += `</row>`;
             rowDataArr.push(row);
@@ -372,7 +372,7 @@ export class WorksheetFile implements IExcelFile {
         }
 
         for (let j = 0; j < keys.length; j++) {
-            const col = j + (isHierarchicalGrid ? rowLevel : worksheetData.isPivotGrid ? worksheetData.owner.maxRowLevel : 0);
+            const col = j + (isHierarchicalGrid ? rowLevel : worksheetData.isPivotGrid ? worksheetData.owner.maxRowLevel : 0)!;
 
             const cellData = this.getCellData(worksheetData, i, col, keys[j]);
 
@@ -406,7 +406,7 @@ export class WorksheetFile implements IExcelFile {
         }
 
         if (worksheetData.hasSummaries && (isValidRecordType || (worksheetData.isGroupedGrid && isSummaryRecord))) {
-            this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner, worksheetData.isGroupedGrid && isSummaryRecord)
+            this.setSummaryCoordinates(columnName, key, fullRow.hierarchicalOwner!, worksheetData.isGroupedGrid && isSummaryRecord)
         }
 
         if (fullRow.summaryKey && fullRow.summaryKey === GRID_ROOT_SUMMARY && key !== GRID_LEVEL_COL && worksheetData.isGroupedGrid) {
@@ -444,7 +444,7 @@ export class WorksheetFile implements IExcelFile {
             const isPercentage = targetCol?.dataType === 'percent';
             const isColumnCurrencyType = targetCol?.dataType === 'currency';
 
-            const format = isPercentage ? ` s="12"` : isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode)?.styleXf || 0}"` : ` s="1"`;
+            const format = isPercentage ? ` s="12"` : isDateTime ? ` s="11"` : isTime ? ` s="10"` : isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : isColumnCurrencyType ? ` s="${this.currencyStyleMap.get(targetCol.currencyCode!)?.styleXf || 0}"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         } else {
@@ -454,7 +454,7 @@ export class WorksheetFile implements IExcelFile {
                 const dimensionMapKey = this.isValidGrid ? fullRow.hierarchicalOwner ?? GRID_PARENT : null;
                 const level = worksheetData.isGroupedGrid ? worksheetData.maxLevel : fullRow.level;
 
-                summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol);
+                summaryFunc = this.getSummaryFunction(cellValue.label, key, dimensionMapKey, level, targetCol!);
 
                 if (!summaryFunc) {
                     let summaryValue;
@@ -506,7 +506,7 @@ export class WorksheetFile implements IExcelFile {
                 this.dimensionMap.clear();
             }
 
-            this.currentSummaryOwner = record.summaryKey;
+            this.currentSummaryOwner = record.summaryKey!;
 
             // For grouped grid we need to reset the parent map
             // so we can change the startCoordinate for each record
@@ -514,7 +514,7 @@ export class WorksheetFile implements IExcelFile {
                 this.hierarchicalDimensionMap.delete(GRID_PARENT)
             }
 
-            this.currentHierarchicalOwner = record.hierarchicalOwner;
+            this.currentHierarchicalOwner = record.hierarchicalOwner!;
         }
     }
 
@@ -532,20 +532,20 @@ export class WorksheetFile implements IExcelFile {
             if (useLastValidEndCoordinate) {
                 this.setEndCoordinates(targetDimensionMap, true);
             } else {
-                targetDimensionMap.get(key).endCoordinate = columnName;
-                this.lastValidRow = targetDimensionMap.get(key).endCoordinate.match(/[a-z]+|[^a-z]+/gi)[1]
+                targetDimensionMap.get(key)!.endCoordinate = columnName;
+                this.lastValidRow = targetDimensionMap.get(key)!.endCoordinate.match(/[a-z]+|[^a-z]+/gi)![1]
             }
         }
 
         if (this.isValidGrid && !useLastValidEndCoordinate && hierarchicalOwner !== GRID_PARENT) {
             const parentMap = this.hierarchicalDimensionMap.get(GRID_PARENT);
-            this.setEndCoordinates(parentMap);
+            this.setEndCoordinates(parentMap!);
         }
     }
 
     private setEndCoordinates(map: Map<string, Dimensions>, useLastValidEndCoordinate = false) {
         for (const a of map.values()) {
-            const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)[0];
+            const colName = a.endCoordinate.match(/[a-z]+|[^a-z]+/gi)![0];
             a.endCoordinate = `${colName}${useLastValidEndCoordinate ? this.lastValidRow : this.rowIndex}`;
          }
     }
@@ -564,7 +564,7 @@ export class WorksheetFile implements IExcelFile {
         let func = '';
         let funcType = '';
         let result = '';
-        const currencyInfo = this.currencyStyleMap.get(col.currencyCode);
+        const currencyInfo = this.currencyStyleMap.get(col.currencyCode!);
 
         switch(type?.toString().toLowerCase()) {
             case "count":
@@ -612,14 +612,15 @@ export class WorksheetFile implements IExcelFile {
                 // TODO: get date format from locale
                 return `"Latest: "&amp;_xlfn.TEXT(_xlfn.MAX(_xlfn.IF(${levelDimensions.startCoordinate}:${levelDimensions.endCoordinate}=${recordLevel}, ${dimensions.startCoordinate}:${dimensions.endCoordinate})), "m/d/yyyy")`
         }
+        return undefined!;
     }
 
     private setRootSummaryStartCoordinate(column: number, key: string) {
         const firstDataRecordColName = ExcelStrings.getExcelColumn(column) + (this.firstDataRow);
         const targetMap = this.hierarchicalDimensionMap.get(GRID_PARENT);
 
-        if (targetMap.get(key).startCoordinate !== firstDataRecordColName) {
-            targetMap.get(key).startCoordinate = firstDataRecordColName;
+        if (targetMap!.get(key)!.startCoordinate !== firstDataRecordColName) {
+            targetMap!.get(key)!.startCoordinate = firstDataRecordColName;
         }
     }
 
@@ -645,7 +646,7 @@ export class WorksheetFile implements IExcelFile {
                     : startValue + (owner.maxRowLevel ?? 0)
 
                 let rowCoordinate = isVertical
-                    ? startValue + owner.maxLevel + 2
+                    ? startValue + owner.maxLevel! + 2
                     : this.rowIndex
                 if (currentCol.headerType === ExportHeaderType.PivotRowHeader) {
                     rowCoordinate = startValue + 1;
@@ -659,7 +660,7 @@ export class WorksheetFile implements IExcelFile {
                     ? ExcelStrings.getExcelColumn(worksheetData.columnCount + 1)
                     : ExcelStrings.getExcelColumn(column)) + rowCoordinate;
 
-                rowStyle = isVertical && currentCol.rowSpan > 1 ? ' s="4"' : rowStyle;
+                rowStyle = isVertical && currentCol.rowSpan! > 1 ? ' s="4"' : rowStyle;
                 str = `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
 
                 if (isVertical) {
@@ -683,11 +684,11 @@ export class WorksheetFile implements IExcelFile {
 
                         const row = isVertical
                             ? rowCoordinate
-                            : owner.maxLevel + 1;
+                            : owner.maxLevel! + 1;
 
-                        columnCoordinate = ExcelStrings.getExcelColumn(col) + row;
+                        columnCoordinate = ExcelStrings.getExcelColumn(col!) + row;
                     } else {
-                        for (let k = 1; k < spanLength; k++) {
+                        for (let k = 1; k < spanLength!; k++) {
                             const col = isVertical
                                 ? column
                                 : column + k;
@@ -706,14 +707,14 @@ export class WorksheetFile implements IExcelFile {
                     }
                     if ((currentCol.headerType === ExportHeaderType.RowHeader || currentCol.headerType === ExportHeaderType.MultiRowHeader) &&
                         currentCol.columnSpan && currentCol.columnSpan > 1 ) {
-                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength - 1);
+                        columnCoordinate = ExcelStrings.getExcelColumn(column + currentCol.columnSpan - 1) + (rowCoordinate + spanLength! - 1);
                     }
 
                     this.mergeCellStr += `${columnCoordinate}" />`;
                 }
             }
             if (currentCol.headerType !== ExportHeaderType.PivotRowHeader) {
-                startValue += spanLength;
+                startValue += spanLength!;
             }
         }
     }
@@ -724,7 +725,7 @@ export class WorksheetFile implements IExcelFile {
  */
 export class StyleFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['styles.xml'] = strToU8(ExcelStrings.getStyles());
+        (folder as any)['styles.xml'] = strToU8(ExcelStrings.getStyles());
     }
 }
 
@@ -733,7 +734,7 @@ export class StyleFile implements IExcelFile {
  */
 export class WorkbookFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
-        folder['workbook.xml'] = strToU8(ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
+        (folder as any)['workbook.xml'] = strToU8(ExcelStrings.getWorkbook(worksheetData.options.worksheetName));
     }
 }
 
@@ -743,7 +744,7 @@ export class WorkbookFile implements IExcelFile {
 export class ContentTypesFile implements IExcelFile {
     public writeElement(folder: Object, worksheetData: WorksheetData) {
         const hasSharedStrings = !worksheetData.isEmpty || worksheetData.options.alwaysExportHeaders;
-        folder['[Content_Types].xml'] = strToU8(ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
+        (folder as any)['[Content_Types].xml'] = strToU8(ExcelStrings.getContentTypesXML(hasSharedStrings, worksheetData.options.exportAsTable));
     }
 }
 
@@ -760,7 +761,7 @@ export class SharedStringsFile implements IExcelFile {
             sharedStrings[dict.getSanitizedValue(value)] = '<si><t>' + value + '</t></si>';
         }
 
-        folder['sharedStrings.xml'] = strToU8(ExcelStrings.getSharedStringXML(
+        (folder as any)['sharedStrings.xml'] = strToU8(ExcelStrings.getSharedStringXML(
                         dict.stringsCount,
                         sortedValues.length,
                         sharedStrings.join(''))
@@ -784,8 +785,8 @@ export class TablesFile implements IExcelFile {
             ? worksheetData.rootKeys
             : worksheetData.owner.columns
                 .filter(c => !c.skip)
-                .sort((a, b) => a.startIndex - b.startIndex)
-                .sort((a, b) => a.pinnedIndex - b.pinnedIndex)
+                .sort((a, b) => a.startIndex! - b.startIndex!)
+                .sort((a, b) => a.pinnedIndex! - b.pinnedIndex!)
                 .map(c => c.header);
 
         let sortString = '';
@@ -805,7 +806,7 @@ export class TablesFile implements IExcelFile {
             sortString = `<sortState ref="A2:${lastColumn}"><sortCondition descending="${dir}" ref="${sc}1:${sc}15"/></sortState>`;
         }
 
-        folder['table1.xml'] = strToU8(ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
+        (folder as any)['table1.xml'] = strToU8(ExcelStrings.getTablesXML(autoFilterDimension, tableDimension, tableColumns, sortString));
     }
 }
 
@@ -814,6 +815,6 @@ export class TablesFile implements IExcelFile {
  */
 export class WorksheetRelsFile implements IExcelFile {
     public writeElement(folder: Object) {
-        folder['sheet1.xml.rels'] = strToU8(ExcelStrings.getWorksheetRels());
+        (folder as any)['sheet1.xml.rels'] = strToU8(ExcelStrings.getWorksheetRels());
     }
 }

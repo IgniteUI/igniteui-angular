@@ -1,15 +1,17 @@
-import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject } from '@angular/core';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxChipComponent } from './chip.component';
-import { IgxChipsAreaComponent } from './chips-area.component';
+import { IgxChipsAreaComponent } from './chips-area/chips-area.component';
 import { IgxPrefixDirective } from '../../../input-group/src/public_api';
 import { IgxLabelDirective } from '../../../input-group/src/public_api';
 import { IgxSuffixDirective } from '../../../input-group/src/public_api';
 import { IgxIconComponent } from 'igniteui-angular/icon';
-import { getComponentSize } from 'igniteui-angular/core';
+import { ChipResourceStringsEN, changei18n, getComponentSize } from 'igniteui-angular/core';
 import { ControlsFunction } from 'igniteui-angular/test-utils/controls-functions.spec';
-import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { UIInteractions } from 'igniteui-angular/test-utils/ui-interactions.spec';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 @Component({
     template: `
@@ -23,23 +25,24 @@ import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interaction
                     <igx-icon igxPrefix>drag_indicator</igx-icon>
                 </igx-chip>
             }
-            <igx-chip #chipElem tabIndex="1" [id]="tabChipAttr">
+            <igx-chip #chipElem [tabIndex]="1">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem tabIndex="2" [disabled]="true" [id]="tabChipDisabled">
+            <igx-chip #chipElem [tabIndex]="2" [disabled]="true">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem [tabIndex]="3" [removable]="true" [id]="tabChipInput" >
+            <igx-chip #chipElem [tabIndex]="3" [removable]="true">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem tabIndex="4" [tabIndex]="1" [id]="tabChipBoth">
+            <igx-chip #chipElem [tabIndex]="4" [tabIndex]="1">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
-            <igx-chip #chipElem tabIndex="5" [tabIndex]="1" [disabled]="true" [id]="tabChipAll">
+            <igx-chip #chipElem [tabIndex]="5" [tabIndex]="1" [disabled]="true">
                 <span #label [class]="'igx-chip__text'">Tab Chip</span>
             </igx-chip>
         </igx-chips-area>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipComponent, IgxChipsAreaComponent, IgxIconComponent, IgxPrefixDirective]
 })
 class TestChipComponent {
@@ -76,6 +79,7 @@ class TestChipComponent {
             }
         </igx-chips-area>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxChipsAreaComponent, IgxChipComponent, IgxLabelDirective, IgxSuffixDirective]
 })
 class TestChipsLabelAndSuffixComponent {
@@ -102,11 +106,11 @@ describe('IgxChip', () => {
     let fix: ComponentFixture<TestChipComponent | TestChipsLabelAndSuffixComponent>;
     let chipArea;
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             imports: [TestChipComponent, TestChipsLabelAndSuffixComponent]
         }).compileComponents();
-    }));
+    });
 
     describe('Rendering Tests: ', () => {
         beforeEach(() => {
@@ -133,7 +137,7 @@ describe('IgxChip', () => {
             const igxChipItem = igxChip[1].nativeElement;
             const chipRemoveButton = ControlsFunction.getChipRemoveButton(igxChipItem);
 
-            expect(igxChipItem.children[0].children[2].children[0]).toHaveClass('igx-chip__remove');
+            expect(igxChipItem.children[0].children[2].children[0].classList.contains('igx-chip__remove')).toBe(true);
             expect(chipRemoveButton).toBeTruthy();
         });
 
@@ -148,7 +152,19 @@ describe('IgxChip', () => {
             fixture.detectChanges();
 
             expect(igxChip.variant).toMatch('danger');
-            expect(igxChip.nativeElement).toHaveClass('igx-chip--danger');
+            expect(igxChip.nativeElement.classList.contains('igx-chip--danger')).toBe(true);
+        });
+
+        it('should apply igx-chip--outlined class when outlined is set to true', () => {
+            const fixture = TestBed.createComponent(IgxChipComponent);
+            const igxChip = fixture.componentInstance;
+            igxChip.id = 'root-outlined';
+
+            igxChip.outlined = true;
+            fixture.detectChanges();
+
+            expect(igxChip.outlined).toBe(true);
+            expect(igxChip.nativeElement.classList.contains('igx-chip--outlined')).toBe(true);
         });
 
         it('should set text in chips correctly', () => {
@@ -219,7 +235,7 @@ describe('IgxChip', () => {
         it('should not trigger remove event when delete button is pressed when not removable', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
-            spyOn(firstChipComp.remove, 'emit');
+            vi.spyOn(firstChipComp.remove, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Delete', firstChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
 
@@ -229,7 +245,7 @@ describe('IgxChip', () => {
         it('should trigger remove event when delete button is pressed when removable', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(secondChipComp.remove, 'emit');
+            vi.spyOn(secondChipComp.remove, 'emit');
             UIInteractions.triggerKeyDownEvtUponElem('Delete', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
 
@@ -290,8 +306,8 @@ describe('IgxChip', () => {
 
         it('should fire selectedChanging event when selectable is true', () => {
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
-            spyOn(secondChipComp.selectedChanging, 'emit');
-            spyOn(secondChipComp.selectedChanged, 'emit');
+            vi.spyOn(secondChipComp.selectedChanging, 'emit');
+            vi.spyOn(secondChipComp.selectedChanged, 'emit');
 
             UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
@@ -305,45 +321,92 @@ describe('IgxChip', () => {
             });
 
             expect(secondChipComp.selectedChanging.emit).toHaveBeenCalledWith({
-                originalEvent: jasmine.anything(),
+                originalEvent: expect.anything(),
                 owner: secondChipComp,
                 cancel: false,
                 selected: true
             });
         });
 
-        it('should fire selectedChanged event when selectable is true', (async () => {
-            pending('This should be tested in the e2e test');
+        it('should fire selectedChanged event when selectable is true', async () => {
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
+            const chipItem: HTMLElement = secondChipComp.chipArea.nativeElement;
 
-            spyOn(secondChipComp.selectedChanging, 'emit');
-            spyOn(secondChipComp.selectedChanged, 'emit');
-            secondChipComp.chipArea.nativeElement.focus();
+            const selectedChangingSpy = vi.spyOn(secondChipComp.selectedChanging, 'emit');
+            const selectedChangedSpy = vi.spyOn(secondChipComp.selectedChanged, 'emit');
+            secondChipComp.nativeElement.focus();
+            expect(document.activeElement).toBe(secondChipComp.nativeElement);
 
-            UIInteractions.triggerKeyDownEvtUponElem(' ', secondChipComp.chipArea.nativeElement, true);
+            // select with a real Space key press
+            await userEvent.keyboard(' ');
             fix.detectChanges();
-            expect(secondChipComp.selectedChanging.emit).toHaveBeenCalled();
-            expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalled();
-            expect(secondChipComp.selectedChanging.emit).not.toHaveBeenCalledWith({
-                originalEvent: null,
+
+            expect(selectedChangingSpy).toHaveBeenCalledExactlyOnceWith({
+                originalEvent: expect.any(KeyboardEvent),
                 owner: secondChipComp,
                 cancel: false,
                 selected: true
             });
-
-            await wait(400);
-            expect(secondChipComp.selectedChanged.emit).toHaveBeenCalledTimes(1);
-            expect(secondChipComp.selectedChanged.emit).not.toHaveBeenCalledWith({
-                originalEvent: null,
+            // selectedChanged is emitted after selectedChanging, once the selection is applied
+            expect(selectedChangedSpy).toHaveBeenCalledExactlyOnceWith({
+                originalEvent: expect.any(KeyboardEvent),
                 owner: secondChipComp
             });
-        }));
+            expect(selectedChangingSpy.mock.invocationCallOrder[0]).toBeLessThan(selectedChangedSpy.mock.invocationCallOrder[0]);
+            expect(selectedChangedSpy.mock.calls[0][0].originalEvent).toBe(selectedChangingSpy.mock.calls[0][0].originalEvent);
+            expect(secondChipComp.selected).toBe(true);
+            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true);
+
+            // deselect
+            await userEvent.keyboard(' ');
+            fix.detectChanges();
+
+            expect(selectedChangingSpy).toHaveBeenCalledTimes(2);
+            expect(selectedChangingSpy).toHaveBeenLastCalledWith({
+                originalEvent: expect.any(KeyboardEvent),
+                owner: secondChipComp,
+                cancel: false,
+                selected: false
+            });
+            expect(selectedChangedSpy).toHaveBeenCalledTimes(2);
+            expect(selectedChangedSpy).toHaveBeenLastCalledWith({
+                originalEvent: expect.any(KeyboardEvent),
+                owner: secondChipComp
+            });
+            expect(secondChipComp.selected).toBe(false);
+            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false);
+
+            // selectedChanged is not emitted when the selection is canceled
+            const sub = secondChipComp.selectedChanging.subscribe(args => args.cancel = true);
+            await userEvent.keyboard(' ');
+            fix.detectChanges();
+            sub.unsubscribe();
+
+            expect(selectedChangingSpy).toHaveBeenCalledTimes(3);
+            expect(selectedChangedSpy).toHaveBeenCalledTimes(2);
+            expect(secondChipComp.selected).toBe(false);
+            expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false);
+        });
+
+        it('should transition the chip colors only after the initial render', async () => {
+            const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
+            const chipItem: HTMLElement = secondChipComp.chipArea.nativeElement;
+            await vi.waitFor(() => expect(secondChipComp.nativeElement.classList.contains('igx-chip--animated')).toBe(true));
+            const styles = getComputedStyle(chipItem);
+            const properties = styles.transitionProperty.split(',').map(p => p.trim());
+            const durations = styles.transitionDuration.split(',').map(d => parseFloat(d));
+
+            expect(properties).toEqual(expect.arrayContaining(['color', 'background-color', 'border-color', 'box-shadow']));
+            // The igxDrag directive on the item disables its transitions only while dragging.
+            expect(chipItem.style.transitionDuration).toBe('');
+            expect(durations.every(d => d > 0)).toBe(true);
+        });
 
         it('should not fire selectedChanging event when selectable is false', () => {
             const firstChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[0];
 
-            spyOn(firstChipComp.selectedChanging, 'emit');
-            spyOn(firstChipComp.selectedChanged, 'emit');
+            vi.spyOn(firstChipComp.selectedChanging, 'emit');
+            vi.spyOn(firstChipComp.selectedChanged, 'emit');
             firstChipComp.nativeElement.focus();
 
             UIInteractions.triggerKeyDownEvtUponElem(' ', firstChipComp.chipArea.nativeElement, true);
@@ -355,8 +418,8 @@ describe('IgxChip', () => {
         it('should not fire selectedChanging event when the remove button is clicked', () => {
             const secondChipComp: IgxChipComponent = fix.componentInstance.chips.toArray()[1];
 
-            spyOn(secondChipComp.selectedChanging, 'emit');
-            spyOn(secondChipComp.selectedChanged, 'emit');
+            vi.spyOn(secondChipComp.selectedChanging, 'emit');
+            vi.spyOn(secondChipComp.selectedChanged, 'emit');
 
             const chipRemoveButton = ControlsFunction.getChipRemoveButton(secondChipComp.chipArea.nativeElement);
 
@@ -396,6 +459,127 @@ describe('IgxChip', () => {
 
             expect(firstChipSuffixText).toEqual('suf');
         });
+    });
+
+    describe('Resource Strings', () => {
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [TestChipComponent]
+            }).compileComponents();
+        });
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(TestChipComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const chip = fix.componentInstance.chips.first;
+
+            chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
+            fix.detectChanges();
+
+            expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+            expect(chip.resourceStrings.igx_chip_select).toBe('select chip');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            const chip = fix.componentInstance.chips.first;
+
+            chip.resourceStrings = { igx_chip_remove: 'Custom Remove' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_chip_select: 'Global Select' });
+                fix.detectChanges();
+
+                expect(chip.resourceStrings.igx_chip_remove).toBe('Custom Remove');
+                expect(chip.resourceStrings.igx_chip_select).toBe('Global Select');
+            } finally {
+                changei18n(ChipResourceStringsEN);
+            }
+        });
+    });
+});
+
+describe('IgxChip selection animations', () => {
+    let fix: ComponentFixture<TestChipComponent>;
+    let chip: IgxChipComponent;
+
+    const getSelectIcons = () => Array.from(chip.nativeElement.querySelectorAll<HTMLElement>('.igx-chip__select'));
+    const runningTransitions = (el: HTMLElement) => el.getAnimations()
+        .filter((a): a is CSSTransition => a instanceof CSSTransition)
+        .map(a => a.transitionProperty);
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [TestChipComponent],
+            animationsEnabled: true
+        }).compileComponents();
+
+        fix = TestBed.createComponent(TestChipComponent);
+        fix.detectChanges();
+        chip = fix.componentInstance.chips.toArray()[1];
+        // An animation set on the host by the application does not keep the transitions disabled.
+        chip.nativeElement.style.animation = 'none';
+        chip.nativeElement.style.setProperty('--background', 'rgb(255, 0, 0)');
+        chip.nativeElement.style.setProperty('--selected-background', 'rgb(0, 0, 255)');
+
+        // The transitions are enabled after the initial render.
+        await vi.waitFor(() => expect(chip.nativeElement.classList.contains('igx-chip--animated')).toBe(true));
+    });
+
+    /** Waits for the transitions that run on the element to finish. */
+    const transitionsEnd = (el: HTMLElement) => Promise.all(el.getAnimations().map(a => a.finished.catch(() => null)));
+
+    it('should animate the chip colors and the select icon when the selection changes', async () => {
+        const chipItem: HTMLElement = chip.chipArea.nativeElement;
+
+        chip.selected = true;
+        fix.detectChanges();
+
+        expect(runningTransitions(chipItem)).toContain('background-color');
+        expect(getSelectIcons().length).toBe(1);
+        // The gap before the prefix opens with the icon.
+        expect(runningTransitions(getSelectIcons()[0]))
+            .toEqual(expect.arrayContaining(['max-width', 'margin-right', 'opacity'])); // margin-inline-end in LTR
+
+        await transitionsEnd(chipItem);
+        expect(getComputedStyle(chipItem).backgroundColor).toBe('rgb(0, 0, 255)');
+
+        chip.selected = false;
+        fix.detectChanges();
+
+        // The icon stays until it animates out.
+        await vi.waitFor(() => expect(getSelectIcons()[0]?.classList.contains('igx-chip__select--leaving')).toBe(true));
+        const leavingIcon = getSelectIcons()[0];
+        // The gap before the prefix closes with the icon.
+        expect(runningTransitions(leavingIcon))
+            .toEqual(expect.arrayContaining(['max-width', 'margin-right', 'opacity'])); // margin-inline-end in LTR
+        expect(runningTransitions(chipItem)).toContain('background-color');
+
+        await vi.waitFor(() => expect(getSelectIcons().length).toBe(0));
+        await transitionsEnd(chipItem);
+        expect(getComputedStyle(chipItem).backgroundColor).toBe('rgb(255, 0, 0)');
+    });
+
+    it('should show only the new select icon when the chip is selected again while the icon animates out', async () => {
+        chip.selected = true;
+        fix.detectChanges();
+        await transitionsEnd(getSelectIcons()[0]);
+
+        chip.selected = false;
+        fix.detectChanges();
+        await vi.waitFor(() => expect(getSelectIcons()[0]?.classList.contains('igx-chip__select--leaving')).toBe(true));
+        const leavingIcon = getSelectIcons()[0];
+
+        chip.selected = true;
+        fix.detectChanges();
+
+        // The leaving icon is removed right away, so the chip never shows two icons.
+        expect(leavingIcon.isConnected).toBe(false);
+        expect(getSelectIcons().length).toBe(1);
+        expect(getSelectIcons()[0].classList.contains('igx-chip__select--leaving')).toBe(false);
     });
 });
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IgxRippleDirective } from 'igniteui-angular';
 
 @Component({
@@ -15,6 +15,7 @@ import { IgxAvatarComponent, IgxIconComponent, IgxListActionDirective, IgxListCo
             }
         </igx-list>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         IgxListComponent,
         IgxListItemComponent,
@@ -72,6 +73,7 @@ export class BottomNavRoutingView1Component {
             arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula diam.
             Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class BottomNavRoutingView2Component {
@@ -85,6 +87,7 @@ export class BottomNavRoutingView2Component {
             urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra lacus.
             Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque.</p>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class BottomNavRoutingView3Component {

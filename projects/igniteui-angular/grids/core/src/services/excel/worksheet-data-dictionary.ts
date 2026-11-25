@@ -13,8 +13,8 @@ export class WorksheetDataDictionary {
     private _dictionary: any;
     private _widthsDictionary: any;
 
-    private _keys: string[];
-    private _keysAreValid: boolean;
+    private _keys!: string[];
+    private _keysAreValid!: boolean;
 
     private _counter: number;
     private _columnWidths: number[];

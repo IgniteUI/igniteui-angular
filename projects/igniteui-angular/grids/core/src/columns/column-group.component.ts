@@ -24,7 +24,7 @@ import { CellType, IgxColumnTemplateContext } from '../common/grid.interface';
 /**
  * **Ignite UI for Angular Column Group**
  *
- * @igxParent IgxGridComponent, IgxTreeGridComponent, IgxHierarchicalGridComponent, IgxColumnGroupComponent, IgxRowIslandComponent
+ * @igxParent IgxGridComponent, IgxHierarchicalGridComponent, IgxTreeGridComponent, IgxColumnGroupComponent, IgxRowIslandComponent
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -198,7 +198,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public override collapsibleIndicatorTemplate: TemplateRef<IgxColumnTemplateContext>;
+    public override collapsibleIndicatorTemplate!: TemplateRef<IgxColumnTemplateContext>;
 
     /**
      * @hidden
@@ -387,7 +387,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             if (val.hidden) {
                 return acc;
             }
-            return acc + parseFloat(val.calcWidth);
+            return acc + parseFloat(val.calcWidth?.toString() || val.defaultWidth);
         }, 0)}`;
         return width + 'px';
     }

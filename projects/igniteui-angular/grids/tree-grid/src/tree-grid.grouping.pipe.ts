@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { GridType } from 'igniteui-angular/grids/core';
-import { GridColumnDataType, IGroupingExpression, IgxSorting } from 'igniteui-angular/core';
+import { GridColumnDataType, IGroupingExpression, IgxSorting, ITreeGridRecord } from 'igniteui-angular/core';
 
 const HIDDEN_FIELD_NAME = '_Igx_Hidden_Data_';
 
@@ -9,19 +9,19 @@ const HIDDEN_FIELD_NAME = '_Igx_Hidden_Data_';
  * @internal
  */
 class GroupByRecord {
-    public key: string;
+    public key!: string;
     public value: any;
-    public groups: GroupByRecord[];
-    public records: any[];
+    public groups!: GroupByRecord[];
+    public records!: any[];
 }
 
 export class ITreeGridAggregation {
-    public field: string;
-    public aggregate: (parent: any, children: any[]) => any;
+    public field!: string;
+    public aggregate!: (parent: ITreeGridRecord, children: any[]) => any;
 }
 
 export class IgxGroupedTreeGridSorting extends IgxSorting {
-    private static _instance: IgxGroupedTreeGridSorting = null;
+    private static _instance: IgxGroupedTreeGridSorting = null!;
 
     public static instance() {
         return this._instance || (this._instance = new IgxGroupedTreeGridSorting());
@@ -44,7 +44,7 @@ export class IgxGroupedTreeGridSorting extends IgxSorting {
     standalone: true
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
-    private grid: GridType;
+    private grid!: GridType;
 
     public transform(collection: any[],
                      groupingExpressions: IGroupingExpression[],
@@ -63,7 +63,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
 
         this.grid = grid;
 
-        const result = [];
+        const result: any[] = [];
         const groupedRecords = this.groupByMultiple(collection, groupingExpressions);
         this.flattenGrouping(groupedRecords, groupKey,
             childDataKey, result, aggregations);
@@ -77,24 +77,24 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                             data: any[],
                             aggregations: ITreeGridAggregation[] = []) {
         for (const groupRecord of groupRecords) {
-            const parent = {};
+            const parent: ITreeGridRecord = {} as any;
             const children = groupRecord.records;
 
-            parent[childDataKey] = [];
+            (parent as any)[childDataKey] = [];
 
             for (const aggregation of aggregations) {
-                parent[aggregation.field] = aggregation.aggregate(parent, children);
+                (parent as any)[aggregation.field] = aggregation.aggregate(parent, children);
             }
 
-            parent[groupKey] = groupRecord.value + ` (${groupRecord.records.length})`;
-            parent[HIDDEN_FIELD_NAME] = { [groupRecord.key]: groupRecord.value };
+            (parent as any)[groupKey] = groupRecord.value + ` (${groupRecord.records.length})`;
+            (parent as any)[HIDDEN_FIELD_NAME] = { [groupRecord.key]: groupRecord.value };
             data.push(parent);
 
             if (groupRecord.groups) {
                 this.flattenGrouping(groupRecord.groups, groupKey, childDataKey,
-                    parent[childDataKey], aggregations);
+                    (parent as any)[childDataKey], aggregations);
             } else {
-                parent[childDataKey] = children;
+                (parent as any)[childDataKey] = children;
             }
         }
     }
@@ -130,7 +130,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                 valueCase = value?.toString().toLowerCase();
             }
             if (map.has(valueCase)) {
-                groupByRecord = map.get(valueCase);
+                groupByRecord = map.get(valueCase)!;
             } else {
                 groupByRecord = new GroupByRecord();
                 groupByRecord.key = key;

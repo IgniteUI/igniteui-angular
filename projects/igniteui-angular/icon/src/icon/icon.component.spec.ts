@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { IgxIconComponent } from "./icon.component";
 import { IgxIconService } from "./icon.service";
@@ -6,6 +6,7 @@ import { IconFamily } from './types';
 import type { IconType } from './types';
 
 import { By } from "@angular/platform-browser";
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe("Icon", () => {
 
@@ -22,9 +23,7 @@ describe("Icon", () => {
 
             fixture = TestBed.createComponent(IconTestComponent);
 
-            const debugElement = fixture.debugElement.query(
-                By.directive(IgxIconComponent),
-            );
+            const debugElement = fixture.debugElement.query(By.directive(IgxIconComponent));
 
             instance = debugElement.componentInstance;
             el = debugElement.nativeElement;
@@ -148,9 +147,7 @@ describe("Icon", () => {
             iconService.defaultFamily = fa;
 
             const fixture = TestBed.createComponent(IconTestComponent);
-            const debugElement = fixture.debugElement.query(
-                By.directive(IgxIconComponent),
-            );
+            const debugElement = fixture.debugElement.query(By.directive(IgxIconComponent));
 
             const instance = debugElement.componentInstance;
             const el = debugElement.nativeElement;
@@ -178,9 +175,7 @@ describe("Icon", () => {
             });
 
             const fixture = TestBed.createComponent(MetaIconComponent);
-            const debugElement = fixture.debugElement.query(
-                By.directive(IgxIconComponent),
-            );
+            const debugElement = fixture.debugElement.query(By.directive(IgxIconComponent));
 
             const instance = debugElement.componentInstance;
             const el = debugElement.nativeElement;
@@ -231,9 +226,11 @@ function assertRenderedIcon(el: HTMLElement, icon: ProtoIgxIcon) {
 
 @Component({
     template: `<igx-icon class="my-class" name="home"></igx-icon>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
-class IconTestComponent {}
+class IconTestComponent {
+}
 
 @Component({
     template: `<igx-icon
@@ -241,6 +238,8 @@ class IconTestComponent {}
         family="default"
         name="home"
     ></igx-icon>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [IgxIconComponent]
 })
-class MetaIconComponent {}
+class MetaIconComponent {
+}
