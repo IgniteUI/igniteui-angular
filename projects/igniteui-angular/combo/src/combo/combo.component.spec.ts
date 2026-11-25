@@ -3991,6 +3991,65 @@ describe('igxCombo', () => {
                 await press('Space');
                 expect(combo.value.length).toEqual(combo.data.length);
             });
+
+            it('should render a record with an isSelectAll field as an item', async () => {
+                const record = { field: 'Everything', region: 'All', isSelectAll: true };
+                fixture.componentInstance.items = [record, ...fixture.componentInstance.items];
+                combo.showSelectAll = true;
+                fixture.detectChanges();
+                await openList();
+
+                const recordRow = fixture.debugElement.queryAll(By.directive(IgxComboItemComponent))
+                    .find(item => item.componentInstance.value === record).nativeElement as HTMLElement;
+                expect(recordRow.textContent).toContain('State: Everything');
+                expect(recordRow.classList).not.toContain(CSS_CLASS_SELECT_ALL);
+                expect(rows().filter(row => row.classList.contains(CSS_CLASS_SELECT_ALL)).length).toEqual(1);
+                expect(rows()[0].classList).toContain(CSS_CLASS_SELECT_ALL);
+            });
+
+            it('should check and uncheck the toggle options when valueKey is 0', async () => {
+                const items = [{ 0: 'a', region: 'R' }, { 0: 'b', region: 'R' }];
+                fixture.componentInstance.items = items;
+                combo.valueKey = 0 as any;
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                fixture.detectChanges();
+                await openList();
+
+                await click(selectAllRow());
+                expect(combo.selection).toEqual(items);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('true');
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('true');
+
+                await click(firstGroupRow());
+                expect(combo.selection).toEqual([]);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('false');
+            });
+
+            it('should give the group header options the text style of the group headers in each theme', async () => {
+                const textStyle = (row: HTMLElement) => {
+                    const { textTransform, fontSize, fontWeight, letterSpacing } = getComputedStyle(row);
+                    return { textTransform, fontSize, fontWeight, letterSpacing };
+                };
+                await openList();
+
+                try {
+                    for (const theme of ['material', 'bootstrap', 'fluent', 'indigo']) {
+                        // The list renders in the overlay, outside the combo, so the theme is set on the root.
+                        document.documentElement.style.setProperty('--ig-theme', theme);
+                        combo.groupSelection = false;
+                        await render();
+                        const headerStyle = textStyle(rows().find(row => row.classList.contains(CSS_CLASS_HEADERITEM)));
+
+                        combo.groupSelection = true;
+                        await render();
+                        expect(textStyle(firstGroupRow()), theme).toEqual(headerStyle);
+                    }
+                } finally {
+                    document.documentElement.style.removeProperty('--ig-theme');
+                }
+            });
         });
         describe('Filtering tests: ', () => {
             beforeEach(() => {

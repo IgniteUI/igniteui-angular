@@ -25,5 +25,12 @@ $_theme: digest-schema($fluent-combo);
             border-block-start-width: 0;
         }
     }
+
+    // A group header option of `groupSelection` keeps the text style of a Fluent group header.
+    @include e(group-option) {
+        &.igx-drop-down__item {
+            @include type-style(subtitle-2);
+        }
+    }
 }
 

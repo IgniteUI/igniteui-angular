@@ -1161,17 +1161,46 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     /**
      * @hidden @internal
      * Whether the record is a toggle option: the "Select all" option or a group header option.
+     * A combo without these options has none.
+     *
+     * @param _record The record of a row in the list.
+     * @returns `true` for a toggle option.
+     * @example
+     * ```typescript
+     * const isToggle = this.combo.isToggleRecord(item.value);
+     * ```
      */
     public isToggleRecord(_record: any): boolean {
         return false;
     }
 
-    /** @hidden @internal Whether all, some or none of the items of a toggle option are selected. */
+    /**
+     * @hidden @internal
+     * Whether all, some or none of the items of a toggle option are selected.
+     *
+     * @param _record The record of the "Select all" option or of a group header option.
+     * @returns `'all'`, `'some'` or `'none'`.
+     * @example
+     * ```typescript
+     * const checked = this.combo.toggleRecordState(item.value) === 'all';
+     * ```
+     */
     public toggleRecordState(_record: any): ComboToggleState {
         return 'none';
     }
 
-    /** @hidden @internal Selects the items of a toggle option, or deselects them when all are selected. */
+    /**
+     * @hidden @internal
+     * Selects the items of a toggle option, or deselects them when all are selected.
+     *
+     * @param _record The record of the "Select all" option or of a group header option.
+     * @param _event The user interaction that toggles the option, if any.
+     * @returns Nothing.
+     * @example
+     * ```typescript
+     * this.combo.toggleRecord(item.value, event);
+     * ```
+     */
     public toggleRecord(_record: any, _event?: Event): void { }
 
     /**
