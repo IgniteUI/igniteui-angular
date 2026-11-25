@@ -12,7 +12,7 @@ All notable changes for each version of this project will be documented in this 
 ### Bug Fixes
 
 - `IgxButtonDirective`
-    - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only when `igxLabel` is set, and restores the original value when `igxLabel` is cleared (#18009).
+    - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only through `igxLabel`, and clearing `igxLabel` removes only the value it set (#18009).
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
 
 ## 22.3.1
