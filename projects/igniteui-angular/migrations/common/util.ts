@@ -8,8 +8,6 @@ import type {
     Block,
     BlockParameter,
     Comment,
-    Component,
-    Directive,
     Element,
     Expansion,
     ExpansionCase,
@@ -296,14 +294,6 @@ class SerializerVisitor implements Visitor {
 
     private _visitAll(nodes: Node[], separator = '', prefix = ''): string {
         return nodes.length > 0 ? prefix + nodes.map(a => a.visit(this, null)).join(separator) : '';
-    }
-
-    public visitComponent(component: Component, context: any) {
-
-    }
-
-    public visitDirective(directive: Directive, context: any) {
-
     }
 }
 
