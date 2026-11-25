@@ -16,7 +16,7 @@ The following built-in mask rules should be supported:
 
 Static symbols (literals) in the mask pattern are also supported.
 
-Each mask position holds one UTF-16 code unit. No position accepts a character that takes two code units, such as most emoji, so the masked text always has the length of the mask.
+Each mask position holds one UTF-16 code unit. No position accepts a character that takes two code units, such as most emoji.
 
 # Usage
 ```typescript
