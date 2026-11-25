@@ -14,6 +14,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `igxButton` |  string | Set the type of igxButton to be used. Default is set to flat. |
 | `buttonSelected` | EventEmitter<IButtonEventArgs> | Emitted only when a button gets selected, or deselected, and not on initialization. |
 | `selected` | boolean | Gets or sets whether the button is selected. Mainly used in the IgxButtonGroup component and it will have no effect if set separately. |
+| `focusVisible` | boolean | Gets or sets whether the button shows its focused state while the focus is on another element, for example a list that marks the button as its active entry with `aria-activedescendant`. The button also shows the focused state when it has keyboard focus. Available on `igxIconButton` as well. |
 
 # Button types
 | Name   | Description |

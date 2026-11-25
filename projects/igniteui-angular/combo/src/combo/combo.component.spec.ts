@@ -2962,6 +2962,37 @@ describe('igxCombo', () => {
                     expect(dropdown.focusedItem instanceof IgxComboAddItemComponent).toBe(true);
                     expect(addItem.classList.contains(CSS_CLASS_FOCUSED)).toBe(true);
                 });
+                it('should switch between the default add item button and a custom template at runtime', async () => {
+                    fixture = TestBed.createComponent(IgxComboCustomAddItemComponent);
+                    fixture.detectChanges();
+                    combo = fixture.componentInstance.combo;
+                    const customTemplate = combo.addItemTemplate;
+
+                    combo.toggle();
+                    await wait();
+                    fixture.detectChanges();
+
+                    const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+                    UIInteractions.triggerInputEvent(searchInput, 'Not existing');
+                    await wait();
+                    fixture.detectChanges();
+
+                    const addItem: HTMLElement = fixture.debugElement.query(By.directive(IgxComboAddItemComponent)).nativeElement;
+                    expect(addItem.querySelector('.custom-add-item')).not.toBeNull();
+                    expect(addItem.querySelector('button')).toBeNull();
+
+                    // the host is OnPush, so the combo is checked directly after a programmatic change
+                    combo.addItemTemplate = null;
+                    combo.triggerCheck();
+                    expect(addItem.querySelector('.custom-add-item')).toBeNull();
+                    expect(addItem.querySelector('button').textContent.trim())
+                        .toEqual(combo.resourceStrings.igx_combo_addCustomValues_placeholder);
+
+                    combo.addItemTemplate = customTemplate;
+                    combo.triggerCheck();
+                    expect(addItem.querySelector('.custom-add-item')).not.toBeNull();
+                    expect(addItem.querySelector('button')).toBeNull();
+                });
                 it('should not change the selection when selectItem is called without an item', () => {
                     const selectSpy = vi.spyOn(combo, 'select');
                     dropdown.selectItem(null);

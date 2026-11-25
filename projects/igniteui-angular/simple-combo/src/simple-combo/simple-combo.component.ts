@@ -4,9 +4,7 @@ import { ControlValueAccessor, FormGroupDirective, NG_VALUE_ACCESSOR } from '@an
 import { takeUntil } from 'rxjs/operators';
 
 import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
-import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxVirtualItemDirective, IgxVirtualScrollComponent } from 'igniteui-angular/virtual-scroll';
-import { IgxRippleDirective } from 'igniteui-angular/directives';
 import { IgxTextSelectionDirective } from 'igniteui-angular/directives';
 import { IgxInputGroupComponent, IgxInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -64,7 +62,7 @@ export interface ISimpleComboSelectionChangingEventArgs extends ISimpleComboSele
         '(keydown.ArrowDown)': 'onArrowDown($any($event))',
         '(keydown.Alt.ArrowDown)': 'onArrowDown($any($event))'
     },
-    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxButtonDirective, IgxRippleDirective, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboDataWindowPipe, IgxComboRecordWindowPipe]
+    imports: [IgxInputGroupComponent, IgxInputDirective, IgxTextSelectionDirective, IgxSuffixDirective, NgTemplateOutlet, IgxIconComponent, IgxComboDropDownComponent, IgxDropDownItemNavigationDirective, IgxVirtualScrollComponent, IgxVirtualItemDirective, IgxComboItemComponent, IgxComboAddItemComponent, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboDataWindowPipe, IgxComboRecordWindowPipe]
 })
 export class IgxSimpleComboComponent extends IgxComboBaseDirective implements ControlValueAccessor, AfterViewInit, DoCheck {
     private platformUtil = inject(PlatformUtil);

@@ -1,0 +1,6 @@
+@if (template) {
+    <ng-container *ngTemplateOutlet="template"></ng-container>
+} @else {
+    <!-- Focus stays on the list, so the button shows that the add item is active as its focused state. -->
+    <button type="button" igxButton="flat" igxRipple [focusVisible]="active">{{ label }}</button>
+}

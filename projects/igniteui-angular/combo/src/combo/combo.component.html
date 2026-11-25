@@ -115,17 +115,11 @@
                     </div>
                 }
                 @if (isAddButtonVisible()) {
-                    <igx-combo-add-item #addItem [itemHeight]="itemHeight"
+                    <igx-combo-add-item [itemHeight]="itemHeight"
                                         [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
                                         [attr.aria-label]="resourceStrings.igx_combo_addCustomValues_placeholder" [index]="itemWindow.totalCount"
-                                        [customTemplate]="!!addItemTemplate">
-                        @if (addItemTemplate) {
-                            <ng-container *ngTemplateOutlet="addItemTemplate"></ng-container>
-                        } @else {
-                            <!-- Focus stays on the list, so the button shows the add item's focus state as its own.
-                                 When the add item is not active, `undefined` leaves the class to the button's own keyboard focus. -->
-                            <button type="button" igxButton="flat" igxRipple [class.igx-button--focused]="addItem.active || undefined">{{ resourceStrings.igx_combo_addCustomValues_placeholder }}</button>
-                        }
+                                        [template]="addItemTemplate"
+                                        [label]="resourceStrings.igx_combo_addCustomValues_placeholder">
                     </igx-combo-add-item>
                 }
             </div>

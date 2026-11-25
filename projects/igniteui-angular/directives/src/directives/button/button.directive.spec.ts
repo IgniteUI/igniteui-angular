@@ -16,7 +16,8 @@ describe('IgxButton', () => {
         outlined: 'igx-button--outlined',
         fab: 'igx-button--fab',
         disabled: 'igx-button--disabled',
-        ready: 'igx-button--ready'
+        ready: 'igx-button--ready',
+        focused: 'igx-button--focused'
     } as const;
 
     beforeEach(async () => {
@@ -25,7 +26,8 @@ describe('IgxButton', () => {
                 NoopAnimationsModule,
                 InitButtonComponent,
                 ButtonWithAttribsComponent,
-                ButtonWithRoleComponent
+                ButtonWithRoleComponent,
+                ButtonWithFocusVisibleComponent
             ]
         }).compileComponents();
     });
@@ -100,6 +102,51 @@ describe('IgxButton', () => {
         });
     });
 
+    describe('focusVisible', () => {
+        let fixture: ComponentFixture<ButtonWithFocusVisibleComponent>;
+        let buttonElement: HTMLElement;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(ButtonWithFocusVisibleComponent);
+            fixture.detectChanges();
+            buttonElement = fixture.debugElement.query(By.css('button')).nativeElement as HTMLElement;
+        });
+
+        it('should show the focused state while focusVisible is set', () => {
+            expect(hasClass(buttonElement, CSS_CLASSES.focused)).toBe(false);
+
+            fixture.componentRef.setInput('focusVisible', true);
+            fixture.detectChanges();
+            expect(fixture.componentInstance.button().focusVisible).toBe(true);
+            expect(hasClass(buttonElement, CSS_CLASSES.focused)).toBe(true);
+
+            fixture.componentRef.setInput('focusVisible', false);
+            fixture.detectChanges();
+            expect(hasClass(buttonElement, CSS_CLASSES.focused)).toBe(false);
+        });
+
+        it('should keep the focused state of its own keyboard focus while focusVisible is not set', () => {
+            buttonElement.focus();
+            buttonElement.dispatchEvent(new KeyboardEvent('keyup', { key: 'Tab', bubbles: true }));
+            fixture.detectChanges();
+            expect(fixture.componentInstance.button().focusVisible).toBe(false);
+            expect(hasClass(buttonElement, CSS_CLASSES.focused)).toBe(true);
+
+            buttonElement.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+            fixture.detectChanges();
+            expect(hasClass(buttonElement, CSS_CLASSES.focused)).toBe(false);
+        });
+
+        it('should keep the focused state on pointerdown while focusVisible is set', () => {
+            fixture.componentRef.setInput('focusVisible', true);
+            fixture.detectChanges();
+
+            buttonElement.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+            fixture.detectChanges();
+            expect(hasClass(buttonElement, CSS_CLASSES.focused)).toBe(true);
+        });
+    });
+
     it('Should enable transitions only after the first render', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);
 
@@ -155,4 +202,13 @@ function hasClass(element: HTMLElement, className: string): boolean {
     imports: [IgxButtonDirective]
 })
 class ButtonWithRoleComponent {
+}
+
+@Component({
+    template: `<button type="button" igxButton="flat" [focusVisible]="focusVisible()">Test</button>`,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithFocusVisibleComponent {
+    public button = viewChild.required(IgxButtonDirective);
+    public focusVisible = input(false);
 }

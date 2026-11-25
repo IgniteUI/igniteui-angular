@@ -1,27 +1,42 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component, HostBinding, ChangeDetectionStrategy, Input, booleanAttribute } from '@angular/core';
+import { Component, HostBinding, ChangeDetectionStrategy, Input, TemplateRef } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { IgxButtonDirective, IgxRippleDirective } from 'igniteui-angular/directives';
 
 /**
  * @hidden
  */
 @Component({
     selector: 'igx-combo-add-item',
-    template: '<ng-content></ng-content>',
+    templateUrl: 'combo-add-item.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     providers: [{ provide: IgxComboItemComponent, useExisting: IgxComboAddItemComponent }],
+    imports: [NgTemplateOutlet, IgxButtonDirective, IgxRippleDirective]
 })
 export class IgxComboAddItemComponent extends IgxComboItemComponent {
     /**
      * @hidden @internal
-     * Set when the add item renders a custom `igxComboAddItem` template instead of the default button.
+     * The custom `igxComboAddItem` template, rendered instead of the default button.
      *
      * @example
      * ```html
-     * <igx-combo-add-item [customTemplate]="!!addItemTemplate"></igx-combo-add-item>
+     * <igx-combo-add-item [template]="addItemTemplate"></igx-combo-add-item>
      * ```
      */
-    @Input({ transform: booleanAttribute })
-    public customTemplate = false;
+    @Input()
+    public template: TemplateRef<any> | null = null;
+
+    /**
+     * @hidden @internal
+     * The text of the default button.
+     *
+     * @example
+     * ```html
+     * <igx-combo-add-item [label]="resourceStrings.igx_combo_addCustomValues_placeholder"></igx-combo-add-item>
+     * ```
+     */
+    @Input()
+    public label?: string;
 
     @HostBinding('class.igx-drop-down__item')
     public get isDropDownItem(): boolean {
@@ -37,7 +52,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
      *
      * @example
      * ```html
-     * <button igxButton="flat" [class.igx-button--focused]="addItem.active || undefined"></button>
+     * <button igxButton="flat" [focusVisible]="active"></button>
      * ```
      */
     public get active(): boolean {
@@ -50,7 +65,7 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
      * the focus style of the list items. A custom template keeps that style.
      */
     public override get focused(): boolean {
-        return this.customTemplate && this.active;
+        return !!this.template && this.active;
     }
 
     public override set focused(value: boolean) {
