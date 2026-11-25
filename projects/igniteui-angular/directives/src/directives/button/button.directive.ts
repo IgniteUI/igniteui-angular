@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output, booleanAttribute, signal } from '@angular/core';
+import { Directive, EventEmitter, Input, Output, Renderer2, booleanAttribute, inject, signal } from '@angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
@@ -36,15 +36,17 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
         '[class.igx-button--outlined]': '_type() === "outlined"',
         '[class.igx-button--fab]': '_type() === "fab"',
         '[class.igx-button--ready]': '_hasRendered()',
-        '[attr.aria-label]': '_label()',
         '[attr.data-selected]': '_selected() ? "true" : "false"',
         '(click)': 'buttonSelected.emit({ button: this })',
     }
 })
 export class IgxButtonDirective extends IgxButtonBaseDirective {
+    private readonly _renderer = inject(Renderer2);
     protected readonly _type = signal<IgxButtonType>(IgxButtonType.Flat);
-    protected readonly _label = signal<string | null>(null);
     protected readonly _selected = signal(false);
+    private _label: string | null = null;
+    /** The element's own aria-label, saved when igxLabel first replaces it. */
+    private _ownAriaLabel: string | null = null;
 
     /** Emitted when the button is selected. */
     @Output()
@@ -84,14 +86,33 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     /**
      * Sets the `aria-label` attribute.
      *
+     * @deprecated in version 22.2.8. Use the native `aria-label` attribute instead.
+     *
      * @example
      *  ```html
-     * <button type="button" igxButton="flat" igxLabel="Label"></button>
+     * <button type="button" igxButton="flat" aria-label="Label"></button>
      * ```
      */
     @Input({ alias: 'igxLabel' })
-    public set label(value: string) {
-        this._label.set(value || null);
+    public set label(value: string | null | undefined) {
+        const label = value || null;
+        const element = this.nativeElement;
+
+        // Touch aria-label only through igxLabel, so the template's own value survives.
+        if (label) {
+            if (!this._label) {
+                this._ownAriaLabel = element.getAttribute('aria-label');
+            }
+            this._renderer.setAttribute(element, 'aria-label', label);
+        } else if (this._label) {
+            if (this._ownAriaLabel === null) {
+                this._renderer.removeAttribute(element, 'aria-label');
+            } else {
+                this._renderer.setAttribute(element, 'aria-label', this._ownAriaLabel);
+            }
+        }
+
+        this._label = label;
     }
 }
 
