@@ -2344,6 +2344,37 @@ describe('igxCombo', () => {
                 });
             });
 
+            it('should act only on the records a trimmed page shows from the toggle options', async () => {
+                host.groupKey.set('category');
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                // The page holds five records, but the collection holds only three.
+                host.data.set(host.page(0, 5));
+                combo.totalItemCount = 3;
+                await settle();
+
+                const toggles = '.igx-combo__select-all, .igx-combo__group-option';
+                const selectAll = () => rows().find(row => row.matches('.igx-combo__select-all'));
+                const firstGroup = () => rows().find(row => row.matches('.igx-combo__group-option'));
+                const click = async (row: HTMLElement) => {
+                    row.click();
+                    await settle();
+                };
+                expect(rows().filter(row => !row.matches(toggles)).map(row => row.textContent.trim()))
+                    .toEqual(['Product 0', 'Product 2', 'Product 1']);
+
+                await click(selectAll());
+                expect(combo.value).toEqual([0, 1, 2]);
+                expect(selectAll().getAttribute('aria-checked')).toEqual('true');
+
+                await click(selectAll());
+                expect(combo.value).toEqual([]);
+
+                await click(firstGroup());
+                expect(combo.value).toEqual([0, 2]);
+                expect(firstGroup().getAttribute('aria-checked')).toEqual('true');
+            });
+
             it('should show accepted filter results from the start of the collection', async () => {
                 await combo.virtualScrollContainer.scrollToIndex(400);
                 await settle();

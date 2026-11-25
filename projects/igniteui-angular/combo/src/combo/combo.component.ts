@@ -273,6 +273,8 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     private _showSelectAll = false;
     private _groupSelection = false;
     private _toggleCounts: ToggleCounts | null = null;
+    /** Keeps the records of a remote page inside the total, as the list does. */
+    private readonly _recordWindow = new IgxComboRecordWindowPipe();
 
     constructor() {
         super();
@@ -535,7 +537,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * ```
      */
     public override toggleRecord(record: any, event?: Event): void {
-        const shown = this.filteredData ?? [];
+        const shown = this.shownRecords;
         const items = record === COMBO_SELECT_ALL_RECORD
             ? shown
             : shown.filter(item => this.groupOf(item) === this.groupOf(record));
@@ -557,6 +559,15 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         return this.hasSelectAllRow ? 1 : 0;
     }
 
+    /**
+     * The records the list shows, before grouping. A remote page can hold records past
+     * `totalItemCount`, which the list leaves out, and `filteredData` can still hold them:
+     * it returns `data` while filtering is disabled.
+     */
+    private get shownRecords(): any[] {
+        return this._recordWindow.transform(this.filteredData ?? [], this.totalItemCount, this.virtualStartIndex);
+    }
+
     /** The group of an item or a group header, as the grouping names it. */
     private groupOf(record: any): string {
         return String(record?.[this.groupKey] ?? 'Other');
@@ -567,7 +578,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * on each check, so it is counted again only for new shown items or a new selection.
      */
     private getToggleCounts(): ToggleCounts {
-        const items = this.filteredData ?? [];
+        const items = this.shownRecords;
         const selection = this.selectionService.get(this.selectionKey);
         const cached = this._toggleCounts;
 
