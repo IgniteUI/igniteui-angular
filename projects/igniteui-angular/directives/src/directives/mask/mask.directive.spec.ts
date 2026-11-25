@@ -585,6 +585,57 @@ describe('igxMask', () => {
         expect(inputHTMLElement.value).toEqual('(123) __67-890');
     });
 
+    it('should reject a typed emoji and keep the mask length', () => {
+        const fixture = TestBed.createComponent(DefMaskComponent);
+        fixture.componentInstance.mask = 'CCC';
+        fixture.detectChanges();
+        const inputElement = fixture.debugElement.query(By.css('input'));
+        const input = inputElement.nativeElement as HTMLInputElement;
+
+        inputElement.triggerEventHandler('focus');
+        fixture.detectChanges();
+        expect(input.value).toEqual('___');
+
+        UIInteractions.simulateTyping('😀', inputElement);
+        fixture.detectChanges();
+
+        expect(input.value).toEqual('___');
+        expect(input.selectionStart).toEqual(0);
+        expect(input.selectionEnd).toEqual(0);
+        expect(fixture.componentInstance.value).toEqual('');
+    });
+
+    it('should reject a pasted emoji and keep the value and the literals', () => {
+        const fixture = TestBed.createComponent(DefMaskComponent);
+        fixture.componentInstance.mask = '(CCC) CCC';
+        fixture.detectChanges();
+        const inputElement = fixture.debugElement.query(By.css('input'));
+        const input = inputElement.nativeElement as HTMLInputElement;
+
+        inputElement.triggerEventHandler('focus');
+        fixture.detectChanges();
+        expect(input.value).toEqual('(___) ___');
+
+        UIInteractions.simulatePaste('abcd', inputElement, 1, 1);
+        fixture.detectChanges();
+        expect(input.value).toEqual('(abc) d__');
+
+        UIInteractions.simulatePaste('😀', inputElement, 2, 2);
+        fixture.detectChanges();
+
+        expect(input.value).toEqual('(abc) d__');
+        expect(input.selectionStart).toEqual(2);
+        expect(input.selectionEnd).toEqual(2);
+
+        // the characters before the emoji are placed, the mask stops at it
+        UIInteractions.simulatePaste('e😀f', inputElement, 7, 7);
+        fixture.detectChanges();
+
+        expect(input.value).toEqual('(abc) de_');
+        expect(input.value.length).toEqual(9);
+        expect(fixture.componentInstance.value).toEqual('abcde');
+    });
+
     it('should handle deleteContentBackward input event after compositionend (line 209 branch)', fakeAsync(() => {
         // This test covers the branch at line 209 of mask.directive.ts:
         // After compositionend, Chromium fires an input event with inputType='deleteContentBackward'.
