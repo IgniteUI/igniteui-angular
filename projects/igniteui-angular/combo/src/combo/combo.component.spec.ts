@@ -7,7 +7,7 @@ import { FormField, disabled, form as signalForm, required } from '@angular/form
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { IgxSelectionAPIService } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, IgxSelectionAPIService } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { SortingDirection } from '../../../core/src/data-operations/sorting-strategy';
 import { IForOfState } from '../../../directives/src/directives/for-of/for_of.directive';
@@ -120,6 +120,7 @@ describe('igxCombo', () => {
                 .overrideComponent(IgxComboComponent, {
                 set: {
                     providers: [
+                        IgxKeyBindingsService,
                         { provide: IgxComboAPIService, useValue: mockComboService },
                         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent }
                     ]
@@ -2799,6 +2800,38 @@ describe('igxCombo', () => {
                     fixture.detectChanges();
 
                     expect(stopPropSpy).toHaveBeenCalledTimes(1);
+                });
+                it('should handle ArrowDown, Alt + ArrowDown and Escape pressed in the combo input', async () => {
+                    const keydown = (init: KeyboardEventInit) => {
+                        const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+                        combo.comboInput.nativeElement.dispatchEvent(event);
+                        fixture.detectChanges();
+                        return event;
+                    };
+                    vi.spyOn(combo, 'open');
+
+                    for (const init of [{ key: 'ArrowDown', shiftKey: true }, { key: 'ArrowDown', ctrlKey: true }]) {
+                        expect(keydown(init).defaultPrevented, JSON.stringify(init)).toBe(false);
+                    }
+                    expect(combo.open).not.toHaveBeenCalled();
+
+                    expect(keydown({ key: 'ArrowDown' }).defaultPrevented).toBe(true);
+                    expect(keydown({ key: 'ArrowDown', altKey: true }).defaultPrevented).toBe(true);
+                    expect(combo.open).toHaveBeenCalledTimes(2);
+
+                    combo.close();
+                    await fixture.whenStable();
+                    combo.select([combo.data[0][combo.valueKey]]);
+                    fixture.detectChanges();
+                    const documentListener = vi.fn();
+                    document.addEventListener('keydown', documentListener);
+
+                    const escape = keydown({ key: 'Escape' });
+                    document.removeEventListener('keydown', documentListener);
+
+                    expect(escape.defaultPrevented).toBe(false);
+                    expect(documentListener).not.toHaveBeenCalled();
+                    expect(combo.selection.length).toEqual(0);
                 });
                 it('should close the combo and preserve the focus when Escape key is pressed', async () => {
                     combo.comboInput.nativeElement.focus();

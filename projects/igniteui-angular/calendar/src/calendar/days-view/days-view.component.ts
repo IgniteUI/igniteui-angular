@@ -29,11 +29,17 @@ import {
     getNextActiveDate,
     getPreviousActiveDate,
     intoChunks,
-    isDateInRanges
+    isDateInRanges,
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    endKey,
+    homeKey
 } from 'igniteui-angular/core';
 import { IgxCalendarBaseDirective } from '../calendar-base';
 import { IViewChangingEventArgs } from './days-view.interface';
-import { KeyboardNavigationService } from '../calendar.services';
 import { DayDigitPipe } from "../day-digit.pipe";
 import { getDateFormatter } from 'igniteui-i18n-core';
 
@@ -46,7 +52,7 @@ let NEXT_ID = 0;
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxDaysViewComponent
         },
-        KeyboardNavigationService
+        IgxKeyBindingsService
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html',
@@ -58,6 +64,7 @@ let NEXT_ID = 0;
 export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     protected el = inject(ElementRef);
     public override cdr = inject(ChangeDetectorRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService, { self: true });
     #standalone = true;
 
     /**
@@ -223,6 +230,20 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     @HostBinding('class.igx-days-view')
     public defaultClass = true;
 
+    constructor() {
+        super();
+
+        this._keyBindings
+            .configure({ skip: [], bindingDefaults: { preventDefault: false, repeat: true } })
+            .set(arrowRight, (event) => this.onArrowRight(event))
+            .set(arrowLeft, (event) => this.onArrowLeft(event))
+            .set(arrowUp, (event) => this.onArrowUp(event))
+            .set(arrowDown, (event) => this.onArrowDown(event))
+            .setActivateHandler((event) => this.onKeydownEnter(event))
+            .set(homeKey, (event) => this.onKeydownHome(event))
+            .set(endKey, (event) => this.onKeydownEnd(event));
+    }
+
     /**
      * @hidden
      */
@@ -254,7 +275,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.arrowright', ['$event'])
     protected onArrowRight(event: KeyboardEvent) {
         this.handleArrowKeydown(event, 1);
     }
@@ -262,7 +282,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.arrowleft', ['$event'])
     protected onArrowLeft(event: KeyboardEvent) {
         this.handleArrowKeydown(event, -1);
     }
@@ -270,7 +289,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.arrowup', ['$event'])
     protected onArrowUp(event: KeyboardEvent) {
         this.handleArrowKeydown(event, -7);
     }
@@ -278,7 +296,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.arrowdown', ['$event'])
     protected onArrowDown(event: KeyboardEvent) {
         this.handleArrowKeydown(event, 7);
     }
@@ -286,8 +303,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.space', ['$event'])
-    @HostListener('keydown.enter', ['$event'])
     protected onKeydownEnter(event: KeyboardEvent) {
         event.stopPropagation();
         this.selectActiveDate();
@@ -296,7 +311,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.home', ['$event'])
     protected onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
@@ -311,7 +325,6 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    @HostListener('keydown.end', ['$event'])
     protected onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();

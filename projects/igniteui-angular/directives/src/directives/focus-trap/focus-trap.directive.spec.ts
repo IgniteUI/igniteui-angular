@@ -6,6 +6,9 @@ import { IgxFocusTrapDirective } from './focus-trap.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { IgxTimePickerComponent } from '../../../../time-picker/src/time-picker/time-picker.component';
+import { IgxCalendarComponent } from '../../../../calendar/src/calendar/calendar.component';
+import { IgxRadioComponent } from '../../../../radio/src/radio/radio.component';
+import { IgxRadioGroupDirective } from '../../../../radio/src/radio/radio-group/radio-group.directive';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 describe('igxFocusTrap', () => {
@@ -16,7 +19,9 @@ describe('igxFocusTrap', () => {
                 TrapFocusTestComponent,
                 TrapFocusElementsTestComponent,
                 TrapFocusTabOrderTestComponent,
-                TrapFocusShadowDomTestComponent
+                TrapFocusShadowDomTestComponent,
+                TrapFocusCalendarHostTestComponent,
+                TrapFocusRadioGroupTestComponent
             ]
         }).compileComponents();
     });
@@ -33,19 +38,19 @@ describe('igxFocusTrap', () => {
         const button = fix.debugElement.query(By.css('button'));
         const inputs = fix.debugElement.queryAll(By.css('input'));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
     });
@@ -58,19 +63,19 @@ describe('igxFocusTrap', () => {
         const button = fix.debugElement.query(By.css('button'));
         const inputs = fix.debugElement.queryAll(By.css('input'));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
     });
@@ -85,15 +90,15 @@ describe('igxFocusTrap', () => {
         const focusTrap = fix.debugElement.query(By.directive(IgxFocusTrapDirective));
         const button = fix.debugElement.query(By.css('button'));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
     });
@@ -108,17 +113,17 @@ describe('igxFocusTrap', () => {
 
         const focusTrap = fix.debugElement.query(By.directive(IgxFocusTrapDirective));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         await fix.whenStable();
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         await fix.whenStable();
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         await fix.whenStable();
         fix.detectChanges();
         expect(document.activeElement).toEqual(focusTrap.nativeElement);
@@ -132,15 +137,15 @@ describe('igxFocusTrap', () => {
         const button = fix.debugElement.query(By.css('button'));
         const inputs = fix.debugElement.queryAll(By.css('input'));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
 
@@ -150,22 +155,22 @@ describe('igxFocusTrap', () => {
         fix.componentInstance.focusTrap = false;
         fix.detectChanges();
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).not.toEqual(inputs[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).not.toEqual(inputs[1].nativeElement);
 
         fix.componentInstance.focusTrap = true;
         fix.detectChanges();
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap, false, true);
+        pressKey(focusTrap.nativeElement, 'Tab', true);
         fix.detectChanges();
         expect(document.activeElement).toEqual(button.nativeElement);
     });
@@ -182,23 +187,23 @@ describe('igxFocusTrap', () => {
         const inputs = fix.debugElement.queryAll(By.css('input'));
         const timePickerInput = fix.debugElement.query(By.css('.igx-input-group__input'));
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(timePickerInput.nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(buttons[buttons.length - 1].nativeElement);
 
-        UIInteractions.triggerEventHandlerKeyDown('Tab', focusTrap);
+        pressKey(focusTrap.nativeElement, 'Tab');
         fix.detectChanges();
         expect(document.activeElement).toEqual(inputs[0].nativeElement);
     });
@@ -244,6 +249,49 @@ describe('igxFocusTrap', () => {
 
         expect(pressKey(inputs[1].nativeElement, 'Tab').defaultPrevented).toBe(false);
         expect(document.activeElement).toBe(inputs[1].nativeElement);
+    });
+
+    it('should move focus with Option + Tab and Option + Shift + Tab, which Safari uses to reach links', () => {
+        const fix = TestBed.createComponent(TrapFocusTestComponent);
+        fix.detectChanges();
+
+        const button = fix.debugElement.query(By.css('button')).nativeElement;
+        const inputs = fix.debugElement.queryAll(By.css('input'));
+        button.focus();
+
+        expect(pressKey(button, 'Tab', false, { altKey: true }).defaultPrevented).toBe(true);
+        expect(document.activeElement).toBe(inputs[0].nativeElement);
+
+        expect(pressKey(inputs[0].nativeElement, 'Tab', true, { altKey: true }).defaultPrevented).toBe(true);
+        expect(document.activeElement).toBe(button);
+    });
+
+    it('should keep moving focus while Tab is held', () => {
+        const fix = TestBed.createComponent(TrapFocusTestComponent);
+        fix.detectChanges();
+
+        const inputs = fix.debugElement.queryAll(By.css('input'));
+        const button = fix.debugElement.query(By.css('button')).nativeElement;
+        inputs[0].nativeElement.focus();
+
+        pressKey(inputs[0].nativeElement, 'Tab');
+        pressKey(inputs[1].nativeElement, 'Tab', false, { repeat: true });
+
+        expect(document.activeElement).toBe(button);
+    });
+
+    it('should not trap Tab combined with Ctrl or Meta', () => {
+        const fix = TestBed.createComponent(TrapFocusTestComponent);
+        fix.detectChanges();
+
+        const input = fix.debugElement.query(By.css('input')).nativeElement;
+        input.focus();
+
+        for (const init of [{ ctrlKey: true }, { metaKey: true }, { ctrlKey: true, shiftKey: true }]) {
+            const label = JSON.stringify(init);
+            expect(pressKey(input, 'Tab', false, init).defaultPrevented, label).toBe(false);
+            expect(document.activeElement, label).toBe(input);
+        }
     });
 
     it('should move focus relative to the currently focused element', () => {
@@ -460,10 +508,47 @@ describe('igxFocusTrap', () => {
 
         expect(pressKey(input, 'Tab').defaultPrevented).toBe(false);
     });
+
+    it('should trap focus on the host of a component that handles keys too', () => {
+        const fix = TestBed.createComponent(TrapFocusCalendarHostTestComponent);
+        fix.detectChanges();
+
+        const calendar = fix.debugElement.query(By.directive(IgxCalendarComponent)).componentInstance as IgxCalendarComponent;
+        const wrapper = fix.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement as HTMLElement;
+        calendar.viewDate = new Date(2017, 5, 13);
+        fix.detectChanges();
+
+        wrapper.focus();
+        expect(pressKey(wrapper, 'Tab').defaultPrevented).toBe(true);
+        expect(document.activeElement).not.toBe(wrapper);
+
+        pressKey(wrapper, 'PageDown');
+        fix.detectChanges();
+        expect(calendar.viewDate.getMonth()).toBe(6);
+    });
+
+    it('should trap focus on an element with the radio group directive', () => {
+        const fix = TestBed.createComponent(TrapFocusRadioGroupTestComponent);
+        fix.detectChanges();
+
+        const group = fix.debugElement.query(By.directive(IgxRadioGroupDirective));
+        const radios = fix.debugElement.queryAll(By.directive(IgxRadioComponent))
+            .map(radio => radio.componentInstance as IgxRadioComponent);
+        radios[0].select();
+        fix.detectChanges();
+
+        pressKey(radios[0].nativeElement, 'ArrowDown');
+        fix.detectChanges();
+        expect(radios[1].checked).toBe(true);
+
+        const tab = pressKey(radios[1].nativeElement, 'Tab');
+        expect(tab.defaultPrevented).toBe(true);
+        expect(group.nativeElement.contains(document.activeElement)).toBe(true);
+    });
 });
 
-function pressKey(target: HTMLElement, key: string, shiftKey = false): KeyboardEvent {
-    const event = new KeyboardEvent('keydown', { key, shiftKey, bubbles: true, cancelable: true, composed: true });
+function pressKey(target: HTMLElement, key: string, shiftKey = false, init?: KeyboardEventInit): KeyboardEvent {
+    const event = new KeyboardEvent('keydown', { key, shiftKey, bubbles: true, cancelable: true, composed: true, ...init });
     target.dispatchEvent(event);
     return event;
 }
@@ -564,3 +649,19 @@ class TrapFocusTabOrderTestComponent { }
     imports: [IgxFocusTrapDirective]
 })
 class TrapFocusShadowDomTestComponent { }
+
+@Component({
+    template: `<igx-calendar igxFocusTrap></igx-calendar>`,
+    imports: [IgxFocusTrapDirective, IgxCalendarComponent]
+})
+class TrapFocusCalendarHostTestComponent { }
+
+@Component({
+    template: `
+    <div igxRadioGroup igxFocusTrap name="group">
+        <igx-radio value="1">One</igx-radio>
+        <igx-radio value="2">Two</igx-radio>
+    </div>`,
+    imports: [IgxFocusTrapDirective, IgxRadioGroupDirective, IgxRadioComponent]
+})
+class TrapFocusRadioGroupTestComponent { }

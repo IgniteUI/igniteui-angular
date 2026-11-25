@@ -19,7 +19,17 @@ import {
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { fromEvent, noop, Subject, Subscription, takeUntil } from 'rxjs';
 import { IgxRadioComponent } from '../radio.component';
-import { isLeftToRight, NgControlAdapter } from 'igniteui-angular/core';
+import {
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    isLeftToRight,
+    NgControlAdapter,
+    shiftKey,
+    tabKey
+} from 'igniteui-angular/core';
 import { IChangeCheckboxEventArgs } from 'igniteui-angular/directives';
 /**
  * Determines the Radio Group alignment
@@ -58,7 +68,8 @@ let nextId = 0;
 @Directive({
     exportAs: 'igxRadioGroup',
     selector: '[igxRadioGroup],igx-radio-group',
-    standalone: true
+    standalone: true,
+    providers: [IgxKeyBindingsService]
 })
 export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, DoCheck {
     public ngControl = inject(NgControl, { optional: true, self: true });
@@ -66,6 +77,7 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
     private _statusChanges$?: Subscription;
     private cdr = inject(ChangeDetectorRef);
     private readonly _element = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     private _radioButtons = signal<IgxRadioComponent[]>([]);
     private _radioButtonsList = new QueryList<IgxRadioComponent>();
@@ -261,50 +273,37 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         }
     }
 
-    @HostListener('keydown', ['$event'])
-    protected handleKeyDown(event: KeyboardEvent) {
-        const { key } = event;
+    /** Selects and focuses the next (`1`) or previous (`-1`) enabled radio button, wrapping around. */
+    private selectNextButton(step: 1 | -1) {
         const buttons = this._radioButtons().filter(radio => !radio.disabled);
         const checked = buttons.find((radio) => radio.checked);
+        let index = (checked ? buttons.indexOf(checked) : -1) + step;
 
-        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
-            let index = checked ? buttons.indexOf(checked) : -1;
-            const ltr = isLeftToRight(this._element.nativeElement);
+        if (index < 0) index = buttons.length - 1;
+        if (index > buttons.length - 1) index = 0;
 
-            switch (key) {
-                case 'ArrowUp':
-                    index += -1;
-                    break;
-                case 'ArrowLeft':
-                    index += ltr ? -1 : 1;
-                    break;
-                case 'ArrowRight':
-                    index += ltr ? 1 : -1;
-                    break;
-                default:
-                    index += 1;
-            }
+        buttons.forEach((radio) => {
+            radio.deselect();
+            radio.nativeElement.blur();
+        });
 
-            if (index < 0) index = buttons.length - 1;
-            if (index > buttons.length - 1) index = 0;
+        buttons[index].focused = true;
+        buttons[index].nativeElement.focus();
+        buttons[index].select();
+    }
 
-            buttons.forEach((radio) => {
-                radio.deselect();
-                radio.nativeElement.blur();
-            });
+    /** ArrowLeft and ArrowRight follow the reading direction */
+    private selectButtonInReadingDirection(next: boolean) {
+        const ltr = isLeftToRight(this._element.nativeElement);
+        this.selectNextButton(next === ltr ? 1 : -1);
+    }
 
-            buttons[index].focused = true;
-            buttons[index].nativeElement.focus();
-            buttons[index].select();
-            event.preventDefault();
-        }
-
-        if (event.key === "Tab") {
-            buttons.forEach((radio) => {
-                if (radio !== checked) {
-                    event.stopPropagation();
-                }
-            });
+    /** Tab keeps the event in the group while an enabled radio button is not the checked one */
+    private onTabKey(event: KeyboardEvent) {
+        const buttons = this._radioButtons().filter(radio => !radio.disabled);
+        const checked = buttons.find((radio) => radio.checked);
+        if (buttons.some((radio) => radio !== checked)) {
+            event.stopPropagation();
         }
     }
 
@@ -511,6 +510,15 @@ export class IgxRadioGroupDirective implements ControlValueAccessor, OnDestroy, 
         if (this.ngControl !== null) {
             this.ngControl.valueAccessor = this;
         }
+
+        this._keyBindings
+            .configure({ skip: [], bindingDefaults: { repeat: true } })
+            .set(arrowUp, () => this.selectNextButton(-1))
+            .set(arrowDown, () => this.selectNextButton(1))
+            .set(arrowLeft, () => this.selectButtonInReadingDirection(false))
+            .set(arrowRight, () => this.selectButtonInReadingDirection(true))
+            .set(tabKey, (event) => this.onTabKey(event), { preventDefault: false })
+            .set([shiftKey, tabKey], (event) => this.onTabKey(event), { preventDefault: false });
 
         effect(() => {
             this.initialize();

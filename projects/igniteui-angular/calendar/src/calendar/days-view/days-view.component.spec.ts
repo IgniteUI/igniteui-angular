@@ -4,7 +4,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { DateRangeDescriptor, DateRangeType } from 'igniteui-webcomponents';
 import { ScrollDirection } from "../calendar";
-import { KeyboardNavigationService } from '../calendar.services';
 import { CalendarDay } from 'igniteui-angular/core';
 import { UIInteractions } from '../../../../test-utils/ui-interactions.spec';
 import { DayDigitPipe } from "igniteui-angular/calendar/src/calendar/day-digit.pipe";
@@ -17,10 +16,7 @@ describe("Days View Component", () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [InitDaysViewComponent],
-            providers: [
-                KeyboardNavigationService
-            ]
+            imports: [InitDaysViewComponent]
         }).compileComponents();
     });
 
@@ -220,6 +216,29 @@ describe("Days View Component", () => {
                 instance.activeDate,
             ]);
             expect(instance.selectedDates).toEqual([instance.activeDate]);
+        });
+
+        it("should keep moving while an arrow key is held", () => {
+            for (const repeat of [false, true, true]) {
+                el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", repeat, bubbles: true }));
+            }
+            fixture.detectChanges();
+
+            expect(instance.activeDate).toEqual(firstDay.add("day", 3).native);
+        });
+
+        it("should select the active date with Enter and Space without preventing their default action", () => {
+            for (const [key, day] of [["Enter", 4], [" ", 5]] as const) {
+                instance.activeDate = firstDay.add("day", day).native;
+                fixture.detectChanges();
+
+                const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+                el.dispatchEvent(event);
+                fixture.detectChanges();
+
+                expect(event.defaultPrevented, key).toBe(false);
+                expect(instance.selectedDates, key).toEqual([instance.activeDate]);
+            }
         });
 
         it("should skip disabled dates when navigating with arrow keys", () => {

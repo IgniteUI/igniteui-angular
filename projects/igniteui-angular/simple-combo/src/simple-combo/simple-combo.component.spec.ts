@@ -7,7 +7,7 @@ import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Untyp
 import { FormField, disabled, form as signalForm, required } from '@angular/forms/signals';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectionAPIService, PlatformUtil } from 'igniteui-angular/core';
+import { IgxKeyBindingsService, IgxSelectionAPIService, PlatformUtil } from 'igniteui-angular/core';
 import { IBaseCancelableBrowserEventArgs } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputDirective, IgxInputState, IgxLabelDirective } from '../../../input-group/src/public_api';
@@ -58,7 +58,7 @@ describe('IgxSimpleCombo', () => {
             { country: 'Spain', city: 'Madrid' },
             { country: 'Italy', city: 'Rome' }
         ];
-        const elementRef = { nativeElement: null };
+        const elementRef = { nativeElement: document.createElement('div') };
         const mockSelection: {
             [key: string]: Mock;
         } = {
@@ -88,7 +88,8 @@ describe('IgxSimpleCombo', () => {
         const mockDocument = {
             'body': document.createElement('div'),
             'defaultView': {
-                getComputedStyle: () => ({})
+                getComputedStyle: () => ({}),
+                addEventListener: () => { }
             },
             'documentElement': document.createElement('html')
         };
@@ -104,6 +105,7 @@ describe('IgxSimpleCombo', () => {
                     { provide: PlatformUtil, useValue: platformUtil },
                     { provide: DOCUMENT, useValue: mockDocument },
                     { provide: Injector, useValue: mockInjector },
+                    IgxKeyBindingsService,
                     IgxSimpleComboComponent,
                     IgxSelectionAPIService
                 ]
@@ -1257,6 +1259,31 @@ describe('IgxSimpleCombo', () => {
             combo = fixture.componentInstance.combo;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
             dropdown = combo.dropdown;
+        });
+
+        it('should open on ArrowDown and Alt + ArrowDown pressed in the combo input', async () => {
+            const keydown = (init: KeyboardEventInit) => {
+                const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+                combo.comboInput.nativeElement.dispatchEvent(event);
+                fixture.detectChanges();
+                return event;
+            };
+            vi.spyOn(combo, 'open');
+
+            for (const init of [{ key: 'ArrowDown', shiftKey: true }, { key: 'ArrowDown', ctrlKey: true }]) {
+                expect(keydown(init).defaultPrevented, JSON.stringify(init)).toBe(false);
+            }
+            expect(combo.open).not.toHaveBeenCalled();
+
+            expect(keydown({ key: 'ArrowDown' }).defaultPrevented).toBe(true);
+            expect(combo.open).toHaveBeenCalledTimes(1);
+
+            combo.close();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(keydown({ key: 'ArrowDown', altKey: true }).defaultPrevented).toBe(true);
+            expect(combo.open).toHaveBeenCalledTimes(2);
         });
 
         it('should toggle dropdown list with arrow down/up keys', async () => {

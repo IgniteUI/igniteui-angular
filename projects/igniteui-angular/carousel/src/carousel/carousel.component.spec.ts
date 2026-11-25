@@ -293,6 +293,79 @@ describe('Carousel', () => {
             expect(carousel.slideChanged.emit).toHaveBeenCalledTimes(8);
         });
 
+        it('should not handle the indicator keys pressed with a modifier or outside the indicators', () => {
+            vi.spyOn(carousel.slideChanged, 'emit');
+            carousel.pause = true;
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+            const slide = carousel.slides.first.nativeElement;
+
+            const keys: [HTMLElement, KeyboardEventInit][] = [
+                [indicators, { key: 'ArrowRight', shiftKey: true }],
+                [indicators, { key: 'ArrowLeft', altKey: true }],
+                [indicators, { key: 'End', ctrlKey: true }],
+                [indicators, { key: 'End', metaKey: true }],
+                [slide, { key: 'ArrowRight' }],
+                [slide, { key: 'End' }]
+            ];
+            for (const [target, init] of keys) {
+                const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+                target.dispatchEvent(event);
+                fixture.detectChanges();
+
+                expect(event.defaultPrevented, JSON.stringify(init)).toBe(false);
+            }
+
+            expect(carousel.slideChanged.emit).not.toHaveBeenCalled();
+            expect(carousel.current).toBe(0);
+        });
+
+        it('should keep changing the slide while an arrow key is held on the indicators', () => {
+            carousel.pause = true;
+            const indicators = HelperTestFunctions.getIndicatorsContainer(fixture);
+
+            for (const repeat of [false, true]) {
+                indicators.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', repeat, bubbles: true }));
+                fixture.detectChanges();
+            }
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+        });
+
+        it('should handle the indicator keys after the indicators are shown again', () => {
+            carousel.pause = true;
+            carousel.indicators = false;
+            fixture.detectChanges();
+            carousel.indicators = true;
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', HelperTestFunctions.getIndicatorsContainer(fixture), true);
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+        });
+
+        it('should move the focus to the current indicator before Tab leaves the indicators', () => {
+            carousel.pause = true;
+            const indicators = HelperTestFunctions.getIndicators(fixture) as NodeListOf<HTMLElement>;
+
+            for (const shiftKey of [false, true]) {
+                carousel.select(0);
+                fixture.detectChanges();
+                indicators[0].focus();
+                // The slide changes while the focus stays on its indicator, as with autoplay.
+                carousel.select(2);
+                fixture.detectChanges();
+
+                const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true });
+                indicators[0].dispatchEvent(event);
+                fixture.detectChanges();
+
+                expect(document.activeElement, `shiftKey: ${shiftKey}`).toBe(indicators[2]);
+                // The browser then moves the focus from the current indicator.
+                expect(event.defaultPrevented, `shiftKey: ${shiftKey}`).toBe(false);
+            }
+        });
+
         it('changing slides with navigation buttons', () => {
             vi.spyOn(carousel.slideChanged, 'emit');
             carousel.pause = true;

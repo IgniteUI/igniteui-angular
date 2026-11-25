@@ -1,5 +1,5 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, ContentChildren, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList, booleanAttribute, inject, ChangeDetectionStrategy } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import {
     IExpansionPanelCancelableEventArgs,
@@ -7,9 +7,16 @@ import {
 } from 'igniteui-angular/expansion-panel';
 import { IgxExpansionPanelComponent } from 'igniteui-angular/expansion-panel';
 import { ToggleAnimationSettings } from 'igniteui-angular/expansion-panel';
-
-/** @hidden @internal */
-const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.split(' '));
+import {
+    IgxKeyBindingObserver,
+    IgxKeyBindingsService,
+    altKey,
+    arrowDown,
+    arrowUp,
+    endKey,
+    homeKey,
+    shiftKey
+} from 'igniteui-angular/core';
 
 export interface IAccordionEventArgs extends IExpansionPanelEventArgs {
     owner: IgxAccordionComponent;
@@ -54,10 +61,13 @@ let NEXT_ID = 0;
     selector: 'igx-accordion',
     templateUrl: 'accordion.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    standalone: true,
+    providers: [IgxKeyBindingsService]
 })
 export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, OnDestroy {
     private cdr = inject(ChangeDetectorRef);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+    private _headerObservers: IgxKeyBindingObserver[] = [];
 
     /**
      * Get/Set the `id` of the accordion component.
@@ -217,8 +227,20 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _expandingPanels!: Set<IgxExpansionPanelComponent>;
     private _destroy$ = new Subject<void>();
     private _unsubChildren$ = new Subject<void>();
-    private _enabledPanels!: IgxExpansionPanelComponent[];
     private _singleBranchExpand = false;
+
+    constructor() {
+        // Only the keys pressed on a panel header navigate: they are handled at the header (observed in
+        // subToChanges), the accordion host skips the rest. A held key runs its handler again.
+        this._keyBindings
+            .configure({ skip: (_target, event) => !this.getHeaderPanel(event), bindingDefaults: { repeat: true } })
+            .set(homeKey, () => this.enabledPanels()[0]?.header.innerElement.focus())
+            .set(endKey, () => this.enabledPanels().at(-1)?.header.innerElement.focus())
+            .set(arrowUp, (event) => this.focusNextPanel(event, -1))
+            .set(arrowDown, (event) => this.focusNextPanel(event, 1))
+            .set([altKey, shiftKey, arrowUp], (event) => this.collapseEnabledPanels(event))
+            .set([altKey, shiftKey, arrowDown], (event) => this.expandEnabledPanels(event));
+    }
 
     /** @hidden @internal **/
     public ngAfterContentInit(): void {
@@ -286,65 +308,41 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this.cdr.markForCheck();
     }
 
-    private handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
-        const key = event.key.toLowerCase();
-        if (!(ACCORDION_NAVIGATION_KEYS.has(key))) {
+    /** The panel whose header listener handles the event; the accordion host itself handles no keys. */
+    private getHeaderPanel(event: KeyboardEvent): IgxExpansionPanelComponent | undefined {
+        return this._panels?.find(p => p.header.innerElement === event.currentTarget);
+    }
+
+
+    private enabledPanels(): IgxExpansionPanelComponent[] {
+        return this._panels.filter(p => !p.header.disabled);
+    }
+
+    /** Focuses the next (`1`) or previous (`-1`) enabled panel header; the focus stays at the first and last one. */
+    private focusNextPanel(event: KeyboardEvent, dir: 1 | -1): void {
+        const enabled = this.enabledPanels();
+        const panel = this.getHeaderPanel(event)!;
+        const next = enabled[enabled.indexOf(panel) + dir];
+        next?.header.innerElement.focus();
+    }
+
+    /** Alt + Shift + ArrowUp: unlike `collapseAll()`, skips the disabled panels and passes the event. */
+    private collapseEnabledPanels(event: KeyboardEvent): void {
+        this.enabledPanels().forEach(p => p.collapse(event));
+    }
+
+    /**
+     * Alt + Shift + ArrowDown: expands every enabled panel, or only the last one when `singleBranchExpand`
+     * is set. Unlike `expandAll()`, skips the disabled panels and passes the event.
+     */
+    private expandEnabledPanels(event: KeyboardEvent): void {
+        const enabled = this.enabledPanels();
+        if (this.singleBranchExpand) {
+            enabled.slice(0, -1).forEach(p => p.collapse(event));
+            enabled.at(-1)?.expand(event);
             return;
         }
-        // TO DO: if we ever want to improve the performance of the accordion,
-        // enabledPanels could be cached (by making a disabledChange emitter on the panel header)
-        this._enabledPanels = this._panels.filter(p => !p.header.disabled);
-        event.preventDefault();
-        this.handleNavigation(event, panel);
-    }
-
-    private handleNavigation(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
-        switch (event.key.toLowerCase()) {
-            case 'home':
-                this._enabledPanels[0].header.innerElement.focus();
-                break;
-            case 'end':
-                this._enabledPanels[this._enabledPanels.length - 1].header.innerElement.focus();
-                break;
-            case 'arrowup':
-            case 'up':
-                this.handleUpDownArrow(true, event, panel);
-                break;
-            case 'arrowdown':
-            case 'down':
-                this.handleUpDownArrow(false, event, panel);
-                break;
-        }
-    }
-
-    private handleUpDownArrow(isUp: boolean, event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
-        if (!event.altKey) {
-            const focusedPanel = panel;
-            const next = this.getNextPanel(focusedPanel, isUp ? -1 : 1);
-            if (next === focusedPanel) {
-                return;
-            }
-            next.header.innerElement.focus();
-        }
-        if (event.altKey && event.shiftKey) {
-            if (isUp) {
-                this._enabledPanels.forEach(p => p.collapse(event));
-            } else {
-                if (this.singleBranchExpand) {
-                    for (let i = 0; i < this._enabledPanels.length - 1; i++) {
-                        this._enabledPanels[i].collapse(event);
-                    }
-                    this._enabledPanels[this._enabledPanels.length - 1].expand(event);
-                    return;
-                }
-                this._enabledPanels.forEach(p => p.expand(event));
-            }
-        }
-    }
-
-    private getNextPanel(panel: IgxExpansionPanelComponent, dir: 1 | -1 = 1): IgxExpansionPanelComponent {
-        const panelIndex = this._enabledPanels.indexOf(panel);
-        return this._enabledPanels[panelIndex + dir] || panel;
+        enabled.forEach(p => p.expand(event));
     }
 
     private subToChanges(): void {
@@ -399,12 +397,11 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                     args.cancel = true;
                 }
             });
-            fromEvent<KeyboardEvent>(panel.header.innerElement, 'keydown')
-                .pipe(takeUntil(this._unsubChildren$))
-                .subscribe((e: KeyboardEvent) => {
-                    this.handleKeydown(e, panel);
-                });
         });
+
+        // The header listeners handle the keys before the panel headers themselves, as before.
+        this._headerObservers.forEach(observer => observer.unsubscribe());
+        this._headerObservers = this._panels.map(panel => this._keyBindings.observeElement(panel.header.innerElement));
     }
 
     private updatePanelsAnimation(): void {

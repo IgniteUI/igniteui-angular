@@ -14,7 +14,7 @@ import {
 } from "../common/calendar-view.directive";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core';
+import { CalendarDay, calendarRange, IgxKeyBindingsService, PlatformUtil } from 'igniteui-angular/core';
 
 @Component({
     providers: [
@@ -27,6 +27,7 @@ import { CalendarDay, calendarRange, PlatformUtil } from 'igniteui-angular/core'
             provide: DAY_INTERVAL_TOKEN,
             useValue: "year",
         },
+        IgxKeyBindingsService
     ],
     selector: "igx-years-view",
     templateUrl: "years-view.component.html",

@@ -373,19 +373,61 @@ describe('Rendering Tests', () => {
             expect(document.activeElement).toBe(lastHeader);
         });
 
-        it('Should focus the correct panel on legacy Up/Down key press', () => {
+        it('Should not handle the legacy Up/Down key names', () => {
+            const header = accordion.panels[1].header.innerElement;
+            header.focus();
+            fix.detectChanges();
+
+            for (const key of ['Down', 'Up']) {
+                const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+                header.dispatchEvent(event);
+                fix.detectChanges();
+
+                expect(event.defaultPrevented, key).toBe(false);
+                expect(document.activeElement, key).toBe(header);
+            }
+        });
+
+        it('Should ignore the navigation keys pressed with Ctrl, Shift or Meta', () => {
+            const header = accordion.panels[1].header.innerElement;
+            header.focus();
+            fix.detectChanges();
+
+            for (const modifier of ['ctrlKey', 'shiftKey', 'metaKey'] as const) {
+                for (const key of ['ArrowDown', 'ArrowUp', 'Home', 'End']) {
+                    const event = new KeyboardEvent('keydown', { key, [modifier]: true, bubbles: true, cancelable: true });
+                    header.dispatchEvent(event);
+                    fix.detectChanges();
+
+                    expect(event.defaultPrevented, `${modifier} + ${key}`).toBe(false);
+                    expect(document.activeElement, `${modifier} + ${key}`).toBe(header);
+                }
+            }
+        });
+
+        it('Should not handle the keys pressed outside the panel headers', () => {
+            const header = accordion.panels[1].header.innerElement;
+            header.focus();
+            fix.detectChanges();
+
+            const event = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+            fix.nativeElement.querySelectorAll('igx-expansion-panel')[2].querySelector('igx-expansion-panel-body').dispatchEvent(event);
+            fix.detectChanges();
+
+            expect(event.defaultPrevented).toBe(false);
+            expect(document.activeElement).toBe(header);
+        });
+
+        it('Should keep moving the focus while ArrowDown is held', () => {
             accordion.panels[0].header.innerElement.focus();
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('down', accordion.panels[0].header.innerElement);
-            fix.detectChanges();
+            for (const repeat of [false, true]) {
+                document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', repeat, bubbles: true }));
+                fix.detectChanges();
+            }
 
-            expect(document.activeElement).toBe(accordion.panels[1].header.innerElement);
-
-            UIInteractions.triggerKeyDownEvtUponElem('up', accordion.panels[1].header.innerElement);
-            fix.detectChanges();
-
-            expect(document.activeElement).toBe(accordion.panels[0].header.innerElement);
+            expect(document.activeElement).toBe(accordion.panels[2].header.innerElement);
         });
 
         it('Should not expand a panel when panelExpanding is canceled', async () => {
@@ -595,6 +637,21 @@ describe('Accordion with bound inputs and dynamic panels', () => {
         fix = TestBed.createComponent(IgxAccordionDynamicTestComponent);
         fix.detectChanges();
         accordion = fix.componentInstance.accordion();
+    });
+
+    it('Should navigate with the keyboard between the headers of panels added after init', () => {
+        fix.componentInstance.panels.update(panels => [...panels, { id: 'ts', title: 'TypeScript', collapsed: true, disabled: false }]);
+        fix.detectChanges();
+
+        const added = accordion.panels[4].header.innerElement;
+        added.focus();
+        added.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+        fix.detectChanges();
+        expect(document.activeElement).toBe(accordion.panels[0].header.innerElement);
+
+        document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+        fix.detectChanges();
+        expect(document.activeElement).toBe(added);
     });
 
     it('Should apply the bound id to the host element', () => {

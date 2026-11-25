@@ -4,7 +4,8 @@ import { IgxTreeNavigationComponent, IgxTreeScrollComponent, IgxTreeSimpleCompon
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
-import { ElementRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, ElementRef, EventEmitter } from '@angular/core';
+import { IgxKeyBindingsService } from 'igniteui-angular/core';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeService } from './tree.service';
@@ -209,6 +210,48 @@ describe('IgxTree - Navigation #treeView', () => {
                 expect(tree.nodes.toArray()[12].expanded).toBeTruthy();
             });
 
+            it('Pressing Shift + Asterisk on focused node should expand all expandable nodes in the same group', () => {
+                tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
+                fix.detectChanges();
+
+                // `*` takes Shift on most keyboards, but not on the numeric keypad
+                UIInteractions.triggerKeyDownEvtUponElem('*', tree.nodes.first.nativeElement, true, false, true);
+                fix.detectChanges();
+
+                expect(tree.nodes.first.expanded).toBeTruthy();
+                expect(tree.nodes.toArray()[17].expanded).toBeTruthy();
+                expect(tree.nodes.toArray()[28].expanded).toBeTruthy();
+            });
+
+            it('Should not handle the keys pressed with a modifier other than Ctrl + ArrowUp/ArrowDown and Shift + Space', () => {
+                tree.selection = 'BiState';
+                tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
+                fix.detectChanges();
+
+                const modifiedKeys: KeyboardEventInit[] = [
+                    { key: 'ArrowDown', shiftKey: true },
+                    { key: 'ArrowDown', altKey: true },
+                    { key: 'ArrowDown', metaKey: true },
+                    { key: 'ArrowRight', shiftKey: true },
+                    { key: 'End', ctrlKey: true },
+                    { key: ' ', ctrlKey: true },
+                    { key: '*', altKey: true },
+                    { key: 'Enter', altKey: true }
+                ];
+                for (const init of modifiedKeys) {
+                    const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+                    tree.nodes.first.nativeElement.dispatchEvent(event);
+                    fix.detectChanges();
+
+                    expect(event.defaultPrevented, JSON.stringify(init)).toBeFalsy();
+                }
+
+                expect((tree as any).navService.focusedNode).toEqual(tree.nodes.first);
+                expect((tree as any).navService.activeNode).toEqual(tree.nodes.first);
+                expect(tree.nodes.first.expanded).toBeFalsy();
+                expect(tree.nodes.first.selected).toBeFalsy();
+            });
+
             it('Pressing Enter should activate the focused node and not prevent the keydown event`s deafault behavior', () => {
                 vi.spyOn(tree.activeNodeChanged, 'emit');
                 tree.nodes.first.header.nativeElement.dispatchEvent(new Event('pointerdown'));
@@ -241,7 +284,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 vi.spyOn((tree as any).selectionService, 'deselectNode');
                 vi.spyOn((tree as any).selectionService, 'selectMultipleNodes');
 
-                UIInteractions.triggerKeyDownEvtUponElem('space', tree.nodes.toArray()[17].nativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem(' ', tree.nodes.toArray()[17].nativeElement);
                 fix.detectChanges();
 
                 expect(tree.nodes.toArray()[17].selected).toBeFalsy();
@@ -252,7 +295,7 @@ describe('IgxTree - Navigation #treeView', () => {
 
                 // Space for select
                 tree.selection = 'BiState';
-                UIInteractions.triggerKeyDownEvtUponElem('space', tree.nodes.toArray()[17].nativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem(' ', tree.nodes.toArray()[17].nativeElement);
                 fix.detectChanges();
 
                 expect(tree.nodes.toArray()[17].selected).toBeTruthy();
@@ -267,7 +310,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('arrowup', tree.nodes.toArray()[17].nativeElement, true, false, false, true);
                 fix.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem('space', tree.nodes.first.nativeElement, true, false, true, false);
+                UIInteractions.triggerKeyDownEvtUponElem(' ', tree.nodes.first.nativeElement, true, false, true, false);
                 fix.detectChanges();
 
                 expect(tree.nodes.first.selected).toBeTruthy();
@@ -283,7 +326,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', tree.nodes.first.nativeElement, true, false, false, true);
                 fix.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem('space', tree.nodes.toArray()[17].nativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem(' ', tree.nodes.toArray()[17].nativeElement);
                 fix.detectChanges();
 
                 expect(tree.nodes.toArray()[17].selected).toBeFalsy();
@@ -623,7 +666,10 @@ describe('IgxTree - Navigation #treeView', () => {
         });
 
         describe('IgxNavigationService', () => {
+            let treeElement: HTMLElement;
+
             beforeEach(async () => {
+                treeElement = document.createElement('div');
                 mockEmitter = {
                     emit: vi.fn()
                 } as unknown as EventEmitter<IgxTreeNode<any>>;
@@ -638,6 +684,9 @@ describe('IgxTree - Navigation #treeView', () => {
                         { provide: IgxTreeComponent, useValue: mockTree },
                         { provide: IgxTreeService, useValue: treeService },
                         { provide: IgxTreeSelectionService, useValue: selectionService },
+                        { provide: ElementRef, useValue: { nativeElement: treeElement } },
+                        { provide: ChangeDetectorRef, useValue: { markForCheck: vi.fn() } },
+                        IgxKeyBindingsService,
                         IgxTreeNavigationService
                     ]
                 }).compileComponents();
@@ -717,34 +766,24 @@ describe('IgxTree - Navigation #treeView', () => {
 
             });
 
-            it('Should traverse visibleChildren on handleKeyDown', async () => {
+            it('Should traverse visibleChildren on keydown', async () => {
                 navService.register(mockTree);
                 navService.init_invisible_cache();
-                const mockEvent1 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true });
-                vi.spyOn(mockEvent1, 'preventDefault');
-                vi.spyOn(navService, 'handleKeydown');
+                const keydown = (init: KeyboardEventInit) => {
+                    const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+                    treeElement.dispatchEvent(event);
+                    return event;
+                };
                 navService.focusedNode = mockNodesLevel1[0];
 
-                navService.handleKeydown(mockEvent1);
-
-                expect(mockEvent1.preventDefault).toHaveBeenCalled();
-                expect(navService.handleKeydown).toHaveBeenCalledTimes(1);
+                expect(keydown({ key: 'ArrowDown' }).defaultPrevented).toBe(true);
                 expect(navService.focusedNode).toEqual(mockNodesLevel1[1]);
 
-                const mockEvent2 = new KeyboardEvent('keydown', { key: 'arrowup', bubbles: true });
-                vi.spyOn(mockEvent2, 'preventDefault');
-                navService.handleKeydown(mockEvent2);
-
-                expect(mockEvent2.preventDefault).toHaveBeenCalled();
-                expect(navService.handleKeydown).toHaveBeenCalledTimes(2);
+                expect(keydown({ key: 'ArrowUp' }).defaultPrevented).toBe(true);
                 expect(navService.focusedNode).toEqual(mockNodesLevel1[0]);
 
-                const mockEvent3 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true, repeat: true });
-                vi.spyOn(mockEvent3, 'preventDefault');
                 // when event is repeated, prevent default and wait
-                navService.handleKeydown(mockEvent3);
-                expect(navService.handleKeydown).toHaveBeenCalledTimes(3);
-                expect(mockEvent3.preventDefault).toHaveBeenCalled();
+                expect(keydown({ key: 'ArrowDown', repeat: true }).defaultPrevented).toBe(true);
                 // when event is repeating, node does not change immediately
                 expect(navService.focusedNode).toEqual(mockNodesLevel1[0]);
                 await wait(1);
@@ -752,14 +791,11 @@ describe('IgxTree - Navigation #treeView', () => {
 
                 // does nothing if there is no focused node
                 navService.focusedNode = null;
-                const mockEvent4 = new KeyboardEvent('keydown', { key: 'arrowdown', bubbles: true, repeat: false });
-                vi.spyOn(mockEvent4, 'preventDefault');
-                navService.handleKeydown(mockEvent4);
-                expect(mockEvent4.preventDefault).not.toHaveBeenCalled();
+                expect(keydown({ key: 'ArrowDown' }).defaultPrevented).toBe(false);
 
                 // do not move focused node if on last node
                 navService.focusedNode = allNodes[allNodes.length - 1];
-                navService.handleKeydown(mockEvent4);
+                keydown({ key: 'ArrowDown' });
                 expect(navService.focusedNode).toEqual(allNodes[allNodes.length - 1]);
             });
 
@@ -799,6 +835,8 @@ describe('IgxTree - Navigation #treeView', () => {
                         { provide: IgxTreeService, useValue: mockTreeService },
                         { provide: ElementRef, useValue: mockElementRef },
                         { provide: IgxTreeSelectionService, useValue: mockSelectionService },
+                        { provide: ChangeDetectorRef, useValue: { markForCheck: vi.fn() } },
+                        IgxKeyBindingsService,
                         IgxTreeNavigationService,
                         IgxTreeComponent
                     ]

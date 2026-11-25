@@ -1,5 +1,5 @@
-import { Directive, ElementRef, Input, booleanAttribute, inject } from '@angular/core';
-import { PlatformUtil } from 'igniteui-angular/core';
+import { DestroyRef, Directive, ElementRef, Injector, Input, booleanAttribute, inject } from '@angular/core';
+import { IgxKeyBindingsService, altKey, shiftKey, tabKey } from 'igniteui-angular/core';
 
 const NATIVELY_FOCUSABLE = [
     'a[href]',
@@ -14,14 +14,22 @@ const NATIVELY_FOCUSABLE = [
 const TABBABLE_CANDIDATES = `${NATIVELY_FOCUSABLE}, [contenteditable], [tabindex]`;
 
 @Directive({
-    selector: '[igxFocusTrap]',
-    host: {
-        '(keydown)': 'onKeydown($event)'
-    }
+    selector: '[igxFocusTrap]'
 })
 export class IgxFocusTrapDirective {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected platformUtil = inject(PlatformUtil);
+
+    /**
+     * The focus trap has its own key bindings instance. The trap can be placed on the host of a component that
+     * provides and configures the element's instance (e.g. `<igx-calendar igxFocusTrap>`), and the two must not
+     * share a configuration or bindings. The child injector resolves the element, the change detector and the
+     * rest from the directive's injector.
+     */
+    private readonly _keyBindingsInjector = Injector.create({
+        providers: [IgxKeyBindingsService],
+        parent: inject(Injector)
+    });
+    private readonly _keyBindings = this._keyBindingsInjector.get(IgxKeyBindingsService);
 
     /** @hidden */
     public get element(): HTMLElement {
@@ -39,16 +47,24 @@ export class IgxFocusTrapDirective {
     @Input({ alias: 'igxFocusTrap', transform: booleanAttribute })
     public focusTrap = true;
 
-    /** @hidden */
-    protected onKeydown(event: KeyboardEvent): void {
-        if (!this.focusTrap || event.key !== this.platformUtil.KEYMAP.TAB) {
-            return;
-        }
+    constructor() {
+        // The service removes its listeners when its injector is destroyed, which is not the directive's.
+        inject(DestroyRef).onDestroy(() => this._keyBindingsInjector.destroy());
 
+        const moveFocus = (event: KeyboardEvent) => this.moveFocus(event.shiftKey);
+
+        this._keyBindings
+            .configure({ skip: () => !this.focusTrap, bindingDefaults: { repeat: true } })
+            .set(tabKey, moveFocus)
+            .set([shiftKey, tabKey], moveFocus)
+            .set([altKey, tabKey], moveFocus)
+            .set([altKey, shiftKey, tabKey], moveFocus);
+    }
+
+    private moveFocus(backwards: boolean): void {
         const elements = this.getTabbableElements();
-        const next = elements.length ? this.getNextElement(elements, event.shiftKey) : this.element;
+        const next = elements.length ? this.getNextElement(elements, backwards) : this.element;
         next.focus();
-        event.preventDefault();
     }
 
     private getTabbableElements(): HTMLElement[] {

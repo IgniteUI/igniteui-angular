@@ -1,6 +1,20 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
-import { NAVIGATION_KEYS } from 'igniteui-angular/core';
+import {
+    IgxKeyBindingHandler,
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    asteriskKey,
+    ctrlKey,
+    endKey,
+    enterKey,
+    homeKey,
+    shiftKey,
+    spaceBar
+} from 'igniteui-angular/core';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { Subject } from 'rxjs';
@@ -10,6 +24,7 @@ import { Subject } from 'rxjs';
 export class IgxTreeNavigationService implements OnDestroy {
     private treeService = inject(IgxTreeService);
     private selectionService = inject(IgxTreeSelectionService);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     private tree!: IgxTree;
 
@@ -30,6 +45,25 @@ export class IgxTreeNavigationService implements OnDestroy {
                     this.tree.nodes.filter(e => !(this._invisibleChildren.has(e) || this._disabledChildren.has(e))) :
                     [];
         });
+
+        this._keyBindings
+            .configure({ skip: () => !this.focusedNode, bindingDefaults: { repeat: true } })
+            .set(homeKey, this.deferOnRepeat(() => this.setFocusedAndActiveNode(this.visibleChildren[0])))
+            .set(endKey, this.deferOnRepeat(() => this.setFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1])))
+            .set(arrowLeft, this.deferOnRepeat(() => this.handleArrowLeft()))
+            .set(arrowRight, this.deferOnRepeat(() => this.handleArrowRight()))
+            .set(arrowUp, this.deferOnRepeat(() => this.handleUpDownArrow(true, true)))
+            .set(arrowDown, this.deferOnRepeat(() => this.handleUpDownArrow(false, true)))
+            .set([ctrlKey, arrowUp], this.deferOnRepeat(() => this.handleUpDownArrow(true, false)))
+            .set([ctrlKey, arrowDown], this.deferOnRepeat(() => this.handleUpDownArrow(false, false)))
+            // `*` takes Shift on most keyboards, but not on the numeric keypad.
+            .set(asteriskKey, this.deferOnRepeat(() => this.handleAsterisk()))
+            .set([shiftKey, asteriskKey], this.deferOnRepeat(() => this.handleAsterisk()))
+            .set(spaceBar, this.deferOnRepeat(() => this.handleSpace(false)))
+            .set([shiftKey, spaceBar], this.deferOnRepeat(() => this.handleSpace(true)))
+            .set(enterKey, () => {
+                this.activeNode = this.focusedNode;
+            }, { preventDefault: false });
     }
 
     public register(tree: IgxTree) {
@@ -115,66 +149,20 @@ export class IgxTreeNavigationService implements OnDestroy {
         this.focusedNode = node;
     }
 
-    /** Handler for keydown events. Used in tree.component.ts */
-    public handleKeydown(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        if (!this.focusedNode) {
-            return;
-        }
-        if (!(NAVIGATION_KEYS.has(key) || key === '*')) {
-            if (key === 'enter') {
-                this.activeNode = this.focusedNode;
-            }
-            return;
-        }
-        event.preventDefault();
-        if (event.repeat) {
-            setTimeout(() => this.handleNavigation(event), 1);
-        } else {
-            this.handleNavigation(event);
-        }
-    }
-
     public ngOnDestroy() {
         this._cacheChange.next();
         this._cacheChange.complete();
     }
 
-    private handleNavigation(event: KeyboardEvent) {
-        switch (event.key.toLowerCase()) {
-            case 'home':
-                this.setFocusedAndActiveNode(this.visibleChildren[0]);
-                break;
-            case 'end':
-                this.setFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1]);
-                break;
-            case 'arrowleft':
-            case 'left':
-                this.handleArrowLeft();
-                break;
-            case 'arrowright':
-            case 'right':
-                this.handleArrowRight();
-                break;
-            case 'arrowup':
-            case 'up':
-                this.handleUpDownArrow(true, event);
-                break;
-            case 'arrowdown':
-            case 'down':
-                this.handleUpDownArrow(false, event);
-                break;
-            case '*':
-                this.handleAsterisk();
-                break;
-            case ' ':
-            case 'spacebar':
-            case 'space':
-                this.handleSpace(event);
-                break;
-            default:
-                return;
-        }
+    /** Returns a key handler that runs `action`, a tick later for a held key. */
+    private deferOnRepeat(action: () => void): IgxKeyBindingHandler {
+        return (event) => {
+            if (event.repeat) {
+                setTimeout(action, 1);
+            } else {
+                action();
+            }
+        };
     }
 
     private handleArrowLeft(): void {
@@ -207,17 +195,13 @@ export class IgxTreeNavigationService implements OnDestroy {
         }
     }
 
-    private handleUpDownArrow(isUp: boolean, event: KeyboardEvent): void {
+    private handleUpDownArrow(isUp: boolean, activate: boolean): void {
         const next = this.getVisibleNode(this.focusedNode, isUp ? -1 : 1);
         if (next === this.focusedNode) {
             return;
         }
 
-        if (event.ctrlKey) {
-            this.setFocusedAndActiveNode(next, false);
-        } else {
-            this.setFocusedAndActiveNode(next);
-        }
+        this.setFocusedAndActiveNode(next, activate);
     }
 
     private handleAsterisk(): void {
@@ -229,13 +213,13 @@ export class IgxTreeNavigationService implements OnDestroy {
         });
     }
 
-    private handleSpace(event: KeyboardEvent): void {
+    private handleSpace(selectRange: boolean): void {
         if (this.tree.selection === IgxTreeSelectionType.None) {
             return;
         }
 
         this.activeNode = this.focusedNode;
-        if (event.shiftKey) {
+        if (selectRange) {
             this.selectionService.selectMultipleNodes(this.focusedNode);
             return;
         }

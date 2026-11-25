@@ -39,7 +39,8 @@ import {
     DEFAULT_LOCALE,
     onResourceChangeHandle,
     IgxDateFormatterPipe,
-    isTree
+    isTree,
+    IgxKeyBindingsService
 } from 'igniteui-angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular/date-picker';
 
@@ -116,7 +117,8 @@ const DEFAULT_CHIP_FOCUS_DELAY = 50;
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
-        IgxQueryBuilderDragService
+        IgxQueryBuilderDragService,
+        IgxKeyBindingsService
     ],
 })
 export class IgxQueryBuilderTreeComponent implements AfterViewInit, OnDestroy {

@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, QueryList, provideZonelessChangeDetection, signal } from '@angular/core';
+import { IgxKeyBindingsService } from 'igniteui-angular/core';
 import { IgxTreeComponent } from './tree.component';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
@@ -596,7 +597,8 @@ describe('IgxTree - Selection #treeView', () => {
         let mockQuery: MockedObject<QueryList<any>>;
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const elementRef = { nativeElement: null };
+        const elementRef = { nativeElement: document.createElement('div') };
+        const mockCdr = { markForCheck: vi.fn() };
         const _mockPlatform = {
             isBrowser: vi.fn().mockName("platform.isBrowser").mockReturnValue(true),
             isServer: vi.fn().mockName("platform.isServer")
@@ -611,6 +613,8 @@ describe('IgxTree - Selection #treeView', () => {
                     { provide: IgxTreeSelectionService, useValue: selectionService },
                     { provide: IgxTreeService, useValue: treeService },
                     { provide: ElementRef, useValue: elementRef },
+                    { provide: ChangeDetectorRef, useValue: mockCdr },
+                    IgxKeyBindingsService,
                     IgxTreeNavigationService,
                     IgxTreeComponent
                 ]
@@ -659,7 +663,7 @@ describe('IgxTree - Selection #treeView', () => {
     describe('IgxTreeNode - API Tests', () => {
         let node: IgxTreeNodeComponent<any>;
         let navService: IgxTreeNavigationService;
-        const elementRef = { nativeElement: null };
+        const elementRef = { nativeElement: document.createElement('div') };
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
         const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = {
@@ -686,6 +690,7 @@ describe('IgxTree - Selection #treeView', () => {
                     { provide: IGX_TREE_COMPONENT, useValue: mockTree },
                     { provide: ChangeDetectorRef, useValue: mockCdr },
                     { provide: ElementRef, useValue: elementRef },
+                    IgxKeyBindingsService,
                     IgxTreeNodeComponent
                 ]
             });

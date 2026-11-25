@@ -35,8 +35,7 @@ describe('IgxTree #treeView', () => {
                 update_disabled_cache: vi.fn(),
                 update_visible_cache: vi.fn(),
                 init_invisible_cache: vi.fn(),
-                setFocusedAndActiveNode: vi.fn(),
-                handleKeydown: vi.fn()
+                setFocusedAndActiveNode: vi.fn()
             } as unknown as IgxTreeNavigationService;
             mockTreeService = {
                 register: vi.fn(),
@@ -137,11 +136,6 @@ describe('IgxTree #treeView', () => {
                 (tree.nodes.changes as any).next();
                 expect(mockNavService.init_invisible_cache).toHaveBeenCalledTimes(2);
                 tree.ngOnDestroy();
-            });
-            it('Should update delegate keyboard events to nav service', () => {
-                const mockEvent: any = {};
-                tree.handleKeydown(mockEvent as any);
-                expect(mockNavService.handleKeydown).toHaveBeenCalledWith(mockEvent as any);
             });
             it('Should search through nodes and return expected value w/ `findNodes`', () => {
                 tree.nodes = mockNodes;

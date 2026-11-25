@@ -2,6 +2,34 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## Unreleased
+
+### Behavioral Changes
+
+- `IgxAccordionComponent`
+    - The arrow keys, `Home` and `End` combined with `Ctrl`, `Shift` or `Meta`, and `Home` and `End` combined with `Alt`, no longer move the focus between the panel headers. The browser default runs. Previously the accordion ignored these modifiers and handled the keys as the plain keys. `Alt` + `Shift` + `ArrowUp` / `ArrowDown` still collapse or expand all panels.
+- `IgxCalendarComponent`, `IgxMonthPickerComponent`
+    - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta`, and `PageUp` and `PageDown` combined with `Ctrl`, `Alt` or `Meta`, no longer navigate or select in the dates, months or years. The browser default runs. Previously these modifiers were ignored and the keys were handled as the plain keys. `Shift` + `PageUp` / `PageDown` still move one year.
+- `IgxCarouselComponent`
+    - The arrow keys, `Home` and `End` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer change the slide from the indicators. The browser default runs. Previously the indicators ignored the modifiers and handled these keys as the plain keys.
+- `IgxDialogComponent`
+    - `Tab` combined with `Ctrl` or `Meta` no longer moves the focus inside the focus trap. The browser default runs. Previously the focus trap ignored these modifiers and handled the keys as `Tab` or `Shift` + `Tab`. Browsers and operating systems usually use these combinations themselves, so they rarely reach the page. `Option` + `Tab`, which Safari uses to move the focus to links, is still trapped.
+- `IgxQueryBuilderComponent`
+    - While a condition is dragged with the keyboard, `ArrowUp`, `ArrowDown`, `Enter`, `Space` and `Escape` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move, drop or cancel it. The browser default runs. Previously the modifiers were ignored and the keys were handled as the plain keys. `Tab` and `Shift` + `Tab` still keep the focus on the drop location.
+- `IgxRadioComponent`
+    - The native `change` event of the radio button's input no longer bubbles, as with the checkbox and the switch. The radio button emits its own `change` event.
+- `IgxRadioGroupDirective`
+    - The arrow keys combined with `Shift`, `Ctrl`, `Alt` or `Meta` are no longer handled by the radio group. The browser's native radio button navigation runs instead, so whether they move the selection depends on the browser: `Shift` + arrow keys still do in Chrome, Firefox and Safari, while `Ctrl`, `Alt` or `Meta` + arrow keys do only in Safari. Previously the radio group ignored the modifiers and handled these keys as the plain arrow keys.
+- `IgxSliderComponent`
+    - The left and right arrow keys now prevent their default action when they move a thumb, so they no longer also scroll the page or a scrollable container. Previously the default action ran as well.
+    - The arrow keys combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move a thumb. The browser default runs. Previously the thumb ignored the modifiers and handled these keys as the plain arrow keys.
+- `IgxStepperComponent`
+    - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the steps or activate a step. The step ignores them, and the browser default runs. Previously the step ignored the modifiers and handled these keys as the plain keys.
+- `IgxTabsComponent`
+    - The arrow keys, `Home`, `End`, `Enter` and `Space` combined with `Shift`, `Ctrl`, `Alt` or `Meta` no longer move the focus between the tab headers or select a tab. The tab header ignores them, and the browser default runs. Previously the tab header ignored the modifiers and handled these keys as the plain keys.
+- `IgxTreeComponent`
+    - The navigation keys combined with a modifier no longer move the focus, expand, collapse, select or activate nodes. The browser default runs. Previously the tree ignored most modifiers and handled these keys as the plain keys. `Ctrl` + `ArrowUp` / `ArrowDown` (move the focus without activating the node), `Shift` + `Space` (select a range) and `*` with or without `Shift` keep working.
+
 ## 22.3.1
 
 ### Bug Fixes

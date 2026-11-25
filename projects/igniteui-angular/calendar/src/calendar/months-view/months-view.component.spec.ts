@@ -113,6 +113,22 @@ describe('IgxMonthsView', () => {
         expect(fixture.componentInstance.model).toEqual(new Date(2020, 6, 1));
     });
 
+    it('should keep moving while an arrow key is held and select with Enter without preventing its default action', () => {
+        viewElement.focus();
+        for (const repeat of [false, true, true]) {
+            viewElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', repeat, bubbles: true }));
+        }
+        fixture.detectChanges();
+        expect(monthsView.date).toEqual(new Date(2020, 5, 1));
+
+        const enter = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true });
+        viewElement.dispatchEvent(enter);
+        fixture.detectChanges();
+
+        expect(enter.defaultPrevented).toBe(false);
+        expect(fixture.componentInstance.model).toEqual(new Date(2020, 5, 1));
+    });
+
     it('should render the Date.getMonth() value of the months when the view is not formatted', () => {
         monthsView.formatView = false;
         fixture.detectChanges();

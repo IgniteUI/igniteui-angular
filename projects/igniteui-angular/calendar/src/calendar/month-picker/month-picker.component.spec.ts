@@ -974,6 +974,82 @@ describe('IgxMonthPicker', () => {
         expect(monthPicker.viewDate.getFullYear()).toBe(2019);
     });
 
+    it('should move one year with PageUp/PageDown pressed outside the months', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        await fixture.whenStable();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const year = monthPicker.viewDate.getFullYear();
+        const button = document.createElement('button');
+        fixture.debugElement.query(By.css('igx-month-picker')).nativeElement.prepend(button);
+        button.focus();
+
+        const pageDown = new KeyboardEvent('keydown', { key: 'PageDown', bubbles: true, cancelable: true });
+        button.dispatchEvent(pageDown);
+        fixture.detectChanges();
+        expect(pageDown.defaultPrevented).toBe(true);
+        expect(monthPicker.viewDate.getFullYear()).toBe(year + 1);
+
+        button.dispatchEvent(new KeyboardEvent('keydown', { key: 'PageUp', bubbles: true, cancelable: true }));
+        fixture.detectChanges();
+        expect(monthPicker.viewDate.getFullYear()).toBe(year);
+
+        // Shift + PageUp/PageDown move one year only from the months
+        const shiftPageDown = new KeyboardEvent('keydown', { key: 'PageDown', shiftKey: true, bubbles: true, cancelable: true });
+        button.dispatchEvent(shiftPageDown);
+        fixture.detectChanges();
+        expect(shiftPageDown.defaultPrevented).toBe(false);
+        expect(monthPicker.viewDate.getFullYear()).toBe(year);
+    });
+
+    it('should keep the keys that the months handle from a keydown listener on the month picker', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+        // ngModel writes the initial value asynchronously
+        await fixture.whenStable();
+
+        const hostKeys: string[] = [];
+        fixture.debugElement.query(By.css('igx-month-picker')).nativeElement
+            .addEventListener('keydown', (event: KeyboardEvent) => hostKeys.push(event.key));
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        wrapper.focus();
+
+        for (const key of ['ArrowRight', 'ArrowDown', 'Home', 'End', 'PageDown', 'PageUp', 'Enter']) {
+            UIInteractions.triggerKeyDownEvtUponElem(key, wrapper);
+            fixture.detectChanges();
+        }
+
+        expect(hostKeys).toEqual([]);
+    });
+
+    it('should ignore the navigation keys pressed with Ctrl, Alt or Meta', async () => {
+        const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
+        fixture.detectChanges();
+
+        await fixture.whenStable();
+
+        const monthPicker = fixture.componentInstance.monthPicker;
+        const { viewDate, value } = monthPicker;
+        const wrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+        wrapper.focus();
+        fixture.detectChanges();
+        const activeDescendant = wrapper.getAttribute('aria-activedescendant');
+
+        for (const modifier of ['altKey', 'ctrlKey', 'metaKey'] as const) {
+            for (const key of ['ArrowRight', 'ArrowDown', 'Home', 'End', 'PageDown', 'Enter']) {
+                wrapper.dispatchEvent(new KeyboardEvent('keydown', { key, [modifier]: true, bubbles: true }));
+                fixture.detectChanges();
+
+                expect(wrapper.getAttribute('aria-activedescendant'), `${modifier} + ${key}`).toBe(activeDescendant);
+                expect(monthPicker.viewDate, `${modifier} + ${key}`).toEqual(viewDate);
+                expect(monthPicker.value, `${modifier} + ${key}`).toEqual(value);
+                expect(document.activeElement, `${modifier} + ${key}`).toBe(wrapper);
+            }
+        }
+    });
+
     it('should render the years without formatting when the year view is not formatted', () => {
         const fixture = TestBed.createComponent(IgxMonthPickerSampleComponent);
         fixture.detectChanges();

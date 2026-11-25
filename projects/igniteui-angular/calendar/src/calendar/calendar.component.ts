@@ -14,6 +14,7 @@ import {
     ChangeDetectionStrategy,
     ViewEncapsulation,
     TemplateRef,
+    inject,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -33,9 +34,25 @@ import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { IgxMonthViewSlotsCalendar, IgxGetViewDateCalendar } from './months-view.pipe';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxCalendarBaseDirective } from './calendar-base';
-import { KeyboardNavigationService } from './calendar.services';
 import { getDateFormatter } from 'igniteui-i18n-core';
-import { areSameMonth, CalendarDay, formatToParts, getClosestActiveDate, isDateInRanges, IgxDateFormatterPipe } from 'igniteui-angular/core';
+import {
+    areSameMonth,
+    CalendarDay,
+    formatToParts,
+    getClosestActiveDate,
+    isDateInRanges,
+    IgxDateFormatterPipe,
+    IgxKeyBindingsService,
+    arrowDown,
+    arrowLeft,
+    arrowRight,
+    arrowUp,
+    endKey,
+    homeKey,
+    pageDownKey,
+    pageUpKey,
+    shiftKey
+} from 'igniteui-angular/core';
 
 let NEXT_ID = 0;
 
@@ -66,10 +83,7 @@ let NEXT_ID = 0;
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxCalendarComponent,
         },
-        {
-            multi: false,
-            provide: KeyboardNavigationService,
-        },
+        IgxKeyBindingsService
     ],
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html',
@@ -89,6 +103,8 @@ let NEXT_ID = 0;
     ]
 })
 export class IgxCalendarComponent extends IgxCalendarBaseDirective implements AfterViewInit {
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
+
     /**
      * @hidden
      * @internal
@@ -514,19 +530,29 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         this._activeDescendant = date.getTime();
     }
 
+    constructor() {
+        super();
+        this._keyBindings
+            .configure({
+                skip: (_target, event) => !this.isWrapperEvent(event),
+                bindingDefaults: { preventDefault: false, repeat: true }
+            })
+            .set(arrowUp, (event) => this.onArrowUp(event))
+            .set(arrowDown, (event) => this.onArrowDown(event))
+            .set(arrowLeft, (event) => this.onArrowLeft(event))
+            .set(arrowRight, (event) => this.onArrowRight(event))
+            .setActivateHandler((event) => this.onEnter(event))
+            .set(homeKey, (event) => this.onHome(event))
+            .set(endKey, (event) => this.onEnd(event))
+            .set(pageUpKey, (event) => this.handlePageUp(event))
+            .set(pageDownKey, (event) => this.handlePageDown(event))
+            .set([shiftKey, pageUpKey], (event) => this.handlePageUp(event))
+            .set([shiftKey, pageDownKey], (event) => this.handlePageDown(event));
+    }
+
     public ngAfterViewInit() {
-        this.keyboardNavigation!
-            .attachKeyboardHandlers(this.wrapper, this)
-            .set("ArrowUp", this.onArrowUp)
-            .set("ArrowDown", this.onArrowDown)
-            .set("ArrowLeft", this.onArrowLeft)
-            .set("ArrowRight", this.onArrowRight)
-            .set("Enter", this.onEnter)
-            .set(" ", this.onEnter)
-            .set("Home", this.onHome)
-            .set("End", this.onEnd)
-            .set("PageUp", this.handlePageUp)
-            .set("PageDown", this.handlePageDown);
+        // The wrapper lives as long as the calendar; the service removes its listeners on destroy.
+        this._keyBindings.observeElement(this.wrapper.nativeElement);
 
         this.activeView$.subscribe((view) => {
             this.activeViewChanged.emit(view);
@@ -535,10 +561,6 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
                 previousValue: this.previousViewDate,
                 currentValue: this.viewDate
             });
-        });
-
-        this._destroyRef.onDestroy(() => {
-            this.keyboardNavigation!.detachKeyboardHandlers();
         });
     }
 
@@ -551,6 +573,10 @@ export class IgxCalendarComponent extends IgxCalendarBaseDirective implements Af
         this.showActiveDay = false;
         this.monthViews.forEach(view => view.clearPreviewRange());
         this._onTouchedCallback();
+    }
+
+    private isWrapperEvent(event: KeyboardEvent): boolean {
+        return !!this.wrapper && event.currentTarget === this.wrapper.nativeElement;
     }
 
     private handleArrowKeydown(event: KeyboardEvent, delta: number) {

@@ -27,7 +27,21 @@ import {
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CarouselResourceStringsEN, ICarouselResourceStrings, IgxGestureEvent, isLeftToRight } from 'igniteui-angular/core';
-import { first, IBaseEventArgs, IgxTouchManager, last, PlatformUtil } from 'igniteui-angular/core';
+import {
+    arrowLeft,
+    arrowRight,
+    endKey,
+    first,
+    homeKey,
+    IBaseEventArgs,
+    IgxKeyBindingObserver,
+    IgxKeyBindingsService,
+    IgxTouchManager,
+    last,
+    PlatformUtil,
+    shiftKey,
+    tabKey
+} from 'igniteui-angular/core';
 import { CarouselAnimationDirection, IgxCarouselComponentBase } from './carousel-base';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { IgxSlideComponent } from './slide.component';
@@ -67,12 +81,14 @@ const GESTURE_THRESHOLD = 5;
     styleUrl: 'carousel.component.css',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
+    providers: [IgxKeyBindingsService],
     imports: [IgxButtonDirective, IgxIconComponent, NgClass, NgTemplateOutlet]
 })
 export class IgxCarouselComponent extends IgxCarouselComponentBase implements DoCheck, OnDestroy, AfterContentInit {
     private element = inject(ElementRef);
     private iterableDiffers = inject(IterableDiffers);
     private platformUtil = inject(PlatformUtil);
+    private readonly _keyBindings = inject(IgxKeyBindingsService);
 
     /**
      * Sets the `id` of the carousel.
@@ -396,6 +412,17 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
     @ViewChildren('indicators', { read: ElementRef })
     private _indicators!: QueryList<ElementRef<HTMLDivElement>>;
 
+    /** The indicators are rendered conditionally, so their key events are observed while they exist. */
+    @ViewChild('indicatorsContainer')
+    private set indicatorsContainer(container: ElementRef<HTMLElement> | undefined) {
+        this._indicatorsObserver?.unsubscribe();
+        this._indicatorsContainer = container?.nativeElement;
+        this._indicatorsObserver = this._indicatorsContainer && this._keyBindings.observeElement(this._indicatorsContainer);
+    }
+
+    private _indicatorsContainer?: HTMLElement;
+    private _indicatorsObserver?: IgxKeyBindingObserver;
+
     /**
      * @hidden
      * @internal
@@ -580,6 +607,20 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
             this._defaultResourceStrings = getCurrentResourceStrings(CarouselResourceStringsEN, false);
             this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
         }, this);
+
+        this._keyBindings
+            .configure({
+                skip: (_target, event) => event.currentTarget !== this._indicatorsContainer,
+                bindingDefaults: { repeat: true }
+            })
+            .set(arrowLeft, () => this.selectInReadingDirection(false), { preventDefault: false })
+            .set(arrowRight, () => this.selectInReadingDirection(true), { preventDefault: false })
+            .set(homeKey, () => this.selectEdgeInReadingDirection(false))
+            .set(endKey, () => this.selectEdgeInReadingDirection(true))
+            // Autoplay can change the slide while the focus is on another indicator, so the
+            // browser moves the focus from the current indicator, out of the indicators.
+            .set(tabKey, () => this.focusCurrentIndicator(), { preventDefault: false })
+            .set([shiftKey, tabKey], () => this.focusCurrentIndicator(), { preventDefault: false });
     }
 
     /** @hidden */
@@ -768,32 +809,6 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
     /** @hidden */
     public handleClick(): void {
         this._hasKeyboardFocusOnIndicators = false;
-    }
-
-    /** @hidden */
-    public handleKeydown(event: KeyboardEvent): void {
-        const { key } = event;
-        const slides = this.slides.toArray();
-        const isRTL = !isLeftToRight(this.nativeElement);
-
-        switch (key) {
-            case this.platformUtil.KEYMAP.ARROW_LEFT:
-                isRTL ? this.next() : this.prev();
-                break;
-            case this.platformUtil.KEYMAP.ARROW_RIGHT:
-                isRTL ? this.prev() : this.next();
-                break;
-            case this.platformUtil.KEYMAP.HOME:
-                event.preventDefault();
-                this.select(isRTL ? last(slides) : first(slides));
-                break;
-            case this.platformUtil.KEYMAP.END:
-                event.preventDefault();
-                this.select(isRTL ? first(slides) : last(slides));
-                break;
-        }
-
-        this.indicatorsElements[this.current].nativeElement.focus();
     }
 
     /**
@@ -1095,6 +1110,27 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements Do
 
     private get indicatorsElements() {
         return this._indicators.toArray();
+    }
+
+    /** Selects the next or the previous slide in the reading direction and focuses its indicator. */
+    private selectInReadingDirection(next: boolean): void {
+        if (next === isLeftToRight(this.nativeElement)) {
+            this.next();
+        } else {
+            this.prev();
+        }
+        this.focusCurrentIndicator();
+    }
+
+    /** Selects the last or the first slide in the reading direction and focuses its indicator. */
+    private selectEdgeInReadingDirection(end: boolean): void {
+        const slides = this.slides.toArray();
+        this.select(end === isLeftToRight(this.nativeElement) ? last(slides) : first(slides));
+        this.focusCurrentIndicator();
+    }
+
+    private focusCurrentIndicator(): void {
+        this.indicatorsElements[this.current].nativeElement.focus();
     }
 
     private getIndicatorsClass(): string {

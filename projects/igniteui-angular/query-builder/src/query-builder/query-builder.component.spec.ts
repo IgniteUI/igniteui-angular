@@ -3584,9 +3584,9 @@ describe('IgxQueryBuilder', () => {
             const dropGhostContent = QueryBuilderFunctions.GetChipsContentAsArray(fix)[1];
 
             //pass 1 down to bottom
-            let keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+            let key = 'ArrowDown';
             for (let i = 0; i <= 5; i++) {
-                tree.nativeElement.dispatchEvent(keyPress);
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
                 await fix.whenStable();
                 fix.detectChanges();
 
@@ -3621,9 +3621,9 @@ describe('IgxQueryBuilder', () => {
             }
 
             //pass 2 up to top
-            keyPress = new KeyboardEvent('keydown', { key: 'ArrowUp' });
+            key = 'ArrowUp';
             for (let i = 0; i <= 10; i++) {
-                tree.nativeElement.dispatchEvent(keyPress);
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
                 await fix.whenStable();
                 fix.detectChanges();
 
@@ -3664,9 +3664,9 @@ describe('IgxQueryBuilder', () => {
             }
 
             //pass 3 down to bottom again
-            keyPress = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+            key = 'ArrowDown';
             for (let i = 0; i <= 10; i++) {
-                tree.nativeElement.dispatchEvent(keyPress);
+                tree.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key }));
                 await fix.whenStable();
                 fix.detectChanges();
 
@@ -3889,6 +3889,57 @@ describe('IgxQueryBuilder', () => {
             chipComponents = QueryBuilderFunctions.getVisibleChips(fix);
             expect(QueryBuilderFunctions.getChipContent(chipComponents[2].nativeElement)).toBe("OrderName  Ends With  a");
             expect(QueryBuilderFunctions.getChipContent(chipComponents[3].nativeElement)).toBe("OrderDate  Today");
+        });
+
+        describe('Keyboard drag keys', () => {
+            let tree: HTMLElement;
+            const chipTexts = () => QueryBuilderFunctions.getVisibleChips(fix)
+                .map(chip => QueryBuilderFunctions.getChipContent(chip.nativeElement));
+            const pressKey = async (key: string, init?: KeyboardEventInit) => {
+                const event = new KeyboardEvent('keydown', { key, cancelable: true, ...init });
+                tree.dispatchEvent(event);
+                await fix.whenStable();
+                fix.detectChanges();
+                return event;
+            };
+
+            beforeEach(async () => {
+                const draggedIndicator = fix.debugElement.queryAll(By.css('.igx-drag-indicator'))[4];
+                tree = fix.debugElement.query(By.css('.igx-filter-tree')).nativeElement;
+                draggedIndicator.triggerEventHandler('focus', {});
+                draggedIndicator.nativeElement.focus();
+
+                await pressKey('ArrowDown');
+                expect(QueryBuilderFunctions.getDropGhost(fix)).not.toBeNull();
+            });
+
+            it('Should prevent a held arrow key but move the drop ghost only once.', async () => {
+                const afterFirstMove = chipTexts();
+
+                const repeated = await pressKey('ArrowDown', { repeat: true });
+
+                expect(repeated.defaultPrevented).toBe(true);
+                expect(chipTexts()).toEqual(afterFirstMove);
+            });
+
+            it('Should keep Tab and Shift + Tab from moving the focus away from the drop ghost.', async () => {
+                expect((await pressKey('Tab')).defaultPrevented).toBe(true);
+                expect((await pressKey('Tab', { shiftKey: true })).defaultPrevented).toBe(true);
+            });
+
+            it('Should not move or drop the drop ghost with the keys pressed with a modifier.', async () => {
+                const afterFirstMove = chipTexts();
+
+                for (const modifier of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'] as const) {
+                    for (const key of ['ArrowDown', 'ArrowUp', 'Enter', ' ']) {
+                        const event = await pressKey(key, { [modifier]: true });
+
+                        expect(event.defaultPrevented, `${modifier} + ${key}`).toBe(false);
+                        expect(chipTexts(), `${modifier} + ${key}`).toEqual(afterFirstMove);
+                        expect(QueryBuilderFunctions.getDropGhost(fix), `${modifier} + ${key}`).not.toBeNull();
+                    }
+                }
+            });
         });
 
         it('Should ignore drag events while no drag operation is in progress.', () => {
