@@ -272,6 +272,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
                 });
             }
         }
+
+        this.cdr.markForCheck();
     }
 
     private triggerPanelAnimations(oldSelectedIndex: number) {

@@ -1,6 +1,6 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, AfterViewInit, QueryList, inject, ChangeDetectionStrategy, provideCheckNoChangesConfig, provideZonelessChangeDetection, signal, viewChild } from '@angular/core';
 import { IgxChildGridRowComponent, IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -37,7 +37,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
                 IgxHierarchicalGridCustomTemplateComponent,
                 IgxHierarchicalGridCustomFilteringTemplateComponent,
                 IgxHierarchicalGridToggleRIAndColsComponent,
-                IgxHierarchicalGridMCHComponent
+                IgxHierarchicalGridMCHComponent,
+                IgxHierarchicalGridAutosizeFilteringComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -781,6 +782,51 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             const childGrids = hierarchicalGrid.gridAPI.getChildGrids(false) as IgxHierarchicalGridComponent[];
             expect(childGrids[0].height).toBe('200px');
             expect(childGrids[1].height).toBe('200px');
+        });
+
+        it('should hide child row editing overlay when parent scroll moves child row out of view', () => {
+            hierarchicalGrid.getRowByIndex(0).expanded = true;
+            fixture.detectChanges();
+
+            const childGrid = hierarchicalGrid.gridAPI.getChildGrids()[0] as IgxHierarchicalGridComponent;
+            childGrid.primaryKey = 'ID';
+            childGrid.rowEditable = true;
+            fixture.detectChanges();
+
+            const row = childGrid.gridAPI.get_row_by_index(0);
+            spyOnProperty(childGrid.crudService, 'rowInEditMode', 'get').and.returnValue(row);
+            childGrid.openRowOverlay(row.key);
+            fixture.detectChanges();
+
+            expect(childGrid.rowEditingOverlay.collapsed).toBeFalse();
+
+            const parentTbody = hierarchicalGrid.tbody.nativeElement.parentElement;
+            const childTbody = childGrid.tbody.nativeElement.parentElement;
+            const overlayContent = childGrid.rowEditingOverlay.element.parentElement;
+
+            parentTbody.style.overflow = 'hidden';
+            childTbody.style.overflow = 'hidden';
+            spyOn(parentTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childTbody, 'getBoundingClientRect').and.returnValue({
+                top: 0, right: 500, bottom: 200, left: 0
+            } as DOMRect);
+            spyOn(childGrid.tbody.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -100, right: 500, bottom: 500, left: 0
+            } as DOMRect);
+            spyOn(row.nativeElement, 'getBoundingClientRect').and.returnValue({
+                top: -120, right: 500, bottom: -80, left: 0
+            } as DOMRect);
+            spyOn(overlayContent, 'getBoundingClientRect').and.returnValue({
+                top: -80, right: 500, bottom: -32, left: 0, width: 500, height: 48
+            } as DOMRect);
+
+            childGrid.rowEditingOverlay.reposition();
+            fixture.detectChanges();
+
+            expect(overlayContent.style.clipPath).toBe('inset(100%)');
+            expect(overlayContent.style.pointerEvents).toBe('none');
         });
 
         it('Should apply runtime option changes to all related child grids (both existing and not yet initialized).', () => {
@@ -1865,6 +1911,35 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             fixture.detectChanges();
             expect(hierarchicalGrid.childLayoutList.length).toBe(1);
         }));
+
+        describe('in zoneless change detection', () => {
+            beforeEach(() => {
+                TestBed.configureTestingModule({
+                    imports: [IgxHierarchicalGridReplaceColumnsComponent],
+                    providers: [provideZonelessChangeDetection(), provideCheckNoChangesConfig({ exhaustive: true })]
+                });
+            });
+
+            it('should size replaced root columns when there are no root summaries', async () => {
+                const fix = TestBed.createComponent(IgxHierarchicalGridReplaceColumnsComponent);
+                const host = fix.componentInstance;
+                await fix.whenStable();
+                const grid = host.hgrid();
+
+                host.data.set(host.makeData(1));
+                host.columns.set(host.makeColumns(1));
+                await fix.whenStable();
+                const title = grid.nativeElement.querySelector('igx-grid-header .igx-grid-th__title');
+                expect(title.textContent.trim()).toBe('G1 C0');
+                const hScroll = grid.headerContainer.getScroll() as HTMLElement;
+                expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(30 * 140);
+
+                host.columns.set(host.makeColumns(2).slice(0, 20));
+                await fix.whenStable();
+                expect(grid.nativeElement.getAttribute('aria-colcount')).toBe('20');
+                expect(parseFloat((hScroll.firstElementChild as HTMLElement).style.width)).toBe(20 * 180);
+            });
+        });
     });
 
     describe('IgxHierarchicalGrid custom template #hGrid', () => {
@@ -1983,6 +2058,130 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
             expect(fixture.componentInstance.pinnedArgs).toBeDefined();
             expect(fixture.componentInstance.pinnedArgs.args).toBeTrue();
         });
+    });
+
+    describe('IgxHierarchicalGrid Column Autosizing #hGrid', () => {
+        type AutosizeMode = 'autosize' | 'autosizeByHeader' | 'dblclick';
+        type AutosizeFixture = ComponentFixture<IgxHierarchicalGridAutosizeFilteringComponent>;
+
+        const AUTOSIZE_MODES: AutosizeMode[] = ['autosize', 'autosizeByHeader', 'dblclick'];
+        const AUTOSIZED_FIELDS = ['ID', 'ProductName'];
+        const INITIAL_WIDTH = 250;
+        const NARROW_WIDTH = '100px';
+        // snaps the 1px header border to 0.8px, like 125% display scaling
+        const FRACTIONAL_ZOOM = '1.25';
+
+        const createAutosizeHGrid = (allowFiltering: boolean, zoom = ''): AutosizeFixture => {
+            const fix = TestBed.createComponent(IgxHierarchicalGridAutosizeFilteringComponent);
+            if (zoom) {
+                fix.nativeElement.style.zoom = zoom;
+            }
+            fix.componentInstance.allowFiltering = allowFiltering;
+            fix.detectChanges();
+            tick(16);
+            fix.detectChanges();
+            return fix;
+        };
+
+        const getRootGrid = (fix: AutosizeFixture): IgxHierarchicalGridComponent => fix.componentInstance.hgrid;
+
+        const expandFirstChildGrid = (fix: AutosizeFixture): IgxHierarchicalGridComponent => {
+            const rootGrid = fix.componentInstance.hgrid;
+            rootGrid.expandRow(rootGrid.dataRowList.first.key);
+            fix.detectChanges();
+            tick(16);
+            fix.detectChanges();
+            return rootGrid.gridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+        };
+
+        const getWidths = (grid: IgxHierarchicalGridComponent): string[] =>
+            AUTOSIZED_FIELDS.map(field => grid.getColumnByName(field).width);
+
+        const setWidths = (fix: AutosizeFixture, grid: IgxHierarchicalGridComponent, width: string) => {
+            AUTOSIZED_FIELDS.forEach(field => {
+                grid.getColumnByName(field).width = width;
+            });
+            fix.detectChanges();
+        };
+
+        const autosizeColumns = (fix: AutosizeFixture, grid: IgxHierarchicalGridComponent, mode: AutosizeMode): string[] => {
+            AUTOSIZED_FIELDS.forEach(field => {
+                if (mode === 'dblclick') {
+                    const header = GridFunctions.getColumnHeader(field, fix, grid);
+                    UIInteractions.simulateMouseEvent('dblclick', GridFunctions.getHeaderResizeArea(header).nativeElement, 0, 0);
+                    tick(200);
+                } else {
+                    grid.getColumnByName(field).autosize(mode === 'autosizeByHeader');
+                }
+                fix.detectChanges();
+            });
+            return getWidths(grid);
+        };
+
+        const getFilteringCell = (fix: AutosizeFixture, grid: IgxHierarchicalGridComponent, field: string): HTMLElement =>
+            GridFunctions.getColumnHeader(field, fix, grid).parent.query(By.css('igx-grid-filtering-cell')).nativeElement;
+
+        // the chips area shrinks with the cell, so overflowing chips reach the cell padding before the cell overflows
+        const overflowsContentBox = (cell: HTMLElement) =>
+            [cell, cell.querySelector<HTMLElement>('igx-chips-area')].some(element => !!element && element.scrollWidth - element.clientWidth > 1);
+
+        /**
+         * Compares autosizing the root or child grid with and without quick filtering. Each grid is measured before
+         * the next one is created, as creating a fixture detaches the previous one.
+         */
+        const verifyAutosizeWithFilteringCells = (getGrid: (fix: AutosizeFixture) => IgxHierarchicalGridComponent, zoom = '') => {
+            AUTOSIZE_MODES.forEach(mode => {
+                const context = `${mode}, zoom: ${zoom || 1}`;
+
+                const referenceFix = createAutosizeHGrid(false, zoom);
+                const referenceGrid = getGrid(referenceFix);
+                const reference = autosizeColumns(referenceFix, referenceGrid, mode);
+                reference.forEach(width =>
+                    expect(parseFloat(width)).withContext(`${context}, without filtering`).toBeLessThan(INITIAL_WIDTH));
+                // autosizing from the narrow width has to widen the Product column
+                expect(parseFloat(reference[AUTOSIZED_FIELDS.indexOf('ProductName')])).withContext(context)
+                    .toBeGreaterThan(parseFloat(NARROW_WIDTH));
+                expect(autosizeColumns(referenceFix, referenceGrid, mode)).withContext(`${context}, without filtering`).toEqual(reference);
+                setWidths(referenceFix, referenceGrid, NARROW_WIDTH);
+                expect(autosizeColumns(referenceFix, referenceGrid, mode)).withContext(`${context}, without filtering, from ${NARROW_WIDTH}`)
+                    .toEqual(reference);
+
+                const fix = createAutosizeHGrid(true, zoom);
+                const grid = getGrid(fix);
+                expect(getWidths(grid)).withContext(context).toEqual(AUTOSIZED_FIELDS.map(() => `${INITIAL_WIDTH}px`));
+                const widths = autosizeColumns(fix, grid, mode);
+                for (let i = 2; i <= 3; i++) {
+                    expect(autosizeColumns(fix, grid, mode)).withContext(`${context}, with filtering, call ${i}`).toEqual(widths);
+                }
+                AUTOSIZED_FIELDS.forEach((field, i) => {
+                    const fieldContext = `${context}, with filtering, ${field}`;
+                    const columnWidth = grid.getColumnByName(field).width;
+                    const filteringCell = getFilteringCell(fix, grid, field);
+                    expect(parseFloat(widths[i])).withContext(fieldContext).toBeLessThan(INITIAL_WIDTH);
+                    expect(parseFloat(widths[i])).withContext(fieldContext).toBeGreaterThanOrEqual(parseFloat(reference[i]));
+                    expect(overflowsContentBox(filteringCell)).withContext(`${fieldContext}, filtering cell overflows`).toBeFalse();
+                    expect(GridFunctions.getColumnHeader(field, fix, grid).nativeElement.style.width)
+                        .withContext(`${fieldContext}, header width`).toBe(columnWidth);
+                    expect(filteringCell.style.width).withContext(`${fieldContext}, filtering cell width`).toBe(columnWidth);
+                });
+
+                setWidths(fix, grid, NARROW_WIDTH);
+                expect(autosizeColumns(fix, grid, mode)).withContext(`${context}, with filtering, from ${NARROW_WIDTH}`).toEqual(widths);
+            });
+        };
+
+        it('should autosize root grid columns to their content when filtering is enabled.', fakeAsync(() => {
+            verifyAutosizeWithFilteringCells(getRootGrid);
+        }));
+
+        it('should autosize child grid columns to their content when filtering is enabled.', fakeAsync(() => {
+            verifyAutosizeWithFilteringCells(expandFirstChildGrid);
+        }));
+
+        it('should not grow root and child grid columns on repeated autosizing with fractional CSS zoom when filtering is enabled.', fakeAsync(() => {
+            verifyAutosizeWithFilteringCells(getRootGrid, FRACTIONAL_ZOOM);
+            verifyAutosizeWithFilteringCells(expandFirstChildGrid, FRACTIONAL_ZOOM);
+        }));
     });
 });
 
@@ -2566,5 +2765,65 @@ export class IgxHierarchicalGridMissingChildDataComponent {
         { root1: 1, root2: 1, level1data: [{ level1child1: 11, level1child2: 12 }] }, // missing level2data
         { root1: 2, root2: 2, level1data: [{ level1child1: 21, level1child2: 22, level2data: [{ level2child1: 31, level2child2: 32 }] }] },
         { root1: 3, root2: 3, level1data: [] }
+    ];
+}
+
+@Component({
+    template: `
+    <div style="width: 1000px; height: 600px">
+        <igx-hierarchical-grid #hgrid [data]="data()" [width]="width()" height="500px" primaryKey="id"
+            summaryCalculationMode="childLevelsOnly">
+            @for (col of columns(); track col.key) {
+                <igx-column [field]="col.field" [header]="col.header" [width]="col.width"></igx-column>
+            }
+        </igx-hierarchical-grid>
+    </div>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class IgxHierarchicalGridReplaceColumnsComponent {
+    public hgrid = viewChild.required<IgxHierarchicalGridComponent>('hgrid');
+    public data = signal(this.makeData(0));
+    public columns = signal(this.makeColumns(0));
+    public width = signal<string | null>('800px');
+
+    public makeColumns(gen: number) {
+        return Array.from({ length: 30 }, (_, i) =>
+            ({ key: `g${gen}c${i}`, field: `f${i}`, header: `G${gen} C${i}`, width: `${100 + gen * 40}px` }));
+    }
+
+    public makeData(gen: number) {
+        return Array.from({ length: 1000 }, (_, r) => {
+            const row: Record<string, any> = { id: r };
+            for (let c = 0; c < 30; c++) {
+                row[`f${c}`] = `g${gen} r${r} c${c}`;
+            }
+            return row;
+        });
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [primaryKey]="'ID'"
+        [height]="'600px'" [width]="'800px'" [allowFiltering]="allowFiltering">
+        <igx-column field="ID" header="ID" dataType="number" width="250px" [resizable]="true"></igx-column>
+        <igx-column field="ProductName" header="Product" width="250px" [sortable]="true" [resizable]="true"></igx-column>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" [primaryKey]="'ID'" [allowFiltering]="allowFiltering">
+            <igx-column field="ID" header="ID" dataType="number" width="250px" [resizable]="true"></igx-column>
+            <igx-column field="ProductName" header="Product" width="250px" [sortable]="true" [resizable]="true"></igx-column>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    imports: [IgxHierarchicalGridComponent, IgxColumnComponent, IgxRowIslandComponent]
+})
+export class IgxHierarchicalGridAutosizeFilteringComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    public allowFiltering = true;
+    public data: any[] = [
+        { ID: 1, ProductName: 'Product A', childData: [{ ID: 11, ProductName: 'Product A1' }, { ID: 12, ProductName: 'Product A2' }] },
+        { ID: 2, ProductName: 'Product B', childData: [{ ID: 21, ProductName: 'Product B1' }] },
+        { ID: 3, ProductName: 'Product C', childData: [{ ID: 31, ProductName: 'Product C1' }] }
     ];
 }

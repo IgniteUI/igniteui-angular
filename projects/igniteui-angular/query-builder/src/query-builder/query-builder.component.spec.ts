@@ -1,5 +1,5 @@
 import { waitForAsync, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand } from 'igniteui-angular/core';
+import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IgxDateFilteringOperand, IgxNumberFilteringOperand, QueryBuilderResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxChipComponent } from 'igniteui-angular/chips';
 import { IgxComboComponent } from 'igniteui-angular/combo';
 import { IgxIconComponent } from 'igniteui-angular/icon';
@@ -27,6 +27,7 @@ describe('IgxQueryBuilder', () => {
         NoopAnimationsModule,
         IgxQueryBuilderComponent,
         IgxQueryBuilderSampleTestComponent,
+        IgxQueryBuilderInFormSampleTestComponent,
         IgxQueryBuilderCustomTemplateSampleTestComponent,
         IgxComboComponent
       ]
@@ -111,6 +112,32 @@ describe('IgxQueryBuilder', () => {
       for (const button of buttons) {
         ControlsFunction.verifyButtonIsDisabled(button as HTMLElement, false);
       }
+    }));
+
+    it('Should mark the condition of a unary expression chip with the unary modifier class.', fakeAsync(() => {
+      const tree = QueryBuilderFunctions.generateExpressionTree();
+      tree.filteringOperands.push({
+        fieldName: 'OrderDate',
+        condition: IgxDateFilteringOperand.instance().condition('today'),
+        conditionName: 'today'
+      });
+      queryBuilder.expressionTree = tree;
+      fix.detectChanges();
+
+      const conditionSelector = '.igx-filter-tree__expression-condition';
+      const unaryClass = 'igx-filter-tree__expression-condition--unary';
+
+      // 'OrderId Greater Than 3' takes a value, so the condition is followed by the chip content.
+      const valuedChip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [1]);
+      QueryBuilderFunctions.verifyExpressionChipContent(fix, [1], 'OrderId', 'Greater Than', '3');
+      expect(valuedChip.querySelector(conditionSelector)).not.toHaveClass(unaryClass);
+      expect(valuedChip.querySelector('.igx-chip__content').textContent.trim()).toBe('3');
+
+      // 'OrderDate Today' takes no value, so the condition is the last text in the chip.
+      const unaryChip = QueryBuilderFunctions.getQueryBuilderTreeExpressionChip(fix, [3]);
+      QueryBuilderFunctions.verifyExpressionChipContent(fix, [3], 'OrderDate', 'Today');
+      expect(unaryChip.querySelector(conditionSelector)).toHaveClass(unaryClass);
+      expect(unaryChip.querySelector('.igx-chip__content').textContent.trim()).toBe('');
     }));
 
     it('Should render combo for main entity return fields and select for nested entity return field.', fakeAsync(() => {
@@ -1073,6 +1100,37 @@ describe('IgxQueryBuilder', () => {
       fix.detectChanges();
       expect(QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]))
         .toBeNull('actions container is visible');
+    }));
+
+    it('Should render the add expression and group buttons with type="button" to prevent form submission.', fakeAsync(() => {
+      queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      fix.detectChanges();
+
+      UIInteractions.hoverElement(QueryBuilderFunctions.getQueryBuilderTreeItem(fix, [0]) as HTMLElement);
+      tick(50);
+      fix.detectChanges();
+
+      const addButton = QueryBuilderFunctions.getQueryBuilderTreeExpressionActionsContainer(fix, [0]).querySelector('button');
+      const groupButton = fix.nativeElement.querySelector('button.igx-filter-tree__button--and, button.igx-filter-tree__button--or');
+      expect(addButton.getAttribute('type')).toBe('button');
+      expect(groupButton.getAttribute('type')).toBe('button');
+    }));
+
+    it('Should prevent the implicit submission of a surrounding form on Enter in the value input.', fakeAsync(() => {
+      const formFix = TestBed.createComponent(IgxQueryBuilderInFormSampleTestComponent);
+      formFix.detectChanges();
+      formFix.componentInstance.queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTree();
+      formFix.detectChanges();
+
+      QueryBuilderFunctions.clickQueryBuilderTreeExpressionChip(formFix, [0]);
+      tick(50);
+      formFix.detectChanges();
+
+      const input = QueryBuilderFunctions.getQueryBuilderValueInput(formFix).querySelector('input');
+      expect(input.form).toBe(formFix.nativeElement.querySelector('form'));
+      const event = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true, composed: true });
+      input.dispatchEvent(event);
+      expect(event.defaultPrevented).toBeTrue();
     }));
 
     it('Should have disabled adding buttons when an expression is in edit mode.', fakeAsync(() => {
@@ -3232,6 +3290,33 @@ describe('IgxQueryBuilder', () => {
     }));
 
   });
+
+  describe('Resource Strings', () => {
+    it('should return full resource strings when partial resourceStrings are set', () => {
+        queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Pick date' };
+        fix.detectChanges();
+
+        expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Pick date');
+        expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('And');
+        expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+    });
+
+    it('should update non-overridden resource strings when global i18n changes', () => {
+        queryBuilder.resourceStrings = { igx_query_builder_date_placeholder: 'Custom date' };
+        fix.detectChanges();
+
+        try {
+            changei18n({ igx_query_builder_filter_operator_and: 'Und' });
+            fix.detectChanges();
+
+            expect(queryBuilder.resourceStrings.igx_query_builder_date_placeholder).toBe('Custom date');
+            expect(queryBuilder.resourceStrings.igx_query_builder_filter_operator_and).toBe('Und');
+            expect(queryBuilder.resourceStrings.igx_query_builder_add_condition).toBe('Add condition');
+        } finally {
+            changei18n(QueryBuilderResourceStringsEN);
+        }
+    });
+  });
 });
 
 @Component({
@@ -3251,6 +3336,24 @@ export class IgxQueryBuilderSampleTestComponent implements OnInit {
   public ngOnInit(): void {
     this.entities = SampleEntities.map(a => ({ ...a }));
   }
+}
+
+@Component({
+  template: `
+     <form (submit)="$event.preventDefault()">
+        <igx-query-builder #queryBuilder [entities]="this.entities">
+        </igx-query-builder>
+        <button type="submit">Submit</button>
+     </form>
+    `,
+  standalone: true,
+  imports: [
+    IgxQueryBuilderComponent
+  ]
+})
+export class IgxQueryBuilderInFormSampleTestComponent {
+  @ViewChild(IgxQueryBuilderComponent) public queryBuilder: IgxQueryBuilderComponent;
+  public entities: Array<any> = SampleEntities.map(a => ({ ...a }));
 }
 
 @Component({

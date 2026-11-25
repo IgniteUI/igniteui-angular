@@ -7,6 +7,7 @@ import { IForOfState, IgxForOfDirective } from './for_of.directive';
 import { UIInteractions, wait } from '../../../../test-utils/ui-interactions.spec';
 
 import { IgxForOfScrollSyncService } from './for_of.sync.service';
+import { PlatformUtil } from 'igniteui-angular/core';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -141,6 +142,39 @@ describe('IgxForOf directive -', () => {
             expect(parseInt(displayContainer.style.left, 10)).toEqual(0);
         });
 
+        for (const dir of ['ltr', 'rtl']) {
+            it(`should keep the horizontal scroll offset if igxForOf changes while scrolled (${dir})`, () => {
+                const sign = dir === 'rtl' ? -1 : 1;
+                fix.debugElement.nativeElement.dir = dir;
+                fix.componentInstance.width = '500px';
+                fix.componentInstance.cols = [
+                    { field: '1', width: 100 },
+                    { field: '2', width: 200 },
+                    { field: '3', width: 200 },
+                    { field: '4', width: 200 },
+                    { field: '5', width: 300 }
+                ];
+                fix.detectChanges();
+
+                fix.componentInstance.scrollLeft(sign * 250);
+                fix.detectChanges();
+                const firstDir = fix.componentInstance.childVirtDirs.first;
+                expect(firstDir.state.startIndex).toBe(1);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 150);
+
+                // widening the last column keeps the scroll position and the start index
+                fix.componentInstance.cols = [
+                    ...fix.componentInstance.cols.slice(0, 4),
+                    { field: '5', width: 400 }
+                ];
+                fix.detectChanges();
+
+                expect(Math.abs(horizontalScroller.scrollLeft)).toBe(250);
+                expect(firstDir.state.startIndex).toBe(1);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 150);
+            });
+        }
+
         it('should allow scroll in rtl direction.', () => {
             fix.debugElement.nativeElement.dir = 'rtl';
             fix.detectChanges();
@@ -165,6 +199,40 @@ describe('IgxForOf directive -', () => {
             const state = fix.componentInstance.childVirtDirs.toArray()[0].state;
             expect(state.startIndex).toBe(1);
         });
+
+        for (const dir of ['ltr', 'rtl']) {
+            it(`should keep the scrolled content in place when growing the container prepends items (${dir})`, () => {
+                const sign = dir === 'rtl' ? -1 : 1;
+                fix.debugElement.nativeElement.dir = dir;
+                fix.componentInstance.width = '200px';
+                fix.componentInstance.cols = [
+                    { field: '1', width: 100 },
+                    { field: '2', width: 100 },
+                    { field: '3', width: 100 },
+                    { field: '4', width: 100 },
+                    { field: '5', width: 100 }
+                ];
+                fix.detectChanges();
+
+                fix.componentInstance.scrollLeft(sign * 250);
+                fix.detectChanges();
+                const firstDir = fix.componentInstance.childVirtDirs.first;
+                expect(firstDir.state.startIndex).toBe(2);
+                expect(firstDir.state.chunkSize).toBe(3);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 50);
+
+                // growing by 1px adds one item but leaves the scroll position unclamped,
+                // so no scroll event follows to restore the offset
+                fix.componentInstance.width = '201px';
+                fix.detectChanges();
+
+                expect(Math.abs(horizontalScroller.scrollLeft)).toBe(250);
+                expect(firstDir.state.startIndex).toBe(1);
+                expect(firstDir.state.chunkSize).toBe(4);
+                expect(parseFloat(displayContainer.style.left)).toBe(-sign * 150);
+                expect(displayContainer.children[0].textContent).toBe(fix.componentInstance.data[0]['2'].toString());
+            });
+        }
 
         it('should display the correct chunk items on resizing the container', async () => {
             // initially the container's width is narrow enough to be scrollable
@@ -358,6 +426,107 @@ describe('IgxForOf directive -', () => {
             expect(cache).toEqual([130, 100, 100, 100, 100, 100, 100, 130, 130, 130]);
         });
 
+        it('should take item borders and margins into account when calculating its size', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const node = document.createElement('div');
+            node.style.width = '100px';
+            node.style.height = '80px';
+            node.style.border = '2px solid transparent';
+            node.style.margin = '3px 5px 7px 11px';
+            fix.nativeElement.appendChild(node);
+
+            virtualContainer.igxForScrollOrientation = 'vertical';
+            const verticalSize = node.getBoundingClientRect().height + 3 + 7;
+            expect(virtualContainer.testGetNodeSize(node)).toBe(verticalSize);
+
+            virtualContainer.igxForScrollOrientation = 'horizontal';
+            virtualContainer.igxForSizePropName = 'width';
+            const horizontalSize = node.getBoundingClientRect().width + 5 + 11;
+            expect(virtualContainer.testGetNodeSize(node)).toBe(horizontalSize);
+
+            node.remove();
+        });
+
+        it('should resolve the observed node from a comment-rooted view', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const anchor = document.createComment('container');
+            const element = document.createElement('div');
+            fix.nativeElement.appendChild(anchor);
+            fix.nativeElement.appendChild(element);
+
+            // A control flow root leaves only comment anchors among the root
+            // nodes; the rendered element follows the first of them.
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [anchor] })).toBe(element);
+
+            anchor.remove();
+            element.remove();
+        });
+
+        it('should resolve no observed node when the view holds no element', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const orphan = document.createComment('container');
+            fix.nativeElement.appendChild(orphan);
+
+            // Nothing follows the anchor - the view was torn down before its
+            // content rendered.
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [orphan] })).toBeNull();
+            expect(virtualContainer.testGetViewObservedNode({ rootNodes: [] })).toBeNull();
+            expect(virtualContainer.testGetViewObservedNode(null)).toBeNull();
+
+            orphan.remove();
+        });
+
+        it('should not unobserve a view that resolves to no element', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
+                'observe',
+                'unobserve',
+                'disconnect'
+            ]);
+            virtualContainer.testSetViewObserver(observer);
+
+            // A comment anchor with no element after it - ResizeObserver.unobserve()
+            // throws on anything that is not an Element.
+            const orphan = document.createComment('container');
+            virtualContainer.testSetEmbeddedViews([{ rootNodes: [orphan], destroy: () => { } }]);
+
+            expect(() => virtualContainer.testRemoveLastElem()).not.toThrow();
+            expect(observer.unobserve).not.toHaveBeenCalled();
+        });
+
+        it('should unobserve the element that follows a comment-rooted view', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const observer = jasmine.createSpyObj<ResizeObserver>('ResizeObserver', [
+                'observe',
+                'unobserve',
+                'disconnect'
+            ]);
+            virtualContainer.testSetViewObserver(observer);
+
+            const anchor = document.createComment('container');
+            const element = document.createElement('div');
+            fix.nativeElement.appendChild(anchor);
+            fix.nativeElement.appendChild(element);
+            virtualContainer.testSetEmbeddedViews([{ rootNodes: [anchor], destroy: () => { } }]);
+
+            virtualContainer.testRemoveLastElem();
+            expect(observer.unobserve).toHaveBeenCalledWith(element);
+
+            anchor.remove();
+            element.remove();
+        });
+
+        it('should preserve valid border sizes when another side cannot be parsed', () => {
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            const node = document.createElement('div');
+            spyOn(window, 'getComputedStyle').and.returnValue({
+                borderTopWidth: '',
+                borderBottomWidth: '2px'
+            } as CSSStyleDeclaration);
+
+            expect(virtualContainer.testGetBorder(node, 'height')).toBe(2);
+        });
+
         it('should render no more that initial chunk size elements when set if no containerSize', () => {
             fix.componentInstance.height = undefined;
             fix.componentInstance.initialChunkSize = 3;
@@ -483,6 +652,29 @@ describe('IgxForOf directive -', () => {
                 expect(lastInnerDisplayContainer.children[i].textContent)
                     .toBe(data[data.length - 1][i].toString());
             }
+        });
+
+        it('should keep rows in order when the viewport grows at the bottom', async () => {
+            const component = fix.componentInstance;
+            // scroll 25px short of the end, so that growing by 10px does not clamp the scroll position
+            const scrollTop = 50000 * 50 - 400 - 25;
+            component.scrollTop(scrollTop);
+            fix.detectChanges();
+            await wait();
+
+            component.height = '410px';
+            fix.detectChanges();
+            await wait();
+
+            const rows = Array.from(displayContainer.children);
+            const startIndex = component.data.length - rows.length;
+            rows.forEach((row, index) => {
+                const secondCell = row.querySelector(DISPLAY_CONTAINER)?.children[1];
+                expect(secondCell?.textContent)
+                    .toBe(component.data[startIndex + index]['1'].toString());
+            });
+            // the rows are offset so that the content at the scroll position stays in view
+            expect(displayContainer.style.transform).toBe(`translateY(${startIndex * 50 - scrollTop}px)`);
         });
 
         it('should scroll to wheel event correctly', async () => {
@@ -1266,6 +1458,32 @@ describe('IgxForOf directive -', () => {
             expect(secondForOf.state.startIndex).toBe(0);
         });
     });
+
+    describe('server platform', () => {
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [HorizontalVirtualComponent],
+                providers: [{
+                    provide: PlatformUtil,
+                    useFactory: () => Object.assign(new PlatformUtil(), { isBrowser: false })
+                }]
+            }).compileComponents();
+        }));
+
+        it('should render horizontally virtualized items without reading computed styles', () => {
+            // Computed styles are not available during server-side rendering
+            spyOn(window, 'getComputedStyle').and.callFake(() => {
+                throw new ReferenceError('window is not defined');
+            });
+            const fix = TestBed.createComponent(HorizontalVirtualComponent);
+            dg.generateData(300, 5, fix.componentInstance);
+            fix.detectChanges();
+
+            const rows = fix.nativeElement.querySelectorAll(DISPLAY_CONTAINER);
+            expect(rows.length).toBe(5);
+            expect(rows[1].children[1].textContent).toBe(fix.componentInstance.data[1]['1'].toString());
+        });
+    });
 });
 
 class DataGenerator {
@@ -1385,6 +1603,30 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 
     public testGetHorizontalIndexAt(left, set) {
         super.getIndexAt(left, set);
+    }
+
+    public testGetNodeSize(node: Element): number {
+        return super.getNodeSize(node, 0);
+    }
+
+    public testGetBorder(node: Element, dimension: string): number {
+        return super.getBorder(node, dimension);
+    }
+
+    public testGetViewObservedNode(view: any): Element | null {
+        return super.getViewObservedNode(view);
+    }
+
+    public testRemoveLastElem(): void {
+        super.removeLastElem();
+    }
+
+    public testSetEmbeddedViews(views: any[]): void {
+        this._embeddedViews = views;
+    }
+
+    public testSetViewObserver(observer: ResizeObserver): void {
+        this.viewObserver = observer;
     }
 }
 

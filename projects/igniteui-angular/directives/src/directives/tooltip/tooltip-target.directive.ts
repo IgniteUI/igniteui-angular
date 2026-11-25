@@ -27,6 +27,8 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     cancel: boolean;
 }
 
+const HOVER_SHOW_TRIGGERS = new Set(['mouseenter', 'mouseover', 'pointerenter', 'pointerover']);
+
 /**
  * **Ignite UI for Angular Tooltip Target** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tooltip)
@@ -564,8 +566,14 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
         this._pendingShowTrigger = triggerEvent?.type ?? null;
 
         this.target.timeoutId = setTimeout(() => {
-            // Call open() of IgxTooltipDirective
+            const isHoverTrigger = this._pendingShowTrigger && HOVER_SHOW_TRIGGERS.has(this._pendingShowTrigger);
             this._pendingShowTrigger = null;
+            this.target.timeoutId = null;
+
+            if (isHoverTrigger && !this.nativeElement.matches(':hover')) {
+                return;
+            }
+
             this.target.open(this._mergedOverlaySettings);
         }, withDelay ? this.showDelay : 0);
     }

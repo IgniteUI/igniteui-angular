@@ -44,7 +44,6 @@ export const appConfig: ApplicationConfig = {
 |---|---|---|
 | `provideAnimations()` | `@angular/platform-browser/animations` | **All overlay and animated components** — Dialog, Combo, Select, Dropdown, Date/Time Picker, Snackbar, Toast, Banner, Navigation Drawer, Carousel, Overlay service |
 | `importProvidersFrom(HammerModule)` | `@angular/platform-browser` | OPTIONAL — touch gestures (Slider, Drag & Drop, swipe) |
-| `provideIgniteIntl()` | `igniteui-angular/core` | Localization for grids, date/time pickers, and components displaying formatted values |
 
 > **`provideAnimationsAsync()`** lazy-loads the animations module — prefer it for SSR or when optimizing initial bundle size:
 > ```typescript

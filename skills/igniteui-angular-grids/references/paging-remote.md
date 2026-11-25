@@ -15,8 +15,6 @@
 
 ## Paging
 
-> **Docs:** [Paging — Remote Paging](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging) (substitute URL prefix per grid type)
-
 ### Using the Paginator Component
 
 ```html
@@ -114,8 +112,6 @@ export class RemotePagingComponent {
 
 ## Remote Data Operations
 
-> **Docs:** [Remote Data Operations](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/remote-data-operations) (substitute URL prefix per grid type)
-
 ### The Problem
 
 Grids perform sorting, filtering, and paging **client-side** by default. For large datasets, you must intercept these operations and delegate them to the server.
@@ -130,11 +126,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IgxGridComponent, IGX_GRID_DIRECTIVES } from 'igniteui-angular/grids/grid';
 import {
   IFilteringExpressionsTree,
+  ISortingExpression,
   NoopSortingStrategy,
   NoopFilteringStrategy
 } from 'igniteui-angular/core';
 import { IForOfState } from 'igniteui-angular/directives';
-import { ISortingEventArgs } from 'igniteui-angular/grids/core';
 import { debounceTime, Subject } from 'rxjs';
 
 @Component({
@@ -156,7 +152,7 @@ export class RemoteGridComponent {
   private dataService = inject(OrderService);
   private destroyRef = inject(DestroyRef);
 
-  private currentSort: ISortingEventArgs[] | undefined;
+  private currentSort: ISortingExpression[] | undefined;
   private currentFilter: IFilteringExpressionsTree | undefined;
 
   // Debounce rapid dataPreLoad events during fast scrolling
@@ -179,7 +175,7 @@ export class RemoteGridComponent {
     this.dataPreLoad$.next(event);
   }
 
-  onSortingDone(event: ISortingEventArgs) {
+  onSortingDone() {
     this.currentSort = this.gridRef().sortingExpressions;
     this.loadData(0, 15);
   }
@@ -217,7 +213,7 @@ export class RemoteGridComponent {
   [sortStrategy]="noopSort"
   [filterStrategy]="noopFilter"
   (dataPreLoad)="onDataPreLoad($event)"
-  (sortingDone)="onSortingDone($event)"
+  (sortingDone)="onSortingDone()"
   (filteringExpressionsTreeChange)="onFilteringExpressionsTreeChange()"
   height="600px">
 

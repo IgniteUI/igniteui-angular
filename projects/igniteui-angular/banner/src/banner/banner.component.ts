@@ -155,11 +155,12 @@ export class IgxBannerComponent implements IToggleView {
      */
     @Input()
     public set resourceStrings(value: IBannerResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings =  Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     public get resourceStrings(): IBannerResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -240,14 +241,16 @@ export class IgxBannerComponent implements IToggleView {
     private _destroyRef = inject(DestroyRef);
     private _expanded: boolean = false;
     private _shouldFireEvent: boolean = false;
-    private _bannerEvent: BannerEventArgs;
-    private _animationSettings: ToggleAnimationSettings;
+    private _bannerEvent!: BannerEventArgs;
+    private _animationSettings!: ToggleAnimationSettings;
     private _resourceStrings: IBannerResourceStrings = null;
+    private _customResourceStrings: IBannerResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN);
 
     constructor() {
         onResourceChangeHandle(this._destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(BannerResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 

@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture, waitForAsync, fakeAsync, tick } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement, provideZonelessChangeDetection, ViewChild } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import {
     IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent,
@@ -13,14 +13,17 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TreeGridFunctions } from '../../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { By } from '@angular/platform-browser';
-import { CellType, DropPosition, IgxTreeGridRow } from 'igniteui-angular/grids/core';
+import { CellType, DropPosition, IgxColumnComponent, IgxTreeGridRow } from 'igniteui-angular/grids/core';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxGridTransaction } from 'igniteui-angular/grids/core';
 import { HierarchicalTransaction, IgxHierarchicalTransactionService, IgxNumberFilteringOperand, IgxStringFilteringOperand, SortingDirection, TransactionType } from 'igniteui-angular/core';
+import { firstValueFrom } from 'rxjs';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
+const GRID_BOOLEAN_CELL_CLASS = '.igx-grid__td--bool';
+const GRID_TREE_CELL_CLASS = '.igx-grid__td--tree-cell';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix: ComponentFixture<any>;
@@ -72,6 +75,21 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
+
+        const treeBooleanCells = fix.nativeElement.querySelectorAll(
+            `${GRID_BOOLEAN_CELL_CLASS}${GRID_TREE_CELL_CLASS}`
+        );
+        expect(treeBooleanCells.length).toBeGreaterThan(0);
+
+        const booleanColumn = treeGrid.columnList.filter(column => column.field === 'OnPTO')[0];
+        const lastColumn = treeGrid.columnList.filter(column => column.field === 'Age')[0];
+        treeGrid.moveColumn(booleanColumn, lastColumn, DropPosition.AfterDropTarget);
+        fix.detectChanges();
+
+        const regularBooleanCells = fix.nativeElement.querySelectorAll(
+            `${GRID_BOOLEAN_CELL_CLASS}:not(${GRID_TREE_CELL_CLASS})`
+        );
+        expect(regularBooleanCells.length).toBeGreaterThan(0);
     });
 
     describe('Child Collection', () => {
@@ -1829,4 +1847,74 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(firstRow.isRoot).toBe(false);
         });
     });
+
+    describe('Column autosizing in zoneless change detection', () => {
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [TreeGridZonelessAutosizeComponent],
+                providers: [provideZonelessChangeDetection()]
+            });
+        });
+
+        it('should keep header and body column widths aligned when horizontally constrained', async () => {
+            fix = TestBed.createComponent(TreeGridZonelessAutosizeComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+            await fix.whenStable();
+
+            const horizontalScroller = treeGrid.headerContainer.getScroll();
+            expect(horizontalScroller.scrollWidth).toBeGreaterThan(horizontalScroller.clientWidth);
+
+            const expectRenderedColumnsAligned = () => {
+                const cells = Array.from(treeGrid.gridAPI.get_row_by_index(0).cells);
+                expect(cells.length).toBeGreaterThan(1);
+
+                for (const cell of cells.filter(renderedCell => renderedCell.column.field !== 'ID')) {
+                    const header = TreeGridFunctions.getHeaderCellMultiColHeaders(fix, cell.column.field).nativeElement;
+                    const headerWidth = header.getBoundingClientRect().width;
+                    const cellWidth = cell.nativeElement.getBoundingClientRect().width;
+
+                    expect(Math.abs(headerWidth - cellWidth))
+                        .withContext(`column ${cell.column.field}`)
+                        .toBeLessThanOrEqual(1);
+                }
+            };
+
+            expectRenderedColumnsAligned();
+
+            const chunkLoad = firstValueFrom(treeGrid.parentVirtDir.chunkLoad);
+            horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
+            horizontalScroller.dispatchEvent(new Event('scroll'));
+            await chunkLoad;
+            await fix.whenStable();
+
+            expectRenderedColumnsAligned();
+        });
+    });
 });
+
+@Component({
+    template: `
+        <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID"
+            width="400px" height="300px">
+            @for (column of columns; track column) {
+                <igx-column [field]="column" width="fit-content"></igx-column>
+            }
+        </igx-tree-grid>
+    `,
+    imports: [IgxTreeGridComponent, IgxColumnComponent]
+})
+class TreeGridZonelessAutosizeComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public columns = ['ID', 'ParentID', 'EmployeeName', 'Department', 'Office', 'Country', 'Project', 'Status'];
+    public data = Array.from({ length: 40 }, (_row, index) => ({
+        ID: index,
+        ParentID: index === 0 ? null : 0,
+        EmployeeName: `Employee with a long display name ${index}`,
+        Department: `International Operations Department ${index}`,
+        Office: `Regional office location ${index}`,
+        Country: `Country name ${index}`,
+        Project: `Long running project ${index}`,
+        Status: `Current status ${index}`
+    }));
+}

@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import {
     IgxHintDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
@@ -13,7 +13,7 @@ import {
     OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings,
     WEEKDAYS
 } from 'igniteui-angular/core';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, ElementRef, EventEmitter, Injector, provideZonelessChangeDetection, QueryList, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerCalendarOrientation, PickerHeaderOrientation, PickerInteractionMode } from '../../../core/src/date-common/types';
 import { DatePart } from '../../../core/src/date-common/public_api';
@@ -770,6 +770,54 @@ describe('IgxDatePicker', () => {
                     .withContext('focus should return to the picker input')
                     .toBeTrue();
             }));
+
+            it('should open the calendar from the default toggle without focusing or reformatting the input', fakeAsync(() => {
+                datePicker.locale = 'en-US';
+                fixture.componentInstance.date = new Date(2026, 8, 15);
+                fixture.detectChanges();
+
+                const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+                const displayText = input.value;
+                expect(displayText).toEqual('9/15/2026');
+                expect(document.activeElement).not.toBe(input);
+
+                const valueWrites: string[] = [];
+                const valueProperty = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+                Object.defineProperty(input, 'value', {
+                    configurable: true,
+                    get: () => valueProperty.get.call(input),
+                    set: (value: string) => {
+                        valueWrites.push(value);
+                        valueProperty.set.call(input, value);
+                    }
+                });
+                const focusSpy = jasmine.createSpy('focus');
+                input.addEventListener('focus', focusSpy);
+                const selectSpy = spyOn(input, 'select').and.callThrough();
+                spyOn(datePicker.opening, 'emit').and.callThrough();
+                spyOn(datePicker.opened, 'emit').and.callThrough();
+
+                // a native click bubbles from the icon through the input group
+                const toggleIcon: HTMLElement = fixture.debugElement.query(By.directive(IgxPrefixDirective))
+                    .query(By.css('igx-icon')).nativeElement;
+                toggleIcon.click();
+                // flush any deferred (requestAnimationFrame) text selection
+                tick(16);
+                fixture.detectChanges();
+
+                expect(datePicker.collapsed).toBeFalse();
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+                expect(input.getAttribute('aria-expanded')).toEqual('true');
+                expect(focusSpy).not.toHaveBeenCalled();
+                expect(selectSpy).not.toHaveBeenCalled();
+                expect(valueWrites.filter(value => value !== displayText)).toEqual([]);
+                expect(input.value).toEqual(displayText);
+                const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+                expect(calendarWrapper.contains(document.activeElement))
+                    .withContext('focus should move to calendar for KB nav')
+                    .toBeTrue();
+            }));
         });
 
         describe('Input and Display formats', () => {
@@ -903,8 +951,8 @@ describe('IgxDatePicker', () => {
                 get: mockNgControl
             });
 
-            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
-            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => {} };
+            mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges', 'markForCheck']);
+            mockCalendar = { selected: new EventEmitter<any>(), selectDate: () => { } };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
@@ -1664,6 +1712,83 @@ describe('IgxDatePicker', () => {
                 expect(mockInputDirective.valid).toEqual(IgxInputState.INVALID);
             });
         });
+    });
+
+    describe('With animations', () => {
+        let fixture: ComponentFixture<IgxDatePickerTestComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [IgxDatePickerTestComponent],
+                providers: [provideAnimations()]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+            fixture.componentInstance.date = new Date(2026, 8, 15);
+            fixture.detectChanges();
+            datePicker = fixture.componentInstance.datePicker;
+            datePicker.locale = 'en-US';
+            fixture.detectChanges();
+        });
+
+        it('should move the focus from the input to the calendar as soon as the toggle icon opens it', () => {
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            input.focus();
+            expect(input.value).toEqual('09/15/2026');
+            spyOn(datePicker.opened, 'emit').and.callThrough();
+
+            const toggleIcon: HTMLElement = fixture.debugElement.query(By.directive(IgxPrefixDirective))
+                .query(By.css('igx-icon')).nativeElement;
+            toggleIcon.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+            toggleIcon.click();
+
+            // the opening animation is still running
+            expect(datePicker.opened.emit).not.toHaveBeenCalled();
+            const calendarWrapper = fixture.debugElement.query(By.css('.igx-calendar__wrapper')).nativeElement;
+            expect(calendarWrapper.contains(document.activeElement))
+                .withContext('focus should move to calendar for KB nav')
+                .toBeTrue();
+            expect(input.value).toEqual('9/15/2026');
+        });
+    });
+
+    describe('Zoneless', () => {
+        let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(async () => {
+            await TestBed.configureTestingModule({
+                imports: [
+                    NoopAnimationsModule,
+                    IgxDatePickerNgModelComponent,
+                ],
+                providers: [
+                    provideZonelessChangeDetection()
+                ]
+            }).compileComponents();
+
+            fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
+            fixture.detectChanges();
+        });
+
+        it('should not throw ExpressionChangedAfterItHasBeenCheckedError when closing - issue #17305', fakeAsync(() => {
+            datePicker = fixture.componentInstance.datePicker;
+
+            datePicker.open();
+            fixture.detectChanges();
+            tick();
+
+            expect(() => {
+                datePicker.close();
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            fixture.detectChanges();
+            tick(100);
+            const input = fixture.debugElement.query(By.css('input'));
+            expect(input.nativeElement.getAttribute('aria-expanded')).toBe('false');
+        }));
     });
 });
 @Component({

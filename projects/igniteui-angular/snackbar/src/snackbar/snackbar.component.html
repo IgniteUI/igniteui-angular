@@ -6,7 +6,7 @@
     <ng-content select="[igxButton]"></ng-content>
 </div>
 @if (!customButton.children.length && actionText) {
-    <button igxButton (click)="triggerAction()">
+    <button type="button" igxButton (click)="triggerAction()">
         {{ actionText }}
     </button>
 }

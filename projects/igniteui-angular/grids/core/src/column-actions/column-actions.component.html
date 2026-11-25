@@ -10,7 +10,8 @@
                 [attr.aria-describedby]='titleID'
                 [(ngModel)]="filterCriteria"
                 [placeholder]="filterColumnsPrompt"
-                autocomplete="off" />
+                autocomplete="off"
+                (keydown)="preventImplicitSubmission($event)" />
         </igx-input-group>
     }
 </div>

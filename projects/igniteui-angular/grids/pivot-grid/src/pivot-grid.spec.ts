@@ -8,7 +8,7 @@ import { DefaultPivotSortingStrategy } from 'igniteui-angular/grids/pivot-grid';
 import { DimensionValuesFilteringStrategy, IgxGridNavigationService, IgxPivotDateAggregate, IgxPivotDateDimension, IgxPivotNumericAggregate, NoopPivotDimensionsStrategy } from 'igniteui-angular/grids/core';
 import { GridFunctions, GridSelectionFunctions } from '../../../test-utils/grid-functions.spec';
 import { PivotGridFunctions } from '../../../test-utils/pivot-grid-functions.spec';
-import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate } from '../../../test-utils/pivot-grid-samples.spec';
+import { IgxPivotGridFlexContainerComponent, IgxPivotGridTestBaseComponent, IgxPivotGridTestComplexHierarchyComponent, IgxTotalSaleAggregate, IgxPivotGridDelayedDataComponent } from '../../../test-utils/pivot-grid-samples.spec';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { IPivotGridColumn, IPivotGridRecord, PivotDimensionType, PivotRowLayoutType, PivotSummaryPosition } from '../../core/src/pivot-grid.interface';
 import { IgxPivotHeaderRowComponent } from './pivot-header-row.component';
@@ -21,7 +21,6 @@ import { IgxPivotRowDimensionContentComponent } from './pivot-row-dimension-cont
 import { IgxPivotGridComponent } from './pivot-grid.component';
 import { IgxGridCell } from 'igniteui-angular/grids/core';
 import { IGridCellEventArgs } from 'igniteui-angular/grids/core';
-import { getI18nManager } from 'igniteui-i18n-core';
 
 const CSS_CLASS_LIST = 'igx-drop-down__list';
 const CSS_CLASS_ITEM = 'igx-drop-down__item';
@@ -35,7 +34,8 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 NoopAnimationsModule,
                 IgxPivotGridTestBaseComponent,
                 IgxPivotGridTestComplexHierarchyComponent,
-                IgxPivotGridFlexContainerComponent
+                IgxPivotGridFlexContainerComponent,
+                IgxPivotGridDelayedDataComponent
             ],
             providers: [
                 IgxGridNavigationService
@@ -843,9 +843,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
         describe('IgxPivotGrid Features #pivotGrid', () => {
             it('should show excel style filtering via dimension chip.', async () => {
-                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
-                (getI18nManager() as any).removeAllListeners();
-
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 expect(pivotGrid.filterStrategy).toBeInstanceOf(DimensionValuesFilteringStrategy);
                 const excelMenu = GridFunctions.getExcelStyleFilteringComponents(fixture, 'igx-pivot-grid')[1];
@@ -879,9 +876,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should filter rows via excel style filtering dimension chip.', async () => {
-                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
-                (getI18nManager() as any).removeAllListeners();
-
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 const headerRow = fixture.nativeElement.querySelector('igx-pivot-header-row');
                 const rowChip = headerRow.querySelector('igx-chip[id="All"]');
@@ -1126,9 +1120,6 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it('should show complex tree and allow filtering for Date dimension', async () => {
-                // Weird angular error caused by calling setupColumns() on opening a filter. Disable it for now.
-                (getI18nManager() as any).removeAllListeners();
-
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.rows = [new IgxPivotDateDimension(
                     {
@@ -2095,6 +2086,34 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(rowDimension.width).toBe('auto');
                 expect(pivotGrid.rowDimensionWidthToPixels(rowDimension)).toBe(162);
             }));
+
+            it('should auto-size value columns to their content via the API.', () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                const valueColumn = pivotGrid.columns.find(column => !column.columnGroup);
+                const initialWidth = parseFloat(valueColumn.width);
+
+                valueColumn.autosize(true);
+                fixture.detectChanges();
+                const autosizedWidth = valueColumn.width;
+                expect(parseFloat(autosizedWidth)).toBeLessThan(initialWidth);
+                const title: HTMLElement = valueColumn.headerCell.nativeElement.querySelector('.igx-grid-th__title');
+                expect(title.scrollWidth - title.clientWidth).toBeLessThanOrEqual(1);
+
+                valueColumn.autosize(true);
+                fixture.detectChanges();
+                expect(valueColumn.width).toBe(autosizedWidth);
+
+                valueColumn.autosize();
+                fixture.detectChanges();
+                expect(parseFloat(valueColumn.width)).toBeLessThan(initialWidth);
+                expect(parseFloat(valueColumn.width)).toBeGreaterThanOrEqual(parseFloat(autosizedWidth));
+
+                valueColumn.width = '40px';
+                fixture.detectChanges();
+                valueColumn.autosize(true);
+                fixture.detectChanges();
+                expect(valueColumn.width).toBe(autosizedWidth);
+            });
 
             it('should auto-generate pivot config when autoGenerateConfig is set to true.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
@@ -3166,6 +3185,123 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowDimensionsCol4.length).toBe(0);
         });
 
+        it("should size the collapsed and summary row headers to all the columns they span.", () => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }, {
+                    memberFunction: () => 'AllProducts',
+                    memberName: 'AllProducts',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberFunction: (data) => data.ProductCategory,
+                        memberName: 'ProductCategory',
+                        enabled: true,
+                        width: '120px'
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+            const getContentCells = (header: string) => fixture.debugElement
+                .queryAll(By.directive(IgxPivotRowDimensionContentComponent))
+                .filter(x => x.componentInstance.rowDimensionColumn.header === header);
+            const expectHeadersToSpanTheirColumns = () => {
+                const contentCells = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionContentComponent));
+                for (const cell of contentCells) {
+                    const content = cell.componentInstance as IgxPivotRowDimensionContentComponent;
+                    const spannedWidth = pivotGrid.visibleRowDimensions
+                        .slice(content.layout.colStart - 1, content.layout.colEnd - 1)
+                        .reduce((width, dim) => width + pivotGrid.rowDimensionWidthToPixels(dim), 0);
+                    const header = cell.query(By.directive(IgxPivotRowDimensionHeaderComponent)).nativeElement as HTMLElement;
+                    expect(header.getBoundingClientRect().width).withContext(content.rowDimensionColumn.header).toBe(spannedWidth);
+                }
+            };
+
+            // the summary headers span all columns to their right
+            const citiesSummary = getContentCells('All Cities Total');
+            expect(citiesSummary.length).toBe(1);
+            expect(citiesSummary[0].componentInstance.layout.colStart).toBe(1);
+            expect(citiesSummary[0].componentInstance.layout.colEnd).toBe(5);
+            const productsSummaries = getContentCells('AllProducts Total');
+            expect(productsSummaries.length).toBe(6);
+            productsSummaries.forEach(x => {
+                expect(x.componentInstance.layout.colStart).toBe(3);
+                expect(x.componentInstance.layout.colEnd).toBe(5);
+            });
+            expectHeadersToSpanTheirColumns();
+
+            // the collapsed header spans the empty ProductCategory column
+            getContentCells('AllProducts')[0].query(By.directive(IgxIconComponent)).nativeElement.click();
+            fixture.detectChanges();
+            const collapsedProducts = getContentCells('AllProducts')[0].componentInstance.layout;
+            expect(collapsedProducts.colStart).toBe(3);
+            expect(collapsedProducts.colEnd).toBe(5);
+            expectHeadersToSpanTheirColumns();
+
+            // the same applies when the summaries are on top
+            pivotGrid.pivotUI = { horizontalSummariesPosition: PivotSummaryPosition.Top };
+            fixture.detectChanges();
+            expect(getContentCells('All Cities Total')[0].componentInstance.layout.colEnd).toBe(5);
+            expectHeadersToSpanTheirColumns();
+        });
+
+        it("should not widen an auto-sized row dimension to the columns its summary headers span.", async () => {
+            fixture.componentInstance.pivotConfigHierarchy = {
+                columns: pivotGrid.pivotConfiguration.columns,
+                values: pivotGrid.pivotConfiguration.values,
+                rows: [
+                    {
+                        memberName: 'All cities',
+                        memberFunction: () => 'All Cities',
+                        enabled: false,
+                        width: 'auto',
+                        childLevel: {
+                            memberName: 'City',
+                            enabled: true
+                        }
+                    }, {
+                        memberFunction: () => 'AllProducts',
+                        memberName: 'AllProducts',
+                        enabled: true,
+                        width: 'auto',
+                        horizontalSummary: true,
+                        childLevel: {
+                            memberFunction: (data) => data.ProductCategory,
+                            memberName: 'ProductCategory',
+                            enabled: true
+                        }
+                    }
+                ]
+            };
+            fixture.detectChanges();
+            await wait(50);
+            fixture.detectChanges();
+
+            const [allCities, allProducts] = pivotGrid.pivotConfiguration.rows;
+            const productsWidth = allProducts.autoWidth;
+            expect(productsWidth).toBeGreaterThan(0);
+
+            // Enabling another auto dimension reruns sizing.
+            pivotGrid.toggleDimension(allCities);
+            await wait(100);
+            fixture.detectChanges();
+            await wait(50);
+            fixture.detectChanges();
+
+            expect(allCities.autoWidth).toBeGreaterThan(0);
+            expect(allProducts.autoWidth).toBe(productsWidth);
+        });
+
         it("should render summary rows when enabled.", () => {
             pivotGrid.pivotConfiguration.rows = [
                 {
@@ -3412,6 +3548,55 @@ describe('IgxPivotGrid #pivotGrid', () => {
             expect(rowHeaders[0].componentInstance.column.width).toEqual('400px');
         }));
 
+        it("should stop the resizer of a summary row header at the minimum width of its first dimension.", fakeAsync(() => {
+            pivotGrid.pivotConfiguration.rows = [
+                {
+                    memberName: 'All cities',
+                    memberFunction: () => 'All Cities',
+                    enabled: true,
+                    childLevel: {
+                        memberName: 'City',
+                        enabled: true
+                    }
+                }, {
+                    memberFunction: () => 'AllProducts',
+                    memberName: 'AllProducts',
+                    enabled: true,
+                    horizontalSummary: true,
+                    childLevel: {
+                        memberFunction: (data) => data.ProductCategory,
+                        memberName: 'ProductCategory',
+                        enabled: true,
+                        width: '120px'
+                    }
+                }
+            ];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+
+            const summaryHeader = fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderGroupComponent))
+                .find(x => x.componentInstance.column.header === 'AllProducts Total');
+            const allProducts = pivotGrid.pivotConfiguration.rows[1];
+            const rootWidth = pivotGrid.rowDimensionWidthToPixels(allProducts);
+            const minWidth = summaryHeader.componentInstance.column.minWidthPx;
+            // the summary header spans the ProductCategory column as well, but only AllProducts is resized
+            expect(summaryHeader.componentInstance.header.nativeElement.getBoundingClientRect().width).toBe(rootWidth + 120);
+            UIInteractions.simulateMouseEvent('mousedown', GridFunctions.getHeaderResizeArea(summaryHeader).nativeElement, 500, 0);
+            tick(200);
+            fixture.detectChanges();
+            tick(16);
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            const startLeft = parseFloat(resizer.style.left);
+
+            UIInteractions.simulateMouseEvent('mousemove', resizer, -500, 5);
+            tick(16);
+            expect(startLeft - parseFloat(resizer.style.left)).toBe(rootWidth - minWidth);
+
+            UIInteractions.simulateMouseEvent('mouseup', resizer, -500, 5);
+            fixture.detectChanges();
+            expect(allProducts.width).toBe(`${minWidth}px`);
+        }));
+
         it("should allow sorting each dimension column from the hierarchy.", () => {
             pivotGrid.pivotConfiguration.rows = [
                 {
@@ -3522,6 +3707,32 @@ describe('IgxPivotGrid #pivotGrid', () => {
 
             const pivotRows = GridFunctions.getPivotRows(fixture);
             expect(pivotRows.length).toBe(4);
+        });
+    });
+
+    describe('Basic scrolling', () => {
+        it('should horizontally scroll when data is set after the initial render with a single value', async () => {
+            const fixture = TestBed.createComponent(IgxPivotGridDelayedDataComponent);
+            fixture.detectChanges();
+            //await wait();
+            await fixture.whenStable();
+
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            expect(pivotGrid.headerContainer).toBeUndefined();
+
+            fixture.componentInstance.fetchData();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const horizontalScroller = pivotGrid.headerContainer.getScroll();
+            expect(horizontalScroller.scrollWidth).toBeGreaterThan(horizontalScroller.clientWidth);
+
+            horizontalScroller.scrollLeft = horizontalScroller.scrollWidth;
+            horizontalScroller.dispatchEvent(new Event('scroll'));
+            await wait(100);
+            fixture.detectChanges();
+
+            expect(pivotGrid.headerContainer.state.startIndex).toBeGreaterThan(0);
         });
     });
 });

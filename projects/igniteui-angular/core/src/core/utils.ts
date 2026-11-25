@@ -1,5 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Injectable, InjectionToken, PLATFORM_ID, inject } from '@angular/core';
+import { Injectable, InjectionToken, PLATFORM_ID, inject, afterNextRender, type AfterRenderRef, type Injector } from '@angular/core';
 import { mergeWith } from 'lodash-es';
 import { NEVER, Observable } from 'rxjs';
 import { isDevMode } from '@angular/core';
@@ -8,6 +8,31 @@ import type { IgxTheme } from '../services/theme/theme.token';
 /** @hidden @internal */
 export const ELEMENTS_TOKEN = /*@__PURE__*/new InjectionToken<boolean>('elements environment');
 
+/** @hidden @internal */
+export type RenderPhase = 'earlyRead' | 'write' | 'mixedReadWrite' | 'read';
+
+interface AfterNextRenderSpec {
+    earlyRead?: () => void;
+    write?: () => void;
+    mixedReadWrite?: () => void;
+    read?: () => void;
+}
+
+/**
+ * Schedules `callback` to run once after Angular finishes the next render pass.
+ *
+ * Central scheduling point for all work that previously waited on `NgZone.onStable`,
+ * which never emits in zoneless applications. Every deferred render callback in the
+ * library goes through here, so if the scheduling needs to change (different phase,
+ * timing or API), change it in this single place.
+ *
+ * @hidden @internal
+ */
+export function runAfterRenderOnce(injector: Injector, callback: () => void, phase: RenderPhase = 'mixedReadWrite'): AfterRenderRef {
+    const spec: AfterNextRenderSpec = {};
+    spec[phase as keyof AfterNextRenderSpec] = callback;
+    return afterNextRender(spec, { injector });
+}
 
 /**
  * Returns true if the element's direction is left-to-right
@@ -312,12 +337,11 @@ export class PlatformUtil {
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      *
      * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+     * ```
      *
      * @remarks
-     * The last parameter is useful when the size of the element to measure is modified by a
-     * parent element that has explicit size. In such cases the calculated size is never lower
-     * and the function may instead remove the parent size while measuring to get the correct value.
-     * ```
+     * While measuring, the last parameter (usually the node itself) is laid out at its `max-content` width,
+     * so neither its explicit width nor a stretching parent affects the result.
      */
     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
@@ -332,7 +356,8 @@ export class PlatformUtil {
         if (sizeHoldingNode) {
             const style = sizeHoldingNode.style;
             nodeStyles = [style.width, style.minWidth, style.flexBasis];
-            style.width = '';
+            // not '' - a flex or grid parent may stretch the node
+            style.width = 'max-content';
             style.minWidth = '';
             style.flexBasis = '';
         }
@@ -453,6 +478,25 @@ export const NAVIGATION_KEYS = new Set([
     'spacebar',
     ' '
 ]);
+
+/** Input types on which Enter has its own activation behavior instead of submitting the form. */
+const ACTIVATABLE_INPUT_TYPES = new Set(['button', 'submit', 'reset', 'image', 'file', 'color']);
+
+/**
+ * @hidden
+ * @internal
+ *
+ * Cancels the implicit submission of the surrounding form, which the browser performs as the default action
+ * of an Enter keydown in an `<input>`.
+ * Only inputs which have a form owner and no activation behavior of their own are affected.
+ */
+export function preventImplicitSubmission(event: KeyboardEvent): void {
+    const target = event.composedPath()[0];
+    if (event.key === 'Enter' && !event.isComposing && target instanceof HTMLInputElement &&
+        target.form && !ACTIVATABLE_INPUT_TYPES.has(target.type)) {
+        event.preventDefault();
+    }
+}
 
 /**
  * @hidden

@@ -3,6 +3,7 @@ import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angul
 import { By } from '@angular/platform-browser';
 import { IgxBannerComponent } from './banner.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { BannerResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { IgxCardComponent, IgxCardContentDirective, IgxCardHeaderComponent } from 'igniteui-angular/card';
@@ -523,6 +524,52 @@ describe('igxBanner', () => {
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.elementRef.nativeElement.querySelector('.' + CSS_CLASS_BANNER)).not.toBeNull();
         }));
+    });
+
+    describe('Resource Strings', () => {
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            const fix = TestBed.createComponent(SimpleBannerEventsComponent);
+            fix.detectChanges();
+            const banner = fix.componentInstance.banner;
+
+            banner.resourceStrings = { igx_banner_button_dismiss: 'Close' };
+            fix.detectChanges();
+
+            expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Close');
+        });
+
+        it('should update resource strings when global i18n changes and no custom strings are set', () => {
+            const fix = TestBed.createComponent(SimpleBannerEventsComponent);
+            fix.detectChanges();
+            const banner = fix.componentInstance.banner;
+
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Dismiss Global' });
+                fix.detectChanges();
+
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Dismiss Global');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
+        });
+
+        it('should preserve custom resource strings when global i18n changes', () => {
+            const fix = TestBed.createComponent(SimpleBannerEventsComponent);
+            fix.detectChanges();
+            const banner = fix.componentInstance.banner;
+
+            banner.resourceStrings = { igx_banner_button_dismiss: 'Custom Dismiss' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_banner_button_dismiss: 'Global Dismiss' });
+                fix.detectChanges();
+
+                expect(banner.resourceStrings.igx_banner_button_dismiss).toBe('Custom Dismiss');
+            } finally {
+                changei18n(BannerResourceStringsEN);
+            }
+        });
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {

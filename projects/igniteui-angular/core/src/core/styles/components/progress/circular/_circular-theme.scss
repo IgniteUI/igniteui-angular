@@ -58,33 +58,12 @@
             %outer {
 	            stroke: var-get($theme, 'fill-color-default');
 
-                @if $variant != 'bootstrap' {
-                    animation: igx-initial-dashoffset var(--_transition-duration) linear;
-                } @else {
+                @if $variant == 'bootstrap' {
                     stroke-width: var(--stroke-thickness);
                 }
 
                 stroke-dasharray: #{$circumference} #{$circumference};
                 stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-            }
-        }
-    }
-
-    %display-circular:not(%display-circular--indeterminate) {
-        svg {
-            %outer {
-                animation: igx-initial-dashoffset var(--_transition-duration) linear;
-                stroke-dasharray: #{$circumference} #{$circumference};
-                stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-            }
-        }
-    }
-
-    %display-circular:dir(rtl):not(%display-circular--indeterminate) {
-        svg {
-            %outer {
-                animation: igx-initial-dashoffset-rtl var(--_transition-duration) linear;
-                animation-direction: reverse;
             }
         }
     }
@@ -164,8 +143,18 @@
         --_progress-percentage: calc(var(--_progress-whole, 0) / 100);
 
         stroke-dasharray: #{$circumference} #{$circumference};
-        stroke-dashoffset: calc(#{$circumference} - var(--_progress-whole, 0) * #{$circumference});
-        transition: stroke-dashoffset var(--_transition-duration) linear;
+        stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
+
+        // The stroke follows the registered --_progress-whole number: value changes
+        // transition it and @starting-style makes the first render transition from 0
+        // as well. Nothing animates stroke-dashoffset itself, so no property has both
+        // a keyframe animation and a transition, which made WebKit restart the
+        // transition on every frame and overshoot (igniteui-angular#17649).
+        transition: --_progress-whole var(--_transition-duration) linear;
+
+        @starting-style {
+            --_progress-whole: 0;
+        }
 
         @if $variant == 'material' {
             stroke-width: calc(var(--stroke-thickness) + rem(0.75px));
@@ -210,7 +199,6 @@
             font-weight: 700;
         }
 
-        animation: igx-initial-counter var(--_transition-duration) ease-in-out;
         counter-reset:
             progress-integer var(--_progress-integer, 0)
             progress-fraction var(--_progress-fraction, 0);
@@ -321,25 +309,6 @@
             // Positive offset for opposite direction
             stroke-dashoffset: calc(#{$circumference} / 4);
             transform: rotate(-990deg);
-        }
-    }
-
-    @keyframes igx-initial-dashoffset {
-        from {
-            /* Start with no progress (0%) */
-            stroke-dashoffset: #{$circumference};
-        }
-
-        to {
-            stroke-dashoffset: calc(#{$circumference} - var(--_progress-percentage) * #{$circumference});
-        }
-    }
-
-    // Generic animations
-    @keyframes igc-initial-counter {
-        from {
-            --_progress-integer: 0;
-            --_progress-fraction: 0;
         }
     }
 

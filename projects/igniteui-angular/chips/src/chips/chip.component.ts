@@ -345,14 +345,15 @@ export class IgxChipComponent implements OnInit, OnDestroy {
      */
     @Input()
     public set resourceStrings(value: IChipResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
     public get resourceStrings(): IChipResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -609,11 +610,13 @@ export class IgxChipComponent implements OnInit, OnDestroy {
     protected _movedWhileRemoving = false;
     protected computedStyles;
     private _resourceStrings: IChipResourceStrings = null;
+    private _customResourceStrings: IChipResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN);
 
     constructor() {
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ChipResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 

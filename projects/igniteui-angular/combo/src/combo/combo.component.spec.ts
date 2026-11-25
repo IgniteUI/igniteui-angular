@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, DebugElement, ElementRef, Injectable, Injector, OnDestroy, OnInit, ViewChild, inject, provideZonelessChangeDetection } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import {
     FormsModule, NgForm, NgModel, ReactiveFormsModule, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators
@@ -14,6 +14,7 @@ import { IForOfState } from '../../../directives/src/directives/for-of/for_of.di
 import { IgxInputState } from '../../../input-group/src/public_api';
 import { IGX_INPUT_GROUP_TYPE, IgxLabelDirective } from '../../../input-group/src/public_api';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from 'igniteui-angular/core';
+import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
@@ -2712,7 +2713,7 @@ describe('igxCombo', () => {
                 fixture.detectChanges();
                 expect(combo.dropdown.headers[0].element.nativeElement.innerText).toEqual('New England')
             });
-            it('should sort groups with diacritics correctly', async() => {
+            it('should sort groups with diacritics correctly', async () => {
                 combo.data = [
                     { field: "Alaska", region: "Méxícó" },
                     { field: "California", region: "Méxícó" },
@@ -3658,6 +3659,112 @@ describe('igxCombo', () => {
                     expect(ngModel.touched).toBeTrue();
                 }));
             });
+        });
+
+        describe('Zoneless', () => {
+            beforeEach(async () => {
+                TestBed.resetTestingModule();
+                await TestBed.configureTestingModule({
+                    imports: [
+                        NoopAnimationsModule,
+                        IgxComboSampleComponent,
+                    ],
+                    providers: [
+                        provideZonelessChangeDetection(),
+                    ]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(IgxComboSampleComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+            });
+
+            it('should not reproduce NG0100 when virtualized combo items update on scroll - issue #17310', fakeAsync(() => {
+                combo.open();
+                tick();
+                fixture.detectChanges();
+
+                const scrollEl = combo.virtualScrollContainer.getScroll();
+                expect(scrollEl).toBeTruthy();
+
+                scrollEl.scrollTop = 300;
+                scrollEl.dispatchEvent(new Event('scroll'));
+                tick(100);
+
+                expect(() => {
+
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+
+            it('should not reproduce NG0100 related to active descendant on scroll - issue #17310', fakeAsync(() => {
+                combo.toggle();
+                tick();
+                fixture.detectChanges();
+
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                dropdownContent.triggerEventHandler('focus', {});
+                tick();
+                fixture.detectChanges();
+
+                const activeDescendantId = combo.dropdown.activeDescendant;
+                expect(activeDescendantId).toBeTruthy();
+
+                fixture.detectChanges();
+
+                expect(() => {
+                    const scrollEl = combo.virtualScrollContainer.getScroll();
+                    scrollEl.scrollTop = 1000;
+                    scrollEl.dispatchEvent(new Event('scroll'));
+
+                    tick(100);
+                    fixture.detectChanges();
+                }).not.toThrowError(/NG0100|ExpressionChangedAfterItHasBeenCheckedError/);
+            }));
+        });
+    });
+
+    describe('Resource Strings', () => {
+        let fix: ComponentFixture<IgxComboSampleComponent>;
+
+        beforeEach(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                imports: [NoopAnimationsModule, IgxComboSampleComponent]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(IgxComboSampleComponent);
+            fix.detectChanges();
+        });
+
+        it('should return full resource strings when partial resourceStrings are set', () => {
+            combo = fix.componentInstance.combo;
+
+            combo.resourceStrings = { igx_combo_empty_message: 'Nothing here' };
+            fix.detectChanges();
+
+            expect(combo.resourceStrings.igx_combo_empty_message).toBe('Nothing here');
+            expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Enter a Search Term');
+            expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+        });
+
+        it('should update non-overridden resource strings when global i18n changes', () => {
+            combo = fix.componentInstance.combo;
+
+            combo.resourceStrings = { igx_combo_empty_message: 'Custom Empty' };
+            fix.detectChanges();
+
+            try {
+                changei18n({ igx_combo_filter_search_placeholder: 'Suchen...' });
+                fix.detectChanges();
+
+                expect(combo.resourceStrings.igx_combo_empty_message).toBe('Custom Empty');
+                expect(combo.resourceStrings.igx_combo_filter_search_placeholder).toBe('Suchen...');
+                expect(combo.resourceStrings.igx_combo_clearItems_placeholder).toBe('Clear Selection');
+            } finally {
+                changei18n(ComboResourceStringsEN);
+            }
         });
     });
 });

@@ -25,6 +25,15 @@ The grid supports both component inputs (`width`/`height`) and regular CSS/layou
 
 **Default:** `100%` — the grid fills available width of the parent/window.
 
+### `null` Width
+
+```html
+<igx-grid [width]="null" ...></igx-grid>
+```
+
+- All columns are rendered in the DOM — **horizontal column virtualization is disabled**.
+- **Warning:** rendering many columns without virtualization can significantly impact performance.
+
 ### Pixel Width
 
 ```html
@@ -141,6 +150,7 @@ html, body, .grid-container {
 - Column width is calculated as a percentage of the grid width.
 - Responsive — resizes when the grid resizes.
 - Combined percentages less than `100%` leave an empty area; greater than `100%` triggers a horizontal scrollbar.
+- If the grid `width` is `null`, percentage-width columns fall back to `136px` each.
 
 ## Grid Cell Spacing Control
 

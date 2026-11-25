@@ -16,8 +16,6 @@
 
 ## State Persistence
 
-> **Docs:** [State Persistence](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/state-persistence) (substitute URL prefix per grid type)
-
 ### Saving and Restoring Grid State
 
 Use `IgxGridStateDirective` to persist sorting, filtering, grouping, paging, selection, and column state:
@@ -115,8 +113,6 @@ onColumnInit(column: IgxColumnComponent) {
 
 ## Tree Grid Data Operations
 
-> **Docs:** [Tree Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid) · [Load on Demand](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/load-on-demand)
-
 ### Recursive Filtering Behavior
 
 Tree Grid filtering is **inclusive** — when a child matches, all its ancestors are kept visible (marked as `isFilteredOutParent`) and auto-expanded. This is the default `TreeGridFilteringStrategy`.
@@ -170,8 +166,6 @@ this.treeGridRef().deleteRow(2); // deletes row 2 and all its children
 ```
 
 ## Hierarchical Grid Data Operations
-
-> **Docs:** [Hierarchical Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/hierarchical-grid) · [Load on Demand](https://www.infragistics.com/products/ignite-ui-angular/angular/components/hierarchicalgrid/load-on-demand)
 
 ### Independent Grid Levels
 
@@ -236,8 +230,6 @@ Setting `[batchEditing]="true"` on the root hierarchical grid automatically prop
 
 ## Pivot Grid Data Operations
 
-> **Docs:** [Pivot Grid](https://www.infragistics.com/products/ignite-ui-angular/angular/components/pivotGrid/pivot-grid)
-
 > **IMPORTANT**: The Pivot Grid does NOT use standard sorting, filtering, editing, or paging APIs. All data operations are controlled through `pivotConfiguration`.
 
 ### Dimension-Based Filtering
@@ -260,18 +252,16 @@ regionFilter.filteringOperands = [
   }
 ];
 
-// Apply the filter to a dimension
+// Apply the filter to a dimension and notify the grid
 this.pivotConfig.filters[0].filter = regionFilter;
-// Notify the grid of the change
-this.pivotGridRef().pipeTrigger++;
+this.pivotGridRef().notifyDimensionChange(true);
 ```
 
 ### Dimension-Based Sorting
 
 ```typescript
-// Sort a row dimension
-this.pivotConfig.rows[0].sortDirection = SortingDirection.Desc;
-this.pivotGridRef().pipeTrigger++;
+// Sort a row dimension via the public API
+this.pivotGridRef().sortDimension(this.pivotConfig.rows[0], SortingDirection.Desc);
 ```
 
 ### Key Pivot Grid Limitations

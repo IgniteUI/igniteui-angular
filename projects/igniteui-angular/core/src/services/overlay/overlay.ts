@@ -790,11 +790,21 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private cleanUp(info: OverlayInfo) {
+        this.hideDynamicComponent(info);
         this.removeWrapper(info);
         this.restoreHook(info);
         this.destroyComponent(info);
         this.unregisterOverlay(info);
         this.releaseResources(info);
+    }
+
+    /**
+     * Hides a dynamically created component before unwrapping it, as Angular may remove its host after `destroyComponent`.
+     */
+    private hideDynamicComponent(info: OverlayInfo) {
+        if (info.componentRef) {
+            info.elementRef!.nativeElement.style.display = 'none';
+        }
     }
 
     /**

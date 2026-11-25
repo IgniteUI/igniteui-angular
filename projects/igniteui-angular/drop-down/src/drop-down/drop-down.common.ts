@@ -56,7 +56,7 @@ export interface IDropDownList {
     collapsed: boolean;
     items: IgxDropDownItemBaseDirective[];
     headers: IgxDropDownItemBaseDirective[];
-    focusedItem: IgxDropDownItemBaseDirective;
+    focusedItem: IgxDropDownItemBaseDirective | null;
     navigateFirst(): void;
     navigateLast(): void;
     navigateNext(): void;

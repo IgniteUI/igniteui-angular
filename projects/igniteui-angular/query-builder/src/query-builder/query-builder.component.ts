@@ -11,7 +11,8 @@ import {
     QueryBuilderResourceStringsEN,
     recreateTree,
     getCurrentResourceStrings,
-    onResourceChangeHandle
+    onResourceChangeHandle,
+    preventImplicitSubmission
 } from 'igniteui-angular/core';
 import { IgxQueryBuilderTreeComponent } from './query-builder-tree.component';
 import { IgxIconService } from 'igniteui-angular/icon';
@@ -36,10 +37,15 @@ import { IgxQueryBuilderHeaderComponent } from './query-builder-header.component
 @Component({
     selector: 'igx-query-builder',
     templateUrl: './query-builder.component.html',
-    imports: [IgxQueryBuilderTreeComponent]
+    imports: [IgxQueryBuilderTreeComponent],
+    host: {
+        '(keydown)': 'preventImplicitSubmission($event)'
+    }
 })
 export class IgxQueryBuilderComponent implements OnDestroy {
     protected iconService = inject(IgxIconService);
+
+    protected readonly preventImplicitSubmission = preventImplicitSubmission;
 
     /**
      * @hidden @internal
@@ -171,14 +177,15 @@ export class IgxQueryBuilderComponent implements OnDestroy {
      */
     @Input()
     public set resourceStrings(value: IQueryBuilderResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+        this._resourceStrings = value;
+        this._customResourceStrings = Object.assign({}, this._defaultResourceStrings, this._resourceStrings);
     }
 
     /**
      * Returns the resource strings.
      */
     public get resourceStrings(): IQueryBuilderResourceStrings {
-        return this._resourceStrings || this._defaultResourceStrings;
+        return this._resourceStrings ? this._customResourceStrings : this._defaultResourceStrings;
     }
 
     /**
@@ -241,6 +248,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
 
     private destroy$ = new Subject<any>();
     private _resourceStrings: IQueryBuilderResourceStrings = null;
+    private _customResourceStrings: IQueryBuilderResourceStrings = null;
     private _defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN);
     private _expressionTree: IExpressionTree;
     private _fields: FieldType[];
@@ -252,6 +260,7 @@ export class IgxQueryBuilderComponent implements OnDestroy {
         this.registerSVGIcons();
         onResourceChangeHandle(this.destroy$, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(QueryBuilderResourceStringsEN, false);
+            this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null;
         }, this);
     }
 

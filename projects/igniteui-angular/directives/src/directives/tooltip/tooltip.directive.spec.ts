@@ -15,6 +15,7 @@ const SHOW_DELAY = 200;
 const HIDE_DELAY = 300;
 const AUTO_HIDE_DELAY = 180;
 const TOOLTIP_ARROW_SELECTOR = '[data-arrow="true"]';
+const hoveredElements = new WeakSet<Element>();
 
 describe('IgxTooltip', () => {
     let fix: ComponentFixture<any>;
@@ -23,6 +24,11 @@ describe('IgxTooltip', () => {
     let button: DebugElement;
 
     beforeEach(waitForAsync(() => {
+        const matches = Element.prototype.matches;
+        spyOn(Element.prototype, 'matches').and.callFake(function(this: Element, selectors: string): boolean {
+            return selectors === ':hover' ? hoveredElements.has(this) : matches.call(this, selectors);
+        } as typeof Element.prototype.matches);
+
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
@@ -532,6 +538,22 @@ describe('IgxTooltip', () => {
                 tick(300);
                 verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
             }));
+
+            for (const trigger of ['mouseenter', 'mouseover', 'pointerenter', 'pointerover']) {
+                it(`should not open after the delay when the target is no longer hovered using ${trigger}`, fakeAsync(() => {
+                    tooltipTarget.showDelay = 500;
+                    tooltipTarget.showTriggers = trigger;
+                    tooltipTarget.hideTriggers = 'click';
+                    fix.detectChanges();
+
+                    hoverElement(button, trigger);
+                    tick(300);
+                    unhoverElement(button);
+                    tick(200);
+
+                    verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, false);
+                }));
+            }
         });
     });
 
@@ -1169,9 +1191,15 @@ interface ElementRefLike {
     nativeElement: HTMLElement
 }
 
-const hoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerenter'));
+const hoverElement = (element: ElementRefLike, event = 'pointerenter') => {
+    hoveredElements.add(element.nativeElement);
+    element.nativeElement.dispatchEvent(new MouseEvent(event));
+};
 
-const unhoverElement = (element: ElementRefLike) => element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
+const unhoverElement = (element: ElementRefLike) => {
+    hoveredElements.delete(element.nativeElement);
+    element.nativeElement.dispatchEvent(new MouseEvent('pointerleave'));
+};
 
 const simulateTriggerEvent = (element: ElementRefLike, event: string) => element.nativeElement.dispatchEvent(new Event(event, { bubbles: true }));
 
@@ -1188,7 +1216,7 @@ const alignmentTolerance = 2;
 export const verifyTooltipPosition = (
     tooltipNativeElement: HTMLElement,
     actualTarget: { nativeElement: HTMLElement },
-    shouldAlign:boolean = true,
+    shouldAlign: boolean = true,
     placement: Placement = Placement.Bottom,
     offset: number = 6
 ) => {

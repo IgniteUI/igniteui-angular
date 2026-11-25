@@ -10,6 +10,8 @@
             $name: string.slice($this, 2, -1),
             $deps: (
                 igx-button,
+                igx-icon,
+                igx-ripple
             )
         );
 
