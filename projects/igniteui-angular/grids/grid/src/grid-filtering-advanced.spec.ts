@@ -10,7 +10,7 @@ import { SampleTestData } from '../../../test-utils/sample-test-data.spec';
 import { By } from '@angular/platform-browser';
 import { QueryBuilderFunctions } from '../../../query-builder/src/query-builder/query-builder-functions.spec';
 import { IFilteringEventArgs, IgxGridNavigationService, IgxGridToolbarAdvancedFilteringComponent } from 'igniteui-angular/grids/core';
-import { FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
+import { changei18n, FilteringExpressionsTree, FilteringLogic, FormattedValuesFilteringStrategy, GridResourceStringsEN, IGridResourceStrings, IgxNumberFilteringOperand, IgxStringFilteringOperand } from 'igniteui-angular/core';
 import { QueryBuilderSelectors } from 'igniteui-angular/query-builder/src/query-builder/query-builder.common';
 import { IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
 import { IGridCreatedEventArgs, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular/grids/hierarchical-grid';
@@ -1380,6 +1380,37 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             const addingButtons: any = QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0);
             expect(addingButtons[0].innerText).toBe('add\nMy condition');
             expect(addingButtons[1].innerText).toBe('add\nMy group');
+        });
+
+        it('Should update the opened Advanced Filtering dialog when the resource strings change globally.', async () => {
+            const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
+            const grid: IgxGridComponent = fix.componentInstance.grid;
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'angular',
+                ignoreCase: true
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+            const getAddConditionButtonText = () =>
+                (QueryBuilderFunctions.getQueryBuilderTreeRootGroupButtons(fix, 0)[0] as HTMLElement).querySelector('span').innerText;
+            expect(getAddConditionButtonText()).toBe('Condition');
+
+            try {
+                // The dialog passes the grid's advanced filtering strings to the query builder as custom strings,
+                // which the query builder does not refresh by itself.
+                changei18n({ igx_grid_advanced_filter_add_condition_root: 'Bedingung' });
+                fix.detectChanges();
+
+                expect(getAddConditionButtonText()).toBe('Bedingung');
+            } finally {
+                changei18n(GridResourceStringsEN);
+            }
         });
     });
 

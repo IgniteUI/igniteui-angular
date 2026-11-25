@@ -111,10 +111,12 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     public set tabAlignment(value: string | IgxTabsAlignment) {
         this._tabAlignment = value;
-        requestAnimationFrame(() => {
-            this.updateScrollButtons();
-            this.realignSelectedIndicator();
-        });
+        if (this.platform.isBrowser) {
+            requestAnimationFrame(() => {
+                this.updateScrollButtons();
+                this.realignSelectedIndicator();
+            });
+        }
     }
 
     /**

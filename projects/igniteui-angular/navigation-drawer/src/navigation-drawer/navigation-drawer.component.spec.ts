@@ -203,6 +203,39 @@ describe('Navigation Drawer', () => {
         expect(drawer.closed.emit).toHaveBeenCalled();
     });
 
+    it('should not complete opening or closing on transitions of the drawer content', async () => {
+        await TestBed.compileComponents();
+        const fixture = TestBed.createComponent(TestComponentDIComponent);
+        fixture.detectChanges();
+        const drawer = fixture.componentInstance.navDrawer;
+        const aside: HTMLElement = fixture.nativeElement.querySelector('.igx-nav-drawer__aside');
+        const drawerItem: HTMLElement = aside.querySelector('[igxDrawerItem]');
+        const contentTransitionEnd = () => drawerItem.dispatchEvent(
+            new TransitionEvent('transitionend', { propertyName: 'background-color', bubbles: true }));
+        const asideTransitionEnd = () => aside.dispatchEvent(
+            new TransitionEvent('transitionend', { propertyName: 'width', bubbles: true }));
+
+        vi.spyOn(drawer.opened, 'emit');
+        vi.spyOn(drawer.closed, 'emit');
+
+        drawer.open();
+        fixture.detectChanges();
+        // E.g. a hover color transition of an item inside the drawer, which ends before the drawer opens.
+        contentTransitionEnd();
+        expect(drawer.opened.emit).not.toHaveBeenCalled();
+
+        asideTransitionEnd();
+        expect(drawer.opened.emit).toHaveBeenCalledTimes(1);
+
+        drawer.close();
+        fixture.detectChanges();
+        contentTransitionEnd();
+        expect(drawer.closed.emit).not.toHaveBeenCalled();
+
+        asideTransitionEnd();
+        expect(drawer.closed.emit).toHaveBeenCalledTimes(1);
+    });
+
     it('should properly initialize with min template', async () => {
         const template = `<igx-nav-drawer>
                             <ng-template igxDrawer></ng-template>

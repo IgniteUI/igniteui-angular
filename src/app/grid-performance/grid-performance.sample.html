@@ -7,6 +7,16 @@
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
+        <igx-column [field]="'Chip'" [header]="'Chip'" [editable]="true" [sortable]="true" [filterable]="true" [resizable]="true">
+            <ng-template igxCell let-cell="cell">
+                <igx-chip [selected]="cell.row.data.ID % 2 === 0" [variant]="cell.row.data.ID % 5 === 0 ? 'primary' : cell.row.data.ID % 5 === 1 ? 'success' : cell.row.data.ID % 5 === 2 ? 'warning' : cell.row.data.ID % 5 === 3 ? 'danger' : 'info'">Chip</igx-chip>
+            </ng-template>
+        </igx-column>
+        <igx-column [field]="'Checkbox'" [header]="'Checkbox'" [editable]="true" [sortable]="true" [filterable]="true" [resizable]="true">
+            <ng-template igxCell let-cell="cell">
+                <igx-checkbox [checked]="cell.row.data.ID % 2 === 0"></igx-checkbox>
+            </ng-template>
+        </igx-column>
         @for (c of columns; track c) {
             <igx-column width='auto' [editable]="true" [sortable]="true" [filterable]="true" [resizable]="true" [field]="c.field" [header]="c.field">
             </igx-column>
