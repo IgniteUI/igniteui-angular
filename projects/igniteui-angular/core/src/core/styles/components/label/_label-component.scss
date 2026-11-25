@@ -10,7 +10,8 @@
         $deps: ()
     );
 
-    [igxLabel] {
+    // igxButton has an igxLabel input of its own, so keep label styles off buttons.
+    [igxLabel]:where(:not(.igx-button)) {
         @extend %label-base !optional;
     }
 }

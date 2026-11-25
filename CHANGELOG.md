@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 21.2.28
+
+### Bug Fixes
+
+- `IgxButtonDirective`
+    - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+
 ## 21.2.27
 
 ### Bug Fixes
