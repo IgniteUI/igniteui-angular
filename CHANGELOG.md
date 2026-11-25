@@ -2,6 +2,19 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.2
+
+### General
+
+- `IgxButtonDirective`
+    - **Deprecation** - The `igxLabel` input has been deprecated and will be removed in a future version. Use the native `aria-label` attribute instead.
+
+### Bug Fixes
+
+- `IgxButtonDirective`
+    - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only when `igxLabel` is set, and restores the original value when `igxLabel` is cleared (#18009).
+    - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+
 ## 22.3.1
 
 ### Bug Fixes
