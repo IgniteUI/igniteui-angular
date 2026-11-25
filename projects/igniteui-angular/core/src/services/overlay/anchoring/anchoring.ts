@@ -57,11 +57,22 @@ export function supportsNativeAnchoring(win: (Window & typeof globalThis) | null
         && css.supports('justify-self', 'unsafe anchor-center');
 }
 
+/** @hidden @internal The `position-visibility` value that hides content while its anchor is clipped. */
+export type AnchorVisibleKeyword = 'anchor-visible' | 'anchors-visible';
+
 /**
  * @hidden @internal
- * Whether the window supports `position-visibility: anchors-visible`.
+ * The `position-visibility` keyword the window supports for hiding content with a clipped anchor, or `null`.
+ * The CSSWG renamed `anchors-visible` to `anchor-visible` (Chrome 157+, Safari 27+); the plural is a legacy
+ * alias that browsers serialize to the new name, and the only spelling older browsers know.
  */
-export function supportsPositionVisibility(win: (Window & typeof globalThis) | null | undefined): boolean {
+export function anchorVisibleKeyword(win: (Window & typeof globalThis) | null | undefined): AnchorVisibleKeyword | null {
     const css = win?.CSS;
-    return typeof css?.supports === 'function' && css.supports('position-visibility', 'anchors-visible');
+    if (typeof css?.supports !== 'function') {
+        return null;
+    }
+    if (css.supports('position-visibility', 'anchor-visible')) {
+        return 'anchor-visible';
+    }
+    return css.supports('position-visibility', 'anchors-visible') ? 'anchors-visible' : null;
 }

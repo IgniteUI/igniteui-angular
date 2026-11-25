@@ -28,7 +28,7 @@ const settings: OverlaySettings = {
 | What is watched | The target for connected, auto and elastic positioning; the container for `ContainerPositionStrategy`. A `Point` target or `GlobalPositionStrategy` has nothing to watch, so the content is never hidden. |
 | When the content is hidden | While the watched element is fully clipped by the viewport or a scrolling ancestor. One visible pixel shows the content again. |
 | How it is hidden | Visually only. The overlay stays open: `closing` and `closed` are not emitted, and `Esc` and outside clicks still close it. Focus inside the hidden content is lost. |
-| Browser | With native anchor positioning, the browser hides the content (`position-visibility: anchors-visible`). Elsewhere, including Safari 26.0 and 26.1, an `IntersectionObserver` hides it, up to one frame later. |
+| Browser | With native anchor positioning, the browser hides the content (`position-visibility: anchor-visible`, or the older `anchors-visible` spelling). Elsewhere, including Safari 26.0 and 26.1, an `IntersectionObserver` hides it, up to one frame later. |
 
 ## Usage
 

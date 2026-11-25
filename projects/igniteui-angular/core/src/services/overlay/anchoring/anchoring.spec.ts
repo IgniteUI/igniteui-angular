@@ -2,7 +2,7 @@ import { scaleInHorLeft, scaleInHorRight, scaleInVerBottom, scaleInVerTop, fadeI
 import { afterEach, describe, expect, it } from 'vitest';
 import { HorizontalAlignment as H, PositionSettings, VerticalAlignment as V } from '../utilities';
 import { acquireAnchorName, addAnchorName, removeAnchorName } from './anchor-names';
-import { supportsNativeAnchoring, supportsPositionVisibility } from './anchoring';
+import { supportsNativeAnchoring, anchorVisibleKeyword } from './anchoring';
 import {
     AUTO_FALLBACKS,
     connectedDeclarations,
@@ -67,8 +67,8 @@ describe('Overlay anchoring (pure)', () => {
             for (const [vs, vd, row, vAuto, vConnected] of vertical) {
                 it(`maps ${hs}→${hd}, ${vs}→${vd} to "${row} ${column}"`, () => {
                     const s = settings(hs, hd, vs, vd);
-                    const auto = asMap(connectedDeclarations(s, true, '--a', false));
-                    const connected = asMap(connectedDeclarations(s, false, '--a', false));
+                    const auto = asMap(connectedDeclarations(s, true, '--a', null));
+                    const connected = asMap(connectedDeclarations(s, false, '--a', null));
 
                     expect(auto['position-area']).toBe(`${row} ${column}`);
                     expect(auto['justify-self']).toBe(hAuto);
@@ -83,7 +83,7 @@ describe('Overlay anchoring (pure)', () => {
         }
 
         it('writes the fixed base declarations in order', () => {
-            const declarations = connectedDeclarations(settings(H.Left, H.Right, V.Bottom, V.Bottom), false, '--a', false);
+            const declarations = connectedDeclarations(settings(H.Left, H.Right, V.Bottom, V.Bottom), false, '--a', null);
             expect(declarations.map(([p]) => p)).toEqual([
                 'position', 'inset', 'margin', 'position-anchor', 'position-area',
                 'justify-self', 'align-self', 'position-try-fallbacks', 'position-visibility'
@@ -97,26 +97,26 @@ describe('Overlay anchoring (pure)', () => {
         });
 
         it('applies the offset as margins on outside axes only', () => {
-            const bottomBottom = asMap(connectedDeclarations(settings(H.Left, H.Right, V.Bottom, V.Bottom, { offset: 6 }), true, '--a', false));
+            const bottomBottom = asMap(connectedDeclarations(settings(H.Left, H.Right, V.Bottom, V.Bottom, { offset: 6 }), true, '--a', null));
             expect(bottomBottom.margin).toBe('6px 0px 6px 0px');
 
-            const rightRight = asMap(connectedDeclarations(settings(H.Right, H.Right, V.Top, V.Bottom, { offset: 4 }), true, '--a', false));
+            const rightRight = asMap(connectedDeclarations(settings(H.Right, H.Right, V.Top, V.Bottom, { offset: 4 }), true, '--a', null));
             expect(rightRight.margin).toBe('0px 4px 0px 4px');
 
-            const centered = asMap(connectedDeclarations(settings(H.Center, H.Center, V.Middle, V.Middle, { offset: 4 }), true, '--a', false));
+            const centered = asMap(connectedDeclarations(settings(H.Center, H.Center, V.Middle, V.Middle, { offset: 4 }), true, '--a', null));
             expect(centered.margin).toBe('0px 0px 0px 0px');
         });
 
-        it('writes anchors-visible only when hiding', () => {
+        it('writes the anchor-visible keyword only when hiding', () => {
             const s = settings(H.Left, H.Right, V.Bottom, V.Bottom);
-            expect(asMap(connectedDeclarations(s, true, '--a', true))['position-visibility']).toBe('anchors-visible');
-            expect(asMap(connectedDeclarations(s, true, '--a', false))['position-visibility']).toBe('always');
+            expect(asMap(connectedDeclarations(s, true, '--a', 'anchor-visible'))['position-visibility']).toBe('anchor-visible');
+            expect(asMap(connectedDeclarations(s, true, '--a', null))['position-visibility']).toBe('always');
         });
     });
 
     describe('containerDeclarations', () => {
         it('anchors all four insets to the container', () => {
-            expect(asMap(containerDeclarations('--c', false))).toEqual({
+            expect(asMap(containerDeclarations('--c', null))).toEqual({
                 'position-anchor': '--c',
                 top: 'anchor(top)',
                 right: 'anchor(right)',
@@ -124,7 +124,7 @@ describe('Overlay anchoring (pure)', () => {
                 left: 'anchor(left)',
                 'position-visibility': 'always'
             });
-            expect(asMap(containerDeclarations('--c', true))['position-visibility']).toBe('anchors-visible');
+            expect(asMap(containerDeclarations('--c', 'anchors-visible'))['position-visibility']).toBe('anchors-visible');
         });
     });
 
@@ -246,9 +246,18 @@ describe('Overlay anchoring (pure)', () => {
     describe('feature detection', () => {
         it('detects support in this browser and none without a window', () => {
             expect(supportsNativeAnchoring(window)).toBe(true);
-            expect(supportsPositionVisibility(window)).toBe(true);
+            expect(['anchor-visible', 'anchors-visible']).toContain(anchorVisibleKeyword(window));
             expect(supportsNativeAnchoring(null)).toBe(false);
-            expect(supportsPositionVisibility(undefined)).toBe(false);
+            expect(anchorVisibleKeyword(undefined)).toBeNull();
+        });
+
+        it('prefers anchor-visible and falls back to the legacy anchors-visible', () => {
+            const windowWith = (...keywords: string[]) => ({
+                CSS: { supports: (property: string, value: string) => property === 'position-visibility' && keywords.includes(value) }
+            }) as unknown as Window & typeof globalThis;
+            expect(anchorVisibleKeyword(windowWith('anchor-visible', 'anchors-visible'))).toBe('anchor-visible');
+            expect(anchorVisibleKeyword(windowWith('anchors-visible'))).toBe('anchors-visible');
+            expect(anchorVisibleKeyword(windowWith())).toBeNull();
         });
     });
 });

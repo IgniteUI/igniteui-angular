@@ -1,6 +1,7 @@
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { AnimationUtil } from 'igniteui-angular/animations';
 import { HorizontalAlignment, PositionSettings, VerticalAlignment } from '../utilities';
+import type { AnchorVisibleKeyword } from './anchoring';
 
 /** @hidden @internal */
 export type OverlayEngine = 'script' | 'native-connected' | 'native-container';
@@ -87,7 +88,7 @@ export function isExpressible(settings: PositionSettings): boolean {
  * Call only with expressible settings.
  */
 export function connectedDeclarations(
-    settings: PositionSettings, isAuto: boolean, anchorName: string, hide: boolean
+    settings: PositionSettings, isAuto: boolean, anchorName: string, hide: AnchorVisibleKeyword | null
 ): NativeDeclarations {
     const h = horizontalOf(settings)!;
     const v = verticalOf(settings)!;
@@ -103,7 +104,7 @@ export function connectedDeclarations(
         ['justify-self', isAuto ? h.auto : h.connected],
         ['align-self', isAuto ? v.auto : v.connected],
         ['position-try-fallbacks', isAuto ? AUTO_FALLBACKS : 'none'],
-        ['position-visibility', hide ? 'anchors-visible' : 'always']
+        ['position-visibility', hide ?? 'always']
     ];
 }
 
@@ -115,14 +116,14 @@ export function connectedDeclarations(
  * the top layer, so the container clips and scrolls them with no positioning code. Native Container
  * (D11, D12, §8.2, PR 3) would then be unnecessary;
  */
-export function containerDeclarations(anchorName: string, hide: boolean): NativeDeclarations {
+export function containerDeclarations(anchorName: string, hide: AnchorVisibleKeyword | null): NativeDeclarations {
     return [
         ['position-anchor', anchorName],
         ['top', 'anchor(top)'],
         ['right', 'anchor(right)'],
         ['bottom', 'anchor(bottom)'],
         ['left', 'anchor(left)'],
-        ['position-visibility', hide ? 'anchors-visible' : 'always']
+        ['position-visibility', hide ?? 'always']
     ];
 }
 

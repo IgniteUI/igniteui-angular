@@ -16,7 +16,7 @@ import { GlobalPositionStrategy } from './position/global-position-strategy';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { HideScrollStrategy } from './scroll/hide-scroll-strategy';
-import { IGX_OVERLAY_ANCHORING, supportsNativeAnchoring, supportsPositionVisibility } from './anchoring/anchoring';
+import { AnchorVisibleKeyword, anchorVisibleKeyword, IGX_OVERLAY_ANCHORING, supportsNativeAnchoring } from './anchoring/anchoring';
 import { acquireAnchorName, addAnchorName, removeAnchorName } from './anchoring/anchor-names';
 import {
     connectedDeclarations,
@@ -62,7 +62,7 @@ export class IgxOverlayService implements OnDestroy {
     private animationService = inject<AnimationService>(IgxAngularAnimationService);
     private _anchoringMode = inject(IGX_OVERLAY_ANCHORING, { optional: true }) ?? 'auto';
     private _nativeSupported?: boolean;
-    private _positionVisibilitySupported?: boolean;
+    private _anchorVisible?: AnchorVisibleKeyword | null;
 
     /**
      * Emitted just before the overlay content starts to open.
@@ -501,7 +501,7 @@ export class IgxOverlayService implements OnDestroy {
         const scrollStrategy = info.settings!.scrollStrategy;
         if (scrollStrategy instanceof HideScrollStrategy) {
             const anchor = this.getHideAnchor(info);
-            const useObserver = engine === 'script' || !this.positionVisibilitySupported();
+            const useObserver = engine === 'script' || !this.anchorVisible();
             this._zone.runOutsideAngular(() => scrollStrategy._onShown(anchor, contentElement, useObserver));
         }
         this.addModalClasses(info);
@@ -1213,8 +1213,12 @@ export class IgxOverlayService implements OnDestroy {
         return this._nativeSupported ??= supportsNativeAnchoring(this._document.defaultView);
     }
 
-    private positionVisibilitySupported(): boolean {
-        return this._positionVisibilitySupported ??= supportsPositionVisibility(this._document.defaultView);
+    /** The supported `position-visibility` hide keyword, or `null`. Detected once per service. */
+    private anchorVisible(): AnchorVisibleKeyword | null {
+        if (this._anchorVisible === undefined) {
+            this._anchorVisible = anchorVisibleKeyword(this._document.defaultView);
+        }
+        return this._anchorVisible;
     }
 
     /** Picks the engine for this show(). Exact class matches only: subclasses keep the script engine. */
@@ -1272,7 +1276,7 @@ export class IgxOverlayService implements OnDestroy {
         const name = info.anchorName ??= acquireAnchorName();
         const settings = info.settings!;
         const strategy = settings.positionStrategy!;
-        const hide = settings.scrollStrategy instanceof HideScrollStrategy && this.positionVisibilitySupported();
+        const hide = settings.scrollStrategy instanceof HideScrollStrategy ? this.anchorVisible() : null;
         let element: HTMLElement;
         let declarations: NativeDeclarations;
 

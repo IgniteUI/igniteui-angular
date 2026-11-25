@@ -15,7 +15,7 @@ import { AbsoluteScrollStrategy } from '../scroll/absolute-scroll-strategy';
 import { HideScrollStrategy } from '../scroll/hide-scroll-strategy';
 import { NoOpScrollStrategy } from '../scroll/NoOpScrollStrategy';
 import { HorizontalAlignment, OverlaySettings, Point, PositionSettings, Util, VerticalAlignment } from '../utilities';
-import { provideOverlayAnchoring } from './anchoring';
+import { anchorVisibleKeyword, provideOverlayAnchoring } from './anchoring';
 import { AUTO_FALLBACKS } from './native-engine';
 
 const TOLERANCE = 1;
@@ -506,7 +506,7 @@ describe('igxOverlay native anchoring', () => {
             overlay.closed.subscribe(closed);
             const id = await open(addElement(), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });
             const el = content(id);
-            expect(el.style.getPropertyValue('position-visibility')).toBe('anchors-visible');
+            expect(el.style.getPropertyValue('position-visibility')).toBe(anchorVisibleKeyword(window));
             expect(isHitTestable(el)).toBe(true);
 
             await scrollAndSettle(scroller, 200);
@@ -592,11 +592,11 @@ describe('igxOverlay native anchoring', () => {
             expect(overlay.getOverlayById(id).visible).toBe(false);
         });
 
-        it('H8 - Container: native writes anchors-visible on the wrapper', async () => {
+        it('H8 - Container: native writes the anchor-visible keyword on the wrapper', async () => {
             const { target: host } = addScroller();
             host.style.position = 'relative';
             const id = await open(addElement(50, 20, host), { positionStrategy: new ContainerPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });
-            expect(overlay.getOverlayById(id).wrapperElement!.style.getPropertyValue('position-visibility')).toBe('anchors-visible');
+            expect(overlay.getOverlayById(id).wrapperElement!.style.getPropertyValue('position-visibility')).toBe(anchorVisibleKeyword(window));
         });
     });
 });
