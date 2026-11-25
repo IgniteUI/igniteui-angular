@@ -275,6 +275,7 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     private _toggleCounts: ToggleCounts | null = null;
     /** Keeps the records of a remote page inside the total, as the list does. */
     private readonly _recordWindow = new IgxComboRecordWindowPipe();
+    private _shownRecords: { source: any[]; total: number; start: number; records: any[] } | null = null;
 
     constructor() {
         super();
@@ -542,11 +543,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             ? shown
             : shown.filter(item => this.groupOf(item) === this.groupOf(record));
 
-        if (!items.length) {
+        // An item without a key cannot be selected, as with a click on its row.
+        const keys = this.selectionService.get_all_ids(items, this.valueKey).filter((key: any) => key !== undefined);
+        if (!keys.length) {
             return;
         }
 
-        const keys = this.selectionService.get_all_ids(items, this.valueKey);
         if (this.toggleRecordState(record) === 'all') {
             this.deselect(keys, event);
         } else {
@@ -565,7 +567,17 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
      * it returns `data` while filtering is disabled.
      */
     private get shownRecords(): any[] {
-        return this._recordWindow.transform(this.filteredData ?? [], this.totalItemCount, this.virtualStartIndex);
+        const source = this.filteredData ?? [];
+        const total = this.totalItemCount;
+        const start = this.virtualStartIndex;
+        let shown = this._shownRecords;
+
+        // A trimmed page is a new array, so it is kept while its inputs are, for the counts.
+        if (!shown || shown.source !== source || shown.total !== total || shown.start !== start) {
+            shown = { source, total, start, records: this._recordWindow.transform(source, total, start) };
+            this._shownRecords = shown;
+        }
+        return shown.records;
     }
 
     /** The group of an item or a group header, as the grouping names it. */
@@ -593,7 +605,13 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
         const all: ToggleCount = { total: 0, selected: 0 };
         const groups = new Map<string, ToggleCount>();
         for (const item of items) {
-            const selected = !!selection?.has(hasValueKey ? item?.[valueKey] : item);
+            const key = hasValueKey ? item?.[valueKey] : item;
+            if (key === undefined) {
+                // An item without a key cannot be selected, so it does not count.
+                continue;
+            }
+
+            const selected = !!selection?.has(key);
             const group = this.groupOf(item);
             const count = groups.get(group) ?? { total: 0, selected: 0 };
 

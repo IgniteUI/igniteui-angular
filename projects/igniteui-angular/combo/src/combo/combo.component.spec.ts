@@ -2362,6 +2362,8 @@ describe('igxCombo', () => {
                 };
                 expect(rows().filter(row => !row.matches(toggles)).map(row => row.textContent.trim()))
                     .toEqual(['Product 0', 'Product 2', 'Product 1']);
+                // The same trimmed records on each read, so the toggle rows share their counts.
+                expect(combo['shownRecords']).toBe(combo['shownRecords']);
 
                 await click(selectAll());
                 expect(combo.value).toEqual([0, 1, 2]);
@@ -4095,6 +4097,24 @@ describe('igxCombo', () => {
                 expect(combo.selection).toEqual([]);
                 expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
                 expect(firstGroupRow().getAttribute('aria-checked')).toEqual('false');
+            });
+
+            it('should leave the items without a value key out of the toggle options', async () => {
+                fixture.componentInstance.items = [{ field: 'A', region: 'R' }, { field: undefined, region: 'R' }];
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                fixture.detectChanges();
+                await openList();
+
+                // A click on its row does not select an item without a key, and neither do the toggles.
+                await click(selectAllRow());
+                expect(combo.value).toEqual(['A']);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('true');
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('true');
+
+                await click(firstGroupRow());
+                expect(combo.value).toEqual([]);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
             });
 
             it('should give the group header options the text style of the group headers in each theme', async () => {
