@@ -346,6 +346,24 @@ export class IgxListComponent extends IgxListBaseDirective {
     public isLoading = false;
 
     /**
+     * Sets/gets whether the user selects items in the list.
+     *
+     * @remarks
+     * Default value is `false`. When set, the list follows the ARIA listbox pattern: it has `role="listbox"`,
+     * its items become options that expose their `selected` state, Tab focuses the selected option,
+     * Arrow Up/Down and Home/End move between the options, and Enter/Space click the focused option.
+     *
+     * @example
+     * ```html
+     * <igx-list selectable aria-label="Employees">
+     *     <igx-list-item [selected]="true">Kate</igx-list-item>
+     * </igx-list>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public selectable = false;
+
+    /**
      * Event emitted when a left pan gesture is executed on a list item.
      *
      * @remarks
@@ -565,17 +583,9 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Gets/Sets the `role` attribute value.
      *
      * @remarks
-     * Defaults to `list`. With `listbox`, the list follows the ARIA listbox pattern: its items become options
-     * that expose their `selected` state, Tab focuses the selected option, Arrow Up/Down and Home/End
-     * move between the options, and Enter/Space click the focused option.
-     * A listbox that manages the focus itself with `aria-activedescendant` is left as it is.
+     * Defaults to `list`, and is `listbox` when the list is `selectable`.
      *
-     * @example
-     * ```html
-     * <igx-list role="listbox" aria-label="Employees">
-     *     <igx-list-item [selected]="true">Kate</igx-list-item>
-     * </igx-list>
-     * ```
+     * @deprecated in version 22.4.0. Use `selectable` to make the list a listbox instead.
      *
      * @example
      * ```typescript
@@ -585,7 +595,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role;
+        return this.selectable ? 'listbox' : this._role;
     }
 
     public set role(val: string) {
@@ -595,11 +605,10 @@ export class IgxListComponent extends IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * Whether the list follows the ARIA listbox pattern: its role is `listbox`,
-     * and it does not manage the focus itself with `aria-activedescendant`, like the grid's Excel-style filter list.
+     * Whether the list follows the ARIA listbox pattern, which it does when it is `selectable`.
      */
     public override get isListbox(): boolean {
-        return this._role === 'listbox' && !this.element.nativeElement.hasAttribute('aria-activedescendant');
+        return this.selectable;
     }
 
     /**

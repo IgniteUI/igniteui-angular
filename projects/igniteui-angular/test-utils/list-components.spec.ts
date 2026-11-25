@@ -87,7 +87,7 @@ export class ListWithSelectedItemComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list [role]="listbox ? 'listbox' : 'list'">
+        <igx-list [selectable]="listbox">
             <igx-list-item [isHeader]="true">Header</igx-list-item>
             @for (item of items; track item.id) {
                 <igx-list-item [selected]="item.id === selectedId">
@@ -112,7 +112,7 @@ export class ListboxComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list role="listbox" aria-multiselectable="true">
+        <igx-list selectable aria-multiselectable="true">
             <igx-list-item [selected]="false">Ungrouped</igx-list-item>
             <igx-list-item [isHeader]="true">Employees</igx-list-item>
             <igx-list-item [selected]="true">Item 1</igx-list-item>
@@ -132,7 +132,7 @@ export class GroupedListboxComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list [role]="listbox ? 'listbox' : 'list'" aria-label="Results" [isLoading]="isLoading">
+        <igx-list [selectable]="listbox" aria-label="Results" [isLoading]="isLoading">
             @for (item of items; track item) {
                 <igx-list-item>{{ item }}</igx-list-item>
             }
@@ -316,7 +316,7 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
 
 @Component({
     template: `
-    <igx-list #forOfList [role]="listbox ? 'listbox' : 'list'">
+    <igx-list #forOfList [selectable]="listbox">
         <div [style.height]="'240px'" [style.overflow]="'hidden'" [style.position]="'relative'">
             <igx-list-item
                 [index]="i"

@@ -778,7 +778,7 @@ describe('List', () => {
             fixture.detectChanges();
         });
 
-        it('should keep the attributes set by the app on a listbox that manages the focus with aria-activedescendant', () => {
+        it('should leave a list with role listbox that is not selectable unchanged', () => {
             const ownFixture = TestBed.createComponent(ListWithOwnAttributesComponent);
             ownFixture.detectChanges();
             const ownList = ownFixture.componentInstance.list;
@@ -885,7 +885,7 @@ describe('List', () => {
             expect(tabIndexes()).toEqual(['0', '-1']);
         });
 
-        it('should reset the list and its items when its role is no longer listbox', () => {
+        it('should reset the list and its items when it is no longer selectable', () => {
             const header = list.children.first.element;
             expect(header.id).toMatch(/^igx-list-header-\d+$/);
 
@@ -904,7 +904,8 @@ describe('List', () => {
             });
         });
 
-        it('should keep the roles set by the app and not follow the listbox pattern with a role other than listbox', () => {
+        it('should keep the roles set by the app on a list that is not selectable', () => {
+            fixture.componentInstance.listbox = false;
             list.role = 'menu';
             list.items[0].role = 'menuitem';
             fixture.detectChanges();

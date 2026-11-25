@@ -2,14 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 22.3.1
+## 22.4.0
 
 ### New Features
 
 - `IgxListComponent`, `IgxListItemComponent`
-    - Setting `role="listbox"` on the list makes it an accessible listbox (#17952): items get `role="option"` with `aria-selected` from their `selected` state, and the list has a single tab stop on the option that was focused last, else the first selected one, else the first one. Arrow Up/Down and Home/End move between options, and Enter/Space click the focused option, so `itemClicked` fires. While `isLoading` is set, the list has `aria-busy="true"`. While the list has no options, the list itself is the tab stop and its empty or loading message is read as an option. The focused option shows an inset focus ring, also when it is selected, colored by the new `item-focus-outline-color` token of the list theme. Lists with another role, and listboxes that manage the focus with `aria-activedescendant`, are unchanged. A list that already sets `role="listbox"` now gets this behavior.
+    - The new `selectable` input makes the list an accessible listbox (#17952): the list gets `role="listbox"`, items get `role="option"` with `aria-selected` from their `selected` state, and the list has a single tab stop on the option that was focused last, else the first selected one, else the first one. Arrow Up/Down and Home/End move between options, and Enter/Space click the focused option, so `itemClicked` fires. While `isLoading` is set, the list has `aria-busy="true"`. While the list has no options, the list itself is the tab stop and its empty or loading message is read as an option. The focused option shows an inset focus ring, also when it is selected, colored by the new `item-focus-outline-color` token of the list theme. Lists that are not `selectable` are unchanged.
     - In a listbox, headers act as group names: each option points to the header above it with `aria-describedby`, so screen readers announce the group with every option, and the headers themselves are hidden from screen readers. An option that has its own `aria-describedby`, set or bound in the template, keeps it.
+    - **Deprecation** - The `role` input of the list has been deprecated. The role of the list is `list`, and `listbox` when the list is `selectable`, so use `selectable` to make the list a listbox instead.
     - Recommended: give a listbox an `aria-label`, so it is announced when the focus moves into the list. Set `aria-multiselectable="true"` when more than one item can be selected, and avoid focusable controls inside the items. If an item needs a selection control, such as a checkbox, make it `inert` so it does not interfere with the keyboard navigation and selection, and bind it to the item's selected state.
+
+## 22.3.1
 
 ### Bug Fixes
 
