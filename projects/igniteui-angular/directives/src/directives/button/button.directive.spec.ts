@@ -174,17 +174,36 @@ describe('IgxButton', () => {
             expect(button.hasAttribute('aria-label')).toBe(false);
         });
 
-        it('should restore the static aria-label when igxLabel is cleared', () => {
+        it('should replace a static aria-label while igxLabel is set', () => {
             const fixture = TestBed.createComponent(ButtonWithAriaLabelAndIgxLabelComponent);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('span').getAttribute('aria-label')).toBe('Close');
+        });
+
+        it('should keep an aria-label that changed after igxLabel set it', () => {
+            const fixture = TestBed.createComponent(ButtonWithBoundAriaLabelAndIgxLabelComponent);
             fixture.detectChanges();
             const button = fixture.nativeElement.querySelector('span') as HTMLElement;
 
-            expect(button.getAttribute('aria-label')).toBe('Close');
+            fixture.componentRef.setInput('ariaLabel', 'Dismiss');
+            fixture.detectChanges();
+            fixture.componentRef.setInput('label', null);
+            fixture.detectChanges();
+
+            expect(button.getAttribute('aria-label')).toBe('Dismiss');
+        });
+
+        it('should remove a server-rendered aria-label when igxLabel is cleared', () => {
+            // After hydration the element already has the aria-label igxLabel wrote on the server.
+            const fixture = TestBed.createComponent(ServerRenderedIgxLabelComponent);
+            fixture.detectChanges();
+            const button = fixture.nativeElement.querySelector('span') as HTMLElement;
 
             fixture.componentRef.setInput('label', null);
             fixture.detectChanges();
 
-            expect(button.getAttribute('aria-label')).toBe('Save');
+            expect(button.hasAttribute('aria-label')).toBe(false);
         });
     });
 });
@@ -256,5 +275,24 @@ class ButtonWithIgxLabelComponent {
     imports: [IgxButtonDirective]
 })
 class ButtonWithAriaLabelAndIgxLabelComponent {
+    public label = input<string | null>('Close');
+}
+
+@Component({
+    template: `<span igxButton [attr.aria-label]="ariaLabel()" [igxLabel]="label()">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ButtonWithBoundAriaLabelAndIgxLabelComponent {
+    public ariaLabel = input('Save');
+    public label = input<string | null>('Close');
+}
+
+@Component({
+    template: `<span igxButton aria-label="Close" [igxLabel]="label()">Test</span>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxButtonDirective]
+})
+class ServerRenderedIgxLabelComponent {
     public label = input<string | null>('Close');
 }
