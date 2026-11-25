@@ -14,6 +14,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButtonDirective`
     - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only through `igxLabel`, and clearing `igxLabel` removes only the value it set (#18009).
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxDragDirective`
+    - A ghost with a margin stays under the pointer while the pointer is held at the edge of the viewport. Previously it moved away from the pointer by its margin on every auto-scroll step.
+    - While a ghost with a margin is rendered, `location` reports the top-left corner of its border box, like `getBoundingClientRect()`. Previously it was off by the margin.
 - `IgxPivotGridComponent`
     - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
 
