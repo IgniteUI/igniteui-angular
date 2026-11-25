@@ -1822,7 +1822,6 @@ export class VirtualComponent {
         /**
          * The element height is set explicitly via CSS, so it is always present.
          * Visibility is determined by whether the virtual content is wider than the helper.
-         * BUG https://github.com/IgniteUI/igniteui-angular/issues/17216
          */
         return horizontalScrollbar.clientWidth < horizontalScrollbar.children[0].offsetWidth;
     }
