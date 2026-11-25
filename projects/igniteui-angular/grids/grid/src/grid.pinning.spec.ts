@@ -1,7 +1,8 @@
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridSelectionMode, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
+import { GridSelectionMode, IgxColumnComponent, IgxGridHeaderRowComponent, IgxGridMRLNavigationService, IPinningConfig, RowPinningPosition } from 'igniteui-angular/grids/core';
 import { wait, UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { CELL_PINNED_CLASS, GRID_MRL_BLOCK, GRID_SCROLL_CLASS, GridFunctions, GridSelectionFunctions, GridSummaryFunctions, HEADER_PINNED_CLASS, PINNED_SUMMARY } from '../../../test-utils/grid-functions.spec';
 import { GridFeaturesComponent, GridPinningMRLComponent, MRLTestComponent, MultiColumnHeadersComponent, MultiColumnHeadersWithGroupingComponent, PinningComponent, PinOnBothSidesInitComponent, PinOnInitAndSelectionComponent } from '../../../test-utils/grid-samples.spec';
@@ -24,7 +25,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 GridFeaturesComponent,
                 MultiColumnHeadersWithGroupingComponent,
                 GridPinningMRLComponent,
-                PinOnBothSidesInitComponent
+                PinOnBothSidesInitComponent,
+                PinningMinWidthComponent
             ],
             providers: [
                 IgxGridMRLNavigationService
@@ -1043,4 +1045,60 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
     });
 
+    describe('Column with no width and a minWidth below the default minimum (#18039)', () => {
+        let fix;
+        let grid: IgxGridComponent;
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(PinningMinWidthComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        });
+
+        it('should pin and unpin the column through the pinned input', () => {
+            fix.componentInstance.publisherPinned = true;
+            fix.detectChanges();
+            expect(grid.pinnedColumns.map(c => c.field)).toEqual(['publisher']);
+
+            fix.componentInstance.publisherPinned = false;
+            fix.detectChanges();
+            expect(grid.pinnedColumns.length).toBe(0);
+            expect(grid.unpinnedColumns.map(c => c.field)).toEqual(['name', 'publisher', 'gender', 'race', 'skinColor', 'eyeColor', 'hairColor']);
+        });
+
+        it('should unpin the column through the pinned property after pinning it with pin()', () => {
+            const column = grid.getColumnByName('publisher');
+            expect(column.pin()).toBe(true);
+            fix.detectChanges();
+
+            column.pinned = false;
+            fix.detectChanges();
+            expect(grid.pinnedColumns.length).toBe(0);
+            expect(column.pinned).toBe(false);
+        });
+    });
+
 });
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data" width="700px" height="500px">
+            <igx-column field="name" width="300px"></igx-column>
+            <igx-column field="publisher" minWidth="135px" [pinned]="publisherPinned"></igx-column>
+            <igx-column field="gender" width="150px"></igx-column>
+            <igx-column field="race" width="150px"></igx-column>
+            <igx-column field="skinColor" width="150px"></igx-column>
+            <igx-column field="eyeColor" width="150px"></igx-column>
+            <igx-column field="hairColor" width="150px"></igx-column>
+        </igx-grid>`,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+class PinningMinWidthComponent {
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
+    public publisherPinned = false;
+    public data = [
+        { name: 'Batman', publisher: 'DC Comics', gender: 'Male', race: 'Human', skinColor: '-', eyeColor: 'blue', hairColor: 'black' },
+        { name: 'Storm', publisher: 'Marvel Comics', gender: 'Female', race: 'Mutant', skinColor: '-', eyeColor: 'brown', hairColor: 'white' }
+    ];
+}
