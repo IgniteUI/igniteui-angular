@@ -3,7 +3,7 @@
 # Schema: https://raw.githubusercontent.com/jackby03/agentic-collaboration-standard/main/schemas/v1/manifest.schema.json
 #
 # AGENTS.md at the repository root remains the authoritative, tool-agnostic
-# working guide; .github/copilot-instructions.md holds the full coding standards.
+# working guide and holds the full coding standards.
 
 version: "1.0"
 

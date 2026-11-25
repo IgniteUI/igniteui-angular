@@ -69,7 +69,7 @@ When reporting a backtrack action, state:
 ## GREEN Phase — Make Tests Pass
 
 1. Write the **minimum code** to make each failing test pass.
-2. Follow the conventions from `.github/copilot-instructions.md`.
+2. Follow the Coding Conventions in `AGENTS.md`.
 3. Handle **deprecations** if applicable:
    - Add `@deprecated` JSDoc: `@deprecated in version X.Y.0. Use \`newName\` instead.`
    - Keep old API functional — delegate to the new API internally.
