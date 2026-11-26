@@ -1293,6 +1293,70 @@ describe('IgxTooltip', () => {
             expect(tooltipNativeElement.getBoundingClientRect().left).toBeGreaterThanOrEqual(0);
         });
 
+        it('should stay next to its target when the target scrolls out of the viewport at the top', async () => {
+            const removeScrollRoom = addScrollRoom();
+
+            try {
+                button.nativeElement.style.cssText = 'display: block; margin: 1000px 0 0 300px';
+                fix.detectChanges();
+                scrollTargetTo(button.nativeElement, 200);
+                tooltipTarget.showTooltip();
+                await waitForLayout();
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+                // The overlay moves the tooltip into its content element when the tooltip opens.
+                const content = tooltipNativeElement.parentElement;
+
+                // The tooltip leaves with its target, and is not held at the top edge of the viewport.
+                scrollTargetTo(button.nativeElement, -400);
+                await waitForLayout();
+                expect(button.nativeElement.getBoundingClientRect().bottom).toBeLessThan(0);
+                expect(content.style.transform).toBe('');
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+                scrollTargetTo(button.nativeElement, 200);
+                await waitForLayout();
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+            } finally {
+                removeScrollRoom();
+            }
+        });
+
+        it('should stay next to its target when the target scrolls out of the viewport at the bottom', async () => {
+            const removeScrollRoom = addScrollRoom();
+
+            try {
+                const viewportHeight = document.documentElement.clientHeight;
+                button.nativeElement.style.cssText = 'display: block; margin: 1000px 0 0 300px';
+                fix.detectChanges();
+                scrollTargetTo(button.nativeElement, 200);
+                tooltipTarget.showTooltip();
+                await waitForLayout();
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+
+                // The overlay moves the tooltip into its content element when the tooltip opens.
+                const content = tooltipNativeElement.parentElement;
+
+                // At the bottom edge the tooltip has no room under its target and flips above it.
+                scrollTargetTo(button.nativeElement, viewportHeight - button.nativeElement.offsetHeight - 4);
+                await waitForLayout();
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Top);
+
+                // The tooltip leaves with its target, and is not held at the bottom edge of the viewport.
+                scrollTargetTo(button.nativeElement, viewportHeight + 400);
+                await waitForLayout();
+                expect(button.nativeElement.getBoundingClientRect().top).toBeGreaterThan(viewportHeight);
+                expect(content.style.transform).toBe('');
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Top);
+
+                scrollTargetTo(button.nativeElement, 200);
+                await waitForLayout();
+                verifyTooltipPosition(tooltipNativeElement, button, true, Placement.Bottom);
+            } finally {
+                removeScrollRoom();
+            }
+        });
+
         it('should put the arrow at the very start of a square tooltip that is pushed into the viewport', fakeAsync(() => {
             tooltipTarget.hasArrow = true;
             tooltipNativeElement.style.borderRadius = '0';
@@ -1319,6 +1383,26 @@ describe('IgxTooltip', () => {
 });
 
 const waitForLayout = () => new Promise(resolve => setTimeout(resolve, 100));
+
+/**
+ * Makes the document tall enough to scroll.
+ *
+ * @returns a function that removes the added height and scrolls the document back to its start.
+ */
+const addScrollRoom = () => {
+    const spacer = document.createElement('div');
+    spacer.style.height = '3000px';
+    document.body.appendChild(spacer);
+
+    return () => {
+        spacer.remove();
+        window.scrollTo(0, 0);
+    };
+};
+
+/** Scrolls the document so that the top of the element is `top` pixels from the top of the viewport. */
+const scrollTargetTo = (element: HTMLElement, top: number) =>
+    window.scrollTo(0, window.scrollY + element.getBoundingClientRect().top - top);
 
 /** Moves the element down by `distance` pixels in each of the next `frames` animation frames. */
 const moveInFrames = (element: HTMLElement, frames: number, distance: number) => new Promise<void>(resolve => {

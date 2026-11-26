@@ -246,9 +246,9 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
     }
 
     /**
-     * Positions the open tooltip again after a layout change. When only the target moved, a
-     * reposition is enough, as for a scroll. When a size changed, the overlay content gets its natural
-     * size again and is fitted into the viewport anew, as when the tooltip opens.
+     * Positions the open tooltip again after a layout change. When a size changed, the overlay content
+     * gets its natural size again first. While the target is in the viewport, the tooltip is fitted into
+     * the viewport anew, as when it opens. After the target has left the viewport, the tooltip follows it.
      */
     private _updateLayout(target: HTMLElement): void {
         const info = this.overlayService.getOverlayById(this._overlayId);
@@ -269,6 +269,11 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
             return;
         }
 
+        // A scroll moves the target too. A target that has left the viewport takes the tooltip with it:
+        // a tooltip that is fitted into the viewport then would stay at the viewport edge, away from
+        // its target. So position it as a scroll does, with no flip and no push.
+        const fit = this._isInViewport(layout);
+
         if (resized) {
             // The overlay fixes the content width when it shows the tooltip. Measure the natural size
             // away from the viewport edges, where the content could shrink, and without the translate
@@ -282,7 +287,7 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
                 content.style.width = `${width}px`;
             }
 
-            info.settings.positionStrategy.position(content, { width, height }, this.element.ownerDocument, true, target);
+            info.settings.positionStrategy.position(content, { width, height }, this.element.ownerDocument, fit, target);
         } else {
             // Fit the tooltip into the viewport anew at the new place of the target. A reposition alone
             // keeps the push that the tooltip had: away from a viewport edge it would stay off its target,
@@ -291,10 +296,22 @@ export class IgxTooltipDirective extends IgxToggleDirective implements AfterView
 
             const { width, height } = content.getBoundingClientRect();
 
-            info.settings.positionStrategy.position(content, { width, height }, this.element.ownerDocument, true, target);
+            info.settings.positionStrategy.position(content, { width, height }, this.element.ownerDocument, fit, target);
         }
 
         this._layout = this._measureLayout(target);
+    }
+
+    /**
+     * Checks if the target is in the viewport, at least in part.
+     *
+     * @param layout the measured target.
+     */
+    private _isInViewport(layout: TooltipLayout): boolean {
+        const { clientWidth, clientHeight } = this.element.ownerDocument.documentElement;
+
+        return layout.targetLeft < clientWidth && layout.targetLeft + layout.targetWidth > 0
+            && layout.targetTop < clientHeight && layout.targetTop + layout.targetHeight > 0;
     }
 
     /**
