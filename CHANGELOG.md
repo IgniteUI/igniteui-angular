@@ -24,7 +24,7 @@ All notable changes for each version of this project will be documented in this 
         - Anchored content follows its target on scroll with every scroll strategy, including `NoOpScrollStrategy`. It follows one rendering frame after the scroll, so code that scrolls and measures in the same task sees the previous position.
         - `AutoPositionStrategy` content also flips while the overlay is open, when the current side stops fitting. When no side fits, the browser shifts the content into the viewport; the exact position can differ from before.
         - Positions are no longer rounded to whole pixels.
-        - While an overlay is open, its target has an inline `anchor-name` style.
+        - While an overlay is open, its target has an inline `anchor-name: … !important` style. Application values are kept in the list and restored on close.
 
 ### Bug Fixes
 

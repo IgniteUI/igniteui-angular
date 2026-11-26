@@ -556,15 +556,30 @@ export class IgxOverlayService implements OnDestroy {
         if (!overlayInfo.visible) {
             return;
         }
-        if (overlayInfo.engine && overlayInfo.engine !== 'script') {
-            // The browser keeps native overlays in place. Only settings changes need a write.
-            // DISCUSS(#17765): native content follows a scroll at the next rendering frame, while the script
-            // engine moved it synchronously in the scroll handler. Code that scrolls and measures in the same
-            // task sees the old position (the toggle #3636 spec needed a frame wait). Not in plan §17 yet.
-            this.applyNative(overlayInfo, false);
-            return;
-        }
         const contentElement = overlayInfo.elementRef!.nativeElement.parentElement;
+        if (overlayInfo.engine && overlayInfo.engine !== 'script') {
+            if (this.resolveEngine(overlayInfo) === overlayInfo.engine) {
+                // The browser keeps native overlays in place. Only settings changes need a write.
+                // DISCUSS(#17765): native content follows a scroll at the next rendering frame, while the script
+                // engine moved it synchronously in the scroll handler. Code that scrolls and measures in the same
+                // task sees the old position (the toggle #3636 spec needed a frame wait). Not in plan §17 yet.
+                this.applyNative(overlayInfo, false);
+                if (overlayInfo.engine === 'native-container') {
+                    (overlayInfo.settings.positionStrategy as ContainerPositionStrategy).applyLayout(contentElement);
+                }
+                return;
+            }
+            // The current settings no longer fit this engine (e.g. a pair position-area cannot express):
+            // position by script until the next show() picks the engine again.
+            this.switchEngine(overlayInfo);
+            overlayInfo.engine = 'script';
+            this.updateAnimationPlayers(overlayInfo);
+            const scrollStrategy = overlayInfo.settings.scrollStrategy;
+            if (scrollStrategy instanceof HideScrollStrategy) {
+                const anchor = this.getHideAnchor(overlayInfo);
+                this._zone.runOutsideAngular(() => scrollStrategy._onShown(anchor, contentElement, true));
+            }
+        }
         const contentElementRect = contentElement.getBoundingClientRect();
         overlayInfo.settings.positionStrategy!.position(
             contentElement,

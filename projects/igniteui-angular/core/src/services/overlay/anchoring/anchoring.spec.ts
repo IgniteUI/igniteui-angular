@@ -237,6 +237,33 @@ describe('Overlay anchoring (pure)', () => {
             expect(el.style.getPropertyValue('anchor-name')).toBe('--inline');
         });
 
+        it('restores an author inline !important value with its priority', () => {
+            const el = element();
+            el.style.setProperty('anchor-name', '--inline', 'important');
+            addAnchorName(el, '--one');
+            expect(el.style.getPropertyValue('anchor-name')).toBe('--inline, --one');
+            removeAnchorName(el, '--one');
+            expect(el.style.getPropertyValue('anchor-name')).toBe('--inline');
+            expect(el.style.getPropertyPriority('anchor-name')).toBe('important');
+        });
+
+        it('wins over an !important author stylesheet rule and keeps its value', () => {
+            const el = element();
+            el.id = 'igx-anchor-important';
+            const style = document.createElement('style');
+            style.textContent = '#igx-anchor-important { anchor-name: --author !important; }';
+            document.head.appendChild(style);
+            try {
+                addAnchorName(el, '--one');
+                expect(getComputedStyle(el).getPropertyValue('anchor-name')).toBe('--author, --one');
+                removeAnchorName(el, '--one');
+                expect(el.getAttribute('style') ?? '').toBe('');
+                expect(getComputedStyle(el).getPropertyValue('anchor-name')).toBe('--author');
+            } finally {
+                style.remove();
+            }
+        });
+
         it('ignores removing an unknown name', () => {
             const el = element();
             expect(() => removeAnchorName(el, '--never')).not.toThrow();

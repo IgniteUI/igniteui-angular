@@ -1,6 +1,6 @@
 // DISCUSS(#17765): plan §14.2 puts these tests in a 'Native anchoring' group in overlay.spec.ts. Here they are a
-// separate file; overlay.spec.ts runs all its existing groups under both engines (D9). C5 (grid loading overlay,
-// snackbar container) is covered by those components' own suites.
+// separate file; overlay.spec.ts runs all its existing groups under both engines (D9). Plan case C5 (grid loading
+// overlay, snackbar container) is covered by those components' own suites.
 import { ElementRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -114,7 +114,7 @@ describe('igxOverlay native anchoring', () => {
     describe('engine selection', () => {
         beforeEach(() => configure());
 
-        it('N1 - exact Connected and Auto classes go native; subclasses keep the script engine', async () => {
+        it('uses the native engine for exact Connected and Auto strategies and the script engine for their subclasses', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             for (const Strategy of [ConnectedPositioningStrategy, AutoPositionStrategy]) {
                 const id = await open(addElement(), { target, positionStrategy: new Strategy(NO_ANIMATIONS) });
@@ -134,7 +134,7 @@ describe('igxOverlay native anchoring', () => {
             expect(content(id).style.top).not.toBe('');
         });
 
-        it('N2 - Point, detached and SVG targets keep the script engine', async () => {
+        it('uses the script engine for Point, detached and SVG targets', async () => {
             const point = await open(addElement(), { target: new Point(10, 10), positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) });
             expect(overlay.getOverlayById(point).engine).toBe('script');
 
@@ -148,7 +148,7 @@ describe('igxOverlay native anchoring', () => {
             expect(overlay.getOverlayById(svgId).engine).toBe('script');
         });
 
-        it('N3 - a target in a shadow root keeps the script engine', async () => {
+        it('uses the script engine for a target in a shadow root the overlay is not in', async () => {
             const host = track(document.createElement('div'));
             document.body.appendChild(host);
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 }, host.attachShadow({ mode: 'open' }) as unknown as HTMLElement);
@@ -156,7 +156,7 @@ describe('igxOverlay native anchoring', () => {
             expect(overlay.getOverlayById(id).engine).toBe('script');
         });
 
-        it('N3 - a target and overlay in the same shadow root go native', async () => {
+        it('uses the native engine for a target and overlay in the same shadow root', async () => {
             const host = track(document.createElement('div'));
             document.body.appendChild(host);
             // A direct child of a shadow root has no parentElement, and the service would append the overlay to <body>.
@@ -170,7 +170,7 @@ describe('igxOverlay native anchoring', () => {
             expectNear(r.left, 100);
         });
 
-        it('N4 - a pair position-area cannot express keeps the script engine', async () => {
+        it('uses the script engine for a pair position-area cannot express', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const id = await open(addElement(), {
                 target,
@@ -181,7 +181,7 @@ describe('igxOverlay native anchoring', () => {
             expect(overlay.getOverlayById(id).engine).toBe('script');
         });
 
-        it('N6 - no browser support keeps the script engine, detected once per service', async () => {
+        it('uses the script engine without browser support and detects support once per service', async () => {
             const supports = spyOn(CSS, 'supports').mockReturnValue(false);
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const id = await open(addElement(), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS) });
@@ -192,7 +192,7 @@ describe('igxOverlay native anchoring', () => {
             expect(supports.mock.calls.length).toBe(calls);
         });
 
-        it('N10 - switching from script to native clears script styles and keeps setOffset', async () => {
+        it('clears the script styles and keeps the setOffset translation when switching from script to native', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const id = await open(addElement(), { target: new Point(20, 20), positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) });
             expect(content(id).style.top).not.toBe('');
@@ -210,7 +210,7 @@ describe('igxOverlay native anchoring', () => {
     });
 
     describe('provideOverlayAnchoring', () => {
-        it('N5 - "script" keeps every overlay on the script engine', async () => {
+        it('"script" keeps every overlay on the script engine', async () => {
             await configure([provideOverlayAnchoring('script')]);
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const id = await open(addElement(), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS) });
@@ -218,7 +218,7 @@ describe('igxOverlay native anchoring', () => {
             expect(content(id).style.getPropertyValue('position-anchor')).toBe('');
         });
 
-        it('N15 - the script engine writes no native property', async () => {
+        it('the script engine writes no native property', async () => {
             await configure();
             useScriptEngine();
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
@@ -231,7 +231,7 @@ describe('igxOverlay native anchoring', () => {
     describe('connected and auto', () => {
         beforeEach(() => configure());
 
-        it('N7 - anchor-name lives on the target only while the overlay is open', async () => {
+        it('sets anchor-name on the target only while the overlay is open and keeps the author value', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             target.style.setProperty('anchor-name', '--author');
             const a = await open(addElement(), { target, positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) });
@@ -246,7 +246,7 @@ describe('igxOverlay native anchoring', () => {
             expect(target.style.getPropertyValue('anchor-name')).toBe('--author');
         });
 
-        it('N7 - show with another target moves the anchor name', async () => {
+        it('moves the anchor name when shown with another target', async () => {
             const first = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const second = addTarget({ top: 300, left: 300, width: 80, height: 30 });
             const id = await open(addElement(), { target: first, positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) });
@@ -257,7 +257,7 @@ describe('igxOverlay native anchoring', () => {
             expectNear(content(id).getBoundingClientRect().top, 330);
         });
 
-        it('N8 - writes the declarations for the default, Auto, offset and toolbar settings', async () => {
+        it('writes the declarations for the default, Auto, offset and toolbar settings', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const connected = content(await open(addElement(), { target, positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) }));
             expect(area(connected)).toBe(sortedArea('bottom span-right'));
@@ -283,7 +283,7 @@ describe('igxOverlay native anchoring', () => {
             expectNear(toolbar.getBoundingClientRect().right, 180);
         });
 
-        it('N9 - reposition applies settings changes and never reads layout', async () => {
+        it('reposition applies settings changes without reading layout', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const strategy = new AutoPositionStrategy(NO_ANIMATIONS);
             const id = await open(addElement(), { target, positionStrategy: strategy });
@@ -299,7 +299,31 @@ describe('igxOverlay native anchoring', () => {
             expect(targetRect).not.toHaveBeenCalled();
         });
 
-        it('Auto flips above a target near the bottom edge and reverses the animations (N11)', async () => {
+        it('reposition switches to the script engine when the settings change to a pair position-area cannot express', async () => {
+            const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
+            const strategy = new ConnectedPositioningStrategy(NO_ANIMATIONS);
+            const id = await open(addElement(), { target, positionStrategy: strategy });
+            expect(overlay.getOverlayById(id).engine).toBe('native-connected');
+
+            strategy.settings.horizontalDirection = HorizontalAlignment.Center;
+            expect(() => overlay.reposition(id)).not.toThrow();
+            const el = content(id);
+            expect(overlay.getOverlayById(id).engine).toBe('script');
+            expect(el.getAttribute('style')).not.toMatch(/position-anchor|position-area/);
+            expect(target.style.getPropertyValue('anchor-name')).toBe('');
+            const r = el.getBoundingClientRect();
+            expectNear(r.top, 130);
+            expectNear(r.left, 50);
+
+            overlay.hide(id);
+            strategy.settings.horizontalDirection = HorizontalAlignment.Right;
+            overlay.show(id);
+            await frames();
+            expect(overlay.getOverlayById(id).engine).toBe('native-connected');
+            expectNear(content(id).getBoundingClientRect().left, 100);
+        });
+
+        it('Auto flips above a target near the bottom edge and reverses the animations', async () => {
             const target = addTarget({ top: window.innerHeight - 60, left: 100, width: 80, height: 30 });
             const strategy = new AutoPositionStrategy({ openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop });
             const id = await open(addElement(100, 200), { target, positionStrategy: strategy });
@@ -312,7 +336,7 @@ describe('igxOverlay native anchoring', () => {
             expect(strategy.settings.verticalDirection).toBe(VerticalAlignment.Bottom);
         });
 
-        it('N11 - the close animation follows a flip that happened while the overlay was open', async () => {
+        it('the close animation follows a flip that happened while the overlay was open', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const strategy = new AutoPositionStrategy({ openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop });
             const id = await open(addElement(100, 200), { target, positionStrategy: strategy });
@@ -359,7 +383,7 @@ describe('igxOverlay native anchoring', () => {
             expectNear(r.top + r.height / 2, 220);
         });
 
-        it('N12 - content follows its target on scroll with NoOpScrollStrategy, without reposition', async () => {
+        it('content follows its target on scroll with NoOpScrollStrategy, without reposition', async () => {
             const scroller = track(document.createElement('div'));
             Object.assign(scroller.style, { position: 'fixed', top: '50px', left: '50px', width: '300px', height: '300px', overflow: 'auto' });
             const spacer = document.createElement('div');
@@ -379,7 +403,7 @@ describe('igxOverlay native anchoring', () => {
             expect(reposition).not.toHaveBeenCalled();
         });
 
-        it('N13 - settings changed between shows are honored', async () => {
+        it('honors settings changed between shows', async () => {
             const target = addTarget({ top: 200, left: 300, width: 80, height: 30 });
             const strategy = new AutoPositionStrategy({
                 ...NO_ANIMATIONS, horizontalStartPoint: HorizontalAlignment.Right, horizontalDirection: HorizontalAlignment.Right
@@ -395,7 +419,7 @@ describe('igxOverlay native anchoring', () => {
             expectNear(content(id).getBoundingClientRect().right, 300);
         });
 
-        it('N14 - a target inside another overlay anchors correctly', async () => {
+        it('anchors to a target inside another overlay', async () => {
             const outerTarget = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const outerElement = addElement(200, 100);
             const innerTarget = document.createElement('button');
@@ -426,7 +450,7 @@ describe('igxOverlay native anchoring', () => {
             return { scroller, host };
         };
 
-        it('C1/C2 - the wrapper covers the container and follows it on scroll, with no observer', async () => {
+        it('the wrapper covers the container and follows it on scroll, with no observer', async () => {
             const { scroller, host } = addHost();
             const observer = spyOn(Util, 'setupIntersectionObserver');
             const id = await open(addElement(50, 20, host), { positionStrategy: new ContainerPositionStrategy(NO_ANIMATIONS) });
@@ -454,7 +478,22 @@ describe('igxOverlay native anchoring', () => {
             check();
         });
 
-        it('C3 - the script observer does not throw after detach (#16988)', async () => {
+        it('reposition applies alignment changes', async () => {
+            const { host } = addHost();
+            const strategy = new ContainerPositionStrategy(NO_ANIMATIONS);
+            const id = await open(addElement(50, 20, host), { positionStrategy: strategy });
+            const wrapper = overlay.getOverlayById(id).wrapperElement!;
+            expect(wrapper.style.justifyContent).toBe('center');
+
+            strategy.settings.horizontalDirection = HorizontalAlignment.Left;
+            strategy.settings.verticalDirection = VerticalAlignment.Bottom;
+            overlay.reposition(id);
+            expect(overlay.getOverlayById(id).engine).toBe('native-container');
+            expect(wrapper.style.justifyContent).toBe('flex-start');
+            expect(wrapper.style.alignItems).toBe('flex-end');
+        });
+
+        it('the script observer does not throw after detach (#16988)', async () => {
             useScriptEngine();
             const { host } = addHost();
             let callback: () => void = () => undefined;
@@ -468,7 +507,7 @@ describe('igxOverlay native anchoring', () => {
             expect(() => callback()).not.toThrow();
         });
 
-        it('C4 - switching to Container on show after attaching with Global keeps the script engine', async () => {
+        it('uses the script engine when switching to Container on show after attaching with Global', async () => {
             const { host } = addHost();
             const element = addElement(50, 20, host);
             const id = overlay.attach(new ElementRef(element), { modal: false, positionStrategy: new GlobalPositionStrategy(NO_ANIMATIONS) });
@@ -500,7 +539,7 @@ describe('igxOverlay native anchoring', () => {
             await frames(3);
         };
 
-        it('H1 - native: hides while the target is scrolled out, without closing', async () => {
+        it('native: hides the content while the target is scrolled out, without closing', async () => {
             const { scroller, target } = addScroller();
             const closed = vi.fn();
             overlay.closed.subscribe(closed);
@@ -518,7 +557,7 @@ describe('igxOverlay native anchoring', () => {
             expect(closed).not.toHaveBeenCalled();
         });
 
-        it('H2 - native without position-visibility: the observer hides the content', async () => {
+        it('native without position-visibility: the observer hides the content', async () => {
             withoutPositionVisibility();
             const { scroller, target } = addScroller();
             const id = await open(addElement(), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });
@@ -531,7 +570,7 @@ describe('igxOverlay native anchoring', () => {
             expect(el.style.visibility).toBe('');
         });
 
-        it('H3 - script: repositions like Absolute and hides through the observer', async () => {
+        it('script: repositions like Absolute and hides the content through the observer', async () => {
             useScriptEngine();
             const { scroller, target } = addScroller();
             const reposition = spyOn(overlay, 'reposition');
@@ -541,14 +580,14 @@ describe('igxOverlay native anchoring', () => {
             expect(content(id).style.visibility).toBe('hidden');
         });
 
-        it('H4 - a Point target never hides', async () => {
+        it('never hides the content of a Point target', async () => {
             const { scroller } = addScroller();
             const id = await open(addElement(), { target: new Point(60, 60), positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });
             await scrollAndSettle(scroller, 200);
             expect(content(id).style.visibility).toBe('');
         });
 
-        it('H5 - hide and detach clear the hidden state', async () => {
+        it('hide and detach clear the hidden state', async () => {
             withoutPositionVisibility();
             const { scroller, target } = addScroller();
             const strategy = new HideScrollStrategy();
@@ -569,7 +608,7 @@ describe('igxOverlay native anchoring', () => {
             expect(el.style.visibility).toBe('');
         });
 
-        it('H6 - replacing the strategy on show clears the hidden state', async () => {
+        it('replacing the scroll strategy on show clears the hidden state', async () => {
             withoutPositionVisibility();
             const { scroller, target } = addScroller();
             const id = await open(addElement(), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });
@@ -581,7 +620,7 @@ describe('igxOverlay native anchoring', () => {
             expect(content(id).style.visibility).toBe('');
         });
 
-        it('H7 - Esc closes an overlay whose content is hidden', async () => {
+        it('Esc closes an overlay whose content is hidden', async () => {
             const { scroller, target } = addScroller();
             const id = await open(addElement(), {
                 target, closeOnEscape: true,
@@ -592,7 +631,21 @@ describe('igxOverlay native anchoring', () => {
             expect(overlay.getOverlayById(id).visible).toBe(false);
         });
 
-        it('H8 - Container: native writes the anchor-visible keyword on the wrapper', async () => {
+        it('native: the observer hides the content after reposition switches to the script engine', async () => {
+            const { scroller, target } = addScroller();
+            const strategy = new ConnectedPositioningStrategy(NO_ANIMATIONS);
+            const id = await open(addElement(), { target, positionStrategy: strategy, scrollStrategy: new HideScrollStrategy() });
+            strategy.settings.horizontalDirection = HorizontalAlignment.Center;
+            overlay.reposition(id);
+            expect(overlay.getOverlayById(id).engine).toBe('script');
+
+            await scrollAndSettle(scroller, 200);
+            expect(content(id).style.visibility).toBe('hidden');
+            await scrollAndSettle(scroller, 0);
+            expect(content(id).style.visibility).toBe('');
+        });
+
+        it('Container: native writes the anchor-visible keyword on the wrapper', async () => {
             const { target: host } = addScroller();
             host.style.position = 'relative';
             const id = await open(addElement(50, 20, host), { positionStrategy: new ContainerPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });

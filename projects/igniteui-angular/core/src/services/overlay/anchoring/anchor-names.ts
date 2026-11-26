@@ -5,6 +5,8 @@ interface AnchorRecord {
     authorValue: string;
     /** Inline `anchor-name` before the element was touched, `''` if none. */
     inlineValue: string;
+    /** Priority of the inline value, `'important'` or `''`. */
+    inlinePriority: string;
     names: string[];
 }
 
@@ -30,6 +32,7 @@ export function addAnchorName(element: HTMLElement, name: string): void {
         record = {
             authorValue: computed === 'none' ? '' : computed,
             inlineValue: element.style.getPropertyValue('anchor-name'),
+            inlinePriority: element.style.getPropertyPriority('anchor-name'),
             names: []
         };
         records.set(element, record);
@@ -55,13 +58,17 @@ export function removeAnchorName(element: HTMLElement, name: string): void {
         return;
     }
     if (record.inlineValue) {
-        element.style.setProperty('anchor-name', record.inlineValue);
+        element.style.setProperty('anchor-name', record.inlineValue, record.inlinePriority);
     } else {
         element.style.removeProperty('anchor-name');
     }
     records.delete(element);
 }
 
+/**
+ * Writes the author value followed by the overlay names. `!important`, so that an `!important` author
+ * rule cannot drop the overlay names; the author value stays in the list.
+ */
 function write(element: HTMLElement, record: AnchorRecord): void {
-    element.style.setProperty('anchor-name', [record.authorValue, ...record.names].filter(Boolean).join(', '));
+    element.style.setProperty('anchor-name', [record.authorValue, ...record.names].filter(Boolean).join(', '), 'important');
 }

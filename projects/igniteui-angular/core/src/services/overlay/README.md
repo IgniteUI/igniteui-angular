@@ -26,13 +26,15 @@ An overlay uses the native engine when the browser supports CSS anchor positioni
 
 Everything else uses the script engine: `GlobalPositionStrategy`, `ElasticPositionStrategy`, every subclass (for example tooltips), `Point` targets, and browsers without CSS anchor positioning (Safari 18). Chrome, Edge, Firefox and Safari 26 use the native engine.
 
+The engine is chosen on each `show()`. If the settings of an open overlay change so that they no longer qualify (for example, to a pair the native engine cannot express), `reposition()` positions it with the script engine until it is shown again.
+
 Differences under the native engine:
 
 - Anchored content follows its target on scroll with every scroll strategy, including `NoOpScrollStrategy`. It follows one rendering frame later than the script engine did, so code that scrolls and measures in the same task sees the previous position.
 - `AutoPositionStrategy` content can flip while the overlay is open, not only when it is shown. When no side fits, the browser shifts it into the viewport; the exact position can differ from the script engine.
 - `ConnectedPositioningStrategy` content never flips or shifts, as before.
 - Positions are not rounded to whole pixels.
-- While an overlay is open, its target has an inline `anchor-name` style. Values set by the application are kept.
+- While an overlay is open, its target has an inline `anchor-name: … !important` style. Values set by the application, inline or in a stylesheet, are kept in the list and restored on close.
 - If the target is removed from the document while the overlay is open, the content loses its position.
 
 To use the script engine for every overlay, add `provideOverlayAnchoring('script')` to the application providers. It takes effect only in the root environment injector:
