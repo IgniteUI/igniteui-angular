@@ -49,6 +49,16 @@ export class IgxSingleTabStopService {
     private _options?: IgxSingleTabStopOptions;
     /** Whether the current focus change comes from a Tab key press. */
     private _tabbing = false;
+    private _leaving = false;
+
+    /**
+     * Whether the service is moving the focus on its way out of the host, so the host can ignore that focus.
+     *
+     * @returns `true` during the focus move.
+     */
+    public get leaving(): boolean {
+        return this._leaving;
+    }
 
     /**
      * Configures the tab stop and starts handling the Tab key. Call it once.
@@ -104,7 +114,9 @@ export class IgxSingleTabStopService {
 
         // The browser moves the focus on from there, out of the host.
         if (target && target !== active) {
+            this._leaving = true;
             target.focus({ preventScroll: true });
+            this._leaving = false;
         }
     };
 

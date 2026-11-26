@@ -155,6 +155,19 @@ describe('IgxSingleTabStopService', () => {
         });
     });
 
+    it('should report that it is leaving while it moves the focus on its way out', async () => {
+        const service = fixture.debugElement.query((node) => node.nativeElement.id === 'composite')
+            .injector.get(IgxSingleTabStopService);
+        const seen: boolean[] = [];
+        byId('composite').addEventListener('focusin', () => seen.push(service.leaving));
+        byId('action-1').focus();
+
+        await shiftTab();
+
+        expect(seen).toEqual([false, true]);
+        expect(service.leaving).toBe(false);
+    });
+
     it('should leave the Tab key to the browser while when returns false', async () => {
         fixture.componentInstance.enabled.set(false);
         fixture.detectChanges();
