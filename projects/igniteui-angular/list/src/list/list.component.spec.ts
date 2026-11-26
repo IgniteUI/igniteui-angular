@@ -5,7 +5,7 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent, GridWithNestedListboxComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent, GridWithNestedListboxComponent, GridWithWrappedItemsComponent, GridWithNestedGridComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -1592,6 +1592,120 @@ describe('List', () => {
                 fixture.detectChanges();
 
                 expect(document.activeElement).toBe(rows()[1]);
+            });
+        });
+
+        it('should not scroll the page with Space on a row', () => {
+            rows()[0].focus();
+
+            expect(pressKey(rows()[0], ' ').defaultPrevented).toBe(true);
+        });
+
+        it('should switch from a listbox to a grid at runtime', () => {
+            fixture.componentInstance.navigation.set('listbox');
+            fixture.detectChanges();
+            expect(host().getAttribute('role')).toBe('listbox');
+            expect(rows().map(row => row.getAttribute('role'))).toEqual(['option', 'option', 'option']);
+            expect(rows().map(row => row.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
+            expect(rows()[0].querySelector('[role="gridcell"]')).toBeNull();
+
+            fixture.componentInstance.navigation.set('grid');
+            fixture.detectChanges();
+            expect(host().getAttribute('role')).toBe('grid');
+            expect(rows().map(row => row.getAttribute('role'))).toEqual(['row', 'row', 'row']);
+            expect(rows().map(row => row.getAttribute('aria-selected'))).toEqual([null, 'true', null]);
+            expect(rows()[0].querySelector('[role="gridcell"]')).toBeTruthy();
+            expect(rows().map(row => row.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
+
+            rows()[1].focus();
+            pressKey(rows()[1], 'ArrowRight');
+            expect(document.activeElement).toBe(rows()[1].querySelector('.edit'));
+        });
+
+        it('should include the rows declared in the template of another component', () => {
+            const wrappedFixture = TestBed.createComponent(GridWithWrappedItemsComponent);
+            wrappedFixture.detectChanges();
+            const wrappedRows = Array.from<HTMLElement>(wrappedFixture.nativeElement.querySelectorAll('igx-list-item'));
+
+            expect(wrappedRows.map(row => row.getAttribute('role'))).toEqual(['row', 'row', 'row']);
+            expect(wrappedRows.map(row => row.getAttribute('tabindex'))).toEqual(['0', '-1', '-1']);
+
+            wrappedRows[0].focus();
+            pressKey(wrappedRows[0], 'ArrowDown');
+            expect(document.activeElement).toBe(wrappedRows[1]);
+            pressKey(wrappedRows[1], 'ArrowRight');
+            expect(document.activeElement).toBe(wrappedRows[1].querySelector('.edit'));
+        });
+
+        describe('Nested grid', () => {
+            let nestedFixture: ComponentFixture<GridWithNestedGridComponent>;
+            let nested: HTMLElement;
+            const outerRows = () => Array.from<HTMLElement>(nested.querySelectorAll('.outer > igx-list-item'));
+            const innerRows = () => Array.from<HTMLElement>(nested.querySelectorAll('.inner > igx-list-item'));
+            const stops = (items: HTMLElement[]) => items.map(item => item.getAttribute('tabindex'));
+
+            beforeEach(() => {
+                nestedFixture = TestBed.createComponent(GridWithNestedGridComponent);
+                nestedFixture.detectChanges();
+                nested = nestedFixture.nativeElement;
+            });
+
+            it('should count a grid in a row as one control, and leave it its keys', () => {
+                const [sprint] = outerRows();
+                const [task1, task2] = innerRows();
+                const add = nested.querySelector<HTMLElement>('.add')!;
+
+                sprint.focus();
+                pressKey(sprint, 'ArrowRight');
+                expect(document.activeElement).toBe(task1);
+
+                // The nested grid keeps the arrows of its rows and controls.
+                pressKey(task1, 'ArrowRight');
+                expect(document.activeElement).toBe(task1.querySelector('.task'));
+                pressKey(document.activeElement as HTMLElement, 'ArrowDown');
+                expect(document.activeElement).toBe(task2);
+
+                pressKey(sprint, 'ArrowLeft');
+                expect(document.activeElement).toBe(add);
+                pressKey(add, 'ArrowLeft');
+                expect(document.activeElement).toBe(task2);
+            });
+
+            it('should go back one level with each Escape', () => {
+                const [sprint] = outerRows();
+                const [task1] = innerRows();
+                const edit = task1.querySelector<HTMLElement>('.task')!;
+                edit.focus();
+
+                pressKey(edit, 'Escape');
+                expect(document.activeElement).toBe(task1);
+                pressKey(task1, 'Escape');
+                expect(document.activeElement).toBe(sprint);
+            });
+
+            it('should leave both grids with Tab and Shift+Tab, and keep their tab stops', async () => {
+                const before = nested.querySelector<HTMLElement>('#before')!;
+                const after = nested.querySelector<HTMLElement>('#after')!;
+                const [, task2] = innerRows();
+                await userEvent.click(task2.querySelector('.task')!);
+
+                await userEvent.keyboard('{Tab}');
+                expect(document.activeElement).toBe(after);
+                nestedFixture.detectChanges();
+                expect(stops(outerRows())).toEqual(['0', '-1']);
+                expect(stops(innerRows())).toEqual(['-1', '0']);
+
+                await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+                expect(document.activeElement).toBe(outerRows()[0]);
+
+                task2.querySelector<HTMLElement>('.task')!.focus();
+                await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+                expect(document.activeElement).toBe(before);
+
+                await userEvent.keyboard('{Tab}');
+                nestedFixture.detectChanges();
+                expect(document.activeElement).toBe(outerRows()[0]);
+                expect(stops(innerRows())).toEqual(['-1', '0']);
             });
         });
 

@@ -221,6 +221,45 @@ export class GridWithNestedListboxComponent extends BasicListComponent {
 export class WrappedListItemComponent {
 }
 
+/** A grid list whose rows live in the template of another component. */
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list navigation="grid">
+            <igx-list-item>Item 1 <button class="edit">Edit</button></igx-list-item>
+            <test-wrapped-list-item>Item 2 <button class="edit">Edit</button></test-wrapped-list-item>
+            <igx-list-item>Item 3 <button class="edit">Edit</button></igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, WrappedListItemComponent]
+})
+export class GridWithWrappedItemsComponent extends BasicListComponent {
+}
+
+/** A grid list in a row of another grid list, which counts as one control of the row. */
+@Component({
+    template: `
+    <div #wrapper>
+        <button id="before">Before</button>
+        <igx-list navigation="grid" class="outer">
+            <igx-list-item>
+                <span igxListLineTitle>Sprint</span>
+                <igx-list navigation="grid" class="inner">
+                    <igx-list-item>Task 1 <button class="task">Edit</button></igx-list-item>
+                    <igx-list-item>Task 2 <button class="task">Edit</button></igx-list-item>
+                </igx-list>
+                <button class="add">Add</button>
+            </igx-list-item>
+            <igx-list-item>Backlog <button class="open">Open</button></igx-list-item>
+        </igx-list>
+        <button id="after">After</button>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
+})
+export class GridWithNestedGridComponent extends BasicListComponent {
+}
+
+
 @Component({
     template: `
     <div #wrapper>
