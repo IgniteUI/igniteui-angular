@@ -375,10 +375,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Sets/gets the keyboard navigation and the ARIA pattern of the list.
      *
      * @remarks
-     * Default value is `none`, a static list with list and list item semantics. With `listbox`, the list
-     * follows the ARIA listbox pattern: it has `role="listbox"`, its items become options that expose their
-     * `selected` state, Tab focuses the selected option, Arrow Up/Down and Home/End move between the options,
-     * and Enter/Space click the focused option.
+     * Defaults to `none`, a static list. `listbox` makes it an ARIA listbox with keyboard navigation.
      *
      * @example
      * ```html
@@ -538,7 +535,7 @@ export class IgxListComponent extends IgxListBaseDirective {
         afterEveryRender({ read: () => this.checkItemOrder() });
         afterRenderEffect({
             write: () => this.syncHostAttributes(),
-            // After the write phase of every item, so the new tab stop is focusable.
+            // After the items' write phase, so the tab stop is focusable.
             mixedReadWrite: (focusTarget) => focusTarget()?.element.focus()
         });
         onResourceChangeHandle(this.destroyRef, () => {
@@ -577,29 +574,29 @@ export class IgxListComponent extends IgxListBaseDirective {
         return this._options().length > 0;
     }
 
-    /** The items that found this list through DI, without those of nested lists. */
+    /** The items registered through DI, without those of nested lists. */
     private readonly _registeredItems = signal<readonly IgxListItemComponent[]>([]);
 
-    /** Bumped when the displayed order of the items changes without a registration, such as a move. */
+    /** Bumped when items move without registering. */
     private readonly _orderVersion = signal(0);
 
-    /** The items of this list, without those of nested lists, in the order they are displayed. */
+    /** The items of this list, in displayed order. */
     private readonly _ownItems = computed(() => {
         this._orderVersion();
         return [...this._registeredItems()].sort(byDocumentPosition);
     });
 
-    /** The options of the list: its items that are not headers and not hidden. */
+    /** The visible items that are not headers. */
     private readonly _options = computed(() => this._ownItems().filter(item => !item.isHeader && !item.hidden));
 
-    /** The option in the tab order: the one focused last, else the first selected option, else the first option. */
+    /** The option focused last, else the first selected one, else the first one. */
     private readonly _tabStop = computed(() => {
         const options = this._options();
         const active = this._activeItem();
         return active && options.includes(active) ? active : options.find(item => item.selected) ?? options[0] ?? null;
     });
 
-    /** The header of the group of each item: the closest header above it. */
+    /** The header above each item. */
     private readonly _groupHeaders = computed(() => {
         const headers = new Map<IgxListItemComponent, IgxListItemComponent | null>();
         let header: IgxListItemComponent | null = null;
@@ -670,7 +667,7 @@ export class IgxListComponent extends IgxListBaseDirective {
         keyBindings.setActivateHandler((event) => option(event)?.element.click(), { repeat: false });
     }
 
-    /** Detects a change of the displayed order of the items of a listbox, such as a move, which no registration reports. */
+    /** Detects moved items, which do not register again. */
     private checkItemOrder() {
         if (!this.isListbox) {
             return;
@@ -683,11 +680,9 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     /**
-     * Syncs the listbox attributes of the list itself. While it has no options, the list is the tab stop, and when
-     * options are added while it has the focus, the focus moves to them. While loading, the listbox is marked busy.
-     * The items sync their own attributes. A list that is not a listbox, and has not just stopped being one, is left untouched.
+     * Syncs the listbox attributes of the list host. An empty listbox is the tab stop.
      *
-     * @returns The tab stop to move the focus to, when the list had the focus as the tab stop.
+     * @returns The tab stop to focus, when options arrive while the list has the focus.
      */
     private syncHostAttributes(): IgxListItemComponent | null {
         const listbox = this.isListbox;

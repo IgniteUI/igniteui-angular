@@ -38,8 +38,7 @@ export class IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * Adds an item to the items of the list. Called by the item, which finds its list through DI,
-     * also when it is declared in the template of another component.
+     * Adds an item to the list. Called by the item, which finds its list through DI.
      *
      * @param _item The item to add.
      */
@@ -50,7 +49,7 @@ export class IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * Removes an item from the items of the list. Called by the item when it is destroyed.
+     * Removes an item from the list. Called by the item when it is destroyed.
      *
      * @param _item The item to remove.
      */
@@ -61,7 +60,7 @@ export class IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * Whether `item` is the tab stop of the list. Reactive: an item reads it in an effect.
+     * Whether `item` is the tab stop of the list.
      *
      * @param _item The item to check.
      */
@@ -72,7 +71,7 @@ export class IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * The header of the group of `item`: the closest header above it. Reactive: an item reads it in an effect.
+     * The header above `item`.
      *
      * @param _item The item whose header to find.
      */

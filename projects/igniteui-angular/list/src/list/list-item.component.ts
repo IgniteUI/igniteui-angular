@@ -49,21 +49,17 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /** The `id` the item generated as a header of a listbox, so it is removed when the item is no longer one. */
     private _headerId: string | null = null;
 
-    /** Whether the item applied listbox attributes at the last sync, so it removes them when the list stops being a listbox. */
+    /** Whether listbox attributes are applied, so they are removed when the list stops being a listbox. */
     private _applied = false;
 
     private readonly _isHeader = signal(false);
     private readonly _hidden = signal(false);
     private readonly _selected = signal(false);
 
-    /**
-     * @hidden
-     * @internal
-     * The `id` that the options of the group of this header point to, while it is a header of a listbox.
-     */
+    /** @hidden @internal The `id` that the options of this header's group point to. */
     public readonly headerId = signal<string | null>(null);
 
-    /** Syncs the listbox attributes of the item on its own host, from the state of the list. */
+    /** Writes the listbox attributes on the item's own host. */
     private readonly _listboxAttributes = afterRenderEffect({ write: () => this.syncListboxAttributes() });
 
     /**
@@ -341,13 +337,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
         this._selected.set(value);
     }
 
-    /**
-     * Syncs the listbox attributes of the item. Options expose their selected state, only the tab stop is in the
-     * tab order, and they are described by the header of their group, unless they have their own `aria-describedby`.
-     * Headers are hidden from assistive technology and get an `id` when they have none, so options can point to them.
-     * Runs in an effect, so the item follows the list state also when it is declared in another OnPush component.
-     * An item of a list that is not a listbox, and has not just stopped being one, is left untouched.
-     */
+    /** Syncs the listbox attributes of the item from the list state. Does nothing outside a listbox. */
     private syncListboxAttributes() {
         const listbox = this.list.isListbox;
         if (!listbox && !this._applied) {
