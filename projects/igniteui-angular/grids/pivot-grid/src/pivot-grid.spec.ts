@@ -1,12 +1,15 @@
-import { SimpleChange } from '@angular/core';
+import { provideZonelessChangeDetection, SimpleChange } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { firstValueFrom } from 'rxjs';
 import {
+    changei18n,
     ColumnPinningPosition,
     FilteringExpressionsTree,
     FilteringLogic,
     GridColumnDataType,
+    GridResourceStringsEN,
     GridSummaryCalculationMode,
     IDataCloneStrategy,
     IgxStringFilteringOperand,
@@ -2604,6 +2607,30 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(dateDimension.resourceStrings.igx_grid_pivot_date_dimension_total).toBe('Custom total');
             });
 
+            it('should regenerate the date dimension columns when the resource strings change globally.', async () => {
+                const pivotGrid = fixture.componentInstance.pivotGrid;
+                // The grid subscribes to resource changes only after its initial columns are generated.
+                await fixture.whenStable();
+                pivotGrid.pivotConfiguration = {
+                    columns: [new IgxPivotDateDimension({ memberName: 'Date', enabled: true }, { years: false, months: false, fullDate: false })],
+                    rows: [{ memberName: 'SellerName', enabled: true }],
+                    values: [fixture.componentInstance.pivotConfigHierarchy.values[0]]
+                };
+                fixture.detectChanges();
+                expect(pivotGrid.columns.map(x => x.header)).toEqual(['All Periods']);
+
+                try {
+                    changei18n({ igx_grid_pivot_date_dimension_total: 'Alle Perioden' });
+                    // The columns are regenerated asynchronously after the resource change.
+                    await vi.waitFor(() => expect(pivotGrid.columns.map(x => x.header)).toEqual(['Alle Perioden']));
+                    fixture.detectChanges();
+
+                    expect(GridFunctions.getColumnHeaderTitleByIndex(fixture, 0).innerText).toBe('Alle Perioden');
+                } finally {
+                    changei18n(GridResourceStringsEN);
+                }
+            });
+
             it('should sort row dimensions with date values.', () => {
                 const pivotGrid = fixture.componentInstance.pivotGrid;
                 pivotGrid.pivotConfiguration.rows = [{
@@ -4583,6 +4610,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it("should scroll to the row dimension cells outside of the view.", async () => {
+                fixture.autoDetectChanges();
                 pivotGrid.data = Array.from({ length: 30 }, (_, i) => ({
                     ProductCategory: 'Clothing', UnitPrice: 10, SellerName: `Seller ${i}`,
                     Country: 'Bulgaria', City: `City ${i}`, Date: '01/01/2012', UnitsSold: i
@@ -4621,6 +4649,7 @@ describe('IgxPivotGrid #pivotGrid', () => {
             });
 
             it("should jump to the first and last row dimension cells outside of the view.", async () => {
+                fixture.autoDetectChanges();
                 pivotGrid.data = Array.from({ length: 30 }, (_, i) => ({
                     ProductCategory: 'Clothing', UnitPrice: 10, SellerName: `Seller ${i}`,
                     Country: 'Bulgaria', City: `City ${i}`, Date: '01/01/2012', UnitsSold: i
@@ -4661,6 +4690,50 @@ describe('IgxPivotGrid #pivotGrid', () => {
                 expect(pivotNav.activeNode.row).toBe(0);
                 expect(getRowDimensionHeader('City 0').parent.nativeElement.classList).toContain('igx-grid-th--active');
             });
+        });
+    });
+
+    describe('IgxPivotGrid Horizontal Layout zoneless #pivotGrid', () => {
+        beforeEach(() => {
+            TestBed.configureTestingModule({ providers: [provideZonelessChangeDetection()] });
+        });
+
+        it('should highlight the row dimension header that End and Home scroll to.', async () => {
+            const fixture = TestBed.createComponent(IgxPivotGridTestComplexHierarchyComponent);
+            fixture.detectChanges();
+            const pivotGrid = fixture.componentInstance.pivotGrid;
+            pivotGrid.pivotUI = { showRowHeaders: true, rowLayout: PivotRowLayoutType.Horizontal };
+            pivotGrid.data = Array.from({ length: 40 }, (_, i) => ({
+                ProductCategory: i % 2 ? 'Bikes' : 'Clothing', City: `City ${i}`, Country: 'Bulgaria', Date: '01/01/2012', UnitsSold: i
+            }));
+            pivotGrid.pivotConfiguration.rows = [{
+                memberName: 'AllProducts', memberFunction: () => 'All Products', enabled: true, horizontalSummary: true,
+                childLevel: { memberName: 'ProductCategory', enabled: true, horizontalSummary: true, childLevel: { memberName: 'City', enabled: true } }
+            }];
+            pivotGrid.pipeTrigger++;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const headers = () => fixture.debugElement.queryAll(By.directive(IgxPivotRowDimensionHeaderComponent));
+            const activeHeaders = () => headers()
+                .filter(x => x.parent.nativeElement.classList.contains('igx-grid-th--active'))
+                .map(x => x.componentInstance.column.header);
+            const container = fixture.debugElement.query(By.css('.igx-grid__tbody-pivot-mrl-dimension')).nativeElement;
+            const pressKey = async (key: string) => {
+                const activeNodeChanged = firstValueFrom(pivotGrid.activeNodeChange);
+                UIInteractions.triggerKeyDownEvtUponElem(key, container);
+                await activeNodeChanged;
+                await fixture.whenStable();
+            };
+
+            UIInteractions.simulateClickAndSelectEvent(headers().find(x => x.componentInstance.column.header === 'All Products'));
+            await fixture.whenStable();
+
+            await pressKey('End');
+            expect(activeHeaders()).toEqual(['All Products Total']);
+
+            await pressKey('Home');
+            expect(activeHeaders()).toEqual(['All Products']);
         });
     });
 
