@@ -1122,6 +1122,51 @@ describe('List', () => {
                 expect(inner.map(element => element.getAttribute('tabindex'))).toEqual(['-1', '0']);
             });
 
+            describe('Type-ahead', () => {
+                const type = (text: string) => {
+                    for (const key of text) {
+                        pressKey(document.activeElement as HTMLElement, key);
+                    }
+                };
+
+                it('should move to the next option that starts with the typed letters, Space included', () => {
+                    const items = list.items;
+                    const clicked = vi.fn();
+                    list.itemClicked.subscribe(clicked);
+                    items[0].element.focus();
+
+                    const event = pressKey(items[0].element, 'i');
+                    expect(event.defaultPrevented).toBe(true);
+                    expect(document.activeElement).toBe(items[1].element);
+
+                    type('tem 3');
+                    expect(document.activeElement).toBe(items[2].element);
+                    expect(clicked).not.toHaveBeenCalled();
+                });
+
+                it('should match the text of an option without a title', () => {
+                    const groupedFixture = TestBed.createComponent(GroupedListboxComponent);
+                    groupedFixture.detectChanges();
+                    const [ungrouped, item1] = groupedFixture.componentInstance.list.items;
+                    item1.element.focus();
+
+                    type('u');
+
+                    expect(document.activeElement).toBe(ungrouped.element);
+                });
+
+                it('should only search from an option of a listbox', () => {
+                    const items = list.items;
+                    const listElement = list.element.nativeElement as HTMLElement;
+
+                    expect(pressKey(listElement, 'i').defaultPrevented).toBe(false);
+
+                    fixture.componentInstance.listbox = false;
+                    fixture.detectChanges();
+                    expect(pressKey(items[0].element, 'i').defaultPrevented).toBe(false);
+                });
+            });
+
             it('should skip hidden items', () => {
                 const items = list.items;
                 items[1].hidden = true;

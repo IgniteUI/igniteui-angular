@@ -35,7 +35,7 @@ import {
     IgxListItemRightPanningTemplateDirective,
     syncAttribute
 } from './list.common';
-import { IBaseEventArgs, IgxKeyBindingsService, IgxRovingFocusService } from 'igniteui-angular/core';
+import { IBaseEventArgs, IgxKeyBindingsService, IgxRovingFocusService, IgxTypeAhead } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
@@ -531,6 +531,8 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor() {
         super();
+        // Before the key bindings, so Space that the type-ahead takes is not also a click.
+        this.listenTypeAhead();
         this.configureNavigation();
         afterEveryRender({ read: () => this.checkItemOrder() });
         afterRenderEffect({
@@ -642,17 +644,39 @@ export class IgxListComponent extends IgxListBaseDirective {
         this._registeredItems.update(items => items.filter(registered => registered !== item));
     }
 
+    private readonly _typeAhead = new IgxTypeAhead<IgxListItemComponent>({ label: optionLabel });
+
+    /** The option that a key event was dispatched on, not on its content. */
+    private eventOption(event: KeyboardEvent): IgxListItemComponent | undefined {
+        const target = event.composedPath()[0];
+        return this._options().find(item => item.element === target);
+    }
+
+    /** Moves the focus to the next option that starts with the typed letters. */
+    private listenTypeAhead() {
+        const host = this.element.nativeElement as HTMLElement;
+        const onKeydown = (event: KeyboardEvent) => {
+            const option = this.isListbox && !event.defaultPrevented ? this.eventOption(event) : undefined;
+            if (!option || !this._typeAhead.isSearchKey(event)) {
+                return;
+            }
+            event.preventDefault();
+            const match = this._typeAhead.search(event.key, this._options(), option);
+            if (match && match !== option) {
+                match.element.focus();
+            }
+        };
+        host.addEventListener('keydown', onKeydown);
+        this.destroyRef.onDestroy(() => host.removeEventListener('keydown', onKeydown));
+    }
+
     /** Binds the listbox keys on the options: arrows, Home/End, and Enter/Space as a click. */
     private configureNavigation() {
         const keyBindings = inject(IgxKeyBindingsService);
-        const option = (event: KeyboardEvent) => {
-            const target = event.composedPath()[0];
-            return this._options().find(item => item.element === target);
-        };
 
         inject<IgxRovingFocusService<HTMLElement>>(IgxRovingFocusService).configure({
             keyBindings: {
-                skip: (_, event) => !this.isListbox || !option(event),
+                skip: (_, event) => !this.isListbox || !this.eventOption(event),
                 skipHandled: true,
                 // Held arrows keep moving.
                 bindingDefaults: { repeat: true }
@@ -664,7 +688,7 @@ export class IgxListComponent extends IgxListBaseDirective {
             loop: false
         });
 
-        keyBindings.setActivateHandler((event) => option(event)?.element.click(), { repeat: false });
+        keyBindings.setActivateHandler((event) => this.eventOption(event)?.element.click(), { repeat: false });
     }
 
     /** Detects moved items, which do not register again. */
@@ -846,6 +870,12 @@ export class IgxListComponent extends IgxListBaseDirective {
             return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
         }
     }
+}
+
+/** The title of an option, else its text, which the type-ahead matches. */
+function optionLabel(item: IgxListItemComponent): string {
+    const title = item.element.querySelector('.igx-list__item-line-title');
+    return (title ?? item.element).textContent?.trim() ?? '';
 }
 
 /** Orders two items by their position in the document. */

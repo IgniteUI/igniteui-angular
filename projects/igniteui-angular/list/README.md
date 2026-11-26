@@ -83,6 +83,7 @@ Set `navigation="listbox"` on the list to make it an accessible [listbox](https:
 | Arrow Down / Arrow Up | Next / previous option |
 | Home / End | First / last option |
 | Enter / Space | Clicks the option, so `(click)` and `itemClicked` fire. Holding the key down clicks once. |
+| Letters | Next option whose title, else its text, starts with the typed letters. Space is a letter while a search is active. |
 
 When an option is activated with Enter or Space, the `event` of `itemClicked` is the synthetic `MouseEvent` of that click.
 
