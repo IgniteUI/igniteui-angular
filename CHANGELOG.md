@@ -2,6 +2,13 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.2
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Auto-sizing columns with `width="auto"` no longer throws when a column group is partly scrolled out of view and one of its child columns with a cell template has no rendered cells. Such a column is now measured when it is scrolled into view.
+
 ## 22.3.1
 
 ### Bug Fixes

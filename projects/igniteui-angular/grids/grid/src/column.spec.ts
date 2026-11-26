@@ -12,7 +12,7 @@ import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicC
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, frames, nextFrame, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
@@ -44,6 +44,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 TemplatedContextInputColumnsComponent,
                 ColumnHaederClassesComponent,
                 ResizableColumnsComponent,
+                AutoSizeColumnGroupComponent,
                 DOMAttributesAsSettersComponent,
                 GridInToggleableWrapperComponent
             ]
@@ -1732,6 +1733,39 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns[0].width).toBe('165px');
             expect(grid.columns[1].width).toBe('280px');
         });
+
+        it('should not throw on recalculateAutoSizes when a templated child of a partly visible group is out of view', async () => {
+            const fix = TestBed.createComponent(AutoSizeColumnGroupComponent);
+            fix.detectChanges();
+            await fix.whenStable();
+            const grid = fix.componentInstance.instance;
+
+            // Scroll so `templated` is out of view while the rest of its group stays visible.
+            const scroller = grid.headerContainer.getScroll();
+            scroller.scrollLeft = 170;
+            scroller.dispatchEvent(new Event('scroll'));
+            await frames(AUTOSIZE_FRAMES);
+            fix.detectChanges();
+
+            // The group header stays rendered, but no data row renders a cell for `templated`.
+            const groupA = grid.columns.find(c => c.header === 'Group A');
+            expect(grid.headerContainer.state.startIndex).toBe(0);
+            expect(groupA.headerGroup).toBeTruthy();
+            expect(grid.dataRowList.first.cells.some(c => c.column.field === 'templated')).toBe(false);
+
+            const autoSizeSpy = vi.spyOn(grid as any, 'autoSizeColumnsInView');
+            grid.recalculateAutoSizes();
+            fix.detectChanges();
+            await fix.whenStable();
+            await frames(AUTOSIZE_FRAMES);
+
+            expect(autoSizeSpy).toHaveBeenCalled();
+            for (const result of autoSizeSpy.mock.results) {
+                expect(result.type).toBe('return');
+            }
+            expect(grid.getColumnByName('flag1').autoSize).toBeGreaterThan(0);
+            expect(grid.getColumnByName('flag2').autoSize).toBeGreaterThan(0);
+        });
     });
 
 
@@ -1837,6 +1871,44 @@ export class ResizableColumnsComponent {
         { field: 'ID', width: 'auto', resizable: true },
         { field: 'Address', minWidth: '100px', maxWidth: '400px', width: 'auto', resizable: true }
     ];
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" [primaryKey]="'id'" width="900px" height="400px">
+        <igx-column-group header="Group A">
+            <igx-column field="templated" width="150px">
+                <ng-template igxCell let-value>
+                    <span>{{ value }}</span>
+                </ng-template>
+            </igx-column>
+            <igx-column field="flag1" dataType="boolean" width="auto"></igx-column>
+            <igx-column field="flag2" dataType="boolean" width="auto"></igx-column>
+        </igx-column-group>
+        <igx-column-group header="Group B">
+            @for (field of groupBFields; track field) {
+                <igx-column [field]="field" width="150px"></igx-column>
+            }
+        </igx-column-group>
+    </igx-grid>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxCellTemplateDirective]
+})
+export class AutoSizeColumnGroupComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public groupBFields = ['col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7'];
+    public data = this.makeData(5);
+
+    public makeData(count: number) {
+        return Array.from({ length: count }, (_, i) => {
+            const row: Record<string, unknown> = { id: i + 1, templated: `Templated ${i + 1}`, flag1: i % 2 === 0, flag2: i % 3 === 0 };
+            this.groupBFields.forEach(f => row[f] = `${f} - ${i + 1}`);
+            return row;
+        });
+    }
 }
 
 @Component({
