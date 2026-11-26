@@ -2,7 +2,7 @@
     <section class="sample-content">
         <article class="sample-column">
             <h5 class="sample-title">Angular List</h5>
-            <igx-list navigation="listbox" aria-label="Employees" aria-multiselectable="true" [allowLeftPanning]="properties.enablePanning" [allowRightPanning]="properties.enablePanning">
+            <igx-list [navigation]="properties.navigation" aria-label="Employees" aria-multiselectable="true" [allowLeftPanning]="properties.enablePanning" [allowRightPanning]="properties.enablePanning">
                 <ng-template igxListItemLeftPanning>
                     <div class="pan pan--left">
                         <igx-icon>delete</igx-icon>Delete
@@ -30,7 +30,13 @@
                             <p igxListLineSubTitle>{{ employee.position }}</p>
                         }
                         @if(properties.addCheckboxAction) {
-                            <igx-checkbox igxListAction inert [checked]="!!employee.selected"></igx-checkbox>
+                            <!-- A listbox option holds no controls, so there the checkbox only mirrors the selection. -->
+                            <igx-checkbox igxListAction
+                                [attr.inert]="properties.navigation === 'listbox' ? '' : null"
+                                [aria-label]="'Select ' + employee.name"
+                                [checked]="!!employee.selected"
+                                (change)="employee.selected = $event.checked"
+                                (click)="$event.stopPropagation()"></igx-checkbox>
                         }
                         @if(properties.addIconAction) {
                             <igx-icon igxListAction>info</igx-icon>
@@ -70,5 +76,167 @@
                 }
             </igc-list>
         </article>
+    </section>
+
+    <section class="list-showcase">
+        <!-- Team: a multi-select listbox, grouped by team -->
+        <igx-card>
+            <igx-card-header>
+                <h3 igxCardHeaderTitle>Invite to the project</h3>
+                <h5 igxCardHeaderSubtitle>{{ selectedMembers().size }} of {{ members.length }} selected · type to search</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <igx-list navigation="listbox" aria-label="Team members" aria-multiselectable="true">
+                    @for (team of teams; track team) {
+                        <igx-list-item [isHeader]="true">{{ team }}</igx-list-item>
+                        @for (member of membersOf(team); track member.id) {
+                            <igx-list-item [selected]="selectedMembers().has(member.id)" (click)="toggleMember(member)">
+                                @if (member.avatar) {
+                                    <igx-avatar igxListThumbnail shape="circle" [src]="member.avatar"></igx-avatar>
+                                } @else {
+                                    <igx-avatar igxListThumbnail shape="circle" [initials]="initials(member.name)"></igx-avatar>
+                                }
+                                <span igxListLineTitle>{{ member.name }}</span>
+                                <span igxListLineSubTitle>{{ member.role }}</span>
+                                <igx-checkbox igxListAction inert [checked]="selectedMembers().has(member.id)"></igx-checkbox>
+                            </igx-list-item>
+                        }
+                    }
+                </igx-list>
+            </igx-card-content>
+        </igx-card>
+
+        <!-- Inbox: a grid of messages with their own actions -->
+        <igx-card>
+            <igx-card-header>
+                <h3 igxCardHeaderTitle>Inbox</h3>
+                <h5 igxCardHeaderSubtitle>{{ unreadCount() }} unread · Right arrow reaches the actions</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <igx-list navigation="grid" aria-label="Messages">
+                    @for (day of days; track day) {
+                        @if (messagesOf(day).length) {
+                            <igx-list-item [isHeader]="true">{{ day }}</igx-list-item>
+                        }
+                        @for (message of messagesOf(day); track message.id) {
+                            <igx-list-item (click)="open(message)">
+                                <igx-avatar igxListThumbnail shape="circle" [src]="message.avatar"></igx-avatar>
+                                <span igxListLineTitle>{{ message.from }}</span>
+                                <span igxListLineSubTitle>{{ message.subject }}</span>
+                                <span igxListAction class="list-showcase__time">
+                                    @if (message.unread) {
+                                        <igx-badge [dot]="true" type="primary" aria-label="Unread"></igx-badge>
+                                    }
+                                    {{ message.time }}
+                                </span>
+                                <button igxIconButton="flat" igxListAction
+                                    [attr.aria-label]="message.starred ? 'Unstar' : 'Star'"
+                                    [attr.aria-pressed]="message.starred"
+                                    (click)="toggleStar($event, message)">
+                                    <igx-icon>{{ message.starred ? 'star' : 'star_border' }}</igx-icon>
+                                </button>
+                                <button igxIconButton="flat" igxListAction aria-label="Delete" (click)="remove($event, message)">
+                                    <igx-icon>delete</igx-icon>
+                                </button>
+                            </igx-list-item>
+                        }
+                    }
+                    <ng-template igxEmptyList>
+                        <div class="list-showcase__empty">
+                            <igx-icon>mark_email_read</igx-icon>
+                            <p>You're all caught up</p>
+                            <button igxButton="outlined" (click)="restoreMessages()">Restore messages</button>
+                        </div>
+                    </ng-template>
+                </igx-list>
+            </igx-card-content>
+        </igx-card>
+
+        <!-- Settings: a grid of switches and a slider that keeps its arrow keys -->
+        <igx-card>
+            <igx-card-header>
+                <h3 igxCardHeaderTitle>Notifications</h3>
+                <h5 igxCardHeaderSubtitle>Enter toggles · Escape leaves the slider</h5>
+            </igx-card-header>
+            <igx-card-content>
+                <igx-list navigation="grid" aria-label="Notification settings">
+                    <igx-list-item [isHeader]="true">Channels</igx-list-item>
+                    <igx-list-item (click)="toggleSetting('email')">
+                        <igx-icon igxListThumbnail>mail</igx-icon>
+                        <span igxListLineTitle>Email</span>
+                        <span igxListLineSubTitle>Mentions and replies to your comments</span>
+                        <igx-switch igxListAction aria-label="Email" [checked]="settings().email" (change)="toggleSetting('email')" (click)="$event.stopPropagation()"></igx-switch>
+                    </igx-list-item>
+                    <igx-list-item (click)="toggleSetting('push')">
+                        <igx-icon igxListThumbnail>notifications</igx-icon>
+                        <span igxListLineTitle>Push</span>
+                        <span igxListLineSubTitle>Instant alerts on this device</span>
+                        <igx-switch igxListAction aria-label="Push" [checked]="settings().push" (change)="toggleSetting('push')" (click)="$event.stopPropagation()"></igx-switch>
+                    </igx-list-item>
+                    <igx-list-item (click)="toggleSetting('digest')">
+                        <igx-icon igxListThumbnail>summarize</igx-icon>
+                        <span igxListLineTitle>Weekly digest</span>
+                        <span igxListLineSubTitle>A summary every Monday morning</span>
+                        <igx-switch igxListAction aria-label="Weekly digest" [checked]="settings().digest" (change)="toggleSetting('digest')" (click)="$event.stopPropagation()"></igx-switch>
+                    </igx-list-item>
+
+                    <igx-list-item [isHeader]="true">Sound</igx-list-item>
+                    <igx-list-item (click)="toggleSetting('quietHours')">
+                        <igx-icon igxListThumbnail>bedtime</igx-icon>
+                        <span igxListLineTitle>Quiet hours</span>
+                        <span igxListLineSubTitle>Mute alerts from 22:00 to 07:00</span>
+                        <igx-switch igxListAction aria-label="Quiet hours" [checked]="settings().quietHours" (change)="toggleSetting('quietHours')" (click)="$event.stopPropagation()"></igx-switch>
+                    </igx-list-item>
+                    <igx-list-item>
+                        <igx-icon igxListThumbnail>volume_up</igx-icon>
+                        <span igxListLineTitle>Alert volume · {{ settings().volume }}%</span>
+                        <igx-slider igxListLine aria-label="Alert volume" [minValue]="0" [maxValue]="100" [step]="10"
+                            [value]="settings().volume" (valueChange)="setVolume($any($event.value))"></igx-slider>
+                    </igx-list-item>
+                </igx-list>
+            </igx-card-content>
+        </igx-card>
+
+        <!-- Cities: a single-select listbox with search, an empty and a loading template -->
+        <igx-card>
+            <igx-card-header>
+                <h3 igxCardHeaderTitle>Office location</h3>
+                <h5 igxCardHeaderSubtitle>Selected: {{ selectedCity() }}</h5>
+                <button igxIconButton="flat" aria-label="Refresh cities" (click)="refreshCities()">
+                    <igx-icon>refresh</igx-icon>
+                </button>
+            </igx-card-header>
+            <igx-card-content>
+                <igx-input-group type="search">
+                    <igx-prefix><igx-icon>search</igx-icon></igx-prefix>
+                    <input igxInput placeholder="Search cities or countries" aria-label="Search cities"
+                        [ngModel]="citySearch()" (ngModelChange)="citySearch.set($event)" />
+                </igx-input-group>
+                <igx-list navigation="listbox" aria-label="Cities" [isLoading]="loadingCities()">
+                    @if (!loadingCities()) {
+                        @for (city of cities(); track city.name) {
+                            <igx-list-item [selected]="city.name === selectedCity()" (click)="selectedCity.set(city.name)">
+                                <igx-icon igxListThumbnail>location_city</igx-icon>
+                                <span igxListLineTitle>{{ city.name }}</span>
+                                <span igxListLineSubTitle>{{ city.country }}</span>
+                                <span igxListAction>{{ city.population }}</span>
+                            </igx-list-item>
+                        }
+                    }
+                    <ng-template igxEmptyList>
+                        <div class="list-showcase__empty">
+                            <igx-icon>travel_explore</igx-icon>
+                            <p>No cities match "{{ citySearch() }}"</p>
+                        </div>
+                    </ng-template>
+                    <ng-template igxDataLoading>
+                        <div class="list-showcase__empty">
+                            <igx-circular-bar [indeterminate]="true" [textVisibility]="false"></igx-circular-bar>
+                            <p>Loading cities…</p>
+                        </div>
+                    </ng-template>
+                </igx-list>
+            </igx-card-content>
+        </igx-card>
     </section>
 </div>
