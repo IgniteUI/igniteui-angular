@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxButtonDirective`
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Auto-sizing columns with `width="auto"` no longer throws when a column group is partly scrolled out of view and one of its child columns with a cell template has no rendered cells. Such a column is now measured when it is scrolled into view.
 
 ## 21.2.27
 
