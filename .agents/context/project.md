@@ -1,9 +1,8 @@
 # Project Context
 
-Concise context for ACS-aware tools. The authoritative working rules live in
-[`AGENTS.md`](../../AGENTS.md) and the full coding standards in
-[`.github/copilot-instructions.md`](../../.github/copilot-instructions.md).
-Read both before making changes; if they disagree with this file, they win.
+Concise context for ACS-aware tools. The authoritative working rules and the
+full coding standards live in [`AGENTS.md`](../../AGENTS.md).
+Read it before making changes; if it disagrees with this file, it wins.
 
 ## Stack
 

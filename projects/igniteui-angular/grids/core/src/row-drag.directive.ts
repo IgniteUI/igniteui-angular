@@ -74,8 +74,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 this._clicked = false;
                 this._pointerDownId = null;
                 this._pointerCaptureTarget = null;
-                // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started.
+                // The pointer release skips the cleanup now, so remove the Escape listener added when the drag started
+                // and enable again the transitions of the element, which were disabled when the drag started.
                 this.unsubscribeFromEscape();
+                this.restoreBaseTransitionDuration();
                 return;
             }
             this.row.grid.dragRowID = this.row.key;
@@ -200,7 +202,11 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this._unsubscribe();
     }
 
-    private transitionEndEvent = () => {
+    private transitionEndEvent = (event: TransitionEvent) => {
+        if (!this.isPositionTransitionEnd(event)) {
+            // E.g. a color transition of a chip in a cloned cell, which must not end the return animation early.
+            return;
+        }
         if (this.ghostElement) {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }

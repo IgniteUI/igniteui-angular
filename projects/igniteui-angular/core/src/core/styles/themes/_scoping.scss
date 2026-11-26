@@ -19,6 +19,19 @@
     }
 }
 
+/// Applies the passed content to the parent selector while a virtualized container it is in scrolls:
+/// an `igxFor` display container (also in the grids, combo and drop-down) or an `igx-virtual-scroll`.
+/// The containers reuse the views of their items for other records while they scroll, so a component
+/// that animates its state changes uses it to show the state of the new record right away.
+/// @access private
+/// @content The declarations to emit while the container scrolls.
+@mixin virtualized-scrolling {
+    .igx-display-container--scrolling &,
+    .igx-virtual-scroll--scrolling & {
+        @content;
+    }
+}
+
 /// Restores selected properties from the preceding cascade layer.
 /// This mixin is intended for narrowly scoped, unlayered component styles that need to
 /// reject generic unlayered element styles without unlayering the component's full ruleset.

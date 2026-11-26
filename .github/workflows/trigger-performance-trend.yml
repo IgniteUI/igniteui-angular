@@ -1,0 +1,63 @@
+name: Trigger Performance Trend
+run-name: Performance trend of ${{ inputs.version }}
+
+# Starts the grid's performance trend run for one release. The Trend workflow of
+# IgniteUI/grid-performance-benchmarks measures the release against the one before it, stores the
+# results and opens an issue there if the release changed performance.
+#
+# Started by hand for now, with the version of a release that is already published.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Released version to measure (e.g. 22.2.6)'
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  dispatch-performance-trend:
+    name: Start the trend run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      VERSION: ${{ inputs.version }}
+
+    steps:
+      - name: Check the version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # The trend covers stable releases only.
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::\"$VERSION\" is not a stable release version, like 22.2.6."
+            exit 1
+          fi
+          # The trend run waits up to two hours for the version's licensed package, so a version
+          # that was never released is stopped here.
+          if ! gh api "repos/$GITHUB_REPOSITORY/releases/tags/$VERSION" --silent; then
+            echo "::error::Could not find the release $VERSION in $GITHUB_REPOSITORY (the answer is above)."
+            exit 1
+          fi
+
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}
+          private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+          owner: IgniteUI
+          repositories: grid-performance-benchmarks
+          permission-actions: write
+
+      - name: Trigger the trend run
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run trend.yml --repo IgniteUI/grid-performance-benchmarks --ref master -f version="$VERSION"
+          echo "Started the trend run of $VERSION. It is listed with the [Trend runs](https://github.com/IgniteUI/grid-performance-benchmarks/actions/workflows/trend.yml)." >> "$GITHUB_STEP_SUMMARY"

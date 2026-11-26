@@ -6,7 +6,7 @@
       [selected]="button.selected"
       [attr.data-togglable]="button.togglable"
       [disabled]="disabled || button.disabled"
-      [igxLabel]="button.label"
+      [attr.aria-label]="button.label"
       [igxRipple]="button.ripple || ''"
     >
       <span class="igx-button-group__item-content {{ itemContentCssClass }}">

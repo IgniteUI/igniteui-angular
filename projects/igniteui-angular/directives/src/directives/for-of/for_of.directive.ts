@@ -8,7 +8,7 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime } from 'rxjs/operators';
-import { getResizeObserver, runAfterRenderOnce } from 'igniteui-angular/core';
+import { getResizeObserver, runAfterRenderOnce, ScrollingClassController } from 'igniteui-angular/core';
 import { IBaseEventArgs, PlatformUtil } from 'igniteui-angular/core';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
@@ -102,6 +102,8 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     protected syncScrollService = inject(IgxForOfScrollSyncService);
     protected platformUtil = inject(PlatformUtil);
     protected document = inject(DOCUMENT);
+    /** Keeps the scrolling class on the display container while the items scroll. */
+    private _scrollingClass = new ScrollingClassController(this._zone, 'igx-display-container--scrolling');
     private _igxForOf: U & T[] | null = null;
     protected _embeddedViewSizesCache = new WeakMap<EmbeddedViewRef<any>, number>();
 
@@ -569,6 +571,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
      */
     public ngOnDestroy() {
         this.removeScrollEventListeners();
+        this._scrollingClass.clear();
         this.destroy$.next(true);
         this.destroy$.complete();
         if (this.contentObserver) {
@@ -986,6 +989,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this._bScrollInternal = false;
         }
+        this.markScrolling();
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
 
@@ -1179,6 +1183,17 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
     }
 
     /**
+     * @hidden @internal
+     * Keeps the scrolling class on the display container while the items scroll, so that the components
+     * in the views reused for other records (e.g. a chip or a checkbox) do not animate from their previous state.
+     */
+    protected markScrolling() {
+        if (this.platformUtil.isBrowser) {
+            this._scrollingClass.scrolled(this.dc?.instance._viewContainer.element.nativeElement);
+        }
+    }
+
+    /**
      * @hidden
      * Function that is called when scrolling horizontally
      */
@@ -1194,6 +1209,7 @@ export class IgxForOfDirective<T, U extends T[] = T[]> extends IgxForOfToken<T,U
         } else {
             this._bScrollInternal = false;
         }
+        this.markScrolling();
         const prevStartIndex = this.state.startIndex;
         const scrLeft = this.scrollComponent.scrollAmount;
         // Updating horizontal chunks
@@ -1878,6 +1894,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
         } else {
             this._bScrollInternal = false;
         }
+        this.markScrolling();
         const prevState = Object.assign({}, this.state);
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollPosition);
         runAfterRenderOnce(this._injector, () => {
@@ -1895,6 +1912,7 @@ export class IgxGridForOfDirective<T, U extends T[] = T[]> extends IgxForOfDirec
             return;
         }
         this.scrollComponent.scrollAmount = scrollAmount;
+        this.markScrolling();
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllElements(Math.abs(scrollAmount));
         if (scrollAmount < 0) {
