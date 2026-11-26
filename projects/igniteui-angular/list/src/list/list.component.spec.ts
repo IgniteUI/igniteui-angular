@@ -1467,6 +1467,71 @@ describe('List', () => {
             });
         });
 
+        describe('Removal', () => {
+            const remove = (...ids: number[]) => {
+                fixture.componentInstance.items.update(items => items.filter(item => !ids.includes(item.id)));
+                fixture.detectChanges();
+            };
+
+            it('should move the focus to the row that takes the place of the removed one', () => {
+                const [, review, release] = rows();
+                review.focus();
+
+                remove(2);
+
+                expect(document.activeElement).toBe(release);
+                expect(release.getAttribute('tabindex')).toBe('0');
+            });
+
+            it('should move the focus to the new last row when the last one is removed', () => {
+                const [, review, release] = rows();
+                release.focus();
+
+                remove(3);
+
+                expect(document.activeElement).toBe(review);
+            });
+
+            it('should move the focus to the row, not a control, when a focused control is removed with its row', () => {
+                const [, review, release] = rows();
+                review.querySelector<HTMLElement>('.edit')!.focus();
+
+                remove(2);
+
+                expect(document.activeElement).toBe(release);
+            });
+
+            it('should move the focus to the list when its last row is removed', () => {
+                rows()[0].focus();
+
+                remove(1, 2, 3);
+
+                expect(document.activeElement).toBe(host());
+            });
+
+            it('should not move the focus when the removed row was only the tab stop', () => {
+                const before = fixture.nativeElement.querySelector('#before') as HTMLElement;
+                rows()[1].focus();
+                before.focus();
+
+                remove(2);
+
+                expect(document.activeElement).toBe(before);
+                expect(rows().map(row => row.getAttribute('tabindex'))).toEqual(['0', '-1']);
+            });
+
+            it('should not move the focus in a list without navigation', () => {
+                fixture.componentInstance.navigation.set('none');
+                fixture.detectChanges();
+                const edit = rows()[1].querySelector<HTMLElement>('.edit')!;
+                edit.focus();
+
+                remove(2);
+
+                expect(document.activeElement).toBe(document.body);
+            });
+        });
+
         it('should reset the list and its rows when the navigation is none', () => {
             fixture.componentInstance.navigation.set('none');
             fixture.detectChanges();

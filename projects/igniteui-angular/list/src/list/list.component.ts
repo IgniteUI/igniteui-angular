@@ -562,6 +562,8 @@ export class IgxListComponent extends IgxListBaseDirective {
             // After the items' write phase, so the tab stop is focusable.
             mixedReadWrite: (focusTarget) => focusTarget()?.element.focus()
         });
+        // Owned by the list, so a removal while the list is destroyed does nothing.
+        afterRenderEffect({ mixedReadWrite: () => this.recoverFocus() });
         onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
             this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
@@ -666,11 +668,38 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @internal
      */
     public override unregisterItem(item: IgxListItemComponent): void {
+        const index = this._options().indexOf(item);
         this._registeredItems.update(items => items.filter(registered => registered !== item));
+        if (this.isNavigable && item === this._focusedItem && index !== -1) {
+            this._focusedItem = null;
+            this._removedFocusIndex.set(index);
+        }
+    }
+
+    /** Focuses the option that took the place of a removed one, else the last option, else the list. */
+    private recoverFocus() {
+        const index = this._removedFocusIndex();
+        if (index === null) {
+            return;
+        }
+        this._removedFocusIndex.set(null);
+        const host = this.element.nativeElement as HTMLElement;
+        const active = (host.getRootNode() as Document | ShadowRoot).activeElement;
+        // The app may have moved the focus already.
+        if (active && active !== host.ownerDocument.body) {
+            return;
+        }
+        const options = this._options();
+        (options[index] ?? options.at(-1))?.element.focus() ?? host.focus();
     }
 
     private readonly _typeAhead = new IgxTypeAhead<IgxListItemComponent>({ label: optionLabel });
     private readonly _singleTabStop = inject(IgxSingleTabStopService);
+    /** The item that holds the focus, so its removal moves the focus to a neighbor. */
+    private _focusedItem: IgxListItemComponent | null = null;
+
+    /** The index of a removed option that held the focus, until the focus moves to a neighbor. */
+    private readonly _removedFocusIndex = signal<number | null>(null);
 
     /** The option that a key event was dispatched on, not on its content. */
     private eventOption(event: KeyboardEvent): IgxListItemComponent | undefined {
@@ -875,9 +904,36 @@ export class IgxListComponent extends IgxListBaseDirective {
         }
         const target = event.composedPath()[0];
         const item = target instanceof Node ? this._ownItems().find(own => own.element.contains(target)) : undefined;
+        this._focusedItem = item ?? null;
         if (item) {
             this._activeItem.set(item);
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Forgets the focused item when the focus leaves the list.
+     *
+     * @param event The focusout event of the list.
+     */
+    @HostListener('focusout', ['$event'])
+    public onFocusOut(event: FocusEvent) {
+        const next = event.relatedTarget as Node | null;
+        if (next && this.element.nativeElement.contains(next)) {
+            return;
+        }
+        if (next) {
+            this._focusedItem = null;
+            return;
+        }
+        // A removed element loses the focus to nothing: keep the item until it unregisters in this task.
+        const item = this._focusedItem;
+        setTimeout(() => {
+            if (this._focusedItem === item) {
+                this._focusedItem = null;
+            }
+        });
     }
 
     /**
