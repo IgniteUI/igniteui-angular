@@ -35,7 +35,7 @@ import {
     IgxListItemRightPanningTemplateDirective,
     syncAttribute
 } from './list.common';
-import { IBaseEventArgs } from 'igniteui-angular/core';
+import { IBaseEventArgs, IgxKeyBindingsService, IgxRovingFocusService } from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
@@ -174,7 +174,7 @@ export type IgxListNavigation = typeof IgxListNavigation[keyof typeof IgxListNav
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     styleUrl: 'list.component.css',
-    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }],
+    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }, IgxKeyBindingsService, IgxRovingFocusService],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
@@ -534,6 +534,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor() {
         super();
+        this.configureNavigation();
         afterEveryRender({ read: () => this.checkItemOrder() });
         afterRenderEffect({
             write: () => this.syncHostAttributes(),
@@ -644,6 +645,31 @@ export class IgxListComponent extends IgxListBaseDirective {
         this._registeredItems.update(items => items.filter(registered => registered !== item));
     }
 
+    /** Binds the listbox keys on the options: arrows, Home/End, and Enter/Space as a click. */
+    private configureNavigation() {
+        const keyBindings = inject(IgxKeyBindingsService);
+        const option = (event: KeyboardEvent) => {
+            const target = event.composedPath()[0];
+            return this._options().find(item => item.element === target);
+        };
+
+        inject<IgxRovingFocusService<HTMLElement>>(IgxRovingFocusService).configure({
+            keyBindings: {
+                skip: (_, event) => !this.isListbox || !option(event),
+                skipHandled: true,
+                // Held arrows keep moving.
+                bindingDefaults: { repeat: true }
+            },
+            items: () => this._options().map(item => item.element),
+            focusItem: (element) => element.focus(),
+            horizontal: false,
+            vertical: true,
+            loop: false
+        });
+
+        keyBindings.setActivateHandler((event) => option(event)?.element.click(), { repeat: false });
+    }
+
     /** Detects a change of the displayed order of the items of a listbox, such as a move, which no registration reports. */
     private checkItemOrder() {
         if (!this.isListbox) {
@@ -729,59 +755,6 @@ export class IgxListComponent extends IgxListBaseDirective {
         if (item) {
             this._activeItem.set(item);
         }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     * Moves the focus between the options of a listbox.
-     * ArrowDown/ArrowUp go to the next/previous option, Home/End to the first/last one.
-     * Enter/Space activate the focused option like a click, so `itemClicked` and its `click` handlers fire,
-     * once per key press, also when the key is held down. Keys pressed in the content of an option are not handled.
-     *
-     * @param event The keydown event that bubbled up from an option.
-     */
-    @HostListener('keydown', ['$event'])
-    public onKeydown(event: KeyboardEvent) {
-        if (!this.isListbox) {
-            return;
-        }
-
-        const target = event.composedPath()[0];
-        const items = this._options();
-        const current = items.findIndex(item => item.element === target);
-        if (current === -1) {
-            return;
-        }
-
-        if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            if (!event.repeat) {
-                items[current].element.click();
-            }
-            return;
-        }
-
-        let next: number;
-        switch (event.key) {
-            case 'ArrowDown':
-                next = Math.min(current + 1, items.length - 1);
-                break;
-            case 'ArrowUp':
-                next = Math.max(current - 1, 0);
-                break;
-            case 'Home':
-                next = 0;
-                break;
-            case 'End':
-                next = items.length - 1;
-                break;
-            default:
-                return;
-        }
-
-        event.preventDefault();
-        items[next].element.focus();
     }
 
     /**

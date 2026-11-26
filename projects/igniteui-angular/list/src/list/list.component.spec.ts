@@ -1035,6 +1035,26 @@ describe('List', () => {
                 expect(document.activeElement).toBe(items[0].element);
             });
 
+            it('should keep moving the focus while an arrow key is held', () => {
+                const items = list.items;
+                items[0].element.focus();
+
+                pressKey(items[0].element, 'ArrowDown');
+                pressKey(items[1].element, 'ArrowDown', true);
+
+                expect(document.activeElement).toBe(items[2].element);
+            });
+
+            it('should leave a key that the app already handled on the item', () => {
+                const items = list.items;
+                items[0].element.addEventListener('keydown', (event: KeyboardEvent) => event.preventDefault());
+                items[0].element.focus();
+
+                pressKey(items[0].element, 'ArrowDown');
+
+                expect(document.activeElement).toBe(items[0].element);
+            });
+
             it('should move the focus to the first and last item with Home and End', () => {
                 const items = list.items;
                 items[1].element.focus();
