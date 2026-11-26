@@ -2753,15 +2753,26 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy, ColumnTy
             const currentCalcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
             this._calcWidth = this.getConstrainedSizePx(parseFloat(currentCalcWidth));
         } else {
-            let possibleColumnWidth = '';
-            if (!this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth) {
-                possibleColumnWidth = this.defaultWidth = this.grid.getPossibleColumnWidth();
+            // A column without a width and with a `minWidth` below the grid minimum can shrink down to its `minWidth`
+            const sizeToMinWidth = !this.widthSetByUser && this.userSetMinWidthPx && this.userSetMinWidthPx < this.grid.minColumnWidth;
+            let currentCalcWidth: number;
+            if (sizeToMinWidth) {
+                // Size this column with the columns without a width. Once constrained, it would count as sized,
+                // and as the only column without a width it would get a non-finite width (a division by zero).
+                this.widthConstrained = false;
+                currentCalcWidth = parseFloat(this.grid.getPossibleColumnWidth());
+                // A hidden column is not sized with the visible columns, so its possible width can still be non-finite
+                if (!Number.isFinite(currentCalcWidth)) {
+                    currentCalcWidth = this.userSetMinWidthPx;
+                }
             } else {
-                possibleColumnWidth = this.width;
+                currentCalcWidth = parseFloat(this.width);
             }
 
-            const currentCalcWidth = parseFloat(possibleColumnWidth);
             this._calcWidth = this.getConstrainedSizePx(currentCalcWidth);
+            if (sizeToMinWidth) {
+                this.defaultWidth = this._calcWidth + 'px';
+            }
         }
         this.calcPixelWidth = parseFloat(this._calcWidth.toString());
     }
