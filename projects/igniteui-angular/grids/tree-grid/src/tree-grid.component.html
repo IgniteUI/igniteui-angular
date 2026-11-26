@@ -138,9 +138,9 @@
         </div>
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
-    <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
-    </div>
+</div>
+<div class="igx-grid__addrow-snackbar">
+    <igx-snackbar #addRowSnackbar [actionText]="resourceStrings.igx_grid_snackbar_addrow_actiontext" [displayTime]='snackbarDisplayTime'>{{resourceStrings.igx_grid_snackbar_addrow_label}}</igx-snackbar>
 </div>
 
 <div class="igx-grid__tfoot" role="presentation" [style.height.px]='summaryRowHeight' #tfoot>
@@ -208,7 +208,7 @@
 </ng-template>
 
 @if (rowEditable) {
-    <div igxToggle #rowEditingOverlay>
+    <div igxToggle #rowEditingOverlay [style.pointer-events]="isLoading ? 'none' : null">
         <div [className]="bannerClass">
             <ng-container
                 *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">

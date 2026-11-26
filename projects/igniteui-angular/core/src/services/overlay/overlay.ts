@@ -445,9 +445,11 @@ export class IgxOverlayService implements OnDestroy {
         this.updateSize(info);
         const openAnimation = info.settings.positionStrategy.settings.openAnimation;
         const closeAnimation = info.settings.positionStrategy.settings.closeAnimation;
+        // A container-positioned overlay stays out of the top layer, so that whatever clips or scrolls the container does the same to it
+        info.wrapperElement.popover = info.settings.positionStrategy instanceof ContainerPositionStrategy ? null : 'manual';
         // Show the overlay using Popover API BEFORE positioning
         // This ensures the element is in the top layer when position calculations happen
-        if (info.wrapperElement?.isConnected && typeof info.wrapperElement.showPopover === 'function') {
+        if (info.wrapperElement?.isConnected && info.wrapperElement.popover && typeof info.wrapperElement.showPopover === 'function') {
             try {
                 info.wrapperElement.showPopover();
             } catch (_) {

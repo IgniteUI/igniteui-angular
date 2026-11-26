@@ -2350,6 +2350,7 @@
 
     %igx-grid__addrow-snackbar {
         position: absolute;
+        grid-row: 4 / 5;
         z-index: 5;
         bottom: rem(24px);
         inset-inline-start: 50%;
