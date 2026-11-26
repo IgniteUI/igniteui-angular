@@ -455,7 +455,16 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = value;
+        if (value && this.dropdown && this.collapsed === false) {
+            this.close();
+        }
+    }
+    private _disabled = false;
 
     /**
      * Disables the clear button. The default is `false`.

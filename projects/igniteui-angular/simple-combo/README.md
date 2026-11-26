@@ -151,6 +151,8 @@ You can disable the combo using the following code:
 <igx-simple-combo [disabled]="true"></igx-simple-combo>
 ```
 
+If the dropdown is already open, it cannot receive focus or accept a selection while disabled.
+
 <div class="divider--half"></div>
 
 ### Disable Clear
@@ -337,3 +339,5 @@ When the combo is opened, allow custom values are enabled and add item button is
 | `opened`    | Emitted after the dropdown is opened                                    | false        | `IBaseEventArgs`                        |
 | `closing`   | Emitted before the dropdown is closed                                   | true        | `IBaseCancelableBrowserEventArgs`         |
 | `closed`    | Emitted after the dropdown is closed                                    | false        | `IBaseEventArgs`                        |
+
+Disabling an open combo closes its dropdown and preserves its value.

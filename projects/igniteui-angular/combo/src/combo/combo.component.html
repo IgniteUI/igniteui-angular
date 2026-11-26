@@ -50,7 +50,7 @@
     (opened)="handleOpened()" (closed)="handleClosed()">
 
     <!-- The igx-combo class is needed here in order to scope the css variables -->
-    <div class="igx-combo">
+    <div class="igx-combo" [inert]="disabled">
         @if (displaySearchInput) {
             <div class="igx-combo__search">
                 <igx-input-group type="line">
