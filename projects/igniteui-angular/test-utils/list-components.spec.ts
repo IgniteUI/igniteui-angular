@@ -153,14 +153,21 @@ export class EmptyListboxComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
+        <button id="before">Before</button>
         <igx-list [navigation]="navigation()" aria-label="Tasks" [attr.aria-multiselectable]="multiselectable()">
             <igx-list-item [isHeader]="true">Today</igx-list-item>
             @for (item of items(); track item.id) {
                 <igx-list-item [selected]="item.id === selectedId()">
                     <span igxListLineTitle>{{ item.name }}</span>
+                    <button class="edit">Edit</button>
+                    @if (item.id === 3) {
+                        <input class="note" />
+                    }
+                    <button class="delete">Delete</button>
                 </igx-list-item>
             }
         </igx-list>
+        <button id="after">After</button>
     </div>`,
     imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
 })
@@ -173,6 +180,26 @@ export class GridListComponent extends BasicListComponent {
         { id: 2, name: 'Review' },
         { id: 3, name: 'Release' }
     ]);
+}
+
+/** A listbox in a row of a grid list, which counts as one control of the row. */
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list navigation="grid">
+            <igx-list-item>
+                <span igxListLineTitle>Assignees</span>
+                <igx-list navigation="listbox" class="inner">
+                    <igx-list-item>Kate</igx-list-item>
+                    <igx-list-item>Lee</igx-list-item>
+                </igx-list>
+                <button class="add">Add</button>
+            </igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
+})
+export class GridWithNestedListboxComponent extends BasicListComponent {
 }
 
 /** An item declared in the template of another component, which the list content query does not see. */

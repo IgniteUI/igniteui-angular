@@ -35,7 +35,21 @@ import {
     IgxListItemRightPanningTemplateDirective,
     syncAttribute
 } from './list.common';
-import { IBaseEventArgs, IgxKeyBindingsService, IgxRovingFocusService, IgxTypeAhead } from 'igniteui-angular/core';
+import {
+    IBaseEventArgs,
+    IgxKeyBindingsService,
+    IgxRovingFocusService,
+    IgxSingleTabStopService,
+    IgxTypeAhead,
+    arrowLeft,
+    arrowRight,
+    enterKey,
+    escapeKey,
+    getTabbableElements,
+    isFromArrowKeyControl,
+    isLeftToRight,
+    spaceBar
+} from 'igniteui-angular/core';
 import { IListResourceStrings, ListResourceStringsEN } from 'igniteui-angular/core';
 import { getCurrentResourceStrings, onResourceChangeHandle } from 'igniteui-angular/core';
 import { IgxNoTypographyDirective } from 'igniteui-angular/directives';
@@ -176,7 +190,12 @@ export type IgxListNavigation = typeof IgxListNavigation[keyof typeof IgxListNav
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     styleUrl: 'list.component.css',
-    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }, IgxKeyBindingsService, IgxRovingFocusService],
+    providers: [
+        { provide: IgxListBaseDirective, useExisting: IgxListComponent },
+        IgxKeyBindingsService,
+        IgxRovingFocusService,
+        IgxSingleTabStopService
+    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgTemplateOutlet]
@@ -651,6 +670,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     }
 
     private readonly _typeAhead = new IgxTypeAhead<IgxListItemComponent>({ label: optionLabel });
+    private readonly _singleTabStop = inject(IgxSingleTabStopService);
 
     /** The option that a key event was dispatched on, not on its content. */
     private eventOption(event: KeyboardEvent): IgxListItemComponent | undefined {
@@ -676,13 +696,60 @@ export class IgxListComponent extends IgxListBaseDirective {
         this.destroyRef.onDestroy(() => host.removeEventListener('keydown', onKeydown));
     }
 
-    /** Binds the listbox keys on the options: arrows, Home/End, and Enter/Space as a click. */
+    /** The option that holds the target of a key event, or is the target. */
+    private eventRow(event: KeyboardEvent): IgxListItemComponent | undefined {
+        const target = event.composedPath()[0];
+        return target instanceof Node ? this._options().find(item => item.element.contains(target)) : undefined;
+    }
+
+    /** The controls of a row; a nested navigable list counts as one, its tab stop. */
+    private rowControls(row: IgxListItemComponent): HTMLElement[] {
+        const host = this.element.nativeElement as HTMLElement;
+        return getTabbableElements(row.element).filter(element => {
+            const list = element.parentElement?.closest('igx-list');
+            const nested = list !== host && list?.matches('[role="grid"], [role="listbox"]');
+            return !nested || element.parentElement === list;
+        });
+    }
+
+    /** Whether the list leaves a key to the page or to a control inside a row. */
+    private skipKey(event: KeyboardEvent): boolean {
+        const row = this.isNavigable ? this.eventRow(event) : undefined;
+        if (!row) {
+            return true;
+        }
+        const escape = event.key === escapeKey || event.key === 'F2';
+        if (event.composedPath()[0] === row.element) {
+            return escape;
+        }
+        if (this.isListbox) {
+            return true;
+        }
+        // On a control: Escape and F2 go back to the row, the control keeps the other keys it uses.
+        return !escape && (event.key === enterKey || event.key === spaceBar || isFromArrowKeyControl(event, this.element.nativeElement));
+    }
+
+    /** Moves from a row to its first or last control, and between its controls and back to the row. */
+    private moveInRow(event: KeyboardEvent, delta: -1 | 1) {
+        const row = this.eventRow(event)!;
+        const target = event.composedPath()[0] as Node;
+        const controls = this.rowControls(row);
+        const direction = isLeftToRight(this.element.nativeElement) ? delta : -delta;
+        const index = controls.findIndex(control => control.contains(target));
+        const next = target === row.element
+            ? (direction > 0 ? controls[0] : controls.at(-1))
+            : controls[index + direction] ?? row.element;
+        next?.focus();
+    }
+
+    /** Binds the keys of a listbox or grid: arrows, Home/End, Enter/Space as a click, and in a grid its controls. */
     private configureNavigation() {
         const keyBindings = inject(IgxKeyBindingsService);
+        const grid = { when: () => this.isGrid };
 
         inject<IgxRovingFocusService<HTMLElement>>(IgxRovingFocusService).configure({
             keyBindings: {
-                skip: (_, event) => !this.isNavigable || !this.eventOption(event),
+                skip: (_, event) => this.skipKey(event),
                 skipHandled: true,
                 // Held arrows keep moving.
                 bindingDefaults: { repeat: true }
@@ -694,7 +761,17 @@ export class IgxListComponent extends IgxListBaseDirective {
             loop: false
         });
 
-        keyBindings.setActivateHandler((event) => this.eventOption(event)?.element.click(), { repeat: false });
+        keyBindings
+            .setActivateHandler((event) => this.eventOption(event)?.element.click(), { repeat: false })
+            .set(arrowLeft, (event) => this.moveInRow(event, -1), grid)
+            .set(arrowRight, (event) => this.moveInRow(event, 1), grid)
+            .set(escapeKey, (event) => this.eventRow(event)!.element.focus(), grid)
+            .set('F2', (event) => this.eventRow(event)!.element.focus(), grid);
+
+        this._singleTabStop.configure({
+            when: () => this.isGrid,
+            tabStop: () => this._tabStop()?.element ?? this.element.nativeElement
+        });
     }
 
     /** Detects moved items, which do not register again, and a change of `aria-multiselectable`. */
@@ -792,8 +869,12 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @HostListener('focusin', ['$event'])
     public onFocusIn(event: FocusEvent) {
+        // A focus on the way out of the list keeps the tab stop.
+        if (this._singleTabStop.leaving) {
+            return;
+        }
         const target = event.composedPath()[0];
-        const item = this._ownItems().find(own => own.element === target);
+        const item = target instanceof Node ? this._ownItems().find(own => own.element.contains(target)) : undefined;
         if (item) {
             this._activeItem.set(item);
         }

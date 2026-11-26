@@ -5,12 +5,13 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent, GridWithNestedListboxComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
 import { ListResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { userEvent } from 'vitest/browser';
 
 /** Delay before a released item hides its pan templates (`setTimeout(500)` in list-item.component.ts). */
 const PAN_TEMPLATES_HIDE_DELAY = 500;
@@ -1293,6 +1294,163 @@ describe('List', () => {
             expect(host().getAttribute('tabindex')).toBe('0');
             expect(message.getAttribute('role')).toBe('row');
             expect(message.querySelectorAll('[role="gridcell"]').length).toBe(1);
+        });
+
+        describe('Controls', () => {
+            const controls = (row: HTMLElement) => Array.from(row.querySelectorAll<HTMLElement>('button, input'));
+
+            it('should move from a row to its first and last control with Right and Left', () => {
+                const row = rows()[0];
+                row.focus();
+
+                pressKey(row, 'ArrowRight');
+                expect(document.activeElement).toBe(controls(row)[0]);
+
+                row.focus();
+                pressKey(row, 'ArrowLeft');
+                expect(document.activeElement).toBe(controls(row).at(-1));
+            });
+
+            it('should move between the controls with Right and Left, and back to the row past the ends', () => {
+                const row = rows()[0];
+                const [edit, remove] = controls(row);
+                edit.focus();
+
+                pressKey(edit, 'ArrowRight');
+                expect(document.activeElement).toBe(remove);
+                pressKey(remove, 'ArrowRight');
+                expect(document.activeElement).toBe(row);
+
+                edit.focus();
+                pressKey(edit, 'ArrowLeft');
+                expect(document.activeElement).toBe(row);
+            });
+
+            it('should mirror Right and Left in right-to-left', () => {
+                host().dir = 'rtl';
+                const row = rows()[0];
+                row.focus();
+
+                pressKey(row, 'ArrowRight');
+
+                expect(document.activeElement).toBe(controls(row).at(-1));
+            });
+
+            it('should move to the next and previous row with Down and Up from a control', () => {
+                const [edit] = controls(rows()[1]);
+                edit.focus();
+
+                pressKey(edit, 'ArrowDown');
+                expect(document.activeElement).toBe(rows()[2]);
+
+                controls(rows()[1])[0].focus();
+                pressKey(document.activeElement as HTMLElement, 'ArrowUp');
+                expect(document.activeElement).toBe(rows()[0]);
+            });
+
+            it('should go back to the row with Escape and F2, unless the control handled the key', () => {
+                const row = rows()[0];
+                const [edit, remove] = controls(row);
+
+                edit.focus();
+                pressKey(edit, 'Escape');
+                expect(document.activeElement).toBe(row);
+
+                remove.focus();
+                pressKey(remove, 'F2');
+                expect(document.activeElement).toBe(row);
+
+                edit.addEventListener('keydown', (event: KeyboardEvent) => event.preventDefault());
+                edit.focus();
+                pressKey(edit, 'Escape');
+                expect(document.activeElement).toBe(edit);
+            });
+
+            it('should leave Escape on a row to the page', () => {
+                rows()[0].focus();
+
+                expect(pressKey(rows()[0], 'Escape').defaultPrevented).toBe(false);
+            });
+
+            it('should leave Enter, Space and letters on a control to the control', () => {
+                const clicked = vi.fn();
+                list.itemClicked.subscribe(clicked);
+                const [edit] = controls(rows()[0]);
+                edit.focus();
+
+                expect(pressKey(edit, 'Enter').defaultPrevented).toBe(false);
+                expect(pressKey(edit, ' ').defaultPrevented).toBe(false);
+                expect(pressKey(edit, 'r').defaultPrevented).toBe(false);
+                expect(clicked).not.toHaveBeenCalled();
+                expect(document.activeElement).toBe(edit);
+            });
+
+            it('should leave the arrows, Home and End to a control that uses them, but not Escape', () => {
+                const row = rows()[2];
+                const note = row.querySelector<HTMLElement>('.note')!;
+                note.focus();
+
+                for (const key of ['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', 'Home', 'End']) {
+                    expect(pressKey(note, key).defaultPrevented, key).toBe(false);
+                    expect(document.activeElement).toBe(note);
+                }
+
+                pressKey(note, 'Escape');
+                expect(document.activeElement).toBe(row);
+            });
+
+            it('should make the row of a focused control the tab stop', () => {
+                controls(rows()[2])[0].focus();
+                fixture.detectChanges();
+
+                expect(rows().map(row => row.getAttribute('tabindex'))).toEqual(['-1', '-1', '0']);
+            });
+
+            it('should leave the list with Tab and Shift+Tab from a control, and enter on the tab stop', async () => {
+                const before = fixture.nativeElement.querySelector('#before') as HTMLElement;
+                const after = fixture.nativeElement.querySelector('#after') as HTMLElement;
+
+                controls(rows()[0])[0].focus();
+                await userEvent.keyboard('{Tab}');
+                expect(document.activeElement).toBe(after);
+
+                // Leaving through the last row keeps the tab stop on the row of the control.
+                await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+                expect(document.activeElement).toBe(rows()[0]);
+
+                controls(rows()[2])[1].focus();
+                await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+                expect(document.activeElement).toBe(before);
+
+                await userEvent.keyboard('{Tab}');
+                expect(document.activeElement).toBe(rows()[2]);
+            });
+
+            it('should treat a listbox in a row as one control', () => {
+                const nestedFixture = TestBed.createComponent(GridWithNestedListboxComponent);
+                nestedFixture.detectChanges();
+                const nestedHost: HTMLElement = nestedFixture.nativeElement;
+                const row = nestedHost.querySelector<HTMLElement>('igx-list:not(.inner) > igx-list-item')!;
+                const [kate, lee] = Array.from(nestedHost.querySelectorAll<HTMLElement>('.inner > igx-list-item'));
+                const add = nestedHost.querySelector<HTMLElement>('.add')!;
+
+                row.focus();
+                pressKey(row, 'ArrowRight');
+                expect(document.activeElement).toBe(kate);
+
+                // The listbox keeps its arrows.
+                pressKey(kate, 'ArrowDown');
+                expect(document.activeElement).toBe(lee);
+                expect(pressKey(lee, 'ArrowRight').defaultPrevented).toBe(false);
+
+                pressKey(lee, 'Escape');
+                expect(document.activeElement).toBe(row);
+
+                pressKey(row, 'ArrowLeft');
+                expect(document.activeElement).toBe(add);
+                pressKey(add, 'ArrowLeft');
+                expect(document.activeElement).toBe(lee);
+            });
         });
 
         it('should reset the list and its rows when the navigation is none', () => {

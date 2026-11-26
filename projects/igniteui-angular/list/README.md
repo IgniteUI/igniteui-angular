@@ -114,7 +114,37 @@ Recommendations:
 </igx-list>
 ```
 
-If an item really needs a button or another control for a separate action, such as deleting the item, call `$event.stopPropagation()` in the control's `(click)` handler, so using it does not select the item.
+If an item needs a button or another control for a separate action, such as deleting the item, use the [grid navigation](#grid-navigation) instead.
+
+### Grid navigation
+Set `navigation="grid"` when items hold their own controls, such as a delete button. The list follows the [layout grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) pattern with one cell per row:
+
+- The list gets `role="grid"`, and each item `role="row"` with one `gridcell` around its content. Headers work as in a listbox.
+- With `aria-multiselectable` on the list, `"true"` or `"false"`, every row exposes `aria-selected`. Without it, only selected rows do, so leave it out for a list of actions only.
+- The list has a single tab stop, as a listbox. Tab and Shift+Tab leave the list also from a control. The controls keep their own `tabindex`.
+
+| Focus | Key | Action |
+| :--- | :--- | :--- |
+| Row | Arrow Down / Up, Home / End, Enter / Space, letters | As in a listbox |
+| Row | Arrow Right / Left | First / last control of the row, mirrored in right-to-left |
+| Control | Arrow Right / Left | Next / previous control, then back to the row |
+| Control | Arrow Down / Up | Next / previous row |
+| Control | Escape / F2 | Back to the row, unless the control handled the key |
+
+A control that uses the arrow keys itself, such as a text field, a slider, a combo or a nested listbox, keeps them. A click on a control also reaches its row, so call `$event.stopPropagation()` in the control's `(click)` handler when it must not select the row.
+
+```html
+<igx-list navigation="grid" aria-label="Tasks">
+    @for (task of tasks; track task.id) {
+        <igx-list-item (click)="open(task)">
+            <span igxListLineTitle>{{ task.name }}</span>
+            <button igxIconButton="flat" igxListAction aria-label="Delete" (click)="$event.stopPropagation(); remove(task)">
+                <igx-icon>delete</igx-icon>
+            </button>
+        </igx-list-item>
+    }
+</igx-list>
+```
 
 Lists whose `navigation` is `none`, the default, are unchanged: they are not focusable, and controls inside their items work as before. This includes a list that only sets `role="listbox"`, like the grid's Excel-style filter list, which manages the focus itself with `aria-activedescendant`.
 
@@ -173,7 +203,7 @@ public rightPanPerformed(args) {
 | allowRightPanning  | Determines whether the right panning of an item is allowed  |
 | emptyListTemplate | Sets a reference to a custom empty list template, otherwise default template is used |
 | dataLoadingTemplate | Sets a reference to a custom data loading template, otherwise default template is used |
-| navigation | The keyboard navigation and the ARIA pattern of the list: _none_ (default) or _listbox_, which makes the list an accessible [listbox](#listbox-and-keyboard-navigation) with keyboard navigation |
+| navigation | The keyboard navigation and the ARIA pattern of the list: _none_ (default), _listbox_, an accessible [listbox](#listbox-and-keyboard-navigation), or _grid_, a [grid](#grid-navigation) for items with controls |
 | panEndTriggeringThreshold | Number | Specifies the threshold after which a panning event is emitted. By default this property has a value of 0.5 which means 50% of list item's width. |
 
 ### Properties
