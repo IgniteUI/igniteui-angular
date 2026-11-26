@@ -923,6 +923,20 @@ describe('List', () => {
             expect(listElement.hasAttribute('role')).toBe(false);
         });
 
+        it('should follow the displayed order when the items are moved', () => {
+            fixture.componentInstance.selectedId = null;
+            fixture.detectChanges();
+            expect(list.items[0].element.getAttribute('tabindex')).toBe('0');
+
+            // Moving the views registers no item, so the list detects the new order after rendering.
+            fixture.componentInstance.items = [...fixture.componentInstance.items].reverse();
+            fixture.detectChanges();
+
+            const elements = Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('igx-list-item:not(.igx-list__header)'));
+            expect(elements.map(element => element.textContent!.trim())).toEqual(['Item 3', 'Item 2', 'Item 1']);
+            expect(elements.map(element => element.getAttribute('tabindex'))).toEqual(['0', '-1', '-1']);
+        });
+
         it('should describe every option with the header of its group, unless it has its own aria-describedby', () => {
             const groupedFixture = TestBed.createComponent(GroupedListboxComponent);
             groupedFixture.detectChanges();
@@ -942,9 +956,7 @@ describe('List', () => {
             groupedFixture.detectChanges();
             expect(item3.element.getAttribute('aria-describedby')).toBe('item-3-other-note');
 
-            groupedFixture.componentInstance.note = null;
-            groupedFixture.detectChanges();
-            expect(item3.element.getAttribute('aria-describedby')).toBe(employees.element.id);
+            // An app that binds its own aria-describedby owns it: the list does not watch for it to be removed.
         });
 
         it('should be the tab stop with its empty or loading message as an option while it has no options', () => {

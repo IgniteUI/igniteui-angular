@@ -57,6 +57,28 @@ export class IgxListBaseDirective {
     public unregisterItem(_item: unknown): void {
         // The list keeps its items.
     }
+
+    /**
+     * @hidden
+     * @internal
+     * Whether `item` is the tab stop of the list. Reactive: an item reads it in an effect.
+     *
+     * @param _item The item to check.
+     */
+    public isTabStop(_item: unknown): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * The header of the group of `item`: the closest header above it. Reactive: an item reads it in an effect.
+     *
+     * @param _item The item whose header to find.
+     */
+    public headerOf(_item: unknown): unknown {
+        return null;
+    }
 }
 
 /**

@@ -20,6 +20,8 @@ import {
     ChangeDetectionStrategy,
     ViewEncapsulation,
     afterEveryRender,
+    afterRenderEffect,
+    computed,
     signal
 } from '@angular/core';
 
@@ -344,7 +346,15 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public isLoading = false;
+    public get isLoading(): boolean {
+        return this._isLoading();
+    }
+
+    public set isLoading(value: boolean) {
+        this._isLoading.set(value);
+    }
+
+    private readonly _isLoading = signal(false);
 
     /**
      * Sets/gets whether the user selects items in the list.
@@ -362,7 +372,15 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public selectable = false;
+    public get selectable(): boolean {
+        return this._selectable();
+    }
+
+    public set selectable(value: boolean) {
+        this._selectable.set(value);
+    }
+
+    private readonly _selectable = signal(false);
 
     /**
      * Event emitted when a left pan gesture is executed on a list item.
@@ -500,7 +518,12 @@ export class IgxListComponent extends IgxListBaseDirective {
 
     constructor() {
         super();
-        afterEveryRender({ write: () => this.updateAttributes() });
+        afterEveryRender({ read: () => this.checkItemOrder() });
+        afterRenderEffect({
+            write: () => this.syncHostAttributes(),
+            // After the write phase of every item, so the new tab stop is focusable.
+            mixedReadWrite: (focusTarget) => focusTarget()?.element.focus()
+        });
         onResourceChangeHandle(this.destroyRef, () => {
             this._defaultResourceStrings = getCurrentResourceStrings(ListResourceStringsEN, false);
             this._customResourceStrings = this._resourceStrings ? Object.assign({}, this._defaultResourceStrings, this._resourceStrings) : null!;
@@ -523,7 +546,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     private _synced = false;
 
     /** The option that was focused last, which keeps the tab stop. */
-    private _activeItem: IgxListItemComponent | null = null;
+    private readonly _activeItem = signal<IgxListItemComponent | null>(null);
 
     /** The `tabindex` the list set on itself, so a `tabindex` set by the app is kept. */
     private _tabIndex: string | null = null;
@@ -534,15 +557,59 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Whether the list has options that are not hidden. Without them, the empty or loading message of a listbox is an option.
      */
     protected get hasOptions(): boolean {
-        return this.ownItems.some(item => !item.isHeader && !item.hidden);
+        return this._options().length > 0;
     }
 
     /** The items that found this list through DI, without those of nested lists. */
     private readonly _registeredItems = signal<readonly IgxListItemComponent[]>([]);
 
+    /** Bumped when the displayed order of the items changes without a registration, such as a move. */
+    private readonly _orderVersion = signal(0);
+
     /** The items of this list, without those of nested lists, in the order they are displayed. */
-    private get ownItems(): IgxListItemComponent[] {
+    private readonly _ownItems = computed(() => {
+        this._orderVersion();
         return [...this._registeredItems()].sort(byDocumentPosition);
+    });
+
+    /** The options of the list: its items that are not headers and not hidden. */
+    private readonly _options = computed(() => this._ownItems().filter(item => !item.isHeader && !item.hidden));
+
+    /** The option in the tab order: the one focused last, else the first selected option, else the first option. */
+    private readonly _tabStop = computed(() => {
+        const options = this._options();
+        const active = this._activeItem();
+        return active && options.includes(active) ? active : options.find(item => item.selected) ?? options[0] ?? null;
+    });
+
+    /** The header of the group of each item: the closest header above it. */
+    private readonly _groupHeaders = computed(() => {
+        const headers = new Map<IgxListItemComponent, IgxListItemComponent | null>();
+        let header: IgxListItemComponent | null = null;
+        for (const item of this._ownItems()) {
+            if (item.isHeader) {
+                header = item;
+            } else {
+                headers.set(item, header);
+            }
+        }
+        return headers;
+    });
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override isTabStop(item: IgxListItemComponent): boolean {
+        return this._tabStop() === item;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override headerOf(item: IgxListItemComponent): IgxListItemComponent | null {
+        return this._groupHeaders().get(item) ?? null;
     }
 
     /**
@@ -561,24 +628,34 @@ export class IgxListComponent extends IgxListBaseDirective {
         this._registeredItems.update(items => items.filter(registered => registered !== item));
     }
 
+    /** Detects a change of the displayed order of the items of a listbox, such as a move, which no registration reports. */
+    private checkItemOrder() {
+        if (!this.isListbox) {
+            return;
+        }
+        const ordered = [...this._registeredItems()].sort(byDocumentPosition);
+        const current = this._ownItems();
+        if (ordered.some((item, index) => item !== current[index])) {
+            this._orderVersion.update(version => version + 1);
+        }
+    }
+
     /**
-     * Syncs the listbox attributes of the list and its items, in the order the items are displayed.
-     * Only the active option is a tab stop: the one focused last, else the first selected option, else the first option.
-     * Without options, the list itself is the tab stop, and when options are added while it has the focus, the focus moves to them.
-     * While loading, the listbox is marked busy. A list that is not a listbox, and has not just stopped being one, is left untouched.
+     * Syncs the listbox attributes of the list itself. While it has no options, the list is the tab stop, and when
+     * options are added while it has the focus, the focus moves to them. While loading, the listbox is marked busy.
+     * The items sync their own attributes. A list that is not a listbox, and has not just stopped being one, is left untouched.
+     *
+     * @returns The tab stop to move the focus to, when the list had the focus as the tab stop.
      */
-    private updateAttributes() {
+    private syncHostAttributes(): IgxListItemComponent | null {
         const listbox = this.isListbox;
         if (!listbox && !this._synced) {
-            return;
+            return null;
         }
         this._synced = listbox;
         const element = this.element.nativeElement as HTMLElement;
-        syncAttribute(element, 'aria-busy', listbox && this.isLoading ? 'true' : null);
-        const children = this.ownItems;
-        const options = children.filter(item => !item.isHeader && !item.hidden);
-        const tabStop = options.includes(this._activeItem!) ? this._activeItem
-            : options.find(item => item.selected) ?? options[0];
+        syncAttribute(element, 'aria-busy', listbox && this._isLoading() ? 'true' : null);
+        const tabStop = this._tabStop();
         const tabIndex = element.getAttribute('tabindex');
         const focused = tabIndex !== null && tabIndex === this._tabIndex
             && (element.getRootNode() as Document | ShadowRoot).activeElement === element;
@@ -587,14 +664,7 @@ export class IgxListComponent extends IgxListBaseDirective {
             element.classList.toggle('igx-list--focusable', this._tabIndex !== null);
             syncAttribute(element, 'tabindex', this._tabIndex);
         }
-        let header: IgxListItemComponent | null = null;
-        for (const item of children) {
-            header = item.isHeader ? item : header;
-            item.updateAttributes(listbox, item === tabStop, header);
-        }
-        if (listbox && tabStop && focused) {
-            tabStop.element.focus();
-        }
+        return listbox && tabStop && focused ? tabStop : null;
     }
 
     private _role = 'list';
@@ -615,7 +685,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this.selectable ? 'listbox' : this._role;
+        return this._selectable() ? 'listbox' : this._role;
     }
 
     public set role(val: string) {
@@ -628,7 +698,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Whether the list follows the ARIA listbox pattern, which it does when it is `selectable`.
      */
     public override get isListbox(): boolean {
-        return this.selectable;
+        return this._selectable();
     }
 
     /**
@@ -641,7 +711,10 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostListener('focusin', ['$event'])
     public onFocusIn(event: FocusEvent) {
         const target = event.composedPath()[0];
-        this._activeItem = this.ownItems.find(item => item.element === target) ?? this._activeItem;
+        const item = this._ownItems().find(own => own.element === target);
+        if (item) {
+            this._activeItem.set(item);
+        }
     }
 
     /**
@@ -661,7 +734,7 @@ export class IgxListComponent extends IgxListBaseDirective {
         }
 
         const target = event.composedPath()[0];
-        const items = this.ownItems.filter(item => !item.isHeader && !item.hidden);
+        const items = this._options();
         const current = items.findIndex(item => item.element === target);
         if (current === -1) {
             return;

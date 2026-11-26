@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, booleanAttribute, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, afterRenderEffect, booleanAttribute, inject, signal } from '@angular/core';
 
 import {
     IgxListPanState,
@@ -49,6 +49,23 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /** The `id` the item generated as a header of a listbox, so it is removed when the item is no longer one. */
     private _headerId: string | null = null;
 
+    /** Whether the item applied listbox attributes at the last sync, so it removes them when the list stops being a listbox. */
+    private _applied = false;
+
+    private readonly _isHeader = signal(false);
+    private readonly _hidden = signal(false);
+    private readonly _selected = signal(false);
+
+    /**
+     * @hidden
+     * @internal
+     * The `id` that the options of the group of this header point to, while it is a header of a listbox.
+     */
+    public readonly headerId = signal<string | null>(null);
+
+    /** Syncs the listbox attributes of the item on its own host, from the state of the list. */
+    private readonly _listboxAttributes = afterRenderEffect({ write: () => this.syncListboxAttributes() });
+
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
      * ```typescript
@@ -79,7 +96,13 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @memberof IgxListItemComponent
      */
     @Input({ transform: booleanAttribute })
-    public isHeader!: boolean;
+    public get isHeader(): boolean {
+        return this._isHeader();
+    }
+
+    public set isHeader(value: boolean) {
+        this._isHeader.set(value);
+    }
 
     /**
      * Sets/gets whether the `list item` is hidden.
@@ -94,7 +117,13 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @memberof IgxListItemComponent
      */
     @Input({ transform: booleanAttribute })
-    public hidden = false;
+    public get hidden(): boolean {
+        return this._hidden();
+    }
+
+    public set hidden(value: boolean) {
+        this._hidden.set(value);
+    }
 
     /**
      * Sets/gets the `aria-label` attribute of the `list item`.
@@ -140,7 +169,6 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     private lastPanDir = IgxListPanState.NONE;
 
     private _role: string = '';
-    private _selected = false;
 
     /**
      * Gets the `panState` of a `list item`.
@@ -306,45 +334,51 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('class.igx-list__item-base--selected')
     @Input({ transform: booleanAttribute })
     public get selected() {
-        return this._selected && !this.isHeader;
+        return this._selected() && !this.isHeader;
     }
 
     public set selected(value: boolean) {
-        this._selected = value;
+        this._selected.set(value);
     }
 
     /**
-     * @hidden
-     * @internal
-     * Syncs the listbox attributes of the item. Options expose their selected state, only the active one is a tab stop,
-     * and they are described by the header of their group, unless they have their own `aria-describedby`.
+     * Syncs the listbox attributes of the item. Options expose their selected state, only the tab stop is in the
+     * tab order, and they are described by the header of their group, unless they have their own `aria-describedby`.
      * Headers are hidden from assistive technology and get an `id` when they have none, so options can point to them.
-     * The generated `id` is removed when the list is no longer a listbox.
-     * Called by the list after rendering.
-     *
-     * @param listbox Whether the list is a listbox.
-     * @param tabStop Whether the item is the active option.
-     * @param header The header of the item's group.
+     * Runs in an effect, so the item follows the list state also when it is declared in another OnPush component.
+     * An item of a list that is not a listbox, and has not just stopped being one, is left untouched.
      */
-    public updateAttributes(listbox: boolean, tabStop: boolean, header: IgxListItemComponent | null) {
-        const option = listbox && !this.isHeader;
-        syncAttribute(this.element, 'tabindex', option ? (tabStop ? '0' : '-1') : null);
+    private syncListboxAttributes() {
+        const listbox = this.list.isListbox;
+        if (!listbox && !this._applied) {
+            return;
+        }
+        this._applied = listbox;
+
+        const isHeader = this._isHeader();
+        const option = listbox && !isHeader;
+        syncAttribute(this.element, 'tabindex', option ? (this.list.isTabStop(this) ? '0' : '-1') : null);
         syncAttribute(this.element, 'aria-selected', option ? String(this.selected) : null);
-        syncAttribute(this.element, 'aria-hidden', listbox && this.isHeader ? 'true' : null);
-        if (listbox && this.isHeader) {
+        syncAttribute(this.element, 'aria-hidden', listbox && isHeader ? 'true' : null);
+
+        if (listbox && isHeader) {
             if (!this.element.id) {
                 this._headerId = `igx-list-header-${NEXT_HEADER_ID++}`;
                 this.element.id = this._headerId;
             }
-        } else if (this._headerId !== null) {
-            if (this.element.id === this._headerId) {
+            this.headerId.set(this.element.id);
+        } else {
+            if (this._headerId !== null && this.element.id === this._headerId) {
                 this.element.removeAttribute('id');
             }
             this._headerId = null;
+            this.headerId.set(null);
         }
+
+        const header = option ? this.list.headerOf(this) as IgxListItemComponent | null : null;
         const describedBy = this.element.getAttribute('aria-describedby');
         if (describedBy === null || describedBy === this._describedBy) {
-            this._describedBy = (option && header?.element.id) || null;
+            this._describedBy = header?.headerId() ?? null;
             syncAttribute(this.element, 'aria-describedby', this._describedBy);
         }
     }
