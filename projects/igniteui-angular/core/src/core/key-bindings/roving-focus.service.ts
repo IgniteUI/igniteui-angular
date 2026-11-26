@@ -1,5 +1,7 @@
-import { ElementRef, Injectable, inject, isDevMode } from '@angular/core';
+import { ElementRef, Injectable, inject } from '@angular/core';
 import { isLeftToRight } from '../utils';
+import { getActiveElement } from '../tabbable';
+import { canConfigure } from './configure-once';
 import { IgxKeyBindingOptions, IgxKeyBindingsConfig, IgxKeyBindingsService } from './key-bindings.service';
 import { arrowDown, arrowLeft, arrowRight, arrowUp, endKey, homeKey } from './keys';
 
@@ -95,10 +97,7 @@ export class IgxRovingFocusService<T extends Element = Element> {
      * ```
      */
     public configure(options: IgxRovingFocusOptions<T>): this {
-        if (this._options) {
-            if (isDevMode()) {
-                throw new Error('IgxRovingFocusService: configure() was already called for this element.');
-            }
+        if (!canConfigure(!!this._options, 'IgxRovingFocusService')) {
             return this;
         }
         this._options = options;
@@ -180,7 +179,7 @@ export class IgxRovingFocusService<T extends Element = Element> {
             return this._options!.current();
         }
 
-        const active = (this._host.getRootNode() as Document | ShadowRoot).activeElement;
+        const active = getActiveElement(this._host);
         return active ? items.find((item) => item === active || item.contains(active)) : undefined;
     }
 }

@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { enterKey, isComposingKey, spaceBar } from './keys';
+import { canConfigure } from './configure-once';
 
 //#region Modifiers and combination keys
 
@@ -260,13 +261,8 @@ export class IgxKeyBindingsService {
      * ```
      */
     public configure(config: IgxKeyBindingsConfig): this {
-        if (this._configured) {
-            if (isDevMode()) {
-                throw new Error(
-                    'IgxKeyBindingsService: configure() was already called for this element. ' +
-                    'The owners that share the instance must agree on one configuration.'
-                );
-            }
+        if (!canConfigure(this._configured, 'IgxKeyBindingsService',
+            ' The owners that share the instance must agree on one configuration.')) {
             return this;
         }
 

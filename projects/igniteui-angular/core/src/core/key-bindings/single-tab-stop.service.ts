@@ -1,6 +1,7 @@
-import { DOCUMENT, DestroyRef, ElementRef, Injectable, NgZone, PLATFORM_ID, inject, isDevMode } from '@angular/core';
+import { DOCUMENT, DestroyRef, ElementRef, Injectable, NgZone, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { getTabbableElements, isTabbable } from '../tabbable';
+import { getActiveElement, getTabbableElements, isTabbable } from '../tabbable';
+import { canConfigure } from './configure-once';
 import { tabKey } from './keys';
 
 /**
@@ -55,6 +56,13 @@ export class IgxSingleTabStopService {
      * Whether the service is moving the focus on its way out of the host, so the host can ignore that focus.
      *
      * @returns `true` during the focus move.
+     *
+     * @example
+     * ```typescript
+     * if (this._singleTabStop.leaving) {
+     *     return;
+     * }
+     * ```
      */
     public get leaving(): boolean {
         return this._leaving;
@@ -72,10 +80,7 @@ export class IgxSingleTabStopService {
      * ```
      */
     public configure(options: IgxSingleTabStopOptions): this {
-        if (this._options) {
-            if (isDevMode()) {
-                throw new Error('IgxSingleTabStopService: configure() was already called for this element.');
-            }
+        if (!canConfigure(!!this._options, 'IgxSingleTabStopService')) {
             return this;
         }
         this._options = options;
@@ -110,7 +115,7 @@ export class IgxSingleTabStopService {
         }
 
         const target = event.shiftKey ? this._firstStop() : getTabbableElements(this._host).at(-1);
-        const active = (this._host.getRootNode() as Document | ShadowRoot).activeElement;
+        const active = getActiveElement(this._host);
 
         // The browser moves the focus on from there, out of the host.
         if (target && target !== active) {

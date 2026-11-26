@@ -49,6 +49,26 @@ export function isTabbable(element: HTMLElement): boolean {
 }
 
 /**
+ * Returns the focused element of the root of `node`: the document, or the shadow root that holds `node`.
+ *
+ * @remarks
+ * When the focus is inside another shadow root, its shadow host is returned.
+ *
+ * @param node - A node in the root to read.
+ * @returns The focused element, or `null`.
+ *
+ * @example
+ * ```typescript
+ * const focused = getActiveElement(this.element);
+ * ```
+ *
+ * @hidden @internal
+ */
+export function getActiveElement(node: Node): Element | null {
+    return (node.getRootNode() as Document | ShadowRoot).activeElement;
+}
+
+/**
  * Returns the descendants of `root` that Tab reaches, in document order.
  *
  * @remarks

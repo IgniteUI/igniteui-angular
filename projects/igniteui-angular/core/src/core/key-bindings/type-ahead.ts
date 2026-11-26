@@ -1,17 +1,25 @@
 import { isComposingKey, spaceBar } from './keys';
 
 /**
- * How {@link findTypeAheadMatch} reads and filters the items.
+ * How the type-ahead reads and filters the items.
  *
  * @hidden @internal
  */
-export interface IgxTypeAheadMatchOptions<T> {
+export interface IgxTypeAheadItemOptions<T> {
     /** The text that an item matches against, such as its title. */
     label: (item: T) => string;
-    /** The item that the search starts after. */
-    current?: T | null;
     /** The items to pass over, such as disabled ones. They keep their place in the order. */
     skip?: (item: T) => boolean;
+}
+
+/**
+ * The options of {@link findTypeAheadMatch}.
+ *
+ * @hidden @internal
+ */
+export interface IgxTypeAheadMatchOptions<T> extends IgxTypeAheadItemOptions<T> {
+    /** The item that the search starts after. */
+    current?: T | null;
 }
 
 /**
@@ -19,11 +27,7 @@ export interface IgxTypeAheadMatchOptions<T> {
  *
  * @hidden @internal
  */
-export interface IgxTypeAheadOptions<T> {
-    /** The text that an item matches against, such as its title. */
-    label: (item: T) => string;
-    /** The items to pass over, such as disabled ones. They keep their place in the order. */
-    skip?: (item: T) => boolean;
+export interface IgxTypeAheadOptions<T> extends IgxTypeAheadItemOptions<T> {
     /** The pause, in milliseconds, after which the next key starts a new term. Defaults to `500`. */
     timeout?: number;
 }
@@ -85,8 +89,7 @@ function startsWith(text: string, term: string): boolean {
  * @hidden @internal
  */
 export class IgxTypeAhead<T> {
-    private readonly _label: (item: T) => string;
-    private readonly _skip?: (item: T) => boolean;
+    private readonly _items: IgxTypeAheadItemOptions<T>;
     private readonly _timeout: number;
 
     private _term = '';
@@ -96,6 +99,11 @@ export class IgxTypeAhead<T> {
      * Whether a search is active: a key was added within the timeout.
      *
      * @returns `true` from the first key until a pause of the timeout or a {@link reset}.
+     *
+     * @example
+     * ```typescript
+     * const typesSpace = event.key === ' ' && typeAhead.searching;
+     * ```
      */
     public get searching(): boolean {
         return this._term !== '' && !this._timedOut();
@@ -103,10 +111,14 @@ export class IgxTypeAhead<T> {
 
     /**
      * @param options - The label of an item, the items to pass over and the timeout.
+     *
+     * @example
+     * ```typescript
+     * const typeAhead = new IgxTypeAhead({ label: (item) => item.text, skip: (item) => item.disabled });
+     * ```
      */
     constructor(options: IgxTypeAheadOptions<T>) {
-        this._label = options.label;
-        this._skip = options.skip;
+        this._items = { label: options.label, skip: options.skip };
         this._timeout = options.timeout ?? 500;
     }
 
@@ -163,11 +175,11 @@ export class IgxTypeAhead<T> {
         this._term += key;
         this._lastKeyTime = Date.now();
 
-        if (current && this._term.length > 1 && startsWith(this._label(current), this._term)) {
+        if (current && this._term.length > 1 && startsWith(this._items.label(current), this._term)) {
             return current;
         }
 
-        return findTypeAheadMatch(items, this._term, { label: this._label, current, skip: this._skip });
+        return findTypeAheadMatch(items, this._term, { ...this._items, current });
     }
 
     /**
