@@ -5,7 +5,7 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -1041,6 +1041,43 @@ describe('List', () => {
                 pressKey(items[0].element, 'ArrowDown');
                 expect(document.activeElement).toBe(items[1].element);
                 expect(items[1].index).toBe(1);
+            });
+
+            it('should include the items declared in the template of another component', () => {
+                const wrappedFixture = TestBed.createComponent(ListboxWithWrappedItemsComponent);
+                wrappedFixture.detectChanges();
+                const elements = Array.from<HTMLElement>(wrappedFixture.nativeElement.querySelectorAll('igx-list-item'));
+
+                expect(elements.map(element => element.getAttribute('tabindex'))).toEqual(['0', '-1', '-1', '-1']);
+
+                elements[0].focus();
+                pressKey(elements[0], 'ArrowDown');
+                expect(document.activeElement).toBe(elements[1]);
+                pressKey(elements[1], 'ArrowDown');
+                expect(document.activeElement).toBe(elements[2]);
+                pressKey(elements[2], 'End');
+                expect(document.activeElement).toBe(elements[3]);
+            });
+
+            it('should keep the items of a listbox nested in an item to the listbox', () => {
+                const nestedFixture = TestBed.createComponent(NestedListboxComponent);
+                nestedFixture.detectChanges();
+                const host: HTMLElement = nestedFixture.nativeElement;
+                const outer = Array.from<HTMLElement>(host.querySelectorAll('igx-list:not(.inner) > igx-list-item'));
+                const inner = Array.from<HTMLElement>(host.querySelectorAll('.inner > igx-list-item'));
+
+                // The static outer list takes nothing from the listbox in its item.
+                expect(outer.map(element => element.getAttribute('role'))).toEqual(['listitem', 'listitem', 'listitem']);
+                expect(outer.some(element => element.hasAttribute('tabindex'))).toBe(false);
+                expect(inner.map(element => element.getAttribute('role'))).toEqual(['option', 'option']);
+
+                inner[0].focus();
+                pressKey(inner[0], 'ArrowDown');
+                expect(document.activeElement).toBe(inner[1]);
+                pressKey(inner[1], 'End');
+                expect(document.activeElement).toBe(inner[1]);
+                // The nested list keeps its own tab stop, on its option focused last.
+                expect(inner.map(element => element.getAttribute('tabindex'))).toEqual(['-1', '0']);
             });
 
             it('should skip hidden items', () => {

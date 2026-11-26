@@ -150,6 +150,50 @@ export class EmptyListboxComponent extends BasicListComponent {
     public items: string[] = [];
 }
 
+/** An item declared in the template of another component, which the list content query does not see. */
+@Component({
+    selector: 'test-wrapped-list-item',
+    template: `<igx-list-item><ng-content></ng-content></igx-list-item>`,
+    imports: [IgxListItemComponent]
+})
+export class WrappedListItemComponent {
+}
+
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list selectable>
+            <igx-list-item>Item 1</igx-list-item>
+            <test-wrapped-list-item>Item 2</test-wrapped-list-item>
+            <test-wrapped-list-item>Item 3</test-wrapped-list-item>
+            <igx-list-item>Item 4</igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, WrappedListItemComponent]
+})
+export class ListboxWithWrappedItemsComponent extends BasicListComponent {
+}
+
+/** A listbox in an item of a static list, which a list item allows, unlike an option. */
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list>
+            <igx-list-item>Outer 1</igx-list-item>
+            <igx-list-item>
+                <igx-list selectable class="inner">
+                    <igx-list-item>Inner 1</igx-list-item>
+                    <igx-list-item>Inner 2</igx-list-item>
+                </igx-list>
+            </igx-list-item>
+            <igx-list-item>Outer 3</igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent]
+})
+export class NestedListboxComponent extends BasicListComponent {
+}
+
 @Component({
     template: `
     <div #wrapper>

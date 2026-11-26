@@ -405,6 +405,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     public ngOnInit() {
+        this.list.registerItem(this);
         this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
             panStart: () => this.panStart(),
             panMove: (event) => this.panMove(event),
@@ -422,6 +423,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     public ngOnDestroy() {
+        this.list.unregisterItem(this);
         this._gestures?.destroy();
     }
 

@@ -34,6 +34,29 @@ export class IgxListBaseDirective {
     public get isListbox(): boolean {
         return false;
     }
+
+    /**
+     * @hidden
+     * @internal
+     * Adds an item to the items of the list. Called by the item, which finds its list through DI,
+     * also when it is declared in the template of another component.
+     *
+     * @param _item The item to add.
+     */
+    public registerItem(_item: unknown): void {
+        // The list keeps its items.
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * Removes an item from the items of the list. Called by the item when it is destroyed.
+     *
+     * @param _item The item to remove.
+     */
+    public unregisterItem(_item: unknown): void {
+        // The list keeps its items.
+    }
 }
 
 /**

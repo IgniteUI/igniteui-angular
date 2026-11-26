@@ -19,7 +19,8 @@ import {
     DestroyRef,
     ChangeDetectionStrategy,
     ViewEncapsulation,
-    afterEveryRender
+    afterEveryRender,
+    signal
 } from '@angular/core';
 
 import { IgxListItemComponent } from './list-item.component';
@@ -536,9 +537,28 @@ export class IgxListComponent extends IgxListBaseDirective {
         return this.ownItems.some(item => !item.isHeader && !item.hidden);
     }
 
+    /** The items that found this list through DI, without those of nested lists. */
+    private readonly _registeredItems = signal<readonly IgxListItemComponent[]>([]);
+
     /** The items of this list, without those of nested lists, in the order they are displayed. */
     private get ownItems(): IgxListItemComponent[] {
-        return this.sortedChildren?.filter(item => item.list === this) ?? [];
+        return [...this._registeredItems()].sort(byDocumentPosition);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override registerItem(item: IgxListItemComponent): void {
+        this._registeredItems.update(items => [...items, item]);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override unregisterItem(item: IgxListItemComponent): void {
+        this._registeredItems.update(items => items.filter(registered => registered !== item));
     }
 
     /**
@@ -771,6 +791,11 @@ export class IgxListComponent extends IgxListBaseDirective {
             return this.emptyListTemplate ? this.emptyListTemplate.template : this.defaultEmptyListTemplate;
         }
     }
+}
+
+/** Orders two items by their position in the document. */
+function byDocumentPosition(a: IgxListItemComponent, b: IgxListItemComponent): number {
+    return a.element.compareDocumentPosition(b.element) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
 }
 
 /**
