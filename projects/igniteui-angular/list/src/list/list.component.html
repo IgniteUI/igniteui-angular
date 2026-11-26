@@ -14,9 +14,9 @@
 
 @if (!children || children.length === 0 || isLoading || (isNavigable && !hasOptions)) {
     <div class="igx-list__message-wrapper"
-        [attr.role]="isNavigable && !hasOptions ? (isGrid ? 'row' : 'option') : null"
+        [attr.role]="isNavigable && !hasOptions ? itemRole : null"
         [attr.aria-hidden]="isNavigable && hasOptions ? 'true' : null">
-        <div class="igx-list__message-wrapper" [attr.role]="isGrid && !hasOptions ? 'gridcell' : null">
+        <div class="igx-list__message-cell" [attr.role]="isGrid && !hasOptions ? 'gridcell' : null">
             <ng-container *ngTemplateOutlet="template; context: context">
             </ng-container>
         </div>

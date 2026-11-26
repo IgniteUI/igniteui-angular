@@ -1,4 +1,5 @@
 import { Directive, TemplateRef, EventEmitter, QueryList, ElementRef, inject } from '@angular/core';
+import type { IgxListItemComponent } from './list-item.component';
 
 export interface IListChild {
     index: number;
@@ -30,24 +31,44 @@ export class IgxListBaseDirective {
      * @hidden
      * @internal
      * Whether the list follows the ARIA listbox pattern.
+     *
+     * @returns `true` for a listbox.
      */
     public get isListbox(): boolean {
         return false;
     }
 
-    /** @hidden @internal Whether the list follows the ARIA layout grid pattern, one cell per row. */
+    /**
+     * @hidden
+     * @internal
+     * Whether the list follows the ARIA layout grid pattern, one cell per row.
+     *
+     * @returns `true` for a grid.
+     */
     public get isGrid(): boolean {
         return false;
     }
 
-    /** @hidden @internal Whether the list has keyboard navigation: a listbox or a grid. */
+    /**
+     * @hidden
+     * @internal
+     * Whether the list has keyboard navigation: a listbox or a grid.
+     *
+     * @returns `true` for a listbox or a grid.
+     */
     public get isNavigable(): boolean {
         return this.isListbox || this.isGrid;
     }
 
-    /** @hidden @internal Whether the app set `aria-multiselectable` on the list, with either value. */
-    public get isMultiselectable(): boolean {
-        return false;
+    /**
+     * @hidden
+     * @internal
+     * The role of the items that are not headers: `option` in a listbox, `row` in a grid.
+     *
+     * @returns The role, or `null` without navigation.
+     */
+    public get itemRole(): string | null {
+        return null;
     }
 
     /**
@@ -57,7 +78,7 @@ export class IgxListBaseDirective {
      *
      * @param _item The item to add.
      */
-    public registerItem(_item: unknown): void {
+    public registerItem(_item: IgxListItemComponent): void {
         // The list keeps its items.
     }
 
@@ -68,31 +89,35 @@ export class IgxListBaseDirective {
      *
      * @param _item The item to remove.
      */
-    public unregisterItem(_item: unknown): void {
+    public unregisterItem(_item: IgxListItemComponent): void {
         // The list keeps its items.
     }
 
     /**
      * @hidden
      * @internal
-     * Whether `item` is the tab stop of the list.
+     * The navigation attributes of `item`, which the item writes on its own host.
      *
-     * @param _item The item to check.
+     * @param _item The item.
+     * @returns The attributes, or `null` without navigation.
      */
-    public isTabStop(_item: unknown): boolean {
-        return false;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     * The header above `item`.
-     *
-     * @param _item The item whose header to find.
-     */
-    public headerOf(_item: unknown): unknown {
+    public navigationStateOf(_item: IgxListItemComponent): IgxListItemNavigationState | null {
         return null;
     }
+}
+
+/**
+ * @hidden
+ * @internal
+ * The navigation attributes of an item of a listbox or a grid. Reactive: an item reads them in an effect.
+ */
+export interface IgxListItemNavigationState {
+    /** The `tabindex`: `0` for the tab stop, `-1` for the other options, `null` for a header. */
+    tabIndex: string | null;
+    /** The `aria-selected` value, or `null`. */
+    selected: string | null;
+    /** The `id` of the header that describes the item, or `null`. */
+    describedBy: string | null;
 }
 
 /**

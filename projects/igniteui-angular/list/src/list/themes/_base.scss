@@ -46,6 +46,10 @@ $theme: digest-schema($light-list);
             display: contents;
         }
 
+        @include e(message-cell) {
+            display: contents;
+        }
+
         @include m(focusable) {
             &:focus-visible {
                 outline: var(--_focus-ring-width, #{rem(1px)}) solid var-get($theme, 'item-focus-outline-color');

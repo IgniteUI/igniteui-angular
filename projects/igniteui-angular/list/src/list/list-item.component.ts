@@ -49,8 +49,8 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /** The `id` the item generated as a header of a listbox, so it is removed when the item is no longer one. */
     private _headerId: string | null = null;
 
-    /** Whether listbox attributes are applied, so they are removed when the list stops being a listbox. */
-    private _applied = false;
+    /** Whether navigation attributes are applied, so they are removed when the list loses its navigation. */
+    private _hasNavigationAttributes = false;
 
     private readonly _isHeader = signal(false);
     private readonly _hidden = signal(false);
@@ -59,8 +59,8 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /** @hidden @internal The `id` that the options of this header's group point to. */
     public readonly headerId = signal<string | null>(null);
 
-    /** Writes the listbox attributes on the item's own host. */
-    private readonly _listboxAttributes = afterRenderEffect({ write: () => this.syncListboxAttributes() });
+    /** Writes the navigation attributes on the item's own host. */
+    private readonly _navigationAttributes = afterRenderEffect({ write: () => this.syncNavigationAttributes() });
 
     /**
      * Provides a reference to the template's base element shown when left panning a list item.
@@ -301,8 +301,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role ? this._role : this.isHeader ? 'separator'
-            : this.list.isListbox ? 'option' : this.list.isGrid ? 'row' : 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator' : this.list.itemRole ?? 'listitem';
     }
 
     public set role(val: string) {
@@ -317,6 +316,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * Sets/gets whether the `list item` is selected.
      * Selection is only applied to non-header items.
      * When selected, the CSS class 'igx-list__item-base--selected' is added to the item.
+     * In a list with `navigation`, it also sets the `aria-selected` attribute of the item.
      * ```html
      * <igx-list-item [selected]="true">Selected Item</igx-list-item>
      * ```
@@ -338,23 +338,20 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
         this._selected.set(value);
     }
 
-    /** Syncs the listbox attributes of the item from the list state. Does nothing outside a listbox. */
-    private syncListboxAttributes() {
-        const listbox = this.list.isNavigable;
-        if (!listbox && !this._applied) {
+    /** Syncs the navigation attributes of the item from the list state. Does nothing without navigation. */
+    private syncNavigationAttributes() {
+        const state = this.list.navigationStateOf(this);
+        if (!state && !this._hasNavigationAttributes) {
             return;
         }
-        this._applied = listbox;
+        this._hasNavigationAttributes = !!state;
 
-        const isHeader = this._isHeader();
-        const option = listbox && !isHeader;
-        syncAttribute(this.element, 'tabindex', option ? (this.list.isTabStop(this) ? '0' : '-1') : null);
-        // A grid that is not multiselectable marks only its selected rows.
-        const selected = this.list.isGrid && !this.list.isMultiselectable ? (this.selected ? 'true' : null) : String(this.selected);
-        syncAttribute(this.element, 'aria-selected', option ? selected : null);
-        syncAttribute(this.element, 'aria-hidden', listbox && isHeader ? 'true' : null);
+        const header = !!state && this._isHeader();
+        syncAttribute(this.element, 'tabindex', state?.tabIndex ?? null);
+        syncAttribute(this.element, 'aria-selected', state?.selected ?? null);
+        syncAttribute(this.element, 'aria-hidden', header ? 'true' : null);
 
-        if (listbox && isHeader) {
+        if (header) {
             if (!this.element.id) {
                 this._headerId = `igx-list-header-${NEXT_HEADER_ID++}`;
                 this.element.id = this._headerId;
@@ -368,10 +365,9 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
             this.headerId.set(null);
         }
 
-        const header = option ? this.list.headerOf(this) as IgxListItemComponent | null : null;
         const describedBy = this.element.getAttribute('aria-describedby');
         if (describedBy === null || describedBy === this._describedBy) {
-            this._describedBy = header?.headerId() ?? null;
+            this._describedBy = state?.describedBy ?? null;
             syncAttribute(this.element, 'aria-describedby', this._describedBy);
         }
     }
