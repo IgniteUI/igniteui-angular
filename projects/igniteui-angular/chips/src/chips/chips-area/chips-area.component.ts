@@ -15,7 +15,8 @@ import {
     ElementRef,
     inject,
     ChangeDetectionStrategy,
-    ViewEncapsulation
+    ViewEncapsulation,
+    signal
 } from '@angular/core';
 import {
     IgxChipComponent,
@@ -72,10 +73,11 @@ export interface IChipsAreaSelectEventArgs extends IBaseChipsAreaEventArgs {
     standalone: true,
 })
 export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy {
-     public cdr = inject(ChangeDetectorRef);
-     public element = inject(ElementRef);
-     private _iterableDiffers = inject(IterableDiffers);
-
+    public cdr = inject(ChangeDetectorRef);
+    public element = inject(ElementRef);
+    private _iterableDiffers = inject(IterableDiffers);
+    private _width = signal<number>(undefined!);
+    private _height = signal<number>(undefined!);
 
     /**
      * Returns the `role` attribute of the chips area.
@@ -109,7 +111,13 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * ```
      */
     @Input()
-    public width!: number;
+    public set width(value: number) {
+        this._width.set(value);
+    }
+
+    public get width(): number {
+        return this._width();
+    }
 
     /** @hidden @internal */
     @HostBinding('style.width.rem')
@@ -126,7 +134,13 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * ```
      */
     @Input()
-    public height!: number;
+    public set height(value: number) {
+        this._height.set(value);
+    }
+
+    public get height(): number {
+        return this._height();
+    }
 
     /** @hidden @internal */
     @HostBinding('style.height.rem')
