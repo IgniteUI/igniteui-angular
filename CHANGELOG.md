@@ -2,14 +2,25 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 21.2.27
+## 21.2.28
 
 ### Bug Fixes
 
+- `IgxButtonDirective`
+    - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
     - The loading indicator is no longer shown outside a scrollable parent that clips the grid, for example below a hierarchical grid when a child grid that is partly scrolled out of view is loading. It also moves with the grid now while the parent is scrolled (#17986).
 - `IgxOverlayService`
     - Overlays shown with `ContainerPositionStrategy`, such as `IgxSnackbarComponent` with `positioning="container"`, are now rendered inside their container instead of in the top layer, so the container clips them and they scroll with it (#17986).
+
+## 21.2.27
+
+### Bug Fixes
+
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
+- `IgxHierarchicalGridComponent`
+    - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
 
 ## 21.2.26
 
