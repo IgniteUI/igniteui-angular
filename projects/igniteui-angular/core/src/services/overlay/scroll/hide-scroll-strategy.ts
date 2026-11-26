@@ -20,11 +20,12 @@ import { AbsoluteScrollStrategy } from './absolute-scroll-strategy';
  * ```
  */
 // DISCUSS(#17765): Container behavior depends on #17986. Once Container overlays render inside their
-// container (not in the top layer), `position-visibility` no longer applies to the wrapper (H8) and the
+// container (not in the top layer), `position-visibility` no longer applies to the wrapper and the
 // container already clips them. Decide whether Hide does anything for Container then.
 export class HideScrollStrategy extends AbsoluteScrollStrategy {
     private _observer: IntersectionObserver | null = null;
     private _content: HTMLElement | null = null;
+    private _anchor: HTMLElement | null = null;
 
     constructor(scrollContainer?: HTMLElement) {
         super(scrollContainer);
@@ -32,7 +33,8 @@ export class HideScrollStrategy extends AbsoluteScrollStrategy {
 
     /**
      * @hidden @internal
-     * Called by the overlay service after it positions the content in `show()`.
+     * Called by the overlay service after it positions the content in `show()`, and by `reposition()`
+     * when the anchor or the engine changed.
      *
      * @param anchor The element whose visibility controls the content, or `null`.
      * @param content The overlay content element.
@@ -45,10 +47,19 @@ export class HideScrollStrategy extends AbsoluteScrollStrategy {
             return;
         }
         this._content = content;
+        this._anchor = anchor;
         this._observer = new Observer(entries => {
             content.style.visibility = entries[entries.length - 1].isIntersecting ? '' : 'hidden';
         }, { threshold: 0 });
         this._observer.observe(anchor);
+    }
+
+    /**
+     * @hidden @internal
+     * The element the observer watches, or `null` when nothing is observed.
+     */
+    public get _observedAnchor(): HTMLElement | null {
+        return this._anchor;
     }
 
     /**
@@ -58,6 +69,7 @@ export class HideScrollStrategy extends AbsoluteScrollStrategy {
     public _onHidden(): void {
         this._observer?.disconnect();
         this._observer = null;
+        this._anchor = null;
         if (this._content) {
             this._content.style.visibility = '';
             this._content = null;

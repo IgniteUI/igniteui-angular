@@ -299,6 +299,23 @@ describe('igxOverlay native anchoring', () => {
             expect(targetRect).not.toHaveBeenCalled();
         });
 
+        it('reposition moves the anchor to a new target', async () => {
+            const first = addTarget({ top: 100, left: 100, width: 80, height: 30 });
+            const second = addTarget({ top: 300, left: 300, width: 80, height: 30 });
+            const id = await open(addElement(), { target: first, positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) });
+            const info = overlay.getOverlayById(id);
+
+            info.settings.target = second;
+            overlay.reposition(id);
+            await frames();
+            expect(info.engine).toBe('native-connected');
+            expect(first.style.getPropertyValue('anchor-name')).toBe('');
+            expect(second.style.getPropertyValue('anchor-name')).toBe(info.anchorName);
+            const r = content(id).getBoundingClientRect();
+            expectNear(r.top, 330);
+            expectNear(r.left, 300);
+        });
+
         it('reposition switches to the script engine when the settings change to a pair position-area cannot express', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const strategy = new ConnectedPositioningStrategy(NO_ANIMATIONS);
@@ -694,6 +711,18 @@ describe('igxOverlay native anchoring', () => {
             await scrollAndSettle(scroller, 200);
             expect(content(id).style.visibility).toBe('hidden');
             await scrollAndSettle(scroller, 0);
+            expect(content(id).style.visibility).toBe('');
+        });
+
+        it('native without position-visibility: the observer follows a target changed through reposition', async () => {
+            withoutPositionVisibility();
+            const { scroller, target } = addScroller();
+            const id = await open(addElement(), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS), scrollStrategy: new HideScrollStrategy() });
+            const fixedTarget = addTarget({ top: 400, left: 400, width: 80, height: 30 });
+            overlay.getOverlayById(id).settings.target = fixedTarget;
+            overlay.reposition(id);
+
+            await scrollAndSettle(scroller, 200);
             expect(content(id).style.visibility).toBe('');
         });
 

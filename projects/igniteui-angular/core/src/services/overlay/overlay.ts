@@ -487,7 +487,7 @@ export class IgxOverlayService implements OnDestroy {
                 true,
                 info.settings!.target);
         } else {
-            this.applyNative(info, true);
+            this.applyNative(info);
             if (engine === 'native-container') {
                 (strategy as ContainerPositionStrategy).applyLayout(contentElement);
             }
@@ -498,12 +498,7 @@ export class IgxOverlayService implements OnDestroy {
             info.resolvedOpenAnimation = info.resolvedCloseAnimation = undefined;
         }
         this.updateAnimationPlayers(info);
-        const scrollStrategy = info.settings!.scrollStrategy;
-        if (scrollStrategy instanceof HideScrollStrategy) {
-            const anchor = this.getHideAnchor(info);
-            const useObserver = engine === 'script' || !this.anchorVisible();
-            this._zone.runOutsideAngular(() => scrollStrategy._onShown(anchor, contentElement, useObserver));
-        }
+        this.trackHide(info, contentElement, true);
         this.addModalClasses(info);
         if (this.getOpenAnimation(info)) {
             // TODO: should we build players again. This was already done in attach!!!
@@ -563,10 +558,11 @@ export class IgxOverlayService implements OnDestroy {
                 // DISCUSS(#17765): native content follows a scroll at the next rendering frame, while the script
                 // engine moved it synchronously in the scroll handler. Code that scrolls and measures in the same
                 // task sees the old position (the toggle #3636 spec needed a frame wait). Not in plan §17 yet.
-                this.applyNative(overlayInfo, false);
+                this.applyNative(overlayInfo);
                 if (overlayInfo.engine === 'native-container') {
                     (overlayInfo.settings.positionStrategy as ContainerPositionStrategy).applyLayout(contentElement);
                 }
+                this.trackHide(overlayInfo, contentElement);
                 return;
             }
             // The current settings no longer fit this engine (e.g. a pair position-area cannot express):
@@ -574,12 +570,8 @@ export class IgxOverlayService implements OnDestroy {
             this.switchEngine(overlayInfo);
             overlayInfo.engine = 'script';
             this.updateAnimationPlayers(overlayInfo);
-            const scrollStrategy = overlayInfo.settings.scrollStrategy;
-            if (scrollStrategy instanceof HideScrollStrategy) {
-                const anchor = this.getHideAnchor(overlayInfo);
-                this._zone.runOutsideAngular(() => scrollStrategy._onShown(anchor, contentElement, true));
-            }
         }
+        this.trackHide(overlayInfo, contentElement);
         const contentElementRect = contentElement.getBoundingClientRect();
         overlayInfo.settings.positionStrategy!.position(
             contentElement,
@@ -1271,10 +1263,6 @@ export class IgxOverlayService implements OnDestroy {
             wrapper.style.removeProperty(prop);
         }
         this.releaseAnchor(info);
-        if (info.engine === 'native-container') {
-            info.containerElement?.style.removeProperty('anchor-name');
-        }
-        delete info.anchorElement;
         info.resolvedOpenAnimation = info.resolvedCloseAnimation = undefined;
         if (info.transformX || info.transformY) {
             content.style.transform = `translate(${info.transformX}px, ${info.transformY}px)`;
@@ -1282,12 +1270,11 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
-     * Writes the native declarations from the current settings. Never reads layout, so it is cheap to
-     * call on every scroll; rewriting unchanged inline values does not invalidate layout.
-     *
-     * @param moveAnchor whether the anchor may move to the current target (show only).
+     * Writes the native declarations from the current settings and moves the anchor name to the current
+     * target. Never reads layout, so it is cheap to call on every scroll; rewriting unchanged inline values
+     * does not invalidate layout.
      */
-    private applyNative(info: OverlayInfo, moveAnchor: boolean) {
+    private applyNative(info: OverlayInfo) {
         const name = info.anchorName ??= acquireAnchorName();
         const settings = info.settings!;
         const strategy = settings.positionStrategy!;
@@ -1304,7 +1291,7 @@ export class IgxOverlayService implements OnDestroy {
             declarations = containerDeclarations(name, hide);
         } else {
             const target = settings.target as HTMLElement;
-            if (moveAnchor && info.anchorElement !== target) {
+            if (info.anchorElement !== target) {
                 if (info.anchorElement) {
                     removeAnchorName(info.anchorElement, name);
                 }
@@ -1321,12 +1308,34 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    /** Removes the overlay's anchor name from its target. Idempotent. */
+    /** Removes the overlay's anchor name from its target or container. Idempotent. */
     private releaseAnchor(info: OverlayInfo) {
-        if (info.engine === 'native-connected' && info.anchorElement && info.anchorName) {
-            removeAnchorName(info.anchorElement, info.anchorName);
-            delete info.anchorElement;
+        if (!info.anchorElement || !info.anchorName) {
+            return;
         }
+        if (info.engine === 'native-container') {
+            info.anchorElement.style.removeProperty('anchor-name');
+        } else {
+            removeAnchorName(info.anchorElement, info.anchorName);
+        }
+        delete info.anchorElement;
+    }
+
+    /**
+     * Starts `HideScrollStrategy` tracking for the current engine and anchor. Unless `restart` is set, it
+     * does nothing when the strategy already observes the right element, so it is cheap on every scroll.
+     */
+    private trackHide(info: OverlayInfo, content: HTMLElement, restart = false) {
+        const scrollStrategy = info.settings!.scrollStrategy;
+        if (!(scrollStrategy instanceof HideScrollStrategy)) {
+            return;
+        }
+        const anchor = this.getHideAnchor(info);
+        const useObserver = info.engine === 'script' || !this.anchorVisible();
+        if (!restart && scrollStrategy._observedAnchor === (useObserver ? anchor : null)) {
+            return;
+        }
+        this._zone.runOutsideAngular(() => scrollStrategy._onShown(anchor, content, useObserver));
     }
 
     /**
