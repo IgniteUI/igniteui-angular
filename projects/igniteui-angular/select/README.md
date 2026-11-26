@@ -46,6 +46,8 @@ export class MyClass {
 - If more than one `IgxSuffix` is used, the expansion arrow will be displayed always last.
 
 
+Disabling an open select closes its dropdown and preserves its value.
+
 ## Features
 
 ### Value
@@ -76,6 +78,8 @@ You can disable select using the following code:
 ```html
 <igx-select [disabled]="true"></igx-select>
 ```
+
+If the dropdown is open when the select becomes disabled, it cannot receive focus or accept a selection.
 <div class="divider--half"></div>
 
 
