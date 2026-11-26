@@ -391,6 +391,39 @@ describe('igxOverlay native anchoring', () => {
             expect(closeAnimationDone).toHaveBeenCalledTimes(1);
         });
 
+        it('Auto starts from the configured settings after a script flip, when a later show uses the native engine', async () => {
+            const strategy = new AutoPositionStrategy({ openAnimation: scaleInVerTop, closeAnimation: null });
+            const id = await open(addElement(100, 200), { target: new Point(100, window.innerHeight - 20), positionStrategy: strategy });
+            expect(overlay.getOverlayById(id).engine).toBe('script');
+            expect(strategy.settings.verticalDirection).toBe(VerticalAlignment.Top);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            overlay.hide(id);
+
+            const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
+            overlay.show(id, { target, positionStrategy: strategy });
+            await frames();
+            const info = overlay.getOverlayById(id);
+            expect(info.engine).toBe('native-connected');
+            expect(strategy.settings.verticalDirection).toBe(VerticalAlignment.Bottom);
+            expectNear(content(id).getBoundingClientRect().top, 130);
+            expect(info.builtOpenAnimation).toBe(scaleInVerTop);
+        });
+
+        it('a close animation removed while the open animation plays closes at once', async () => {
+            const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
+            const strategy = new AutoPositionStrategy({ openAnimation: scaleInVerTop, closeAnimation: scaleOutVerTop });
+            const id = overlay.attach(new ElementRef(addElement(100, 50)), { target, modal: false, closeOnOutsideClick: false, positionStrategy: strategy });
+            overlay.show(id);
+            expect(overlay.getOverlayById(id).engine).toBe('native-connected');
+            expect(overlay.getOverlayById(id).openAnimationPlayer!.hasStarted()).toBe(true);
+            const closed = vi.fn();
+            overlay.closed.subscribe(closed);
+
+            strategy.settings.closeAnimation = null;
+            overlay.hide(id);
+            expect(closed).toHaveBeenCalledTimes(1);
+        });
+
         it('a setOffset translation is not mistaken for a flip', async () => {
             const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
             const strategy = new AutoPositionStrategy({ openAnimation: null, closeAnimation: scaleOutVerTop });
@@ -591,6 +624,29 @@ describe('igxOverlay native anchoring', () => {
             expect(overlay.getOverlayById(id).engine).toBe('native-container');
             expect(wrapper.style.justifyContent).toBe('flex-start');
             expect(wrapper.style.alignItems).toBe('flex-end');
+        });
+
+        it('the script observer stops writing the wrapper when a later show uses the native engine', async () => {
+            const { host } = addHost();
+            let callback: () => void = () => undefined;
+            spyOn(Util, 'setupIntersectionObserver').mockImplementation((_el, _doc, cb) => {
+                callback = cb;
+                return null;
+            });
+            const id = await open(addElement(50, 20, host), { positionStrategy: new ContainerPositionStrategy(NO_ANIMATIONS) });
+            const info = overlay.getOverlayById(id);
+            const container = info.containerElement!;
+            container.remove();
+            overlay.reposition(id);
+            expect(info.engine).toBe('script');
+
+            host.appendChild(container);
+            overlay.hide(id);
+            overlay.show(id);
+            await frames();
+            expect(info.engine).toBe('native-container');
+            callback();
+            expect(info.wrapperElement!.style.getPropertyValue('top')).toBe('anchor(top)');
         });
 
         it('the script observer does not throw after detach (#16988)', async () => {

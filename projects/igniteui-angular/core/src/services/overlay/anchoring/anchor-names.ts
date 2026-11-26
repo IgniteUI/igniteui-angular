@@ -1,4 +1,10 @@
 let counter = 0;
+/**
+ * Differs per load of this module, so that two copies of the library on one page (micro-frontends, or the
+ * Elements package next to an Angular app) never use the same name. `anchor-name` is document-wide, and the
+ * browser resolves a shared name to the last element with it.
+ */
+const loadId = Math.random().toString(36).slice(2, 10).padEnd(8, '0');
 
 interface AnchorRecord {
     /** Computed `anchor-name` before the element was touched, `''` for `none`. */
@@ -17,7 +23,7 @@ const records = new WeakMap<HTMLElement, AnchorRecord>();
  * Returns a new, document-unique anchor name.
  */
 export function acquireAnchorName(): string {
-    return `--igx-overlay-anchor-${counter++}`;
+    return `--igx-overlay-anchor-${loadId}-${counter++}`;
 }
 
 /**

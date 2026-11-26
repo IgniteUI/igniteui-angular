@@ -194,10 +194,12 @@ describe('Overlay anchoring (pure)', () => {
 
         afterEach(() => elements.splice(0).forEach(e => e.remove()));
 
-        it('acquires unique names', () => {
-            const names = new Set([acquireAnchorName(), acquireAnchorName(), acquireAnchorName()]);
-            expect(names.size).toBe(3);
-            names.forEach(n => expect(n).toMatch(/^--igx-overlay-anchor-\d+$/));
+        it('acquires unique names with a per-load part, so two copies of the library do not share names', () => {
+            const names = [acquireAnchorName(), acquireAnchorName(), acquireAnchorName()];
+            expect(new Set(names).size).toBe(3);
+            names.forEach(n => expect(n).toMatch(/^--igx-overlay-anchor-[a-z0-9]{6,}-\d+$/));
+            const loadPart = (n: string) => n.split('-').at(-2);
+            expect(new Set(names.map(loadPart)).size).toBe(1);
         });
 
         it('adds and removes names, leaving nothing behind', () => {

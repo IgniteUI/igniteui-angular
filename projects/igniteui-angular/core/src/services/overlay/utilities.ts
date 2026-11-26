@@ -224,9 +224,11 @@ export interface OverlayInfo {
     anchorElement?: HTMLElement;
     /** The container div created for ContainerPositionStrategy, if any. */
     containerElement?: HTMLElement;
-    /** Animations chosen by the native Auto flip check. `undefined` means "use the strategy settings". */
-    resolvedOpenAnimation?: AnimationReferenceMetadata | null;
-    resolvedCloseAnimation?: AnimationReferenceMetadata | null;
+    /**
+     * Axes on which the browser flipped a native Auto overlay, measured on show and on hide. The animations
+     * are the strategy's current ones, reversed on these axes. `undefined` means "use the strategy settings".
+     */
+    flippedAxes?: { horizontal: boolean; vertical: boolean };
     /** Animations the current players were built from. */
     builtOpenAnimation?: AnimationReferenceMetadata | null;
     builtCloseAnimation?: AnimationReferenceMetadata | null;

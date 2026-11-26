@@ -36,6 +36,19 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     }
 
     /**
+     * @hidden @internal
+     * Undoes a flip that `position()` wrote into `settings`, and forgets the saved settings so the next
+     * `position()` starts from the current ones. Called by the overlay service when it stops positioning
+     * this strategy by script, because the native engine reads `settings` as the configured placement.
+     */
+    public _restoreSettings(): void {
+        if (this._initialSettings) {
+            this.settings = Object.assign({}, this._initialSettings);
+            this._initialSettings = null!;
+        }
+    }
+
+    /**
      * Checks if element can fit in viewport and updates provided connectedFit
      * with the result
      *

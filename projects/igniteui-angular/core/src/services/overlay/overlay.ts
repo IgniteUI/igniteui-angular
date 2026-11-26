@@ -9,6 +9,7 @@ import { IgxOverlayOutletDirective } from './utilities';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
 import { AnimationPlayer, AnimationService } from '../animation/animation';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
+import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { ContainerPositionStrategy } from './position/container-position-strategy';
 import { ElasticPositionStrategy } from './position/elastic-position-strategy';
@@ -495,9 +496,9 @@ export class IgxOverlayService implements OnDestroy {
             }
         }
         if (engine === 'native-connected' && strategy.constructor === AutoPositionStrategy) {
-            this.resolveAnimations(info, 'both');
+            this.resolveFlips(info);
         } else {
-            info.resolvedOpenAnimation = info.resolvedCloseAnimation = undefined;
+            delete info.flippedAxes;
         }
         this.updateAnimationPlayers(info);
         this.trackHide(info, contentElement, true);
@@ -663,7 +664,7 @@ export class IgxOverlayService implements OnDestroy {
             info.visible &&
             !info.openAnimationPlayer?.hasStarted()) {
             // The browser may have flipped the content since show(); close from the side it is on now.
-            this.resolveAnimations(info, 'close');
+            this.resolveFlips(info);
             if (this.getCloseAnimation(info) !== info.builtCloseAnimation && !info.closeAnimationPlayer?.hasStarted()) {
                 this.buildCloseAnimationPlayer(info);
             }
@@ -968,8 +969,7 @@ export class IgxOverlayService implements OnDestroy {
         delete info.anchorName;
         delete info.anchorElement;
         delete info.containerElement;
-        delete info.resolvedOpenAnimation;
-        delete info.resolvedCloseAnimation;
+        delete info.flippedAxes;
         delete info.builtOpenAnimation;
         delete info.builtCloseAnimation;
     }
@@ -1222,15 +1222,13 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private getOpenAnimation(info: OverlayInfo): AnimationReferenceMetadata | null | undefined {
-        return info.resolvedOpenAnimation !== undefined
-            ? info.resolvedOpenAnimation
-            : info.settings!.positionStrategy!.settings.openAnimation;
+        const animation = info.settings!.positionStrategy!.settings.openAnimation;
+        return info.flippedAxes ? flipAnimation(animation, info.flippedAxes) : animation;
     }
 
     private getCloseAnimation(info: OverlayInfo): AnimationReferenceMetadata | null | undefined {
-        return info.resolvedCloseAnimation !== undefined
-            ? info.resolvedCloseAnimation
-            : info.settings!.positionStrategy!.settings.closeAnimation;
+        const animation = info.settings!.positionStrategy!.settings.closeAnimation;
+        return info.flippedAxes ? flipAnimation(animation, info.flippedAxes) : animation;
     }
 
     //#region Native anchoring
@@ -1271,10 +1269,22 @@ export class IgxOverlayService implements OnDestroy {
         return 'script';
     }
 
-    /** Clears both engines' inline styles and anchors when an overlay changes engine between shows. */
+    /**
+     * Clears both engines' inline styles and anchors when an overlay changes engine. When it leaves the
+     * script engine, also undoes the state script positioning keeps in the strategy: a fit strategy's
+     * flipped settings and the Container observer, which would overwrite the native wrapper insets.
+     */
     private switchEngine(info: OverlayInfo) {
         const content: HTMLElement = info.elementRef!.nativeElement.parentElement;
         const wrapper = info.wrapperElement!;
+        const strategy = info.settings!.positionStrategy;
+        if (info.engine === 'script') {
+            if (strategy instanceof BaseFitPositionStrategy) {
+                strategy._restoreSettings();
+            } else if (strategy instanceof ContainerPositionStrategy) {
+                strategy.dispose();
+            }
+        }
         for (const prop of [...SCRIPT_CONTENT_PROPS, ...NATIVE_CONTENT_PROPS]) {
             content.style.removeProperty(prop);
         }
@@ -1282,7 +1292,7 @@ export class IgxOverlayService implements OnDestroy {
             wrapper.style.removeProperty(prop);
         }
         this.releaseAnchor(info);
-        info.resolvedOpenAnimation = info.resolvedCloseAnimation = undefined;
+        delete info.flippedAxes;
         if (info.transformX || info.transformY) {
             content.style.transform = `translate(${info.transformX}px, ${info.transformY}px)`;
         }
@@ -1359,12 +1369,14 @@ export class IgxOverlayService implements OnDestroy {
 
     /**
      * Native Auto: CSS does not report which position option the browser chose, so compare the rendered
-     * rectangles with the configured and the flipped placement, and reverse the animations of flipped axes.
+     * rectangles with the configured and the flipped placement, and store the flipped axes. The animations
+     * are derived from them and the current settings on each read, so a later settings change still applies.
      * The `setOffset()` translation is taken out of the content rectangle, so it is not mistaken for a flip.
      * Strategy settings are never written.
      */
-    private resolveAnimations(info: OverlayInfo, which: 'open' | 'close' | 'both') {
+    private resolveFlips(info: OverlayInfo) {
         if (!info.anchorElement) {
+            delete info.flippedAxes;
             return;
         }
         const settings = info.settings!.positionStrategy!.settings;
@@ -1373,13 +1385,7 @@ export class IgxOverlayService implements OnDestroy {
         const dx = info.transformX ?? 0;
         const dy = info.transformY ?? 0;
         const placed = { top: rect.top - dy, right: rect.right - dx, bottom: rect.bottom - dy, left: rect.left - dx };
-        const flipped = resolveFlippedAxes(settings, placed, info.anchorElement.getBoundingClientRect());
-        if (which !== 'close') {
-            info.resolvedOpenAnimation = flipAnimation(settings.openAnimation, flipped);
-        }
-        if (which !== 'open') {
-            info.resolvedCloseAnimation = flipAnimation(settings.closeAnimation, flipped);
-        }
+        info.flippedAxes = resolveFlippedAxes(settings, placed, info.anchorElement.getBoundingClientRect());
     }
 
     /** The element whose visibility controls a `HideScrollStrategy` overlay, if any. */
