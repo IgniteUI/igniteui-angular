@@ -8,6 +8,9 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxButtonDirective`
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - The default "Add item" button no longer takes the background or outline of a focused list item when it is reached with the keyboard. It shows the focus state of a flat button instead (#17992).
+    - In `IgxSimpleComboComponent`, "Add item" no longer appears focused before it is reached with the keyboard, for example right after typing text that matches no item or when the list reopens (#17992).
 
 ## 21.2.27
 
