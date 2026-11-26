@@ -42,6 +42,7 @@ const CLASS_OVERLAY_CONTENT_RELATIVE = 'igx-overlay__content--relative';
 const CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const CLASS_OVERLAY_WRAPPER_MODAL = 'igx-overlay__wrapper--modal';
 const CLASS_OVERLAY_WRAPPER_FLEX = 'igx-overlay__wrapper--flex';
+const CLASS_OVERLAY_WRAPPER_FLEX_CONTAINER = 'igx-overlay__wrapper--flex-container';
 const CLASS_SCROLLABLE_DIV = 'scrollableDiv';
 
 /** Resolves on the next animation frame, after any frame callbacks the overlay already scheduled (e.g. modal classes). */
@@ -1511,49 +1512,6 @@ describe('igxOverlay', () => {
 
             expect(mockElement.style.width).toBe('200px');
             expect(mockElement.style.height).toBe('100px');
-        });
-
-        it('#16988 - should not reposition overlay when detached', async () => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-
-            const containerElement = fixture.componentInstance.divElement.nativeElement;
-            containerElement.style.width = '800px';
-            containerElement.style.height = '600px';
-            containerElement.style.position = 'fixed';
-            containerElement.style.top = '100px';
-            containerElement.style.left = '200px';
-            containerElement.style.overflow = 'hidden';
-
-            const overlayContent = document.createElement('div');
-            overlayContent.textContent = 'Test Content';
-            containerElement.appendChild(overlayContent);
-
-            fixture.detectChanges();
-
-            const positionStrategy = new ContainerPositionStrategy();
-            const overlaySettings: OverlaySettings = {
-                positionStrategy
-            };
-
-            const id = fixture.componentInstance.overlay.attach(new ElementRef(overlayContent), overlaySettings);
-            fixture.componentInstance.overlay.show(id);
-            await fixture.whenStable();
-
-            // Capture the content element while it is still in the DOM
-            const contentElement = containerElement.querySelector('.' + CLASS_OVERLAY_CONTENT_MODAL) as HTMLElement;
-
-            // Detaching the overlay calls dispose() on the position strategy which disconnects
-            // the IntersectionObserver and sets it to null. However, if a callback was already
-            // queued by the observer before disconnect, it will still fire and call updatePosition
-            // with the now-detached contentElement (parentElement === null).
-            fixture.componentInstance.overlay.detach(id);
-            await fixture.whenStable();
-
-            // Simulate the stale IntersectionObserver callback firing after detach.
-            // Should not throw even though contentElement is no longer attached to the DOM.
-            expect(() => (positionStrategy as any).updatePosition(contentElement)).not.toThrow();
-
-            fixture.componentInstance.overlay.detachAll();
         });
 
         it('should close overlay on outside click when target is point, #8297', async () => {
@@ -3500,7 +3458,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.show(id);
             await fixture.whenStable();
 
-            const wrapperElement = containerElement.querySelector('[popover]') as HTMLElement;
+            const wrapperElement = containerElement.querySelector('.' + CLASS_OVERLAY_WRAPPER_FLEX_CONTAINER) as HTMLElement;
             const overlayElement = wrapperElement.parentElement;
             const overlayElementRect = overlayElement.getBoundingClientRect();
             expect(overlayElementRect.width).toBeCloseTo(800, 0);
@@ -3517,6 +3475,92 @@ describe('igxOverlay', () => {
             expect(verticalCenter).toBeLessThan(1);
 
             fixture.componentInstance.overlay.detachAll();
+        });
+
+        it('Should clip the shown component to the visible part of the container and scroll it with it, #17986', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const scrollElement = fixture.componentInstance.divElement.nativeElement;
+            scrollElement.style.width = '200px';
+            scrollElement.style.height = '100px';
+            scrollElement.style.position = 'fixed';
+            scrollElement.style.top = '0';
+            scrollElement.style.left = '0';
+            scrollElement.style.overflow = 'auto';
+
+            const containerElement = document.createElement('div');
+            containerElement.style.position = 'relative';
+            containerElement.style.height = '400px';
+            scrollElement.appendChild(containerElement);
+
+            const overlayContent = document.createElement('div');
+            overlayContent.textContent = 'Test Content';
+            containerElement.appendChild(overlayContent);
+
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new ContainerPositionStrategy()
+            };
+
+            const id = fixture.componentInstance.overlay.attach(new ElementRef(overlayContent), overlaySettings);
+            fixture.componentInstance.overlay.show(id);
+            await fixture.whenStable();
+
+            // The component is centered in the container, below the visible part of it
+            let componentRect = overlayContent.getBoundingClientRect();
+            expect(componentRect.top).toBeGreaterThan(scrollElement.getBoundingClientRect().bottom);
+            expect(document.elementFromPoint(componentRect.left + componentRect.width / 2, componentRect.top + componentRect.height / 2))
+                .not.toBe(overlayContent);
+
+            // Scroll the center of the container into view
+            scrollElement.scrollTop = 150;
+            await wait(100);
+
+            componentRect = overlayContent.getBoundingClientRect();
+            const containerRect = containerElement.getBoundingClientRect();
+            expect(Math.abs((componentRect.top + componentRect.height / 2) - (containerRect.top + containerRect.height / 2))).toBeLessThan(1);
+            expect(document.elementFromPoint(componentRect.left + componentRect.width / 2, componentRect.top + componentRect.height / 2))
+                .toBe(overlayContent);
+
+            fixture.componentInstance.overlay.detachAll();
+        });
+
+        it('Should show the component in the container when ContainerPositionStrategy is passed to show.', async () => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const containerElement = fixture.componentInstance.divElement.nativeElement;
+            containerElement.style.width = '800px';
+            containerElement.style.height = '600px';
+            containerElement.style.position = 'fixed';
+            containerElement.style.top = '100px';
+            containerElement.style.left = '200px';
+            containerElement.style.overflow = 'hidden';
+
+            const overlayContent = document.createElement('div');
+            overlayContent.textContent = 'Test Content';
+            containerElement.appendChild(overlayContent);
+
+            fixture.detectChanges();
+            const overlay = fixture.componentInstance.overlay;
+            const id = overlay.attach(new ElementRef(overlayContent));
+            overlay.show(id, { positionStrategy: new ContainerPositionStrategy({ openAnimation: null, closeAnimation: null }) });
+            await fixture.whenStable();
+
+            const wrapperElement = overlay.getOverlayById(id).wrapperElement;
+            expect(wrapperElement.hasAttribute('popover')).toBe(false);
+
+            const componentRect = overlayContent.getBoundingClientRect();
+            const containerRect = containerElement.getBoundingClientRect();
+            expect(Math.abs((componentRect.left + componentRect.width / 2) - (containerRect.left + containerRect.width / 2))).toBeLessThan(1);
+            expect(Math.abs((componentRect.top + componentRect.height / 2) - (containerRect.top + containerRect.height / 2))).toBeLessThan(1);
+
+            // Another strategy puts the component back in the top layer
+            overlay.hide(id);
+            overlay.show(id, { positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null }) });
+            await fixture.whenStable();
+            expect(wrapperElement.getAttribute('popover')).toBe('manual');
+
+            overlay.detachAll();
         });
 
         it('Should reposition overlay when container is resized with ContainerPositionStrategy.', async () => {
@@ -3544,7 +3588,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             await wait(100);
 
-            let overlayContainer = containerElement.querySelector('[popover]').parentElement;
+            let overlayContainer = containerElement.querySelector('.' + CLASS_OVERLAY_WRAPPER_FLEX_CONTAINER).parentElement;
             let containerRect = overlayContainer.getBoundingClientRect();
 
             // Initial container dimensions should match the positioned ancestor
@@ -3558,7 +3602,7 @@ describe('igxOverlay', () => {
             await wait(100);
 
             // Container should now match new dimensions
-            overlayContainer = containerElement.querySelector('[popover]').parentElement;
+            overlayContainer = containerElement.querySelector('.' + CLASS_OVERLAY_WRAPPER_FLEX_CONTAINER).parentElement;
             containerRect = overlayContainer.getBoundingClientRect();
             expect(containerRect.width).toBeCloseTo(1000, 0);
             expect(containerRect.height).toBeCloseTo(700, 0);
@@ -3591,7 +3635,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             await wait(100);
 
-            const wrapperElement = containerElement.querySelector('[popover]') as HTMLElement;
+            const wrapperElement = containerElement.querySelector('.' + CLASS_OVERLAY_WRAPPER_FLEX_CONTAINER) as HTMLElement;
             let componentElement = wrapperElement.children[0].children[0];
             let componentRect = componentElement.getBoundingClientRect();
             let containerRect = containerElement.getBoundingClientRect();
@@ -3647,7 +3691,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.overlay.show(id);
             await wait(100);
 
-            const overlayContainer = containerElement.querySelector('[popover]').parentElement;
+            const overlayContainer = containerElement.querySelector('.' + CLASS_OVERLAY_WRAPPER_FLEX_CONTAINER).parentElement;
             const containerRect = overlayContainer.getBoundingClientRect();
 
             // Initial dimensions

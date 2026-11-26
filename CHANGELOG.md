@@ -16,6 +16,10 @@ All notable changes for each version of this project will be documented in this 
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
 - `IgxPivotGridComponent`
     - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`, `IgxPivotGridComponent`
+    - The loading indicator is no longer shown outside a scrollable parent that clips the grid, for example below a hierarchical grid when a child grid that is partly scrolled out of view is loading. It also moves with the grid now while the parent is scrolled (#17986).
+- `IgxOverlayService`
+    - Overlays shown with `ContainerPositionStrategy`, such as `IgxSnackbarComponent` with `positioning="container"`, are now rendered inside their container instead of in the top layer, so the container clips them and they scroll with it (#17986).
 
 ## 22.3.1
 
