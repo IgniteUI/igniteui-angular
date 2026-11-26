@@ -150,6 +150,12 @@ export class EmptyListboxComponent extends BasicListComponent {
     public items: string[] = [];
 }
 
+const GRID_ITEMS = [
+    { id: 1, name: 'Write' },
+    { id: 2, name: 'Review' },
+    { id: 3, name: 'Release' }
+];
+
 @Component({
     template: `
     <div #wrapper>
@@ -166,20 +172,24 @@ export class EmptyListboxComponent extends BasicListComponent {
                     <button class="delete">Delete</button>
                 </igx-list-item>
             }
+            <ng-template igxEmptyList>
+                <p>No tasks</p>
+                <button class="restore" (click)="restore()">Restore</button>
+            </ng-template>
         </igx-list>
         <button id="after">After</button>
     </div>`,
-    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxEmptyListTemplateDirective]
 })
 export class GridListComponent extends BasicListComponent {
     public readonly navigation = signal<'none' | 'listbox' | 'grid'>('grid');
     public readonly multiselectable = signal<string | null>(null);
     public readonly selectedId = signal<number | null>(2);
-    public readonly items = signal([
-        { id: 1, name: 'Write' },
-        { id: 2, name: 'Review' },
-        { id: 3, name: 'Release' }
-    ]);
+    public readonly items = signal(GRID_ITEMS);
+
+    public restore() {
+        this.items.set(GRID_ITEMS);
+    }
 }
 
 /** A listbox in a row of a grid list, which counts as one control of the row. */

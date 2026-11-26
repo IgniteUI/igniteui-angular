@@ -132,7 +132,7 @@ Set `navigation="grid"` when items hold their own controls, such as a delete but
 | Control | Arrow Down / Up | Next / previous row |
 | Control | Escape / F2 | Back to the row, unless the control handled the key |
 
-A control that uses the arrow keys itself, such as a text field, a slider, a combo or a nested listbox, keeps them. A click on a control also reaches its row, so call `$event.stopPropagation()` in the control's `(click)` handler when it must not select the row.
+A control that uses the arrow keys itself, such as a text field, a slider, a combo or a nested listbox, keeps them. An empty grid list works as one row: Arrow Right/Left reach the controls of its empty template, such as a button that adds items. In a listbox, the empty template is an option and holds no controls. A click on a control also reaches its row, so call `$event.stopPropagation()` in the control's `(click)` handler when it must not select the row.
 
 ```html
 <igx-list navigation="grid" aria-label="Tasks">

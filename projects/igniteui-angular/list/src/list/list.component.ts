@@ -698,6 +698,9 @@ export class IgxListComponent extends IgxListBaseDirective {
     /** The item that holds the focus, so its removal moves the focus to a neighbor. */
     private _focusedItem: IgxListItemComponent | null = null;
 
+    /** Whether a control of the empty message holds the focus, so arriving options take it. */
+    private _focusInMessage = false;
+
     /** The index of a removed option that held the focus, until the focus moves to a neighbor. */
     private readonly _removedFocusIndex = signal<number | null>(null);
 
@@ -725,16 +728,21 @@ export class IgxListComponent extends IgxListBaseDirective {
         this.destroyRef.onDestroy(() => host.removeEventListener('keydown', onKeydown));
     }
 
-    /** The option that holds the target of a key event, or is the target. */
-    private eventRow(event: KeyboardEvent): IgxListItemComponent | undefined {
+    /** The row of a key event: the option that holds its target, or an empty grid list, whose message is its row. */
+    private eventRow(event: KeyboardEvent): HTMLElement | undefined {
         const target = event.composedPath()[0];
-        return target instanceof Node ? this._options().find(item => item.element.contains(target)) : undefined;
+        if (!(target instanceof Node)) {
+            return undefined;
+        }
+        const host = this.element.nativeElement as HTMLElement;
+        const option = this._options().find(item => item.element.contains(target));
+        return option?.element ?? (this.isGrid && !this.hasOptions && host.contains(target) ? host : undefined);
     }
 
     /** The controls of a row; a nested navigable list counts as one, its tab stop. */
-    private rowControls(row: IgxListItemComponent): HTMLElement[] {
+    private rowControls(row: HTMLElement): HTMLElement[] {
         const host = this.element.nativeElement as HTMLElement;
-        return getTabbableElements(row.element).filter(element => {
+        return getTabbableElements(row).filter(element => {
             const list = element.parentElement?.closest('igx-list');
             const nested = list !== host && list?.matches('[role="grid"], [role="listbox"]');
             return !nested || element.parentElement === list;
@@ -748,7 +756,7 @@ export class IgxListComponent extends IgxListBaseDirective {
             return true;
         }
         const escape = event.key === escapeKey || event.key === 'F2';
-        if (event.composedPath()[0] === row.element) {
+        if (event.composedPath()[0] === row) {
             return escape;
         }
         if (this.isListbox) {
@@ -765,9 +773,9 @@ export class IgxListComponent extends IgxListBaseDirective {
         const controls = this.rowControls(row);
         const direction = isLeftToRight(this.element.nativeElement) ? delta : -delta;
         const index = controls.findIndex(control => control.contains(target));
-        const next = target === row.element
+        const next = target === row
             ? (direction > 0 ? controls[0] : controls.at(-1))
-            : controls[index + direction] ?? row.element;
+            : controls[index + direction] ?? row;
         next?.focus();
     }
 
@@ -794,8 +802,8 @@ export class IgxListComponent extends IgxListBaseDirective {
             .setActivateHandler((event) => this.eventOption(event)?.element.click(), { repeat: false })
             .set(arrowLeft, (event) => this.moveInRow(event, -1), grid)
             .set(arrowRight, (event) => this.moveInRow(event, 1), grid)
-            .set(escapeKey, (event) => this.eventRow(event)!.element.focus(), grid)
-            .set('F2', (event) => this.eventRow(event)!.element.focus(), grid);
+            .set(escapeKey, (event) => this.eventRow(event)!.focus(), grid)
+            .set('F2', (event) => this.eventRow(event)!.focus(), grid);
 
         this._singleTabStop.configure({
             when: () => this.isGrid,
@@ -831,8 +839,9 @@ export class IgxListComponent extends IgxListBaseDirective {
         syncAttribute(element, 'aria-busy', listbox && this._isLoading() ? 'true' : null);
         const tabStop = this._tabStop();
         const tabIndex = element.getAttribute('tabindex');
+        const active = (element.getRootNode() as Document | ShadowRoot).activeElement;
         const focused = tabIndex !== null && tabIndex === this._tabIndex
-            && (element.getRootNode() as Document | ShadowRoot).activeElement === element;
+            && (active === element || (this._focusInMessage && (!active || active === element.ownerDocument.body)));
         if (tabIndex === null || tabIndex === this._tabIndex) {
             this._tabIndex = listbox && !tabStop ? '0' : null;
             element.classList.toggle('igx-list--focusable', this._tabIndex !== null);
@@ -905,6 +914,7 @@ export class IgxListComponent extends IgxListBaseDirective {
         const target = event.composedPath()[0];
         const item = target instanceof Node ? this._ownItems().find(own => own.element.contains(target)) : undefined;
         this._focusedItem = item ?? null;
+        this._focusInMessage = !item && target !== this.element.nativeElement;
         if (item) {
             this._activeItem.set(item);
         }
@@ -925,13 +935,18 @@ export class IgxListComponent extends IgxListBaseDirective {
         }
         if (next) {
             this._focusedItem = null;
+            this._focusInMessage = false;
             return;
         }
-        // A removed element loses the focus to nothing: keep the item until it unregisters in this task.
+        // A removed element loses the focus to nothing: keep the state for the removal in this task.
         const item = this._focusedItem;
         setTimeout(() => {
             if (this._focusedItem === item) {
                 this._focusedItem = null;
+            }
+            const host = this.element.nativeElement as HTMLElement;
+            if (!host.contains((host.getRootNode() as Document | ShadowRoot).activeElement)) {
+                this._focusInMessage = false;
             }
         });
     }

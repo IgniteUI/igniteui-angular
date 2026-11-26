@@ -1532,6 +1532,53 @@ describe('List', () => {
             });
         });
 
+        describe('Empty', () => {
+            const empty = () => {
+                fixture.componentInstance.items.set([]);
+                fixture.detectChanges();
+                return host().querySelector<HTMLElement>('.restore')!;
+            };
+
+            it('should reach the controls of the empty message with Right and Left, and go back with Escape', () => {
+                const restore = empty();
+                host().focus();
+
+                pressKey(host(), 'ArrowRight');
+                expect(document.activeElement).toBe(restore);
+                pressKey(restore, 'ArrowLeft');
+                expect(document.activeElement).toBe(host());
+
+                pressKey(host(), 'ArrowLeft');
+                expect(document.activeElement).toBe(restore);
+                pressKey(restore, 'Escape');
+                expect(document.activeElement).toBe(host());
+            });
+
+            it('should leave the empty list with Tab and Shift+Tab, also from its controls', async () => {
+                const restore = empty();
+                const before = fixture.nativeElement.querySelector('#before') as HTMLElement;
+                const after = fixture.nativeElement.querySelector('#after') as HTMLElement;
+
+                host().focus();
+                await userEvent.keyboard('{Tab}');
+                expect(document.activeElement).toBe(after);
+
+                restore.focus();
+                await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+                expect(document.activeElement).toBe(before);
+            });
+
+            it('should move the focus to the tab stop when a control of the empty message brings the rows back', () => {
+                const restore = empty();
+                restore.focus();
+
+                restore.click();
+                fixture.detectChanges();
+
+                expect(document.activeElement).toBe(rows()[1]);
+            });
+        });
+
         it('should reset the list and its rows when the navigation is none', () => {
             fixture.componentInstance.navigation.set('none');
             fixture.detectChanges();
