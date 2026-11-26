@@ -16,6 +16,7 @@ import {
     ctrlKey,
     enterKey,
     escapeKey,
+    isComposingKey,
     isKey,
     shiftKey,
     spaceBar
@@ -145,6 +146,39 @@ describe('IgxKeyBindingsService', () => {
                 expect(handler).toHaveBeenCalledTimes(1);
             });
 
+            it('should skip the keys of an IME composition', () => {
+                keyBindings.set(enterKey, handler);
+
+                const composing = dispatch(host, 'keydown', enterKey, { isComposing: true });
+                // Safari sends the last key after `compositionend`, with keyCode 229.
+                const committed = dispatch(host, 'keydown', enterKey, { keyCode: 229 });
+
+                expect(handler).not.toHaveBeenCalled();
+                expect(composing.defaultPrevented).toBe(false);
+                expect(committed.defaultPrevented).toBe(false);
+            });
+
+            it('should handle keys that an inner element prevented by default', () => {
+                keyBindings.set(escapeKey, handler);
+                const inner = host.querySelector('.inner')!;
+                inner.addEventListener('keydown', (event) => event.preventDefault(), { once: true });
+
+                dispatch(inner, 'keydown', escapeKey);
+                expect(handler).toHaveBeenCalledTimes(1);
+            });
+
+            it('should skip keys that an inner element prevented when skipHandled is true', () => {
+                keyBindings.configure({ skipHandled: true }).set(escapeKey, handler);
+                const inner = host.querySelector('.inner')!;
+                inner.addEventListener('keydown', (event) => event.preventDefault(), { once: true });
+
+                dispatch(inner, 'keydown', escapeKey);
+                expect(handler).not.toHaveBeenCalled();
+
+                dispatch(inner, 'keydown', escapeKey);
+                expect(handler).toHaveBeenCalledTimes(1);
+            });
+
             it('should release a key on a skipped keyup', () => {
                 keyBindings.set(['x', 'z'], handler);
 
@@ -222,6 +256,45 @@ describe('IgxKeyBindingsService', () => {
                 keyBindings.configure({ bindingDefaults: { preventDefault: false } });
 
                 expect(dispatch(host, 'keydown', 'a').defaultPrevented).toBe(false);
+            });
+        });
+
+        describe('Condition', () => {
+            it('should run a binding only while its when predicate returns true', () => {
+                let enabled = false;
+                keyBindings.set(arrowDown, handler, { when: () => enabled });
+
+                const ignored = dispatch(host, 'keydown', arrowDown);
+                dispatch(host, 'keyup', arrowDown);
+                expect(handler).not.toHaveBeenCalled();
+                // A disabled binding leaves the key to the browser, for example to scroll.
+                expect(ignored.defaultPrevented).toBe(false);
+
+                enabled = true;
+                const handled = dispatch(host, 'keydown', arrowDown);
+                expect(handler).toHaveBeenCalledExactlyOnceWith(handled);
+                expect(handled.defaultPrevented).toBe(true);
+            });
+
+            it('should apply a when predicate from the binding defaults', () => {
+                let enabled = false;
+                keyBindings.configure({ bindingDefaults: { when: () => enabled } }).set('a', handler);
+
+                press(host, 'a');
+                expect(handler).not.toHaveBeenCalled();
+
+                enabled = true;
+                press(host, 'a');
+                expect(handler).toHaveBeenCalledTimes(1);
+            });
+
+            it('should let the when of a binding take precedence over the binding defaults', () => {
+                keyBindings
+                    .configure({ bindingDefaults: { when: () => false } })
+                    .set(arrowDown, handler, { when: () => true });
+
+                press(host, arrowDown);
+                expect(handler).toHaveBeenCalledTimes(1);
             });
         });
 
@@ -637,6 +710,14 @@ describe('isKey', () => {
         expect(isKey(event, 'arrowup')).toBe(true);
         expect(isKey(event, arrowDown)).toBe(false);
         expect(isKey(new KeyboardEvent('keydown', { key: 'Control' }), ctrlKey)).toBe(true);
+    });
+});
+
+describe('isComposingKey', () => {
+    it('should report the keys that an IME composition owns', () => {
+        expect(isComposingKey(new KeyboardEvent('keydown', { key: 'a', isComposing: true }))).toBe(true);
+        expect(isComposingKey(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229 }))).toBe(true);
+        expect(isComposingKey(new KeyboardEvent('keydown', { key: 'a' }))).toBe(false);
     });
 });
 
