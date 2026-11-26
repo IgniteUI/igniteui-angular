@@ -124,7 +124,7 @@ describe('Native CSS anchor positioning gate tests', () => {
         }
     });
 
-    it('G0 - the test browser supports the final property names', () => {
+    it('the test browser supports the final property names', () => {
         expect(CSS.supports('anchor-name', '--igx-probe')).toBe(true);
         expect(CSS.supports('position-anchor', '--igx-probe')).toBe(true);
         expect(CSS.supports('position-area', 'bottom span-right')).toBe(true);
@@ -136,7 +136,7 @@ describe('Native CSS anchor positioning gate tests', () => {
 
     // If it fails: stop. The explicit anchor name design is invalid. Plan B is the implicit anchor
     // (`showPopover({ source })`) with the popover moved from the wrapper to the content.
-    it('G1 - content in the top layer wrapper anchors to a target in the page', async () => {
+    it('content in the top layer wrapper anchors to a target in the page', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: 100, left: 100, width: 100, height: 30 }, name);
         const { content } = openOverlay({ width: 200, height: 150 }, connected(name, 'bottom span-right', 'left', 'normal'));
@@ -152,7 +152,7 @@ describe('Native CSS anchor positioning gate tests', () => {
     it.each([
         ['the body', false],
         ['the outer overlay content', true]
-    ])('G2 - content anchors to a target inside another open overlay (inner wrapper in %s)', async (_, insideOuter) => {
+    ])('content anchors to a target inside another open overlay (inner wrapper in %s)', async (_, insideOuter) => {
         const outer = openOverlay({ width: 300, height: 200 }, { top: '200px', left: '300px' });
         const name = nextAnchorName();
         const target = document.createElement('div');
@@ -171,7 +171,7 @@ describe('Native CSS anchor positioning gate tests', () => {
     });
 
     // If it fails: stop and escalate.
-    it('G3 - Auto flips above a target near the bottom edge', async () => {
+    it('Auto flips above a target near the bottom edge', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: innerHeight - 120, left: 100, width: 100, height: 30 }, name);
         const { content } = openOverlay({ width: 200, height: 150 },
@@ -186,7 +186,7 @@ describe('Native CSS anchor positioning gate tests', () => {
 
     // If it fails: re-run with `justify-self: normal` on spanning pairs. If that passes, change the tables
     // in §7.3 to `normal` for spanning pairs. If not, escalate.
-    it('G4 - Auto flips a spanning pair to the left of a target near the right edge', async () => {
+    it('Auto flips a spanning column to the left of a target near the right edge', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: 100, left: innerWidth - 80, width: 60, height: 30 }, name);
         const { content } = openOverlay({ width: 200, height: 150 },
@@ -199,8 +199,8 @@ describe('Native CSS anchor positioning gate tests', () => {
         expectNear(c.top, t.bottom, 'content top');
     });
 
-    // Vertical counterpart of G4, for `align-self: self-start` on a spanning row.
-    it('G4b - Auto flips a spanning row above a target near the bottom edge', async () => {
+    // Vertical counterpart of the spanning column flip, for `align-self: self-start` on a spanning row.
+    it('Auto flips a spanning row above a target near the bottom edge', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: innerHeight - 100, left: 100, width: 100, height: 60 }, name);
         const { content } = openOverlay({ width: 200, height: 150 },
@@ -214,7 +214,7 @@ describe('Native CSS anchor positioning gate tests', () => {
     });
 
     // If it fails: escalate.
-    it('G5 - Auto flips both axes for a target in the bottom right corner', async () => {
+    it('Auto flips both axes for a target in the bottom right corner', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: innerHeight - 70, left: innerWidth - 80, width: 60, height: 30 }, name);
         const { content } = openOverlay({ width: 200, height: 150 },
@@ -227,10 +227,10 @@ describe('Native CSS anchor positioning gate tests', () => {
         expectNear(c.bottom, t.top, 'content bottom');
     });
 
-    // Amends §7.3: a centered pair maps to `span-all` with `anchor-center`, not to `center` (see G6b).
+    // Amends §7.3: a centered pair maps to `span-all` with `anchor-center`, not to `center` (see the `center` area test below).
     // If it fails: Auto overlays with exactly one centered axis use the script engine
     // (affects the grid cell error tooltip and the extras tabs menu).
-    describe('G6 - a centered axis (span-all, anchor-center)', () => {
+    describe('a centered axis (span-all, anchor-center)', () => {
         it('flips the other axis and shifts into the viewport', async () => {
             const name = nextAnchorName();
             const target = addTarget({ top: innerHeight - 120, left: 20, width: 40, height: 30 }, name);
@@ -273,8 +273,8 @@ describe('Native CSS anchor positioning gate tests', () => {
 
     // Informative. Why §7.3 does not use `center`: the `center` area is only as wide as the target, so wider
     // content overflows it in every fallback and the browser keeps the base option, shifted over the target.
-    // If it fails, the browser now flips a `center` area: G6 still holds; this test can go.
-    it('G6b - a `center` area does not flip content wider than the target', async () => {
+    // If it fails, the browser now flips a `center` area: the centered axis tests still hold; this test can go.
+    it('a `center` area does not flip content wider than the target', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: innerHeight - 120, left: 600, width: 40, height: 30 }, name);
         const { content } = openOverlay({ width: 200, height: 150 },
@@ -291,13 +291,13 @@ describe('Native CSS anchor positioning gate tests', () => {
     const midTarget: Box = { top: 300, left: 100, width: 100, height: 30 };
 
     // Measured: with `normal` alignment the browser pushes the content into the viewport on the outside
-    // axis, for Auto and for Connected. Auto then matches the script engine (which also pushes);
-    // Connected does not (the script never moves Connected content). Amends §7.3, D13 and §17.
-    // If it fails: the browser no longer pushes; restore the original G7 wording of the plan.
+    // axis, for Auto and for Connected. #17765 requires Auto to flip only, so the engine writes `unsafe`
+    // alignment on outside axes for both. This test records why `normal` is not used there.
+    // If it fails: the browser no longer pushes; `unsafe` is still correct.
     it.each([
         ['Auto', true],
         ['Connected', false]
-    ])('G7 - %s with normal alignment pushes content that fits on neither side into the viewport', async (_, auto) => {
+    ])('%s with normal alignment pushes content that fits on neither side into the viewport', async (_, auto) => {
         const name = nextAnchorName();
         const target = addTarget(midTarget, name);
         const { content } = openOverlay(tallContent(), connected(name, 'bottom span-right', 'left', 'normal', { auto }));
@@ -309,10 +309,10 @@ describe('Native CSS anchor positioning gate tests', () => {
         expectNear(c.bottom, innerHeight, 'content bottom at the viewport edge');
     });
 
-    // An `unsafe` alignment turns the push off and keeps the flip. Use it if Connected must keep script
-    // parity (no push), or if Auto must not push on the outside axis.
-    // If it fails: the push cannot be turned off; only the documentation option of G7 remains.
-    describe('G7b - unsafe alignment on the outside axis', () => {
+    // An `unsafe` alignment turns the push off and keeps the flip. The engine uses it on outside axes:
+    // Connected keeps script parity (no push) and Auto flips only (#17765).
+    // If it fails: the push cannot be turned off; Auto and Connected would push, against #17765.
+    describe('unsafe alignment on the outside axis', () => {
         it.each([
             ['Auto', true],
             ['Connected', false]
@@ -339,7 +339,7 @@ describe('Native CSS anchor positioning gate tests', () => {
     // Connected keeps script parity: the script never moves Connected content, so every axis uses an `unsafe`
     // alignment and the browser never shifts the content into the viewport.
     // If it fails: Connected content can shift; document it in §17 as a behavioral change.
-    describe('G12 - Connected with unsafe alignment never shifts the content', () => {
+    describe('Connected with unsafe alignment never shifts the content', () => {
         it('Top → Top stays above a target when it fits on neither side', async () => {
             const name = nextAnchorName();
             const target = addTarget({ top: innerHeight - 330, left: 100, width: 100, height: 30 }, name);
@@ -435,8 +435,8 @@ describe('Native CSS anchor positioning gate tests', () => {
         });
     });
 
-    // Auto keeps the safe defaults, so it shifts like the script engine pushes.
-    it('G13 - Auto with both centered axes (span-all span-all) centers on the target', async () => {
+    // Auto keeps the safe defaults on centered axes, so it may shift into the viewport there.
+    it('Auto with both centered axes (span-all span-all) centers on the target', async () => {
         const name = nextAnchorName();
         const target = addTarget({ top: 200, left: 300, width: 400, height: 300 }, name);
         const { content } = openOverlay({ width: 200, height: 150 },
@@ -450,7 +450,7 @@ describe('Native CSS anchor positioning gate tests', () => {
     });
 
     // If it fails: escalate.
-    it('G8 - an offset becomes a gap on the target side, before and after a flip', async () => {
+    it('an offset becomes a gap on the target side, before and after a flip', async () => {
         const options: ConnectedOptions = { auto: true, margin: '6px 0px 6px 0px' };
         const belowName = nextAnchorName();
         const below = addTarget({ top: 100, left: 100, width: 100, height: 30 }, belowName);
@@ -467,7 +467,7 @@ describe('Native CSS anchor positioning gate tests', () => {
     });
 
     // If it fails: `ContainerPositionStrategy` uses the script engine (agreed fallback); record why here.
-    it('G9 - a container wrapper covers its container div and follows it on scroll, with no observer', async () => {
+    it('a container wrapper covers its container div and follows it on scroll, with no observer', async () => {
         const scroller = document.createElement('div');
         Object.assign(scroller.style, { position: 'fixed', top: '100px', left: '100px', width: '400px', height: '300px', overflow: 'auto' });
         track(scroller, document.body);
@@ -523,7 +523,7 @@ describe('Native CSS anchor positioning gate tests', () => {
         expectCovers('after scroll');
     });
 
-    describe('G10 - position-visibility', () => {
+    describe('position-visibility', () => {
         /** A target inside a scroll container, low enough that the content stays in the viewport when it is clipped. */
         function setup(visibility: 'always' | 'anchors-visible') {
             const scroller = document.createElement('div');
@@ -572,7 +572,7 @@ describe('Native CSS anchor positioning gate tests', () => {
 
     // Informative. Proves that the native engine needs the same-tree rule (R3).
     // If it fails, the browser resolves anchor names across shadow roots: delete this test.
-    it('G11 - an anchor name inside a shadow root does not anchor content in the light DOM', async () => {
+    it('an anchor name inside a shadow root does not anchor content in the light DOM', async () => {
         const host = document.createElement('div');
         track(host, document.body);
         const shadowRoot = host.attachShadow({ mode: 'open' });

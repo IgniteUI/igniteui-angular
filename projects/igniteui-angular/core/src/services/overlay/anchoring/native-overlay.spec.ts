@@ -360,6 +360,58 @@ describe('igxOverlay native anchoring', () => {
             expectNear(content(id).getBoundingClientRect().right, window.innerWidth - 10);
         });
 
+        describe('Auto flips only and never pushes on an outside axis', () => {
+            it('keeps content taller than the space above and below at the target', async () => {
+                const target = addTarget({ top: 300, left: 100, width: 80, height: 30 });
+                const id = await open(addElement(100, Math.max(window.innerHeight - 200, 320)), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS) });
+                expectNear(content(id).getBoundingClientRect().top, 330);
+            });
+
+            it('keeps content wider than the space on both sides next to the target', async () => {
+                const target = addTarget({ top: 100, left: 500, width: 80, height: 30 });
+                const id = await open(addElement(Math.max(window.innerWidth - 400, 520), 50), {
+                    target,
+                    positionStrategy: new AutoPositionStrategy({
+                        ...NO_ANIMATIONS, horizontalStartPoint: HorizontalAlignment.Right, horizontalDirection: HorizontalAlignment.Right
+                    })
+                });
+                expectNear(content(id).getBoundingClientRect().left, 580);
+            });
+
+            it('flips Top → Top below a target near the top edge', async () => {
+                const target = addTarget({ top: 40, left: 100, width: 80, height: 30 });
+                const id = await open(addElement(100, 100), {
+                    target,
+                    positionStrategy: new AutoPositionStrategy({
+                        ...NO_ANIMATIONS, verticalStartPoint: VerticalAlignment.Top, verticalDirection: VerticalAlignment.Top
+                    })
+                });
+                expectNear(content(id).getBoundingClientRect().top, 70);
+            });
+
+            it('flips Left → Left to the right of a target near the left edge', async () => {
+                const target = addTarget({ top: 100, left: 40, width: 80, height: 30 });
+                const id = await open(addElement(100, 50), {
+                    target,
+                    positionStrategy: new AutoPositionStrategy({
+                        ...NO_ANIMATIONS, horizontalStartPoint: HorizontalAlignment.Left, horizontalDirection: HorizontalAlignment.Left
+                    })
+                });
+                expectNear(content(id).getBoundingClientRect().left, 120);
+            });
+
+            it('flips Right → Right to the left of a target near the right edge', async () => {
+                const target = addTarget({ top: 100, left: window.innerWidth - 120, width: 80, height: 30 });
+                const id = await open(addElement(100, 50), {
+                    target,
+                    positionStrategy: new AutoPositionStrategy({
+                        ...NO_ANIMATIONS, horizontalStartPoint: HorizontalAlignment.Right, horizontalDirection: HorizontalAlignment.Right
+                    })
+                });
+                expectNear(content(id).getBoundingClientRect().right, window.innerWidth - 120);
+            });
+        });
+
         it('Connected never flips or shifts, as with the script engine', async () => {
             const target = addTarget({ top: 100, left: window.innerWidth - 90, width: 80, height: 30 });
             const id = await open(addElement(200, 50), { target, positionStrategy: new ConnectedPositioningStrategy(NO_ANIMATIONS) });

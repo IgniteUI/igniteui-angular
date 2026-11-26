@@ -49,18 +49,18 @@ describe('Overlay anchoring (pure)', () => {
 
     describe('connectedDeclarations', () => {
         const horizontal: [H, H, string, string, string][] = [
-            [H.Left, H.Left, 'left', 'normal', 'unsafe right'],
+            [H.Left, H.Left, 'left', 'unsafe right', 'unsafe right'],
             [H.Left, H.Right, 'span-right', 'left', 'unsafe left'],
             [H.Center, H.Center, 'span-all', 'anchor-center', 'unsafe anchor-center'],
             [H.Right, H.Left, 'span-left', 'right', 'unsafe right'],
-            [H.Right, H.Right, 'right', 'normal', 'unsafe left']
+            [H.Right, H.Right, 'right', 'unsafe left', 'unsafe left']
         ];
         const vertical: [V, V, string, string, string][] = [
-            [V.Top, V.Top, 'top', 'normal', 'unsafe end'],
+            [V.Top, V.Top, 'top', 'unsafe end', 'unsafe end'],
             [V.Top, V.Bottom, 'span-bottom', 'self-start', 'unsafe self-start'],
             [V.Middle, V.Middle, 'span-all', 'anchor-center', 'unsafe anchor-center'],
             [V.Bottom, V.Top, 'span-top', 'self-end', 'unsafe self-end'],
-            [V.Bottom, V.Bottom, 'bottom', 'normal', 'unsafe start']
+            [V.Bottom, V.Bottom, 'bottom', 'unsafe start', 'unsafe start']
         ];
 
         for (const [hs, hd, column, hAuto, hConnected] of horizontal) {

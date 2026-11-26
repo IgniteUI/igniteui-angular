@@ -22,7 +22,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlayService`
     - **Behavioral changes** with native anchor positioning. `provideOverlayAnchoring('script')` restores the previous behavior.
         - Anchored content follows its target on scroll with every scroll strategy, including `NoOpScrollStrategy`. It follows one rendering frame after the scroll, so code that scrolls and measures in the same task sees the previous position.
-        - `AutoPositionStrategy` content also flips while the overlay is open, when the current side stops fitting. When no side fits, the browser shifts the content into the viewport; the exact position can differ from before.
+        - `AutoPositionStrategy` content also flips while the overlay is open, when the current side stops fitting. When no side fits, the content stays at its configured side and is no longer pushed into the viewport. Where the content overlaps its target (spanning or centered alignment), it can still shift into the viewport.
         - Positions are no longer rounded to whole pixels.
         - While an overlay is open, its target has an inline `anchor-name: … !important` style. Application values are kept in the list and restored on close.
 

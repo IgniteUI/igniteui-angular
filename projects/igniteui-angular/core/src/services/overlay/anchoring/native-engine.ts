@@ -27,7 +27,11 @@ export const AUTO_FALLBACKS = 'flip-block, flip-inline, flip-block flip-inline';
 interface AxisMapping {
     /** `position-area` track on this axis. */
     area: string;
-    /** Self-alignment for Auto: the browser's default overflow alignment may shift the content into view. */
+    /**
+     * Self-alignment for Auto. On an outside axis it is `unsafe`: Auto flips only and is never pushed along the
+     * viewport edge after a failed flip (#17765). On a spanning or centered axis the browser's default overflow
+     * alignment may shift the content into view.
+     */
     auto: string;
     /** Self-alignment for Connected: `unsafe`, so the content never shifts, as with the script engine. */
     connected: string;
@@ -41,8 +45,9 @@ const H = HorizontalAlignment;
 const V = VerticalAlignment;
 
 // DISCUSS(#17765): these tables differ from the approved plan (§7.3, D13, Appendix A), following the gate
-// tests (option 1): centered pairs use `span-all` instead of `center` (G6, G6b, G13), and Connected uses
-// `unsafe` alignment so it never shifts (G7, G12). §15 requires the amended spec to be re-approved.
+// tests (option 1): centered pairs use `span-all` instead of `center`, Connected uses `unsafe` alignment
+// so it never shifts, and Auto uses it on outside axes so it flips only (see the centered axis and `unsafe`
+// alignment tests in native-anchoring.spec.ts). §15 requires the amended spec to be re-approved.
 //
 // DISCUSS(#17765): only these 5 pairs per axis go native. Start points default to Left/Bottom, so code that
 // sets only a direction (e.g. `horizontalDirection: Center` → `Left → Center`, `verticalDirection: Middle`
@@ -55,20 +60,20 @@ const V = VerticalAlignment;
  * would overflow it on both sides and never flip.
  */
 const HORIZONTAL = new Map<string, AxisMapping>([
-    [pairKey(H.Left, H.Left), { area: 'left', auto: 'normal', connected: 'unsafe right', outside: true }],
+    [pairKey(H.Left, H.Left), { area: 'left', auto: 'unsafe right', connected: 'unsafe right', outside: true }],
     [pairKey(H.Left, H.Right), { area: 'span-right', auto: 'left', connected: 'unsafe left', outside: false }],
     [pairKey(H.Center, H.Center), { area: 'span-all', auto: 'anchor-center', connected: 'unsafe anchor-center', outside: false }],
     [pairKey(H.Right, H.Left), { area: 'span-left', auto: 'right', connected: 'unsafe right', outside: false }],
-    [pairKey(H.Right, H.Right), { area: 'right', auto: 'normal', connected: 'unsafe left', outside: true }]
+    [pairKey(H.Right, H.Right), { area: 'right', auto: 'unsafe left', connected: 'unsafe left', outside: true }]
 ]);
 
 /** Vertical pairs (`verticalStartPoint → verticalDirection`). */
 const VERTICAL = new Map<string, AxisMapping>([
-    [pairKey(V.Top, V.Top), { area: 'top', auto: 'normal', connected: 'unsafe end', outside: true }],
+    [pairKey(V.Top, V.Top), { area: 'top', auto: 'unsafe end', connected: 'unsafe end', outside: true }],
     [pairKey(V.Top, V.Bottom), { area: 'span-bottom', auto: 'self-start', connected: 'unsafe self-start', outside: false }],
     [pairKey(V.Middle, V.Middle), { area: 'span-all', auto: 'anchor-center', connected: 'unsafe anchor-center', outside: false }],
     [pairKey(V.Bottom, V.Top), { area: 'span-top', auto: 'self-end', connected: 'unsafe self-end', outside: false }],
-    [pairKey(V.Bottom, V.Bottom), { area: 'bottom', auto: 'normal', connected: 'unsafe start', outside: true }]
+    [pairKey(V.Bottom, V.Bottom), { area: 'bottom', auto: 'unsafe start', connected: 'unsafe start', outside: true }]
 ]);
 
 const horizontalOf = (s: PositionSettings) => HORIZONTAL.get(pairKey(s.horizontalStartPoint, s.horizontalDirection));

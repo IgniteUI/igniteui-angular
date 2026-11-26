@@ -31,7 +31,7 @@ The engine is chosen on each `show()`. If the settings of an open overlay change
 Differences under the native engine:
 
 - Anchored content follows its target on scroll with every scroll strategy, including `NoOpScrollStrategy`. It follows one rendering frame later than the script engine did, so code that scrolls and measures in the same task sees the previous position.
-- `AutoPositionStrategy` content can flip while the overlay is open, not only when it is shown. When no side fits, the browser shifts it into the viewport; the exact position can differ from the script engine.
+- `AutoPositionStrategy` content can flip while the overlay is open, not only when it is shown. When no side fits, it stays at its configured side and is not pushed into the viewport, unlike the script engine. Where it overlaps its target (spanning or centered alignment), the browser can still shift it into the viewport.
 - `ConnectedPositioningStrategy` content never flips or shifts, as before.
 - Positions are not rounded to whole pixels.
 - While an overlay is open, its target has an inline `anchor-name: … !important` style. Values set by the application, inline or in a stylesheet, are kept in the list and restored on close.
