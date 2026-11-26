@@ -7735,8 +7735,15 @@ export abstract class IgxGridBaseDirective implements GridType,
                 if (col._cells.length !== this.rowList.length) {
                     this.rowList.forEach(x => x.cdr.detectChanges());
                 }
-                const cells = this._dataRowList.map(x => x.cells.find(c => c.column === col));
-                cells.forEach((cell) => cellsContentWidths.push(cell?.nativeElement?.offsetWidth || 0));
+                const cells = this._dataRowList
+                    .map(x => x.cells.find(c => c.column === col))
+                    .filter(cell => !!cell);
+                if (this._dataRowList.length > 0 && cells.length === 0) {
+                    // The column is in a partly visible group, but its cells are virtualized out of the rows.
+                    // Skip it until it is scrolled into view, instead of sizing it by its header alone.
+                    continue;
+                }
+                cells.forEach((cell) => cellsContentWidths.push(cell.nativeElement?.offsetWidth || 0));
                 let maxForCells = Math.max(...cellsContentWidths);
                 const header = this.headerCellList.find(x => x.column === col);
                 cellsContentWidths.push(header!.nativeElement.offsetWidth);
@@ -7746,7 +7753,7 @@ export abstract class IgxGridBaseDirective implements GridType,
                 // and initially renders as empty, skip measuring it.
                 let emptyCellWithPaddingOnly = 0;
                 if (cells.length > 0 && !!col.bodyTemplate) {
-                    const cellStyle = this.document.defaultView!.getComputedStyle(cells[0]!.nativeElement!);
+                    const cellStyle = this.document.defaultView!.getComputedStyle(cells[0].nativeElement!);
                     emptyCellWithPaddingOnly = parseFloat(cellStyle.paddingLeft) + parseFloat(cellStyle.paddingRight);
                 } else {
                     maxForCells = max;
