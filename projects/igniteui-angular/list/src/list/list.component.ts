@@ -902,16 +902,19 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @hidden
      * @internal
      * Keeps the tab stop on the option that was focused last.
-     *
-     * @param event The focusin event of the list.
      */
-    @HostListener('focusin', ['$event'])
-    public onFocusIn(event: FocusEvent) {
+    @HostListener('focusin')
+    public onFocusIn() {
         // A focus on the way out of the list keeps the tab stop.
         if (this._singleTabStop.leaving) {
             return;
         }
-        const target = event.composedPath()[0];
+        // Read the focus, not the target: a handler may have moved it on, such as the redirect to the tab stop.
+        const host = this.element.nativeElement as HTMLElement;
+        const target = (host.getRootNode() as Document | ShadowRoot).activeElement;
+        if (!target || !host.contains(target)) {
+            return;
+        }
         const item = target instanceof Node ? this._ownItems().find(own => own.element.contains(target)) : undefined;
         this._focusedItem = item ?? null;
         this._focusInMessage = !item && target !== this.element.nativeElement;

@@ -1440,6 +1440,22 @@ describe('List', () => {
                 expect(document.activeElement).toBe(rows()[2]);
             });
 
+            it('should come back to the row focused last with Shift+Tab, again and again', async () => {
+                const after = fixture.nativeElement.querySelector('#after') as HTMLElement;
+                await userEvent.click(rows()[1].querySelector('[igxListLineTitle]')!);
+
+                for (let round = 0; round < 2; round++) {
+                    await userEvent.keyboard('{Tab}');
+                    expect(document.activeElement).toBe(after);
+
+                    // The browser lands on the last control of the list first, and the list moves on to the row.
+                    await userEvent.keyboard('{Shift>}{Tab}{/Shift}');
+                    fixture.detectChanges();
+                    expect(document.activeElement).toBe(rows()[1]);
+                    expect(rows().map(row => row.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
+                }
+            });
+
             it('should treat a listbox in a row as one control', () => {
                 const nestedFixture = TestBed.createComponent(GridWithNestedListboxComponent);
                 nestedFixture.detectChanges();
