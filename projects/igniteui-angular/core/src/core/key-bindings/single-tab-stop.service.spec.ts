@@ -155,6 +155,19 @@ describe('IgxSingleTabStopService', () => {
         });
     });
 
+    it('should leave the Tab key to the browser while when returns false', async () => {
+        fixture.componentInstance.enabled.set(false);
+        fixture.detectChanges();
+
+        byId('row-1').focus();
+        await tab();
+        expect(focusedId()).toBe('action-1');
+
+        byId('before').focus();
+        await tab();
+        expect(focusedId()).toBe('action-0');
+    });
+
     it('should throw when configure is called a second time', () => {
         const service = fixture.debugElement.query((node) => node.nativeElement.id === 'composite')
             .injector.get(IgxSingleTabStopService);
@@ -185,10 +198,12 @@ describe('IgxSingleTabStopService', () => {
 })
 class SingleTabStopDirective {
     public readonly tabStopId = input<string | null>(null);
+    public readonly enabled = input(true);
 
     constructor() {
         const host = inject(IgxSingleTabStopService);
         host.configure({
+            when: () => this.enabled(),
             tabStop: () => {
                 const id = this.tabStopId();
                 return id ? document.getElementById(id) : null;
@@ -200,7 +215,7 @@ class SingleTabStopDirective {
 @Component({
     template: `
         <button id="before">Before</button>
-        <div id="composite" testSingleTabStop [tabStopId]="tabStopId()">
+        <div id="composite" testSingleTabStop [tabStopId]="tabStopId()" [enabled]="enabled()">
             <div id="row-0" tabindex="-1"><button id="action-0">Action 0</button></div>
             <div id="row-1" tabindex="0"><button id="action-1">Action 1</button><input id="input-1" /></div>
             <div id="row-2" tabindex="-1"><button id="action-2">Action 2</button></div>
@@ -211,4 +226,5 @@ class SingleTabStopDirective {
 })
 class SingleTabStopHostComponent {
     public readonly tabStopId = signal<string | null>('row-1');
+    public readonly enabled = signal(true);
 }

@@ -15,6 +15,8 @@ export interface IgxSingleTabStopOptions {
      * key lands.
      */
     tabStop: () => HTMLElement | null | undefined;
+    /** Whether the service handles the Tab key. Defaults to always. */
+    when?: () => boolean;
 }
 
 /**
@@ -92,7 +94,8 @@ export class IgxSingleTabStopService {
     };
 
     private readonly _onKeydown = (event: KeyboardEvent): void => {
-        if (event.key !== tabKey || event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey) {
+        if (event.key !== tabKey || event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey
+            || this._options!.when?.() === false) {
             return;
         }
 
@@ -107,7 +110,7 @@ export class IgxSingleTabStopService {
 
     private readonly _onFocusIn = (event: FocusEvent): void => {
         const from = event.relatedTarget as Node | null;
-        if (!this._tabbing || (from && this._host.contains(from))) {
+        if (!this._tabbing || (from && this._host.contains(from)) || this._options!.when?.() === false) {
             return;
         }
 
