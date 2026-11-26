@@ -79,7 +79,7 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `cancelButtonLabel` | string | Renders cancel button with custom content, which closes the dropdown/dialog and reverts picker's value to the value at the moment of opening. By default `cancelButtonLabel` is set to 'Cancel'. |
 | `value` | `Date | string` | Value of the time picker. |
 |`resourceStrings`| ITimePickerResourceStrings | Resource strings of the time-picker. |
-| `disabled` | boolean | Disable the time picker. |
+| `disabled` | boolean | Disable the time picker. An open picker cannot change the time while disabled. |
 | `itemsDelta`| object | Sets the delta for hour, minute and second items. By default `itemsDelta` is set to {hour:1, minute:1, second:1} |
 | `minValue` | `Date | string` | The minimum value required for the picker to remain valid. |
 | `maxValue` | `Date | string` | The maximum value required for the editor to remain valid. |
@@ -114,3 +114,5 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `toggle` | `OverlaySettings` | `void` | Toggles the dropdown/dialog between opened and closed states. |
 | `increment` | `DatePart?, number?` | | `void` | Accepts a `DatePart` and increments it by one. If no value is provided, it defaults to the part at the position of the cursor.
 | `decrement` | `DatePart?, number?` | `void` | Accepts a `DatePart` and decrements it by one. If no value is provided, it defaults to the part at the position of the cursor.
+
+Disabling an open time picker closes it and preserves its saved value.

@@ -141,7 +141,16 @@ export abstract class PickerBaseDirective implements IToggleView, EditorProvider
      * ```
      */
     @Input({ transform: booleanAttribute })
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = value;
+        if (value && !this.collapsed) {
+            this.close();
+        }
+    }
+    private _disabled = false;
 
     /**
      * @example
