@@ -371,6 +371,37 @@ describe('igxOverlay native anchoring', () => {
             expect(strategy.settings.closeAnimation).toBe(scaleOutVerTop);
         });
 
+        it('disposes the close animation player it replaces after a flip, without closing early', async () => {
+            const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
+            const strategy = new AutoPositionStrategy({ openAnimation: null, closeAnimation: scaleOutVerTop });
+            const id = await open(addElement(100, 200), { target, positionStrategy: strategy });
+            const info = overlay.getOverlayById(id);
+            const replaced = info.closeAnimationPlayer!;
+            const destroy = spyOn(replaced, 'destroy');
+            const closeAnimationDone = spyOn(overlay as any, 'closeAnimationDone');
+
+            target.style.top = `${window.innerHeight - 60}px`;
+            await frames();
+            overlay.hide(id);
+
+            expect(info.closeAnimationPlayer).not.toBe(replaced);
+            expect(destroy).toHaveBeenCalled();
+            expect(replaced.animationEnd.observed).toBe(false);
+            await new Promise(resolve => setTimeout(resolve, 400));
+            expect(closeAnimationDone).toHaveBeenCalledTimes(1);
+        });
+
+        it('a setOffset translation is not mistaken for a flip', async () => {
+            const target = addTarget({ top: 100, left: 100, width: 80, height: 30 });
+            const strategy = new AutoPositionStrategy({ openAnimation: null, closeAnimation: scaleOutVerTop });
+            const id = await open(addElement(100, 50), { target, positionStrategy: strategy });
+            overlay.setOffset(id, 0, -100);
+            expectNear(content(id).getBoundingClientRect().bottom, 80);
+
+            overlay.hide(id);
+            expect(overlay.getOverlayById(id).builtCloseAnimation).toBe(scaleOutVerTop);
+        });
+
         it('Auto flips a spanning pair at the right edge so the right edges meet', async () => {
             const target = addTarget({ top: 100, left: window.innerWidth - 90, width: 80, height: 30 });
             const id = await open(addElement(200, 50), { target, positionStrategy: new AutoPositionStrategy(NO_ANIMATIONS) });
@@ -724,6 +755,31 @@ describe('igxOverlay native anchoring', () => {
 
             await scrollAndSettle(scroller, 200);
             expect(content(id).style.visibility).toBe('');
+        });
+
+        it('ignores a notification queued for an observer that is no longer active', () => {
+            const notify: IntersectionObserverCallback[] = [];
+            const RealObserver = window.IntersectionObserver;
+            spyOn(window, 'IntersectionObserver').mockImplementation(function (callback: IntersectionObserverCallback) {
+                notify.push(callback);
+                return new RealObserver(() => { /* driven by the test */ });
+            } as any);
+            const strategy = new HideScrollStrategy();
+            const el = addElement();
+            const out = [{ isIntersecting: false } as IntersectionObserverEntry];
+
+            strategy._onShown(addTarget({ top: 0, left: 0, width: 10, height: 10 }), el, true);
+            strategy._onHidden();
+            notify[0](out, null!);
+            expect(el.style.visibility).toBe('');
+
+            strategy._onShown(addTarget({ top: 0, left: 0, width: 10, height: 10 }), el, true);
+            strategy._onShown(addTarget({ top: 20, left: 0, width: 10, height: 10 }), el, true);
+            notify[1](out, null!);
+            expect(el.style.visibility).toBe('');
+            notify[2](out, null!);
+            expect(el.style.visibility).toBe('hidden');
+            strategy.detach();
         });
 
         it('Container: native writes the anchor-visible keyword on the wrapper', async () => {

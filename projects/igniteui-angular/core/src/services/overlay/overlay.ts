@@ -7,7 +7,7 @@ import { fadeIn, fadeOut, IAnimationParams, scaleInHorLeft, scaleInHorRight, sca
 import { PlatformUtil } from '../../core/utils';
 import { IgxOverlayOutletDirective } from './utilities';
 import { IgxAngularAnimationService } from '../animation/angular-animation-service';
-import { AnimationService } from '../animation/animation';
+import { AnimationPlayer, AnimationService } from '../animation/animation';
 import { AutoPositionStrategy } from './position/auto-position-strategy';
 import { ConnectedPositioningStrategy } from './position/connected-positioning-strategy';
 import { ContainerPositionStrategy } from './position/container-position-strategy';
@@ -139,6 +139,8 @@ export class IgxOverlayService implements OnDestroy {
     private _document: Document;
     private _keyPressEventListener!: Subscription;
     private destroy$ = new Subject<boolean>();
+    /** The `animationEnd` subscription of each player, so a replaced player can be released. */
+    private _playerSubscriptions = new WeakMap<AnimationPlayer, Subscription>();
     private _cursorStyleIsSet = false;
     private _cursorOriginalValue!: string;
 
@@ -1169,23 +1171,40 @@ export class IgxOverlayService implements OnDestroy {
     private buildOpenAnimationPlayer(info: OverlayInfo) {
         const animation = this.getOpenAnimation(info);
         info.builtOpenAnimation = animation;
+        this.disposePlayer(info.openAnimationPlayer);
+        delete info.openAnimationPlayer;
         if (animation) {
-            info.openAnimationPlayer = this.animationService.buildAnimation(animation, info.elementRef!.nativeElement);
-            info.openAnimationPlayer.animationEnd
-                .pipe(takeUntil(this.destroy$))
-                .subscribe(() => this.openAnimationDone(info));
+            info.openAnimationPlayer = this.buildPlayer(animation, info, () => this.openAnimationDone(info));
         }
     }
 
     private buildCloseAnimationPlayer(info: OverlayInfo) {
         const animation = this.getCloseAnimation(info);
         info.builtCloseAnimation = animation;
+        this.disposePlayer(info.closeAnimationPlayer);
+        delete info.closeAnimationPlayer;
         if (animation) {
-            info.closeAnimationPlayer = this.animationService.buildAnimation(animation, info.elementRef!.nativeElement);
-            info.closeAnimationPlayer.animationEnd
-                .pipe(takeUntil(this.destroy$))
-                .subscribe(() => this.closeAnimationDone(info));
+            info.closeAnimationPlayer = this.buildPlayer(animation, info, () => this.closeAnimationDone(info));
         }
+    }
+
+    private buildPlayer(animation: AnimationReferenceMetadata, info: OverlayInfo, done: () => void): AnimationPlayer {
+        const player = this.animationService.buildAnimation(animation, info.elementRef!.nativeElement);
+        this._playerSubscriptions.set(player, player.animationEnd.pipe(takeUntil(this.destroy$)).subscribe(done));
+        return player;
+    }
+
+    /**
+     * Releases a player that is being replaced. Unsubscribes first: destroying a player completes it,
+     * and its done handler would otherwise finish the open or close of the overlay.
+     */
+    private disposePlayer(player: AnimationPlayer | undefined) {
+        if (!player) {
+            return;
+        }
+        this._playerSubscriptions.get(player)?.unsubscribe();
+        this._playerSubscriptions.delete(player);
+        player.destroy();
     }
 
     /**
@@ -1341,6 +1360,7 @@ export class IgxOverlayService implements OnDestroy {
     /**
      * Native Auto: CSS does not report which position option the browser chose, so compare the rendered
      * rectangles with the configured and the flipped placement, and reverse the animations of flipped axes.
+     * The `setOffset()` translation is taken out of the content rectangle, so it is not mistaken for a flip.
      * Strategy settings are never written.
      */
     private resolveAnimations(info: OverlayInfo, which: 'open' | 'close' | 'both') {
@@ -1349,7 +1369,11 @@ export class IgxOverlayService implements OnDestroy {
         }
         const settings = info.settings!.positionStrategy!.settings;
         const content: HTMLElement = info.elementRef!.nativeElement.parentElement;
-        const flipped = resolveFlippedAxes(settings, content.getBoundingClientRect(), info.anchorElement.getBoundingClientRect());
+        const rect = content.getBoundingClientRect();
+        const dx = info.transformX ?? 0;
+        const dy = info.transformY ?? 0;
+        const placed = { top: rect.top - dy, right: rect.right - dx, bottom: rect.bottom - dy, left: rect.left - dx };
+        const flipped = resolveFlippedAxes(settings, placed, info.anchorElement.getBoundingClientRect());
         if (which !== 'close') {
             info.resolvedOpenAnimation = flipAnimation(settings.openAnimation, flipped);
         }

@@ -48,10 +48,15 @@ export class HideScrollStrategy extends AbsoluteScrollStrategy {
         }
         this._content = content;
         this._anchor = anchor;
-        this._observer = new Observer(entries => {
+        const observer: IntersectionObserver = new Observer(entries => {
+            // `disconnect()` does not drop notifications that are already queued.
+            if (this._observer !== observer) {
+                return;
+            }
             content.style.visibility = entries[entries.length - 1].isIntersecting ? '' : 'hidden';
         }, { threshold: 0 });
-        this._observer.observe(anchor);
+        this._observer = observer;
+        observer.observe(anchor);
     }
 
     /**
