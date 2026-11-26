@@ -44,6 +44,8 @@ All notable changes for each version of this project will be documented in this 
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+- `IgxQueryBuilderComponent`
+    - Dropping a condition dragged with the mouse on another condition no longer leaves a timer running, so the application becomes stable again (`ApplicationRef.isStable`, `fixture.whenStable()`). Destroying the query builder while a condition is dragged no longer throws `Cannot read properties of null (reading 'getBoundingClientRect')` (#17804).
 
 ## 22.3.0
 
