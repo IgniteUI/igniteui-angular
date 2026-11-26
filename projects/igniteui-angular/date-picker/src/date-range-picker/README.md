@@ -108,6 +108,7 @@ With projected inputs:
 ### Inputs
 | Name             | Type               | Description |
 |:-----------------|:-------------------|:------------|
+| disabled         | boolean            | Disables the picker, including date selection in an open calendar. |
 | doneButtonText   | string             | Changes the default text of the `done` button. It will show up only in `dialog` mode. Default value is `Done`. |
 | displayMonthsCount | number             | Sets the number displayed month views. Default is `2`. |
 | formatter        | function => string | Applies a custom formatter function on the selected or passed date. |

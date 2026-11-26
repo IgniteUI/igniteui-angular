@@ -832,6 +832,34 @@ describe('IgxDatePicker', () => {
                 vi.useRealTimers();
             });
 
+            it.each(['input', 'forms'])('should close the open calendar when disabled through %s', async source => {
+                const initialValue = datePicker.value;
+                const change = vi.spyOn(datePicker.valueChange, 'emit');
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+
+                if (source === 'input') {
+                    datePicker.disabled = true;
+                } else {
+                    datePicker.setDisabledState(true);
+                }
+                detectChanges();
+                await vi.runAllTimersAsync();
+                expect(datePicker.collapsed).toBeTruthy();
+                expect(datePicker.value).toEqual(initialValue);
+                expect(change).not.toHaveBeenCalled();
+
+                datePicker.setDisabledState(false);
+                detectChanges();
+                expect(datePicker.collapsed).toBeTruthy();
+                datePicker.open();
+                await vi.runAllTimersAsync();
+                detectChanges();
+                expect(datePicker.collapsed).toBeFalsy();
+            });
+
             it('should activate today\'s date when reopening the calendar', async () => {
                 datePicker.clear();
                 datePicker.open();
@@ -1096,13 +1124,13 @@ describe('IgxDatePicker', () => {
             mockDateEditor = {
                 _value: null as any,
                 get value() {
- return this._value; 
+ return this._value;
 },
                 set value(val: any) {
- this._value = val; 
+ this._value = val;
 },
                 clear() {
- this.valueChange.emit(null); 
+ this.valueChange.emit(null);
 },
                 increment: vi.fn(),
                 decrement: vi.fn(),
@@ -1126,13 +1154,13 @@ describe('IgxDatePicker', () => {
                         _listeners[event]?.forEach(fn => fn());
                     },
                     focus() {
- this.dispatchEvent('focus'); 
+ this.dispatchEvent('focus');
 },
                     click() {
- this.dispatchEvent('click'); 
+ this.dispatchEvent('click');
 },
                     blur() {
- this.dispatchEvent('blur'); 
+ this.dispatchEvent('blur');
 }
                 },
                 focus: () => {}
