@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, Input, Output, booleanAttribute, signal } from '@angular/core';
+import { Directive, EventEmitter, Input, Output, Renderer2, booleanAttribute, inject, signal } from '@angular/core';
 import { IBaseEventArgs } from 'igniteui-angular/core';
 import { IgxBaseButtonType, IgxButtonBaseDirective } from './button-base';
 
@@ -36,15 +36,16 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
         '[class.igx-button--outlined]': '_type() === "outlined"',
         '[class.igx-button--fab]': '_type() === "fab"',
         '[class.igx-button--ready]': '_hasRendered()',
-        '[attr.aria-label]': '_label()',
         '[attr.data-selected]': '_selected() ? "true" : "false"',
         '(click)': 'buttonSelected.emit({ button: this })',
     }
 })
 export class IgxButtonDirective extends IgxButtonBaseDirective {
+    private readonly _renderer = inject(Renderer2);
     protected readonly _type = signal<IgxButtonType>(IgxButtonType.Flat);
-    protected readonly _label = signal<string | null>(null);
     protected readonly _selected = signal(false);
+    /** The aria-label last written by igxLabel. */
+    private _label: string | null = null;
 
     /** Emitted when the button is selected. */
     @Output()
@@ -82,16 +83,28 @@ export class IgxButtonDirective extends IgxButtonBaseDirective {
     }
 
     /**
-     * Sets the `aria-label` attribute.
+     * Sets the `aria-label` attribute. While it has a value, it replaces any other `aria-label` on the button.
+     *
+     * @deprecated in version 22.3.2. Use the native `aria-label` attribute instead.
      *
      * @example
      *  ```html
-     * <button type="button" igxButton="flat" igxLabel="Label"></button>
+     * <button type="button" igxButton="flat" aria-label="Label"></button>
      * ```
      */
     @Input({ alias: 'igxLabel' })
-    public set label(value: string) {
-        this._label.set(value || null);
+    public set label(value: string | null | undefined) {
+        const label = value || null;
+        const element = this.nativeElement;
+
+        if (label) {
+            this._renderer.setAttribute(element, 'aria-label', label);
+        } else if (this._label !== null && element.getAttribute('aria-label') === this._label) {
+            // Remove only the value igxLabel wrote; a newer aria-label belongs to someone else.
+            this._renderer.removeAttribute(element, 'aria-label');
+        }
+
+        this._label = label;
     }
 }
 

@@ -14,6 +14,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `igxButton` |  string | Set the type of igxButton to be used. Default is set to flat. |
 | `buttonSelected` | EventEmitter<IButtonEventArgs> | Emitted only when a button gets selected, or deselected, and not on initialization. |
 | `selected` | boolean | Gets or sets whether the button is selected. Mainly used in the IgxButtonGroup component and it will have no effect if set separately. |
+| `igxLabel` | string | **Deprecated.** Sets the button's `aria-label`. Use the native `aria-label` attribute instead. |
 
 # Button types
 | Name   | Description |

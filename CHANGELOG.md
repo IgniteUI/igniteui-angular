@@ -18,10 +18,42 @@ All notable changes for each version of this project will be documented in this 
     - The "Select all" option and the group header options are reached with the arrow keys, `Home` and `End`, and `Space` toggles them. A click or `Space` on them emits one `selectionChanging` event, which can be canceled, with all the items that change. They have `role="option"` and `aria-checked`, which is `mixed` while only some of their items are selected.
     - With `showSelectAll`, the list shows the records one row further down. `virtualizationState` and the `dataPreLoad` event still give the indices of the records in the data source, not of the rows.
 
-## 22.3.1
+## 22.3.2
+
+### General
+
+- `IgxButtonDirective`
+    - **Deprecation** - The `igxLabel` input has been deprecated and will be removed in a future version. Use the native `aria-label` attribute instead.
 
 ### Bug Fixes
 
+- `IgxButtonDirective`
+    - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only through `igxLabel`, and clearing `igxLabel` removes only the value it set (#18009).
+    - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
+
+## 22.3.1
+
+### General
+
+- `IgxSplitterComponent`
+    - An app that sets `--ig-size` to medium or large on the splitter or on an ancestor gets a thicker bar. Previously the splitter had one size (#18013).
+    - The 48px gap around the drag handle is measured from the icon box of the design, so each expander is 5px further from the handle at the default size, 3px in the Indigo theme. The area of an expander that takes the pointer is that icon box, centered on the arrow: 18px, 20px or 24px square, 14px, 16px or 24px in the Indigo theme. Previously it was 16px by 12px at the default size in every theme.
+    - In the Indigo theme, the idle bar is 1px thick at the default size also with an overridden `--ig-splitter-size`. Previously it was thicker, 2px for `--ig-splitter-size: 10px`.
+
+### New Functionality
+
+- `IgxSplitterComponent`
+    - The splitter follows `--ig-size`. The bar is 6px, 12px or 18px thick, the drag handle 4px, 6px or 8px with a 2px, 8px or 8px radius, and the expanders grow with them. The default is small, which is the size from before, so a splitter without `--ig-size` looks the same. `--size` and `--ig-splitter-size` still set the small size, and the medium and large steps add to it. A `--border-radius` or `--ig-splitter-border-radius` that you set applies at every size. In the Indigo theme the idle bar is 1px, 4px or 8px thick by size, and the area around the bar that takes the pointer grows with the bar (#18013).
+        ```html
+        <igx-splitter style="--ig-size: var(--ig-size-large)">...</igx-splitter>
+        ```
+
+### Bug Fixes
+
+- `IgxSplitterComponent`
+    - On a bar too short for the drag handle, the two expanders and the 48px gaps between them, the drag handle keeps 25% of the bar length and the gaps get narrower. Previously the gaps stayed 48px, so the handle shrank and the expanders touched the ends of the bar (#18013).
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - In the filtering row of a date column, `Alt + Arrow Down` in the date input keeps the focus in the opened calendar. Previously the focus moved to the conditions button (#17936).
     - In the filtering row, `Alt + Arrow Down` on the conditions button opens the conditions, and not the date or time picker. With a unary condition, such as Today, the date and time inputs are read-only and `Alt + Arrow Down` in them opens the conditions. `Tab` on the conditions button closes the conditions. Previously they opened again.
