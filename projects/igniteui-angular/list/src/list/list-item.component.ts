@@ -409,9 +409,9 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
         return false;
     }
 
-    /** @hidden @internal Applies the option style when the item is an option of a listbox. */
-    @HostBinding('class.igx-list-item--option')
-    public get optionStyle(): boolean {
+    /** @hidden @internal Applies the focus ring style to the options of a listbox and the rows of a grid. */
+    @HostBinding('class.igx-list-item--focusable')
+    public get focusableStyle(): boolean {
         return !this.isHeader && this.list.isNavigable;
     }
 

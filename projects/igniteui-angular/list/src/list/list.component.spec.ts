@@ -799,7 +799,7 @@ describe('List', () => {
             expect(header.element.getAttribute('aria-hidden')).toBe('true');
             expect(item.element.getAttribute('tabindex')).toBe('-1');
             expect(item.element.getAttribute('aria-selected')).toBe('true');
-            expect(item.element.classList).not.toContain('igx-list-item--option');
+            expect(item.element.classList).not.toContain('igx-list-item--focusable');
 
             ownList.isLoading = true;
             ownFixture.detectChanges();
@@ -863,8 +863,8 @@ describe('List', () => {
             expect(listElement.hasAttribute('tabindex')).toBe(false);
             expect(owned.map(child => child.getAttribute('role'))).toEqual(['option', 'option', 'option']);
             expect(header.element.hasAttribute('tabindex')).toBe(false);
-            expect(header.element.classList).not.toContain('igx-list-item--option');
-            expect(items.every(i => i.element.classList.contains('igx-list-item--option'))).toBe(true);
+            expect(header.element.classList).not.toContain('igx-list-item--focusable');
+            expect(items.every(i => i.element.classList.contains('igx-list-item--focusable'))).toBe(true);
             expect(items.map(i => i.element.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
 
             fixture.componentInstance.selectedId = 3;
@@ -911,7 +911,7 @@ describe('List', () => {
                 expect(item.element.getAttribute('role')).toBe('listitem');
                 expect(item.element.hasAttribute('tabindex')).toBe(false);
                 expect(item.element.hasAttribute('aria-selected')).toBe(false);
-                expect(item.element.classList).not.toContain('igx-list-item--option');
+                expect(item.element.classList).not.toContain('igx-list-item--focusable');
             });
         });
 
@@ -1245,6 +1245,20 @@ describe('List', () => {
                 expect(row.getAttribute('aria-describedby')).toBe(header.element.id);
             }
             expect(header.element.getAttribute('aria-hidden')).toBe('true');
+            expect(rows().every(row => row.classList.contains('igx-list-item--focusable'))).toBe(true);
+            expect(header.element.classList).not.toContain('igx-list-item--focusable');
+        });
+
+        it('should show the focus ring on the cell of the row that the keyboard focuses', async () => {
+            const cell = (row: HTMLElement) => row.querySelector<HTMLElement>('[role="gridcell"]')!;
+            rows()[0].focus();
+
+            await userEvent.keyboard('{ArrowDown}');
+
+            expect(document.activeElement).toBe(rows()[1]);
+            expect(getComputedStyle(rows()[1]).outlineStyle).toBe('none');
+            expect(getComputedStyle(cell(rows()[1])).outlineStyle).toBe('solid');
+            expect(getComputedStyle(cell(rows()[0])).outlineStyle).toBe('none');
         });
 
         it('should mark only the selected rows when the grid is not multiselectable', () => {

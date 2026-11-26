@@ -50,6 +50,10 @@ $theme: digest-schema($light-list);
             &:focus-visible {
                 outline: var(--_focus-ring-width, #{rem(1px)}) solid var-get($theme, 'item-focus-outline-color');
                 outline-offset: calc(var(--_focus-ring-width, #{rem(1px)}) * -1);
+
+                @media (forced-colors: active) {
+                    outline-color: Highlight;
+                }
             }
         }
 
@@ -188,13 +192,17 @@ $theme: digest-schema($light-list);
             background: var-get($theme, 'header-background');
         }
 
-        @include m(option) {
+        @include m(focusable) {
             &:focus-visible {
                 outline: none;
 
                 @include e(content) {
                     outline: var(--_focus-ring-width, #{rem(1px)}) solid var-get($theme, 'item-focus-outline-color');
                     outline-offset: calc(var(--_focus-ring-width, #{rem(1px)}) * -1);
+
+                    @media (forced-colors: active) {
+                        outline-color: Highlight;
+                    }
                 }
             }
         }
