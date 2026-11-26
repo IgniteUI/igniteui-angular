@@ -14,6 +14,9 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButtonDirective`
     - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only through `igxLabel`, and clearing `igxLabel` removes only the value it set (#18009).
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxComboComponent`, `IgxSimpleComboComponent`
+    - The default "Add item" button no longer takes the background or outline of a focused list item when it is reached with the keyboard. It shows the focus state of a flat button instead (#17992).
+    - In `IgxSimpleComboComponent`, "Add item" no longer appears focused before it is reached with the keyboard, for example right after typing text that matches no item or when the list reopens (#17992).
 - `IgxPivotGridComponent`
     - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
 
@@ -113,9 +116,6 @@ All notable changes for each version of this project will be documented in this 
     - A slide activated through its `active` property now animates in the direction of its position, or in its own `direction` when one is set.
 - `IgxCircularProgressBarComponent`, `IgxLinearProgressBarComponent`
     - In Safari, the initial animation no longer overshoots the value and then crawls back to it. The initial fill and later value changes now use the same transition, so a value that changes while the bar is still animating goes straight to the new value in every browser. The Bootstrap circular bar now also animates its initial fill in RTL.
-- `IgxComboComponent`, `IgxSimpleComboComponent`
-    - The default "Add item" button no longer takes the background or outline of a focused list item when it is reached with the keyboard. It shows the focus state of a flat button instead.
-    - In `IgxSimpleComboComponent`, "Add item" no longer appears focused before it is reached with the keyboard, for example right after typing text that matches no item or when the list reopens.
 - `IgxCsvExporterService`
     - Exporting a grid with summaries no longer adds an extra `GRID_LEVEL_COL` column with the nesting level of each record. Only the grid's columns are exported, as with the Excel and PDF exporters.
 - `IgxDatePickerComponent`
