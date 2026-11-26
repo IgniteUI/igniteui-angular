@@ -1076,6 +1076,26 @@ describe('IgxGrid - Column Pinning #grid', () => {
             expect(grid.pinnedColumns.length).toBe(0);
             expect(column.pinned).toBe(false);
         });
+
+        it('should pin the column through the pinned input while it is hidden', () => {
+            // The columns with a width leave space, and the hidden column is the only one without a width
+            grid.width = '1400px';
+            const column = grid.getColumnByName('publisher');
+            column.hidden = true;
+            fix.detectChanges();
+            expect(column.width).toEqual('135px');
+            expect(column.calcPixelWidth).toEqual(135);
+
+            fix.componentInstance.publisherPinned = true;
+            fix.detectChanges();
+            column.hidden = false;
+            fix.detectChanges();
+            expect(grid.pinnedColumns.map(c => c.field)).toEqual(['publisher']);
+
+            fix.componentInstance.publisherPinned = false;
+            fix.detectChanges();
+            expect(grid.pinnedColumns.length).toBe(0);
+        });
     });
 
 });
