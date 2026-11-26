@@ -1734,37 +1734,61 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns[1].width).toBe('280px');
         });
 
-        it('should not throw on recalculateAutoSizes when a templated child of a partly visible group is out of view', async () => {
+        it('should defer auto-sizing a templated child of a partly visible group until it is scrolled into view', async () => {
             const fix = TestBed.createComponent(AutoSizeColumnGroupComponent);
             fix.detectChanges();
             await fix.whenStable();
             const grid = fix.componentInstance.instance;
+            const templated = grid.getColumnByName('templated');
+            const headerTitle = grid.headerCellList.find(h => h.column === templated).nativeElement.querySelector('.igx-grid-th__title');
+            const titleRange = document.createRange();
+            titleRange.selectNodeContents(headerTitle);
+            // Sized from its content, which is much wider than its header text.
+            const contentAutoSize = templated.autoSize;
+            expect(contentAutoSize).toBeGreaterThan(titleRange.getBoundingClientRect().width * 2);
 
-            // Scroll so `templated` is out of view while the rest of its group stays visible.
+            const autoSizeSpy = vi.spyOn(grid as any, 'autoSizeColumnsInView');
             const scroller = grid.headerContainer.getScroll();
-            scroller.scrollLeft = 170;
-            scroller.dispatchEvent(new Event('scroll'));
-            await frames(AUTOSIZE_FRAMES);
+            const scrollPastTemplated = async () => {
+                scroller.scrollLeft = templated.calcPixelWidth + 5;
+                scroller.dispatchEvent(new Event('scroll'));
+                await frames(AUTOSIZE_FRAMES);
+                fix.detectChanges();
+            };
+
+            // Scroll `templated` out of view, then reset the sizes. The reset changes the column widths,
+            // so scroll past `templated` again to keep the rest of its group in view.
+            await scrollPastTemplated();
+            grid.recalculateAutoSizes();
             fix.detectChanges();
+            await fix.whenStable();
+            await frames(AUTOSIZE_FRAMES);
+            await scrollPastTemplated();
 
             // The group header stays rendered, but no data row renders a cell for `templated`.
             const groupA = grid.columns.find(c => c.header === 'Group A');
             expect(grid.headerContainer.state.startIndex).toBe(0);
             expect(groupA.headerGroup).toBeTruthy();
-            expect(grid.dataRowList.first.cells.some(c => c.column.field === 'templated')).toBe(false);
+            expect(grid.dataRowList.first.cells.some(c => c.column === templated)).toBe(false);
 
-            const autoSizeSpy = vi.spyOn(grid as any, 'autoSizeColumnsInView');
-            grid.recalculateAutoSizes();
-            fix.detectChanges();
-            await fix.whenStable();
-            await frames(AUTOSIZE_FRAMES);
-
-            expect(autoSizeSpy).toHaveBeenCalled();
             for (const result of autoSizeSpy.mock.results) {
                 expect(result.type).toBe('return');
             }
             expect(grid.getColumnByName('flag1').autoSize).toBeGreaterThan(0);
             expect(grid.getColumnByName('flag2').autoSize).toBeGreaterThan(0);
+            // Not sized from its header alone while its cells are out of view.
+            expect(templated.autoSize).toBeUndefined();
+
+            scroller.scrollLeft = 0;
+            scroller.dispatchEvent(new Event('scroll'));
+            await frames(AUTOSIZE_FRAMES);
+            fix.detectChanges();
+
+            expect(autoSizeSpy).toHaveBeenCalled();
+            for (const result of autoSizeSpy.mock.results) {
+                expect(result.type).toBe('return');
+            }
+            expect(templated.autoSize).toBe(contentAutoSize);
         });
     });
 
@@ -1877,7 +1901,7 @@ export class ResizableColumnsComponent {
     template: `
     <igx-grid [data]="data" [primaryKey]="'id'" width="900px" height="400px">
         <igx-column-group header="Group A">
-            <igx-column field="templated" width="150px">
+            <igx-column field="templated" width="auto">
                 <ng-template igxCell let-value>
                     <span>{{ value }}</span>
                 </ng-template>
@@ -1904,7 +1928,7 @@ export class AutoSizeColumnGroupComponent {
 
     public makeData(count: number) {
         return Array.from({ length: count }, (_, i) => {
-            const row: Record<string, unknown> = { id: i + 1, templated: `Templated ${i + 1}`, flag1: i % 2 === 0, flag2: i % 3 === 0 };
+            const row: Record<string, unknown> = { id: i + 1, templated: `A templated value that is wider than its header ${i + 1}`, flag1: i % 2 === 0, flag2: i % 3 === 0 };
             this.groupBFields.forEach(f => row[f] = `${f} - ${i + 1}`);
             return row;
         });
