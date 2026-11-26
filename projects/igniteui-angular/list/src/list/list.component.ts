@@ -136,11 +136,13 @@ export const IgxListNavigation = {
     /** A static list, with list and list item semantics. */
     None: 'none',
     /** The ARIA listbox pattern. */
-    Listbox: 'listbox'
+    Listbox: 'listbox',
+    /** The ARIA layout grid pattern, one cell per row. */
+    Grid: 'grid'
 } as const;
 
 /**
- * The keyboard navigation and the ARIA pattern of a list: `none` or `listbox`.
+ * The keyboard navigation and the ARIA pattern of a list: `none`, `listbox` or `grid`.
  */
 export type IgxListNavigation = typeof IgxListNavigation[keyof typeof IgxListNavigation];
 
@@ -375,7 +377,8 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Sets/gets the keyboard navigation and the ARIA pattern of the list.
      *
      * @remarks
-     * Defaults to `none`, a static list. `listbox` makes it an ARIA listbox with keyboard navigation.
+     * Defaults to `none`, a static list. `listbox` makes it an ARIA listbox, and `grid` an ARIA grid with one
+     * cell per row, both with keyboard navigation.
      *
      * @example
      * ```html
@@ -579,6 +582,9 @@ export class IgxListComponent extends IgxListBaseDirective {
     /** The items registered through DI, without those of nested lists. */
     private readonly _registeredItems = signal<readonly IgxListItemComponent[]>([]);
 
+    /** Whether the host has `aria-multiselectable`, read after each render, as the app may bind it. */
+    private readonly _multiselectable = signal(false);
+
     /** Bumped when items move without registering. */
     private readonly _orderVersion = signal(0);
 
@@ -656,7 +662,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     private listenTypeAhead() {
         const host = this.element.nativeElement as HTMLElement;
         const onKeydown = (event: KeyboardEvent) => {
-            const option = this.isListbox && !event.defaultPrevented ? this.eventOption(event) : undefined;
+            const option = this.isNavigable && !event.defaultPrevented ? this.eventOption(event) : undefined;
             if (!option || !this._typeAhead.isSearchKey(event)) {
                 return;
             }
@@ -676,7 +682,7 @@ export class IgxListComponent extends IgxListBaseDirective {
 
         inject<IgxRovingFocusService<HTMLElement>>(IgxRovingFocusService).configure({
             keyBindings: {
-                skip: (_, event) => !this.isListbox || !this.eventOption(event),
+                skip: (_, event) => !this.isNavigable || !this.eventOption(event),
                 skipHandled: true,
                 // Held arrows keep moving.
                 bindingDefaults: { repeat: true }
@@ -691,11 +697,12 @@ export class IgxListComponent extends IgxListBaseDirective {
         keyBindings.setActivateHandler((event) => this.eventOption(event)?.element.click(), { repeat: false });
     }
 
-    /** Detects moved items, which do not register again. */
+    /** Detects moved items, which do not register again, and a change of `aria-multiselectable`. */
     private checkItemOrder() {
-        if (!this.isListbox) {
+        if (!this.isNavigable) {
             return;
         }
+        this._multiselectable.set((this.element.nativeElement as HTMLElement).hasAttribute('aria-multiselectable'));
         const ordered = [...this._registeredItems()].sort(byDocumentPosition);
         const current = this._ownItems();
         if (ordered.some((item, index) => item !== current[index])) {
@@ -709,7 +716,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * @returns The tab stop to focus, when options arrive while the list has the focus.
      */
     private syncHostAttributes(): IgxListItemComponent | null {
-        const listbox = this.isListbox;
+        const listbox = this.isNavigable;
         if (!listbox && !this._synced) {
             return null;
         }
@@ -744,7 +751,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this.isListbox ? 'listbox' : this._role;
+        return this.isListbox ? 'listbox' : this.isGrid ? 'grid' : this._role;
     }
 
     public set role(val: string) {
@@ -758,6 +765,22 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     public override get isListbox(): boolean {
         return this._navigation() === IgxListNavigation.Listbox;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override get isGrid(): boolean {
+        return this._navigation() === IgxListNavigation.Grid;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public override get isMultiselectable(): boolean {
+        return this._multiselectable();
     }
 
     /**

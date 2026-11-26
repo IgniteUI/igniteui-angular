@@ -42,7 +42,7 @@
 }
 
 @if (!isHeader) {
-    <div class="igx-list-item__content igx-list__item-content">
+    <div class="igx-list-item__content igx-list__item-content" [attr.role]="list.isGrid ? 'gridcell' : null">
         <ng-container *ngTemplateOutlet="itemThumbnails"></ng-container>
         <ng-container *ngTemplateOutlet="itemLines"></ng-container>
         <ng-container *ngTemplateOutlet="itemActions"></ng-container>

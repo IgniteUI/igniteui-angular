@@ -35,6 +35,21 @@ export class IgxListBaseDirective {
         return false;
     }
 
+    /** @hidden @internal Whether the list follows the ARIA layout grid pattern, one cell per row. */
+    public get isGrid(): boolean {
+        return false;
+    }
+
+    /** @hidden @internal Whether the list has keyboard navigation: a listbox or a grid. */
+    public get isNavigable(): boolean {
+        return this.isListbox || this.isGrid;
+    }
+
+    /** @hidden @internal Whether the app set `aria-multiselectable` on the list, with either value. */
+    public get isMultiselectable(): boolean {
+        return false;
+    }
+
     /**
      * @hidden
      * @internal

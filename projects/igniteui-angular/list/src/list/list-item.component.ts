@@ -301,7 +301,8 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role ? this._role : this.isHeader ? 'separator' : this.list.isListbox ? 'option' : 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator'
+            : this.list.isListbox ? 'option' : this.list.isGrid ? 'row' : 'listitem';
     }
 
     public set role(val: string) {
@@ -339,7 +340,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     /** Syncs the listbox attributes of the item from the list state. Does nothing outside a listbox. */
     private syncListboxAttributes() {
-        const listbox = this.list.isListbox;
+        const listbox = this.list.isNavigable;
         if (!listbox && !this._applied) {
             return;
         }
@@ -348,7 +349,9 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
         const isHeader = this._isHeader();
         const option = listbox && !isHeader;
         syncAttribute(this.element, 'tabindex', option ? (this.list.isTabStop(this) ? '0' : '-1') : null);
-        syncAttribute(this.element, 'aria-selected', option ? String(this.selected) : null);
+        // A grid that is not multiselectable marks only its selected rows.
+        const selected = this.list.isGrid && !this.list.isMultiselectable ? (this.selected ? 'true' : null) : String(this.selected);
+        syncAttribute(this.element, 'aria-selected', option ? selected : null);
         syncAttribute(this.element, 'aria-hidden', listbox && isHeader ? 'true' : null);
 
         if (listbox && isHeader) {
@@ -409,7 +412,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     /** @hidden @internal Applies the option style when the item is an option of a listbox. */
     @HostBinding('class.igx-list-item--option')
     public get optionStyle(): boolean {
-        return !this.isHeader && this.list.isListbox;
+        return !this.isHeader && this.list.isNavigable;
     }
 
     /**

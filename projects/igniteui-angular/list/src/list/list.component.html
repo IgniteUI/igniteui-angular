@@ -12,11 +12,13 @@
     </article>
 </ng-template>
 
-@if (!children || children.length === 0 || isLoading) {
+@if (!children || children.length === 0 || isLoading || (isNavigable && !hasOptions)) {
     <div class="igx-list__message-wrapper"
-        [attr.role]="isListbox && !hasOptions ? 'option' : null"
-        [attr.aria-hidden]="isListbox && hasOptions ? 'true' : null">
-        <ng-container *ngTemplateOutlet="template; context: context">
-        </ng-container>
+        [attr.role]="isNavigable && !hasOptions ? (isGrid ? 'row' : 'option') : null"
+        [attr.aria-hidden]="isNavigable && hasOptions ? 'true' : null">
+        <div class="igx-list__message-wrapper" [attr.role]="isGrid && !hasOptions ? 'gridcell' : null">
+            <ng-container *ngTemplateOutlet="template; context: context">
+            </ng-container>
+        </div>
     </div>
 }

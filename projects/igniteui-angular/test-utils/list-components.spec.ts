@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, signal } from '@angular/core';
 import { IgxForOfDirective } from '../directives/src/directives/for-of/for_of.directive';
 import { IgxIconComponent } from '../icon/src/icon/icon.component';
 import { IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective, IgxListActionDirective, IgxListComponent, IgxListItemComponent, IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective } from 'igniteui-angular/list';
@@ -148,6 +148,31 @@ export class EmptyListboxComponent extends BasicListComponent {
     public listbox = true;
     public isLoading = false;
     public items: string[] = [];
+}
+
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list [navigation]="navigation()" aria-label="Tasks" [attr.aria-multiselectable]="multiselectable()">
+            <igx-list-item [isHeader]="true">Today</igx-list-item>
+            @for (item of items(); track item.id) {
+                <igx-list-item [selected]="item.id === selectedId()">
+                    <span igxListLineTitle>{{ item.name }}</span>
+                </igx-list-item>
+            }
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective]
+})
+export class GridListComponent extends BasicListComponent {
+    public readonly navigation = signal<'none' | 'listbox' | 'grid'>('grid');
+    public readonly multiselectable = signal<string | null>(null);
+    public readonly selectedId = signal<number | null>(2);
+    public readonly items = signal([
+        { id: 1, name: 'Write' },
+        { id: 2, name: 'Review' },
+        { id: 3, name: 'Release' }
+    ]);
 }
 
 /** An item declared in the template of another component, which the list content query does not see. */

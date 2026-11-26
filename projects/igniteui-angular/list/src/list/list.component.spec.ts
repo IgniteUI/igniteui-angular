@@ -5,7 +5,7 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -1211,6 +1211,101 @@ describe('List', () => {
 
                 expect(pressKey(option, 'ArrowDown').defaultPrevented).toBe(true);
             });
+        });
+    });
+
+    describe('Grid', () => {
+        let fixture: ComponentFixture<GridListComponent>;
+        let list: IgxListComponent;
+
+        const pressKey = (target: HTMLElement, key: string): KeyboardEvent => {
+            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, composed: true });
+            target.dispatchEvent(event);
+            return event;
+        };
+        const host = () => list.element.nativeElement as HTMLElement;
+        const rows = () => list.items.map(item => item.element as HTMLElement);
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(GridListComponent);
+            list = fixture.componentInstance.list;
+            fixture.detectChanges();
+        });
+
+        it('should be a grid of rows with one cell each, and hidden headers that describe them', () => {
+            const [header] = list.headers;
+
+            expect(host().getAttribute('role')).toBe('grid');
+            expect(rows().map(row => row.getAttribute('role'))).toEqual(['row', 'row', 'row']);
+            for (const row of rows()) {
+                const cells = row.querySelectorAll('[role="gridcell"]');
+                expect(cells.length).toBe(1);
+                expect(cells[0].querySelector('.igx-list__item-line-title')).toBeTruthy();
+                expect(row.getAttribute('aria-describedby')).toBe(header.element.id);
+            }
+            expect(header.element.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('should mark only the selected rows when the grid is not multiselectable', () => {
+            expect(rows().map(row => row.getAttribute('aria-selected'))).toEqual([null, 'true', null]);
+        });
+
+        it('should mark every row when the grid sets aria-multiselectable', () => {
+            fixture.componentInstance.multiselectable.set('true');
+            fixture.detectChanges();
+            expect(rows().map(row => row.getAttribute('aria-selected'))).toEqual(['false', 'true', 'false']);
+
+            fixture.componentInstance.multiselectable.set('false');
+            fixture.componentInstance.selectedId.set(3);
+            fixture.detectChanges();
+            expect(rows().map(row => row.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
+        });
+
+        it('should keep one tab stop and move between the rows with the arrows, Home and End', () => {
+            expect(rows().map(row => row.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
+
+            rows()[1].focus();
+            pressKey(rows()[1], 'ArrowDown');
+            expect(document.activeElement).toBe(rows()[2]);
+            pressKey(rows()[2], 'Home');
+            expect(document.activeElement).toBe(rows()[0]);
+            pressKey(rows()[0], 'End');
+            expect(document.activeElement).toBe(rows()[2]);
+        });
+
+        it('should click a row with Enter and move to a row by typing', () => {
+            const clicked = vi.fn();
+            list.itemClicked.subscribe(clicked);
+            rows()[0].focus();
+
+            pressKey(rows()[0], 'Enter');
+            expect(clicked).toHaveBeenCalledTimes(1);
+
+            pressKey(rows()[0], 'r');
+            expect(document.activeElement).toBe(rows()[1]);
+        });
+
+        it('should be the tab stop with its empty message as a row with one cell', () => {
+            fixture.componentInstance.items.set([]);
+            fixture.detectChanges();
+            const message = host().querySelector('.igx-list__message-wrapper') as HTMLElement;
+
+            expect(host().getAttribute('tabindex')).toBe('0');
+            expect(message.getAttribute('role')).toBe('row');
+            expect(message.querySelectorAll('[role="gridcell"]').length).toBe(1);
+        });
+
+        it('should reset the list and its rows when the navigation is none', () => {
+            fixture.componentInstance.navigation.set('none');
+            fixture.detectChanges();
+
+            expect(host().getAttribute('role')).toBe('list');
+            for (const row of rows()) {
+                expect(row.getAttribute('role')).toBe('listitem');
+                expect(row.hasAttribute('tabindex')).toBe(false);
+                expect(row.hasAttribute('aria-selected')).toBe(false);
+                expect(row.querySelector('[role="gridcell"]')).toBeNull();
+            }
         });
     });
 
