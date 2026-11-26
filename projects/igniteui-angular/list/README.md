@@ -68,7 +68,7 @@ In order to access its elements, the list provides the following:
 - an array with headers only
 
 ### Listbox and keyboard navigation
-Set `selectable` on the list to make it an accessible [listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
+Set `navigation="listbox"` on the list to make it an accessible [listbox](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/):
 
 - The list gets `role="listbox"`.
 - Items get `role="option"` with `aria-selected`, from their `selected` state.
@@ -87,7 +87,7 @@ Set `selectable` on the list to make it an accessible [listbox](https://www.w3.o
 When an option is activated with Enter or Space, the `event` of `itemClicked` is the synthetic `MouseEvent` of that click.
 
 ```html
-<igx-list selectable aria-label="Employees">
+<igx-list navigation="listbox" aria-label="Employees">
     @for (item of items(); track item.id) {
         <igx-list-item [selected]="item.id === selectedId()" (click)="select(item)">
             <span igxListLineTitle>{{ item.name }}</span>
@@ -103,7 +103,7 @@ Recommendations:
 - **Avoid interactive controls inside items.** An option should not contain buttons, links or checkboxes that can be focused. To show the selection with a checkbox, make it `inert` and bind it to the item state, so clicking it selects the item:
 
 ```html
-<igx-list selectable aria-label="Employees" aria-multiselectable="true">
+<igx-list navigation="listbox" aria-label="Employees" aria-multiselectable="true">
     @for (employee of employees; track employee.id) {
         <igx-list-item [selected]="employee.selected" (click)="employee.selected = !employee.selected">
             <span igxListLineTitle>{{ employee.name }}</span>
@@ -115,9 +115,9 @@ Recommendations:
 
 If an item really needs a button or another control for a separate action, such as deleting the item, call `$event.stopPropagation()` in the control's `(click)` handler, so using it does not select the item.
 
-Lists that are not `selectable` are unchanged: they are not focusable, and controls inside their items work as before. This includes a list that only sets `role="listbox"`, like the grid's Excel-style filter list, which manages the focus itself with `aria-activedescendant`.
+Lists whose `navigation` is `none`, the default, are unchanged: they are not focusable, and controls inside their items work as before. This includes a list that only sets `role="listbox"`, like the grid's Excel-style filter list, which manages the focus itself with `aria-activedescendant`.
 
-The keyboard navigation only moves between the rendered items. A list virtualized with `igxFor` is not scrolled to the items that are not rendered, so do not set `selectable` on it. Handle the focus and the keys of a virtualized list in the app with `aria-activedescendant`, like the grid's Excel-style filter list does.
+The keyboard navigation only moves between the rendered items. A list virtualized with `igxFor` is not scrolled to the items that are not rendered, so do not set `navigation` on it. Handle the focus and the keys of a virtualized list in the app with `aria-activedescendant`, like the grid's Excel-style filter list does.
 
 ### Empty list template
 
@@ -172,7 +172,7 @@ public rightPanPerformed(args) {
 | allowRightPanning  | Determines whether the right panning of an item is allowed  |
 | emptyListTemplate | Sets a reference to a custom empty list template, otherwise default template is used |
 | dataLoadingTemplate | Sets a reference to a custom data loading template, otherwise default template is used |
-| selectable | Whether the user selects items in the list, default _false_. Makes the list an accessible [listbox](#listbox-and-keyboard-navigation) with keyboard navigation |
+| navigation | The keyboard navigation and the ARIA pattern of the list: _none_ (default) or _listbox_, which makes the list an accessible [listbox](#listbox-and-keyboard-navigation) with keyboard navigation |
 | panEndTriggeringThreshold | Number | Specifies the threshold after which a panning event is emitted. By default this property has a value of 0.5 which means 50% of list item's width. |
 
 ### Properties
@@ -183,7 +183,7 @@ public rightPanPerformed(args) {
 | items  | Array of items in the list  |
 | headers  | Array of headers in the list  |
 | innerStyle  | Currently used inner style depending on whether the list is empty or not  |
-| role  | **Deprecated**, use `selectable` instead. Gets/sets the role of the list, default _list_, _listbox_ when the list is `selectable`  |
+| role  | Gets/sets the role of the list, default _list_, _listbox_ when its `navigation` is _listbox_  |
 
 
 ### Outputs

@@ -778,7 +778,17 @@ describe('List', () => {
             fixture.detectChanges();
         });
 
-        it('should leave a list with role listbox that is not selectable unchanged', () => {
+        it('should have no navigation by default', () => {
+            const basic = TestBed.createComponent(ListWithSelectedItemComponent);
+            basic.detectChanges();
+            const basicList = basic.componentInstance.list;
+
+            expect(basicList.navigation).toBe('none');
+            expect(basicList.element.nativeElement.getAttribute('role')).toBe('list');
+            expect(basicList.items[0].element.getAttribute('role')).toBe('listitem');
+        });
+
+        it('should leave a list with role listbox and no listbox navigation unchanged', () => {
             const ownFixture = TestBed.createComponent(ListWithOwnAttributesComponent);
             ownFixture.detectChanges();
             const ownList = ownFixture.componentInstance.list;
@@ -885,7 +895,7 @@ describe('List', () => {
             expect(tabIndexes()).toEqual(['0', '-1']);
         });
 
-        it('should reset the list and its items when it is no longer selectable', () => {
+        it('should reset the list and its items when its navigation is no longer listbox', () => {
             const header = list.children.first.element;
             expect(header.id).toMatch(/^igx-list-header-\d+$/);
 
@@ -904,7 +914,7 @@ describe('List', () => {
             });
         });
 
-        it('should keep the roles set by the app on a list that is not selectable', () => {
+        it('should keep the roles set by the app on a list without listbox navigation', () => {
             fixture.componentInstance.listbox = false;
             list.role = 'menu';
             list.items[0].role = 'menuitem';

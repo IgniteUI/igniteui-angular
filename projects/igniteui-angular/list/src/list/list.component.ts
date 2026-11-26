@@ -130,6 +130,21 @@ export class IgxListLineSubTitleDirective {
 }
 
 /**
+ * The keyboard navigation and the ARIA pattern of a list.
+ */
+export const IgxListNavigation = {
+    /** A static list, with list and list item semantics. */
+    None: 'none',
+    /** The ARIA listbox pattern. */
+    Listbox: 'listbox'
+} as const;
+
+/**
+ * The keyboard navigation and the ARIA pattern of a list: `none` or `listbox`.
+ */
+export type IgxListNavigation = typeof IgxListNavigation[keyof typeof IgxListNavigation];
+
+/**
  * Displays a collection of data items in a templatable list format
  *
  * @igxModule IgxListModule
@@ -357,30 +372,31 @@ export class IgxListComponent extends IgxListBaseDirective {
     private readonly _isLoading = signal(false);
 
     /**
-     * Sets/gets whether the user selects items in the list.
+     * Sets/gets the keyboard navigation and the ARIA pattern of the list.
      *
      * @remarks
-     * Default value is `false`. When set, the list follows the ARIA listbox pattern: it has `role="listbox"`,
-     * its items become options that expose their `selected` state, Tab focuses the selected option,
-     * Arrow Up/Down and Home/End move between the options, and Enter/Space click the focused option.
+     * Default value is `none`, a static list with list and list item semantics. With `listbox`, the list
+     * follows the ARIA listbox pattern: it has `role="listbox"`, its items become options that expose their
+     * `selected` state, Tab focuses the selected option, Arrow Up/Down and Home/End move between the options,
+     * and Enter/Space click the focused option.
      *
      * @example
      * ```html
-     * <igx-list selectable aria-label="Employees">
+     * <igx-list navigation="listbox" aria-label="Employees">
      *     <igx-list-item [selected]="true">Kate</igx-list-item>
      * </igx-list>
      * ```
      */
-    @Input({ transform: booleanAttribute })
-    public get selectable(): boolean {
-        return this._selectable();
+    @Input()
+    public get navigation(): IgxListNavigation {
+        return this._navigation();
     }
 
-    public set selectable(value: boolean) {
-        this._selectable.set(value);
+    public set navigation(value: IgxListNavigation) {
+        this._navigation.set(value ?? IgxListNavigation.None);
     }
 
-    private readonly _selectable = signal(false);
+    private readonly _navigation = signal<IgxListNavigation>(IgxListNavigation.None);
 
     /**
      * Event emitted when a left pan gesture is executed on a list item.
@@ -673,9 +689,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * Gets/Sets the `role` attribute value.
      *
      * @remarks
-     * Defaults to `list`, and is `listbox` when the list is `selectable`.
-     *
-     * @deprecated in version 22.4.0. Use `selectable` to make the list a listbox instead.
+     * Defaults to `list`, and is `listbox` when the `navigation` of the list is `listbox`.
      *
      * @example
      * ```typescript
@@ -685,7 +699,7 @@ export class IgxListComponent extends IgxListBaseDirective {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._selectable() ? 'listbox' : this._role;
+        return this.isListbox ? 'listbox' : this._role;
     }
 
     public set role(val: string) {
@@ -695,10 +709,10 @@ export class IgxListComponent extends IgxListBaseDirective {
     /**
      * @hidden
      * @internal
-     * Whether the list follows the ARIA listbox pattern, which it does when it is `selectable`.
+     * Whether the list follows the ARIA listbox pattern, which it does when its `navigation` is `listbox`.
      */
     public override get isListbox(): boolean {
-        return this._selectable();
+        return this._navigation() === IgxListNavigation.Listbox;
     }
 
     /**

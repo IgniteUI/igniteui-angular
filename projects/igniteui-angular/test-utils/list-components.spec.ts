@@ -87,7 +87,7 @@ export class ListWithSelectedItemComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list [selectable]="listbox">
+        <igx-list [navigation]="listbox ? 'listbox' : 'none'">
             <igx-list-item [isHeader]="true">Header</igx-list-item>
             @for (item of items; track item.id) {
                 <igx-list-item [selected]="item.id === selectedId">
@@ -112,7 +112,7 @@ export class ListboxComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list selectable aria-multiselectable="true">
+        <igx-list navigation="listbox" aria-multiselectable="true">
             <igx-list-item [selected]="false">Ungrouped</igx-list-item>
             <igx-list-item [isHeader]="true">Employees</igx-list-item>
             <igx-list-item [selected]="true">Item 1</igx-list-item>
@@ -132,7 +132,7 @@ export class GroupedListboxComponent extends BasicListComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list [selectable]="listbox" aria-label="Results" [isLoading]="isLoading">
+        <igx-list [navigation]="listbox ? 'listbox' : 'none'" aria-label="Results" [isLoading]="isLoading">
             @for (item of items; track item) {
                 <igx-list-item>{{ item }}</igx-list-item>
             }
@@ -162,7 +162,7 @@ export class WrappedListItemComponent {
 @Component({
     template: `
     <div #wrapper>
-        <igx-list selectable>
+        <igx-list navigation="listbox">
             <igx-list-item>Item 1</igx-list-item>
             <test-wrapped-list-item>Item 2</test-wrapped-list-item>
             <test-wrapped-list-item>Item 3</test-wrapped-list-item>
@@ -181,7 +181,7 @@ export class ListboxWithWrappedItemsComponent extends BasicListComponent {
         <igx-list>
             <igx-list-item>Outer 1</igx-list-item>
             <igx-list-item>
-                <igx-list selectable class="inner">
+                <igx-list navigation="listbox" class="inner">
                     <igx-list-item>Inner 1</igx-list-item>
                     <igx-list-item>Inner 2</igx-list-item>
                 </igx-list>
@@ -360,7 +360,7 @@ export class ListWithPanningTemplatesComponent extends ListWithPanningComponent 
 
 @Component({
     template: `
-    <igx-list #forOfList [selectable]="listbox">
+    <igx-list #forOfList [navigation]="listbox ? 'listbox' : 'none'">
         <div [style.height]="'240px'" [style.overflow]="'hidden'" [style.position]="'relative'">
             <igx-list-item
                 [index]="i"
