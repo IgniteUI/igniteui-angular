@@ -408,6 +408,25 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.addRowSnackbar.isVisible).toBe(false);
         });
 
+        it('Should not clip the snackbar when the grid body is shorter than it', () => {
+            fixture.componentInstance.data = [];
+            fixture.componentInstance.paging = true;
+            grid.height = null;
+            fixture.detectChanges();
+
+            grid.beginAddRowById(null);
+            fixture.detectChanges();
+            grid.gridAPI.get_cell_by_index(0, 'ID').editValue = 'NEW';
+            endTransition();
+            grid.gridAPI.crudService.endEdit(true);
+            fixture.detectChanges();
+
+            const snackbar = grid.nativeElement.querySelector('igx-snackbar') as HTMLElement;
+            const snackbarRect = snackbar.getBoundingClientRect();
+            expect(snackbarRect.bottom).toBeLessThanOrEqual(grid.nativeElement.querySelector('.igx-grid__tbody').getBoundingClientRect().bottom);
+            expect(snackbar.contains(document.elementFromPoint(snackbarRect.left + snackbarRect.width / 2, snackbarRect.top + 1))).toBe(true);
+        });
+
         it('Should set templated banner text when adding row', () => {
             const rows = grid.rowList.toArray();
             rows[0].beginAddRow();
