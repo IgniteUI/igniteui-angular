@@ -22,9 +22,9 @@ Ignite UI for Angular is a comprehensive UI component library built on the Angul
   agents/                          ← custom agent definitions and handoff workflows
   skills/                          ← internal operational skills (build, testing, linting)
   permissions/policy.yaml          ← agent read/write boundaries
-.github/                           ← contributing docs, templates, workflows, Copilot instructions
+.github/                           ← contributing docs, templates, workflows, Copilot agents and path-specific instructions
   agents/                          ← Copilot pointer files that load the matching `.agents/agents/` definition
-  copilot-instructions.md          ← repository coding standards and AI-specific guidance
+  instructions/                    ← path-specific Copilot instructions (`*.instructions.md`)
 cypress/                           ← repository-level Cypress setup/tests
 projects/
   bundle-test/                     ← auxiliary bundle test project
@@ -50,13 +50,95 @@ skills/                            ← AI skill guides for components, grids, th
 src/app/                           ← demo application
   <component>/                     ← existing demo/sample areas reused for user-visible changes
 CHANGELOG.md                       ← release notes
+CLAUDE.md                          ← imports this file (`@AGENTS.md`) for Claude Code
 SECURITY.md                        ← supported-version policy for multi-branch bug fixes
 css-naming-convention.md           ← CSS naming rules
 ```
 
 ## Coding Conventions
 
-[`.github/copilot-instructions.md`](.github/copilot-instructions.md) for full Ignite UI Angular coding standards.
+Here is a link to the most recent Angular style guide https://angular.dev/style-guide
+
+Here are some links to the essentials for building Angular applications. Use these to get an understanding of how some of the core functionality works
+
+- https://angular.dev/essentials/components
+- https://angular.dev/essentials/signals
+- https://angular.dev/essentials/templates
+- https://angular.dev/essentials/dependency-injection
+
+### CSS naming convention
+
+See [`css-naming-convention.md`](css-naming-convention.md) for the component CSS class naming rules — CUBE CSS for new/actively-migrated components, BEM for the rest of the existing library.
+
+### TypeScript Best Practices
+
+- Use strict type checking
+- Prefer type inference when the type is obvious
+- Avoid the `any` type; use `unknown` when type is uncertain
+
+### Angular Best Practices
+
+- Use signals for state management
+- Implement lazy loading for feature routes
+- Use `NgOptimizedImage` for all static images.
+
+### Components
+
+- Keep component logic, styles, and templates in separate `.ts`, `.scss`, and `.html` files. Do NOT use inline templates or inline styles.
+- Author component styles in `<name>.component.scss`, but set `styleUrl` to the compiled `<name>.component.css` file (built by `scripts/sass.mjs`), as existing components do.
+- New components should have their own entry-point
+- Keep components small and focused on a single responsibility
+- Use `computed()` for derived state learn more about signals here https://angular.dev/guide/signals.
+- Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
+- Prefer Reactive forms instead of Template-driven ones
+
+### New Code
+
+Apply these conventions to new components, directives, and pipes:
+
+- Always use standalone components over `NgModules`
+- Do NOT set `standalone: true` inside the `@Component`, `@Directive` and `@Pipe` decorators
+- Use `input()` signal instead of decorators, learn more here https://angular.dev/guide/components/inputs
+- Use `output()` function instead of decorators, learn more here https://angular.dev/guide/components/outputs
+- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
+- Do NOT use `ngClass`, use `class` bindings instead, for context: https://angular.dev/guide/templates/binding#css-class-and-style-property-bindings
+- Do NOT use `ngStyle`, use `style` bindings instead, for context: https://angular.dev/guide/templates/binding#css-class-and-style-property-bindings
+
+### Existing Code
+
+- When modifying existing code, including adding members to existing classes or templates, respect established repository patterns and preserve backward compatibility.
+- Do NOT migrate existing decorators, inputs, host bindings, or template bindings unless explicitly requested.
+- Avoid unrelated refactoring and unintended public API changes.
+
+### State Management
+
+- Keep state transformations pure and predictable
+- Do NOT use `mutate` on signals, use `update` or `set` instead
+
+### Templates
+
+- Keep templates simple and avoid complex logic
+- Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
+- Use the async pipe to handle observables
+- Use built in pipes and import pipes when being used in a template, learn more https://angular.dev/guide/templates/pipes#
+
+### Services
+
+- Design services around a single responsibility
+- Use the `providedIn: 'root'` option for singleton services
+- Use the `inject()` function instead of constructor injection
+
+### DOM Events
+
+- Do NOT use `event.target` to identify the element where the event originated; use `event.composedPath()[0]` with an `instanceof` guard (`Element`, or a narrower type such as `HTMLInputElement`) instead, especially before calling `preventDefault()` or `stopPropagation()`. A listener outside a shadow root sees the shadow host as `event.target`.
+- Do NOT add an `event.composed ? ... : event.target` fallback; `composedPath()[0]` already equals `event.target` when no shadow boundary is crossed.
+- To find an ancestor in the listener's own DOM tree, call `closest()` on `event.target` after an `instanceof Element` guard. `closest()` and `contains()` check DOM containment and cannot cross shadow boundaries.
+- To check whether the event passed through an element that may be in another tree (for example, from a `document` listener), use the propagation path: `event.composedPath().includes(element)`, or `event.composedPath().some(node => node instanceof Element && node.matches(selector))` for a selector.
+- Resolve elements synchronously in the handler and pass the element, not the event, to throttled, debounced, or asynchronous code. After dispatch, `composedPath()` returns an empty array and `event.target` can be `null`.
+- Prefer handlers on the element itself over container listeners that cancel native behavior.
+- When a container listener must cancel a default action, cancel it only for the elements that need it (an allowlist), as `preventImplicitSubmission` in `projects/igniteui-angular/core/src/core/utils.ts` does. An exclusion list still cancels every native action it does not list, such as toggling a `<summary>`.
+- In specs, cover the shadow DOM case: host the native element in an open shadow root inside the element that has the listener, and dispatch the event on the native element with `bubbles: true, cancelable: true, composed: true` (event constructors default all three to `false`). See the `preventImplicitSubmission()` tests in `projects/igniteui-angular/core/src/core/utils.spec.ts` for the setup.
+- In tests that verify cancellation, assert `defaultPrevented`. When the expected result is `false`, also dispatch on an element in the same shadow root that the handler must cancel, to prove the listener received the event.
 
 ## Working Rules
 

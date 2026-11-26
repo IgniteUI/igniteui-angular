@@ -58,7 +58,7 @@ Follow the existing wording in [`igniteui-angular-components`](../../../skills/i
 2. The description includes `WHEN TO USE:` and `WHEN NOT TO USE:`.
 3. The body is under 500 lines, and every reference file is linked from `SKILL.md`.
 4. Public skills include the required MCP server check: `igniteui-cli` for component usage, `igniteui-theming` for theming.
-5. The skill is listed in the Skills table in [AGENTS.md](../../../AGENTS.md). Internal skills are also listed in [.agents/README.md](../../README.md) and [.github/copilot-instructions.md](../../../.github/copilot-instructions.md).
+5. The skill is listed in the Skills table in [AGENTS.md](../../../AGENTS.md). Internal skills are also listed in [.agents/README.md](../../README.md).
 
 ## Related Skills
 
