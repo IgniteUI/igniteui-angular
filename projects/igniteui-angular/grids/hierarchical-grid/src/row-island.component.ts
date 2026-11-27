@@ -21,7 +21,10 @@ import {
     IterableDiffer
 } from '@angular/core';
 import {
+    DropPosition,
     GridType,
+    ICellPosition,
+    IColumnVisibilityChangedEventArgs,
     IgxColumnComponent,
     IgxFilteringService,
     IgxGridPaginatorTemplateContext,
@@ -31,7 +34,17 @@ import {
     ISearchInfo
 } from 'igniteui-angular/grids/core';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
-import { IGridResourceStrings } from 'igniteui-angular/core';
+import {
+    ColumnPinningPosition,
+    ColumnType,
+    GridSelectionRange,
+    IFilteringExpressionsTree,
+    IFilteringOperation,
+    IGridResourceStrings,
+    ISortingExpression,
+    ISummaryExpression,
+    OverlaySettings
+} from 'igniteui-angular/core';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import type { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
@@ -266,6 +279,313 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     public override get dataView(): any[] {
         return [];
     }
+
+    //#region grid API that doesn't apply to the row island; use the child grids instead
+    /** @hidden */
+    public override get selectedRows(): any[] {
+        return super.selectedRows;
+    }
+
+    public override set selectedRows(rowIDs: any[]) {
+        super.selectedRows = rowIDs;
+    }
+
+    /** @hidden @internal */
+    @Output()
+    public override selectedRowsChange = new EventEmitter<any[]>();
+
+    /** @hidden */
+    public override get shouldGenerate(): boolean {
+        return super.shouldGenerate;
+    }
+
+    public override set shouldGenerate(value: boolean) {
+        super.shouldGenerate = value;
+    }
+
+    /** @hidden */
+    public override get defaultRowHeight(): number {
+        return super.defaultRowHeight;
+    }
+
+    /** @hidden */
+    public override expandRow(rowID: any) {
+        super.expandRow(rowID);
+    }
+
+    /** @hidden */
+    public override collapseRow(rowID: any) {
+        super.collapseRow(rowID);
+    }
+
+    /** @hidden */
+    public override toggleRow(rowID: any) {
+        super.toggleRow(rowID);
+    }
+
+    /** @hidden */
+    public override expandAll() {
+        super.expandAll();
+    }
+
+    /** @hidden */
+    public override collapseAll() {
+        super.collapseAll();
+    }
+
+    /** @hidden */
+    public override getRowData(rowSelector: any): any {
+        return super.getRowData(rowSelector);
+    }
+
+    /** @hidden */
+    public override sort(expression: ISortingExpression | Array<ISortingExpression>): void {
+        super.sort(expression);
+    }
+
+    /** @hidden */
+    public override beginAddRowById(rowID: any, asChild?: boolean): void {
+        super.beginAddRowById(rowID, asChild);
+    }
+
+    /** @hidden */
+    public override deleteRow(rowSelector: any): any {
+        return super.deleteRow(rowSelector);
+    }
+
+    /** @hidden */
+    public override updateCell(value: any, rowSelector: any, column: string): void {
+        super.updateCell(value, rowSelector, column);
+    }
+
+    /** @hidden */
+    public override updateRow(value: any, rowSelector: any): void {
+        super.updateRow(value, rowSelector);
+    }
+
+    /** @hidden */
+    public override endEdit(commit = true, event?: FocusEvent | MouseEvent | KeyboardEvent): boolean {
+        return super.endEdit(commit, event);
+    }
+
+    /** @hidden */
+    public override findNext(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return super.findNext(text, caseSensitive, exactMatch);
+    }
+
+    /** @hidden */
+    public override findPrev(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+        return super.findPrev(text, caseSensitive, exactMatch);
+    }
+
+    /** @hidden */
+    public override refreshSearch(updateActiveInfo?: boolean, endEdit = true): number {
+        return super.refreshSearch(updateActiveInfo, endEdit);
+    }
+
+    /** @hidden */
+    public override clearSearch() {
+        super.clearSearch();
+    }
+
+    /** @hidden */
+    public override selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
+        super.selectRows(rowIDs, clearCurrentSelection);
+    }
+
+    /** @hidden */
+    public override deselectRows(rowIDs: any[]) {
+        super.deselectRows(rowIDs);
+    }
+
+    /** @hidden */
+    public override selectAllRows(onlyFilterData = true) {
+        super.selectAllRows(onlyFilterData);
+    }
+
+    /** @hidden */
+    public override deselectAllRows(onlyFilterData = true) {
+        super.deselectAllRows(onlyFilterData);
+    }
+
+    /** @hidden */
+    public override selectRange(arg: GridSelectionRange | GridSelectionRange[] | null | undefined): void {
+        super.selectRange(arg);
+    }
+
+    /** @hidden */
+    public override clearCellSelection(): void {
+        super.clearCellSelection();
+    }
+
+    /** @hidden */
+    public override getSelectedRanges(): GridSelectionRange[] {
+        return super.getSelectedRanges();
+    }
+
+    /** @hidden */
+    public override getSelectedData(formatters = false, headers = false): any[] {
+        return super.getSelectedData(formatters, headers);
+    }
+
+    /** @hidden */
+    public override isRecordPinnedByIndex(rowIndex: number): boolean {
+        return super.isRecordPinnedByIndex(rowIndex);
+    }
+
+    /** @hidden */
+    public override openAdvancedFilteringDialog(overlaySettings?: OverlaySettings) {
+        super.openAdvancedFilteringDialog(overlaySettings);
+    }
+
+    /** @hidden */
+    public override closeAdvancedFilteringDialog(applyChanges: boolean) {
+        super.closeAdvancedFilteringDialog(applyChanges);
+    }
+
+    /** @hidden */
+    public override markForCheck() {
+        super.markForCheck();
+    }
+
+    /** @hidden */
+    public override recalculateAutoSizes() {
+        super.recalculateAutoSizes();
+    }
+
+    /** @hidden */
+    public override getColumnByVisibleIndex(index: number): IgxColumnComponent {
+        return super.getColumnByVisibleIndex(index);
+    }
+
+    /** @hidden */
+    public override getHeaderGroupWidth(column: IgxColumnComponent): string {
+        return super.getHeaderGroupWidth(column);
+    }
+
+    /** @hidden */
+    public override getPinnedStartWidth(takeHidden = false): number {
+        return super.getPinnedStartWidth(takeHidden);
+    }
+
+    /** @hidden */
+    public override getPinnedEndWidth(takeHidden = false): number {
+        return super.getPinnedEndWidth(takeHidden);
+    }
+
+    /** @hidden */
+    public override moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
+        super.moveColumn(column, target, pos);
+    }
+
+    /** @hidden */
+    public override pinColumn(columnName: string | IgxColumnComponent, index?: number, pinningPosition?: ColumnPinningPosition): boolean {
+        return super.pinColumn(columnName, index, pinningPosition);
+    }
+
+    /** @hidden */
+    public override unpinColumn(columnName: string | IgxColumnComponent, index?: number): boolean {
+        return super.unpinColumn(columnName, index);
+    }
+
+    /** @hidden */
+    public override enableSummaries(expressions: ISummaryExpression[]): void;
+    /** @hidden */
+    public override enableSummaries(expression: ISummaryExpression): void;
+    /** @hidden */
+    public override enableSummaries(fieldName: string, customSummary?: any): void;
+    public override enableSummaries(rest: string | ISummaryExpression | ISummaryExpression[], customSummary?: any): void {
+        super.enableSummaries(rest as any, customSummary);
+    }
+
+    /** @hidden */
+    public override disableSummaries(columns: Array<string | ISummaryExpression>): void;
+    /** @hidden */
+    public override disableSummaries(expression: ISummaryExpression): void;
+    /** @hidden */
+    public override disableSummaries(fieldName: string): void;
+    public override disableSummaries(rest: string | ISummaryExpression | Array<string | ISummaryExpression>): void {
+        super.disableSummaries(rest as any);
+    }
+
+    /** @hidden */
+    public override selectedColumns(): ColumnType[] {
+        return super.selectedColumns();
+    }
+
+    /** @hidden */
+    public override selectColumns(columns: string[] | ColumnType[], clearCurrentSelection?: boolean) {
+        super.selectColumns(columns, clearCurrentSelection);
+    }
+
+    /** @hidden */
+    public override deselectColumns(columns: string[] | ColumnType[]) {
+        super.deselectColumns(columns);
+    }
+
+    /** @hidden */
+    public override deselectAllColumns() {
+        super.deselectAllColumns();
+    }
+
+    /** @hidden */
+    public override selectAllColumns() {
+        super.selectAllColumns();
+    }
+
+    /** @hidden */
+    public override getSelectedColumnsData(formatters = false, headers = false): any[] {
+        return super.getSelectedColumnsData(formatters, headers);
+    }
+
+    /** @hidden */
+    public override navigateTo(rowIndex: number, visibleColIndex = -1, cb: (args: any) => void = null!) {
+        super.navigateTo(rowIndex, visibleColIndex, cb);
+    }
+
+    /** @hidden */
+    public override getNextCell(currRowIndex: number, curVisibleColIndex: number,
+        callback: (column: ColumnType) => boolean = null!): ICellPosition {
+        return super.getNextCell(currRowIndex, curVisibleColIndex, callback);
+    }
+
+    /** @hidden */
+    public override getPreviousCell(currRowIndex: number, curVisibleColIndex: number,
+        callback: (column: ColumnType) => boolean = null!): ICellPosition {
+        return super.getPreviousCell(currRowIndex, curVisibleColIndex, callback);
+    }
+
+    /** @hidden */
+    public override toggleColumnVisibility(args: IColumnVisibilityChangedEventArgs) {
+        super.toggleColumnVisibility(args);
+    }
+
+    /** @hidden */
+    public override getColumnByName(name: string): IgxColumnComponent {
+        return super.getColumnByName(name);
+    }
+
+    /** @hidden */
+    public override filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase?: boolean) {
+        super.filter(name, value, conditionOrExpressionTree, ignoreCase);
+    }
+
+    /** @hidden */
+    public override filterGlobal(value: any, condition: IFilteringOperation, ignoreCase?: boolean) {
+        super.filterGlobal(value, condition, ignoreCase);
+    }
+
+    /** @hidden */
+    public override clearFilter(name?: string) {
+        super.clearFilter(name);
+    }
+
+    /** @hidden */
+    public override clearSort(name?: string) {
+        super.clearSort(name);
+    }
+    //#endregion
 
     //#region inert, not-a-grid component
     /** @hidden @internal */

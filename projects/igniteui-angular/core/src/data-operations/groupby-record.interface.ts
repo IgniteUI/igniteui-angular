@@ -13,6 +13,7 @@ export interface IGroupByRecord {
     /* wcAlternateType: any[] */
     records: GroupedRecords;
     value: any;
+    /* blazorCSSuppress */
     groupParent: IGroupByRecord;
     groups?: IGroupByRecord[];
     height: number;

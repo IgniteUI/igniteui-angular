@@ -65,6 +65,7 @@ export interface CellType {
     grid: GridType;
     /** Optional; An object identifying the cell. It contains rowID, columnID, and rowIndex of the cell. */
     id?: { rowID: any; columnID: number; rowIndex: number };
+    /* blazorCSSuppress */
     /** Optional; The `cellID` is the unique key, used to identify the cell */
     cellID?: any;
     /**
@@ -72,17 +73,22 @@ export interface CellType {
      * Whether it's valid or invalid, and if it has errors
      */
     readonly validation?: IGridValidationState;
+    /* blazorCSSuppress */
     readonly?: boolean;
+    /* blazorCSSuppress */
     /** An optional title to display for the cell */
     title?: any;
     /** The CSS width of the cell as a string. */
     width: string;
+    /* blazorCSSuppress */
     /** The index of the column that the cell belongs to. It counts only the visible (not hidden) columns */
     visibleColumnIndex?: number;
     /** A method definition to update the value of the cell. */
     update: (value: any) => void;
+    /* blazorCSSuppress */
     /** A method definition to start or end the edit mode of the cell. It takes a boolean value as an argument*/
     setEditMode?(value: boolean): void;
+    /* blazorCSSuppress */
     /**
      * Optional;
      * A method definition to calculate the size of the cell to fit the content
@@ -216,6 +222,7 @@ export interface RowType {
      */
     children?: RowType[];
     /* blazorAlternateName: RowParent */
+    /* blazorCSSuppress */
     /**
      * Optional
      * Contains the parent row of the current row, if it has one.
@@ -234,6 +241,7 @@ export interface RowType {
      */
     treeRow?: ITreeGridRecord;
     addRowUI?: boolean;
+    /* blazorCSSuppress */
     /**
      * Optional
      * Indicates whether the row is currently focused.
@@ -1136,6 +1144,7 @@ export interface IgxGroupByRowTemplateContext {
 }
 
 export interface IgxGridTemplateContext {
+    /* blazorCSSuppress */
     $implicit: GridType
 }
 

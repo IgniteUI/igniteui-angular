@@ -21,6 +21,7 @@ import { OffsetMode, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings 
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 
 export interface ToggleViewEventArgs extends IBaseEventArgs {
+    /* blazorCSSuppress */
     /** Id of the toggle view */
     id: string;
     /* blazorSuppress */

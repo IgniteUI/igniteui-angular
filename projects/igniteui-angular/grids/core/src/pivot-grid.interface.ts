@@ -141,6 +141,7 @@ export interface IPivotDimension {
     dataType?: GridColumnDataType;
     /** The width of the dimension cells to be rendered.Can be pixel, % or "auto". */
     width?: string;
+    /* blazorCSSuppress */
     /** Level of the dimension. */
     level?: number;
     /** @hidden @internal */
@@ -200,6 +201,7 @@ export interface IPivotValue {
     formatter?: (value: any, rowData?: IPivotGridRecord, columnData?: IPivotGridColumn) => any;
 }
 
+/* blazorCSSuppress */
 /** Interface describing the Pivot column data.
 *  Contains information on the related column dimensions and their values.
 */
@@ -289,6 +291,7 @@ export interface DimensionValueType {
     children: Map<string, DimensionValueType> | null;
 }
 
+/* blazorCSSuppress */
 export interface IPivotGridRecord {
     /* blazorSuppress */
     /** Gets/Sets the group value associated with the related row dimension by its memberName. **/

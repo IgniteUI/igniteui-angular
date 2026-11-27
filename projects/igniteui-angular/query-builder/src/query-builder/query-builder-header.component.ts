@@ -42,6 +42,7 @@ export class IgxQueryBuilderHeaderComponent {
     @Input()
     public title!: string;
 
+    /* blazorCSSuppress */
     /**
      * Show/hide the legend.
      *

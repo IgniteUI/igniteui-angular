@@ -9,6 +9,7 @@ import { IgxExporterOptionsBase } from '../services/exporter-common/exporter-opt
 export interface IGridClipboardEvent {
     /** `data` can be of any type and refers to the data that is being copied/stored to the clipboard */
     data: any[];
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether an external event has intercepted the copying
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -32,6 +33,7 @@ export interface IGridCellEventArgs extends IBaseEventArgs {
 export interface IGridRowEventArgs extends IBaseEventArgs {
     /** Represents the grid row that triggered the event. */
     row: RowType;
+    /* blazorCSSuppress */
     /**
      * Represents the original event that occurred
      * Examples of such events include: selecting, clicking, double clicking, etc.
@@ -114,6 +116,7 @@ export interface IGridEditEventArgs extends CancelableEventArgs, IGridEditDoneEv
 }
 
 export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEditEventArgs {
+    /* blazorCSSuppress */
     /**
      * @deprecated
      */
@@ -126,6 +129,7 @@ export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEdi
      * @deprecated
      */
     oldValue: any;
+    /* blazorCSSuppress */
     /**
      * @deprecated
      */
@@ -135,6 +139,13 @@ export interface IRowDataCancelableEventArgs extends IRowDataEventArgs, IGridEdi
      */
     isAddRow?: boolean;
     owner: GridType;
+    // rowAdd and rowDelete never set the column; the edit events have their own
+    /* blazorCSSuppress */
+    /**
+     * Optional
+     * Represents the column information of the edited cell
+     */
+    column?: ColumnType;
 }
 
 /**
@@ -293,6 +304,7 @@ export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
      * (whether they should be ignored) as well as method for generating a file name
      */
     options: IgxExporterOptionsBase;
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -316,6 +328,7 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
      * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     source: ColumnType;
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -335,6 +348,7 @@ export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
      * The `ColumnType` contains the information (the grid it belongs to, css data, settings, etc.) of the column in its properties
      */
     target: ColumnType;
+    /* blazorCSSuppress */
     /**
      * `cancel` returns whether the event has been intercepted and stopped
      * If the value becomes "true", it returns/exits from the method, instantiating the interface
@@ -354,6 +368,7 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
     /* blazorCSSuppress */
     /** Represents the original event, that occurred. */
     event: Event;
+    /* blazorCSSuppress */
     /**
      * The event is cancelable
      * `cancel` returns whether the event has been intercepted and stopped
@@ -377,6 +392,7 @@ export interface ICellPosition {
 
 /** Emitted when a dragging operation is finished (when the row is dropped) */
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
+    /* blazorCSSuppress */
     /** Represents the drag directive or information associated with the drag operation */
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
@@ -384,6 +400,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
     /* blazorSuppress */
     /** Represents the HTML element itself */
     dragElement: HTMLElement;
+    /* blazorCSSuppress */
     /** `animation` returns whether the event is animated */
     animation: boolean;
 }
@@ -393,6 +410,7 @@ export interface IRowDragEndEventArgs extends IBaseEventArgs {
  * The event is cancelable
  */
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    /* blazorCSSuppress */
     /** Represents the drag directive or information associated with the drag operation */
     dragDirective: any;
     /** Represents the information of the row that is being dragged. */
@@ -421,6 +439,7 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
      * Represents the original event, that has triggered the expansion/collapse
      */
     event?: Event;
+    /* blazorCSSuppress */
     /**
      * The event is cancelable
      * `cancel` returns whether the event has been intercepted and stopped
@@ -502,6 +521,7 @@ export interface ISortingEventArgs extends IBaseEventArgs, CancelableEventArgs {
      * The expression contains information like file name, whether the letter case should be taken into account, etc.
      */
     sortingExpressions?: ISortingExpression | Array<ISortingExpression>;
+    /* blazorCSSuppress */
     /**
      * Optional
      * Represents the grouping expressions applied to the grid.
@@ -526,7 +546,7 @@ export interface IFilteringEventArgs extends IBaseEventArgs, CancelableEventArgs
 /** The event arguments after a column's visibility is changed. */
 export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
     /** Represents the column the event originated from */
-    column: any;
+    column: ColumnType;
     /**
      * The new hidden state that the column will have, if operation is successful.
      * Will be `true` when hiding and `false` when showing.

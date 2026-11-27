@@ -67,6 +67,7 @@ export interface IColumnInfo {
     dateFormat?: string;
     digitsInfo?: string;
 }
+/* blazorCSSuppress */
 /**
  * rowExporting event arguments
  * this.exporterService.rowExporting.subscribe((args: IRowExportingEventArgs) => {
@@ -90,6 +91,7 @@ export interface IRowExportingEventArgs extends IBaseEventArgs {
     cancel: boolean;
 }
 
+/* blazorCSSuppress */
 /**
  * columnExporting event arguments
  * ```typescript

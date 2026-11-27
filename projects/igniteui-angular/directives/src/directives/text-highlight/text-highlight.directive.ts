@@ -9,6 +9,7 @@ export interface IBaseSearchInfo {
     caseSensitive: boolean;
     exactMatch: boolean;
     matchCount: number;
+    /* blazorCSSuppress */
     content: string;
 }
 

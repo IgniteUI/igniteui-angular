@@ -147,11 +147,13 @@ export interface FieldType {
      */
     pipeArgs?: IFieldPipeArgs;
 
+    /* blazorCSSuppress */
     /**
      * Default time format for Date/Time fields.
      */
     defaultTimeFormat?: string;
 
+    /* blazorCSSuppress */
     /**
      * Default date/time format for Date/Time fields.
      */
@@ -416,6 +418,7 @@ export interface ITreeGridRecord {
     data: any;
     children?: ITreeGridRecord[];
     /* blazorAlternateName: RecordParent */
+    /* blazorCSSuppress */
     parent?: ITreeGridRecord;
     level?: number;
     isFilteredOutParent?: boolean;
