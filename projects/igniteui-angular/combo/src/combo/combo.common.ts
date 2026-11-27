@@ -88,7 +88,24 @@ export interface IgxComboBase {
     select(itemIDs: any[], clearSelection?: boolean, event?: Event): void;
     deselect(...args: [] | [itemIDs: any[], event?: Event]): void;
     setActiveDescendant(): void;
+    isToggleRecord(record: any): boolean;
+    toggleRecordState(record: any): ComboToggleState;
+    toggleRecord(record: any, event?: Event): void;
 }
+
+/**
+ * @hidden @internal
+ * How many of the items of a toggle option (the "Select all" option or a group header
+ * option) are selected.
+ */
+export type ComboToggleState = 'all' | 'some' | 'none';
+
+/**
+ * @hidden @internal
+ * The record of the "Select all" option. It is the first row of the list and is not
+ * part of the data or of the selection.
+ */
+export const COMBO_SELECT_ALL_RECORD: Readonly<{ isSelectAll: true }> = /*@__PURE__*/Object.freeze({ isSelectAll: true });
 
 let NEXT_ID = 0;
 
@@ -888,7 +905,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
     public set virtualizationState(state: IForOfState) {
         this._virtualizationState = { ...state };
         this._requestedStartIndex = state.startIndex ?? 0;
-        void this.virtualScrollContainer?.scrollToIndex(state.startIndex ?? 0);
+        void this.virtualScrollContainer?.scrollToIndex(this.rowOf(state.startIndex ?? 0));
     }
 
     /**
@@ -933,7 +950,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         const lastStart = Math.max(0, count - (this._virtualizationState.chunkSize ?? 0));
         if ((this._virtualizationState.startIndex ?? 0) > lastStart) {
             this._virtualizationState = { ...this._virtualizationState, startIndex: lastStart };
-            void this.virtualScrollContainer?.scrollToIndex(lastStart);
+            void this.virtualScrollContainer?.scrollToIndex(this.rowOf(lastStart));
         }
     }
 
@@ -1130,17 +1147,79 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
 
     /**
      * @hidden @internal
+     * The rows that the list shows before the first record, such as the "Select all" option.
+     */
+    protected get leadingRowCount(): number {
+        return 0;
+    }
+
+    /** @hidden @internal The row that shows the record at `index`. The first record scrolls to the top. */
+    protected rowOf(index: number): number {
+        return index > 0 ? index + this.leadingRowCount : 0;
+    }
+
+    /**
+     * @hidden @internal
+     * Whether the record is a toggle option: the "Select all" option or a group header option.
+     * A combo without these options has none.
+     *
+     * @param _record The record of a row in the list.
+     * @returns `true` for a toggle option.
+     * @example
+     * ```typescript
+     * const isToggle = this.combo.isToggleRecord(item.value);
+     * ```
+     */
+    public isToggleRecord(_record: any): boolean {
+        return false;
+    }
+
+    /**
+     * @hidden @internal
+     * Whether all, some or none of the items of a toggle option are selected.
+     *
+     * @param _record The record of the "Select all" option or of a group header option.
+     * @returns `'all'`, `'some'` or `'none'`.
+     * @example
+     * ```typescript
+     * const checked = this.combo.toggleRecordState(item.value) === 'all';
+     * ```
+     */
+    public toggleRecordState(_record: any): ComboToggleState {
+        return 'none';
+    }
+
+    /**
+     * @hidden @internal
+     * Selects the items of a toggle option, or deselects them when all are selected.
+     *
+     * @param _record The record of the "Select all" option or of a group header option.
+     * @param _event The user interaction that toggles the option, if any.
+     * @returns Nothing.
+     * @example
+     * ```typescript
+     * this.combo.toggleRecord(item.value, event);
+     * ```
+     */
+    public toggleRecord(_record: any, _event?: Event): void { }
+
+    /**
+     * @hidden @internal
      * Reports the wanted window as `virtualizationState` and asks for the data behind it.
      */
     public handleVirtualStateChange(state: VirtualScrollState): void {
-        const chunkSize = state.endIndex - state.startIndex + 1;
-        if (this._virtualizationState.startIndex === state.startIndex &&
+        // The list reports rows. The rows before the data, such as the "Select all"
+        // option, are not records, so the state names the records the rows show.
+        const leadingRows = this.leadingRowCount;
+        const startIndex = Math.max(0, state.startIndex - leadingRows);
+        const endIndex = state.endIndex - leadingRows;
+        const chunkSize = endIndex - startIndex + 1;
+        if (this._virtualizationState.startIndex === startIndex &&
             this._virtualizationState.chunkSize === chunkSize) {
             return;
         }
 
         const initial = !this._virtualizationState.chunkSize;
-        const startIndex = state.startIndex;
         this._virtualizationState = { startIndex, chunkSize };
         this._requestedStartIndex = startIndex;
 
@@ -1148,7 +1227,7 @@ export abstract class IgxComboBaseDirective implements IgxComboBase, AfterViewCh
         // and then there is nothing to fetch. Later windows are always reported, so a reply
         // to a range the list has left is superseded rather than left in flight.
         if (initial && startIndex >= this._loadedStartIndex &&
-            state.endIndex <= this._loadedStartIndex + this._data.length - 1) {
+            endIndex <= this._loadedStartIndex + this._data.length - 1) {
             return;
         }
 

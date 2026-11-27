@@ -29,7 +29,7 @@ import { IgxButtonDirective } from 'igniteui-angular/directives';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboDataWindowPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboRecordWindowPipe } from './combo.pipes';
-import { IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
+import { COMBO_SELECT_ALL_RECORD, ComboToggleState, IGX_COMBO_COMPONENT, IgxComboBaseDirective } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { IgxInputGroupComponent, IgxInputDirective, IgxReadOnlyInputDirective, IgxSuffixDirective } from 'igniteui-angular/input-group';
@@ -76,6 +76,22 @@ export interface IComboItemAdditionEvent extends IBaseEventArgs, CancelableEvent
  *
  * @hidden
  */
+/** How many of the items of a toggle option there are, and how many are selected. */
+interface ToggleCount {
+    total: number;
+    selected: number;
+}
+
+/** The counts of the toggle options, and what they were counted from. */
+interface ToggleCounts {
+    items: any[];
+    selection: Set<any> | undefined;
+    valueKey: string;
+    groupKey: string;
+    all: ToggleCount;
+    groups: Map<string, ToggleCount>;
+}
+
 const diffInSets = (set1: Set<any>, set2: Set<any>): any[] => {
     const results: any[] = [];
     set1.forEach(entry => {
@@ -167,6 +183,57 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     public searchPlaceholder!: string;
 
     /**
+     * Shows a "Select all" option as the first row of the list. It selects the items that
+     * the list shows, or deselects them when all of them are selected, with one
+     * `selectionChanging` event. Its checkbox is indeterminate while only some of them are
+     * selected. The list shows it only while it shows items. With `totalItemCount`, it acts
+     * on the loaded items.
+     *
+     * @param value `true` to show the "Select all" option. Default is `false`.
+     * @returns Whether the list shows the "Select all" option when it shows items.
+     * @example
+     * ```html
+     * <igx-combo [showSelectAll]="true"></igx-combo>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public get showSelectAll(): boolean {
+        return this._showSelectAll;
+    }
+    public set showSelectAll(value: boolean) {
+        if (this._showSelectAll !== value) {
+            this._showSelectAll = value;
+            // The rows move, so the active row would name another option.
+            this.clearActiveOption();
+        }
+    }
+
+    /**
+     * Makes each group header an option that selects the items of its group that the list
+     * shows, or deselects them when all of them are selected, with one `selectionChanging`
+     * event. Its checkbox is indeterminate while only some of them are selected. The items
+     * are indented under their header. Needs `groupKey`. A group is not part of the selection.
+     *
+     * @param value `true` to make the group headers options. Default is `false`.
+     * @returns Whether the group headers are options when `groupKey` is set.
+     * @example
+     * ```html
+     * <igx-combo groupKey="region" [groupSelection]="true"></igx-combo>
+     * ```
+     */
+    @Input({ transform: booleanAttribute })
+    public get groupSelection(): boolean {
+        return this._groupSelection;
+    }
+    public set groupSelection(value: boolean) {
+        if (this._groupSelection !== value) {
+            this._groupSelection = value;
+            // A header that stops being an option cannot stay active.
+            this.clearActiveOption();
+        }
+    }
+
+    /**
      * Emitted when item selection is changing, before the selection completes
      *
      * ```html
@@ -203,6 +270,12 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
     protected _prevInputValue = '';
 
     private _displayText!: string;
+    private _showSelectAll = false;
+    private _groupSelection = false;
+    private _toggleCounts: ToggleCounts | null = null;
+    /** Keeps the records of a remote page inside the total, as the list does. */
+    private readonly _recordWindow = new IgxComboRecordWindowPipe();
+    private _shownRecords: { source: any[]; total: number; start: number; records: any[] } | null = null;
 
     constructor() {
         super();
@@ -387,6 +460,179 @@ export class IgxComboComponent extends IgxComboBaseDirective implements AfterVie
             this.select([itemID], false, event);
         } else {
             this.deselect([itemID], event);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * The record of the "Select all" option. The template compares rows with it, because a
+     * data record can have a field of the same name.
+     */
+    protected readonly selectAllRecord = COMBO_SELECT_ALL_RECORD;
+
+    /** @hidden @internal Whether the group headers are options. See `groupSelection`. */
+    protected get selectableGroups(): boolean {
+        const groupKey: unknown = this.groupKey;
+        return this.groupSelection && (!!groupKey || groupKey === 0);
+    }
+
+    /**
+     * @hidden @internal
+     * Whether the list starts with the "Select all" option. With remote records, the row stays
+     * while a page loads, so emptied data does not move the records to other rows.
+     */
+    protected get hasSelectAllRow(): boolean {
+        return this.showSelectAll && (this.totalItemCount > 0 || !!this.filteredData?.length);
+    }
+
+    /**
+     * @hidden @internal
+     * Whether the record is the "Select all" option, or a group header option while
+     * `groupSelection` applies.
+     *
+     * @param record The record of a row in the list.
+     * @returns `true` for a toggle option.
+     * @example
+     * ```typescript
+     * const isToggle = this.combo.isToggleRecord(item.value);
+     * ```
+     */
+    public override isToggleRecord(record: any): boolean {
+        return record === COMBO_SELECT_ALL_RECORD || (!!record?.isHeader && this.selectableGroups);
+    }
+
+    /**
+     * @hidden @internal
+     * Whether all, some or none of the shown items of a toggle option are selected.
+     *
+     * @param record The record of the "Select all" option or of a group header option.
+     * @returns `'all'`, `'some'` or `'none'`.
+     * @example
+     * ```typescript
+     * const checked = this.combo.toggleRecordState(item.value) === 'all';
+     * ```
+     */
+    public override toggleRecordState(record: any): ComboToggleState {
+        const counts = this.getToggleCounts();
+        const count = record === COMBO_SELECT_ALL_RECORD
+            ? counts.all
+            : counts.groups.get(this.groupOf(record));
+
+        if (!count?.selected) {
+            return 'none';
+        }
+        return count.selected === count.total ? 'all' : 'some';
+    }
+
+    /**
+     * @hidden @internal
+     * Selects the shown items of a toggle option, or deselects them when all of them are
+     * selected, with one `selectionChanging` event.
+     *
+     * @param record The record of the "Select all" option or of a group header option.
+     * @param event The user interaction that toggles the option, if any.
+     * @returns Nothing.
+     * @example
+     * ```typescript
+     * this.combo.toggleRecord(item.value, event);
+     * ```
+     */
+    public override toggleRecord(record: any, event?: Event): void {
+        const shown = this.shownRecords;
+        const items = record === COMBO_SELECT_ALL_RECORD
+            ? shown
+            : shown.filter(item => this.groupOf(item) === this.groupOf(record));
+
+        // An item without a key cannot be selected, as with a click on its row.
+        const keys = this.selectionService.get_all_ids(items, this.valueKey).filter((key: any) => key !== undefined);
+        if (!keys.length) {
+            return;
+        }
+
+        if (this.toggleRecordState(record) === 'all') {
+            this.deselect(keys, event);
+        } else {
+            this.select(keys, false, event);
+        }
+    }
+
+    /** @hidden @internal One row before the records for the "Select all" option. */
+    protected override get leadingRowCount(): number {
+        return this.hasSelectAllRow ? 1 : 0;
+    }
+
+    /**
+     * The records the list shows, before grouping. A remote page can hold records past
+     * `totalItemCount`, which the list leaves out, and `filteredData` can still hold them:
+     * it returns `data` while filtering is disabled.
+     */
+    private get shownRecords(): any[] {
+        const source = this.filteredData ?? [];
+        const total = this.totalItemCount;
+        const start = this.virtualStartIndex;
+        let shown = this._shownRecords;
+
+        // A trimmed page is a new array, so it is kept while its inputs are, for the counts.
+        if (!shown || shown.source !== source || shown.total !== total || shown.start !== start) {
+            shown = { source, total, start, records: this._recordWindow.transform(source, total, start) };
+            this._shownRecords = shown;
+        }
+        return shown.records;
+    }
+
+    /** The group of an item or a group header, as the grouping names it. */
+    private groupOf(record: any): string {
+        return String(record?.[this.groupKey] ?? 'Other');
+    }
+
+    /**
+     * How many of the shown items are selected, in all and in each group. The rows read it
+     * on each check, so it is counted again only for new shown items or a new selection.
+     */
+    private getToggleCounts(): ToggleCounts {
+        const items = this.shownRecords;
+        const selection = this.selectionService.get(this.selectionKey);
+        const cached = this._toggleCounts;
+
+        if (cached && cached.items === items && cached.selection === selection &&
+            cached.valueKey === this.valueKey && cached.groupKey === this.groupKey) {
+            return cached;
+        }
+
+        // A valueKey of 0 still names a field, as in the selection service.
+        const valueKey = this.valueKey;
+        const hasValueKey = valueKey !== null && valueKey !== undefined;
+        const all: ToggleCount = { total: 0, selected: 0 };
+        const groups = new Map<string, ToggleCount>();
+        for (const item of items) {
+            const key = hasValueKey ? item?.[valueKey] : item;
+            if (key === undefined) {
+                // An item without a key cannot be selected, so it does not count.
+                continue;
+            }
+
+            const selected = !!selection?.has(key);
+            const group = this.groupOf(item);
+            const count = groups.get(group) ?? { total: 0, selected: 0 };
+
+            count.total++;
+            all.total++;
+            if (selected) {
+                count.selected++;
+                all.selected++;
+            }
+            groups.set(group, count);
+        }
+
+        this._toggleCounts = { items, selection, valueKey: this.valueKey, groupKey: this.groupKey, all, groups };
+        return this._toggleCounts;
+    }
+
+    /** Leaves the open list without an active option. */
+    private clearActiveOption(): void {
+        if (this.dropdown && !this.dropdown.collapsed && this.dropdown.focusedItem) {
+            this.dropdown.focusedItem = null;
+            this.setActiveDescendant();
         }
     }
 

@@ -41,8 +41,25 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     @HostBinding('attr.aria-label')
     @Input()
     public override get ariaLabel(): string {
+        if (this.comboAPI.is_toggle(this.value)) {
+            // The "Select all" option and a group header option are named by their text.
+            return null!;
+        }
         const valueKey = this.comboAPI.valueKey;
         return (valueKey !== null && this.value != null) ? this.value[valueKey] : this.value;
+    }
+
+    /**
+     * @hidden @internal
+     * The checked state of a toggle option, as the "Select all" option and a group header
+     * option check all, some or none of their items.
+     */
+    @HostBinding('attr.aria-checked')
+    protected get ariaChecked(): 'true' | 'false' | 'mixed' | null {
+        if (!this._isToggle) {
+            return null;
+        }
+        return this._selected ? 'true' : this._indeterminate ? 'mixed' : 'false';
     }
 
     /** @hidden @internal */
@@ -70,8 +87,24 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
      */
     public override ngDoCheck(): void {
         // Sync state from services once per CD cycle so template bindings return stable field values
-        this._selected = !this.isHeader && this.value != null && this.comboAPI.is_item_selected(this.itemID);
+        this._isToggle = !this.isHeader && this.comboAPI.is_toggle(this.value);
+        if (this._isToggle) {
+            const state = this.comboAPI.toggle_state(this.value);
+            this._selected = state === 'all';
+            this._indeterminate = state === 'some';
+        } else {
+            this._selected = !this.isHeader && this.value != null && this.comboAPI.is_item_selected(this.itemID);
+            this._indeterminate = false;
+        }
         this._disableTransitions = this.comboAPI.disableTransitions;
+    }
+
+    /**
+     * @hidden @internal
+     * Whether only some of the items of a toggle option are selected.
+     */
+    protected get indeterminate(): boolean {
+        return this._indeterminate;
     }
 
     /**
@@ -97,6 +130,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
     }
 
     private _disableTransitions = false;
+    private _isToggle = false;
+    private _indeterminate = false;
 
     public override clicked(event: MouseEvent): void {
         this.comboAPI.disableTransitions = false;
@@ -104,7 +139,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent {
             return;
         }
         this.dropDown.navigateItem(this.index);
-        this.comboAPI.set_selected_item(this.itemID, event);
+        this.comboAPI.select_record(this.value, this.itemID, event);
     }
 
     /**

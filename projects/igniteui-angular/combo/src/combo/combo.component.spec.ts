@@ -18,12 +18,12 @@ import { ComboResourceStringsEN, changei18n } from 'igniteui-angular/core';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IComboFilteringOptions, IGX_COMBO_COMPONENT } from './combo.common';
+import { COMBO_SELECT_ALL_RECORD, IComboFilteringOptions, IGX_COMBO_COMPONENT } from './combo.common';
 import {
     IComboItemAdditionEvent, IComboSearchInputEventArgs, IComboSelectionChangedEventArgs, IComboSelectionChangingEventArgs, IgxComboComponent
 } from './combo.component';
 import { IgxComboFooterDirective, IgxComboHeaderDirective, IgxComboItemDirective } from './combo.directives';
-import { IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
+import { IgxComboDataWindowPipe, IgxComboFilteringPipe, comboIgnoreDiacriticsFilter } from './combo.pipes';
 import { IgxDropDownItemBaseDirective } from '../../../drop-down/src/drop-down/drop-down-item.base';
 import { UIInteractions, wait } from 'igniteui-angular/test-utils/ui-interactions.spec';
 import { RemoteDataService } from '../../../test-utils/remote-data.service.spec';
@@ -540,6 +540,22 @@ describe('igxCombo', () => {
                     .toEqual([{ name: 'Résumé' }]);
                 expect(comboIgnoreDiacriticsFilter(accented, 'Resume', { caseSensitive: false, filteringKey: 'name' }))
                     .toEqual(accented);
+            });
+
+            it('should put the "Select all" record first and move the remote records one row down', () => {
+                const pipe = new IgxComboDataWindowPipe();
+                const items = [{ id: 20 }, { id: 21 }];
+
+                expect(pipe.transform(items, 0, 0)).toEqual({ items, startIndex: 0, totalCount: 2 });
+                expect(pipe.transform(items, 0, 0, true))
+                    .toEqual({ items: [COMBO_SELECT_ALL_RECORD, ...items], startIndex: 0, totalCount: 3 });
+
+                // A remote page at the start holds the option; a later page sits one row further down.
+                expect(pipe.transform(items, 100, 0, true))
+                    .toEqual({ items: [COMBO_SELECT_ALL_RECORD, ...items], startIndex: 0, totalCount: 101 });
+                expect(pipe.transform(items, 100, 20, true)).toEqual({ items, startIndex: 21, totalCount: 101 });
+                expect(pipe.transform(items, 100, 20)).toEqual({ items, startIndex: 20, totalCount: 100 });
+                expect(pipe.transform([], 100, 20, true)).toEqual({ items: [], startIndex: 0, totalCount: 101 });
             });
         });
 
@@ -1786,6 +1802,35 @@ describe('igxCombo', () => {
 
                 expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
             });
+            it('should report records, not rows, in the virtualization state with "Select all"', async () => {
+                combo.showSelectAll = true;
+                combo.toggle();
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                fixture.detectChanges();
+
+                const comboItems = () => fixture.debugElement.queryAll(By.directive(IgxComboItemComponent))
+                    .map(item => item.componentInstance as IgxComboItemComponent);
+                expect(comboItems()[0].value).toBe(COMBO_SELECT_ALL_RECORD);
+                expect(comboItems()[0].index).toEqual(0);
+                expect(comboItems()[1].value.product).toEqual('Product 0');
+                expect(comboItems()[1].index).toEqual(1);
+                expect(combo.virtualScrollContainer.dataWindow()!.totalCount).toEqual(combo.totalItemCount + 1);
+
+                // The row of record 42 is row 43.
+                await combo.virtualScrollContainer.scrollToIndex(43);
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                fixture.detectChanges();
+
+                const { startIndex, chunkSize } = combo.virtualizationState;
+                expect(42).toBeGreaterThanOrEqual(startIndex);
+                expect(42).toBeLessThanOrEqual(startIndex + chunkSize - 1);
+                expect(combo.data[0].id).toEqual(startIndex);
+                const row = comboItems().find(item => item.value?.id === 42);
+                expect(row.index).toEqual(43);
+                expect(comboItems().some(item => item.value === COMBO_SELECT_ALL_RECORD)).toBe(false);
+            });
         });
         describe('Binding to remote data with request cancellation: ', () => {
             let host: IgxComboDeferredRemoteComponent;
@@ -1860,6 +1905,28 @@ describe('igxCombo', () => {
                 expect(combo.virtualizationState.startIndex).toEqual(requestB.state.startIndex);
                 expect(combo.data[0].id).toEqual(windowB.start);
                 expect(rowText()).toEqual(renderedAfterB);
+            });
+
+            it('should not ask again for a page when the host clears the data while it loads with "Select all"', async () => {
+                host.clearWhileLoading = true;
+                combo.showSelectAll = true;
+                combo.toggle();
+                await settle();
+
+                await combo.virtualScrollContainer.scrollToIndex(400);
+                await settle();
+                expect(combo.data).toEqual([]);
+                const requestCount = host.service.requests.length;
+                const request = host.service.requests[requestCount - 1];
+
+                host.service.complete(request);
+                await settle();
+
+                // The records keep their rows while the data is empty, so the page answers the
+                // window and the list wants nothing more.
+                expect(host.service.requests.length).toBe(requestCount);
+                expect(combo.virtualizationState.startIndex).toEqual(request.state.startIndex);
+                expect(combo.data[0].id).toEqual(request.state.startIndex);
             });
 
             it('should leave the loaded page where it is until a response arrives', async () => {
@@ -2275,6 +2342,39 @@ describe('igxCombo', () => {
                     expect(rowAt(row)).toBeLessThan(100);
                     expect(row.textContent.trim()).toBe(`Product ${rowAt(row)}`);
                 });
+            });
+
+            it('should act only on the records a trimmed page shows from the toggle options', async () => {
+                host.groupKey.set('category');
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                // The page holds five records, but the collection holds only three.
+                host.data.set(host.page(0, 5));
+                combo.totalItemCount = 3;
+                await settle();
+
+                const toggles = '.igx-combo__select-all, .igx-combo__group-option';
+                const selectAll = () => rows().find(row => row.matches('.igx-combo__select-all'));
+                const firstGroup = () => rows().find(row => row.matches('.igx-combo__group-option'));
+                const click = async (row: HTMLElement) => {
+                    row.click();
+                    await settle();
+                };
+                expect(rows().filter(row => !row.matches(toggles)).map(row => row.textContent.trim()))
+                    .toEqual(['Product 0', 'Product 2', 'Product 1']);
+                // The same trimmed records on each read, so the toggle rows share their counts.
+                expect(combo['shownRecords']).toBe(combo['shownRecords']);
+
+                await click(selectAll());
+                expect(combo.value).toEqual([0, 1, 2]);
+                expect(selectAll().getAttribute('aria-checked')).toEqual('true');
+
+                await click(selectAll());
+                expect(combo.value).toEqual([]);
+
+                await click(firstGroup());
+                expect(combo.value).toEqual([0, 2]);
+                expect(firstGroup().getAttribute('aria-checked')).toEqual('true');
             });
 
             it('should show accepted filter results from the start of the collection', async () => {
@@ -3756,6 +3856,289 @@ describe('igxCombo', () => {
                 combo.groupSortingDirection = SortingDirection.None;
                 fixture.detectChanges();
                 expect(groupOrder()).toEqual(['Méxícó', 'Ángel', 'México', 'Boris']);
+            });
+        });
+        describe('Select all and group selection tests: ', () => {
+            const CSS_CLASS_SELECT_ALL = 'igx-combo__select-all';
+            const CSS_CLASS_GROUP_OPTION = 'igx-combo__group-option';
+            const CSS_CLASS_NESTED_ITEM = 'igx-combo__item--nested';
+            const CSS_CLASS_INDETERMINATE = 'igx-checkbox--indeterminate';
+            let changingSpy: Mock;
+
+            beforeEach(() => {
+                fixture = TestBed.createComponent(IgxComboSampleComponent);
+                fixture.detectChanges();
+                combo = fixture.componentInstance.combo;
+                changingSpy = vi.spyOn(combo.selectionChanging, 'emit');
+            });
+
+            const render = async () => {
+                fixture.detectChanges();
+                await combo.virtualScrollContainer.layoutComplete;
+                fixture.detectChanges();
+            };
+            const openList = async () => {
+                combo.toggle();
+                await render();
+            };
+            const rows = (): HTMLElement[] => Array.from(fixture.debugElement
+                .query(By.css(`.${CSS_CLASS_DROPDOWNLIST_SCROLL}`)).nativeElement.querySelectorAll('igx-combo-item'));
+            const selectAllRow = () => rows().find(row => row.classList.contains(CSS_CLASS_SELECT_ALL));
+            const firstGroupRow = () => rows().find(row => row.classList.contains(CSS_CLASS_GROUP_OPTION));
+            const itemsOf = (group: string) => combo.data.filter(item => item.region === group);
+            const keysOf = (items: any[]) => items.map(item => item[combo.valueKey]);
+            const click = async (row: HTMLElement) => {
+                row.click();
+                await render();
+            };
+
+            it('should render "Select all" as the first option only while the list shows items', async () => {
+                await openList();
+                expect(selectAllRow()).toBeUndefined();
+
+                combo.showSelectAll = true;
+                await render();
+                const first = rows()[0];
+                expect(first.classList).toContain(CSS_CLASS_SELECT_ALL);
+                expect(first.textContent.trim()).toEqual(ComboResourceStringsEN.igx_combo_select_all);
+                expect(first.getAttribute('role')).toEqual('option');
+                expect(first.getAttribute('aria-checked')).toEqual('false');
+                expect(first.hasAttribute('aria-label')).toBe(false);
+
+                const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+                UIInteractions.triggerInputEvent(searchInput, 'No such state');
+                await render();
+                expect(combo.filteredData.length).toEqual(0);
+                expect(selectAllRow()).toBeUndefined();
+            });
+
+            it('should select the shown items from "Select all", and deselect them when all are selected', async () => {
+                combo.showSelectAll = true;
+                await openList();
+
+                await click(selectAllRow());
+                expect(changingSpy).toHaveBeenCalledTimes(1);
+                expect(changingSpy.mock.calls[0][0].added.length).toEqual(combo.data.length);
+                expect(combo.value).toEqual(keysOf(combo.data));
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('true');
+
+                await click(selectAllRow());
+                expect(changingSpy).toHaveBeenCalledTimes(2);
+                expect(changingSpy.mock.calls[1][0].removed.length).toEqual(combo.data.length);
+                expect(combo.value).toEqual([]);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
+            });
+
+            it('should act only on the filtered items from "Select all"', async () => {
+                combo.showSelectAll = true;
+                await openList();
+
+                const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
+                UIInteractions.triggerInputEvent(searchInput, 'new');
+                await render();
+                const shown = [...combo.filteredData];
+                expect(shown.length).toBeGreaterThan(0);
+                expect(shown.length).toBeLessThan(combo.data.length);
+
+                await click(selectAllRow());
+                expect(combo.value).toEqual(keysOf(shown));
+            });
+
+            it('should not apply a canceled change from "Select all"', async () => {
+                combo.showSelectAll = true;
+                await openList();
+                const subscription = combo.selectionChanging.subscribe(args => args.cancel = true);
+
+                await click(selectAllRow());
+                expect(changingSpy).toHaveBeenCalledTimes(1);
+                expect(combo.value).toEqual([]);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
+                subscription.unsubscribe();
+            });
+
+            it('should make the group headers options with groupSelection', async () => {
+                await openList();
+                expect(firstGroupRow()).toBeUndefined();
+                expect(rows().some(row => row.classList.contains(CSS_CLASS_NESTED_ITEM))).toBe(false);
+
+                combo.groupSelection = true;
+                await render();
+                const header = firstGroupRow();
+                expect(header.getAttribute('role')).toEqual('option');
+                expect(header.getAttribute('aria-checked')).toEqual('false');
+                expect(header.classList).not.toContain(CSS_CLASS_HEADERITEM);
+                expect(header.classList).toContain(CSS_CLASS_DROPDOWNLISTITEM);
+                expect(rows().filter(row => row.classList.contains(CSS_CLASS_NESTED_ITEM)).length).toBeGreaterThan(0);
+
+                combo.groupSelection = false;
+                await render();
+                expect(firstGroupRow()).toBeUndefined();
+                expect(rows()[0].classList).toContain(CSS_CLASS_HEADERITEM);
+                expect(rows()[0].getAttribute('role')).toEqual('group');
+                expect(rows().some(row => row.classList.contains(CSS_CLASS_NESTED_ITEM))).toBe(false);
+            });
+
+            it('should name the group header options by their text', async () => {
+                await openList();
+                const group = rows()[0].textContent.trim();
+                // A group is named only by its label.
+                expect(rows()[0].getAttribute('aria-label')).toEqual(group);
+
+                combo.groupSelection = true;
+                await render();
+                expect(firstGroupRow().hasAttribute('aria-label')).toBe(false);
+
+                // Without a valueKey, the record of a group header has no field to name it.
+                combo.valueKey = null;
+                await render();
+                expect(firstGroupRow().textContent.trim()).toEqual(group);
+                expect(firstGroupRow().hasAttribute('aria-label')).toBe(false);
+            });
+
+            it('should select the shown items of a group from its header, and deselect them when all are selected', async () => {
+                combo.groupSelection = true;
+                await openList();
+                const group = firstGroupRow().textContent.trim();
+                const groupItems = itemsOf(group);
+                expect(groupItems.length).toBeGreaterThan(1);
+
+                combo.select([groupItems[0][combo.valueKey]]);
+                await render();
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('mixed');
+                expect(firstGroupRow().querySelector('igx-checkbox').classList).toContain(CSS_CLASS_INDETERMINATE);
+                changingSpy.mockClear();
+
+                await click(firstGroupRow());
+                expect(changingSpy).toHaveBeenCalledTimes(1);
+                expect(changingSpy.mock.calls[0][0].added).toEqual(groupItems.slice(1));
+                expect(combo.value).toEqual(keysOf(groupItems));
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('true');
+
+                await click(firstGroupRow());
+                expect(changingSpy).toHaveBeenCalledTimes(2);
+                expect(changingSpy.mock.calls[1][0].removed).toEqual(groupItems);
+                expect(combo.value).toEqual([]);
+            });
+
+            it('should show the indeterminate state of "Select all" while only some items are selected', async () => {
+                combo.showSelectAll = true;
+                await openList();
+
+                combo.select([combo.data[0][combo.valueKey]]);
+                await render();
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('mixed');
+                expect(selectAllRow().querySelector('igx-checkbox').classList).toContain(CSS_CLASS_INDETERMINATE);
+
+                combo.selectAllItems(true);
+                await render();
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('true');
+                expect(selectAllRow().querySelector('igx-checkbox').classList).not.toContain(CSS_CLASS_INDETERMINATE);
+            });
+
+            it('should navigate to "Select all" and the group headers, and toggle them with Space', async () => {
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                await openList();
+                const dropdownContent = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTENT}`));
+                const focused = () => rows().find(row => row.classList.contains(CSS_CLASS_FOCUSED));
+                const press = async (key: string) => {
+                    UIInteractions.triggerEventHandlerKeyDown(key, dropdownContent);
+                    await render();
+                };
+
+                await press('ArrowDown');
+                expect(focused()).toBe(selectAllRow());
+
+                await press('ArrowDown');
+                expect(focused()).toBe(firstGroupRow());
+                const group = firstGroupRow().textContent.trim();
+
+                await press('Space');
+                expect(combo.value).toEqual(keysOf(itemsOf(group)));
+
+                await press('ArrowDown');
+                await press('Home');
+                expect(focused()).toBe(selectAllRow());
+
+                await press('Space');
+                expect(combo.value.length).toEqual(combo.data.length);
+            });
+
+            it('should render a record with an isSelectAll field as an item', async () => {
+                const record = { field: 'Everything', region: 'All', isSelectAll: true };
+                fixture.componentInstance.items = [record, ...fixture.componentInstance.items];
+                combo.showSelectAll = true;
+                fixture.detectChanges();
+                await openList();
+
+                const recordRow = fixture.debugElement.queryAll(By.directive(IgxComboItemComponent))
+                    .find(item => item.componentInstance.value === record).nativeElement as HTMLElement;
+                expect(recordRow.textContent).toContain('State: Everything');
+                expect(recordRow.classList).not.toContain(CSS_CLASS_SELECT_ALL);
+                expect(rows().filter(row => row.classList.contains(CSS_CLASS_SELECT_ALL)).length).toEqual(1);
+                expect(rows()[0].classList).toContain(CSS_CLASS_SELECT_ALL);
+            });
+
+            it('should check and uncheck the toggle options when valueKey is 0', async () => {
+                const items = [{ 0: 'a', region: 'R' }, { 0: 'b', region: 'R' }];
+                fixture.componentInstance.items = items;
+                combo.valueKey = 0 as any;
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                fixture.detectChanges();
+                await openList();
+
+                await click(selectAllRow());
+                expect(combo.selection).toEqual(items);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('true');
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('true');
+
+                await click(firstGroupRow());
+                expect(combo.selection).toEqual([]);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('false');
+            });
+
+            it('should leave the items without a value key out of the toggle options', async () => {
+                fixture.componentInstance.items = [{ field: 'A', region: 'R' }, { field: undefined, region: 'R' }];
+                combo.showSelectAll = true;
+                combo.groupSelection = true;
+                fixture.detectChanges();
+                await openList();
+
+                // A click on its row does not select an item without a key, and neither do the toggles.
+                await click(selectAllRow());
+                expect(combo.value).toEqual(['A']);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('true');
+                expect(firstGroupRow().getAttribute('aria-checked')).toEqual('true');
+
+                await click(firstGroupRow());
+                expect(combo.value).toEqual([]);
+                expect(selectAllRow().getAttribute('aria-checked')).toEqual('false');
+            });
+
+            it('should give the group header options the text style of the group headers in each theme', async () => {
+                const textStyle = (row: HTMLElement) => {
+                    const { textTransform, fontSize, fontWeight, letterSpacing } = getComputedStyle(row);
+                    return { textTransform, fontSize, fontWeight, letterSpacing };
+                };
+                await openList();
+
+                try {
+                    for (const theme of ['material', 'bootstrap', 'fluent', 'indigo']) {
+                        // The list renders in the overlay, outside the combo, so the theme is set on the root.
+                        document.documentElement.style.setProperty('--ig-theme', theme);
+                        combo.groupSelection = false;
+                        await render();
+                        const headerStyle = textStyle(rows().find(row => row.classList.contains(CSS_CLASS_HEADERITEM)));
+
+                        combo.groupSelection = true;
+                        await render();
+                        expect(textStyle(firstGroupRow()), theme).toEqual(headerStyle);
+                    }
+                } finally {
+                    document.documentElement.style.removeProperty('--ig-theme');
+                }
             });
         });
         describe('Filtering tests: ', () => {
@@ -5482,6 +5865,9 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
 
     public data: any[] = [];
 
+    /** Empties the list while a page loads, as a host that shows a loading state does. */
+    public clearWhileLoading = false;
+
     private pending: Subscription | null = null;
 
     public ngAfterViewInit() {
@@ -5490,6 +5876,10 @@ export class IgxComboDeferredRemoteComponent implements AfterViewInit, OnDestroy
 
     /** The documented pattern: answer the window the event carries, drop the one in flight. */
     public dataLoading(state: IForOfState) {
+        if (this.clearWhileLoading) {
+            this.data = [];
+            this.cdr.markForCheck();
+        }
         this.request(state);
     }
 
