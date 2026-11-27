@@ -118,3 +118,177 @@ jobs:
                 coverage/igniteui-angular/lcov.info
                 coverage/igniteui-angular-extras/lcov.info
                 coverage/igniteui-angular-elements/lcov.info
+
+  # Builds igniteui-webcomponents-grids from this change the way its CD in igniteui-api-analyzer does,
+  # runs the Blazor generator on it and builds igniteui-react against the package. On pull requests it
+  # also compares the public API of the Web Components grids with the base branch and fails when public
+  # API is removed or changed, unless the pull request has one of the labels that accept the change.
+  # The React and Blazor wrappers are generated from that API.
+  # igniteui-api-analyzer is private, so the job needs the IgniteUI GitHub App. Forks of the repository,
+  # fork pull requests and Dependabot pull requests get no secrets and skip it; the push after the merge
+  # still runs it.
+  analyzer-downstream:
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: >-
+        github.repository == 'IgniteUI/igniteui-angular' &&
+        (github.event_name == 'push' ||
+        (github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'))
+    # The comparison reads the labels of the pull request.
+    permissions:
+        contents: read
+        pull-requests: read
+    env:
+        # The igniteui-api-analyzer and igniteui-react branch, tag or commit to build with. A change that
+        # needs a matching analyzer change points ANALYZER_REF at the analyzer branch until both are merged.
+        # Maintenance branches pin both to the commits that match their release, since the analyzer has no tags.
+        ANALYZER_REF: master
+        REACT_REF: master
+
+    steps:
+      # The token is only used by the analyzer checkout, which runs before any code of this change.
+      - name: Get app token
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+            client-id: ${{ secrets.IGNITEUI_GITHUB_APP_CLIENT_ID }}
+            private-key: ${{ secrets.IGNITEUI_GITHUB_APP_PRIVATE_KEY }}
+            owner: IgniteUI
+            repositories: igniteui-api-analyzer
+            permission-contents: read
+      # The analyzer reads the sources from ../igniteui-angular, so the repositories are checked out side by side.
+      - name: Checkout igniteui-api-analyzer
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+            repository: IgniteUI/igniteui-api-analyzer
+            ref: ${{ env.ANALYZER_REF }}
+            token: ${{ steps.app-token.outputs.token }}
+            path: igniteui-api-analyzer
+            persist-credentials: false
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+            path: igniteui-angular
+      # The analyzer only reads the sources under projects/ for the public API comparison.
+      - name: Checkout the base branch
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+            ref: ${{ github.event.pull_request.base.sha }}
+            path: igniteui-angular-base
+            sparse-checkout: projects
+            persist-credentials: false
+      - name: Checkout igniteui-react
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+            repository: IgniteUI/igniteui-react
+            ref: ${{ env.REACT_REF }}
+            path: igniteui-react
+            persist-credentials: false
+      - name: Use Node.js 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+            node-version: 24.x
+            cache: 'npm'
+            cache-dependency-path: |
+                igniteui-angular/package-lock.json
+                igniteui-api-analyzer/package-lock.json
+                igniteui-react/package-lock.json
+      - name: Install packages
+        working-directory: igniteui-angular
+        run: npm ci
+      - name: Build Elements
+        working-directory: igniteui-angular
+        run: npm run build:elements
+      # Fails when a grid entry point is missing or a declaration does not parse. With skipLibCheck on, tsc
+      # does not type-check the declarations.
+      - name: Generate the grid declarations and check that they parse
+        working-directory: igniteui-api-analyzer
+        run: |
+            npm ci
+            npm run build
+            npm run verify:grids
+      - name: Report the public API
+        id: api-head
+        working-directory: igniteui-api-analyzer
+        run: |
+            mkdir -p "$RUNNER_TEMP/api"
+            npm run api:grids -- report --report "$RUNNER_TEMP/api/head.json"
+      - name: Assemble and pack igniteui-webcomponents-grids
+        working-directory: igniteui-api-analyzer
+        run: |
+            npm run assemble:grids -- \
+                --angular-dist ../igniteui-angular/dist/igniteui-angular-elements \
+                --dist dist/igniteui-webcomponents-grids \
+                --version "0.0.0-ci.${{ github.run_number }}"
+            mkdir -p "$RUNNER_TEMP/grids-package"
+            npm pack ./dist/igniteui-webcomponents-grids --pack-destination "$RUNNER_TEMP/grids-package"
+      - name: Upload the package
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+            name: igniteui-webcomponents-grids
+            path: ${{ runner.temp }}/grids-package/*.tgz
+            retention-days: 7
+            if-no-files-found: error
+      # Generates the Blazor wrappers from the declarations. It does not compile them.
+      - name: Blazor smoke test
+        working-directory: igniteui-api-analyzer
+        run: |
+            npm run gridTestRun
+            if [ -z "$(find output/grids -maxdepth 1 -name '*.cs' -print -quit)" ]; then
+                echo "::error::gridTestRun wrote no .cs files to output/grids" >&2
+                exit 1
+            fi
+      # The React CI steps that use the grids package, without its lint and browser tests.
+      - name: Build igniteui-react with the package
+        working-directory: igniteui-react
+        run: |
+            npm ci
+            npm install --no-save "$RUNNER_TEMP"/grids-package/*.tgz
+            npm run build
+            npm run typecheck:tests
+            npm run validate:dist
+      # Also runs when the React build failed, since the comparison names the API that changed.
+      # The base resolves its types against the dependencies of this change. An analyzer branch that follows
+      # moved grid entry points cannot read the base, so the comparison is skipped with a warning then.
+      # Removed or changed API passes when the pull request has one of API_CHANGE_LABELS: add the label and
+      # re-run the job. The labels are read when the step runs, since a re-run reuses the event payload.
+      - name: Compare the public API with the base branch
+        if: ${{ !cancelled() && github.event_name == 'pull_request' && steps.api-head.outcome == 'success' }}
+        working-directory: igniteui-api-analyzer
+        env:
+            GH_TOKEN: ${{ github.token }}
+            PR_NUMBER: ${{ github.event.pull_request.number }}
+            API_CHANGE_LABELS: |
+                :bangbang: breaking-change
+                api-change-reviewed
+        run: |
+            set -o pipefail
+            ln -s "$GITHUB_WORKSPACE/igniteui-angular/node_modules" ../igniteui-angular-base/node_modules
+            if ! npm run generate:grids -- --grid-root=../igniteui-angular-base/ 2>&1 | tee "$RUNNER_TEMP/api/base.log"; then
+                if grep -q 'Missing grid entry points' "$RUNNER_TEMP/api/base.log"; then
+                    message="The analyzer cannot find the grid entry points in the base branch, so the public API was not compared."
+                    echo "::warning::$message"
+                    printf '## Public API of the Web Components grids\n\n%s\n' "$message" >> "$GITHUB_STEP_SUMMARY"
+                    exit 0
+                fi
+                exit 1
+            fi
+            npm run api:grids -- report --report "$RUNNER_TEMP/api/base.json"
+            status=0
+            npm run api:grids -- compare --base "$RUNNER_TEMP/api/base.json" --head "$RUNNER_TEMP/api/head.json" --summary "$GITHUB_STEP_SUMMARY" || status=$?
+            if [ "$status" -ne 1 ]; then
+                exit "$status"
+            fi
+            labels=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json labels --jq '.labels[].name')
+            while IFS= read -r label; do
+                if [ -n "$label" ] && grep -qxF -- "$label" <<< "$labels"; then
+                    echo "::notice::The label \"$label\" accepts the removed or changed public API."
+                    printf '\nThe label `%s` accepts these changes.\n' "$label" >> "$GITHUB_STEP_SUMMARY"
+                    exit 0
+                fi
+            done <<< "$API_CHANGE_LABELS"
+            accepted=$(sed '/^$/d; s/.*/"&"/' <<< "$API_CHANGE_LABELS" | paste -sd ',' - | sed 's/,/ or /g')
+            echo "::error::Public API was removed or changed. If that is intended, add the label $accepted and re-run this job."
+            exit 1
