@@ -1,137 +1,108 @@
 import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  DestroyRef,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-  computed,
-  signal
+    ChangeDetectionStrategy,
+    Component,
+    CUSTOM_ELEMENTS_SCHEMA,
+    DestroyRef,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    afterNextRender,
+    inject,
+    signal
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import {
-    IGX_CARD_DIRECTIVES,
-    IGX_INPUT_GROUP_DIRECTIVES,
     IGX_LIST_DIRECTIVES,
     IgxAvatarComponent,
-    IgxBadgeComponent,
     IgxButtonDirective,
     IgxCheckboxComponent,
     IgxCircularProgressBarComponent,
     IgxIconButtonDirective,
     IgxIconComponent,
     IgxSliderComponent,
-    IgxSwitchComponent,
+    IgxSwitchComponent
 } from 'igniteui-angular';
 import {
     defineComponents,
-    IgcListComponent,
     IgcAvatarComponent,
+    IgcButtonComponent,
+    IgcCheckboxComponent,
+    IgcCircularProgressComponent,
+    IgcIconButtonComponent,
+    IgcIconComponent,
+    IgcListComponent,
     IgcListHeaderComponent,
     IgcListItemComponent,
-    IgcIconComponent,
-    IgcCheckboxComponent,
-    registerIconFromText,
+    IgcSliderComponent,
+    IgcSwitchComponent,
+    registerIconFromText
 } from 'igniteui-webcomponents';
-import {
-    Properties,
-    PropertyChangeService,
-    PropertyPanelConfig,
-} from '../properties-panel/property-change.service';
+import { Properties, PropertyChangeService, PropertyPanelConfig } from '../properties-panel/property-change.service';
 
 defineComponents(
     IgcListComponent,
     IgcListHeaderComponent,
     IgcListItemComponent,
     IgcAvatarComponent,
-    IgcIconComponent,
+    IgcButtonComponent,
     IgcCheckboxComponent,
+    IgcCircularProgressComponent,
+    IgcIconButtonComponent,
+    IgcIconComponent,
+    IgcSliderComponent,
+    IgcSwitchComponent
 );
 
-const icons = [
-    {
-        name: 'face',
-        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37C11.07 8.33 14.05 10 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z"/></svg>'
-    },
-    {
-        name: 'info',
-        url: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>'
-    }
-];
+const svg = (path: string) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="${path}"/></svg>`;
 
-icons.forEach((icon) => {
-    registerIconFromText(icon.name, icon.url);
-});
+const ICONS: Record<string, string> = {
+    face: 'M9 11.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5zm6 0a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-.29.02-.58.05-.86 2.36-1.05 4.23-2.98 5.21-5.37A9.97 9.97 0 0 0 17.42 10c.78 0 1.53-.09 2.25-.26.21.71.33 1.47.33 2.26 0 4.41-3.59 8-8 8z',
+    star: 'M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z',
+    star_border: 'M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z',
+    delete: 'M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z'
+};
 
-interface Employee {
-    imageURL: string;
-    name: string;
-    position: string;
-    description: string;
-    selected?: boolean;
+for (const [name, path] of Object.entries(ICONS)) {
+    registerIconFromText(name, svg(path));
 }
 
-interface Member {
+export interface Person {
     id: number;
     name: string;
     role: string;
     team: string;
     avatar?: string;
-}
-
-interface Message {
-    id: number;
-    from: string;
-    avatar: string;
-    subject: string;
     time: string;
-    day: 'Today' | 'Earlier';
-    unread: boolean;
     starred: boolean;
+    notify: boolean;
+    volume: number;
 }
 
-interface City {
-    name: string;
-    country: string;
-    population: string;
+const PEOPLE: Person[] = [
+    { id: 1, name: 'Amelia Brooks', role: 'Lead Product Designer', team: 'Design', avatar: 'assets/images/avatar/1.jpg', time: '10:42', starred: false, notify: true, volume: 60 },
+    { id: 2, name: 'Noah Fischer', role: 'UX Researcher', team: 'Design', time: '09:15', starred: true, notify: false, volume: 40 },
+    { id: 3, name: 'Priya Raman', role: 'Visual Designer', team: 'Design', avatar: 'assets/images/avatar/5.jpg', time: '08:03', starred: false, notify: true, volume: 80 },
+    { id: 4, name: 'Diego Morales', role: 'Staff Engineer', team: 'Engineering', avatar: 'assets/images/avatar/9.jpg', time: 'Mon', starred: true, notify: true, volume: 20 },
+    { id: 5, name: 'Hana Sato', role: 'Front-end Engineer', team: 'Engineering', avatar: 'assets/images/avatar/12.jpg', time: 'Mon', starred: false, notify: false, volume: 50 },
+    { id: 6, name: 'Lukas Novak', role: 'Platform Engineer', team: 'Engineering', time: 'Sun', starred: false, notify: true, volume: 70 },
+    { id: 7, name: 'Zara Ahmed', role: 'QA Engineer', team: 'Engineering', avatar: 'assets/images/avatar/16.jpg', time: 'Sun', starred: true, notify: false, volume: 30 },
+    { id: 8, name: 'Oliver Grant', role: 'Product Manager', team: 'Product', avatar: 'assets/images/avatar/20.jpg', time: 'Sat', starred: false, notify: true, volume: 90 },
+    { id: 9, name: 'Sofia Rossi', role: 'Product Analyst', team: 'Product', time: 'Sat', starred: false, notify: true, volume: 10 },
+    { id: 10, name: 'Mateo Silva', role: 'Data Scientist', team: 'Product', avatar: 'assets/images/avatar/7.jpg', time: 'Fri', starred: true, notify: false, volume: 60 },
+    { id: 11, name: 'Ingrid Berg', role: 'Technical Writer', team: 'Product', time: 'Fri', starred: false, notify: true, volume: 40 },
+    { id: 12, name: 'Kenji Watanabe', role: 'DevOps Engineer', team: 'Engineering', avatar: 'assets/images/avatar/11.jpg', time: 'Thu', starred: false, notify: false, volume: 50 },
+    { id: 13, name: 'Chloe Martin', role: 'Interaction Designer', team: 'Design', avatar: 'assets/images/avatar/14.jpg', time: 'Thu', starred: true, notify: true, volume: 70 },
+    { id: 14, name: 'Ravi Patel', role: 'Security Engineer', team: 'Engineering', time: 'Wed', starred: false, notify: true, volume: 20 },
+    { id: 15, name: 'Elena Petrova', role: 'Product Owner', team: 'Product', avatar: 'assets/images/avatar/18.jpg', time: 'Wed', starred: false, notify: false, volume: 80 }
+];
+
+const TEAMS = ['Design', 'Engineering', 'Product'];
+
+/** One group of people under a header, or all of them under none. */
+interface Group {
+    team: string | null;
+    people: Person[];
 }
-
-const MEMBERS: Member[] = [
-    { id: 1, name: 'Amelia Brooks', role: 'Lead Product Designer', team: 'Design', avatar: 'assets/images/avatar/1.jpg' },
-    { id: 2, name: 'Noah Fischer', role: 'UX Researcher', team: 'Design' },
-    { id: 3, name: 'Priya Raman', role: 'Visual Designer', team: 'Design', avatar: 'assets/images/avatar/5.jpg' },
-    { id: 4, name: 'Diego Morales', role: 'Staff Engineer', team: 'Engineering', avatar: 'assets/images/avatar/9.jpg' },
-    { id: 5, name: 'Hana Sato', role: 'Front-end Engineer', team: 'Engineering', avatar: 'assets/images/avatar/12.jpg' },
-    { id: 6, name: 'Lukas Novak', role: 'Platform Engineer', team: 'Engineering' },
-    { id: 7, name: 'Zara Ahmed', role: 'QA Engineer', team: 'Engineering', avatar: 'assets/images/avatar/16.jpg' },
-    { id: 8, name: 'Oliver Grant', role: 'Product Manager', team: 'Product', avatar: 'assets/images/avatar/20.jpg' },
-    { id: 9, name: 'Sofia Rossi', role: 'Product Analyst', team: 'Product' }
-];
-
-const MESSAGES: Message[] = [
-    { id: 1, from: 'Amelia Brooks', avatar: 'assets/images/avatar/1.jpg', subject: 'Design review moved to 3 PM', time: '10:42', day: 'Today', unread: true, starred: false },
-    { id: 2, from: 'Diego Morales', avatar: 'assets/images/avatar/9.jpg', subject: 'Release 22.3 is green on CI', time: '09:15', day: 'Today', unread: true, starred: true },
-    { id: 3, from: 'Oliver Grant', avatar: 'assets/images/avatar/20.jpg', subject: 'Q1 roadmap draft for feedback', time: '08:03', day: 'Today', unread: false, starred: false },
-    { id: 4, from: 'Hana Sato', avatar: 'assets/images/avatar/12.jpg', subject: 'Accessibility audit results', time: 'Mon', day: 'Earlier', unread: false, starred: true },
-    { id: 5, from: 'Zara Ahmed', avatar: 'assets/images/avatar/16.jpg', subject: 'Regression suite: 3 new flaky tests', time: 'Sun', day: 'Earlier', unread: false, starred: false }
-];
-
-const CITIES: City[] = [
-    { name: 'Amsterdam', country: 'Netherlands', population: '0.9M' },
-    { name: 'Athens', country: 'Greece', population: '0.6M' },
-    { name: 'Barcelona', country: 'Spain', population: '1.6M' },
-    { name: 'Berlin', country: 'Germany', population: '3.7M' },
-    { name: 'Budapest', country: 'Hungary', population: '1.7M' },
-    { name: 'Copenhagen', country: 'Denmark', population: '0.6M' },
-    { name: 'Dublin', country: 'Ireland', population: '0.6M' },
-    { name: 'Lisbon', country: 'Portugal', population: '0.5M' },
-    { name: 'London', country: 'United Kingdom', population: '8.9M' },
-    { name: 'Madrid', country: 'Spain', population: '3.3M' },
-    { name: 'Paris', country: 'France', population: '2.1M' },
-    { name: 'Prague', country: 'Czechia', population: '1.3M' },
-    { name: 'Rome', country: 'Italy', population: '2.8M' },
-    { name: 'Sofia', country: 'Bulgaria', population: '1.2M' },
-    { name: 'Vienna', country: 'Austria', population: '2.0M' }
-];
 
 @Component({
     selector: 'app-list-sample',
@@ -139,224 +110,190 @@ const CITIES: City[] = [
     templateUrl: 'list.sample.html',
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     encapsulation: ViewEncapsulation.None,
-    standalone: true,
     imports: [
         IGX_LIST_DIRECTIVES,
-        IGX_CARD_DIRECTIVES,
-        IGX_INPUT_GROUP_DIRECTIVES,
-        FormsModule,
-        IgxIconComponent,
-        IgxCheckboxComponent,
         IgxAvatarComponent,
-        IgxBadgeComponent,
         IgxButtonDirective,
-        IgxIconButtonDirective,
-        IgxSwitchComponent,
-        IgxSliderComponent,
+        IgxCheckboxComponent,
         IgxCircularProgressBarComponent,
+        IgxIconButtonDirective,
+        IgxIconComponent,
+        IgxSliderComponent,
+        IgxSwitchComponent
     ],
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ListSampleComponent {
-    public panelConfig: PropertyPanelConfig = {
+    @ViewChild('customControls', { static: true })
+    public customControls!: TemplateRef<unknown>;
+
+    public readonly panelConfig: PropertyPanelConfig = {
         navigation: {
             label: 'Navigation',
-            control: {
-                type: 'button-group',
-                options: ['none', 'listbox', 'grid'],
-                defaultValue: 'listbox'
-            }
+            control: { type: 'button-group', options: ['none', 'listbox', 'grid'], defaultValue: 'listbox' }
         },
-        hideTitle: {
-            label: 'Hide Title',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
+        selection: {
+            label: 'Selection',
+            control: { type: 'button-group', options: ['none', 'single', 'multiple'], defaultValue: 'multiple' }
         },
-        hideSubtitle: {
-            label: 'Hide Subtitle',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
+        thumbnail: {
+            label: 'Thumbnail',
+            control: { type: 'select', options: ['none', 'avatar', 'initials', 'icon'], defaultValue: 'avatar' }
         },
-        addAvatarThumbnail: {
-            label: 'Add Avatar Thumbnail',
-            control: {
-                type: 'boolean',
-                defaultValue: true
-            }
+        title: {
+            label: 'Show title',
+            control: { type: 'boolean', defaultValue: true }
         },
-        addIconThumbnail: {
-            label: 'Add Icon Thumbnail',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
+        subtitle: {
+            label: 'Show subtitle',
+            control: { type: 'boolean', defaultValue: true }
         },
-        addCheckboxAction: {
-            label: 'Add Checkbox Action',
-            control: {
-                type: 'boolean',
-                defaultValue: true
-            }
+        end: {
+            label: 'End content',
+            control: { type: 'select', options: ['none', 'text', 'checkbox', 'buttons', 'switch', 'slider'], defaultValue: 'checkbox' }
         },
-        addIconAction: {
-            label: 'Add Icon Action',
-            control: {
-                type: 'boolean',
-                defaultValue: true
-            }
+        groups: {
+            label: 'Group by team',
+            control: { type: 'boolean', defaultValue: true }
         },
-        enablePanning: {
-            label: 'Item Panning',
-            control: {
-                type: 'boolean',
-                defaultValue: false
-            }
+        count: {
+            label: 'Items (0 shows the empty state)',
+            control: { type: 'number', min: 0, max: PEOPLE.length, defaultValue: 9 }
+        },
+        filter: {
+            label: 'Filter',
+            control: { type: 'text', defaultValue: '' }
+        },
+        loading: {
+            label: 'Loading',
+            control: { type: 'boolean', defaultValue: false }
+        },
+        panning: {
+            label: 'Item panning (Angular only)',
+            control: { type: 'boolean', defaultValue: false }
+        }
+    };
+
+    public properties: Properties = {};
+
+    /** The data that both lists show, with the changes the user made. */
+    public readonly people = signal(PEOPLE.map(person => ({ ...person })));
+    public readonly selected = signal(new Set<number>([1, 5]));
+
+    private readonly _propertyChangeService = inject(PropertyChangeService);
+    private readonly _destroyRef = inject(DestroyRef);
+
+    constructor() {
+        this._propertyChangeService.setPanelConfig(this.panelConfig);
+        const subscription = this._propertyChangeService.propertyChanges.subscribe(properties => {
+            this.properties = properties;
+        });
+        this._destroyRef.onDestroy(() => subscription.unsubscribe());
+        // After the first render: the panel renders the controls synchronously, which fails during this one.
+        afterNextRender(() => this._propertyChangeService.setCustomControls(this.customControls));
+    }
+
+    /** Why the list is empty, for its empty message. */
+    public get emptyReason(): string {
+        if (Number(this.properties.count ?? 0) === 0) {
+            return 'Set Items above 0 to show people';
+        }
+        return this.properties.filter ? `No people match "${this.properties.filter}"` : 'No people left';
+    }
+
+    /** Whether the user removed items, which the Restore button brings back. */
+    public get removed(): boolean {
+        return this.people().length < PEOPLE.length;
+    }
+
+    /** The people to show, filtered, cut to the item count, and grouped by team when groups are on. */
+    public get groups(): Group[] {
+        const term = String(this.properties.filter ?? '').trim().toLowerCase();
+        const shown = this.people()
+            .filter(person => !term || `${person.name} ${person.role} ${person.team}`.toLowerCase().includes(term))
+            .slice(0, Math.max(0, Number(this.properties.count ?? 0)));
+
+        return this.properties.groups
+            ? TEAMS.map(team => ({ team, people: shown.filter(person => person.team === team) })).filter(group => group.people.length)
+            : [{ team: null, people: shown }];
+    }
+
+    /** `true` for a multiple selection, `false` for a single one in a grid, else none. */
+    public get multiselectable(): string | null {
+        switch (this.properties.selection) {
+            case 'multiple': return 'true';
+            case 'single': return this.properties.navigation === 'grid' ? 'false' : null;
+            default: return null;
         }
     }
 
-    public properties: Properties;
-
-    constructor(
-        private propertyChangeService: PropertyChangeService,
-        private destroyRef: DestroyRef
-    ) {
-        this.propertyChangeService.setPanelConfig(this.panelConfig);
-
-        const propertyChange =
-            this.propertyChangeService.propertyChanges.subscribe(
-                (properties) => {
-                    this.properties = properties;
-                }
-            );
-
-        this.destroyRef.onDestroy(() => propertyChange.unsubscribe());
+    /** A checkbox in a listbox option only shows the selection: it is inert, and a click reaches the option. */
+    public get checkboxInert(): boolean {
+        return this.properties.navigation === 'listbox';
     }
 
-    public employeeItems: Employee[] = [
-        {
-            imageURL: 'assets/images/avatar/18.jpg',
-            name: 'Marin Popov',
-            position: 'Web designer',
-            description:
-                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
-        },
-        {
-            imageURL: 'assets/images/avatar/2.jpg',
-            name: 'Simeon Simeonov',
-            position: 'Front-end Developer',
-            description:
-                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
-        },
-        {
-            imageURL: 'assets/images/avatar/7.jpg',
-            name: 'Stefan ivanov',
-            position: 'UX Architect',
-            description:
-                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel?, consectetur adipisicing elit. Aperiam, vel?',
-        },
-        {
-            imageURL: 'assets/images/avatar/6.jpg',
-            name: 'Svilen Dimchevski',
-            position: 'Graphic designer',
-            description:
-                'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam, vel, consectetur adipisicing elit. Aperiam, vel??',
-        },
-    ];
-
-    //#region Team: a multi-select listbox, grouped by team
-
-    public readonly teams = ['Design', 'Engineering', 'Product'];
-    public readonly members = MEMBERS;
-    public readonly selectedMembers = signal(new Set<number>([1, 5]));
-
-    public membersOf(team: string): Member[] {
-        return this.members.filter(member => member.team === team);
+    public isSelected(person: Person): boolean {
+        return this.selected().has(person.id);
     }
 
-    public initials(name: string): string {
-        return name.split(' ').map(part => part[0]).join('');
+    public initials(person: Person): string {
+        return person.name.split(' ').map(part => part[0]).join('');
     }
 
-    public toggleMember(member: Member): void {
-        this.selectedMembers.update(selected => {
+    /** Selects an item as the selection mode says, from a click, or from Enter or Space on the item. */
+    public select(person: Person): void {
+        const mode = this.properties.selection;
+        if (mode === 'none') {
+            return;
+        }
+        this.selected.update(selected => {
+            if (mode === 'single') {
+                return new Set([person.id]);
+            }
             const next = new Set(selected);
-            if (!next.delete(member.id)) {
-                next.add(member.id);
+            if (!next.delete(person.id)) {
+                next.add(person.id);
             }
             return next;
         });
     }
 
-    //#endregion
-
-    //#region Inbox: a grid of messages with actions
-
-    public readonly days: Message['day'][] = ['Today', 'Earlier'];
-    public readonly messages = signal(MESSAGES.map(message => ({ ...message })));
-    public readonly unreadCount = computed(() => this.messages().filter(message => message.unread).length);
-
-    public messagesOf(day: Message['day']): Message[] {
-        return this.messages().filter(message => message.day === day);
+    /** Delete on the item itself removes it, so the focus recovery can be tried in every mode. */
+    public onKeydown(event: KeyboardEvent, person: Person): void {
+        if (event.key === 'Delete' && event.target === event.currentTarget) {
+            this.remove(person);
+        }
     }
 
-    public open(message: Message): void {
-        this.patchMessage(message.id, { unread: false });
+    public remove(person: Person, event?: Event): void {
+        event?.stopPropagation();
+        this.people.update(people => people.filter(item => item.id !== person.id));
     }
 
-    public toggleStar(event: Event, message: Message): void {
+    public toggleStar(person: Person, event: Event): void {
         event.stopPropagation();
-        this.patchMessage(message.id, { starred: !message.starred });
+        this.patch(person, { starred: !person.starred });
     }
 
-    public remove(event: Event, message: Message): void {
-        event.stopPropagation();
-        this.messages.update(messages => messages.filter(item => item.id !== message.id));
+    public setNotify(person: Person, notify: boolean): void {
+        this.patch(person, { notify });
     }
 
-    public restoreMessages(): void {
-        this.messages.set(MESSAGES.map(message => ({ ...message })));
+    public setVolume(person: Person, volume: number): void {
+        this.patch(person, { volume });
     }
 
-    private patchMessage(id: number, patch: Partial<Message>): void {
-        this.messages.update(messages => messages.map(message => message.id === id ? { ...message, ...patch } : message));
+    public restore(): void {
+        this.people.set(PEOPLE.map(person => ({ ...person })));
     }
 
-    //#endregion
-
-    //#region Settings: a grid of switches and a slider
-
-    public readonly settings = signal({ email: true, push: false, digest: true, quietHours: false, volume: 60 });
-
-    public toggleSetting(key: 'email' | 'push' | 'digest' | 'quietHours'): void {
-        this.settings.update(settings => ({ ...settings, [key]: !settings[key] }));
+    /** Turns loading on for a few seconds, so the items can arrive while the empty list has the focus. */
+    public simulateLoad(): void {
+        this._propertyChangeService.updateProperty('loading', true);
+        setTimeout(() => this._propertyChangeService.updateProperty('loading', false), 3000);
     }
 
-    public setVolume(volume: number): void {
-        this.settings.update(settings => ({ ...settings, volume }));
+    private patch(person: Person, change: Partial<Person>): void {
+        this.people.update(people => people.map(item => item.id === person.id ? { ...item, ...change } : item));
     }
-
-    //#endregion
-
-    //#region Cities: a single-select listbox with search and loading
-
-    public readonly citySearch = signal('');
-    public readonly selectedCity = signal('Sofia');
-    public readonly loadingCities = signal(false);
-    public readonly cities = computed(() => {
-        const term = this.citySearch().trim().toLowerCase();
-        return term
-            ? CITIES.filter(city => city.name.toLowerCase().includes(term) || city.country.toLowerCase().includes(term))
-            : CITIES;
-    });
-
-    public refreshCities(): void {
-        this.loadingCities.set(true);
-        setTimeout(() => this.loadingCities.set(false), 1500);
-    }
-
-    //#endregion
 }

@@ -1,242 +1,207 @@
-<div class="sample-wrapper list-sample-component">
-    <section class="sample-content">
-        <article class="sample-column">
-            <h5 class="sample-title">Angular List</h5>
-            <igx-list [navigation]="properties.navigation" aria-label="Employees" aria-multiselectable="true" [allowLeftPanning]="properties.enablePanning" [allowRightPanning]="properties.enablePanning">
-                <ng-template igxListItemLeftPanning>
-                    <div class="pan pan--left">
-                        <igx-icon>delete</igx-icon>Delete
-                    </div>
-                </ng-template>
-                <ng-template igxListItemRightPanning>
-                    <div class="pan pan--right">
-                        <igx-icon>call</igx-icon>Dial
-                    </div>
-                </ng-template>
-                <igx-list-item [isHeader]="true">Employees List</igx-list-item>
+<ng-template #customControls>
+    <div class="list-sample__controls">
+        <button igxButton="outlined" (click)="restore()">Restore removed items</button>
+        <button igxButton="outlined" (click)="simulateLoad()">Load for 3 seconds</button>
+        <p>Delete on a focused item removes it.</p>
+    </div>
+</ng-template>
 
-                @for (employee of employeeItems; track employee) {
-                    <igx-list-item [selected]="!!employee.selected" (click)="employee.selected = !employee.selected">
-                        @if(properties.addAvatarThumbnail) {
-                            <igx-avatar [src]="employee.imageURL" igxListThumbnail></igx-avatar>
-                        }
-                        @if(properties.addIconThumbnail) {
-                            <igx-icon igxListThumbnail>face</igx-icon>
-                        }
-                        @if(!properties.hideTitle) {
-                            <h4 igxListLineTitle>{{ employee.name }}</h4>
-                        }
-                        @if(!properties.hideSubtitle) {
-                            <p igxListLineSubTitle>{{ employee.position }}</p>
-                        }
-                        @if(properties.addCheckboxAction) {
-                            <!-- A listbox option holds no controls, so there the checkbox only mirrors the selection. -->
-                            <igx-checkbox igxListAction
-                                [attr.inert]="properties.navigation === 'listbox' ? '' : null"
-                                [aria-label]="'Select ' + employee.name"
-                                [checked]="!!employee.selected"
-                                (change)="employee.selected = $event.checked"
-                                (click)="$event.stopPropagation()"></igx-checkbox>
-                        }
-                        @if(properties.addIconAction) {
-                            <igx-icon igxListAction>info</igx-icon>
-                        }
-                    </igx-list-item>
-                }
-            </igx-list>
-        </article>
+<div class="list-sample">
+    <article class="list-sample__column">
+        <h5 class="list-sample__title">Angular</h5>
+        <igx-list
+            [navigation]="properties.navigation"
+            aria-label="Team"
+            [attr.aria-multiselectable]="multiselectable"
+            [isLoading]="properties.loading"
+            [allowLeftPanning]="properties.panning"
+            [allowRightPanning]="properties.panning">
+            <ng-template igxListItemLeftPanning>
+                <div class="list-sample__pan list-sample__pan--left"><igx-icon>delete</igx-icon>Delete</div>
+            </ng-template>
+            <ng-template igxListItemRightPanning>
+                <div class="list-sample__pan list-sample__pan--right"><igx-icon>call</igx-icon>Call</div>
+            </ng-template>
 
-        <article class="sample-column">
-            <h5 class="sample-title">WC List</h5>
-            <igc-list>
-                <igc-list-header>
-                    <span>Employees List</span>
-                </igc-list-header>
-                @for(employee of employeeItems; track employee){
-                    <igc-list-item [selected]="employee.selected">
-                        @if(properties.addAvatarThumbnail) {
-                            <igc-avatar slot="start" [src]="employee.imageURL"></igc-avatar>
-                        }
-                        @if(properties.addIconThumbnail) {
-                            <igc-icon slot="start" name="face"></igc-icon>
-                        }
-                        @if(!properties.hideTitle) {
-                            <span slot="title">{{employee.name}}</span>
-                        }
-                        @if(!properties.hideSubtitle) {
-                            <span slot="subtitle">{{employee.position}}</span>
-                        }
-                        @if(properties.addCheckboxAction) {
-                            <igc-checkbox slot="end" [checked]="employee.selected"></igc-checkbox>
-                        }
-                        @if(properties.addIconAction) {
-                            <igc-icon slot="end" name="info"></igc-icon>
-                        }
-                    </igc-list-item>
-                }
-            </igc-list>
-        </article>
-    </section>
-
-    <section class="list-showcase">
-        <!-- Team: a multi-select listbox, grouped by team -->
-        <igx-card>
-            <igx-card-header>
-                <h3 igxCardHeaderTitle>Invite to the project</h3>
-                <h5 igxCardHeaderSubtitle>{{ selectedMembers().size }} of {{ members.length }} selected · type to search</h5>
-            </igx-card-header>
-            <igx-card-content>
-                <igx-list navigation="listbox" aria-label="Team members" aria-multiselectable="true">
-                    @for (team of teams; track team) {
-                        <igx-list-item [isHeader]="true">{{ team }}</igx-list-item>
-                        @for (member of membersOf(team); track member.id) {
-                            <igx-list-item [selected]="selectedMembers().has(member.id)" (click)="toggleMember(member)">
-                                @if (member.avatar) {
-                                    <igx-avatar igxListThumbnail shape="circle" [src]="member.avatar"></igx-avatar>
-                                } @else {
-                                    <igx-avatar igxListThumbnail shape="circle" [initials]="initials(member.name)"></igx-avatar>
+            @if (!properties.loading) {
+                @for (group of groups; track group.team) {
+                    @if (group.team) {
+                        <igx-list-item [isHeader]="true">{{ group.team }}</igx-list-item>
+                    }
+                    @for (person of group.people; track person.id) {
+                        <igx-list-item [selected]="isSelected(person)" (click)="select(person)" (keydown)="onKeydown($event, person)">
+                            @switch (properties.thumbnail) {
+                                @case ('avatar') {
+                                    <igx-avatar igxListThumbnail shape="circle" [src]="person.avatar" [initials]="initials(person)"></igx-avatar>
                                 }
-                                <span igxListLineTitle>{{ member.name }}</span>
-                                <span igxListLineSubTitle>{{ member.role }}</span>
-                                <igx-checkbox igxListAction inert [checked]="selectedMembers().has(member.id)"></igx-checkbox>
-                            </igx-list-item>
-                        }
-                    }
-                </igx-list>
-            </igx-card-content>
-        </igx-card>
-
-        <!-- Inbox: a grid of messages with their own actions -->
-        <igx-card>
-            <igx-card-header>
-                <h3 igxCardHeaderTitle>Inbox</h3>
-                <h5 igxCardHeaderSubtitle>{{ unreadCount() }} unread · Right arrow reaches the actions</h5>
-            </igx-card-header>
-            <igx-card-content>
-                <igx-list navigation="grid" aria-label="Messages">
-                    @for (day of days; track day) {
-                        @if (messagesOf(day).length) {
-                            <igx-list-item [isHeader]="true">{{ day }}</igx-list-item>
-                        }
-                        @for (message of messagesOf(day); track message.id) {
-                            <igx-list-item (click)="open(message)">
-                                <igx-avatar igxListThumbnail shape="circle" [src]="message.avatar"></igx-avatar>
-                                <span igxListLineTitle>{{ message.from }}</span>
-                                <span igxListLineSubTitle>{{ message.subject }}</span>
-                                <span igxListAction class="list-showcase__time">
-                                    @if (message.unread) {
-                                        <igx-badge [dot]="true" type="primary" aria-label="Unread"></igx-badge>
+                                @case ('initials') {
+                                    <igx-avatar igxListThumbnail shape="circle" [initials]="initials(person)"></igx-avatar>
+                                }
+                                @case ('icon') {
+                                    <igx-icon igxListThumbnail>face</igx-icon>
+                                }
+                            }
+                            @if (properties.title) {
+                                <span igxListLineTitle>{{ person.name }}</span>
+                            }
+                            @if (properties.subtitle) {
+                                <span igxListLineSubTitle>{{ person.role }}</span>
+                            }
+                            @switch (properties.end) {
+                                @case ('text') {
+                                    <span igxListAction>{{ person.time }}</span>
+                                }
+                                @case ('checkbox') {
+                                    @if (properties.selection !== 'none') {
+                                        <igx-checkbox igxListAction
+                                            [attr.inert]="checkboxInert ? '' : null"
+                                            [aria-label]="'Select ' + person.name"
+                                            [checked]="isSelected(person)"
+                                            (click)="$event.stopPropagation()"
+                                            (change)="select(person)"></igx-checkbox>
                                     }
-                                    {{ message.time }}
-                                </span>
-                                <button igxIconButton="flat" igxListAction
-                                    [attr.aria-label]="message.starred ? 'Unstar' : 'Star'"
-                                    [attr.aria-pressed]="message.starred"
-                                    (click)="toggleStar($event, message)">
-                                    <igx-icon>{{ message.starred ? 'star' : 'star_border' }}</igx-icon>
-                                </button>
-                                <button igxIconButton="flat" igxListAction aria-label="Delete" (click)="remove($event, message)">
-                                    <igx-icon>delete</igx-icon>
-                                </button>
-                            </igx-list-item>
-                        }
+                                }
+                                @case ('buttons') {
+                                    <ng-container ngProjectAs="[igxListAction]">
+                                        <button igxIconButton="flat" igxListAction
+                                            [attr.aria-label]="'Star ' + person.name"
+                                            [attr.aria-pressed]="person.starred"
+                                            (click)="toggleStar(person, $event)">
+                                            <igx-icon>{{ person.starred ? 'star' : 'star_border' }}</igx-icon>
+                                        </button>
+                                        <button igxIconButton="flat" igxListAction
+                                            [attr.aria-label]="'Delete ' + person.name"
+                                            (click)="remove(person, $event)">
+                                            <igx-icon>delete</igx-icon>
+                                        </button>
+                                    </ng-container>
+                                }
+                                @case ('switch') {
+                                    <igx-switch igxListAction
+                                        [aria-label]="'Notify ' + person.name"
+                                        [checked]="person.notify"
+                                        (click)="$event.stopPropagation()"
+                                        (change)="setNotify(person, $event.checked)"></igx-switch>
+                                }
+                                @case ('slider') {
+                                    <igx-slider igxListLine
+                                        [attr.aria-label]="'Volume of ' + person.name"
+                                        [minValue]="0" [maxValue]="100" [step]="10"
+                                        [value]="person.volume"
+                                        (click)="$event.stopPropagation()"
+                                        (valueChange)="setVolume(person, $any($event.value))"></igx-slider>
+                                }
+                            }
+                        </igx-list-item>
                     }
-                    <ng-template igxEmptyList>
-                        <div class="list-showcase__empty">
-                            <igx-icon>mark_email_read</igx-icon>
-                            <p>You're all caught up</p>
-                            <button igxButton="outlined" (click)="restoreMessages()">Restore messages</button>
-                        </div>
-                    </ng-template>
-                </igx-list>
-            </igx-card-content>
-        </igx-card>
+                }
+            }
 
-        <!-- Settings: a grid of switches and a slider that keeps its arrow keys -->
-        <igx-card>
-            <igx-card-header>
-                <h3 igxCardHeaderTitle>Notifications</h3>
-                <h5 igxCardHeaderSubtitle>Enter toggles · Escape leaves the slider</h5>
-            </igx-card-header>
-            <igx-card-content>
-                <igx-list navigation="grid" aria-label="Notification settings">
-                    <igx-list-item [isHeader]="true">Channels</igx-list-item>
-                    <igx-list-item (click)="toggleSetting('email')">
-                        <igx-icon igxListThumbnail>mail</igx-icon>
-                        <span igxListLineTitle>Email</span>
-                        <span igxListLineSubTitle>Mentions and replies to your comments</span>
-                        <igx-switch igxListAction aria-label="Email" [checked]="settings().email" (change)="toggleSetting('email')" (click)="$event.stopPropagation()"></igx-switch>
-                    </igx-list-item>
-                    <igx-list-item (click)="toggleSetting('push')">
-                        <igx-icon igxListThumbnail>notifications</igx-icon>
-                        <span igxListLineTitle>Push</span>
-                        <span igxListLineSubTitle>Instant alerts on this device</span>
-                        <igx-switch igxListAction aria-label="Push" [checked]="settings().push" (change)="toggleSetting('push')" (click)="$event.stopPropagation()"></igx-switch>
-                    </igx-list-item>
-                    <igx-list-item (click)="toggleSetting('digest')">
-                        <igx-icon igxListThumbnail>summarize</igx-icon>
-                        <span igxListLineTitle>Weekly digest</span>
-                        <span igxListLineSubTitle>A summary every Monday morning</span>
-                        <igx-switch igxListAction aria-label="Weekly digest" [checked]="settings().digest" (change)="toggleSetting('digest')" (click)="$event.stopPropagation()"></igx-switch>
-                    </igx-list-item>
-
-                    <igx-list-item [isHeader]="true">Sound</igx-list-item>
-                    <igx-list-item (click)="toggleSetting('quietHours')">
-                        <igx-icon igxListThumbnail>bedtime</igx-icon>
-                        <span igxListLineTitle>Quiet hours</span>
-                        <span igxListLineSubTitle>Mute alerts from 22:00 to 07:00</span>
-                        <igx-switch igxListAction aria-label="Quiet hours" [checked]="settings().quietHours" (change)="toggleSetting('quietHours')" (click)="$event.stopPropagation()"></igx-switch>
-                    </igx-list-item>
-                    <igx-list-item>
-                        <igx-icon igxListThumbnail>volume_up</igx-icon>
-                        <span igxListLineTitle>Alert volume · {{ settings().volume }}%</span>
-                        <igx-slider igxListLine aria-label="Alert volume" [minValue]="0" [maxValue]="100" [step]="10"
-                            [value]="settings().volume" (valueChange)="setVolume($any($event.value))"></igx-slider>
-                    </igx-list-item>
-                </igx-list>
-            </igx-card-content>
-        </igx-card>
-
-        <!-- Cities: a single-select listbox with search, an empty and a loading template -->
-        <igx-card>
-            <igx-card-header>
-                <h3 igxCardHeaderTitle>Office location</h3>
-                <h5 igxCardHeaderSubtitle>Selected: {{ selectedCity() }}</h5>
-                <button igxIconButton="flat" aria-label="Refresh cities" (click)="refreshCities()">
-                    <igx-icon>refresh</igx-icon>
-                </button>
-            </igx-card-header>
-            <igx-card-content>
-                <igx-input-group type="search">
-                    <igx-prefix><igx-icon>search</igx-icon></igx-prefix>
-                    <input igxInput placeholder="Search cities or countries" aria-label="Search cities"
-                        [ngModel]="citySearch()" (ngModelChange)="citySearch.set($event)" />
-                </igx-input-group>
-                <igx-list navigation="listbox" aria-label="Cities" [isLoading]="loadingCities()">
-                    @if (!loadingCities()) {
-                        @for (city of cities(); track city.name) {
-                            <igx-list-item [selected]="city.name === selectedCity()" (click)="selectedCity.set(city.name)">
-                                <igx-icon igxListThumbnail>location_city</igx-icon>
-                                <span igxListLineTitle>{{ city.name }}</span>
-                                <span igxListLineSubTitle>{{ city.country }}</span>
-                                <span igxListAction>{{ city.population }}</span>
-                            </igx-list-item>
-                        }
+            <ng-template igxEmptyList>
+                <div class="list-sample__message">
+                    <p>{{ emptyReason }}</p>
+                    <!-- A listbox option holds no controls, so only the other modes offer the button. -->
+                    @if (removed && properties.navigation !== 'listbox') {
+                        <button igxButton="outlined" (click)="restore()">Restore</button>
                     }
-                    <ng-template igxEmptyList>
-                        <div class="list-showcase__empty">
-                            <igx-icon>travel_explore</igx-icon>
-                            <p>No cities match "{{ citySearch() }}"</p>
-                        </div>
-                    </ng-template>
-                    <ng-template igxDataLoading>
-                        <div class="list-showcase__empty">
-                            <igx-circular-bar [indeterminate]="true" [textVisibility]="false"></igx-circular-bar>
-                            <p>Loading cities…</p>
-                        </div>
-                    </ng-template>
-                </igx-list>
-            </igx-card-content>
-        </igx-card>
-    </section>
+                </div>
+            </ng-template>
+            <ng-template igxDataLoading>
+                <div class="list-sample__message">
+                    <igx-circular-bar [indeterminate]="true" [textVisibility]="false"></igx-circular-bar>
+                    <p>Loading people…</p>
+                </div>
+            </ng-template>
+        </igx-list>
+    </article>
+
+    <article class="list-sample__column">
+        <h5 class="list-sample__title">Web Components</h5>
+        <igc-list
+            [navigation]="properties.navigation"
+            aria-label="Team"
+            [attr.aria-multiselectable]="multiselectable">
+            @if (!properties.loading) {
+                @for (group of groups; track group.team) {
+                    @if (group.team) {
+                        <igc-list-header>{{ group.team }}</igc-list-header>
+                    }
+                    @for (person of group.people; track person.id) {
+                        <igc-list-item [selected]="isSelected(person)" (click)="select(person)" (keydown)="onKeydown($event, person)">
+                            @switch (properties.thumbnail) {
+                                @case ('avatar') {
+                                    <igc-avatar slot="start" shape="circle" [src]="person.avatar" [initials]="initials(person)"></igc-avatar>
+                                }
+                                @case ('initials') {
+                                    <igc-avatar slot="start" shape="circle" [initials]="initials(person)"></igc-avatar>
+                                }
+                                @case ('icon') {
+                                    <igc-icon slot="start" name="face"></igc-icon>
+                                }
+                            }
+                            @if (properties.title) {
+                                <span slot="title">{{ person.name }}</span>
+                            }
+                            @if (properties.subtitle) {
+                                <span slot="subtitle">{{ person.role }}</span>
+                            }
+                            @switch (properties.end) {
+                                @case ('text') {
+                                    <span slot="end">{{ person.time }}</span>
+                                }
+                                @case ('checkbox') {
+                                    @if (properties.selection !== 'none') {
+                                        <igc-checkbox slot="end"
+                                            [attr.inert]="checkboxInert ? '' : null"
+                                            [attr.aria-label]="'Select ' + person.name"
+                                            [checked]="isSelected(person)"
+                                            (click)="$event.stopPropagation()"
+                                            (igcChange)="select(person)"></igc-checkbox>
+                                    }
+                                }
+                                @case ('buttons') {
+                                    <igc-icon-button slot="end" variant="flat"
+                                        [name]="person.starred ? 'star' : 'star_border'"
+                                        [attr.aria-label]="'Star ' + person.name"
+                                        [attr.aria-pressed]="person.starred"
+                                        (click)="toggleStar(person, $event)"></igc-icon-button>
+                                    <igc-icon-button slot="end" variant="flat" name="delete"
+                                        [attr.aria-label]="'Delete ' + person.name"
+                                        (click)="remove(person, $event)"></igc-icon-button>
+                                }
+                                @case ('switch') {
+                                    <igc-switch slot="end"
+                                        [attr.aria-label]="'Notify ' + person.name"
+                                        [checked]="person.notify"
+                                        (click)="$event.stopPropagation()"
+                                        (igcChange)="setNotify(person, $any($event).detail.checked)"></igc-switch>
+                                }
+                                @case ('slider') {
+                                    <igc-slider
+                                        [attr.aria-label]="'Volume of ' + person.name"
+                                        [min]="0" [max]="100" [step]="10"
+                                        [value]="person.volume"
+                                        (click)="$event.stopPropagation()"
+                                        (igcChange)="setVolume(person, $any($event).detail)"></igc-slider>
+                                }
+                            }
+                        </igc-list-item>
+                    }
+                }
+            }
+
+            <!-- igc-list has no loading state: the app shows one in the empty slot. -->
+            <div slot="empty" class="list-sample__message">
+                @if (properties.loading) {
+                    <igc-circular-progress indeterminate hide-label></igc-circular-progress>
+                    <p>Loading people…</p>
+                } @else {
+                    <p>{{ emptyReason }}</p>
+                    @if (removed && properties.navigation !== 'listbox') {
+                        <igc-button variant="outlined" (click)="restore()">Restore</igc-button>
+                    }
+                }
+            </div>
+        </igc-list>
+    </article>
 </div>
