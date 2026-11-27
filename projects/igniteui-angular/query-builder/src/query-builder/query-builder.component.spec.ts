@@ -3,6 +3,7 @@ import { FilteringExpressionsTree, FilteringLogic, IExpressionTree, IFilteringEx
 import { IBaseChipEventArgs, IgxChipComponent } from 'igniteui-angular/chips';
 import { IDragBaseEventArgs } from 'igniteui-angular/directives';
 import { IgxComboComponent } from 'igniteui-angular/combo';
+import { IgxDropDownComponent } from 'igniteui-angular/drop-down';
 import { IgxIconComponent } from 'igniteui-angular/icon';
 import { IgxInputGroupComponent } from 'igniteui-angular/input-group';
 import { IgxSelectComponent } from 'igniteui-angular/select';
@@ -17,6 +18,7 @@ import { QueryBuilderFunctions, SampleEntities } from './query-builder-functions
 import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { FormsModule } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
 import { NgTemplateOutlet } from '@angular/common';
 import { ExpressionGroupItem, ExpressionOperandItem, QueryBuilderSelectors } from './query-builder.common';
 import { IgxQueryBuilderComponent } from './query-builder.component';
@@ -2149,6 +2151,30 @@ describe('IgxQueryBuilder', () => {
 
             // Verify 'Ungroup' is enabled
             QueryBuilderFunctions.verifyContextMenuItemDisabled(fix, 1, false);
+        });
+
+        it('Should close the open group context menu when its button is clicked.', async () => {
+            queryBuilder.expressionTree = QueryBuilderFunctions.generateExpressionTreeWithSubGroup();
+            fix.detectChanges();
+            const dropDown: IgxDropDownComponent = QueryBuilderFunctions.getQueryBuilderGroupContextMenus(fix)[2]
+                .query(By.directive(IgxDropDownComponent)).componentInstance;
+
+            const opened = firstValueFrom(dropDown.opened);
+            QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+            fix.detectChanges();
+            await opened;
+            expect(queryBuilder.isContextMenuVisible).toBe(true);
+
+            const closed = firstValueFrom(dropDown.closed);
+            const opening = vi.fn();
+            dropDown.opening.subscribe(opening);
+            QueryBuilderFunctions.clickQueryBuilderGroupContextMenu(fix, 2);
+            fix.detectChanges();
+            await closed;
+            fix.detectChanges();
+
+            expect(opening).not.toHaveBeenCalled();
+            expect(queryBuilder.isContextMenuVisible).toBe(false);
         });
 
         it(`Should insert a reversed group after the expression when 'Add group' is chosen from its add menu.`, async () => {
