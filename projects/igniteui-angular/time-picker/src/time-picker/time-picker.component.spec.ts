@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement, EventEmitter, QueryList, ElementRef, Injector, ChangeDetectorRef } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync, flush } from '@angular/core/testing';
 import { UntypedFormControl, UntypedFormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -510,6 +510,34 @@ describe('IgxTimePicker', () => {
                 dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).
                                     injector.get(IgxDateTimeEditorDirective);
             }));
+            it('should undo and redo a spin in the input and keep the value in sync', fakeAsync(() => {
+                const initial = new Date((timePicker.value as Date).getTime());
+                dateTimeEditor.nativeElement.focus();
+                tick();
+                fixture.detectChanges();
+                dateTimeEditor.nativeElement.setSelectionRange(1, 1);
+                const text = dateTimeEditor.nativeElement.value;
+
+                timePicker.increment(DatePart.Hours);
+                fixture.detectChanges();
+                const spun = new Date((timePicker.value as Date).getTime());
+                expect(spun.getHours()).not.toEqual(initial.getHours());
+                expect(dateTimeEditor.nativeElement.value).not.toEqual(text);
+
+                // Ctrl + Z
+                UIInteractions.triggerKeyDownEvtUponElem('z', dateTimeEditor.nativeElement, true, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditor.nativeElement.value).toEqual(text);
+                // the date portion, which the input does not show, is kept as well
+                expect(timePicker.value).toEqual(initial);
+
+                // Ctrl + Y
+                UIInteractions.triggerKeyDownEvtUponElem('y', dateTimeEditor.nativeElement, true, false, false, true);
+                fixture.detectChanges();
+                expect(timePicker.value).toEqual(spun);
+                flush();
+            }));
+
             it('should open/close the dropdown and keep the current selection on toggle icon click', fakeAsync(() => {
                 const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
