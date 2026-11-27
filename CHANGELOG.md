@@ -2,6 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.4.0
+
+### New Functionality
+
+- `IgxMaskDirective`, `IgxDateTimeEditorDirective`
+    - Added undo and redo of the edits in the input. The mask writes the input value on each edit, which clears the undo history of the browser, so the directive now keeps its own. `Ctrl/Cmd + Z` undoes, `Ctrl + Y` and `Ctrl/Cmd + Shift + Z` redo, and the Undo and Redo commands of the context menu, the Edit menu and software keyboards are handled as well. Previously `Ctrl + Z` and `Ctrl + Y` were canceled and did nothing.
+    - A run of typed characters is a single step, and so is a run of deletes in the same direction. Moving the caret starts a new step. Paste, drop, cut and a committed IME composition are one step each. In `IgxDateTimeEditorDirective` each spin of a date or time part and `Ctrl + ;` are separate steps.
+    - A restored step updates the bound value and emits `valueChanged`, and in `IgxDateTimeEditorDirective` also `valueChange` and `validationFailed`, the same as typing does.
+    - The history is dropped when the value is set from outside, for example through the form control or a date selected in the calendar of a picker, and when the mask, the input format or the prompt character changes. It is kept while the input loses and regains the focus. Nothing is undone while the input is readonly.
+    - The same applies to the inputs of `IgxDatePickerComponent`, `IgxTimePickerComponent`, `IgxDateRangePickerComponent` with two inputs, and the date and time cell editors of the grids.
+
 ## 22.3.2
 
 ### General

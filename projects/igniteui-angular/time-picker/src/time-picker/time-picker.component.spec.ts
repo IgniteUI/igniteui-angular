@@ -2334,6 +2334,32 @@ describe('IgxTimePicker', () => {
                 expect(selectedSeconds.attributes['aria-valuemax']).toEqual('56');
             });
 
+            it('should undo and redo a spin in the input and keep the value in sync', () => {
+                const initial = new Date((timePicker.value as Date).getTime());
+                dateTimeEditor.nativeElement.focus();
+                fixture.detectChanges();
+                dateTimeEditor.nativeElement.setSelectionRange(1, 1);
+                const text = dateTimeEditor.nativeElement.value;
+
+                timePicker.increment(DatePart.Hours);
+                fixture.detectChanges();
+                const spun = new Date((timePicker.value as Date).getTime());
+                expect(spun.getHours()).not.toEqual(initial.getHours());
+                expect(dateTimeEditor.nativeElement.value).not.toEqual(text);
+
+                // Ctrl + Z
+                UIInteractions.triggerKeyDownEvtUponElem('z', dateTimeEditor.nativeElement, true, false, false, true);
+                fixture.detectChanges();
+                expect(dateTimeEditor.nativeElement.value).toEqual(text);
+                // the date portion, which the input does not show, is kept as well
+                expect(timePicker.value).toEqual(initial);
+
+                // Ctrl + Y
+                UIInteractions.triggerKeyDownEvtUponElem('y', dateTimeEditor.nativeElement, true, false, false, true);
+                fixture.detectChanges();
+                expect(timePicker.value).toEqual(spun);
+            });
+
             it('should reset a Date value to 00:00 when the input is cleared', () => {
                 vi.spyOn(timePicker.valueChange, 'emit');
                 dateTimeEditor.nativeElement.focus();

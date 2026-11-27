@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2, ChangeDetectionStrategy, DebugElement } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxMaskDirective } from './mask.directive';
@@ -626,6 +626,622 @@ describe('igxMask', () => {
 
         // The branch should have run without throwing; mask is still applied
         expect(inputEl.value).toBeDefined();
+    });
+
+    describe('Undo / redo', () => {
+        const EMPTY_MASK = '(___) ____-___';
+
+        type Modifiers = Partial<Pick<KeyboardEvent, 'ctrlKey' | 'metaKey' | 'shiftKey' | 'altKey'>>;
+
+        /** Creates a focused input with the `(000) 0000-000` mask and no value. */
+        const setup = async () => {
+            const fixture = TestBed.createComponent(EventFiringComponent);
+            fixture.detectChanges();
+            await fixture.whenStable(); // NgModel writeValue Promise
+
+            const input = fixture.debugElement.query(By.css('input'));
+            const element = input.nativeElement as HTMLInputElement;
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            return { fixture, input, element, component: fixture.componentInstance };
+        };
+
+        /** Presses a key and returns the event, so that `preventDefault` can be checked. */
+        const press = (input: DebugElement, key: string, modifiers: Modifiers = {}) => {
+            const event = {
+                key, target: input.nativeElement,
+                ctrlKey: false, metaKey: false, shiftKey: false, altKey: false,
+                preventDefault: vi.fn(),
+                ...modifiers
+            };
+            input.triggerEventHandler('keydown', event);
+            return event;
+        };
+
+        const undo = (input: DebugElement) => press(input, 'z', { ctrlKey: true });
+        const redo = (input: DebugElement) => press(input, 'y', { ctrlKey: true });
+
+        /** Types at the given position, by default where the caret is. */
+        const type = (characters: string, input: DebugElement, at: number = input.nativeElement.selectionStart) =>
+            UIInteractions.simulateTyping(characters, input, at, at);
+
+        /** Does what the browser does on Backspace and fires the events. */
+        const backspace = (input: DebugElement) => {
+            const element = input.nativeElement as HTMLInputElement;
+            UIInteractions.triggerEventHandlerKeyDown('Backspace', input);
+            const [start, end] = [element.selectionStart, element.selectionEnd];
+            const from = start === end ? Math.max(start - 1, 0) : start;
+            element.value = element.value.substring(0, from) + element.value.substring(end);
+            element.setSelectionRange(from, from);
+            input.triggerEventHandler('input', { target: element });
+        };
+
+        /** Does what the browser does on Delete and fires the events. */
+        const del = (input: DebugElement) => {
+            const element = input.nativeElement as HTMLInputElement;
+            UIInteractions.triggerEventHandlerKeyDown('Delete', input);
+            const [start, end] = [element.selectionStart, element.selectionEnd];
+            const to = start === end ? end + 1 : end;
+            element.value = element.value.substring(0, start) + element.value.substring(to);
+            element.setSelectionRange(start, start);
+            input.triggerEventHandler('input', { target: element });
+        };
+
+        const expectSelection = (element: HTMLInputElement, start: number, end = start) => {
+            expect(element.selectionStart).toEqual(start);
+            expect(element.selectionEnd).toEqual(end);
+        };
+
+        it('should undo a run of typed characters as a single step and redo it', async () => {
+            const { input, element, component } = await setup();
+
+            type('123', input, 0);
+            expect(element.value).toEqual('(123) ____-___');
+            expect(component.myValue).toEqual('123');
+
+            const event = undo(input);
+            expect(event.preventDefault).toHaveBeenCalledTimes(1);
+            expect(element.value).toEqual(EMPTY_MASK);
+            expect(component.myValue).toEqual('');
+            // the caret goes back to where the run began
+            expectSelection(element, 0);
+
+            redo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            expect(component.myValue).toEqual('123');
+            expectSelection(element, 4);
+
+            // nothing more to redo
+            redo(input);
+            expect(element.value).toEqual('(123) ____-___');
+        });
+
+        it('should support the alternate shortcuts', async () => {
+            const { input, element } = await setup();
+            type('1', input, 0);
+
+            press(input, 'z', { metaKey: true });
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            press(input, 'Z', { ctrlKey: true, shiftKey: true });
+            expect(element.value).toEqual('(1__) ____-___');
+
+            press(input, 'z', { ctrlKey: true });
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            press(input, 'Z', { metaKey: true, shiftKey: true });
+            expect(element.value).toEqual('(1__) ____-___');
+
+            // AltGr reports both Ctrl and Alt
+            const altGr = press(input, 'z', { ctrlKey: true, altKey: true });
+            expect(altGr.preventDefault).not.toHaveBeenCalled();
+            expect(element.value).toEqual('(1__) ____-___');
+
+            const metaY = press(input, 'y', { metaKey: true });
+            expect(metaY.preventDefault).not.toHaveBeenCalled();
+            expect(element.value).toEqual('(1__) ____-___');
+        });
+
+        it('should start a new step when the caret moves and keep the holes in the mask', async () => {
+            const { input, element } = await setup();
+
+            type('1', input, 0);
+            type('5', input, 7);
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+            expectSelection(element, 7);
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            redo(input);
+            redo(input);
+            expect(element.value).toEqual('(1__) _5__-___');
+        });
+
+        it('should start a new step when the caret leaves and comes back', async () => {
+            const { input, element } = await setup();
+
+            // with the arrow keys
+            type('12', input, 0);
+            press(input, 'ArrowLeft');
+            element.setSelectionRange(2, 2);
+            press(input, 'ArrowRight');
+            element.setSelectionRange(3, 3);
+            type('3', input);
+            expect(element.value).toEqual('(123) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+
+            // with a click at the same position
+            type('3', input);
+            input.triggerEventHandler('pointerdown', {});
+            type('4', input);
+            expect(element.value).toEqual('(123) 4___-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            undo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should undo a run of backspaces across a literal as a single step', async () => {
+            const { input, element, component } = await setup();
+
+            type('1234', input, 0);
+            expect(element.value).toEqual('(123) 4___-___');
+            expectSelection(element, 7);
+
+            // over '4', the space, the bracket and then the three digits
+            for (let i = 0; i < 6; i++) {
+                backspace(input);
+            }
+            expect(element.value).toEqual(EMPTY_MASK);
+            expectSelection(element, 1);
+
+            // typing and deleting are separate steps
+            undo(input);
+            expect(element.value).toEqual('(123) 4___-___');
+            expect(component.myValue).toEqual('1234');
+            expectSelection(element, 7);
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            redo(input);
+            redo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+            undo(input);
+            expect(element.value).toEqual('(123) 4___-___');
+        });
+
+        it('should undo a run of forward deletes as a single step', async () => {
+            const { input, element } = await setup();
+
+            type('123', input, 0);
+            element.setSelectionRange(1, 1);
+            del(input);
+            del(input);
+            del(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            expectSelection(element, 1);
+        });
+
+        it('should record a paste as its own step', async () => {
+            const { input, element } = await setup();
+
+            type('12', input, 0);
+            UIInteractions.simulatePaste('345', input, 3, 3);
+            expect(element.value).toEqual('(123) 45__-___');
+
+            // typing right after the paste does not join it
+            type('6', input);
+            expect(element.value).toEqual('(123) 456_-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) 45__-___');
+
+            undo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+            expectSelection(element, 3);
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should undo an IME composition as a single step', async () => {
+            const { input, element } = await setup();
+
+            UIInteractions.simulateCompositionEvent('12', input, 1, 1, false);
+            expect(element.value).toEqual('(12_) ____-___');
+
+            type('3', input);
+            expect(element.value).toEqual('(123) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should restore the selection that an IME composition replaced', async () => {
+            const { input, element } = await setup();
+            type('123', input, 0);
+
+            // the composition replaces the selected '12'
+            UIInteractions.simulateCompositionEvent('9', input, 1, 3, false);
+            expect(element.value).toEqual('(9_3) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            // selected again, as after undoing a typed replacement or a cut
+            expectSelection(element, 1, 3);
+
+            // so typing replaces the restored selection
+            UIInteractions.simulateTyping('7', input, element.selectionStart, element.selectionEnd);
+            expect(element.value).toEqual('(7_3) ____-___');
+        });
+
+        it('should not undo while an IME composition is in progress', async () => {
+            const { input, element } = await setup();
+            type('1', input, 0);
+
+            input.triggerEventHandler('compositionstart', { target: element });
+            const event = undo(input);
+            // the shortcut is canceled, but the composition keeps the text
+            expect(event.preventDefault).toHaveBeenCalledTimes(1);
+            expect(element.value).toEqual('(1__) ____-___');
+
+            const command = { inputType: 'historyUndo', cancelable: true, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', command);
+            expect(command.preventDefault).toHaveBeenCalledTimes(1);
+            expect(element.value).toEqual('(1__) ____-___');
+
+            input.triggerEventHandler('compositionend', { target: element });
+            expect(element.value).toEqual('(1__) ____-___');
+
+            // a key press that the IME handles is ignored as well
+            press(input, 'z', { ctrlKey: true, isComposing: true } as Modifiers);
+            expect(element.value).toEqual('(1__) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should record a cut as its own step', async () => {
+            const { input, element, component } = await setup();
+            type('123', input, 0);
+
+            // Ctrl + X over the selected '23'
+            element.setSelectionRange(2, 4);
+            press(input, 'x', { ctrlKey: true });
+            element.value = '(1) ____-___';
+            element.setSelectionRange(2, 2);
+            input.triggerEventHandler('input', { target: element, inputType: 'deleteByCut' });
+            expect(element.value).toEqual('(1__) ____-___');
+            expect(component.myValue).toEqual('1');
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            expectSelection(element, 2, 4);
+            expect(component.myValue).toEqual('123');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should not join a cut with Shift + Delete and a delete that follows it', async () => {
+            const { input, element } = await setup();
+            type('1234', input, 0);
+
+            // Shift + Delete cuts the selected '12'
+            element.setSelectionRange(1, 3);
+            press(input, 'Delete', { shiftKey: true });
+            element.value = '(3) 4___-___';
+            element.setSelectionRange(1, 1);
+            input.triggerEventHandler('input', { target: element, inputType: 'deleteByCut' });
+            expect(element.value).toEqual('(__3) 4___-___');
+            expectSelection(element, 3);
+
+            del(input);
+            expect(element.value).toEqual('(___) 4___-___');
+
+            // only the delete is undone
+            undo(input);
+            expect(element.value).toEqual('(__3) 4___-___');
+
+            undo(input);
+            expect(element.value).toEqual('(123) 4___-___');
+        });
+
+        it('should record a drop as its own step', async () => {
+            const { input, element, component } = await setup();
+            type('1', input, 0);
+
+            // the browser inserts the dropped text and selects it
+            UIInteractions.simulateDropEvent(element, '23', 'text');
+            element.value = '(123__) ____-___';
+            element.setSelectionRange(2, 4);
+            input.triggerEventHandler('input', { target: element, inputType: 'insertFromDrop' });
+            expect(element.value).toEqual('(123) ____-___');
+            expect(component.myValue).toEqual('123');
+
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+            expect(component.myValue).toEqual('1');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should record a browser auto-fill as its own step', async () => {
+            const { input, element, component } = await setup();
+            type('1', input, 0);
+
+            // auto-fill replaces the whole value and sends an input event with an empty input type
+            element.value = '5554567890';
+            input.triggerEventHandler('input', { target: element, inputType: '' });
+            expect(element.value).toEqual('(555) 4567-890');
+            expect(component.myValue).toEqual('5554567890');
+
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+            expect(component.myValue).toEqual('1');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should not record an edit that the mask rejects', async () => {
+            const { input, element } = await setup();
+
+            type('a', input, 0);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            type('1', input, 0);
+            // the rejected character does not break the run either
+            type('a', input);
+            type('2', input);
+            expect(element.value).toEqual('(12_) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            // there is no step left for the rejected edits
+            redo(input);
+            undo(input);
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should start a new step when a rejected edit follows a caret move', async () => {
+            const { input, element } = await setup();
+
+            type('1', input, 0);
+            // the caret moves and the character typed at the new position is rejected
+            type('a', input, 7);
+            expect(element.value).toEqual('(1__) ____-___');
+            expectSelection(element, 7);
+
+            type('5', input);
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            // the rejected edit must not join the two runs
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should update the value, emit valueChanged and restore the selection of the undone edit', async () => {
+            const { input, element, component } = await setup();
+
+            type('123', input, 0);
+            // replace the selected '12' with '9'
+            UIInteractions.simulateTyping('9', input, 1, 3);
+            expect(element.value).toEqual('(9_3) ____-___');
+            expect(component.raw).toEqual('93');
+
+            undo(input);
+            expect(element.value).toEqual('(123) ____-___');
+            expectSelection(element, 1, 3);
+            expect(component.myValue).toEqual('123');
+            expect(component.raw).toEqual('123');
+            expect(component.formatted).toEqual('(123) ____-___');
+
+            redo(input);
+            expect(element.value).toEqual('(9_3) ____-___');
+            expect(component.myValue).toEqual('93');
+            expect(component.raw).toEqual('93');
+        });
+
+        it('should do nothing with an empty history or while readonly', async () => {
+            const { input, element } = await setup();
+            const mask = input.injector.get(IgxMaskDirective);
+            vi.spyOn(mask.valueChanged, 'emit');
+
+            // the native undo stack is empty as well, so the shortcut is still canceled
+            expect(undo(input).preventDefault).toHaveBeenCalledTimes(1);
+            expect(redo(input).preventDefault).toHaveBeenCalledTimes(1);
+            expect(element.value).toEqual(EMPTY_MASK);
+            expect(mask.valueChanged.emit).not.toHaveBeenCalled();
+
+            type('1', input, 0);
+            element.readOnly = true;
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+
+            element.readOnly = false;
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+        });
+
+        it('should drop the history when the value is set from outside', async () => {
+            const { fixture, input, element, component } = await setup();
+
+            type('1', input, 0);
+            component.myValue = '555';
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(element.value).toEqual('(555) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(555) ____-___');
+        });
+
+        it('should drop the history when the mask or the prompt changes', async () => {
+            const { fixture, input, element, component } = await setup();
+
+            type('1', input, 0);
+            component.myMask = '00-00';
+            fixture.detectChanges();
+            expect(element.value).toEqual('1_-__');
+
+            undo(input);
+            expect(element.value).toEqual('1_-__');
+
+            type('2', input, 1);
+            expect(element.value).toEqual('12-__');
+            input.injector.get(IgxMaskDirective).promptChar = '*';
+
+            undo(input);
+            expect(element.value).toEqual('12-__');
+        });
+
+        it('should keep the history after a blur and a refocus', async () => {
+            const { fixture, input, element } = await setup();
+
+            type('123', input, 0);
+            input.triggerEventHandler('blur', { target: element });
+            fixture.detectChanges();
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            undo(input);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            // on blur the empty mask is replaced by the placeholder
+            input.triggerEventHandler('blur', { target: element });
+            fixture.detectChanges();
+            expect(element.value).toEqual('');
+            input.triggerEventHandler('focus', {});
+            fixture.detectChanges();
+
+            redo(input);
+            expect(element.value).toEqual('(123) ____-___');
+        });
+
+        it('should handle the undo and redo commands that do not come from the keyboard', async () => {
+            const { input, element } = await setup();
+            type('1', input, 0);
+
+            // context menu, Edit menu, software keyboard
+            const undoCommand = { inputType: 'historyUndo', cancelable: true, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', undoCommand);
+            expect(undoCommand.preventDefault).toHaveBeenCalledTimes(1);
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            const redoCommand = { inputType: 'historyRedo', cancelable: true, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', redoCommand);
+            expect(redoCommand.preventDefault).toHaveBeenCalledTimes(1);
+            expect(element.value).toEqual('(1__) ____-___');
+
+            const typing = { inputType: 'insertText', preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', typing);
+            expect(typing.preventDefault).not.toHaveBeenCalled();
+            expect(element.value).toEqual('(1__) ____-___');
+
+            // where `beforeinput` cannot be canceled the command arrives as an input event
+            input.triggerEventHandler('input', { target: element, inputType: 'historyUndo' });
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            input.triggerEventHandler('input', { target: element, inputType: 'historyRedo' });
+            expect(element.value).toEqual('(1__) ____-___');
+        });
+
+        it('should move a single step for a history command that cannot be canceled', async () => {
+            const { input, element } = await setup();
+            type('1', input, 0);
+            type('5', input, 7);
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            // the browser sends both events for one command
+            const undoCommand = { inputType: 'historyUndo', cancelable: false, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', undoCommand);
+            expect(undoCommand.preventDefault).not.toHaveBeenCalled();
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            input.triggerEventHandler('input', { target: element, inputType: 'historyUndo' });
+            expect(element.value).toEqual('(1__) ____-___');
+
+            const redoCommand = { inputType: 'historyRedo', cancelable: false, preventDefault: vi.fn() };
+            input.triggerEventHandler('beforeinput', redoCommand);
+            input.triggerEventHandler('input', { target: element, inputType: 'historyRedo' });
+            expect(element.value).toEqual('(1__) _5__-___');
+        });
+
+        it('should keep the caret for redo when a history command that cannot be canceled changes the text', async () => {
+            const { input, element } = await setup();
+            type('12', input, 0);
+            expectSelection(element, 3);
+
+            // the native undo changes the text and moves the caret before the input event comes
+            input.triggerEventHandler('beforeinput', { inputType: 'historyUndo', cancelable: false, preventDefault: vi.fn() });
+            element.value = '(1__) ____-___';
+            input.triggerEventHandler('input', { target: element, inputType: 'historyUndo' });
+            expect(element.value).toEqual(EMPTY_MASK);
+
+            redo(input);
+            expect(element.value).toEqual('(12_) ____-___');
+            // where the caret was before the undo, not at the end of the text
+            expectSelection(element, 3);
+        });
+
+        it('should not undo over a text that was changed from outside before a rejected edit', async () => {
+            const { fixture, input, element } = await setup();
+            type('1', input, 0);
+
+            // the text changes without the form control, for example through a native value binding
+            element.value = '(555) ____-___';
+            fixture.detectChanges();
+
+            // a rejected character must not make the old step look current
+            type('a', input, 6);
+            expect(element.value).toEqual('(555) ____-___');
+
+            undo(input);
+            expect(element.value).toEqual('(555) ____-___');
+            redo(input);
+            expect(element.value).toEqual('(555) ____-___');
+        });
+
+        it('should restore the caret of an edit that comes with no keydown', async () => {
+            const { input, element } = await setup();
+            type('1', input, 0);
+
+            // a software keyboard inserts text without key events
+            element.setSelectionRange(7, 7);
+            input.triggerEventHandler('beforeinput', { inputType: 'insertText', preventDefault: vi.fn() });
+            element.value = '(1__) _5___-___';
+            element.setSelectionRange(8, 8);
+            input.triggerEventHandler('input', { target: element, inputType: 'insertText' });
+            expect(element.value).toEqual('(1__) _5__-___');
+
+            undo(input);
+            expect(element.value).toEqual('(1__) ____-___');
+            expectSelection(element, 7);
+        });
     });
 });
 
