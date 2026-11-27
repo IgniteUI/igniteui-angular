@@ -4,6 +4,7 @@ import {
     Validator, AbstractControl, ValidationErrors, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from '@angular/forms';
 import { IgxMaskDirective } from '../mask/mask.directive';
+import { MaskHistoryState } from '../mask/mask-history';
 import { isDate, DatePartInfo, DatePart, DatePartDeltas, DateTimeUtil, I18N_FORMATTER } from 'igniteui-angular/core';
 import { IgxDateTimeEditorEventArgs } from './date-time-editor.common';
 import { noop } from 'rxjs';
@@ -175,6 +176,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     public set value(value: Date | string | null) {
         this._value = value;
         this.setDateValue(value);
+        this.dropHistoryOnOutsideChange();
         this.onChangeCallback(value);
         this.updateMask();
     }
@@ -237,6 +239,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     private _oldValue!: Date;
     private _dateValue!: Date;
     private _onClear!: boolean;
+    /** Whether the editor itself is committing a value, as opposed to a value that is set from outside. */
+    private _committing = false;
+    /** The time of the date as of the last assignment. Tells a change of the date that was made from outside. */
+    private _knownDateTime: number | null = null;
     private document: Document;
     private _defaultInputFormat!: string;
     private _value!: Date | string | null;
@@ -296,6 +302,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
     private get dateValue(): Date {
         return this._dateValue;
+    }
+
+    /** The time value of the current date, or `null` when the editor has no valid date. */
+    private get dateTime(): number | null {
+        return DateTimeUtil.isValidDate(this.dateValue) ? this.dateValue.getTime() : null;
     }
 
     constructor() {
@@ -363,7 +374,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
         const newValue = this.trySpinValue(targetPart, delta);
-        this.updateValue(newValue);
+        this.recordAtomicEdit(() => this.updateValue(newValue));
     }
 
     /**
@@ -378,13 +389,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
             return;
         }
         const newValue = this.trySpinValue(targetPart, delta, true);
-        this.updateValue(newValue);
+        this.recordAtomicEdit(() => this.updateValue(newValue));
     }
 
     /** @hidden @internal */
     public override writeValue(value: any): void {
         this._value = value;
         this.setDateValue(value);
+        this.dropHistoryOnOutsideChange();
         this.updateMask();
     }
 
@@ -435,32 +447,23 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
         this.updateValue(this.parseDate(this.inputValue));
         this.updateMask();
+        this.recordHiddenChange();
+        // The value update can rewrite the text that the mask has just settled on.
+        this.settleHistory();
     }
 
     /** @hidden @internal */
     public override onInputChanged(event: InputEvent): void {
         super.onInputChanged(event);
-        if (this._composing) {
+        // A history step that came as an input event has already restored the value.
+        if (this._composing || event.inputType === 'historyUndo' || event.inputType === 'historyRedo') {
             return;
         }
 
-        if (this.inputIsComplete()) {
-            const parsedDate = this.parseDate(this.inputValue);
-            if (DateTimeUtil.isValidDate(parsedDate)) {
-                this.updateValue(parsedDate);
-            } else {
-                const oldValue = this.value && new Date(this.dateValue.getTime());
-                const args: IgxDateTimeEditorEventArgs = { oldValue: oldValue as Date | undefined, newValue: parsedDate!, userInput: this.inputValue };
-                this.validationFailed.emit(args);
-                if (DateTimeUtil.isValidDate(args.newValue)) {
-                    this.updateValue(args.newValue);
-                } else {
-                    this.updateValue(null);
-                }
-            }
-        } else {
-            this.updateValue(null);
-        }
+        this.commitInputText();
+        this.recordHiddenChange();
+        // The value update can rewrite the text that the mask has just settled on.
+        this.settleHistory();
     }
 
     /** @hidden @internal */
@@ -481,10 +484,115 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         }
 
         if (event.ctrlKey && key === this.platform.KEYMAP.SEMICOLON) {
-            this.updateValue(new Date());
+            this.recordAtomicEdit(() => this.updateValue(new Date()));
         }
 
         this.moveCursor(event);
+    }
+
+    /**
+     * The source format identifies the pattern: `MM/dd/yyyy` and `dd/MM/yyyy` produce the same mask.
+     *
+     * @hidden @internal
+     */
+    protected override get historySignature(): string {
+        return `${this.inputFormat} ${this.promptChar}`;
+    }
+
+    /**
+     * The text shows only the parts of the input format, so the snapshot keeps the whole date next to it.
+     *
+     * @hidden @internal
+     */
+    protected override createHistoryState(value: string, start: number, end: number): MaskHistoryState {
+        return { value, start, end, model: this.dateTime };
+    }
+
+    /** @hidden @internal */
+    protected override restoreHistoryState(state: MaskHistoryState): void {
+        super.restoreHistoryState(state);
+
+        if (typeof state.model === 'number') {
+            this.updateValue(new Date(state.model));
+        } else {
+            this.commitInputText();
+        }
+
+        // The value update rewrites the text and collapses the selection.
+        this.setSelectionRange(state.start, state.end);
+        this.settleHistory(state.start);
+    }
+
+    /** Runs an edit that bypasses the mask input, such as a spin, as a single undo step. */
+    private recordAtomicEdit(edit: () => void): void {
+        // Without the focus the input shows the display format, which the history does not track.
+        // The steps taken before are for another date then.
+        if (!this._focused) {
+            const previous = this.dateTime;
+            edit();
+            if (this.dateTime !== previous) {
+                this.history.clear();
+            }
+            return;
+        }
+
+        const before = this.createHistoryState(this.inputValue, this.selectionStart, this.selectionEnd);
+        edit();
+
+        // A change in a part that the input format hides leaves the text the same.
+        if (this.inputValue !== before.value || this.dateTime !== before.model) {
+            this.history.record('atomic', before);
+        } else {
+            this.history.pass('atomic', before);
+        }
+        this.settleHistory();
+    }
+
+    /**
+     * Drops the undo history when a different date is set from outside. The text does not tell that alone:
+     * two dates can look the same in the input format. A value that the editor commits itself is not such a
+     * change, and neither is what its events write back into it meanwhile, as the pickers do.
+     */
+    private dropHistoryOnOutsideChange(): void {
+        const current = this.dateTime;
+        // Compare with a saved time and not with the date before the assignment: an application can change
+        // the time of the very `Date` instance that the editor holds and then set that instance again.
+        if (!this._committing && current !== this._knownDateTime) {
+            this.history.clear();
+        }
+        this._knownDateTime = current;
+    }
+
+    /**
+     * Records a typed edit that left the text the same, but changed a part of the date that the input
+     * format hides. Typing over `15` in `15/06/2020` rebuilds the date from the text and drops its time.
+     */
+    private recordHiddenChange(): void {
+        const skipped = this.skippedEdit;
+        if (skipped && this.dateTime !== skipped.state.model) {
+            this.history.record(skipped.kind, skipped.state);
+        }
+    }
+
+    /** Updates the value from the text in the input. */
+    private commitInputText(): void {
+        if (this.inputIsComplete()) {
+            const parsedDate = this.parseDate(this.inputValue);
+            if (DateTimeUtil.isValidDate(parsedDate)) {
+                this.updateValue(parsedDate);
+            } else {
+                const oldValue = this.value && new Date(this.dateValue.getTime());
+                const args: IgxDateTimeEditorEventArgs = { oldValue: oldValue as Date | undefined, newValue: parsedDate!, userInput: this.inputValue };
+                this.validationFailed.emit(args);
+                if (DateTimeUtil.isValidDate(args.newValue)) {
+                    this.updateValue(args.newValue);
+                } else {
+                    this.updateValue(null);
+                }
+            }
+        } else {
+            this.updateValue(null);
+        }
     }
 
     /** @hidden @internal */
@@ -663,15 +771,21 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
 
     private updateValue(newDate: Date | null): void {
-        this._oldValue = this.dateValue;
-        this.value = newDate;
+        const committing = this._committing;
+        this._committing = true;
+        try {
+            this._oldValue = this.dateValue;
+            this.value = newDate;
 
-        // TODO: should we emit events here?
-        if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
-            this.valueChange.emit(this.dateValue);
-        }
-        if (this.dateValue && !this.valueInRange(this.dateValue)) {
-            this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
+            // TODO: should we emit events here?
+            if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
+                this.valueChange.emit(this.dateValue);
+            }
+            if (this.dateValue && !this.valueInRange(this.dateValue)) {
+                this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
+            }
+        } finally {
+            this._committing = committing;
         }
     }
 

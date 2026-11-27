@@ -73,6 +73,23 @@ displayFormat = new DisplayFormatPipe();
 <input type="text" igxInput [igxMask]="'CCCCCC'" [displayValuePipe]="displayFormat"/>
 ```
 
+### Undo and redo
+The directive writes the value of the input on each edit, which clears the undo history of the browser. It keeps its own history instead.
+
+| Key combination | Effect |
+|--|--|
+| `CTRL/COMMAND` + `Z` | Undoes the last edit step. |
+| `CTRL` + `Y` or `CTRL/COMMAND` + `SHIFT` + `Z` | Redoes the last undone step. |
+
+The Undo and Redo commands of the context menu, the Edit menu and software keyboards are handled the same way.
+
+- A run of typed characters is a single step, and so is a run of deletes in the same direction. Moving the caret starts a new step.
+- Paste, drop, cut and a committed IME composition are one step each.
+- An edit that the mask rejects is not recorded.
+- A restored step updates the bound value, emits `valueChanged` and puts the caret where the undone edit began.
+- The history is dropped when the value is set from outside (`writeValue`) and when `mask` or `promptChar` changes. It is kept while the input loses and regains the focus.
+- Nothing is undone while the input is readonly or during an IME composition.
+
 ### API
 
 ### Inputs
