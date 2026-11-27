@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, createComponent, EnvironmentInjector } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject, ChangeDetectionStrategy, createComponent, EnvironmentInjector, AfterViewInit } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -7,7 +7,7 @@ import { UIInteractions } from '../../../test-utils/ui-interactions.spec';
 import { IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective } from '../public_api';
 import { IgxCardComponent, IgxCardContentDirective } from 'igniteui-angular/card';
 import { IGX_INPUT_GROUP_TYPE, IgxInputGroupType } from './inputGroupType';
-import { InputResourceStringsEN, changei18n, THEME_TOKEN } from 'igniteui-angular/core';
+import { InputResourceStringsEN, changei18n, IgxTheme, THEME_TOKEN, ThemeToken } from 'igniteui-angular/core';
 import { config } from 'rxjs';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
@@ -15,6 +15,7 @@ const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
+const INPUT_GROUP_BOOTSTRAP_CSS_CLASS = 'igx-input-group--bootstrap';
 
 describe('IgxInputGroup', () => {
     beforeEach(async () => {
@@ -29,7 +30,8 @@ describe('IgxInputGroup', () => {
                 InputGroupDisabledByDefaultComponent,
                 InputGroupDisabledWithoutValueComponent,
                 InputGroupNestedThemeScopeComponent,
-                InputGroupFormRowComponent
+                InputGroupFormRowComponent,
+                InputGroupOnPushThemeComponent
             ]
         }).compileComponents();
     });
@@ -281,6 +283,40 @@ describe('IgxInputGroup', () => {
         }
     });
 
+    describe('IgxInputGroup runtime theme change in an OnPush view (#17991)', () => {
+        // The theme classes are on the host and the notch is in the template, both must show the material theme
+        const expectMaterialBorder = (fixture) => {
+            const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+            expect(inputGroupElement.classList.contains(INPUT_GROUP_BOOTSTRAP_CSS_CLASS)).toBe(false);
+            expect(inputGroupElement.classList.contains(INPUT_GROUP_BORDER_CSS_CLASS)).toBe(true);
+            expect(inputGroupElement.querySelector('.igx-input-group__notch')).not.toBeNull();
+        };
+
+        it('should update its theme classes when THEME_TOKEN changes', async () => {
+            const fixture = TestBed.createComponent(InputGroupOnPushThemeComponent);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+            expect(inputGroupElement.classList.contains(INPUT_GROUP_BOOTSTRAP_CSS_CLASS)).toBe(true);
+
+            fixture.componentInstance.themeToken.set('material');
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expectMaterialBorder(fixture);
+        });
+
+        it('should apply a theme that an OnPush parent sets in ngAfterViewInit', async () => {
+            const fixture = TestBed.createComponent(InputGroupOnPushThemeComponent);
+            fixture.componentInstance.savedTheme = 'material';
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expectMaterialBorder(fixture);
+        });
+    });
+
     describe('Resource Strings', () => {
         it('should return full resource strings when partial resourceStrings are set', () => {
             const fix = TestBed.createComponent(InputGroupComponent);
@@ -384,6 +420,24 @@ class InputGroupNestedThemeScopeComponent {
     @ViewChild('rootGroup', { static: true }) public rootGroup: IgxInputGroupComponent;
     @ViewChild('indigoGroup', { static: true }) public indigoGroup: IgxInputGroupComponent;
     @ViewChild('materialGroup', { static: true }) public materialGroup: IgxInputGroupComponent;
+}
+
+@Component({
+    template: `<igx-input-group type="border"><input igxInput /></igx-input-group>`,
+    providers: [{ provide: THEME_TOKEN, useFactory: () => new ThemeToken('bootstrap') }],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [IgxInputGroupComponent, IgxInputDirective]
+})
+class InputGroupOnPushThemeComponent implements AfterViewInit {
+    public themeToken = inject(THEME_TOKEN);
+    /** A theme to restore after the first render, e.g. one the user saved */
+    public savedTheme?: IgxTheme;
+
+    public ngAfterViewInit() {
+        if (this.savedTheme) {
+            this.themeToken.set(this.savedTheme);
+        }
+    }
 }
 
 @Component({

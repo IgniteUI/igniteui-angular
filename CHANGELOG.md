@@ -46,6 +46,8 @@ All notable changes for each version of this project will be documented in this 
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+- `IgxInputGroupComponent`
+    - After a runtime theme change through `THEME_TOKEN`, an input group in an OnPush view, such as a grid cell editor or a combo in an OnPush component, updates its theme classes with its template. Previously it kept the classes of the theme it was first rendered in (#17991).
 
 ## 22.3.0
 
