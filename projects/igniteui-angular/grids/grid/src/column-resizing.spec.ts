@@ -1210,6 +1210,23 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(2).width).toEqual('90px');
             expect(grid.columnList.get(3).width).toEqual('90px');
         }));
+
+        it('should size columns to their `minWidth` when the grid has no space left for them - #18039.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(MinWidthColumnsComponent);
+            fixture.detectChanges();
+            const grid = fixture.componentInstance.grid;
+
+            // Too narrow for the 3 columns without a width, even at their 50px minWidth
+            grid.width = '200px';
+            fixture.detectChanges();
+            tick();
+
+            expect(grid.columnList.get(0).width).toEqual('130px');
+            for (const column of grid.columnList.toArray().slice(1)) {
+                expect(column.width).toEqual('50px');
+                expect(column.calcPixelWidth).toEqual(50);
+            }
+        }));
     });
 
     describe('Resizer tests: ', () => {
