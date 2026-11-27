@@ -110,7 +110,7 @@ export class IgxFilterOptions {
      * ```
      */
     public metConditionFn(item: any) {
-        if (item.hasOwnProperty('hidden')) {
+        if ('hidden' in item) {
             item.hidden = false;
         }
     }
@@ -126,7 +126,7 @@ export class IgxFilterOptions {
      * ```
      */
     public overdueConditionFn(item: any) {
-        if (item.hasOwnProperty('hidden')) {
+        if ('hidden' in item) {
             item.hidden = true;
         }
     }

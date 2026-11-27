@@ -21,6 +21,8 @@ export const spaceBar = ' ' as const;
 /** @hidden @internal */
 export const escapeKey = 'Escape' as const;
 /** @hidden @internal */
+export const f2Key = 'F2' as const;
+/** @hidden @internal */
 export const homeKey = 'Home' as const;
 /** @hidden @internal */
 export const endKey = 'End' as const;
@@ -53,4 +55,24 @@ export const shiftKey = 'Shift' as const;
  */
 export function isKey(event: KeyboardEvent, key: string): boolean {
     return event.key?.toLowerCase() === key.toLowerCase();
+}
+
+/**
+ * Whether an IME composition owns the key press. Safari sends the last one
+ * after `compositionend`, with `isComposing` false but `keyCode` 229.
+ *
+ * @param event - The keyboard event to check.
+ * @returns `true` when the key belongs to an IME composition.
+ *
+ * @example
+ * ```typescript
+ * if (isComposingKey(event)) {
+ *     return;
+ * }
+ * ```
+ *
+ * @hidden @internal
+ */
+export function isComposingKey(event: KeyboardEvent): boolean {
+    return event.isComposing || event.keyCode === 229;
 }

@@ -10,7 +10,8 @@ import {
     isDevMode
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { enterKey, spaceBar } from './keys';
+import { enterKey, isComposingKey, spaceBar } from './keys';
+import { canConfigure } from './configure-once';
 
 //#region Modifiers and combination keys
 
@@ -109,6 +110,12 @@ export interface IgxKeyBindingOptions {
     preventDefault?: boolean;
     /** Whether to call `stopPropagation` before the handler runs. Defaults to `false`. */
     stopPropagation?: boolean;
+    /**
+     * Whether the binding applies, called on each key press. While it returns
+     * `false`, the key is not bound: the service neither cancels it nor runs
+     * the handler.
+     */
+    when?: () => boolean;
 }
 
 /**
@@ -124,6 +131,13 @@ export interface IgxKeyBindingsConfig {
      * of the selectors. Defaults to `['input', 'textarea', 'select']`.
      */
     skip?: string[] | IgxKeyBindingSkipCallback;
+    /**
+     * Whether to ignore the key presses whose default action an element
+     * between the target and the host already prevented, so an inner control
+     * that handles a key, such as Escape closing its popup, keeps it.
+     * Defaults to `false`.
+     */
+    skipHandled?: boolean;
     /** The default options of every binding. The options of a binding take precedence. */
     bindingDefaults?: IgxKeyBindingOptions;
 }
@@ -204,6 +218,7 @@ export class IgxKeyBindingsService {
     private _bindingDefaults = DEFAULT_BINDING_OPTIONS;
     private _skipSelector?: string = DEFAULT_SKIP.join(',');
     private _skipCallback?: IgxKeyBindingSkipCallback;
+    private _skipHandled = false;
 
     constructor() {
         this._destroyRef.onDestroy(() => {
@@ -246,18 +261,14 @@ export class IgxKeyBindingsService {
      * ```
      */
     public configure(config: IgxKeyBindingsConfig): this {
-        if (this._configured) {
-            if (isDevMode()) {
-                throw new Error(
-                    'IgxKeyBindingsService: configure() was already called for this element. ' +
-                    'The owners that share the instance must agree on one configuration.'
-                );
-            }
+        if (!canConfigure(this._configured, 'IgxKeyBindingsService',
+            ' The owners that share the instance must agree on one configuration.')) {
             return this;
         }
 
         this._configured = true;
         this._bindingDefaults = { ...DEFAULT_BINDING_OPTIONS, ...config.bindingDefaults };
+        this._skipHandled = config.skipHandled ?? false;
 
         const skip = config.skip ?? DEFAULT_SKIP;
         if (typeof skip === 'function') {
@@ -446,7 +457,7 @@ export class IgxKeyBindingsService {
         const options = { ...this._bindingDefaults, ...binding.options };
         const triggers = options.triggers ?? DEFAULT_TRIGGERS;
 
-        if (!triggers.includes(event.type as IgxKeyBindingTrigger)) {
+        if (options.when?.() === false || !triggers.includes(event.type as IgxKeyBindingTrigger)) {
             return;
         }
 
@@ -471,12 +482,13 @@ export class IgxKeyBindingsService {
     }
 
     /**
-     * Whether to ignore the event: the key has no binding, a node between the
-     * target and `scope` matches the skip selectors, or the skip callback
+     * Whether to ignore the event: the key has no binding, an IME composition
+     * owns it, an inner element handled it under `skipHandled`, a node between
+     * the target and `scope` matches the skip selectors, or the skip callback
      * agrees.
      */
     private _shouldSkip(event: KeyboardEvent, key: string, scope: Element): boolean {
-        if (!this._allowedKeys.has(key)) {
+        if (!this._allowedKeys.has(key) || isComposingKey(event) || (this._skipHandled && event.defaultPrevented)) {
             return true;
         }
 

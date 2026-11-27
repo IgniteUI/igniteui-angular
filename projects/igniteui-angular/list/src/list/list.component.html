@@ -12,7 +12,17 @@
     </article>
 </ng-template>
 
-@if (!children || children.length === 0 || isLoading) {
+@if (isNavigable && (!hasOptions || isLoading)) {
+    <!-- In a listbox or grid, the message is read as the only item, or hidden while there are options. -->
+    <div class="igx-list__message-wrapper"
+        [attr.role]="!hasOptions ? itemRole : null"
+        [attr.aria-hidden]="hasOptions ? 'true' : null">
+        <div class="igx-list__message-cell" [attr.role]="isGrid && !hasOptions ? 'gridcell' : null">
+            <ng-container *ngTemplateOutlet="template; context: context">
+            </ng-container>
+        </div>
+    </div>
+} @else if (!children || children.length === 0 || isLoading) {
     <ng-container *ngTemplateOutlet="template; context: context">
     </ng-container>
 }

@@ -335,6 +335,23 @@ describe('Filter', () => {
             expect(item.hidden).toBe(true);
         });
 
+        it('metConditionFn and overdueConditionFn should toggle a hidden accessor', () => {
+            class Item {
+                private _hidden = false;
+                public get hidden() {
+                    return this._hidden;
+                }
+                public set hidden(value: boolean) {
+                    this._hidden = value;
+                }
+            }
+            const item = new Item();
+            options.overdueConditionFn(item);
+            expect(item.hidden).toBe(true);
+            options.metConditionFn(item);
+            expect(item.hidden).toBe(false);
+        });
+
         it('metConditionFn and overdueConditionFn should not add a hidden property', () => {
             const item = {};
             options.metConditionFn(item);

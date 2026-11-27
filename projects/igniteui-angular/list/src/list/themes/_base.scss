@@ -9,6 +9,16 @@
 
 $theme: digest-schema($light-list);
 
+/// The inset focus ring of a focused item or empty list, the system highlight in forced colors.
+@mixin focus-ring() {
+    outline: var(--_focus-ring-width, #{rem(1px)}) solid var-get($theme, 'item-focus-outline-color');
+    outline-offset: calc(var(--_focus-ring-width, #{rem(1px)}) * -1);
+
+    @media (forced-colors: active) {
+        outline-color: Highlight;
+    }
+}
+
 @include layer(base) {
     %igx-list-item-pan {
         position: absolute;
@@ -40,6 +50,20 @@ $theme: digest-schema($light-list);
 
         &:focus-visible {
             outline-style: none;
+        }
+
+        @include e(message-wrapper) {
+            display: contents;
+        }
+
+        @include e(message-cell) {
+            display: contents;
+        }
+
+        @include m(focusable) {
+            &:focus-visible {
+                @include focus-ring();
+            }
         }
 
         @include m(empty) {
@@ -175,6 +199,16 @@ $theme: digest-schema($light-list);
             display: flex;
             color: var-get($theme, 'header-text-color');
             background: var-get($theme, 'header-background');
+        }
+
+        @include m(focusable) {
+            &:focus-visible {
+                outline: none;
+
+                @include e(content) {
+                    @include focus-ring();
+                }
+            }
         }
 
         @include m(base) {

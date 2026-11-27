@@ -4,6 +4,14 @@ All notable changes for each version of this project will be documented in this 
 
 ## 22.3.2
 
+### New Features
+
+- `IgxListComponent`, `IgxListItemComponent`
+    - The new `navigation` input sets the keyboard navigation and the ARIA pattern of the list (#17952). Its values, `none`, `listbox` and `grid`, are exported as `IgxListNavigation`. It defaults to `none`, and with `listbox` the list becomes an accessible listbox: the list gets `role="listbox"`, items get `role="option"` with `aria-selected` from their `selected` state, and the list has a single tab stop on the option that was focused last, else the first selected one, else the first one. Arrow Up/Down and Home/End move between options, typing moves to the next option that starts with the typed letters, and Enter/Space click the focused option, so `itemClicked` fires. While `isLoading` is set, the list has `aria-busy="true"`. While the list has no options, the list itself is the tab stop and its empty or loading message is read as an option. When the focused option is removed, the focus moves to the option that takes its place, else to the next one that renders, else to the last one, else to the list. The focused option shows an inset focus ring, also when it is selected, colored by the new `item-focus-outline-color` token of the list theme. Lists whose `navigation` is `none` are unchanged.
+    - With `navigation` set to `grid`, items can hold their own controls: the list is a grid with one cell per row, Arrow Right/Left move into the controls of the focused row, Escape/F2 go back to the row, and Tab leaves the list also from a control. When a focused control is removed and its row stays, the focus moves to the row. Controls that use the arrow keys keep them. Every row exposes `aria-selected` when the list sets `aria-multiselectable`, else only the selected rows.
+    - In a listbox or grid, an item with an `igxListLineTitle` is named by its title and described by its `igxListLineSubTitle`, then by the header above it, so screen readers announce "Kate, selected, 1 of 8, Designer Employees" instead of all the item content. Headers act as group names and are hidden from screen readers. An item's own `aria-label`, `aria-labelledby` or `aria-describedby`, set or bound in the template, wins.
+    - Recommended: give a listbox an `aria-label`, so it is announced when the focus moves into the list. Set `aria-multiselectable="true"` when more than one item can be selected, and keep focusable controls out of the items of a listbox; use `grid` for items with controls. If an item needs a selection control, such as a checkbox, make it `inert` so it does not interfere with the keyboard navigation and selection, and bind it to the item's selected state.
+
 ### General
 
 - `IgxButtonDirective`
