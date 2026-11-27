@@ -20,7 +20,7 @@ import {
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../../../test-utils/ui-interactions.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../../test-utils/grid-functions.spec';
-import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
+import { IgxCellFooterTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellTemplateDirective, IgxColumnComponent, IgxColumnGroupComponent, INPUT_DEBOUNCE_TIME_DEFAULT, IgxSummaryTemplateDirective } from 'igniteui-angular/grids/core';
 import { IgxGridRowComponent } from './grid-row.component';
 import { GridColumnDataType, IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular/core';
 import { IgxButtonDirective, IgxDateTimeEditorDirective } from 'igniteui-angular/directives';
@@ -51,6 +51,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 TemplatedContextInputColumnsComponent,
                 ColumnHaederClassesComponent,
                 ResizableColumnsComponent,
+                AutoSizeColumnGroupComponent,
                 DOMAttributesAsSettersComponent,
                 GridInToggleableWrapperComponent
             ]
@@ -1739,6 +1740,72 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(grid.columns[0].width).toBe('164px');
             expect(grid.columns[1].width).toBe('279px');
         }));
+
+        it('should defer auto-sizing a templated child of a partly visible group until it is scrolled into view', async () => {
+            const fix = TestBed.createComponent(AutoSizeColumnGroupComponent);
+            fix.detectChanges();
+            await fix.whenStable();
+            await wait(100);
+            const grid = fix.componentInstance.instance;
+            const templated = grid.getColumnByName('templated');
+            const headerTitle = grid.headerCellList.find(h => h.column === templated).nativeElement.querySelector('.igx-grid-th__title');
+            const titleRange = document.createRange();
+            titleRange.selectNodeContents(headerTitle);
+            // Sized from its content, which is much wider than its header text.
+            const contentAutoSize = templated.autoSize;
+            expect(contentAutoSize).toBeGreaterThan(titleRange.getBoundingClientRect().width * 2);
+
+            const original = (grid as any).autoSizeColumnsInView;
+            const errors: unknown[] = [];
+            const autoSizeSpy = spyOn(grid as any, 'autoSizeColumnsInView').and.callFake(function (...args: unknown[]) {
+                try {
+                    return original.apply(grid, args);
+                } catch (e) {
+                    errors.push(e);
+                    throw e;
+                }
+            });
+            const scroller = grid.headerContainer.getScroll();
+            const scrollPastTemplated = async () => {
+                scroller.scrollLeft = templated.calcPixelWidth + 5;
+                scroller.dispatchEvent(new Event('scroll'));
+                // The auto-size pass after a scroll waits for the next render.
+                fix.detectChanges();
+                await wait(100);
+                fix.detectChanges();
+            };
+
+            // Scroll `templated` out of view, then reset the sizes. The reset changes the column widths,
+            // so scroll past `templated` again to keep the rest of its group in view.
+            await scrollPastTemplated();
+            grid.recalculateAutoSizes();
+            fix.detectChanges();
+            await fix.whenStable();
+            await wait(100);
+            await scrollPastTemplated();
+
+            // The group header stays rendered, but no data row renders a cell for `templated`.
+            const groupA = grid.columns.find(c => c.header === 'Group A');
+            expect(grid.headerContainer.state.startIndex).toBe(0);
+            expect(groupA.headerGroup).toBeTruthy();
+            expect(grid.dataRowList.first.cells.some(c => c.column === templated)).toBe(false);
+
+            expect(errors).toEqual([]);
+            expect(grid.getColumnByName('flag1').autoSize).toBeGreaterThan(0);
+            expect(grid.getColumnByName('flag2').autoSize).toBeGreaterThan(0);
+            // Not sized from its header alone while its cells are out of view.
+            expect(templated.autoSize).toBeUndefined();
+
+            scroller.scrollLeft = 0;
+            scroller.dispatchEvent(new Event('scroll'));
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+
+            expect(autoSizeSpy).toHaveBeenCalled();
+            expect(errors).toEqual([]);
+            expect(templated.autoSize).toBe(contentAutoSize);
+        });
     });
 
 
@@ -1841,6 +1908,43 @@ export class ResizableColumnsComponent {
         { field: 'ID', width: 'auto' },
         { field: 'Address', minWidth: '100px', maxWidth: '400px', width: 'auto' }
     ];
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" [primaryKey]="'id'" width="900px" height="400px">
+        <igx-column-group header="Group A">
+            <igx-column field="templated" width="auto">
+                <ng-template igxCell let-value>
+                    <span>{{ value }}</span>
+                </ng-template>
+            </igx-column>
+            <igx-column field="flag1" dataType="boolean" width="auto"></igx-column>
+            <igx-column field="flag2" dataType="boolean" width="auto"></igx-column>
+        </igx-column-group>
+        <igx-column-group header="Group B">
+            @for (field of groupBFields; track field) {
+                <igx-column [field]="field" width="150px"></igx-column>
+            }
+        </igx-column-group>
+    </igx-grid>
+    `,
+    imports: [IgxGridComponent, IgxColumnComponent, IgxColumnGroupComponent, IgxCellTemplateDirective]
+})
+export class AutoSizeColumnGroupComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public groupBFields = ['col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7'];
+    public data = this.makeData(5);
+
+    public makeData(count: number) {
+        return Array.from({ length: count }, (_, i) => {
+            const row: Record<string, unknown> = { id: i + 1, templated: `A templated value that is wider than its header ${i + 1}`, flag1: i % 2 === 0, flag2: i % 3 === 0 };
+            this.groupBFields.forEach(f => row[f] = `${f} - ${i + 1}`);
+            return row;
+        });
+    }
 }
 
 @Component({
