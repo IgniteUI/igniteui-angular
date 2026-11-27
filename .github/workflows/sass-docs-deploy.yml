@@ -110,16 +110,46 @@ jobs:
 
       # Lays the site out as it goes under angular-docs: the version folder, kept out of search
       # results like the earlier ones, and sass/latest when this release is the newest.
+      # The theme builds every page for sass/latest, so the version folder is pointed at its own
+      # assets, search index and links. Otherwise it loads them from sass/latest and breaks once a
+      # newer release replaces that. URLs with the host (canonical, hreflang) keep pointing at latest.
       - name: Stage the angular-docs folders
         env:
           LATEST: ${{ matrix.latest }}
         run: |
             set -euo pipefail
 
+            dir="angular-docs/${VERSION}/sass"
+            latest_base='/products/ignite-ui-angular/docs/sass/latest/'
+            version_base="/products/ignite-ui-angular/docs/${VERSION}/sass/"
+            path_only='(^|[^A-Za-z0-9.-])'
+
             mkdir -p "angular-docs/${VERSION}"
-            cp -r dist/igniteui-angular/docs/sass "angular-docs/${VERSION}/sass"
-            find "angular-docs/${VERSION}/sass" -name index.html \
+            cp -r dist/igniteui-angular/docs/sass "$dir"
+            find "$dir" -name index.html \
               -exec sed -i 's|</head>|<meta name="robots" content="noindex,nofollow"></head>|' {} +
+
+            find "$dir" -type f \( -name '*.html' -o -name '*.js' -o -name '*.css' \) \
+              -exec sed -i -E "s#${path_only}${latest_base}#\1${version_base}#g" {} +
+
+            if grep -rqE "${path_only}${latest_base}" "$dir"; then
+              echo "::error::${dir} still references ${latest_base}."
+              exit 1
+            fi
+
+            # Every file the pages load from the version folder has to be in it, whatever base
+            # the theme builds for.
+            refs=$(grep -rhoE "${version_base}[^\"'\`) #?]+\.[A-Za-z0-9]+" "$dir" --include='*.html' | sort -u || true)
+            if ! grep -qF "${version_base}_assets/" <<< "$refs"; then
+              echo "::error::No page in ${dir} loads assets from ${version_base}_assets/."
+              exit 1
+            fi
+            for url in $refs; do
+              if [[ ! -f "${dir}/${url#"$version_base"}" ]]; then
+                echo "::error::${dir} has no ${url#"$version_base"}, which its pages load."
+                exit 1
+              fi
+            done
 
             if [[ "$LATEST" == "true" ]]; then
               mkdir -p angular-docs/sass
