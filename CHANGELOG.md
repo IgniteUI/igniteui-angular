@@ -8,6 +8,8 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxButtonDirective`
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxForOfDirective`
+    - In Safari, the horizontal scrollbar of a horizontally virtualized `igxFor` is now visible and usable when the list first renders. Previously it was collapsed until change detection ran again.
 - `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
     - Auto-sizing columns with `width="auto"` no longer throws when a column group is partly scrolled out of view and one of its child columns with a cell template has no rendered cells. Such a column is now measured when it is scrolled into view.
 
