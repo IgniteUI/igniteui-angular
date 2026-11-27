@@ -46,6 +46,9 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 LargePinnedColGridComponent,
                 NullColumnsComponent,
                 MinWidthColumnsComponent,
+                MinWidthNoWidthResizeComponent,
+                SmallMinWidthNoWidthResizeComponent,
+                UserWidthBelowMinWidthResizeComponent,
                 ColGridComponent,
                 ColPercentageGridComponent,
                 AutosizeFilteringGridComponent
@@ -1218,6 +1221,132 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columnList.get(2).width).toEqual('90px');
             expect(grid.columnList.get(3).width).toEqual('90px');
         });
+
+        it('should resize a column with minWidth but no width from its rendered width on the first drag - #18038.', async () => {
+            const fixture = TestBed.createComponent(MinWidthNoWidthResizeComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const column = grid.getColumnByName('publisher');
+            const resizingSpy = vi.spyOn(grid.columnResized, 'emit');
+
+            // The column is drawn at its minWidth (200px), but column.width still reports the clamped default.
+            expect(column.width).toEqual('136px');
+            expect(column.calcPixelWidth).toEqual(200);
+
+            const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            const edge = Math.round(headers[1].nativeElement.getBoundingClientRect().right);
+
+            // First drag: +40px from the right edge of the publisher column.
+            await pressResizeArea(fixture, headerResArea, edge, 5);
+            fixture.detectChanges();
+
+            let resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, edge + 40, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, edge + 40, 5);
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('240px');
+            expect(resizingSpy).toHaveBeenCalledTimes(1);
+            expect(resizingSpy).toHaveBeenCalledWith({ column, prevWidth: '200px', newWidth: '240px' });
+
+            // Second drag: +40px more, from the new right edge. It already worked before the fix (control).
+            await pressResizeArea(fixture, headerResArea, edge + 40, 5);
+            fixture.detectChanges();
+
+            resizer = GridFunctions.getResizer(fixture).nativeElement;
+            UIInteractions.simulateMouseEvent('mousemove', resizer, edge + 80, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, edge + 80, 5);
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('280px');
+            expect(resizingSpy).toHaveBeenCalledTimes(2);
+            expect(resizingSpy).toHaveBeenCalledWith({ column, prevWidth: '240px', newWidth: '280px' });
+        });
+
+        it('should resize a column with minWidth but no width by the full drag distance on the first drag - #18038.', async () => {
+            const fixture = TestBed.createComponent(MinWidthNoWidthResizeComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const column = grid.getColumnByName('publisher');
+
+            expect(column.width).toEqual('136px');
+            expect(column.calcPixelWidth).toEqual(200);
+
+            const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            const edge = Math.round(headers[1].nativeElement.getBoundingClientRect().right);
+
+            await pressResizeArea(fixture, headerResArea, edge, 5);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, edge + 100, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, edge + 100, 5);
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('300px');
+        });
+
+        it('should resize a column with a user-set width below minWidth from its rendered width on the first drag - #18038.', async () => {
+            const fixture = TestBed.createComponent(UserWidthBelowMinWidthResizeComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const column = grid.getColumnByName('publisher');
+
+            // The column is drawn at its minWidth (200px), but column.width reports the user-set 100px.
+            expect(column.width).toEqual('100px');
+            expect(column.calcPixelWidth).toEqual(200);
+
+            const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            const edge = Math.round(headers[1].nativeElement.getBoundingClientRect().right);
+
+            await pressResizeArea(fixture, headerResArea, edge, 5);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, edge + 40, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, edge + 40, 5);
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('240px');
+        });
+
+        it('should resize a column with minWidth below the default minimum from its rendered width on the first drag - #18038.', async () => {
+            const fixture = TestBed.createComponent(SmallMinWidthNoWidthResizeComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const column = grid.getColumnByName('CompanyName');
+
+            // The column is drawn at its minWidth; the exact drawn width depends on the
+            // available space, so the test derives the expectation from it.
+            const drawnWidth = column.calcPixelWidth;
+            expect(Number.isFinite(drawnWidth)).toBe(true);
+            expect(drawnWidth).toEqual(column.minWidthPx);
+
+            const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
+            const headerResArea = GridFunctions.getHeaderResizeArea(headers[1]).nativeElement;
+            const edge = Math.round(headers[1].nativeElement.getBoundingClientRect().right);
+
+            await pressResizeArea(fixture, headerResArea, edge, 5);
+            fixture.detectChanges();
+
+            const resizer = GridFunctions.getResizer(fixture).nativeElement;
+            expect(resizer).toBeDefined();
+            UIInteractions.simulateMouseEvent('mousemove', resizer, edge + 40, 5);
+            UIInteractions.simulateMouseEvent('mouseup', resizer, edge + 40, 5);
+            fixture.detectChanges();
+
+            expect(column.width).toEqual((drawnWidth + 40) + 'px');
+        });
     });
 
     describe('Resizer tests: ', () => {
@@ -1399,6 +1528,76 @@ export class MinWidthColumnsComponent implements OnInit {
 
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoData();
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="700px" height="500px"`, ``, `<igx-column [field]="'name'" [width]="'300px'"></igx-column>
+        <igx-column [field]="'publisher'" [minWidth]="'200px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'gender'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'race'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'skinColor'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'eyeColor'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'hairColor'" [width]="'150px'"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class MinWidthNoWidthResizeComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
+    public data = [];
+
+    public ngOnInit(): void {
+        this.data = [
+            { name: 'Name 1', publisher: 'Publisher 1', gender: 'Male', race: 'Human', skinColor: 'Fair', eyeColor: 'Brown', hairColor: 'Black' },
+            { name: 'Name 2', publisher: 'Publisher 2', gender: 'Female', race: 'Elf', skinColor: 'Pale', eyeColor: 'Blue', hairColor: 'Blond' },
+            { name: 'Name 3', publisher: 'Publisher 3', gender: 'Male', race: 'Dwarf', skinColor: 'Tan', eyeColor: 'Green', hairColor: 'Red' }
+        ];
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="400px" height="200px"`, ``, `<igx-column [field]="'ID'" [width]="'300px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'CompanyName'" [minWidth]="'50px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'ContactName'" [width]="'150px'"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class SmallMinWidthNoWidthResizeComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
+    public data = [];
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.contactInfoData();
+    }
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(`width="700px" height="500px"`, ``, `<igx-column [field]="'name'" [width]="'300px'"></igx-column>
+        <igx-column [field]="'publisher'" [width]="'100px'" [minWidth]="'200px'" [resizable]="true"></igx-column>
+        <igx-column [field]="'gender'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'race'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'skinColor'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'eyeColor'" [width]="'150px'"></igx-column>
+        <igx-column [field]="'hairColor'" [width]="'150px'"></igx-column>`),
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [IgxGridComponent, IgxColumnComponent]
+})
+export class UserWidthBelowMinWidthResizeComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
+    public data = [];
+
+    public ngOnInit(): void {
+        this.data = [
+            { name: 'Name 1', publisher: 'Publisher 1', gender: 'Male', race: 'Human', skinColor: 'Fair', eyeColor: 'Brown', hairColor: 'Black' },
+            { name: 'Name 2', publisher: 'Publisher 2', gender: 'Female', race: 'Elf', skinColor: 'Pale', eyeColor: 'Blue', hairColor: 'Blond' },
+            { name: 'Name 3', publisher: 'Publisher 3', gender: 'Male', race: 'Dwarf', skinColor: 'Tan', eyeColor: 'Green', hairColor: 'Red' }
+        ];
     }
 }
 
