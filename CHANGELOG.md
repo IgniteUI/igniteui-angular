@@ -14,6 +14,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxButtonDirective`
     - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only through `igxLabel`, and clearing `igxLabel` removes only the value it set (#18009).
     - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Auto-sizing columns with `width="auto"` no longer throws when a column group is partly scrolled out of view and one of its child columns with a cell template has no rendered cells. Such a column is now measured when it is scrolled into view.
 - `IgxPivotGridComponent`
     - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
 
@@ -44,6 +46,8 @@ All notable changes for each version of this project will be documented in this 
     - Replacing the data and the columns of a percentage-height grid no longer runs a redundant sizing pass (#17792).
 - `IgxHierarchicalGridComponent`
     - Replacing the root columns with the same number of columns no longer leaves the old headers and column widths on screen when `summaryCalculationMode` is `childLevelsOnly`.
+- `IgxInputGroupComponent`
+    - After a runtime theme change through `THEME_TOKEN`, an input group in an OnPush view, such as a grid cell editor or a combo in an OnPush component, updates its theme classes with its template. Previously it kept the classes of the theme it was first rendered in (#17991).
 
 ## 22.3.0
 

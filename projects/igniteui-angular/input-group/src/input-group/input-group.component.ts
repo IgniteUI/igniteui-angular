@@ -15,6 +15,7 @@ import {
     AfterContentChecked,
     ChangeDetectionStrategy,
     ViewEncapsulation,
+    signal,
 } from '@angular/core';
 import { IInputResourceStrings, InputResourceStringsEN } from 'igniteui-angular/core';
 import { getComponentTheme } from 'igniteui-angular/core';
@@ -148,7 +149,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     private _destroyRef = inject(DestroyRef);
     private _type: IgxInputGroupType | null = null;
     private _filled = false;
-    private _theme: IgxTheme;
+    private readonly _theme = signal<IgxTheme>(this.themeToken.theme);
     private _resourceStrings: IInputResourceStrings | null = null;
     private _customResourceStrings: IInputResourceStrings = null!;
     private _defaultResourceStrings = getCurrentResourceStrings(InputResourceStringsEN);
@@ -228,7 +229,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @Input()
     public set theme(value: IgxTheme) {
-        this._theme = value;
+        this._theme.set(value);
     }
 
     /**
@@ -242,14 +243,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      * }
      */
     public get theme(): IgxTheme {
-        return this._theme;
+        return this._theme();
     }
 
     constructor() {
-        this._theme = this.themeToken.theme;
         const themeChange = this.themeToken.onChange((theme) => {
-            if (this._theme !== theme) {
-                this._theme = theme;
+            if (this._theme() !== theme) {
+                this._theme.set(theme);
                 this.cdr.detectChanges();
             }
         });
@@ -342,7 +342,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
     public get hasBorder() {
         return (
             (this.type === 'line' || this.type === 'box') &&
-            this._theme === 'material'
+            this._theme() === 'material'
         );
     }
 
@@ -358,13 +358,13 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @HostBinding('class.igx-input-group--line')
     public get isTypeLine(): boolean {
-        return this.type === 'line' && this._theme === 'material';
+        return this.type === 'line' && this._theme() === 'material';
     }
 
     /** @hidden @internal */
     @HostBinding('class.igx-input-group--base')
     public get isNotBorder(): boolean {
-        return this.type !== 'border' && this._theme === 'material';
+        return this.type !== 'border' && this._theme() === 'material';
     }
 
     /**
@@ -379,7 +379,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @HostBinding('class.igx-input-group--box')
     public get isTypeBox() {
-        return this.type === 'box' && this._theme === 'material';
+        return this.type === 'box' && this._theme() === 'material';
     }
 
     /** @hidden @internal */
@@ -434,7 +434,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @HostBinding('class.igx-input-group--border')
     public get isTypeBorder() {
-        return this.type === 'border' && this._theme === 'material';
+        return this.type === 'border' && this._theme() === 'material';
     }
 
     /**
@@ -449,7 +449,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @HostBinding('class.igx-input-group--fluent')
     public get isTypeFluent() {
-        return this._theme === 'fluent';
+        return this._theme() === 'fluent';
     }
 
     /**
@@ -464,7 +464,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @HostBinding('class.igx-input-group--bootstrap')
     public get isTypeBootstrap() {
-        return this._theme === 'bootstrap';
+        return this._theme() === 'bootstrap';
     }
 
     /**
@@ -479,7 +479,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
      */
     @HostBinding('class.igx-input-group--indigo')
     public get isTypeIndigo() {
-        return this._theme === 'indigo';
+        return this._theme() === 'indigo';
     }
 
     /**
@@ -513,7 +513,7 @@ export class IgxInputGroupComponent implements IgxInputGroupBase, AfterContentCh
         if (!this.themeToken.preferToken) {
             const theme = getComponentTheme(this.element.nativeElement);
 
-            if (theme && theme !== this._theme) {
+            if (theme && theme !== this._theme()) {
                 this.theme = theme;
                 this.cdr.markForCheck();
             }
