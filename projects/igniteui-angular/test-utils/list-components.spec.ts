@@ -166,7 +166,7 @@ const GRID_ITEMS = [
                 <igx-list-item [selected]="item.id === selectedId()">
                     <span igxListLineTitle>{{ item.name }}</span>
                     <button class="edit">Edit</button>
-                    @if (item.id === 3) {
+                    @if (item.id === 3 && showNote()) {
                         <input class="note" />
                     }
                     <button class="delete">Delete</button>
@@ -186,6 +186,7 @@ export class GridListComponent extends BasicListComponent {
     public readonly multiselectable = signal<string | null>(null);
     public readonly selectedId = signal<number | null>(2);
     public readonly items = signal(GRID_ITEMS);
+    public readonly showNote = signal(true);
 
     public restore() {
         this.items.set(GRID_ITEMS);
@@ -234,6 +235,66 @@ export class WrappedListItemComponent {
     imports: [IgxListComponent, IgxListItemComponent, WrappedListItemComponent]
 })
 export class GridWithWrappedItemsComponent extends BasicListComponent {
+}
+
+/** A listbox in a row of a grid list, with its options in the template of another component. */
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list navigation="grid">
+            <igx-list-item>
+                <span igxListLineTitle>Assignees</span>
+                <igx-list navigation="listbox" class="inner">
+                    <test-wrapped-list-item>Kate</test-wrapped-list-item>
+                    <test-wrapped-list-item>Lee</test-wrapped-list-item>
+                </igx-list>
+                <button class="add">Add</button>
+            </igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, WrappedListItemComponent]
+})
+export class GridWithWrappedNestedListboxComponent extends BasicListComponent {
+}
+
+/** Items named by their title and described by their subtitle and header. */
+@Component({
+    template: `
+    <div #wrapper>
+        <igx-list [navigation]="navigation()">
+            <igx-list-item [isHeader]="true">Team</igx-list-item>
+            <igx-list-item>
+                <span igxListThumbnail>KD</span>
+                <span igxListLineTitle>Kate</span>
+                @if (showSubtitle()) {
+                    <span igxListLineSubTitle>Designer</span>
+                }
+                <span igxListAction>Online</span>
+            </igx-list-item>
+            <igx-list-item [attr.aria-label]="label()">
+                <span igxListLineTitle id="lee-title">Lee</span>
+                <span igxListLineSubTitle>Developer</span>
+            </igx-list-item>
+            <igx-list-item>
+                <span igxListLineTitle>Max</span>
+                <span igxListLineSubTitle id="max-note">Tester</span>
+                <igx-list navigation="listbox" class="inner">
+                    <igx-list-item><span igxListLineTitle>Inner</span></igx-list-item>
+                </igx-list>
+            </igx-list-item>
+            <igx-list-item aria-labelledby="own-label" aria-describedby="own-description">
+                <span igxListLineTitle>Ann</span>
+                <span igxListLineSubTitle>Manager</span>
+            </igx-list-item>
+            <igx-list-item>No title</igx-list-item>
+        </igx-list>
+    </div>`,
+    imports: [IgxListComponent, IgxListItemComponent, IgxListLineTitleDirective, IgxListLineSubTitleDirective, IgxListThumbnailDirective, IgxListActionDirective]
+})
+export class NamedListComponent extends BasicListComponent {
+    public readonly navigation = signal<'none' | 'listbox' | 'grid'>('listbox');
+    public readonly showSubtitle = signal(true);
+    public readonly label = signal<string | null>(null);
 }
 
 /** A grid list in a row of another grid list, which counts as one control of the row. */

@@ -6,9 +6,8 @@ import { IgxKeyBindingOptions, IgxKeyBindingsConfig, IgxKeyBindingsService } fro
 import { arrowDown, arrowLeft, arrowRight, arrowUp, endKey, homeKey } from './keys';
 
 /**
- * Whether an arrow axis navigates. A predicate, for a host that changes
- * orientation at runtime, binds the keys only while it returns `true`, so the
- * browser keeps the keys of an inactive axis, for example to scroll the page.
+ * Whether an arrow axis navigates. A predicate turns the axis on and off at runtime;
+ * while it is off, the browser keeps its keys, for example to scroll.
  *
  * @hidden @internal
  */
@@ -41,7 +40,7 @@ export interface IgxRovingFocusOptions<T extends Element> {
      * Whether the arrow moves wrap around the ends. With `false`, a move past
      * an end does nothing, and the key stays cancelled. Defaults to `true`.
      */
-    loop?: boolean;
+    wrap?: boolean;
     /**
      * How arrow navigation treats a nullish current item:
      * - `skip` - do nothing (default)
@@ -60,7 +59,7 @@ export interface IgxRovingFocusOptions<T extends Element> {
  * Implements the roving keyboard navigation of the container components.
  *
  * @remarks
- * Moves wrap over a flat list, unless `loop` is `false`, and the horizontal
+ * Moves wrap over a flat list, unless `wrap` is `false`, and the horizontal
  * axis follows the writing direction. A hierarchy, such as the tree, needs its
  * own navigation.
  *
@@ -92,7 +91,7 @@ export class IgxRovingFocusService<T extends Element = Element> {
      *     activateItem: (option) => option.click(),
      *     horizontal: false,
      *     vertical: true,
-     *     loop: false
+     *     wrap: false
      * });
      * ```
      */
@@ -144,7 +143,7 @@ export class IgxRovingFocusService<T extends Element = Element> {
     }
 
     private _move(delta: -1 | 1, rtlAware: boolean): void {
-        const { loop = true, missingCurrent } = this._options!;
+        const { wrap = true, missingCurrent } = this._options!;
         const items = this._options!.items();
         const current = this._current(items);
 
@@ -158,7 +157,7 @@ export class IgxRovingFocusService<T extends Element = Element> {
         const last = items.length - 1;
         const target = index + direction;
 
-        if (!loop && index !== -1 && (target < 0 || target > last)) {
+        if (!wrap && index !== -1 && (target < 0 || target > last)) {
             return;
         }
 

@@ -72,11 +72,12 @@ Set `navigation="listbox"` on the list to make it an accessible [listbox](https:
 
 - The list gets `role="listbox"`.
 - Items get `role="option"` with `aria-selected`, from their `selected` state.
-- The list has a single tab stop. Tab focuses the option that was focused last, else the first selected option, else the first option, and the next Tab leaves the list. Headers and hidden items are skipped.
-- Headers act as group names: they are hidden from screen readers, and each option points to the header above it with `aria-describedby`. A header without an `id` gets one. A screen reader reads the option content followed by the group name, e.g. "Kate, selected, 1 of 8, Employees". An option that has its own `aria-describedby`, set or bound in the template, keeps it.
+- The list has a single tab stop. Tab focuses the option that was focused last, else the first selected option, else the first option, and the next Tab leaves the list. Headers and hidden items are skipped. Hide items with `hidden`: the arrow keys and the type-ahead also skip items that do not render for another reason, such as a `display: none` style, but such an item can still be the tab stop.
+- An option with an `igxListLineTitle` is named by its title alone, and described by its `igxListLineSubTitle`, then by the header above it, e.g. "Kate, selected, 1 of 8, Designer Employees". Without this, the name is built from all its content, including avatar initials and the names of its buttons. A title or subtitle without an `id` gets one. An option without a title is named by its content and described by its header. Text outside the title and subtitle, such as a badge, is not read when the option gets the focus, so put important text in the title or subtitle. An `aria-label`, `aria-labelledby` or `aria-describedby` that the option has, set or bound in the template, wins.
+- Headers act as group names: they are hidden from screen readers, and a header without an `id` gets one.
 - The focused option shows an inset focus ring, also when it is selected. Its color is the `item-focus-outline-color` of the list theme.
 - While `isLoading` is set, the list has `aria-busy="true"`.
-- When the focused option is removed, the focus moves to the option that takes its place, else to the new last option, else to the list.
+- When the focused option is removed, the focus moves to the option that takes its place, else to the next option that renders, else to the last one, else to the list. In a grid, when a focused control is removed and its row stays, the focus moves to the row. When the focus had already left to no element, such as after a click on the page, a removal does not take it back.
 - While the list has no options, the list itself is the tab stop and shows the focus ring, and its empty or loading message, the default or a custom template, is read as an option. When options are added while the list has the focus, the focus moves to them. While the list has options, the loading message is hidden from screen readers.
 
 | Key | Action |
@@ -84,7 +85,7 @@ Set `navigation="listbox"` on the list to make it an accessible [listbox](https:
 | Arrow Down / Arrow Up | Next / previous option |
 | Home / End | First / last option |
 | Enter / Space | Clicks the option, so `(click)` and `itemClicked` fire. Holding the key down clicks once. |
-| Letters | Next option whose title, else its text, starts with the typed letters. Space is a letter while a search is active. |
+| Letters | Next option whose title, else its text, starts with the typed letters. A repeated letter moves through the options that start with it. Space is a letter while a search is active. |
 
 When an option is activated with Enter or Space, the `event` of `itemClicked` is the synthetic `MouseEvent` of that click.
 
@@ -127,12 +128,13 @@ Set `navigation="grid"` when items hold their own controls, such as a delete but
 | Focus | Key | Action |
 | :--- | :--- | :--- |
 | Row | Arrow Down / Up, Home / End, Enter / Space, letters | As in a listbox |
-| Row | Arrow Right / Left | First / last control of the row, mirrored in right-to-left |
+| Row | Arrow Right / Left | First / last control of the row, mirrored in right-to-left. Nothing without controls |
 | Control | Arrow Right / Left | Next / previous control, then back to the row |
 | Control | Arrow Down / Up | Next / previous row |
 | Control | Escape / F2 | Back to the row, unless the control handled the key |
+| Control | Other keys | The control's own behavior |
 
-A control that uses the arrow keys itself, such as a text field, a slider, a combo or a nested listbox, keeps them. An empty grid list works as one row: Arrow Right/Left reach the controls of its empty template, such as a button that adds items. In a listbox, the empty template is an option and holds no controls. A click on a control also reaches its row, so call `$event.stopPropagation()` in the control's `(click)` handler when it must not select the row.
+A control that uses the arrow keys itself, such as a text field, a slider or a combo, keeps them. A nested listbox or grid counts as one control: it keeps Arrow Down/Up and leaves Arrow Right/Left to the row. An empty grid list works as one row: Arrow Right/Left reach the controls of its empty template, such as a button that adds items. In a listbox, the empty template is an option and holds no controls. A click on a control also reaches its row, so call `$event.stopPropagation()` in the control's `(click)` handler when it must not select the row.
 
 ```html
 <igx-list navigation="grid" aria-label="Tasks">
@@ -215,7 +217,7 @@ public rightPanPerformed(args) {
 | items  | Array of items in the list  |
 | headers  | Array of headers in the list  |
 | innerStyle  | Currently used inner style depending on whether the list is empty or not  |
-| role  | Gets/sets the role of the list, default _list_, _listbox_ when its `navigation` is _listbox_  |
+| role  | Gets/sets the role of the list, default _list_, _listbox_ or _grid_ when its `navigation` is _listbox_ or _grid_  |
 
 
 ### Outputs
@@ -269,7 +271,7 @@ All list items implement `IListChild`.
 | index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
-| selected  | Whether the item is selected, default _false_. In a [listbox](#listbox-and-keyboard-navigation) it sets `aria-selected`  |
+| selected  | Whether the item is selected, default _false_. In a [listbox](#listbox-and-keyboard-navigation) it sets `aria-selected`; in a [grid](#grid-navigation) only selected rows get it, unless the list sets `aria-multiselectable`  |
 
 ### Directives
 
@@ -288,7 +290,7 @@ All list items implement `IListChild`.
 | :--- | :--- |
 | panState  | Gets the item's pan state  |
 | list  | Gets the list that is associated with the item  |
-| role  | Gets/sets the role of the item - _separator_ for headers; for items _option_ in a listbox, _listitem_ otherwise   |
+| role  | Gets/sets the role of the item - _separator_ for headers; for items _option_ in a listbox, _row_ in a grid, _listitem_ otherwise   |
 | element  | Gets the native element that is associated with the item   |
 | width  | Gets the width of the item   |
 | maxLeft  | Gets the maximum left position of the item   |

@@ -21,6 +21,8 @@ export const spaceBar = ' ' as const;
 /** @hidden @internal */
 export const escapeKey = 'Escape' as const;
 /** @hidden @internal */
+export const f2Key = 'F2' as const;
+/** @hidden @internal */
 export const homeKey = 'Home' as const;
 /** @hidden @internal */
 export const endKey = 'End' as const;

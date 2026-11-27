@@ -24,18 +24,9 @@ export interface IgxSingleTabStopOptions {
  * Makes the host a single stop of the Tab sequence, whatever its content.
  *
  * @remarks
- * Tab and Shift+Tab from anywhere in the host leave it: the service moves the
- * focus to the last tabbable element of the host, or the first one, and lets
- * the browser move it on from there. It never changes the `tabindex` of the
- * content, so the controls inside the host keep their own, and it leaves a
- * Tab that an inner element handled.
- *
- * When Tab or Shift+Tab moves the focus into the host from outside, the
- * service moves it on to the tab stop. A focus from a click, from the app or
- * from assistive technology stays where it is.
- *
- * List it in the `providers` of the component or directive and call
- * {@link configure} once. The host manages the `tabindex` of its tab stop.
+ * Tab and Shift+Tab leave the host from anywhere in it, unless an inner element handled the key.
+ * A Tab into the host moves on to its tab stop; a click or a focus call stays where it lands.
+ * The `tabindex` of the content is never changed. Provide it on the host and call {@link configure} once.
  *
  * @hidden @internal
  */

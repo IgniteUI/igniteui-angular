@@ -78,8 +78,8 @@ describe('IgxRovingFocusService', () => {
             expect(ids(focused)).toEqual(['item-1']);
         });
 
-        it('should stop at the ends when loop is false, and keep the keys from the browser', () => {
-            configure({ loop: false, vertical: true });
+        it('should stop at the ends when wrap is false, and keep the keys from the browser', () => {
+            configure({ wrap: false, vertical: true });
 
             current = items[2];
             const down = press(host, arrowDown);
@@ -200,7 +200,7 @@ describe('IgxRovingFocusService', () => {
         });
 
         it('should move in from the edges without a current item when missingCurrent is wrap', () => {
-            configure({ missingCurrent: 'wrap', loop: false });
+            configure({ missingCurrent: 'wrap', wrap: false });
             current = null;
 
             press(host, arrowRight);

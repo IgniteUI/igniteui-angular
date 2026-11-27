@@ -97,6 +97,18 @@ describe('Arrow key controls', () => {
             expect(fromArrowKeyControl(byId('in-listbox'))).toBe(true);
         });
 
+        it('should skip the elements that the caller ignores', () => {
+            const scope = byId('scope');
+            const listbox = byId('in-listbox').closest('[role="listbox"]')!;
+            let result: boolean | undefined;
+            scope.addEventListener('keydown', (event) => (result = isFromArrowKeyControl(event, scope, (element) => element === listbox)), { once: true });
+            byId('in-listbox').dispatchEvent(new KeyboardEvent('keydown', {
+                key: 'ArrowDown', bubbles: true, cancelable: true, composed: true
+            }));
+
+            expect(result).toBe(false);
+        });
+
         it('should be false for a key from an element that does not use them', () => {
             expect(fromArrowKeyControl(byId('scoped-button'))).toBe(false);
         });

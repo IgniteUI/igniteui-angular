@@ -206,7 +206,7 @@ describe('IgxSingleTabStopService', () => {
 });
 
 @Directive({
-    selector: '[testSingleTabStop]',
+    selector: '[igxTestSingleTabStop]',
     providers: [IgxSingleTabStopService]
 })
 class SingleTabStopDirective {
@@ -228,7 +228,7 @@ class SingleTabStopDirective {
 @Component({
     template: `
         <button id="before">Before</button>
-        <div id="composite" testSingleTabStop [tabStopId]="tabStopId()" [enabled]="enabled()">
+        <div id="composite" igxTestSingleTabStop [tabStopId]="tabStopId()" [enabled]="enabled()">
             <div id="row-0" tabindex="-1"><button id="action-0">Action 0</button></div>
             <div id="row-1" tabindex="0"><button id="action-1">Action 1</button><input id="input-1" /></div>
             <div id="row-2" tabindex="-1"><button id="action-2">Action 2</button></div>

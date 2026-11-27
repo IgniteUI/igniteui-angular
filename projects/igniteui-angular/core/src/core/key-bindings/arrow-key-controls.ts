@@ -58,6 +58,7 @@ export function usesArrowKeys(element: Element): boolean {
  *
  * @param event - The keyboard event, during its dispatch.
  * @param scope - The container that handles the event, such as a list.
+ * @param ignore - The elements that do not count, such as a nested list that the container treats as one control.
  * @returns `true` when an element on the path uses the arrow keys.
  *
  * @example
@@ -67,12 +68,12 @@ export function usesArrowKeys(element: Element): boolean {
  *
  * @hidden @internal
  */
-export function isFromArrowKeyControl(event: Event, scope: Element): boolean {
+export function isFromArrowKeyControl(event: Event, scope: Element, ignore?: (element: Element) => boolean): boolean {
     for (const node of event.composedPath()) {
         if (node === scope) {
             return false;
         }
-        if (node instanceof Element && usesArrowKeys(node)) {
+        if (node instanceof Element && !ignore?.(node) && usesArrowKeys(node)) {
             return true;
         }
     }

@@ -5,7 +5,7 @@ import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
 import { IgxListActionDirective, IgxListComponent, IgxListLineDirective, IgxListLineSubTitleDirective, IgxListLineTitleDirective, IgxListThumbnailDirective, IListItemClickEventArgs } from './list.component';
 
-import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent, GridWithNestedListboxComponent, GridWithWrappedItemsComponent, GridWithNestedGridComponent } from '../../../test-utils/list-components.spec';
+import { ListWithHeaderComponent, ListWithPanningComponent, EmptyListComponent, CustomEmptyListComponent, ListLoadingComponent, ListWithPanningTemplatesComponent, ListCustomLoadingComponent, ListWithIgxForAndScrollingComponent, TwoHeadersListComponent, TwoHeadersListNoPanningComponent, ListDirectivesComponent, ListWithSelectedItemComponent, ListboxComponent, GroupedListboxComponent, ListWithOwnAttributesComponent, ListWithBoundAttributesComponent, EmptyListboxComponent, ListboxWithWrappedItemsComponent, NestedListboxComponent, GridListComponent, GridWithNestedListboxComponent, GridWithWrappedNestedListboxComponent, GridWithWrappedItemsComponent, GridWithNestedGridComponent, NamedListComponent } from '../../../test-utils/list-components.spec';
 import { nextFrame } from '../../../test-utils/ui-interactions.spec';
 import { advance, useFakeClock } from '../../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../../test-utils/grid-functions.spec';
@@ -15,6 +15,13 @@ import { userEvent } from 'vitest/browser';
 
 /** Delay before a released item hides its pan templates (`setTimeout(500)` in list-item.component.ts). */
 const PAN_TEMPLATES_HIDE_DELAY = 500;
+
+/** Dispatches a keydown on `target`, as it would bubble out of a shadow root too, and returns the event to read `defaultPrevented`. */
+function pressKey(target: HTMLElement, key: string, repeat = false): KeyboardEvent {
+    const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true, composed: true });
+    target.dispatchEvent(event);
+    return event;
+}
 
 describe('List', () => {
 
@@ -767,12 +774,6 @@ describe('List', () => {
         let fixture: ComponentFixture<ListboxComponent>;
         let list: IgxListComponent;
 
-        const pressKey = (target: HTMLElement, key: string, repeat = false): KeyboardEvent => {
-            const event = new KeyboardEvent('keydown', { key, repeat, bubbles: true, cancelable: true, composed: true });
-            target.dispatchEvent(event);
-            return event;
-        };
-
         beforeEach(() => {
             fixture = TestBed.createComponent(ListboxComponent);
             list = fixture.componentInstance.list;
@@ -787,6 +788,15 @@ describe('List', () => {
             expect(basicList.navigation).toBe('none');
             expect(basicList.element.nativeElement.getAttribute('role')).toBe('list');
             expect(basicList.items[0].element.getAttribute('role')).toBe('listitem');
+        });
+
+        it('should render the empty message of a list without navigation as before, with no wrapper', () => {
+            const empty = TestBed.createComponent(EmptyListComponent);
+            empty.detectChanges();
+            const host: HTMLElement = empty.componentInstance.list.element.nativeElement;
+
+            expect(host.querySelector(':scope > article.igx-list__message')).toBeTruthy();
+            expect(host.querySelector('.igx-list__message-wrapper')).toBeNull();
         });
 
         it('should leave a list with role listbox and no listbox navigation unchanged', () => {
@@ -1011,8 +1021,9 @@ describe('List', () => {
             emptyFixture.detectChanges();
             expect(listElement.hasAttribute('tabindex')).toBe(false);
             expect(listElement.classList).not.toContain('igx-list--focusable');
-            expect(message().hasAttribute('role')).toBe(false);
-            expect(message().hasAttribute('aria-hidden')).toBe(false);
+            // Without navigation, the message renders as before, with no wrapper.
+            expect(message()).toBeNull();
+            expect(listElement.querySelector(':scope > article.igx-list__message')).toBeTruthy();
         });
 
         describe('Keyboard navigation', () => {
@@ -1145,6 +1156,17 @@ describe('List', () => {
                     expect(clicked).not.toHaveBeenCalled();
                 });
 
+                it('should move through the options with the same first letter when the letter repeats', () => {
+                    fixture.componentInstance.items = [{ id: 1, name: 'Aaron' }, { id: 2, name: 'Adam' }, { id: 3, name: 'Alice' }];
+                    fixture.detectChanges();
+                    const items = list.items;
+                    items[0].element.focus();
+
+                    type('aa');
+
+                    expect(document.activeElement).toBe(items[2].element);
+                });
+
                 it('should match the text of an option without a title', () => {
                     const groupedFixture = TestBed.createComponent(GroupedListboxComponent);
                     groupedFixture.detectChanges();
@@ -1175,6 +1197,19 @@ describe('List', () => {
 
                 items[0].element.focus();
                 pressKey(items[0].element, 'ArrowDown');
+                expect(document.activeElement).toBe(items[2].element);
+            });
+
+            it('should skip the items that do not render with the arrows and the type-ahead', () => {
+                const items = list.items;
+                items[1].element.style.display = 'none';
+
+                items[0].element.focus();
+                pressKey(items[0].element, 'ArrowDown');
+                expect(document.activeElement).toBe(items[2].element);
+
+                items[0].element.focus();
+                pressKey(items[0].element, 'i');
                 expect(document.activeElement).toBe(items[2].element);
             });
 
@@ -1219,11 +1254,6 @@ describe('List', () => {
         let fixture: ComponentFixture<GridListComponent>;
         let list: IgxListComponent;
 
-        const pressKey = (target: HTMLElement, key: string): KeyboardEvent => {
-            const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, composed: true });
-            target.dispatchEvent(event);
-            return event;
-        };
         const host = () => list.element.nativeElement as HTMLElement;
         const rows = () => list.items.map(item => item.element as HTMLElement);
 
@@ -1367,7 +1397,8 @@ describe('List', () => {
                 const [edit, remove] = controls(row);
 
                 edit.focus();
-                pressKey(edit, 'Escape');
+                // Cancelled, so a dialog around the list stays open.
+                expect(pressKey(edit, 'Escape').defaultPrevented).toBe(true);
                 expect(document.activeElement).toBe(row);
 
                 remove.focus();
@@ -1378,6 +1409,27 @@ describe('List', () => {
                 edit.focus();
                 pressKey(edit, 'Escape');
                 expect(document.activeElement).toBe(edit);
+            });
+
+            it('should leave Right and Left on a row without controls to the page', () => {
+                const row = rows()[0];
+                controls(row).forEach(control => control.setAttribute('disabled', ''));
+                row.focus();
+
+                for (const key of ['ArrowRight', 'ArrowLeft']) {
+                    expect(pressKey(row, key).defaultPrevented, key).toBe(false);
+                    expect(document.activeElement).toBe(row);
+                }
+            });
+
+            it('should leave Home and End on a control to the control', () => {
+                const [edit] = controls(rows()[1]);
+                edit.focus();
+
+                for (const key of ['Home', 'End']) {
+                    expect(pressKey(edit, key).defaultPrevented, key).toBe(false);
+                    expect(document.activeElement).toBe(edit);
+                }
             });
 
             it('should leave Escape on a row to the page', () => {
@@ -1468,18 +1520,35 @@ describe('List', () => {
                 pressKey(row, 'ArrowRight');
                 expect(document.activeElement).toBe(kate);
 
-                // The listbox keeps its arrows.
+                // The listbox keeps Up and Down, and leaves Right and Left to the row.
                 pressKey(kate, 'ArrowDown');
                 expect(document.activeElement).toBe(lee);
-                expect(pressKey(lee, 'ArrowRight').defaultPrevented).toBe(false);
-
-                pressKey(lee, 'Escape');
-                expect(document.activeElement).toBe(row);
-
-                pressKey(row, 'ArrowLeft');
+                pressKey(lee, 'ArrowRight');
                 expect(document.activeElement).toBe(add);
                 pressKey(add, 'ArrowLeft');
                 expect(document.activeElement).toBe(lee);
+                pressKey(lee, 'ArrowLeft');
+                expect(document.activeElement).toBe(row);
+
+                pressKey(row, 'ArrowRight');
+                lee.focus();
+                pressKey(lee, 'Escape');
+                expect(document.activeElement).toBe(row);
+            });
+
+            it('should reach a listbox in a row whose items are wrapped in another component', () => {
+                const nestedFixture = TestBed.createComponent(GridWithWrappedNestedListboxComponent);
+                nestedFixture.detectChanges();
+                const nestedHost: HTMLElement = nestedFixture.nativeElement;
+                const row = nestedHost.querySelector<HTMLElement>('igx-list:not(.inner) > igx-list-item')!;
+                const [kate] = Array.from(nestedHost.querySelectorAll<HTMLElement>('.inner igx-list-item'));
+                const add = nestedHost.querySelector<HTMLElement>('.add')!;
+
+                row.focus();
+                pressKey(row, 'ArrowRight');
+                expect(document.activeElement).toBe(kate);
+                pressKey(kate, 'ArrowRight');
+                expect(document.activeElement).toBe(add);
             });
         });
 
@@ -1515,6 +1584,41 @@ describe('List', () => {
                 remove(2);
 
                 expect(document.activeElement).toBe(release);
+            });
+
+            it('should move the focus to the row when its focused control is removed', () => {
+                const release = rows()[2];
+                release.querySelector<HTMLElement>('.note')!.focus();
+
+                fixture.componentInstance.showNote.set(false);
+                fixture.detectChanges();
+
+                expect(document.activeElement).toBe(release);
+            });
+
+            it('should not take the focus back when it went to no element before a removal', async () => {
+                const note = rows()[2].querySelector<HTMLElement>('.note')!;
+                note.focus();
+                // A click on text of the page moves the focus to no element.
+                const text = fixture.nativeElement.appendChild(document.createElement('p')) as HTMLElement;
+                text.textContent = 'Page text';
+                await userEvent.click(text);
+                expect(document.activeElement).toBe(document.body);
+
+                fixture.componentInstance.showNote.set(false);
+                fixture.detectChanges();
+
+                expect(document.activeElement).toBe(document.body);
+            });
+
+            it('should move the focus to the next row that renders when the focused one is removed', () => {
+                const [, review, release] = rows();
+                release.style.display = 'none';
+                review.focus();
+
+                remove(2);
+
+                expect(document.activeElement).toBe(rows()[0]);
             });
 
             it('should move the focus to the list when its last row is removed', () => {
@@ -1720,6 +1824,105 @@ describe('List', () => {
                 expect(row.hasAttribute('aria-selected')).toBe(false);
                 expect(row.querySelector('[role="gridcell"]')).toBeNull();
             }
+        });
+    });
+
+    describe('Item names', () => {
+        let fixture: ComponentFixture<NamedListComponent>;
+        let items: HTMLElement[];
+        let header: HTMLElement;
+        const line = (item: HTMLElement, name: 'title' | 'subtitle') =>
+            item.querySelector<HTMLElement>(`:scope > div .igx-list__item-line-${name}`)!;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(NamedListComponent);
+            fixture.detectChanges();
+            const host = fixture.componentInstance.list.element.nativeElement as HTMLElement;
+            [header, ...items] = Array.from(host.querySelectorAll<HTMLElement>(':scope > igx-list-item'));
+        });
+
+        for (const navigation of ['listbox', 'grid'] as const) {
+            it(`should name an item by its title and describe it by its subtitle and header in a ${navigation}`, () => {
+                fixture.componentInstance.navigation.set(navigation);
+                fixture.detectChanges();
+                const [kate] = items;
+
+                expect(line(kate, 'title').id).toBeTruthy();
+                expect(kate.getAttribute('aria-labelledby')).toBe(line(kate, 'title').id);
+                expect(kate.getAttribute('aria-describedby')).toBe(`${line(kate, 'subtitle').id} ${header.id}`);
+            });
+        }
+
+        it('should keep the ids of the app and leave out the titles of a nested list', () => {
+            const [, lee, max] = items;
+
+            expect(lee.getAttribute('aria-labelledby')).toBe('lee-title');
+            expect(max.getAttribute('aria-labelledby')).toBe(line(max, 'title').id);
+            expect(max.getAttribute('aria-describedby')).toBe(`max-note ${header.id}`);
+        });
+
+        it('should follow a subtitle that comes and goes', () => {
+            const [kate] = items;
+            fixture.componentInstance.showSubtitle.set(false);
+            fixture.detectChanges();
+            expect(kate.getAttribute('aria-describedby')).toBe(header.id);
+
+            fixture.componentInstance.showSubtitle.set(true);
+            fixture.detectChanges();
+            expect(kate.getAttribute('aria-describedby')).toBe(`${line(kate, 'subtitle').id} ${header.id}`);
+        });
+
+        it('should let an aria-label of the app name the item', () => {
+            const [, lee] = items;
+            fixture.componentInstance.label.set('Lee, on leave');
+            fixture.detectChanges();
+
+            expect(lee.hasAttribute('aria-labelledby')).toBe(false);
+            expect(lee.getAttribute('aria-describedby')).toBe(`${line(lee, 'subtitle').id} ${header.id}`);
+
+            fixture.componentInstance.label.set(null);
+            fixture.detectChanges();
+            expect(lee.getAttribute('aria-labelledby')).toBe('lee-title');
+        });
+
+        it('should keep the aria-labelledby and aria-describedby of the app', () => {
+            const ann = items[3];
+
+            expect(ann.getAttribute('aria-labelledby')).toBe('own-label');
+            expect(ann.getAttribute('aria-describedby')).toBe('own-description');
+        });
+
+        it('should search an item by its own title, not by the title of a nested list', () => {
+            const [kate, , max] = items;
+            line(max, 'title').remove();
+            kate.focus();
+
+            kate.dispatchEvent(new KeyboardEvent('keydown', { key: 'i', bubbles: true, cancelable: true, composed: true }));
+
+            expect(document.activeElement).toBe(kate);
+        });
+
+        it('should describe an item without a title by its header only', () => {
+            const untitled = items[4];
+
+            expect(untitled.hasAttribute('aria-labelledby')).toBe(false);
+            expect(untitled.getAttribute('aria-describedby')).toBe(header.id);
+        });
+
+        it('should remove the names and the generated ids when the navigation is none', () => {
+            const [kate, lee] = items;
+            fixture.componentInstance.navigation.set('none');
+            fixture.detectChanges();
+
+            for (const item of items) {
+                if (item !== items[3]) {
+                    expect(item.hasAttribute('aria-labelledby')).toBe(false);
+                    expect(item.hasAttribute('aria-describedby')).toBe(false);
+                }
+            }
+            expect(line(kate, 'title').hasAttribute('id')).toBe(false);
+            expect(line(kate, 'subtitle').hasAttribute('id')).toBe(false);
+            expect(line(lee, 'title').id).toBe('lee-title');
         });
     });
 

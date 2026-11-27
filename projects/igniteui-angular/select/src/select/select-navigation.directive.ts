@@ -4,7 +4,7 @@ import { IgxSelectBase } from './select.common';
 import { IgxDropDownItemNavigationDirective } from 'igniteui-angular/drop-down';
 import { IgxTypeAhead, findTypeAheadMatch } from 'igniteui-angular/core';
 
-const label = (item: IgxSelectItemComponent) => item.itemText;
+const itemText = (item: IgxSelectItemComponent) => item.itemText;
 const skip = (item: IgxSelectItemComponent) => item.disabled;
 
 /** @hidden @internal */
@@ -67,7 +67,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
         this.captureKey(event);
     }
 
-    private readonly _typeAhead = new IgxTypeAhead({ label, skip });
+    private readonly _typeAhead = new IgxTypeAhead({ text: itemText, skip });
 
     public captureKey(event: KeyboardEvent) {
         // relying only on key, available on all major browsers:
@@ -88,7 +88,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
     public activateItemByText(text: string) {
         const items = this.target.items as IgxSelectItemComponent[];
         const current = this.target.focusedItem as IgxSelectItemComponent;
-        const nextItem = findTypeAheadMatch(items, text, { label, skip, current });
+        const nextItem = findTypeAheadMatch(items, text, { text: itemText, skip, current });
 
         // If there is no other item to be found, do not change the active item.
         if (nextItem) {

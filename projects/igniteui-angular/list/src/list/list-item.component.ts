@@ -1,16 +1,35 @@
-import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, afterRenderEffect, booleanAttribute, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, HostBinding, HostListener, Input, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, afterEveryRender, afterRenderEffect, booleanAttribute, inject, signal } from '@angular/core';
 
 import {
     IgxListPanState,
     IListChild,
     IgxListBaseDirective,
+    IGX_LIST_NAVIGATION,
+    NO_LIST_NAVIGATION,
+    LIST_ITEM_SUBTITLE,
+    LIST_ITEM_TITLE,
+    claimAttribute,
+    claimId,
+    ownLines,
     syncAttribute
 } from './list.common';
 
 import { rem, IgxTouchManager, IgxGestureEvent } from 'igniteui-angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 
-let NEXT_HEADER_ID = 0;
+/** The title and subtitle elements of an item, and whether the app labels the item itself. */
+interface IgxListItemLines {
+    titles: readonly HTMLElement[];
+    subtitles: readonly HTMLElement[];
+    labelled: boolean;
+}
+
+const NO_LINES: IgxListItemLines = { titles: [], subtitles: [], labelled: false };
+
+function sameLines(a: IgxListItemLines, b: IgxListItemLines): boolean {
+    const same = (x: readonly HTMLElement[], y: readonly HTMLElement[]) => x.length === y.length && x.every((line, i) => line === y[i]);
+    return a.labelled === b.labelled && same(a.titles, b.titles) && same(a.subtitles, b.subtitles);
+}
 
 /**
  * The Ignite UI List Item component is a container intended for row items in the Ignite UI for Angular List component.
@@ -34,6 +53,7 @@ let NEXT_HEADER_ID = 0;
 })
 export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     public list = inject(IgxListBaseDirective);
+    private readonly _navigation = inject(IGX_LIST_NAVIGATION, { optional: true }) ?? NO_LIST_NAVIGATION;
     private elementRef = inject(ElementRef);
     private _renderer = inject(Renderer2);
     private _zone = inject(NgZone);
@@ -43,12 +63,6 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      */
     private _gestures: IgxTouchManager | null = null;
 
-    /** The `aria-describedby` the list set last, to tell it apart from one set or bound by the app, which is kept. */
-    private _describedBy: string | null = null;
-
-    /** The `id` the item generated as a header of a listbox, so it is removed when the item is no longer one. */
-    private _headerId: string | null = null;
-
     /** Whether navigation attributes are applied, so they are removed when the list loses its navigation. */
     private _hasNavigationAttributes = false;
 
@@ -56,8 +70,13 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     private readonly _hidden = signal(false);
     private readonly _selected = signal(false);
 
-    /** @hidden @internal The `id` that the options of this header's group point to. */
-    public readonly headerId = signal<string | null>(null);
+    /** The lines that name the item, to remove their generated ids when they stop. */
+    private _namingLines: readonly HTMLElement[] = [];
+
+    /** The title and subtitle elements, read from the DOM, as they may be projected from other templates. */
+    private readonly _lines = signal(NO_LINES, { equal: sameLines });
+
+    private readonly _readLines = afterEveryRender({ earlyRead: () => this._lines.set(this.readLines()) });
 
     /** Writes the navigation attributes on the item's own host. */
     private readonly _navigationAttributes = afterRenderEffect({ write: () => this.syncNavigationAttributes() });
@@ -291,7 +310,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     /**
      * Gets/Sets the `role` attribute of the `list item`.
-     * Defaults to `separator` for headers, and for items to `option` in a listbox and to `listitem` otherwise.
+     * Defaults to `separator` for headers, and for items to `option` in a listbox, `row` in a grid and `listitem` otherwise.
      * ```typescript
      * let itemRole =  this.listItem.role;
      * ```
@@ -301,7 +320,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
     @HostBinding('attr.role')
     @Input()
     public get role() {
-        return this._role ? this._role : this.isHeader ? 'separator' : this.list.itemRole ?? 'listitem';
+        return this._role ? this._role : this.isHeader ? 'separator' : this._navigation.itemRole() ?? 'listitem';
     }
 
     public set role(val: string) {
@@ -340,36 +359,54 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     /** Syncs the navigation attributes of the item from the list state. Does nothing without navigation. */
     private syncNavigationAttributes() {
-        const state = this.list.navigationStateOf(this);
+        const state = this._navigation.navigationStateOf(this);
         if (!state && !this._hasNavigationAttributes) {
             return;
         }
         this._hasNavigationAttributes = !!state;
 
         const header = !!state && this._isHeader();
-        syncAttribute(this.element, 'tabindex', state?.tabIndex ?? null);
-        syncAttribute(this.element, 'aria-selected', state?.selected ?? null);
+        const option = state && !header ? state : null;
+        syncAttribute(this.element, 'tabindex', option ? (option.tabStop ? '0' : '-1') : null);
+        syncAttribute(this.element, 'aria-selected', option?.selected == null ? null : String(option.selected));
         syncAttribute(this.element, 'aria-hidden', header ? 'true' : null);
 
-        if (header) {
-            if (!this.element.id) {
-                this._headerId = `igx-list-header-${NEXT_HEADER_ID++}`;
-                this.element.id = this._headerId;
-            }
-            this.headerId.set(this.element.id);
-        } else {
-            if (this._headerId !== null && this.element.id === this._headerId) {
-                this.element.removeAttribute('id');
-            }
-            this._headerId = null;
-            this.headerId.set(null);
+        // The options of a group claim the id of their header; it is removed when the item is no longer one.
+        if (!header) {
+            claimAttribute(this.element, 'id', null);
         }
 
-        const describedBy = this.element.getAttribute('aria-describedby');
-        if (describedBy === null || describedBy === this._describedBy) {
-            this._describedBy = state?.describedBy ?? null;
-            syncAttribute(this.element, 'aria-describedby', this._describedBy);
+        // Named by the title, described by the subtitle, then by the header.
+        const { titles, subtitles, labelled } = state && !header ? this._lines() : NO_LINES;
+        const lines = titles.length ? [...titles, ...subtitles] : [];
+        for (const former of this._namingLines.filter(line => !lines.includes(line))) {
+            claimAttribute(former, 'id', null);
         }
+        this._namingLines = lines;
+        const ids = (elements: readonly HTMLElement[]) => elements.map(line => claimId(line, 'igx-list-item-line'));
+
+        const labelledBy = titles.length && !labelled ? ids(titles).join(' ') : null;
+        claimAttribute(this.element, 'aria-labelledby', labelledBy);
+
+        const descriptions = [...ids(lines.slice(titles.length)), state?.describedBy].filter(Boolean);
+        claimAttribute(this.element, 'aria-describedby', descriptions.length ? descriptions.join(' ') : null);
+    }
+
+    /** The own title and subtitle elements of an item in a list with navigation; those of nested lists are left out. */
+    private readLines(): IgxListItemLines {
+        if (!this._navigation.isNavigable() || this._isHeader()) {
+            return NO_LINES;
+        }
+        return {
+            titles: ownLines(this.element, LIST_ITEM_TITLE),
+            subtitles: ownLines(this.element, LIST_ITEM_SUBTITLE),
+            labelled: this.element.hasAttribute('aria-label')
+        };
+    }
+
+    /** @hidden @internal The role of the content: the one cell of a grid row. */
+    protected get contentRole(): string | null {
+        return this._navigation.isGrid() ? 'gridcell' : null;
     }
 
     /**
@@ -407,8 +444,8 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
 
     /** @hidden @internal Applies the focus ring style to the options of a listbox and the rows of a grid. */
     @HostBinding('class.igx-list-item--focusable')
-    public get focusableStyle(): boolean {
-        return !this.isHeader && this.list.isNavigable;
+    protected get focusableStyle(): boolean {
+        return !this.isHeader && this._navigation.isNavigable();
     }
 
     /**
@@ -428,7 +465,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     public ngOnInit() {
-        this.list.registerItem(this);
+        this._navigation.registerItem(this);
         this._gestures = new IgxTouchManager(this.elementRef.nativeElement, {
             panStart: () => this.panStart(),
             panMove: (event) => this.panMove(event),
@@ -446,7 +483,7 @@ export class IgxListItemComponent implements IListChild, OnInit, OnDestroy {
      * @hidden
      */
     public ngOnDestroy() {
-        this.list.unregisterItem(this);
+        this._navigation.unregisterItem(this);
         this._gestures?.destroy();
     }
 
