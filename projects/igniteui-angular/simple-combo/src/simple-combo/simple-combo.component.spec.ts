@@ -2165,10 +2165,19 @@ describe('IgxSimpleCombo', () => {
             combo.overlaySettings = newSettings;
             fixture.detectChanges();
 
+            // Native anchor positioning flips in layout without changing the strategy settings: check the rendered side.
+            const expectOpenedAbove = () => {
+                const lists = document.querySelectorAll('.igx-overlay__content .igx-drop-down__list-scroll');
+                const listRect = lists[lists.length - 1].closest('.igx-overlay__content')!.getBoundingClientRect();
+                const inputRect = fixture.nativeElement.querySelector('igx-input-group').getBoundingClientRect();
+                expect(listRect.bottom).toBeLessThanOrEqual(inputRect.bottom + 1);
+                expect(listRect.top).toBeLessThan(inputRect.top);
+            };
+
             combo.open();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
-            expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
+            expectOpenedAbove();
 
             combo.select('Connecticut');
             fixture.detectChanges();
@@ -2184,7 +2193,7 @@ describe('IgxSimpleCombo', () => {
             combo.open();
             fixture.detectChanges();
             expect(combo.collapsed).toEqual(false);
-            expect(combo.overlaySettings.positionStrategy.settings.verticalDirection).toBe(-1);
+            expectOpenedAbove();
 
             combo.dropdown.close();
             await fixture.whenStable();

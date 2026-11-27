@@ -6,4 +6,5 @@ export * from './block-scroll-strategy';
 export * from './close-scroll-strategy';
 export * from './NoOpScrollStrategy';
 export * from './close-scroll-strategy';
+export * from './hide-scroll-strategy';
 

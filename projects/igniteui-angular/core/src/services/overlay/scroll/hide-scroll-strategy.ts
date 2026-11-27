@@ -1,0 +1,96 @@
+import { AbsoluteScrollStrategy } from './absolute-scroll-strategy';
+
+/**
+ * Hides the overlay content while its anchor element is scrolled out of view and shows it again
+ * when the anchor returns. The overlay stays open. Under the script engine it also repositions
+ * the content on scroll, like `AbsoluteScrollStrategy`.
+ *
+ * The anchor element is the overlay target, or the container for `ContainerPositionStrategy`.
+ * Without an anchor element (a `Point` target, `GlobalPositionStrategy`) it behaves as `AbsoluteScrollStrategy`.
+ *
+ * @param scrollContainer Optional element whose scroll events reposition the content under the script engine.
+ *
+ * @example
+ * ```typescript
+ * const settings: OverlaySettings = {
+ *     target: button,
+ *     positionStrategy: new AutoPositionStrategy(),
+ *     scrollStrategy: new HideScrollStrategy()
+ * };
+ * ```
+ */
+// DISCUSS(#17765): Container behavior depends on #17986. Once Container overlays render inside their
+// container (not in the top layer), `position-visibility` no longer applies to the wrapper and the
+// container already clips them. Decide whether Hide does anything for Container then.
+export class HideScrollStrategy extends AbsoluteScrollStrategy {
+    private _observer: IntersectionObserver | null = null;
+    private _content: HTMLElement | null = null;
+    private _anchor: HTMLElement | null = null;
+
+    constructor(scrollContainer?: HTMLElement) {
+        super(scrollContainer);
+    }
+
+    /**
+     * @hidden @internal
+     * Called by the overlay service after it positions the content in `show()`, and by `reposition()`
+     * when the anchor or the engine changed.
+     *
+     * @param anchor The element whose visibility controls the content, or `null`.
+     * @param content The overlay content element.
+     * @param useObserver `false` when the browser hides the content through `position-visibility`.
+     */
+    public _onShown(anchor: HTMLElement | null, content: HTMLElement, useObserver: boolean): void {
+        this._onHidden();
+        const Observer = content.ownerDocument.defaultView?.IntersectionObserver;
+        if (!anchor || !useObserver || !Observer) {
+            return;
+        }
+        this._content = content;
+        this._anchor = anchor;
+        const observer: IntersectionObserver = new Observer(entries => {
+            // `disconnect()` does not drop notifications that are already queued.
+            if (this._observer !== observer) {
+                return;
+            }
+            content.style.visibility = entries[entries.length - 1].isIntersecting ? '' : 'hidden';
+        }, { threshold: 0 });
+        this._observer = observer;
+        observer.observe(anchor);
+    }
+
+    /**
+     * @hidden @internal
+     * The element the observer watches, or `null` when nothing is observed.
+     */
+    public get _observedAnchor(): HTMLElement | null {
+        return this._anchor;
+    }
+
+    /**
+     * @hidden @internal
+     * Called by the overlay service when the overlay closes, and by `detach()`.
+     */
+    public _onHidden(): void {
+        this._observer?.disconnect();
+        this._observer = null;
+        this._anchor = null;
+        if (this._content) {
+            this._content.style.visibility = '';
+            this._content = null;
+        }
+    }
+
+    /**
+     * Detaches the strategy.
+     *
+     * @example
+     * ```typescript
+     * settings.scrollStrategy.detach();
+     * ```
+     */
+    public override detach(): void {
+        this._onHidden();
+        super.detach();
+    }
+}

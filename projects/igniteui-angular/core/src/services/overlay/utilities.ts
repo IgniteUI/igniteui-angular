@@ -2,6 +2,7 @@ import { AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, Directive, ElementRef, inject, Injector, NgZone } from '@angular/core';
 import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { AnimationPlayer } from '../animation/animation';
+import type { OverlayEngine } from './anchoring/native-engine';
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IScrollStrategy } from './scroll';
 
@@ -215,6 +216,22 @@ export interface OverlayInfo {
     event?: Event;
     wrapperElement?: HTMLElement;
     size?: string;
+    /** Engine chosen by the last show(). Undefined before the first show(). */
+    engine?: OverlayEngine;
+    /** Generated anchor name, created on the first native show() and kept until detach(). */
+    anchorName?: string;
+    /** The element that currently carries `anchorName` (target or container div). */
+    anchorElement?: HTMLElement;
+    /** The container div created for ContainerPositionStrategy, if any. */
+    containerElement?: HTMLElement;
+    /**
+     * Axes on which the browser flipped a native Auto overlay, measured on show and on hide. The animations
+     * are the strategy's current ones, reversed on these axes. `undefined` means "use the strategy settings".
+     */
+    flippedAxes?: { horizontal: boolean; vertical: boolean };
+    /** Animations the current players were built from. */
+    builtOpenAnimation?: AnimationReferenceMetadata | null;
+    builtCloseAnimation?: AnimationReferenceMetadata | null;
 }
 
 /** @hidden */

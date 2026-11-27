@@ -14,7 +14,7 @@ import { IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent } from './da
 import { IgxDateTimeEditorDirective } from '../../../directives/src/directives/date-time-editor/date-time-editor.directive';
 import { DateRangeType } from 'igniteui-angular/core';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent, IGX_DATE_RANGE_PICKER_DIRECTIVES } from './public_api';
-import { AutoPositionStrategy, IgxOverlayService } from 'igniteui-angular/core';
+import { IgxOverlayService } from 'igniteui-angular/core';
 import { map, Subject, timer } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { IgxAngularAnimationService } from 'igniteui-angular/core';
@@ -2053,18 +2053,18 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 detectChanges = () => fixture.changeDetectorRef.detectChanges();
-                vi.spyOn(AutoPositionStrategy.prototype, 'position');
-
                 dateRange = fixture.componentInstance.dateRange;
                 dateRange.open();
                 await vi.runAllTimersAsync();
                 detectChanges();
 
+                // Native anchor positioning: the content is anchored to the input bundle with the Auto fallbacks.
                 const overlayContent = document.getElementsByClassName(CSS_CLASS_OVERLAY_CONTENT)[0] as HTMLElement;
-                const expectedTarget = dateRange.element.nativeElement.querySelector('.igx-input-group__bundle');
-                expect(AutoPositionStrategy.prototype.position).toHaveBeenCalledTimes(1);
-                expect(AutoPositionStrategy.prototype.position)
-                    .toHaveBeenCalledWith(overlayContent, expect.anything(), document, expect.anything(), expectedTarget);
+                const expectedTarget = dateRange.element.nativeElement.querySelector('.igx-input-group__bundle') as HTMLElement;
+                const anchorName = overlayContent.style.getPropertyValue('position-anchor');
+                expect(anchorName).toMatch(/^--igx-overlay-anchor-/);
+                expect(expectedTarget.style.getPropertyValue('anchor-name').split(', ')).toContain(anchorName);
+                expect(overlayContent.style.getPropertyValue('position-try-fallbacks')).toContain('flip-block');
             });
             it('Should the weekStart property takes precedence over locale.', async () => {
                 fixture = TestBed.createComponent(DateRangeCustomComponent);

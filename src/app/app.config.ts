@@ -5,7 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
-import { provideIgniteIntl } from 'igniteui-angular/core';
+import { provideIgniteIntl, provideOverlayAnchoring } from 'igniteui-angular/core';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -18,6 +18,10 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withInterceptorsFromDi(), withFetch()),
         provideClientHydration(withNoIncrementalHydration()),
         provideRouter(appRoutes),
-        provideIgniteIntl()
+        provideIgniteIntl(),
+        // Open any demo with ?anchoring=script to compare against the script positioning engine.
+        ...(new URLSearchParams(globalThis.location?.search ?? '').get('anchoring') === 'script'
+            ? [provideOverlayAnchoring('script')]
+            : [])
     ]
 };
