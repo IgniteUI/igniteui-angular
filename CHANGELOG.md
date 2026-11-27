@@ -2,6 +2,23 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 22.3.2
+
+### General
+
+- `IgxButtonDirective`
+    - **Deprecation** - The `igxLabel` input has been deprecated and will be removed in a future version. Use the native `aria-label` attribute instead.
+
+### Bug Fixes
+
+- `IgxButtonDirective`
+    - An `aria-label` set on the button, statically or through a binding, is no longer removed. The button changes `aria-label` only through `igxLabel`, and clearing `igxLabel` removes only the value it set (#18009).
+    - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Auto-sizing columns with `width="auto"` no longer throws when a column group is partly scrolled out of view and one of its child columns with a cell template has no rendered cells. Such a column is now measured when it is scrolled into view.
+- `IgxPivotGridComponent`
+    - In the horizontal row layout, a key press that scrolls to another row dimension header, such as `Home` or `End`, now highlights that header. Previously the header that was active before the key press stayed highlighted (#17932).
+
 ## 22.3.1
 
 ### General
