@@ -13,6 +13,13 @@ All notable changes for each version of this project will be documented in this 
     - The history is dropped when the value is set from outside, for example through the form control or a date selected in the calendar of a picker, and when the mask, the input format or the prompt character changes. It is kept while the input loses and regains the focus. Nothing is undone while the input is readonly.
     - The same applies to the inputs of `IgxDatePickerComponent`, `IgxTimePickerComponent`, `IgxDateRangePickerComponent` with two inputs, and the date and time cell editors of the grids.
 
+### Bug Fixes
+
+- `IgxButtonDirective`
+    - Buttons that use `igxLabel` no longer receive the label styles of `IgxLabelDirective`, such as its text color (#18009).
+- `IgxGridComponent`, `IgxTreeGridComponent`, `IgxHierarchicalGridComponent`
+    - Auto-sizing columns with `width="auto"` no longer throws when a column group is partly scrolled out of view and one of its child columns with a cell template has no rendered cells. Such a column is now measured when it is scrolled into view.
+
 ## 21.2.27
 
 ### Bug Fixes
