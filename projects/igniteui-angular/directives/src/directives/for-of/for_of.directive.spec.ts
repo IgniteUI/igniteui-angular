@@ -1802,8 +1802,8 @@ export class VirtualComponent {
     public isHorizontalScrollbarVisible() {
         const horizontalScrollbar = this.container.element.nativeElement.querySelector('igx-horizontal-virtual-helper');
         /**
-         * The helper's height is automatically calculated from the native scrollbar size, which is 0 when the
-         * browser hides scrollbars (e.g. headless Playwright). Check if the content is wider than the helper instead.
+         * The element height is set explicitly via CSS, so it is always present.
+         * Visibility is determined by whether the virtual content is wider than the helper.
          */
         return horizontalScrollbar.clientWidth < horizontalScrollbar.children[0].offsetWidth;
     }
