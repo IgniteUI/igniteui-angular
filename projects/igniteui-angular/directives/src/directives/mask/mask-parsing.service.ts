@@ -34,6 +34,9 @@ interface ParsedMask {
 const replaceCharAt = (string: string, idx: number, char: string) =>
     `${string.substring(0, idx)}${char}${string.substring(idx + 1)}`;
 
+/** Returns whether `char` starts with a UTF-16 surrogate, half of an astral character. */
+const isSurrogate = (char: string) => (char.charCodeAt(0) & 0xf800) === 0xd800;
+
 
 export function parseMask(format: string): ParsedMask {
     const literals = new Map<number, string>();
@@ -161,8 +164,15 @@ export class MaskParsingService {
         return { value: maskedValue, end: cursor };
     }
 
-    /** Validates only non literal positions. */
+    /**
+     * Validates only non literal positions. A position holds one UTF-16 code unit,
+     * so an astral character, such as most emoji, never fits.
+     */
     private validateCharOnPosition(inputChar: string, position: number, mask: string): boolean {
+        if (isSurrogate(inputChar)) {
+            return false;
+        }
+
         const regex = REGEX.get(mask.charAt(position));
         return regex ? regex.test(inputChar) : false;
     }
